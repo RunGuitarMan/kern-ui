@@ -1,0 +1,427 @@
+<a class="skip-link" href="#specimen-stage">Skip to specimen</a>
+
+<main class="lab-shell" data-testid="lab-root">
+  <header class="masthead">
+    <a class="wordmark" href="#specimen-stage" aria-label="Kern QA Lab home">
+      <span class="wordmark-mark" aria-hidden="true">K</span>
+      <span><strong>Kern</strong><small>Quality assurance laboratory</small></span>
+    </a>
+    <div class="run-state" role="status">
+      <span class="run-state-light" aria-hidden="true"></span>
+      <span><strong>Deterministic render</strong><small>motion locked · fixed data · local state</small></span>
+    </div>
+    <div class="build-stamp">
+      <span>BUILD</span>
+      <strong>ANGULAR / 22</strong>
+    </div>
+  </header>
+
+  <section class="control-rack" aria-labelledby="controls-title" data-testid="lab-controls">
+    <div class="rack-index">
+      <span>00</span>
+      <div>
+        <p>INPUT / URL STATE</p>
+        <h1 id="controls-title">Calibration controls</h1>
+      </div>
+    </div>
+
+    <div class="control-grid">
+      <label>
+        <span>Component</span>
+        <select
+          data-testid="component-control"
+          [value]="componentId()"
+          (change)="setComponent($event)"
+        >
+          @for (category of categories; track category) {
+            <optgroup [label]="category">
+              @for (item of catalog; track item.id) {
+                @if (item.category === category) {
+                  <option [value]="item.id" [selected]="item.id === componentId()">
+                    {{ item.name }}
+                  </option>
+                }
+              }
+            </optgroup>
+          }
+        </select>
+      </label>
+
+      <label>
+        <span>Scenario</span>
+        <select
+          data-testid="scenario-control"
+          [value]="scenario()"
+          (change)="setScenario($event)"
+        >
+          @for (option of scenarios; track option) {
+            <option [value]="option" [selected]="option === scenario()">{{ option }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        <span>Theme</span>
+        <select data-testid="theme-control" [value]="theme()" (change)="setTheme($event)">
+          @for (option of themes; track option) {
+            <option [value]="option" [selected]="option === theme()">{{ option }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        <span>Density</span>
+        <select
+          data-testid="density-control"
+          [value]="density()"
+          (change)="setDensity($event)"
+        >
+          @for (option of densities; track option) {
+            <option [value]="option" [selected]="option === density()">{{ option }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        <span>Direction</span>
+        <select
+          data-testid="direction-control"
+          [value]="direction()"
+          (change)="setDirection($event)"
+        >
+          @for (option of directions; track option) {
+            <option [value]="option" [selected]="option === direction()">
+              {{ option.toUpperCase() }}
+            </option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <div class="state-tape" aria-label="Current lab state">
+      <span>QUERY</span>
+      <code>{{ stateSignature() }}</code>
+      <span class="state-tape-check">VALID</span>
+    </div>
+  </section>
+
+  <section id="specimen-stage" class="stage" aria-labelledby="stage-title" data-testid="specimen-stage">
+    @if (selectedItem(); as item) {
+      <header class="stage-header">
+        <div class="stage-index" aria-hidden="true">{{ selectedOrdinal() }}</div>
+        <div class="stage-title">
+          <p>{{ item.category }} / {{ item.status }}</p>
+          <h2 id="stage-title">{{ item.name }}</h2>
+          <p dir="auto">{{ item.summary }}</p>
+        </div>
+        <div class="stage-contract">
+          <span>SELECTOR</span>
+          <code>&lt;{{ item.selector }}&gt;</code>
+          <krn-badge status tone="success">ready</krn-badge>
+        </div>
+      </header>
+
+      <div
+        class="specimen-frame"
+        [class.is-stress]="scenario() === 'stress'"
+        [attr.data-category]="item.category"
+        [attr.data-testid]="'specimen-' + item.id"
+      >
+        <div class="frame-ruler frame-ruler-block" aria-hidden="true">
+          <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
+        </div>
+        <div class="frame-ruler frame-ruler-inline" aria-hidden="true">
+          <span>0</span><span>320</span><span>768</span><span>1280</span>
+        </div>
+
+        <div class="specimen-surface">
+          <div class="surface-label">
+            <span>LIVE SPECIMEN</span>
+            <span>{{ scenario() }} / {{ direction().toUpperCase() }}</span>
+          </div>
+
+          @switch (item.category) {
+            @case ('Layout') {
+              <krn-stack gap="5">
+                <div class="layout-rail">
+                  <span>PRIMARY RAIL</span>
+                  <span>CONTENT PLANE</span>
+                  <span>CONTEXT</span>
+                </div>
+                <krn-grid [columns]="3" gap="3">
+                  <krn-card eyebrow="01" heading="Navigation">Stable wayfinding</krn-card>
+                  <krn-card eyebrow="02" heading="Workspace">
+                    {{ scenario() === 'stress' ? specimenCopy() : 'Fluid primary content' }}
+                  </krn-card>
+                  <krn-card eyebrow="03" heading="Context">Container-aware details</krn-card>
+                </krn-grid>
+                <krn-divider label="Responsive boundary" />
+                <krn-alert tone="info" title="Resize contract">
+                  The composition stacks below 46rem without clipping its content.
+                </krn-alert>
+              </krn-stack>
+            }
+
+            @case ('Actions') {
+              <div class="action-specimen">
+                <krn-button>{{ specimenCopy() }}</krn-button>
+                <krn-button variant="outline" tone="neutral">Secondary</krn-button>
+                <krn-button variant="ghost" tone="danger">Delete</krn-button>
+                @if (scenario() === 'states') {
+                  <krn-button loading>Processing</krn-button>
+                  <krn-button disabled>Disabled</krn-button>
+                  <krn-button [pressed]="true" variant="soft">Pressed</krn-button>
+                }
+                <krn-button-group ariaLabel="Record actions">
+                  <krn-icon-button ariaLabel="Add record">+</krn-icon-button>
+                  <krn-icon-button ariaLabel="Duplicate record">⧉</krn-icon-button>
+                  <krn-icon-button ariaLabel="More record actions">•••</krn-icon-button>
+                </krn-button-group>
+                <krn-floating-action-button ariaLabel="Create record">
+                  <span krnFabIcon>+</span>
+                  New record
+                </krn-floating-action-button>
+              </div>
+            }
+
+            @case ('Forms') {
+              <div class="form-specimen">
+                <krn-form-field
+                  id="lab-workspace"
+                  label="Workspace name"
+                  hint="Visible to every workspace member."
+                  [required]="true"
+                >
+                  <krn-text-input
+                    id="lab-workspace"
+                    placeholder="Northstar operations"
+                    [required]="true"
+                    [invalid]="scenario() === 'states'"
+                  />
+                </krn-form-field>
+                <krn-form-field label="Plan" hint="Change this at any time.">
+                  <krn-native-select
+                    ariaLabel="Plan"
+                    placeholder="Choose a plan"
+                    [options]="selectOptions"
+                  />
+                </krn-form-field>
+                <krn-checkbox
+                  description="Receive a weekly operations summary"
+                  [invalid]="scenario() === 'states'"
+                >
+                  Email reports
+                </krn-checkbox>
+                <krn-switch [disabled]="scenario() === 'states'">
+                  Require approval for external guests
+                </krn-switch>
+                @if (scenario() === 'states') {
+                  <p class="validation-note" role="alert">
+                    Workspace name already exists. Choose a unique name.
+                  </p>
+                }
+              </div>
+            }
+
+            @case ('Navigation') {
+              <krn-stack gap="5">
+                <krn-breadcrumbs [items]="breadcrumbs" />
+                <krn-tabs [items]="tabs">
+                  <p class="panel-copy">
+                    Arrow keys move focus through the tab list. Home and End move to its boundaries.
+                  </p>
+                </krn-tabs>
+                <krn-pagination [totalItems]="248" [pageSize]="20" />
+              </krn-stack>
+            }
+
+            @case ('Feedback') {
+              <krn-stack gap="4">
+                <krn-alert tone="success" title="Configuration published" [dismissible]="true">
+                  All twelve environments now use the current policy revision.
+                </krn-alert>
+                @if (scenario() !== 'default') {
+                  <krn-alert tone="warning" title="Review required">
+                    Two workspaces exceed the configured seat threshold.
+                  </krn-alert>
+                }
+                <div class="progress-specimen">
+                  <span>Importing deterministic records <strong>68%</strong></span>
+                  <krn-progress-bar [value]="68" valueText="68 percent complete" />
+                </div>
+                <div class="loading-row">
+                  <krn-spinner label="Loading specimen" />
+                  <krn-skeleton width="36%" height="2.5rem" />
+                  <krn-skeleton width="58%" height="2.5rem" />
+                </div>
+                @if (scenario() === 'states') {
+                  <krn-confirmation
+                    requestLabel="Delete environment"
+                    prompt="Delete the staging environment?"
+                  />
+                }
+              </krn-stack>
+            }
+
+            @case ('Data display') {
+              <div class="data-specimen">
+                <div class="metric-strip">
+                  <krn-stat
+                    label="Active workspaces"
+                    value="2,481"
+                    detail="+12.4% this quarter"
+                    trend="up"
+                  />
+                  <krn-stat label="Automations" value="18.7k" detail="+4.2%" trend="up" />
+                  <div class="identity-cell">
+                    <krn-avatar name="Avery Cole" status="online" />
+                    <span><strong>Avery Cole</strong><small>Release steward</small></span>
+                  </div>
+                </div>
+                <div class="chip-row">
+                  <krn-badge status tone="success">Healthy</krn-badge>
+                  <krn-chip interactive [selected]="true">Enterprise</krn-chip>
+                  <krn-chip removable accessibleLabel="Review">Review</krn-chip>
+                </div>
+                <krn-data-grid
+                  ariaLabel="Service health"
+                  [data]="records"
+                  [columns]="recordColumns"
+                  [rowIdentity]="rowIdentity"
+                  [pageSize]="4"
+                  selectable
+                  [expandable]="scenario() === 'states'"
+                />
+              </div>
+            }
+
+            @case ('Patterns') {
+              <div class="pattern-specimen">
+                <krn-page-header
+                  index="08"
+                  eyebrow="Operations / Q3"
+                  heading="Workspace health"
+                  [description]="
+                    scenario() === 'stress'
+                      ? specimenCopy()
+                      : 'Review service health, owners, and release thresholds.'
+                  "
+                >
+                  <krn-button>New workspace</krn-button>
+                </krn-page-header>
+                <krn-global-search
+                  ariaLabel="Search the specimen"
+                  placeholder="Search projects…"
+                  [results]="searchResults"
+                />
+                <krn-alert tone="info" title="Composable pattern">
+                  Patterns connect public primitives while preserving product-specific slots.
+                </krn-alert>
+              </div>
+            }
+          }
+        </div>
+      </div>
+
+      <footer class="stage-footer">
+        <dl>
+          <div><dt>States</dt><dd>{{ item.states.length }}</dd></div>
+          <div><dt>Keyboard rules</dt><dd>{{ item.keyboard.length }}</dd></div>
+          <div><dt>A11y notes</dt><dd>{{ item.accessibility.length }}</dd></div>
+        </dl>
+        <p>
+          <span>PASS CRITERIA</span>
+          {{ item.accessibility[0] }}
+        </p>
+      </footer>
+    }
+  </section>
+
+  <section id="catalog-matrix" class="matrix" aria-labelledby="matrix-title" data-testid="catalog-matrix">
+    <header class="matrix-header">
+      <div class="matrix-index" aria-hidden="true">02</div>
+      <div>
+        <p>INVENTORY / COMPLETE</p>
+        <h2 id="matrix-title">Catalog matrix</h2>
+        <p>
+          Every documented contract remains addressable by a stable component ID. Select any row to
+          promote it into the specimen stage.
+        </p>
+      </div>
+      <dl>
+        <div><dt>{{ coverage.components }}</dt><dd>entries</dd></div>
+        <div><dt>{{ coverage.keyboardContracts }}</dt><dd>keyboard contracts</dd></div>
+        <div><dt>{{ visibleCatalogCount() }}</dt><dd>visible</dd></div>
+      </dl>
+    </header>
+
+    <div class="matrix-tools" aria-label="Catalog filters">
+      <label>
+        <span>Find by name or selector</span>
+        <input
+          type="search"
+          data-testid="catalog-search"
+          placeholder="e.g. data grid"
+          [value]="catalogQuery()"
+          (input)="setCatalogQuery($event)"
+        />
+      </label>
+      <label>
+        <span>Category</span>
+        <select
+          data-testid="category-filter"
+          [value]="catalogFilter()"
+          (change)="setCatalogFilter($event)"
+        >
+          <option value="All">All categories</option>
+          @for (category of categories; track category) {
+            <option [value]="category">{{ category }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <div class="matrix-board">
+      @for (group of matrixGroups(); track group.category) {
+        <section class="matrix-group" [attr.aria-labelledby]="'group-' + categoryCode(group.category)">
+          <header>
+            <span>{{ categoryCode(group.category) }}</span>
+            <h3 [id]="'group-' + categoryCode(group.category)">{{ group.category }}</h3>
+            <small>{{ group.items.length }} entries</small>
+          </header>
+          <div class="matrix-list">
+            @for (item of group.items; track item.id; let index = $index) {
+              <button
+                type="button"
+                class="matrix-entry"
+                [class.is-selected]="item.id === componentId()"
+                [attr.aria-pressed]="item.id === componentId()"
+                [attr.data-testid]="'catalog-item-' + item.id"
+                (click)="selectCatalogItem(item.id)"
+              >
+                <small>{{ (index + 1).toString().padStart(2, '0') }}</small>
+                <span>
+                  <strong>{{ item.name }}</strong>
+                  <code>{{ item.selector }}</code>
+                </span>
+                <span class="entry-state">{{ item.status }}</span>
+                <span class="entry-arrow" aria-hidden="true">↗</span>
+              </button>
+            }
+          </div>
+        </section>
+      } @empty {
+        <div class="matrix-empty" role="status">
+          <strong>No matching contracts.</strong>
+          <span>Try a broader component name or choose another category.</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <footer class="lab-footer">
+    <span>KERN / QA INSTRUMENT</span>
+    <span>{{ coverage.components }} stable addresses</span>
+    <a href="#specimen-stage">Return to specimen ↑</a>
+  </footer>
+</main>

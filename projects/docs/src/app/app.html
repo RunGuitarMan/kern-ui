@@ -1,0 +1,107 @@
+<a class="skip-link" href="#docs-main">Skip to documentation</a>
+
+<div class="docs-shell">
+  <header class="topbar">
+    <button
+      class="nav-toggle"
+      type="button"
+      aria-label="Open component navigation"
+      [attr.aria-expanded]="prefs.navigationOpen()"
+      (click)="toggleNavigation()"
+    >
+      <span></span><span></span>
+    </button>
+    <a class="brand" routerLink="/" aria-label="Kern documentation home">
+      <span>KERN</span>
+      <i aria-hidden="true"></i>
+      <small>Angular UI</small>
+    </a>
+    <krn-global-search
+      #docsSearch
+      ariaLabel="Search Kern components"
+      placeholder="Jump to a component…"
+      [results]="searchResults()"
+      (resultSelected)="openResult($event)"
+    />
+    <nav aria-label="Project links">
+      <a routerLink="/accessibility">WCAG 2.2 AA</a>
+      <krn-badge status tone="success">Angular 22</krn-badge>
+    </nav>
+  </header>
+
+  <aside class="sidebar" [class.open]="prefs.navigationOpen()" aria-label="Documentation">
+    <div class="sidebar-head">
+      <strong>Components</strong>
+      <button
+        type="button"
+        aria-label="Close component navigation"
+        (click)="prefs.navigationOpen.set(false)"
+      >
+        ×
+      </button>
+    </div>
+    <nav>
+      <section>
+        <p>Documentation</p>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+          >Overview</a
+        >
+        <a routerLink="/foundations" routerLinkActive="active">Foundations</a>
+        <a routerLink="/patterns" routerLinkActive="active">Patterns</a>
+        <a routerLink="/accessibility" routerLinkActive="active">Accessibility</a>
+        <a routerLink="/changelog" routerLinkActive="active">Changelog</a>
+      </section>
+
+      <section class="essentials">
+        <p>Essential components</p>
+        @for (item of essentials; track item.id) {
+          <a [routerLink]="['/components', item.id]" routerLinkActive="active">
+            <span>{{ item.name }}</span>
+            <small>{{ item.category }}</small>
+          </a>
+        }
+      </section>
+
+      @for (category of categories; track category; let categoryIndex = $index) {
+        <details
+          class="category"
+          [open]="categoryOpen(category)"
+          (toggle)="setCategoryOpen(category, $event)"
+        >
+          <summary>
+            <span>{{ (categoryIndex + 1).toString().padStart(2, '0') }} / {{ category }}</span>
+            <small>{{ itemsFor(category).length }}</small>
+          </summary>
+          <div>
+            @for (item of itemsFor(category); track item.id) {
+              <a [routerLink]="['/components', item.id]" routerLinkActive="active">
+                <span>{{ item.name }}</span>
+                @if (item.variantOf) {
+                  <small>variant</small>
+                } @else if (item.status === 'beta') {
+                  <small>β</small>
+                }
+              </a>
+            }
+          </div>
+        </details>
+      }
+    </nav>
+    <footer>
+      <span>v0.1.0</span>
+      <span>{{ catalog.length }} documented entries</span>
+    </footer>
+  </aside>
+  @if (prefs.navigationOpen()) {
+    <button
+      class="nav-backdrop"
+      type="button"
+      aria-label="Close component navigation"
+      (click)="prefs.navigationOpen.set(false)"
+    ></button>
+  }
+
+  <main id="docs-main" tabindex="-1">
+    <router-outlet />
+  </main>
+</div>

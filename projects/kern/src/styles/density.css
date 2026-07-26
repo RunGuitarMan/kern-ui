@@ -1,0 +1,42 @@
+@layer krn.density {
+  :root,
+  [data-krn-density='comfortable'] {
+    --krn-density-scale: 1;
+    --krn-control-height-sm: 2rem;
+    --krn-control-height-md: 2.5rem;
+    --krn-control-height-lg: 3rem;
+    --krn-control-padding-inline: var(--krn-space-3);
+    --krn-density-gap: var(--krn-space-3);
+    --krn-density-section-gap: var(--krn-space-6);
+    --krn-table-row-height: 2.75rem;
+  }
+
+  [data-krn-density='compact'] {
+    --krn-density-scale: 0.84;
+    --krn-control-height-sm: 1.75rem;
+    --krn-control-height-md: 2rem;
+    --krn-control-height-lg: 2.5rem;
+    --krn-control-padding-inline: var(--krn-space-2);
+    --krn-density-gap: var(--krn-space-2);
+    --krn-density-section-gap: var(--krn-space-4);
+    --krn-table-row-height: 2.25rem;
+  }
+
+  [data-krn-density='spacious'] {
+    --krn-density-scale: 1.18;
+    --krn-control-height-sm: 2.5rem;
+    --krn-control-height-md: 3rem;
+    --krn-control-height-lg: 3.5rem;
+    --krn-control-padding-inline: var(--krn-space-4);
+    --krn-density-gap: var(--krn-space-4);
+    --krn-density-section-gap: var(--krn-space-8);
+    --krn-table-row-height: 3.25rem;
+  }
+
+  @media (pointer: coarse) {
+    :root,
+    [data-krn-density] {
+      --krn-touch-target-min: 2.75rem;
+    }
+  }
+}

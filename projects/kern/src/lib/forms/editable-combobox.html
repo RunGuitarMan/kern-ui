@@ -1,0 +1,76 @@
+<div class="krn-combobox" (focusout)="closeOnFocusOut($event)" (keydown.escape)="open.set(false)">
+  <span
+    class="krn-control-shell"
+    [attr.data-disabled]="isDisabled()"
+    [attr.data-invalid]="a11y.invalid()"
+    [attr.data-readonly]="readOnly()"
+  >
+    <input
+      #combo="ngCombobox"
+      ngCombobox
+      class="krn-input"
+      type="text"
+      role="combobox"
+      [attr.aria-autocomplete]="autocompleteMode()"
+      [attr.aria-describedby]="a11y.describedBy()"
+      [attr.aria-invalid]="a11y.invalid()"
+      [attr.aria-label]="ariaLabel() || null"
+      [attr.aria-readonly]="readOnly()"
+      [attr.aria-required]="required()"
+      [attr.autocomplete]="'off'"
+      [attr.disabled]="isDisabled() ? '' : null"
+      [disabled]="isDisabled()"
+      [expanded]="open()"
+      [id]="a11y.id()"
+      [placeholder]="placeholder()"
+      [readOnly]="readOnly()"
+      [required]="required()"
+      [value]="query()"
+      (expandedChange)="setOpen($event)"
+      (valueChange)="updateQuery($event)"
+      (keydown.enter)="commitQuery()"
+    />
+    <span class="krn-control-affix" aria-hidden="true">
+      <span class="krn-select-chevron"></span>
+    </span>
+  </span>
+
+  <ng-template ngComboboxPopup popupType="listbox" [combobox]="combo">
+    <ul
+      #listbox="ngListbox"
+      ngComboboxWidget
+      ngListbox
+      class="krn-listbox"
+      focusMode="activedescendant"
+      selectionMode="explicit"
+      [activeDescendant]="listbox.activeDescendant()"
+      [disabled]="isDisabled()"
+      [value]="selectedValues()"
+      (valueChange)="selectValues($event)"
+    >
+      @for (option of filteredOptions(); track option.value) {
+        <li
+          ngOption
+          class="krn-option"
+          [disabled]="option.disabled"
+          [label]="option.label"
+          [value]="option.value"
+        >
+          <span class="krn-option__copy">
+            <span>{{ option.label }}</span>
+            @if (option.description) {
+              <span class="krn-option__description">
+                {{ option.description }}
+              </span>
+            }
+          </span>
+          @if (controlValue() === option.value) {
+            <span class="krn-option__check" aria-hidden="true">✓</span>
+          }
+        </li>
+      } @empty {
+        <li class="krn-option" aria-disabled="true">{{ emptyText() }}</li>
+      }
+    </ul>
+  </ng-template>
+</div>

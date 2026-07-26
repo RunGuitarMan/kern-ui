@@ -1,0 +1,55 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "paths": {
+      "@kern-ui/angular": ["./dist/kern"],
+      "@kern-ui/showcase": ["./dist/showcase"]
+    },
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "preserve"
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./projects/kern/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/kern/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/docs/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/docs/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/lab/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/lab/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/showcase/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/showcase/tsconfig.spec.json"
+    }
+  ]
+}

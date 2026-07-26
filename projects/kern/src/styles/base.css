@@ -1,0 +1,90 @@
+@layer krn.reset, krn.tokens, krn.themes, krn.density, krn.base,
+  krn.utilities;
+
+@layer krn.base {
+  :where(html) {
+    min-inline-size: 20rem;
+    background: var(--krn-color-canvas, #f7f7f5);
+    color: var(--krn-color-text, #202126);
+    font-family: var(--krn-font-family-sans);
+    font-size: 100%;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    hanging-punctuation: first last;
+    scrollbar-gutter: stable;
+  }
+
+  :where(body) {
+    min-block-size: 100dvb;
+    margin: 0;
+    background: inherit;
+    color: inherit;
+    font-size: var(--krn-font-size-md);
+    line-height: var(--krn-line-height-body);
+  }
+
+  :where(*, *::before, *::after) {
+    box-sizing: border-box;
+  }
+
+  :where(button, input, select, textarea) {
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+  }
+
+  :where(img, picture, svg, video, canvas) {
+    display: block;
+    max-inline-size: 100%;
+  }
+
+  :where(a) {
+    color: var(--krn-color-primary);
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.18em;
+  }
+
+  :where(::selection) {
+    background: var(--krn-color-selection);
+    color: var(--krn-color-text);
+  }
+
+  :where([hidden]) {
+    display: none !important;
+  }
+
+  :where([aria-disabled='true'], :disabled) {
+    cursor: not-allowed;
+  }
+
+  :where(hr) {
+    border: 0;
+    border-block-start: var(--krn-border-width-1) solid var(--krn-color-border);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --krn-motion-duration-fast: 0.01ms;
+      --krn-motion-duration-normal: 0.01ms;
+      --krn-motion-duration-slow: 0.01ms;
+      --krn-motion-duration-deliberate: 0.01ms;
+      --krn-motion-ease-standard: linear;
+      --krn-motion-ease-enter: linear;
+      --krn-motion-ease-exit: linear;
+      --krn-motion-ease-spring: linear;
+    }
+
+    :where(html:focus-within) {
+      scroll-behavior: auto;
+    }
+  }
+
+  @media (forced-colors: active) {
+    :where(:focus-visible) {
+      outline: 3px solid Highlight;
+      outline-offset: 2px;
+      box-shadow: none;
+    }
+  }
+}

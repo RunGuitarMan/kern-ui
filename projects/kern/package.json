@@ -1,0 +1,30 @@
+{
+  "name": "@kern-ui/angular",
+  "version": "0.1.0",
+  "description": "Kern — a precise, accessible Angular design system for product interfaces.",
+  "keywords": [
+    "angular",
+    "design-system",
+    "components",
+    "accessibility",
+    "zoneless"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/cdk": "^22.0.0",
+    "@angular/aria": "^22.0.0",
+    "rxjs": "^7.4.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "exports": {
+    "./styles/kern.css": "./styles/kern.css"
+  },
+  "sideEffects": [
+    "./styles/*.css"
+  ]
+}

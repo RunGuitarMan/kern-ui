@@ -1,0 +1,50 @@
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/geist-mono';
+@import '../../kern/src/styles/kern.css';
+
+:root {
+  --docs-header-height: 3.75rem;
+  --docs-sidebar-width: 15rem;
+  --docs-content-max: 72rem;
+  font-synthesis: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-inline-size: 20rem;
+  background: var(--krn-color-canvas);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-block-size: 100dvb;
+  margin: 0;
+  color: var(--krn-color-text);
+  background: var(--krn-color-canvas);
+  font-family: var(--krn-font-family-sans);
+  font-size: var(--krn-font-size-md);
+  line-height: var(--krn-line-height-body);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  color: var(--krn-color-text);
+  background: var(--krn-color-selection);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

@@ -1,0 +1,244 @@
+@layer krn.tokens {
+  :root {
+    /* Neutral ramp: deliberately achromatic so product content sets the mood. */
+    --krn-color-neutral-0: oklch(100% 0 0);
+    --krn-color-neutral-25: oklch(99.3% 0 0);
+    --krn-color-neutral-50: oklch(98.2% 0 0);
+    --krn-color-neutral-100: oklch(96% 0 0);
+    --krn-color-neutral-200: oklch(92.5% 0 0);
+    --krn-color-neutral-300: oklch(87.5% 0 0);
+    --krn-color-neutral-400: oklch(74% 0 0);
+    --krn-color-neutral-500: oklch(61% 0 0);
+    --krn-color-neutral-600: oklch(47% 0 0);
+    --krn-color-neutral-700: oklch(33% 0 0);
+    --krn-color-neutral-800: oklch(23% 0 0);
+    --krn-color-neutral-850: oklch(18% 0 0);
+    --krn-color-neutral-900: oklch(14.5% 0 0);
+    --krn-color-neutral-950: oklch(9% 0 0);
+    --krn-color-neutral-1000: oklch(0% 0 0);
+
+    /* Primitive electric blue; may be replaced at runtime by KrnThemeService. */
+    --krn-color-brand-50: oklch(97% 0.018 259);
+    --krn-color-brand-100: oklch(93.5% 0.04 259);
+    --krn-color-brand-200: oklch(86% 0.082 259);
+    --krn-color-brand-300: oklch(76% 0.125 259);
+    --krn-color-brand-400: oklch(66% 0.17 259);
+    --krn-color-brand-500: oklch(58% 0.21 260);
+    --krn-color-brand-600: oklch(51% 0.205 260);
+    --krn-color-brand-700: oklch(44% 0.18 260);
+    --krn-color-brand-800: oklch(36% 0.14 260);
+    --krn-color-brand-900: oklch(28% 0.1 260);
+    --krn-color-brand-950: oklch(20% 0.065 260);
+
+    --krn-color-green-100: oklch(93% 0.072 150);
+    --krn-color-green-500: oklch(59% 0.15 151);
+    --krn-color-green-700: oklch(40% 0.11 151);
+    --krn-color-amber-100: oklch(94% 0.094 88);
+    --krn-color-amber-500: oklch(73% 0.157 75);
+    --krn-color-amber-800: oklch(39% 0.092 64);
+    --krn-color-red-100: oklch(94% 0.058 24);
+    --krn-color-red-500: oklch(58% 0.205 25);
+    --krn-color-red-700: oklch(42% 0.16 25);
+    --krn-color-blue-100: oklch(93% 0.052 245);
+    --krn-color-blue-500: oklch(59% 0.16 251);
+    --krn-color-blue-700: oklch(42% 0.125 251);
+    --krn-color-violet-500: oklch(59% 0.15 315);
+
+    /* Geist Sans and Mono are self-hosted by the workspace. */
+    --krn-font-family-sans:
+      'Geist Variable', Geist, Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --krn-font-family-mono: 'Geist Mono Variable', 'SFMono-Regular', 'SF Mono', Consolas, monospace;
+    --krn-font-size-xs: 0.75rem;
+    --krn-font-size-sm: 0.8125rem;
+    --krn-font-size-md: 0.9375rem;
+    --krn-font-size-lg: 1.0625rem;
+    --krn-font-size-xl: 1.25rem;
+    --krn-font-size-2xl: clamp(1.45rem, 1.2rem + 0.7vw, 1.875rem);
+    --krn-font-size-3xl: clamp(1.8rem, 1.35rem + 1.25vw, 2.5rem);
+    --krn-font-size-4xl: clamp(2.25rem, 1.5rem + 2.25vw, 3.75rem);
+    --krn-line-height-none: 1;
+    --krn-line-height-tight: 1.15;
+    --krn-line-height-heading: 1.24;
+    --krn-line-height-body: 1.5;
+    --krn-line-height-relaxed: 1.7;
+    --krn-font-weight-regular: 400;
+    --krn-font-weight-medium: 500;
+    --krn-font-weight-semibold: 600;
+    --krn-font-weight-bold: 700;
+    --krn-letter-spacing-tight: -0.02em;
+    --krn-letter-spacing-normal: 0;
+    --krn-letter-spacing-wide: 0.045em;
+
+    /* 4px spatial rhythm, with optical half steps. */
+    --krn-space-0: 0;
+    --krn-space-px: 1px;
+    --krn-space-0-5: 0.125rem;
+    --krn-space-1: 0.25rem;
+    --krn-space-1-5: 0.375rem;
+    --krn-space-2: 0.5rem;
+    --krn-space-3: 0.75rem;
+    --krn-space-4: 1rem;
+    --krn-space-5: 1.25rem;
+    --krn-space-6: 1.5rem;
+    --krn-space-8: 2rem;
+    --krn-space-10: 2.5rem;
+    --krn-space-12: 3rem;
+    --krn-space-16: 4rem;
+    --krn-space-20: 5rem;
+    --krn-space-24: 6rem;
+
+    --krn-border-width-0: 0;
+    --krn-border-width-1: 1px;
+    --krn-border-width-2: 2px;
+    --krn-radius-none: 0;
+    --krn-radius-xs: 0.25rem;
+    --krn-radius-sm: 0.375rem;
+    --krn-radius-md: 0.5rem;
+    --krn-radius-lg: 0.75rem;
+    --krn-radius-xl: 1rem;
+    --krn-radius-full: 9999px;
+
+    --krn-opacity-disabled: 0.46;
+    --krn-opacity-muted: 0.64;
+    --krn-opacity-overlay: 0.56;
+
+    --krn-z-base: 0;
+    --krn-z-sticky: 100;
+    --krn-z-dropdown: 400;
+    --krn-z-overlay: 600;
+    --krn-z-modal: 700;
+    --krn-z-toast: 900;
+
+    --krn-breakpoint-sm: 36rem;
+    --krn-breakpoint-md: 48rem;
+    --krn-breakpoint-lg: 64rem;
+    --krn-breakpoint-xl: 80rem;
+    --krn-container-sm: 40rem;
+    --krn-container-md: 56rem;
+    --krn-container-lg: 72rem;
+    --krn-container-xl: 86rem;
+
+    --krn-motion-duration-instant: 0ms;
+    --krn-motion-duration-fast: 90ms;
+    --krn-motion-duration-normal: 160ms;
+    --krn-motion-duration-slow: 240ms;
+    --krn-motion-duration-deliberate: 360ms;
+    --krn-motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+    --krn-motion-ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+    --krn-motion-ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
+    --krn-motion-ease-spring: cubic-bezier(0.2, 1.35, 0.4, 1);
+
+    --krn-icon-size-sm: 1rem;
+    --krn-icon-size-md: 1.25rem;
+    --krn-icon-size-lg: 1.5rem;
+    --krn-icon-stroke-width: 1.75;
+    --krn-touch-target-min: 2.75rem;
+
+    /* Shared aliases consumed by every component category. */
+    --krn-font-family-ui: var(--krn-font-family-sans);
+    --krn-font-size-control: var(--krn-font-size-sm);
+    --krn-font-body: var(--krn-font-weight-regular) var(--krn-font-size-md) /
+      var(--krn-line-height-body) var(--krn-font-family-sans);
+    --krn-font-body-sm: var(--krn-font-weight-regular) var(--krn-font-size-sm) /
+      var(--krn-line-height-body) var(--krn-font-family-sans);
+    --krn-font-label: var(--krn-font-weight-semibold) var(--krn-font-size-sm) /
+      var(--krn-line-height-tight) var(--krn-font-family-sans);
+    --krn-font-label-sm: var(--krn-font-weight-semibold) var(--krn-font-size-xs) /
+      var(--krn-line-height-tight) var(--krn-font-family-sans);
+    --krn-font-heading-sm: var(--krn-font-weight-semibold) var(--krn-font-size-lg) /
+      var(--krn-line-height-heading) var(--krn-font-family-sans);
+    --krn-font-heading-lg: var(--krn-font-weight-semibold) var(--krn-font-size-2xl) /
+      var(--krn-line-height-heading) var(--krn-font-family-sans);
+    --krn-font-heading-xl: var(--krn-font-weight-semibold) var(--krn-font-size-3xl) /
+      var(--krn-line-height-tight) var(--krn-font-family-sans);
+
+    --krn-radius-control: var(--krn-radius-sm);
+    --krn-radius-surface: var(--krn-radius-md);
+    --krn-radius-overlay: var(--krn-radius-lg);
+    --krn-radius-pill: var(--krn-radius-full);
+
+    --krn-motion-fast: var(--krn-motion-duration-fast);
+    --krn-motion-moderate: var(--krn-motion-duration-normal);
+    --krn-motion-slow: var(--krn-motion-duration-slow);
+    --krn-ease-standard: var(--krn-motion-ease-standard);
+    --krn-ease-enter: var(--krn-motion-ease-enter);
+
+    --krn-control-size-sm: var(--krn-control-height-sm);
+    --krn-control-size: var(--krn-control-height-md);
+    --krn-data-row-size: var(--krn-table-row-height);
+
+    --krn-shadow-control: var(--krn-shadow-xs);
+    --krn-shadow-floating: var(--krn-shadow-md);
+    --krn-shadow-drawer: var(--krn-shadow-overlay);
+    --krn-z-popover: var(--krn-z-dropdown);
+    --krn-z-drawer: var(--krn-z-modal);
+
+    --krn-color-border-subtle: var(--krn-color-border);
+    --krn-color-surface-hover: var(--krn-color-surface-raised);
+    --krn-color-surface-disabled: var(--krn-color-surface-sunken);
+    --krn-color-surface-overlay: var(--krn-color-surface-raised);
+    --krn-color-text-placeholder: var(--krn-color-text-subtle);
+    --krn-color-link: var(--krn-color-primary);
+    --krn-color-brand-solid: var(--krn-color-primary);
+    --krn-color-brand-surface: var(--krn-color-primary-subtle);
+    --krn-color-brand-text: var(--krn-color-primary);
+    --krn-color-brand-border: var(--krn-color-border-interactive);
+    --krn-color-on-brand: var(--krn-color-on-primary);
+    --krn-color-accent: var(--krn-color-primary);
+    --krn-color-accent-soft: var(--krn-color-primary-subtle);
+    --krn-color-accent-strong: var(--krn-color-primary);
+    --krn-color-accent-border: var(--krn-color-border-interactive);
+    --krn-color-on-accent: var(--krn-color-on-primary);
+
+    --krn-color-success-solid: var(--krn-color-success);
+    --krn-color-success-soft: var(--krn-color-success-subtle);
+    --krn-color-success-surface: var(--krn-color-success-subtle);
+    --krn-color-success-text: var(--krn-color-on-success);
+    --krn-color-success-strong: var(--krn-color-on-success);
+    --krn-color-success-border: color-mix(
+      in oklch,
+      var(--krn-color-success) 50%,
+      var(--krn-color-success-subtle)
+    );
+    --krn-color-warning-solid: var(--krn-color-warning);
+    --krn-color-warning-soft: var(--krn-color-warning-subtle);
+    --krn-color-warning-surface: var(--krn-color-warning-subtle);
+    --krn-color-warning-text: var(--krn-color-on-warning);
+    --krn-color-warning-strong: var(--krn-color-on-warning);
+    --krn-color-warning-border: color-mix(
+      in oklch,
+      var(--krn-color-warning) 50%,
+      var(--krn-color-warning-subtle)
+    );
+    --krn-color-danger-solid: var(--krn-color-danger);
+    --krn-color-danger-soft: var(--krn-color-danger-subtle);
+    --krn-color-danger-surface: var(--krn-color-danger-subtle);
+    --krn-color-danger-text: var(--krn-color-on-danger);
+    --krn-color-danger-strong: var(--krn-color-on-danger);
+    --krn-color-danger-border: color-mix(
+      in oklch,
+      var(--krn-color-danger) 50%,
+      var(--krn-color-danger-subtle)
+    );
+    --krn-color-info-solid: var(--krn-color-info);
+    --krn-color-info-soft: var(--krn-color-info-subtle);
+    --krn-color-info-surface: var(--krn-color-info-subtle);
+    --krn-color-info-text: var(--krn-color-on-info);
+    --krn-color-info-strong: var(--krn-color-on-info);
+    --krn-color-info-border: color-mix(
+      in oklch,
+      var(--krn-color-info) 50%,
+      var(--krn-color-info-subtle)
+    );
+
+    --krn-chart-1: var(--krn-color-brand-500);
+    --krn-chart-2: var(--krn-color-green-500);
+    --krn-chart-3: var(--krn-color-blue-500);
+    --krn-chart-4: var(--krn-color-amber-500);
+    --krn-chart-5: var(--krn-color-violet-500);
+    --krn-focus-ring: var(--krn-focus-ring-shadow);
+    --krn-focus-ring-danger:
+      0 0 0 var(--krn-focus-ring-offset) var(--krn-color-surface),
+      0 0 0 calc(var(--krn-focus-ring-offset) + var(--krn-focus-ring-width)) var(--krn-color-danger);
+  }
+}
