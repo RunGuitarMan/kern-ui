@@ -1,5 +1,4 @@
-import type {
-  ElementRef} from '@angular/core';
+import type { ElementRef } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -36,7 +35,8 @@ import type { KrnNavigationItem } from './navigation.types';
     >
       <ng-content select="[krnMenuTrigger]" />
       @if (!hasProjectedTrigger()) {
-        <span>{{ triggerLabel() }}</span><span aria-hidden="true">⌄</span>
+        <span>{{ triggerLabel() }}</span
+        ><span aria-hidden="true">⌄</span>
       }
     </button>
     <ng-template
@@ -46,10 +46,20 @@ import type { KrnNavigationItem } from './navigation.types';
       [cdkConnectedOverlayHasBackdrop]="true"
       cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
       [cdkConnectedOverlayPositions]="positions"
+      [cdkConnectedOverlayPush]="true"
+      [cdkConnectedOverlayFlexibleDimensions]="true"
+      [cdkConnectedOverlayViewportMargin]="8"
+      cdkConnectedOverlayUsePopover="inline"
+      cdkConnectedOverlayTransformOriginOn=".menu-panel"
       (backdropClick)="close('outside')"
       (detach)="close('detach')"
     >
-      <div class="menu-panel" role="menu" [attr.aria-label]="menuAriaLabel()" (keydown)="onMenuKeydown($event)">
+      <div
+        class="menu-panel"
+        role="menu"
+        [attr.aria-label]="menuAriaLabel()"
+        (keydown)="onMenuKeydown($event)"
+      >
         @for (item of items(); track item.id; let index = $index) {
           @if (item.href && !item.disabled) {
             <a
@@ -73,7 +83,7 @@ import type { KrnNavigationItem } from './navigation.types';
               [disabled]="item.disabled"
               [attr.tabindex]="index === activeIndex() ? 0 : -1"
               (click)="activate(item)"
-              (pointerenter)="activeIndex.set(index)"
+              (pointerenter)="!item.disabled && activeIndex.set(index)"
             >
               <span>{{ item.label }}</span>
               @if (item.shortcut) {
@@ -88,7 +98,84 @@ import type { KrnNavigationItem } from './navigation.types';
     </ng-template>
   `,
   styles: `
-    :host{display:inline-block}.trigger{display:inline-flex;align-items:center;justify-content:center;gap:var(--krn-space-2);min-block-size:var(--krn-control-height-md);padding-inline:var(--krn-control-padding-inline);border:var(--krn-border-width-1) solid var(--krn-color-border-interactive);border-radius:var(--krn-radius-sm);background:var(--krn-color-surface);color:var(--krn-color-text);font:inherit;font-weight:var(--krn-font-weight-medium);cursor:pointer}.trigger:hover{border-color:var(--krn-color-border-strong);background:var(--krn-color-surface-subtle)}.trigger:focus-visible,.menu-panel :is(a,button):focus-visible{outline:var(--krn-focus-ring-width) solid var(--krn-color-focus);outline-offset:var(--krn-focus-ring-offset)}.menu-panel{display:grid;min-inline-size:12rem;max-inline-size:min(22rem,calc(100vw - var(--krn-space-8)));padding:var(--krn-space-1);border:var(--krn-border-width-1) solid var(--krn-color-border);border-radius:var(--krn-radius-md);box-shadow:var(--krn-shadow-overlay);background:var(--krn-color-surface-raised);color:var(--krn-color-text)}.menu-panel :is(a,button){display:flex;align-items:center;justify-content:space-between;gap:var(--krn-space-4);min-block-size:var(--krn-control-height-sm);padding-inline:var(--krn-space-3);border:0;border-radius:var(--krn-radius-sm);background:transparent;color:inherit;font:inherit;text-align:start;text-decoration:none;cursor:pointer}.menu-panel :is(a,button):hover,.menu-panel :is(a,button):focus{background:var(--krn-color-surface-subtle)}.menu-panel button:disabled{color:var(--krn-color-text-disabled);cursor:not-allowed}.menu-panel kbd{color:var(--krn-color-text-subtle);font:inherit;font-size:var(--krn-font-size-xs)}.empty{margin:0;padding:var(--krn-space-3);color:var(--krn-color-text-muted);font-size:var(--krn-font-size-sm)}
+    :host {
+      display: inline-block;
+    }
+    .trigger {
+      display: inline-flex;
+      min-block-size: var(--krn-control-height-md);
+      align-items: center;
+      justify-content: center;
+      gap: var(--krn-space-2);
+      padding-inline: var(--krn-control-padding-inline);
+      border: var(--krn-border-width-1) solid var(--krn-color-border-interactive);
+      border-radius: var(--krn-radius-sm);
+      color: var(--krn-color-text);
+      background: var(--krn-color-surface);
+      font: inherit;
+      font-weight: var(--krn-font-weight-medium);
+      cursor: pointer;
+    }
+    .trigger:hover {
+      border-color: var(--krn-color-border-strong);
+      background: var(--krn-color-surface-subtle);
+    }
+    .trigger:focus-visible,
+    .menu-panel :is(a, button):focus-visible {
+      outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
+      outline-offset: var(--krn-focus-ring-offset);
+    }
+    .menu-panel {
+      display: grid;
+      min-inline-size: 12rem;
+      max-inline-size: min(22rem, calc(100vw - var(--krn-space-8)));
+      max-block-size: min(26rem, calc(100dvh - var(--krn-space-8)));
+      gap: var(--krn-space-1);
+      overflow: auto;
+      padding: var(--krn-space-2);
+      border: var(--krn-border-width-1) solid var(--krn-color-border);
+      border-radius: var(--krn-radius-md);
+      color: var(--krn-color-text);
+      background: var(--krn-color-surface-raised);
+      box-shadow: var(--krn-shadow-overlay);
+    }
+    .menu-panel :is(a, button) {
+      display: flex;
+      min-block-size: var(--krn-control-height-sm);
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--krn-space-4);
+      padding-inline: var(--krn-space-3);
+      border: 0;
+      border-radius: var(--krn-radius-sm);
+      color: inherit;
+      background: transparent;
+      font: inherit;
+      text-align: start;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .menu-panel :is(a, button):hover {
+      background: color-mix(in oklch, var(--krn-color-surface-subtle) 72%, transparent);
+    }
+    .menu-panel :is(a, button)[tabindex='0'] {
+      background: var(--krn-color-surface-subtle);
+    }
+    .menu-panel button:disabled {
+      color: var(--krn-color-text-disabled);
+      cursor: not-allowed;
+    }
+    .menu-panel kbd {
+      color: var(--krn-color-text-subtle);
+      font: inherit;
+      font-size: var(--krn-font-size-xs);
+    }
+    .empty {
+      margin: 0;
+      padding: var(--krn-space-3);
+      color: var(--krn-color-text-muted);
+      font-size: var(--krn-font-size-sm);
+    }
   `,
 })
 export class KrnMenu {
@@ -142,7 +229,11 @@ export class KrnMenu {
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
     event.preventDefault();
     this.open.set(true);
-    this.activeIndex.set(event.key === 'ArrowDown' ? 0 : Math.max(0, this.items().length - 1));
+    const direction = event.key === 'ArrowDown' ? 1 : -1;
+    const start = direction === 1 ? 0 : this.items().length - 1;
+    const next = this.findEnabledIndex(start, direction);
+    if (next < 0) return;
+    this.activeIndex.set(next);
     this.focusActive();
   }
 
@@ -160,22 +251,36 @@ export class KrnMenu {
     if (delta === 0 && event.key !== 'Home' && event.key !== 'End') return;
     event.preventDefault();
     const items = this.items();
-    let next =
+    if (items.length === 0) return;
+    const direction = event.key === 'End' ? -1 : delta || 1;
+    const start =
       event.key === 'Home'
         ? 0
         : event.key === 'End'
           ? items.length - 1
-          : (this.activeIndex() + delta + items.length) % items.length;
-    while (items[next]?.disabled && next !== this.activeIndex()) {
-      next = (next + (delta || 1) + items.length) % items.length;
-    }
+          : this.activeIndex() + direction;
+    const next = this.findEnabledIndex(start, direction);
+    if (next < 0) return;
     this.activeIndex.set(next);
     this.focusActive();
   }
 
   private focusFirst(): void {
-    this.activeIndex.set(this.items().findIndex((item) => !item.disabled));
+    const next = this.findEnabledIndex(0, 1);
+    if (next < 0) return;
+    this.activeIndex.set(next);
     this.focusActive();
+  }
+
+  private findEnabledIndex(start: number, direction: 1 | -1): number {
+    const items = this.items();
+    if (items.length === 0) return -1;
+    let index = ((start % items.length) + items.length) % items.length;
+    for (let visited = 0; visited < items.length; visited += 1) {
+      if (!items[index]?.disabled) return index;
+      index = (index + direction + items.length) % items.length;
+    }
+    return -1;
   }
 
   private focusActive(): void {
@@ -188,7 +293,12 @@ export class KrnMenu {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="menubar" role="menubar" [attr.aria-label]="ariaLabel()" (keydown)="onKeydown($event)">
+    <div
+      class="menubar"
+      role="menubar"
+      [attr.aria-label]="ariaLabel()"
+      (keydown)="onKeydown($event)"
+    >
       @for (item of items(); track item.id; let index = $index) {
         @if (item.href && !item.disabled) {
           <a
@@ -215,7 +325,42 @@ export class KrnMenu {
     </div>
   `,
   styles: `
-    :host{display:block}.menubar{display:flex;align-items:center;gap:var(--krn-space-1);min-inline-size:0}.menubar :is(a,button){display:inline-flex;align-items:center;min-block-size:var(--krn-control-height-sm);padding-inline:var(--krn-space-3);border:0;border-radius:var(--krn-radius-sm);background:transparent;color:var(--krn-color-text-muted);font:inherit;text-decoration:none;white-space:nowrap;cursor:pointer}.menubar :is(a,button):hover,.menubar :is(a,button):focus{background:var(--krn-color-surface-subtle);color:var(--krn-color-text)}.menubar :is(a,button):focus-visible{outline:var(--krn-focus-ring-width) solid var(--krn-color-focus);outline-offset:var(--krn-focus-ring-offset)}.menubar button:disabled{color:var(--krn-color-text-disabled);cursor:not-allowed}
+    :host {
+      display: block;
+    }
+    .menubar {
+      display: flex;
+      align-items: center;
+      gap: var(--krn-space-1);
+      min-inline-size: 0;
+    }
+    .menubar :is(a, button) {
+      display: inline-flex;
+      align-items: center;
+      min-block-size: var(--krn-control-height-sm);
+      padding-inline: var(--krn-space-3);
+      border: 0;
+      border-radius: var(--krn-radius-sm);
+      background: transparent;
+      color: var(--krn-color-text-muted);
+      font: inherit;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .menubar :is(a, button):hover,
+    .menubar :is(a, button):focus {
+      background: var(--krn-color-surface-subtle);
+      color: var(--krn-color-text);
+    }
+    .menubar :is(a, button):focus-visible {
+      outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
+      outline-offset: var(--krn-focus-ring-offset);
+    }
+    .menubar button:disabled {
+      color: var(--krn-color-text-disabled);
+      cursor: not-allowed;
+    }
   `,
 })
 export class KrnMenubar {
@@ -278,7 +423,45 @@ export class KrnMenubar {
     }
   `,
   styles: `
-    :host{display:contents}.context-panel{position:fixed;z-index:var(--krn-z-dropdown);display:grid;min-inline-size:12rem;padding:var(--krn-space-1);border:var(--krn-border-width-1) solid var(--krn-color-border);border-radius:var(--krn-radius-md);box-shadow:var(--krn-shadow-overlay);background:var(--krn-color-surface-raised);color:var(--krn-color-text)}button{min-block-size:var(--krn-control-height-sm);padding-inline:var(--krn-space-3);border:0;border-radius:var(--krn-radius-sm);background:transparent;color:inherit;font:inherit;text-align:start;cursor:pointer}button:hover,button:focus{background:var(--krn-color-surface-subtle)}button:focus-visible{outline:var(--krn-focus-ring-width) solid var(--krn-color-focus);outline-offset:calc(var(--krn-focus-ring-offset) * -1)}button:disabled{color:var(--krn-color-text-disabled);cursor:not-allowed}
+    :host {
+      display: contents;
+    }
+    .context-panel {
+      position: fixed;
+      z-index: var(--krn-z-dropdown);
+      display: grid;
+      min-inline-size: 12rem;
+      gap: var(--krn-space-1);
+      padding: var(--krn-space-2);
+      border: var(--krn-border-width-1) solid var(--krn-color-border);
+      border-radius: var(--krn-radius-md);
+      color: var(--krn-color-text);
+      background: var(--krn-color-surface-raised);
+      box-shadow: var(--krn-shadow-overlay);
+    }
+    button {
+      min-block-size: var(--krn-control-height-sm);
+      padding-inline: var(--krn-space-3);
+      border: 0;
+      border-radius: var(--krn-radius-sm);
+      color: inherit;
+      background: transparent;
+      font: inherit;
+      text-align: start;
+      cursor: pointer;
+    }
+    button:hover {
+      background: color-mix(in oklch, var(--krn-color-surface-subtle) 72%, transparent);
+    }
+    button:focus-visible {
+      background: var(--krn-color-surface-subtle);
+      outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
+      outline-offset: calc(var(--krn-focus-ring-offset) * -1);
+    }
+    button:disabled {
+      color: var(--krn-color-text-disabled);
+      cursor: not-allowed;
+    }
   `,
 })
 export class KrnContextMenu {
@@ -298,9 +481,18 @@ export class KrnContextMenu {
     const view = this.document.defaultView;
     this.previousFocus =
       this.document.activeElement instanceof HTMLElement ? this.document.activeElement : null;
-    this.x.set(Math.min(event.clientX, Math.max(0, (view?.innerWidth ?? event.clientX + 240) - 240)));
-    this.y.set(Math.min(event.clientY, Math.max(0, (view?.innerHeight ?? event.clientY + 240) - 240)));
-    this.activeIndex.set(Math.max(0, this.items().findIndex((item) => !item.disabled)));
+    this.x.set(
+      Math.min(event.clientX, Math.max(0, (view?.innerWidth ?? event.clientX + 240) - 240)),
+    );
+    this.y.set(
+      Math.min(event.clientY, Math.max(0, (view?.innerHeight ?? event.clientY + 240) - 240)),
+    );
+    this.activeIndex.set(
+      Math.max(
+        0,
+        this.items().findIndex((item) => !item.disabled),
+      ),
+    );
     this.open.set(true);
     setTimeout(() => this.elements()[this.activeIndex()]?.nativeElement.focus());
   }
@@ -323,7 +515,8 @@ export class KrnContextMenu {
     event.preventDefault();
     const items = this.items();
     let next = (this.activeIndex() + delta + items.length) % items.length;
-    while (items[next]?.disabled && next !== this.activeIndex()) next = (next + delta + items.length) % items.length;
+    while (items[next]?.disabled && next !== this.activeIndex())
+      next = (next + delta + items.length) % items.length;
     this.activeIndex.set(next);
     this.elements()[next]?.nativeElement.focus();
   }

@@ -51,6 +51,7 @@ export class App {
     ),
     { initialValue: this.router.url },
   );
+  protected readonly currentPath = computed(() => this.currentUrl().split(/[?#]/, 1)[0] || '/');
   private readonly expandedCategories = signal<ReadonlySet<KernCategory>>(
     new Set<KernCategory>(['Actions']),
   );

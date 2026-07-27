@@ -1,12 +1,8 @@
-import { existsSync } from 'node:fs';
-
 import { defineConfig, devices } from '@playwright/test';
 
 const docsUrl = 'http://localhost:4200';
 const labUrl = 'http://localhost:4201';
-const installedChrome =
-  process.env['PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH'] ??
-  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const configuredChrome = process.env['PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH'];
 
 export default defineConfig({
   testDir: './tests',
@@ -27,10 +23,7 @@ export default defineConfig({
       threshold: 0.18,
     },
   },
-  reporter: [
-    ['list'],
-    ['html', { open: 'never', outputFolder: './tests/.artifacts/html-report' }],
-  ],
+  reporter: [['list'], ['html', { open: 'never', outputFolder: './tests/.artifacts/html-report' }]],
   use: {
     ...devices['Desktop Chrome'],
     baseURL: docsUrl,
@@ -41,9 +34,9 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    launchOptions: existsSync(installedChrome)
+    launchOptions: configuredChrome
       ? {
-          executablePath: installedChrome,
+          executablePath: configuredChrome,
         }
       : undefined,
   },

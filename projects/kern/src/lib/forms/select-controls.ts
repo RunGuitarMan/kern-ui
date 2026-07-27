@@ -16,9 +16,15 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import type { KrnAutocompleteMode, KrnSelectOption } from './form-types';
 import { KrnValueAccessor, useKrnControlA11y } from './value-accessor';
 
+const optionalBooleanAttribute = (value: unknown): boolean | undefined =>
+  value === undefined || value === null ? undefined : booleanAttribute(value);
+
 @Component({
   selector: 'krn-native-select',
-  host: { class: 'krn-select-host' },
+  host: {
+    class: 'krn-select-host',
+    '[attr.id]': 'null',
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -104,7 +110,10 @@ export class KrnNativeSelect extends KrnValueAccessor<string | null> {
 
 @Component({
   selector: 'krn-select',
-  host: { class: 'krn-select-host' },
+  host: {
+    class: 'krn-select-host',
+    '[attr.id]': 'null',
+  },
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option],
   providers: [
     {
@@ -258,7 +267,10 @@ export class KrnSelect extends KrnValueAccessor<string | null> {
 
 @Component({
   selector: 'krn-multi-select',
-  host: { class: 'krn-select-host krn-multi-select-host' },
+  host: {
+    class: 'krn-select-host krn-multi-select-host',
+    '[attr.id]': 'null',
+  },
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option],
   providers: [
     {
@@ -425,13 +437,28 @@ const COMBOBOX_IMPORTS = [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Opti
 
 @Directive()
 abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
+  protected readonly defaultAutocompleteMode: KrnAutocompleteMode = 'list';
+  protected readonly defaultAllowCustomValue: boolean = false;
+  protected readonly autocompleteModeInput = input<KrnAutocompleteMode | undefined>(undefined, {
+    alias: 'autocompleteMode',
+  });
+  protected readonly allowCustomValueInput = input<boolean | undefined, unknown>(undefined, {
+    alias: 'allowCustomValue',
+    transform: optionalBooleanAttribute,
+  });
+
   readonly id = input('');
   readonly placeholder = input('Start typing');
   readonly emptyText = input('No matches');
   readonly ariaLabel = input('');
+  readonly toggleLabel = input('Show options');
   readonly options = input.required<readonly KrnSelectOption<string>[]>();
-  readonly autocompleteMode = input<KrnAutocompleteMode>('list');
-  readonly allowCustomValue = input(false, { transform: booleanAttribute });
+  readonly autocompleteMode = computed(
+    () => this.autocompleteModeInput() ?? this.defaultAutocompleteMode,
+  );
+  readonly allowCustomValue = computed(
+    () => this.allowCustomValueInput() ?? this.defaultAllowCustomValue,
+  );
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false, {
     alias: 'readonly',
@@ -454,6 +481,17 @@ abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     return this.options().filter((option) =>
       `${option.label} ${option.description ?? ''}`.toLocaleLowerCase().includes(query),
     );
+  });
+  protected readonly inlineSuggestion = computed(() => {
+    const mode = this.autocompleteMode();
+    if (mode !== 'inline' && mode !== 'both') {
+      return undefined;
+    }
+
+    const query = this.query().trim().toLocaleLowerCase();
+    return this.options().find(
+      (option) => !option.disabled && option.label.toLocaleLowerCase().startsWith(query),
+    )?.label;
   });
   protected readonly selectedValues = computed(() => {
     const value = this.controlValue();
@@ -528,11 +566,23 @@ abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   protected setOpen(open: boolean): void {
     this.open.set(open && !this.isDisabled() && !this.readOnly());
   }
+
+  protected openOptions(): void {
+    this.setOpen(true);
+  }
+
+  protected toggleOptions(input: HTMLInputElement): void {
+    this.setOpen(!this.open());
+    input.focus();
+  }
 }
 
 @Component({
   selector: 'krn-combobox',
-  host: { class: 'krn-select-host' },
+  host: {
+    class: 'krn-select-host',
+    '[attr.id]': 'null',
+  },
   imports: COMBOBOX_IMPORTS,
   providers: [
     {
@@ -553,7 +603,10 @@ export class KrnCombobox extends KrnEditableComboboxBase {
 
 @Component({
   selector: 'krn-autocomplete',
-  host: { class: 'krn-select-host' },
+  host: {
+    class: 'krn-select-host',
+    '[attr.id]': 'null',
+  },
   imports: COMBOBOX_IMPORTS,
   providers: [
     {
@@ -567,6 +620,9 @@ export class KrnCombobox extends KrnEditableComboboxBase {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnAutocomplete extends KrnEditableComboboxBase {
+  protected override readonly defaultAutocompleteMode: KrnAutocompleteMode = 'both';
+  protected override readonly defaultAllowCustomValue = true;
+
   constructor() {
     super();
   }

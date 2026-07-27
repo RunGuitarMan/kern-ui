@@ -1,5 +1,4 @@
-import type {
-  ElementRef} from '@angular/core';
+import type { ElementRef } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,7 +14,11 @@ import type { KrnNavigationOrientation, KrnStepItem } from './navigation.types';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ol class="stepper" [class.vertical]="orientation() === 'vertical'" [attr.aria-label]="ariaLabel()">
+    <ol
+      class="stepper"
+      [class.vertical]="orientation() === 'vertical'"
+      [attr.aria-label]="ariaLabel()"
+    >
       @for (step of steps(); track step.id; let index = $index) {
         <li
           [class.active]="index === activeStep()"
@@ -27,7 +30,9 @@ import type { KrnNavigationOrientation, KrnStepItem } from './navigation.types';
             type="button"
             [disabled]="!canSelect(index)"
             [attr.aria-current]="index === activeStep() ? 'step' : null"
-            [attr.aria-describedby]="step.description || step.error ? step.id + '-description' : null"
+            [attr.aria-describedby]="
+              step.description || step.error ? step.id + '-description' : null
+            "
             (click)="select(index)"
             (keydown)="onKeydown($event, index)"
           >
@@ -38,7 +43,9 @@ import type { KrnNavigationOrientation, KrnStepItem } from './navigation.types';
                 <span class="optional">Optional</span>
               }
               @if (step.description || step.error) {
-                <span class="description" [id]="step.id + '-description'">{{ step.error || step.description }}</span>
+                <span class="description" [id]="step.id + '-description'">{{
+                  step.error || step.description
+                }}</span>
               }
             </span>
           </button>
@@ -50,7 +57,129 @@ import type { KrnNavigationOrientation, KrnStepItem } from './navigation.types';
     </section>
   `,
   styles: `
-    :host{display:block}.stepper{display:flex;margin:0;padding:0;list-style:none;counter-reset:step}.stepper li{position:relative;flex:1;min-inline-size:0}.stepper li:not(:last-child)::after{position:absolute;inset-block-start:calc(var(--krn-control-height-sm) / 2);inset-inline-start:calc(50% + var(--krn-space-4));inline-size:calc(100% - var(--krn-space-8));block-size:var(--krn-border-width-1);background:var(--krn-color-border);content:""}.stepper li.complete::after{background:var(--krn-color-primary)}button{position:relative;z-index:1;display:flex;align-items:flex-start;gap:var(--krn-space-2);inline-size:100%;padding:0 var(--krn-space-2);border:0;background:transparent;color:var(--krn-color-text-muted);font:inherit;text-align:start;cursor:pointer}.marker{display:grid;flex:0 0 var(--krn-control-height-sm);block-size:var(--krn-control-height-sm);border:var(--krn-border-width-1) solid var(--krn-color-border-interactive);border-radius:var(--krn-radius-full);place-items:center;background:var(--krn-color-surface);font-size:var(--krn-font-size-sm);font-variant-numeric:tabular-nums}.copy{display:grid;gap:var(--krn-space-0-5);min-inline-size:0;padding-block-start:var(--krn-space-1)}.label{color:var(--krn-color-text);font-weight:var(--krn-font-weight-semibold)}.optional,.description{color:var(--krn-color-text-subtle);font-size:var(--krn-font-size-xs)}.active .marker{border-color:var(--krn-color-primary);box-shadow:inset 0 0 0 var(--krn-border-width-1) var(--krn-color-primary)}.complete .marker{border-color:var(--krn-color-primary);background:var(--krn-color-primary);color:var(--krn-color-on-primary)}.invalid .marker{border-color:var(--krn-color-danger);color:var(--krn-color-danger)}button:focus-visible{outline:var(--krn-focus-ring-width) solid var(--krn-color-focus);outline-offset:var(--krn-focus-ring-offset);border-radius:var(--krn-radius-sm)}button:disabled{cursor:not-allowed;opacity:var(--krn-opacity-disabled)}.content{padding-block-start:var(--krn-space-6)}.vertical{flex-direction:column;gap:var(--krn-space-3)}.vertical li::after{inset-block-start:calc(var(--krn-control-height-sm) + var(--krn-space-1));inset-block-end:calc(var(--krn-space-1) * -1);inset-inline-start:calc(var(--krn-control-height-sm) / 2);inline-size:var(--krn-border-width-1);block-size:auto}.vertical button{padding-inline:0}
+    :host {
+      display: block;
+    }
+    .stepper {
+      display: flex;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: step;
+    }
+    .stepper li {
+      position: relative;
+      min-inline-size: 0;
+      flex: 1;
+    }
+    .stepper:not(.vertical) li:not(:last-child)::after {
+      position: absolute;
+      z-index: 0;
+      inset-block-start: calc(var(--krn-control-height-sm) / 2);
+      inset-inline-start: calc(50% + var(--krn-control-height-sm) / 2 + var(--krn-space-2));
+      inline-size: calc(100% - var(--krn-control-height-sm) - var(--krn-space-4));
+      block-size: var(--krn-border-width-1);
+      background: var(--krn-color-border);
+      content: '';
+    }
+    .stepper li.complete::after {
+      background: var(--krn-color-primary);
+    }
+    button {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      inline-size: 100%;
+      justify-items: center;
+      gap: var(--krn-space-2);
+      padding: 0 var(--krn-space-2);
+      border: 0;
+      color: var(--krn-color-text-muted);
+      background: transparent;
+      font: inherit;
+      text-align: center;
+      cursor: pointer;
+    }
+    .marker {
+      display: grid;
+      inline-size: var(--krn-control-height-sm);
+      block-size: var(--krn-control-height-sm);
+      border: var(--krn-border-width-1) solid var(--krn-color-border-interactive);
+      border-radius: var(--krn-radius-full);
+      place-items: center;
+      background: var(--krn-color-surface);
+      font-size: var(--krn-font-size-sm);
+      font-variant-numeric: tabular-nums;
+    }
+    .copy {
+      display: grid;
+      min-inline-size: 0;
+      justify-items: center;
+      gap: var(--krn-space-0-5);
+    }
+    .label {
+      color: var(--krn-color-text);
+      font-weight: var(--krn-font-weight-semibold);
+      text-wrap: balance;
+    }
+    .optional,
+    .description {
+      color: var(--krn-color-text-subtle);
+      font-size: var(--krn-font-size-xs);
+      text-wrap: pretty;
+    }
+    .active .marker {
+      border-color: var(--krn-color-primary);
+      box-shadow: inset 0 0 0 var(--krn-border-width-1) var(--krn-color-primary);
+    }
+    .complete .marker {
+      border-color: var(--krn-color-primary);
+      color: var(--krn-color-on-primary);
+      background: var(--krn-color-primary);
+    }
+    .invalid .marker {
+      border-color: var(--krn-color-danger);
+      color: var(--krn-color-danger);
+    }
+    button:focus-visible {
+      border-radius: var(--krn-radius-sm);
+      outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
+      outline-offset: var(--krn-focus-ring-offset);
+    }
+    button:disabled {
+      opacity: var(--krn-opacity-disabled);
+      cursor: not-allowed;
+    }
+    .content {
+      padding-block-start: var(--krn-space-6);
+    }
+    .vertical {
+      flex-direction: column;
+      gap: var(--krn-space-3);
+    }
+    .vertical li:not(:last-child)::after {
+      position: absolute;
+      inset-block-start: calc(var(--krn-control-height-sm) + var(--krn-space-1));
+      inset-block-end: calc(var(--krn-space-1) * -1);
+      inset-inline-start: calc(var(--krn-control-height-sm) / 2);
+      inline-size: var(--krn-border-width-1);
+      background: var(--krn-color-border);
+      content: '';
+    }
+    .vertical li.complete::after {
+      background: var(--krn-color-primary);
+    }
+    .vertical button {
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: start;
+      justify-items: start;
+      text-align: start;
+      padding-inline: 0;
+    }
+    .vertical .copy {
+      justify-items: start;
+      padding-block-start: var(--krn-space-1);
+    }
   `,
 })
 export class KrnStepper {
@@ -71,7 +200,10 @@ export class KrnStepper {
     const step = this.steps()[index];
     if (!step || step.disabled) return false;
     if (!this.linear()) return true;
-    const furthestComplete = this.completedSteps().reduce((maximum, value) => Math.max(maximum, value), -1);
+    const furthestComplete = this.completedSteps().reduce(
+      (maximum, value) => Math.max(maximum, value),
+      -1,
+    );
     return index <= Math.max(this.activeStep(), furthestComplete + 1);
   }
 

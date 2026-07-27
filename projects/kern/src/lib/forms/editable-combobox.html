@@ -6,12 +6,12 @@
     [attr.data-readonly]="readOnly()"
   >
     <input
+      #comboInput
       #combo="ngCombobox"
       ngCombobox
       class="krn-input"
       type="text"
       role="combobox"
-      [attr.aria-autocomplete]="autocompleteMode()"
       [attr.aria-describedby]="a11y.describedBy()"
       [attr.aria-invalid]="a11y.invalid()"
       [attr.aria-label]="ariaLabel() || null"
@@ -22,17 +22,27 @@
       [disabled]="isDisabled()"
       [expanded]="open()"
       [id]="a11y.id()"
+      [inlineSuggestion]="inlineSuggestion()"
       [placeholder]="placeholder()"
       [readOnly]="readOnly()"
       [required]="required()"
       [value]="query()"
       (expandedChange)="setOpen($event)"
+      (click)="openOptions()"
       (valueChange)="updateQuery($event)"
       (keydown.enter)="commitQuery()"
     />
-    <span class="krn-control-affix" aria-hidden="true">
+    <button
+      class="krn-combobox-toggle"
+      type="button"
+      [attr.aria-expanded]="open()"
+      [attr.aria-label]="toggleLabel()"
+      [disabled]="isDisabled()"
+      (click)="toggleOptions(comboInput)"
+      (pointerdown)="$event.preventDefault()"
+    >
       <span class="krn-select-chevron"></span>
-    </span>
+    </button>
   </span>
 
   <ng-template ngComboboxPopup popupType="listbox" [combobox]="combo">

@@ -219,7 +219,10 @@ const connectPickerPopover = (
 
 @Component({
   selector: 'krn-date-picker',
-  host: { class: 'krn-picker-host' },
+  host: {
+    class: 'krn-picker-host',
+    '[attr.id]': 'null',
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -442,7 +445,10 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
 
 @Component({
   selector: 'krn-date-range-picker',
-  host: { class: 'krn-picker-host' },
+  host: {
+    class: 'krn-picker-host',
+    '[attr.id]': 'null',
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -720,7 +726,10 @@ export class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
 
 @Component({
   selector: 'krn-time-picker',
-  host: { class: 'krn-picker-host' },
+  host: {
+    class: 'krn-picker-host',
+    '[attr.id]': 'null',
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -1002,7 +1011,10 @@ const hslToHex = (hue: number, saturation: number, lightness: number): string =>
 
 @Component({
   selector: 'krn-color-picker',
-  host: { class: 'krn-picker-host' },
+  host: {
+    class: 'krn-picker-host',
+    '[attr.id]': 'null',
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

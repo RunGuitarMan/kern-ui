@@ -33,6 +33,9 @@ const CHECKBOX_GROUP_PROVIDER: Provider = {
 
 @Component({
   selector: 'krn-checkbox-group',
+  host: {
+    '[attr.id]': 'null',
+  },
   providers: [
     CHECKBOX_GROUP_PROVIDER,
     {
@@ -53,7 +56,9 @@ const CHECKBOX_GROUP_PROVIDER: Provider = {
       @if (label()) {
         <legend class="krn-label">{{ label() }}</legend>
       }
-      <ng-content />
+      <div class="krn-choice-group__options">
+        <ng-content />
+      </div>
     </fieldset>
   `,
   styleUrl: './forms.css',
@@ -111,6 +116,9 @@ export class KrnCheckboxGroup
 
 @Component({
   selector: 'krn-checkbox',
+  host: {
+    '[attr.id]': 'null',
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -232,6 +240,9 @@ const RADIO_GROUP_PROVIDER: Provider = {
 
 @Component({
   selector: 'krn-radio-group',
+  host: {
+    '[attr.id]': 'null',
+  },
   providers: [
     RADIO_GROUP_PROVIDER,
     {
@@ -254,7 +265,9 @@ const RADIO_GROUP_PROVIDER: Provider = {
       @if (label()) {
         <legend class="krn-label">{{ label() }}</legend>
       }
-      <ng-content />
+      <div class="krn-choice-group__options">
+        <ng-content />
+      </div>
     </fieldset>
   `,
   styleUrl: './forms.css',
@@ -374,6 +387,9 @@ export class KrnRadio {
 
 @Component({
   selector: 'krn-switch',
+  host: {
+    '[attr.id]': 'null',
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -455,6 +471,9 @@ export class KrnSwitch extends KrnValueAccessor<boolean> {
 
 @Component({
   selector: 'krn-segmented-control',
+  host: {
+    '[attr.id]': 'null',
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

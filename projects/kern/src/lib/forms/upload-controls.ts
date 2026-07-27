@@ -1,6 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import type {
-  ElementRef} from '@angular/core';
+import type { ElementRef } from '@angular/core';
 import {
   booleanAttribute,
   ChangeDetectionStrategy,
@@ -164,6 +163,9 @@ abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
 
 @Component({
   selector: 'krn-file-upload',
+  host: {
+    '[attr.id]': 'null',
+  },
   imports: [NgTemplateOutlet],
   providers: [
     {
@@ -247,6 +249,9 @@ export class KrnFileUpload extends KrnUploadBase {
 
 @Component({
   selector: 'krn-drop-upload, krn-drag-drop-upload',
+  host: {
+    '[attr.id]': 'null',
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

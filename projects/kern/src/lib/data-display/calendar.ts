@@ -1,8 +1,12 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
+  Injector,
   booleanAttribute,
   computed,
+  inject,
   input,
   model,
   output,
@@ -41,6 +45,16 @@ function addMonths(value: string, amount: number): string {
   return date.toISOString().slice(0, 7);
 }
 
+function addDateMonths(value: string, amount: number): string {
+  const source = parseIsoDate(value);
+  const targetMonth = new Date(Date.UTC(source.getUTCFullYear(), source.getUTCMonth() + amount, 1));
+  const lastTargetDay = new Date(
+    Date.UTC(targetMonth.getUTCFullYear(), targetMonth.getUTCMonth() + 1, 0),
+  ).getUTCDate();
+  targetMonth.setUTCDate(Math.min(source.getUTCDate(), lastTargetDay));
+  return isoDate(targetMonth);
+}
+
 @Component({
   selector: 'krn-calendar',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -73,7 +87,7 @@ function addMonths(value: string, amount: number): string {
             [attr.data-today]="day.today ? '' : null"
             [attr.aria-current]="day.today ? 'date' : null"
             [attr.aria-selected]="day.iso === value()"
-            [attr.tabindex]="day.iso === focusedDate() ? 0 : -1"
+            [attr.tabindex]="day.iso === focusableDate() ? 0 : -1"
             [disabled]="day.disabled"
             [attr.aria-label]="dayLabel(day.iso)"
             (click)="select(day)"
@@ -86,17 +100,19 @@ function addMonths(value: string, amount: number): string {
       </div>
     </div>
     @if (showTodayAction()) {
-      <button type="button" class="today-action" [disabled]="!today()" (click)="selectToday()">Today</button>
+      <button type="button" class="today-action" [disabled]="!today()" (click)="selectToday()">
+        Today
+      </button>
     }
   `,
   styles: `
     :host {
       display: grid;
       inline-size: min(100%, 20rem);
-      gap: var(--krn-space-3, 0.75rem);
-      padding: var(--krn-space-3, 0.75rem);
+      gap: var(--krn-space-2, 0.5rem);
+      padding: var(--krn-space-2, 0.5rem);
       border: 1px solid var(--krn-color-border-subtle, #e0e3e7);
-      border-radius: var(--krn-radius-surface, 0.75rem);
+      border-radius: var(--krn-radius-lg, 0.75rem);
       color: var(--krn-color-text, #252932);
       background: var(--krn-color-surface, #fff);
       font: var(--krn-font-body-sm, 500 0.8125rem/1.25rem sans-serif);
@@ -109,17 +125,17 @@ function addMonths(value: string, amount: number): string {
     }
     .header button,
     .today-action {
-      min-block-size: 2rem;
-      border: 1px solid var(--krn-color-border, #cdd1d7);
-      border-radius: var(--krn-radius-control, 0.375rem);
+      min-block-size: 2.25rem;
+      border: 1px solid transparent;
+      border-radius: var(--krn-radius-sm, 0.375rem);
       color: inherit;
-      background: var(--krn-color-surface, #fff);
+      background: transparent;
       font: inherit;
       cursor: pointer;
     }
     .header button:hover,
     .today-action:hover {
-      background: var(--krn-color-surface-raised, #f2f3f5);
+      background: var(--krn-calendar-day-hover, var(--krn-color-surface-hover, #f2f3f5));
     }
     button:focus-visible {
       outline: var(--krn-focus-ring, 2px solid #4f6feb);
@@ -127,7 +143,7 @@ function addMonths(value: string, amount: number): string {
     }
     .calendar {
       display: grid;
-      gap: 0.25rem;
+      gap: var(--krn-space-1, 0.25rem);
     }
     .weekdays,
     .days {
@@ -147,19 +163,23 @@ function addMonths(value: string, amount: number): string {
       position: relative;
       display: grid;
       aspect-ratio: 1;
+      min-block-size: 2.25rem;
       min-inline-size: 0;
       place-items: center;
       padding: 0;
       border: 0;
-      border-radius: var(--krn-radius-control, 0.375rem);
+      border-radius: var(--krn-radius-sm, 0.375rem);
       color: inherit;
       background: transparent;
       font: inherit;
       font-variant-numeric: tabular-nums;
       cursor: pointer;
+      transition:
+        color var(--krn-motion-fast, 90ms) var(--krn-ease-standard, ease),
+        background-color var(--krn-motion-fast, 90ms) var(--krn-ease-standard, ease);
     }
-    .days button:hover {
-      background: var(--krn-color-surface-raised, #f2f3f5);
+    .days button:hover:not(:disabled) {
+      background: var(--krn-calendar-day-hover, var(--krn-color-surface-hover, #f2f3f5));
     }
     .days button[data-outside] {
       color: var(--krn-color-text-subtle, #8b929c);
@@ -173,8 +193,8 @@ function addMonths(value: string, amount: number): string {
       content: '';
     }
     .days button[aria-selected='true'] {
-      color: var(--krn-color-on-brand, #fff);
-      background: var(--krn-color-brand-solid, #4f6feb);
+      color: var(--krn-calendar-selected-text, var(--krn-color-on-brand, #fff));
+      background: var(--krn-calendar-selected-surface, var(--krn-color-brand-solid, #4f6feb));
       font-weight: 650;
     }
     .days button:disabled {
@@ -185,11 +205,15 @@ function addMonths(value: string, amount: number): string {
     .today-action {
       inline-size: max-content;
       padding-inline: 0.75rem;
+      border-color: var(--krn-color-border, #cdd1d7);
       justify-self: end;
     }
   `,
 })
 export class KrnCalendar {
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly injector = inject(Injector);
+
   readonly value = model('');
   readonly activeMonth = model('');
   readonly min = input('');
@@ -210,13 +234,18 @@ export class KrnCalendar {
   });
   readonly monthLabel = computed(() => {
     const [year = 2000, month = 1] = this.visibleMonth().split('-').map(Number);
-    return new Intl.DateTimeFormat(this.locale(), { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(
-      new Date(Date.UTC(year, month - 1, 1)),
-    );
+    return new Intl.DateTimeFormat(this.locale(), {
+      month: 'long',
+      year: 'numeric',
+      timeZone: 'UTC',
+    }).format(new Date(Date.UTC(year, month - 1, 1)));
   });
   readonly weekdays = computed(() => {
     const formatter = new Intl.DateTimeFormat(this.locale(), { weekday: 'long', timeZone: 'UTC' });
-    const shortFormatter = new Intl.DateTimeFormat(this.locale(), { weekday: 'narrow', timeZone: 'UTC' });
+    const shortFormatter = new Intl.DateTimeFormat(this.locale(), {
+      weekday: 'narrow',
+      timeZone: 'UTC',
+    });
     const sunday = new Date(Date.UTC(2024, 0, 7));
     return Array.from({ length: 7 }, (_, index) => {
       const offset = (index + this.weekStartsOn()) % 7;
@@ -244,6 +273,16 @@ export class KrnCalendar {
         today: iso === this.today(),
       };
     });
+  });
+  readonly focusableDate = computed(() => {
+    const enabledDays = this.days().filter((day) => !day.disabled);
+    const requested = this.focusedDate();
+    if (enabledDays.some((day) => day.iso === requested)) return requested;
+    const selected = this.value();
+    if (enabledDays.some((day) => day.iso === selected)) return selected;
+    const today = this.today();
+    if (enabledDays.some((day) => day.iso === today)) return today;
+    return enabledDays.find((day) => day.inMonth)?.iso ?? enabledDays.at(0)?.iso ?? '';
   });
 
   moveMonth(amount: number): void {
@@ -288,14 +327,16 @@ export class KrnCalendar {
     else if (event.key === 'ArrowLeft') next = addDays(value, -1);
     else if (event.key === 'ArrowDown') next = addDays(value, 7);
     else if (event.key === 'ArrowUp') next = addDays(value, -7);
-    else if (event.key === 'Home') next = addDays(value, -((parseIsoDate(value).getUTCDay() - this.weekStartsOn() + 7) % 7));
-    else if (event.key === 'End') next = addDays(value, 6 - ((parseIsoDate(value).getUTCDay() - this.weekStartsOn() + 7) % 7));
+    else if (event.key === 'Home')
+      next = addDays(value, -((parseIsoDate(value).getUTCDay() - this.weekStartsOn() + 7) % 7));
+    else if (event.key === 'End')
+      next = addDays(value, 6 - ((parseIsoDate(value).getUTCDay() - this.weekStartsOn() + 7) % 7));
     else if (event.key === 'PageUp') {
-      this.moveMonth(-1);
-      next = `${this.visibleMonth()}-${value.slice(8, 10)}`;
+      next = addDateMonths(value, event.shiftKey ? -12 : -1);
+      this.activeMonth.set(next.slice(0, 7));
     } else if (event.key === 'PageDown') {
-      this.moveMonth(1);
-      next = `${this.visibleMonth()}-${value.slice(8, 10)}`;
+      next = addDateMonths(value, event.shiftKey ? 12 : 1);
+      this.activeMonth.set(next.slice(0, 7));
     } else if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       const day = this.days().find((candidate) => candidate.iso === value);
@@ -308,19 +349,20 @@ export class KrnCalendar {
     if (this.isDisabled(next)) return;
     this.focusedDate.set(next);
     if (next.slice(0, 7) !== this.visibleMonth()) this.activeMonth.set(next.slice(0, 7));
-    queueMicrotask(() => {
-      const button = (event.currentTarget as HTMLElement)
-        .closest('[role="grid"]')
-        ?.querySelector<HTMLElement>(`[data-date="${next}"]`);
-      button?.focus();
-    });
+    afterNextRender(
+      () => {
+        const button = this.host.nativeElement.querySelector<HTMLElement>(`[data-date="${next}"]`);
+        button?.focus();
+      },
+      { injector: this.injector },
+    );
   }
 
   private isDisabled(value: string): boolean {
     return Boolean(
       (this.min() && value < this.min()) ||
-        (this.max() && value > this.max()) ||
-        this.disabledDates().has(value),
+      (this.max() && value > this.max()) ||
+      this.disabledDates().has(value),
     );
   }
 }

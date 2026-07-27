@@ -1,5 +1,4 @@
-import type {
-  ElementRef} from '@angular/core';
+import type { ElementRef } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -18,7 +17,10 @@ import type { KrnTreeNavigationItem } from './navigation.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <nav [attr.aria-label]="ariaLabel()">
-      <ng-container [ngTemplateOutlet]="branch" [ngTemplateOutletContext]="{ $implicit: items(), root: true }" />
+      <ng-container
+        [ngTemplateOutlet]="branch"
+        [ngTemplateOutletContext]="{ $implicit: items(), root: true }"
+      />
     </nav>
     <ng-template #branch let-nodes let-root="root">
       <ul [attr.role]="root ? 'tree' : 'group'">
@@ -67,7 +69,10 @@ import type { KrnTreeNavigationItem } from './navigation.types';
               }
             </div>
             @if (node.children?.length && isExpanded(node.id)) {
-              <ng-container [ngTemplateOutlet]="branch" [ngTemplateOutletContext]="{ $implicit: node.children, root: false }" />
+              <ng-container
+                [ngTemplateOutlet]="branch"
+                [ngTemplateOutletContext]="{ $implicit: node.children, root: false }"
+              />
             }
           </li>
         }
@@ -75,7 +80,112 @@ import type { KrnTreeNavigationItem } from './navigation.types';
     </ng-template>
   `,
   styles: `
-    :host{display:block;min-inline-size:0}nav,ul{min-inline-size:0}ul{display:grid;gap:var(--krn-space-0-5);margin:0;padding:0;list-style:none}ul ul{position:relative;margin-block-start:var(--krn-space-1);padding-inline-start:var(--krn-space-5)}ul ul::before{position:absolute;inset-block:0;inset-inline-start:calc(var(--krn-space-3) - var(--krn-border-width-1));inline-size:var(--krn-border-width-1);background:var(--krn-color-border);content:""}.node-row{display:flex;align-items:center;min-inline-size:0;border-radius:var(--krn-radius-sm)}.node-row:hover,.node-row.selected{background:var(--krn-color-surface-subtle)}.node-row.selected{box-shadow:inset calc(var(--krn-border-width-1) * 2) 0 0 var(--krn-color-primary)}.toggle,.spacer{display:grid;flex:0 0 var(--krn-control-height-sm);block-size:var(--krn-control-height-sm);place-items:center}.toggle{border:0;border-radius:var(--krn-radius-xs);background:transparent;color:var(--krn-color-text-muted);font:inherit;cursor:pointer}.toggle:hover{color:var(--krn-color-text)}.node{display:flex;align-items:center;min-inline-size:0;min-block-size:var(--krn-control-height-sm);flex:1;padding-inline:var(--krn-space-1) var(--krn-space-3);border:0;background:transparent;color:var(--krn-color-text-muted);font:inherit;text-align:start;text-decoration:none;cursor:pointer}.selected .node{color:var(--krn-color-text);font-weight:var(--krn-font-weight-medium)}.node:focus-visible,.toggle:focus-visible{outline:var(--krn-focus-ring-width) solid var(--krn-color-focus);outline-offset:calc(var(--krn-focus-ring-offset) * -1)}.node:disabled{color:var(--krn-color-text-disabled);cursor:not-allowed}
+    :host {
+      display: block;
+      min-inline-size: 0;
+    }
+    nav,
+    ul {
+      min-inline-size: 0;
+    }
+    ul {
+      display: grid;
+      gap: var(--krn-space-0-5);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    ul ul {
+      position: relative;
+      margin-block-start: var(--krn-space-1);
+      padding-inline-start: var(--krn-space-5);
+    }
+    ul ul::before {
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: calc(var(--krn-space-3) - var(--krn-border-width-1));
+      inline-size: var(--krn-border-width-1);
+      background: var(--krn-color-border);
+      content: '';
+    }
+    .node-row {
+      position: relative;
+      display: flex;
+      inline-size: 100%;
+      min-inline-size: 0;
+      align-items: center;
+      overflow: clip;
+      border-radius: var(--krn-radius-sm);
+    }
+    .node-row::before {
+      position: absolute;
+      inset-block: var(--krn-space-1);
+      inset-inline-start: 0;
+      inline-size: calc(var(--krn-border-width-1) * 2);
+      border-radius: var(--krn-radius-full);
+      background: var(--krn-color-border-strong);
+      content: '';
+      opacity: 0;
+    }
+    .node-row:hover {
+      background: color-mix(in oklch, var(--krn-color-surface-subtle) 72%, transparent);
+    }
+    .node-row:hover::before {
+      opacity: 0.72;
+    }
+    .node-row.selected {
+      background: var(--krn-color-surface-subtle);
+    }
+    .node-row.selected::before {
+      background: var(--krn-color-primary);
+      opacity: 1;
+    }
+    .toggle,
+    .spacer {
+      display: grid;
+      flex: 0 0 var(--krn-control-height-sm);
+      block-size: var(--krn-control-height-sm);
+      place-items: center;
+    }
+    .toggle {
+      border: 0;
+      border-radius: var(--krn-radius-xs);
+      color: var(--krn-color-text-muted);
+      background: transparent;
+      font: inherit;
+      cursor: pointer;
+    }
+    .toggle:hover {
+      color: var(--krn-color-text);
+    }
+    .node {
+      display: flex;
+      min-inline-size: 0;
+      min-block-size: var(--krn-control-height-sm);
+      flex: 1;
+      align-items: center;
+      padding-inline: var(--krn-space-1) var(--krn-space-3);
+      border: 0;
+      color: var(--krn-color-text-muted);
+      background: transparent;
+      font: inherit;
+      text-align: start;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .selected .node {
+      color: var(--krn-color-text);
+      font-weight: var(--krn-font-weight-medium);
+    }
+    .node:focus-visible,
+    .toggle:focus-visible {
+      outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
+      outline-offset: calc(var(--krn-focus-ring-offset) * -1);
+    }
+    .node:disabled {
+      color: var(--krn-color-text-disabled);
+      cursor: not-allowed;
+    }
   `,
 })
 export class KrnTreeNavigation {

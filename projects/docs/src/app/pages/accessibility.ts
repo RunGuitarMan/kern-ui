@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { KERN_COVERAGE } from '@kern-ui/showcase';
 import { KrnAlert, KrnBadge, KrnCodeBlock, KrnPageHeader } from '@kern-ui/angular';
 
 @Component({
   selector: 'kdocs-accessibility-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [KrnAlert, KrnBadge, KrnCodeBlock, KrnPageHeader],
+  imports: [KrnAlert, KrnBadge, KrnCodeBlock, KrnPageHeader, RouterLink],
   template: `
     <article class="page">
       <krn-page-header
@@ -24,8 +25,8 @@ import { KrnAlert, KrnBadge, KrnCodeBlock, KrnPageHeader } from '@kern-ui/angula
           <h2>Accessible by structure, verified by behavior.</h2>
         </div>
         <krn-alert tone="info" title="Automation is not certification">
-          axe catches a valuable subset of issues. Kern also tests focus order, announcements, keyboard workflows,
-          content reflow, pointer targets, and real browser rendering.
+          axe catches a valuable subset of issues. Kern also tests focus order, announcements,
+          keyboard workflows, content reflow, pointer targets, and real browser rendering.
         </krn-alert>
       </section>
 
@@ -48,7 +49,10 @@ import { KrnAlert, KrnBadge, KrnCodeBlock, KrnPageHeader } from '@kern-ui/angula
         <header>
           <p>09.2 / VERIFICATION MATRIX</p>
           <h2>Every component, every difficult state.</h2>
-          <p>{{ coverage.components }} catalog entries share the same minimum visual and interaction matrix.</p>
+          <p>
+            {{ coverage.components }} catalog entries share the same minimum visual and interaction
+            matrix.
+          </p>
         </header>
         <div class="matrix" role="table" aria-label="Accessibility verification matrix">
           <div role="row" class="matrix-head">
@@ -76,7 +80,10 @@ import { KrnAlert, KrnBadge, KrnCodeBlock, KrnPageHeader } from '@kern-ui/angula
             <article>
               <h3>{{ widget.name }}</h3>
               @for (binding of widget.bindings; track binding.keys) {
-                <div><kbd>{{ binding.keys }}</kbd><span>{{ binding.action }}</span></div>
+                <div>
+                  <kbd>{{ binding.keys }}</kbd
+                  ><span>{{ binding.action }}</span>
+                </div>
               }
             </article>
           }
@@ -88,25 +95,25 @@ import { KrnAlert, KrnBadge, KrnCodeBlock, KrnPageHeader } from '@kern-ui/angula
           <p>09.4 / REFLOW + CONTRAST</p>
           <h2>No clipped meaning at 200%.</h2>
           <p>
-            Logical properties and container queries let content reflow without hiding overflow. High contrast is a
-            structural theme; forced colors map to system roles.
+            Logical properties and container queries let content reflow without hiding overflow.
+            High contrast is a structural theme; forced colors map to system roles.
           </p>
         </header>
         <div class="contrast-demo">
           <div>
             <span>Light</span>
             <strong>Text remains calm and legible.</strong>
-            <a href="#forced-colors">Visible link affordance</a>
+            <a [routerLink]="[]" fragment="forced-colors">Visible link affordance</a>
           </div>
           <div class="dark">
             <span>Dark</span>
             <strong>Carbon surfaces keep their hierarchy.</strong>
-            <a href="#forced-colors">Visible link affordance</a>
+            <a [routerLink]="[]" fragment="forced-colors">Visible link affordance</a>
           </div>
           <div class="contrast" id="forced-colors">
             <span>High contrast</span>
             <strong>Structure does not depend on shadow.</strong>
-            <a href="#forced-colors">Underlined link affordance</a>
+            <a [routerLink]="[]" fragment="forced-colors">Underlined link affordance</a>
           </div>
         </div>
       </section>
@@ -118,9 +125,7 @@ import { KrnAlert, KrnBadge, KrnCodeBlock, KrnPageHeader } from '@kern-ui/angula
         </header>
         <krn-code-block
           language="html"
-          [code]="
-            '<krn-form-field\\n  label=&quot;Workspace name&quot;\\n  hint=&quot;Visible to every member.&quot;\\n  error=&quot;Use 3–48 characters.&quot;\\n  required\\n>\\n  <krn-text-input autocomplete=&quot;organization&quot; />\\n</krn-form-field>'
-          "
+          [code]="'<krn-form-field\\n  label=&quot;Workspace name&quot;\\n  hint=&quot;Visible to every member.&quot;\\n  error=&quot;Use 3–48 characters.&quot;\\n  required\\n>\\n  <krn-text-input autocomplete=&quot;organization&quot; />\\n</krn-form-field>'"
         />
       </section>
     </article>
@@ -156,14 +161,26 @@ export class AccessibilityPage {
     },
   ] as const;
   protected readonly matrix = [
-    { dimension: 'Keyboard', automation: 'Playwright key sequences', human: 'Order and discoverability' },
+    {
+      dimension: 'Keyboard',
+      automation: 'Playwright key sequences',
+      human: 'Order and discoverability',
+    },
     { dimension: 'Accessible name', automation: 'axe + role queries', human: 'Clarity in context' },
     { dimension: 'Focus', automation: 'Focus assertions', human: 'Visibility and restoration' },
     { dimension: 'Contrast', automation: 'axe color checks', human: 'All themes and imagery' },
-    { dimension: 'Zoom / reflow', automation: '200% viewport suite', human: 'Reading order and clipping' },
+    {
+      dimension: 'Zoom / reflow',
+      automation: '200% viewport suite',
+      human: 'Reading order and clipping',
+    },
     { dimension: 'Motion', automation: 'Reduced-motion emulation', human: 'Causality and comfort' },
     { dimension: 'RTL', automation: 'Direction matrix', human: 'Meaningful icon mirroring' },
-    { dimension: 'Forced colors', automation: 'Media emulation where available', human: 'Windows HC pass' },
+    {
+      dimension: 'Forced colors',
+      automation: 'Media emulation where available',
+      human: 'Windows HC pass',
+    },
   ] as const;
   protected readonly keyboardContracts = [
     {

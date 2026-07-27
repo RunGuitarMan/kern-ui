@@ -31,7 +31,10 @@
                   <krn-sidebar ariaLabel="Workspace">
                     <strong krnSidebarHeader>Northstar</strong>
                     <nav class="demo-nav">
-                      <a href="#specimen">Overview</a><a href="#specimen">Automations</a>
+                      <a [routerLink]="['/components', item().id]" fragment="specimen">Overview</a
+                      ><a [routerLink]="['/components', item().id]" fragment="specimen"
+                        >Automations</a
+                      >
                     </nav>
                   </krn-sidebar>
                   <div class="shell-content">
@@ -52,7 +55,8 @@
                 <krn-header elevated>
                   <strong krnHeaderStart>KERN / OPS</strong>
                   <nav class="header-links">
-                    <a href="#specimen">Overview</a><a href="#specimen">Reports</a>
+                    <a [routerLink]="['/components', item().id]" fragment="specimen">Overview</a
+                    ><a [routerLink]="['/components', item().id]" fragment="specimen">Reports</a>
                   </nav>
                   <krn-avatar krnHeaderEnd name="Avery Cole" size="sm" status="online" />
                 </krn-header>
@@ -66,9 +70,16 @@
                 <krn-sidebar width="15rem" ariaLabel="Project navigation">
                   <strong krnSidebarHeader>NORTHSTAR</strong>
                   <nav class="demo-nav">
-                    <a href="#specimen" aria-current="page">Overview</a>
-                    <a href="#specimen">Automations <span>18</span></a>
-                    <a href="#specimen">Audit log</a>
+                    <a
+                      [routerLink]="['/components', item().id]"
+                      fragment="specimen"
+                      aria-current="page"
+                      >Overview</a
+                    >
+                    <a [routerLink]="['/components', item().id]" fragment="specimen"
+                      >Automations <span>18</span></a
+                    >
+                    <a [routerLink]="['/components', item().id]" fragment="specimen">Audit log</a>
                   </nav>
                   <small krnSidebarFooter>Workspace / 02</small>
                 </krn-sidebar>
@@ -346,20 +357,27 @@
             @case ('form-field') {
               <div class="form-surface">
                 <krn-form-field
-                  id="workspace-name"
                   label="Workspace name"
                   hint="Visible to every member."
-                  error="Use 3–48 characters."
+                  [error]="workspaceNameError()"
                   required
                 >
-                  <krn-text-input id="workspace-name" placeholder="Northstar" required />
+                  <krn-text-input
+                    placeholder="Northstar"
+                    [invalid]="!!workspaceNameError()"
+                    [maxLength]="48"
+                    [minLength]="3"
+                    required
+                    (valueChange)="workspaceName.set($event); workspaceNameTouched.set(true)"
+                  />
                 </krn-form-field>
               </div>
             }
             @case ('label') {
               <div class="form-surface message-demo">
-                <krn-label>Data region <span aria-hidden="true">*</span></krn-label
-                ><krn-native-select ariaLabel="Data region" [options]="selectOptions" />
+                <krn-label for="data-region"
+                  >Data region <span aria-hidden="true">*</span></krn-label
+                ><krn-select id="data-region" [options]="selectOptions" />
               </div>
             }
             @case ('hint') {
@@ -387,8 +405,13 @@
             }
             @case ('textarea') {
               <div class="form-surface">
-                <krn-form-field label="Change summary" hint="280 characters maximum."
-                  ><krn-textarea placeholder="Explain what changed and why…" [rows]="5" autoResize
+                <krn-form-field label="Change summary" hint="Describe the change for reviewers."
+                  ><krn-textarea
+                    placeholder="Explain what changed and why…"
+                    [maxLength]="280"
+                    [rows]="5"
+                    [showCount]="true"
+                    autoResize
                 /></krn-form-field>
               </div>
             }
@@ -489,21 +512,24 @@
             }
             @case ('combobox') {
               <div class="form-surface">
-                <krn-form-field label="Assignee"
+                <krn-form-field
+                  label="Workspace plan"
+                  hint="Filter the list, then choose one of the available plans."
                   ><krn-combobox
-                    ariaLabel="Assignee"
-                    placeholder="Search or add a person"
+                    ariaLabel="Workspace plan"
+                    placeholder="Filter plans…"
                     [options]="selectOptions"
-                    [allowCustomValue]="true"
                 /></krn-form-field>
               </div>
             }
             @case ('autocomplete') {
               <div class="form-surface">
-                <krn-form-field label="Timezone"
+                <krn-form-field
+                  label="Workspace alias"
+                  hint="Choose a suggestion or keep the custom text you entered."
                   ><krn-autocomplete
-                    ariaLabel="Timezone"
-                    placeholder="Start typing a city…"
+                    ariaLabel="Workspace alias"
+                    placeholder="Type a workspace alias…"
                     [options]="selectOptions"
                 /></krn-form-field>
               </div>
@@ -608,7 +634,7 @@
           @switch (item().id) {
             @case ('breadcrumbs') {
               <div class="navigation-surface">
-                <krn-breadcrumbs [items]="breadcrumbs" />
+                <krn-breadcrumbs [items]="breadcrumbs()" />
                 <div class="surface-copy">
                   <span>Current location</span><strong>Settings</strong>
                 </div>
@@ -636,8 +662,15 @@
             }
             @case ('pagination') {
               <div class="navigation-surface">
-                <p class="result-count">Showing <strong>21–40</strong> of 248 workspaces</p>
-                <krn-pagination [totalItems]="248" [pageSize]="20" [siblingCount]="1" />
+                <p class="result-count">
+                  Showing <strong>{{ paginationRange() }}</strong> of 248 workspaces
+                </p>
+                <krn-pagination
+                  [totalItems]="248"
+                  [pageSize]="20"
+                  [siblingCount]="1"
+                  [(page)]="paginationPage"
+                />
               </div>
             }
             @case ('stepper') {
@@ -1347,8 +1380,13 @@
                   ><krn-stat label="Active automations" value="18.7k" />
                 </div>
                 <krn-mobile-navigation ariaLabel="Mobile sections"
-                  ><a href="#specimen" aria-current="page">Overview</a
-                  ><a href="#specimen">Reports</a><button type="button">Create</button
+                  ><a
+                    [routerLink]="['/components', item().id]"
+                    fragment="specimen"
+                    aria-current="page"
+                    >Overview</a
+                  ><a [routerLink]="['/components', item().id]" fragment="specimen">Reports</a
+                  ><button type="button">Create</button
                   ><button type="button">Account</button></krn-mobile-navigation
                 >
               </div>
@@ -1360,8 +1398,9 @@
                     <strong>NORTH / OPS</strong><krn-badge status tone="success">Live</krn-badge>
                   </div>
                   <nav krnAppNavigation class="responsive-shell-nav">
-                    <a href="#specimen">Overview</a><a href="#specimen">Automations</a
-                    ><a href="#specimen">Audit log</a>
+                    <a [routerLink]="['/components', item().id]" fragment="specimen">Overview</a
+                    ><a [routerLink]="['/components', item().id]" fragment="specimen">Automations</a
+                    ><a [routerLink]="['/components', item().id]" fragment="specimen">Audit log</a>
                   </nav>
                   <div class="responsive-shell-main">
                     <span>WORKSPACE / 0248</span>
@@ -1369,8 +1408,14 @@
                     <krn-stat label="Usage" value="84%" detail="Healthy" />
                   </div>
                   <krn-mobile-navigation krnAppMobileNavigation
-                    ><a href="#specimen" aria-current="page">Overview</a
-                    ><a href="#specimen">Reports</a></krn-mobile-navigation
+                    ><a
+                      [routerLink]="['/components', item().id]"
+                      fragment="specimen"
+                      aria-current="page"
+                      >Overview</a
+                    ><a [routerLink]="['/components', item().id]" fragment="specimen"
+                      >Reports</a
+                    ></krn-mobile-navigation
                   ></krn-responsive-application-shell
                 >
               </div>

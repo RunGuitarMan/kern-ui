@@ -23,4 +23,17 @@ describe('Kern showcase catalog', () => {
     expect(findKernComponent('bulk-actions')?.variantOf).toBe('crud-toolbar');
     expect(findKernComponent('tooltip')?.selector).toBe('[krnTooltip]');
   });
+
+  it('documents combobox selection separately from free-text autocomplete', () => {
+    const combobox = findKernComponent('combobox');
+    const autocomplete = findKernComponent('autocomplete');
+
+    expect(combobox?.summary).toContain('defined option set');
+    expect(combobox?.do).toContain('authoritative list');
+    expect(combobox?.dont).toContain('custom values');
+    expect(autocomplete?.summary).toContain('free text');
+    expect(autocomplete?.do).toContain('new value is still valid');
+    expect(autocomplete?.dont).toContain('constrained picker');
+    expect(combobox?.summary).not.toBe(autocomplete?.summary);
+  });
 });

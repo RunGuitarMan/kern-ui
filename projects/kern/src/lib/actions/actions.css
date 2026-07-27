@@ -191,6 +191,10 @@
 }
 
 .krn-action__label {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  gap: var(--krn-space-2, 0.5rem);
   min-inline-size: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -284,19 +288,16 @@
     0 3px 8px rgb(20 38 30 / 10%)
   );
   color: var(--krn-color-text, #17201c);
-  inset-block-start: calc(100% + var(--krn-space-2, 0.5rem));
-  inset-inline-end: 0;
   inline-size: max-content;
   max-inline-size: min(20rem, calc(100vw - var(--krn-space-8, 2rem)));
-  min-inline-size: max(12rem, 100%);
-  overflow: hidden;
+  max-block-size: min(24rem, calc(100dvh - var(--krn-space-8, 2rem)));
+  min-inline-size: 12rem;
+  overflow: auto;
   padding: var(--krn-space-1, 0.25rem);
-  position: absolute;
   transform-origin: top right;
-  z-index: var(--krn-z-popover, 700);
 }
 
-:host ::ng-deep .krn-action-menu [role='menuitem'] {
+::ng-deep .krn-action-menu [role='menuitem'] {
   align-items: center;
   appearance: none;
   background: transparent;
@@ -317,16 +318,16 @@
   white-space: nowrap;
 }
 
-:host ::ng-deep .krn-action-menu [role='menuitem']:is(:hover, :focus-visible) {
+::ng-deep .krn-action-menu [role='menuitem']:is(:hover, :focus-visible) {
   background: var(--krn-color-surface-hover, var(--krn-color-surface-raised));
   outline: 0;
 }
 
-:host ::ng-deep .krn-action-menu [role='menuitem']:focus-visible {
+::ng-deep .krn-action-menu [role='menuitem']:focus-visible {
   box-shadow: inset 0 0 0 2px var(--krn-color-focus);
 }
 
-:host ::ng-deep .krn-action-menu [role='menuitem']:disabled {
+::ng-deep .krn-action-menu [role='menuitem']:disabled {
   color: var(--krn-color-text-disabled);
   cursor: not-allowed;
 }

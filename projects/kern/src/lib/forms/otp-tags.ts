@@ -16,6 +16,9 @@ import { KrnValueAccessor, useKrnControlA11y } from './value-accessor';
 
 @Component({
   selector: 'krn-otp-input, krn-verification-code',
+  host: {
+    '[attr.id]': 'null',
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -29,6 +32,7 @@ import { KrnValueAccessor, useKrnControlA11y } from './value-accessor';
       [attr.aria-describedby]="a11y.describedBy()"
       [attr.aria-invalid]="a11y.invalid()"
       [disabled]="isDisabled()"
+      [id]="a11y.id()"
       (paste)="pasteCode($event)"
     >
       <legend class="krn-label">{{ label() }}</legend>
@@ -43,6 +47,7 @@ import { KrnValueAccessor, useKrnControlA11y } from './value-accessor';
           [disabled]="isDisabled()"
           [maxLength]="1"
           [value]="characterAt(index)"
+          (beforeinput)="blockInvalidInput($event)"
           (blur)="touch()"
           (focus)="selectInput($event)"
           (input)="inputCharacter(index, $event)"
@@ -56,6 +61,7 @@ import { KrnValueAccessor, useKrnControlA11y } from './value-accessor';
 })
 export class KrnOtpInput extends KrnValueAccessor<string> {
   readonly inputs = viewChildren<ElementRef<HTMLInputElement>>('otpInput');
+  private readonly slotValues = signal<readonly string[]>([]);
 
   readonly id = input('');
   readonly label = input('Verification code');
@@ -79,12 +85,20 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
     super('');
   }
 
+  override writeValue(value: unknown): void {
+    const normalized = this.normalizeIncomingValue(value);
+    this.slotValues.set(
+      Array.from({ length: this.safeLength() }, (_, index) => normalized.at(index) ?? ''),
+    );
+    super.writeValue(normalized);
+  }
+
   protected override normalizeIncomingValue(value: unknown): string {
     return this.sanitize(typeof value === 'string' ? value : '').slice(0, this.safeLength());
   }
 
   protected characterAt(index: number): string {
-    return this.controlValue().at(index) ?? '';
+    return this.slotValues().at(index) ?? '';
   }
 
   protected digitLabel(index: number): string {
@@ -93,15 +107,32 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
 
   protected inputCharacter(index: number, event: Event): void {
     const input = event.target as HTMLInputElement;
-    const characters = this.sanitize(input.value);
+    const raw = input.value;
+    const characters = this.sanitize(raw);
+    if (raw && !characters) {
+      input.value = this.characterAt(index);
+      return;
+    }
     if (characters.length > 1) {
       this.insertAt(index, characters);
       return;
     }
-    const value = this.replaceAt(index, characters);
-    this.emitValue(value);
+    const next = [...this.slotValues()];
+    next[index] = characters.at(-1) ?? '';
+    this.emitSlots(next);
     if (characters && index < this.safeLength() - 1) {
       this.focus(index + 1);
+    }
+  }
+
+  protected blockInvalidInput(event: InputEvent): void {
+    if (
+      this.numericOnly() &&
+      event.inputType.startsWith('insert') &&
+      event.data !== null &&
+      /\D/.test(event.data)
+    ) {
+      event.preventDefault();
     }
   }
 
@@ -113,7 +144,16 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
   }
 
   protected navigate(index: number, event: KeyboardEvent): void {
-    if (event.key === 'ArrowLeft') {
+    if (
+      this.numericOnly() &&
+      event.key.length === 1 &&
+      !event.altKey &&
+      !event.ctrlKey &&
+      !event.metaKey &&
+      !/^\d$/.test(event.key)
+    ) {
+      event.preventDefault();
+    } else if (event.key === 'ArrowLeft') {
       event.preventDefault();
       this.focus(Math.max(0, index - 1));
     } else if (event.key === 'ArrowRight') {
@@ -128,8 +168,16 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
     } else if (event.key === 'Backspace') {
       event.preventDefault();
       const targetIndex = this.characterAt(index) ? index : Math.max(0, index - 1);
-      this.emitValue(this.replaceAt(targetIndex, ''));
+      const next = [...this.slotValues()];
+      next[targetIndex] = '';
+      this.emitSlots(next);
       this.focus(targetIndex);
+    } else if (event.key === 'Delete') {
+      event.preventDefault();
+      const next = [...this.slotValues()];
+      next[index] = '';
+      this.emitSlots(next);
+      this.focus(index);
     }
   }
 
@@ -145,29 +193,38 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
 
   private insertAt(index: number, characters: string): void {
     const safe = this.sanitize(characters);
-    const before = this.controlValue().slice(0, index);
-    const after = this.controlValue().slice(index + safe.length);
-    const value = `${before}${safe}${after}`.slice(0, this.safeLength());
-    this.emitValue(value);
+    if (!safe) {
+      return;
+    }
+    const next = Array.from(
+      { length: this.safeLength() },
+      (_, slotIndex) => this.slotValues().at(slotIndex) ?? '',
+    );
+    for (const [offset, character] of [...safe].entries()) {
+      const targetIndex = index + offset;
+      if (targetIndex >= this.safeLength()) {
+        break;
+      }
+      next[targetIndex] = character;
+    }
+    this.emitSlots(next);
     this.focus(Math.min(this.safeLength() - 1, index + safe.length));
-  }
-
-  private replaceAt(index: number, character: string): string {
-    const padded = this.controlValue().padEnd(this.safeLength(), ' ');
-    const value = `${padded.slice(0, index)}${character || ' '}${padded.slice(index + 1)}`
-      .trimEnd()
-      .replaceAll(' ', '');
-    return value.slice(0, this.safeLength());
   }
 
   private sanitize(value: string): string {
     return this.numericOnly() ? value.replace(/\D/g, '') : value.replace(/\s/g, '');
   }
 
-  private emitValue(value: string): void {
+  private emitSlots(values: readonly string[]): void {
+    const slots = Array.from(
+      { length: this.safeLength() },
+      (_, index) => values.at(index)?.slice(0, 1) ?? '',
+    );
+    const value = slots.join('');
+    this.slotValues.set(slots);
     this.commitValue(value);
     this.valueChange.emit(value);
-    if (value.length === this.safeLength()) {
+    if (slots.every(Boolean)) {
       this.completed.emit(value);
     }
   }
@@ -179,6 +236,9 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
 
 @Component({
   selector: 'krn-tags-input',
+  host: {
+    '[attr.id]': 'null',
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

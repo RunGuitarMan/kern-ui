@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
+import { RouterLink } from '@angular/router';
 import type { KernCatalogItem } from '@kern-ui/showcase';
 import {
   KrnAccordion,
@@ -289,6 +298,7 @@ interface SpecimenRow extends Record<string, unknown> {
     KrnTreeNavigation,
     KrnUserMenu,
     KrnValidationMessage,
+    RouterLink,
   ],
   templateUrl: './component-specimen.html',
   styleUrl: './component-specimen.css',
@@ -303,6 +313,20 @@ export class ComponentSpecimen {
   protected readonly selectedCount = signal(3);
   protected readonly detailOpen = signal(false);
   protected readonly formStep = signal(0);
+  protected readonly workspaceName = signal('');
+  protected readonly workspaceNameTouched = signal(false);
+  protected readonly paginationPage = signal(1);
+  protected readonly paginationRange = computed(() => {
+    const start = (this.paginationPage() - 1) * 20 + 1;
+    return `${start}–${Math.min(248, start + 19)}`;
+  });
+  protected readonly workspaceNameError = computed(() => {
+    if (!this.workspaceNameTouched()) {
+      return '';
+    }
+    const length = this.workspaceName().trim().length;
+    return length >= 3 && length <= 48 ? '' : 'Use 3–48 characters.';
+  });
 
   protected readonly selectOptions: readonly KrnSelectOption<string>[] = [
     { value: 'starter', label: 'Starter' },
@@ -319,11 +343,14 @@ export class ComponentSpecimen {
     { id: 'activity', label: 'Activity', badge: 24 },
     { id: 'settings', label: 'Settings' },
   ];
-  protected readonly breadcrumbs = [
-    { label: 'Workspaces', href: '#specimen' },
-    { label: 'Northstar', href: '#specimen' },
-    { label: 'Settings', current: true },
-  ] as const;
+  protected readonly breadcrumbs = computed(() => {
+    const href = `/components/${this.item().id}#specimen`;
+    return [
+      { label: 'Workspaces', href },
+      { label: 'Northstar', href },
+      { label: 'Settings', current: true },
+    ] as const;
+  });
   protected readonly navigationItems: readonly KrnNavigationItem[] = [
     { id: 'overview', label: 'Overview', icon: '⌂' },
     { id: 'activity', label: 'Activity', icon: '↗', badge: 4 },
@@ -462,6 +489,9 @@ export class Toolbar {}`;
       this.settingsOpen.set(false);
       this.detailOpen.set(false);
       this.formStep.set(0);
+      this.workspaceName.set('');
+      this.workspaceNameTouched.set(false);
+      this.paginationPage.set(1);
     });
   }
 

@@ -7,7 +7,7 @@ import {
   model,
 } from '@angular/core';
 
-import type { KrnLayoutSpace} from './layout.types';
+import type { KrnLayoutSpace } from './layout.types';
 import { krnCssLength } from './layout.types';
 
 @Component({
@@ -172,6 +172,8 @@ export class KrnAppShell {
       display: block;
       inline-size: 100%;
       min-inline-size: 0;
+      border-start-start-radius: inherit;
+      border-start-end-radius: inherit;
     }
 
     :host([data-sticky]) {
@@ -187,7 +189,9 @@ export class KrnAppShell {
       align-items: center;
       gap: var(--krn-space-3);
       padding-inline: clamp(var(--krn-space-3), 2.5vi, var(--krn-space-6));
-      border-block-end: 1px solid var(--krn-color-border);
+      border-block-end: 1px solid var(--krn-color-border-subtle);
+      border-start-start-radius: inherit;
+      border-start-end-radius: inherit;
       background: var(--krn-color-surface);
       background: color-mix(in oklch, var(--krn-color-surface) 94%, transparent);
       color: var(--krn-color-text);
@@ -195,8 +199,10 @@ export class KrnAppShell {
     }
 
     :host([data-elevated]) .krn-header {
-      border-block-end-color: transparent;
-      box-shadow: var(--krn-shadow-sm);
+      border-block-end-color: color-mix(in oklch, var(--krn-color-border) 62%, transparent);
+      box-shadow:
+        0 1px 0 color-mix(in oklch, var(--krn-color-surface) 82%, transparent),
+        var(--krn-shadow-sm);
     }
 
     .krn-header__start,

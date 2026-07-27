@@ -12,13 +12,16 @@ import {
   input,
   model,
   output,
+  viewChild,
 } from '@angular/core';
+import { OverlayModule } from '@angular/cdk/overlay';
 import type { KrnActionVariant, KrnSize, KrnTone } from './action-types';
 
 @Directive()
 abstract class KrnMenuButtonBase {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly injector = inject(Injector);
+  private readonly menuPanel = viewChild<ElementRef<HTMLElement>>('menuPanel');
 
   readonly size = input<KrnSize>('md');
   readonly variant = input<KrnActionVariant>('solid');
@@ -28,9 +31,39 @@ abstract class KrnMenuButtonBase {
   readonly open = model(false);
 
   protected readonly isDisabled = computed(() => this.disabled() || this.loading());
+  protected readonly menuPositions = [
+    {
+      originX: 'end' as const,
+      originY: 'bottom' as const,
+      overlayX: 'end' as const,
+      overlayY: 'top' as const,
+      offsetY: 8,
+    },
+    {
+      originX: 'end' as const,
+      originY: 'top' as const,
+      overlayX: 'end' as const,
+      overlayY: 'bottom' as const,
+      offsetY: -8,
+    },
+    {
+      originX: 'start' as const,
+      originY: 'bottom' as const,
+      overlayX: 'start' as const,
+      overlayY: 'top' as const,
+      offsetY: 8,
+    },
+    {
+      originX: 'start' as const,
+      originY: 'top' as const,
+      overlayX: 'start' as const,
+      overlayY: 'bottom' as const,
+      offsetY: -8,
+    },
+  ];
 
   protected setOpen(open: boolean): void {
-    if (this.isDisabled()) {
+    if (open && this.isDisabled()) {
       return;
     }
     this.open.set(open);
@@ -70,6 +103,9 @@ abstract class KrnMenuButtonBase {
     }
 
     const items = this.menuItems();
+    if (items.length === 0) {
+      return;
+    }
     const current = items.indexOf(document.activeElement as HTMLElement);
     const target =
       event.key === 'Home'
@@ -91,7 +127,11 @@ abstract class KrnMenuButtonBase {
   protected closeOnFocusOut(event: FocusEvent): void {
     const next = event.relatedTarget;
     const current = event.currentTarget;
-    if (next instanceof Node && current instanceof Node && current.contains(next)) {
+    if (
+      next instanceof Node &&
+      ((current instanceof Node && current.contains(next)) ||
+        this.menuPanel()?.nativeElement.contains(next))
+    ) {
       return;
     }
     this.setOpen(false);
@@ -102,7 +142,8 @@ abstract class KrnMenuButtonBase {
     if (
       this.open() &&
       event.target instanceof Node &&
-      !this.host.nativeElement.contains(event.target)
+      !this.host.nativeElement.contains(event.target) &&
+      !this.menuPanel()?.nativeElement.contains(event.target)
     ) {
       this.setOpen(false);
     }
@@ -110,9 +151,9 @@ abstract class KrnMenuButtonBase {
 
   private menuItems(): HTMLElement[] {
     return Array.from(
-      this.host.nativeElement.querySelectorAll<HTMLElement>(
-        '.krn-action-menu [role="menuitem"]:not([disabled])',
-      ),
+      this.menuPanel()?.nativeElement.querySelectorAll<HTMLElement>(
+        '[role="menuitem"]:not([disabled])',
+      ) ?? [],
     );
   }
 
@@ -141,8 +182,14 @@ abstract class KrnMenuButtonBase {
 
 @Component({
   selector: 'krn-dropdown-button',
+  imports: [OverlayModule],
   template: `
-    <span class="krn-dropdown" (focusout)="closeOnFocusOut($event)">
+    <span
+      #origin="cdkOverlayOrigin"
+      cdkOverlayOrigin
+      class="krn-dropdown"
+      (focusout)="closeOnFocusOut($event)"
+    >
       <button
         class="krn-action"
         type="button"
@@ -159,17 +206,35 @@ abstract class KrnMenuButtonBase {
         <span class="krn-action__label"><ng-content select="[krnLabel]" /></span>
         <span class="krn-chevron" aria-hidden="true"></span>
       </button>
+    </span>
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="origin"
+      [cdkConnectedOverlayOpen]="open()"
+      [cdkConnectedOverlayPositions]="menuPositions"
+      [cdkConnectedOverlayPush]="true"
+      [cdkConnectedOverlayFlexibleDimensions]="true"
+      [cdkConnectedOverlayViewportMargin]="8"
+      cdkConnectedOverlayUsePopover="inline"
+      cdkConnectedOverlayTransformOriginOn=".krn-action-menu"
+      [cdkConnectedOverlayHasBackdrop]="true"
+      cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+      (backdropClick)="setOpen(false)"
+      (detach)="setOpen(false)"
+    >
       @if (open()) {
         <div
+          #menuPanel
           class="krn-action-menu"
           role="menu"
           (click)="closeFromMenu($event)"
+          (focusout)="closeOnFocusOut($event)"
           (keydown)="onMenuKeydown($event)"
         >
           <ng-content select="[krnMenu]" />
         </div>
       }
-    </span>
+    </ng-template>
   `,
   styleUrl: './actions.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -178,8 +243,14 @@ export class KrnDropdownButton extends KrnMenuButtonBase {}
 
 @Component({
   selector: 'krn-split-button',
+  imports: [OverlayModule],
   template: `
-    <span class="krn-split" (focusout)="closeOnFocusOut($event)">
+    <span
+      #origin="cdkOverlayOrigin"
+      cdkOverlayOrigin
+      class="krn-split"
+      (focusout)="closeOnFocusOut($event)"
+    >
       <button
         class="krn-action"
         type="button"
@@ -207,17 +278,35 @@ export class KrnDropdownButton extends KrnMenuButtonBase {}
       >
         <span class="krn-chevron" aria-hidden="true"></span>
       </button>
+    </span>
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="origin"
+      [cdkConnectedOverlayOpen]="open()"
+      [cdkConnectedOverlayPositions]="menuPositions"
+      [cdkConnectedOverlayPush]="true"
+      [cdkConnectedOverlayFlexibleDimensions]="true"
+      [cdkConnectedOverlayViewportMargin]="8"
+      cdkConnectedOverlayUsePopover="inline"
+      cdkConnectedOverlayTransformOriginOn=".krn-action-menu"
+      [cdkConnectedOverlayHasBackdrop]="true"
+      cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+      (backdropClick)="setOpen(false)"
+      (detach)="setOpen(false)"
+    >
       @if (open()) {
         <div
+          #menuPanel
           class="krn-action-menu"
           role="menu"
           (click)="closeFromMenu($event)"
+          (focusout)="closeOnFocusOut($event)"
           (keydown)="onMenuKeydown($event)"
         >
           <ng-content select="[krnMenu]" />
         </div>
       }
-    </span>
+    </ng-template>
   `,
   styleUrl: './actions.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

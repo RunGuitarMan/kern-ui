@@ -53,6 +53,15 @@
     --krn-color-info-strong: oklch(29% 0.095 251);
 
     --krn-color-surface-hover: var(--krn-color-surface-subtle);
+    --krn-calendar-day-hover: var(--krn-color-neutral-100);
+    --krn-calendar-range-surface: color-mix(
+      in oklch,
+      var(--krn-color-primary) 11%,
+      var(--krn-color-surface)
+    );
+    --krn-calendar-range-text: var(--krn-color-accent-strong);
+    --krn-calendar-selected-surface: var(--krn-color-primary);
+    --krn-calendar-selected-text: var(--krn-color-on-primary);
     --krn-shadow-color: 0 0 0;
     --krn-shadow-xs: 0 1px 2px oklch(var(--krn-shadow-color) / 4%);
     --krn-shadow-sm:
@@ -132,6 +141,19 @@
     --krn-chart-5: oklch(72% 0.12 315);
 
     --krn-color-surface-hover: var(--krn-color-surface-raised);
+    --krn-calendar-day-hover: color-mix(
+      in oklch,
+      var(--krn-color-text) 7%,
+      var(--krn-color-surface-raised)
+    );
+    --krn-calendar-range-surface: color-mix(
+      in oklch,
+      var(--krn-color-primary) 14%,
+      var(--krn-color-surface-raised)
+    );
+    --krn-calendar-range-text: var(--krn-color-brand-200);
+    --krn-calendar-selected-surface: var(--krn-color-primary);
+    --krn-calendar-selected-text: var(--krn-color-on-primary);
     --krn-shadow-color: 0 0 0;
     --krn-shadow-xs:
       0 1px 2px oklch(var(--krn-shadow-color) / 22%), inset 0 1px oklch(100% 0 0 / 3%);
@@ -207,12 +229,18 @@
     --krn-color-accent-strong: CanvasText;
     --krn-color-accent-border: CanvasText;
     --krn-color-on-accent: HighlightText;
+    --krn-calendar-day-hover: ButtonFace;
+    --krn-calendar-range-surface: Highlight;
+    --krn-calendar-range-text: HighlightText;
+    --krn-calendar-selected-surface: Highlight;
+    --krn-calendar-selected-text: HighlightText;
     --krn-shadow-xs: none;
     --krn-shadow-sm: none;
     --krn-shadow-md: none;
     --krn-shadow-lg: none;
     --krn-shadow-overlay: none;
     --krn-focus-ring-width: 3px;
+    --krn-form-focus-ring-width: var(--krn-focus-ring-width);
     --krn-focus-ring-offset: 2px;
     --krn-focus-ring-shadow:
       0 0 0 var(--krn-focus-ring-offset) Canvas,
@@ -277,6 +305,19 @@
       --krn-chart-4: oklch(79% 0.13 78);
       --krn-chart-5: oklch(72% 0.12 315);
       --krn-color-surface-hover: var(--krn-color-surface-raised);
+      --krn-calendar-day-hover: color-mix(
+        in oklch,
+        var(--krn-color-text) 7%,
+        var(--krn-color-surface-raised)
+      );
+      --krn-calendar-range-surface: color-mix(
+        in oklch,
+        var(--krn-color-primary) 14%,
+        var(--krn-color-surface-raised)
+      );
+      --krn-calendar-range-text: var(--krn-color-brand-200);
+      --krn-calendar-selected-surface: var(--krn-color-primary);
+      --krn-calendar-selected-text: var(--krn-color-on-primary);
       --krn-shadow-color: 0 0 0;
       --krn-shadow-xs:
         0 1px 2px oklch(var(--krn-shadow-color) / 22%), inset 0 1px oklch(100% 0 0 / 3%);
@@ -344,11 +385,17 @@
       --krn-color-accent-strong: CanvasText;
       --krn-color-accent-border: CanvasText;
       --krn-color-on-accent: HighlightText;
+      --krn-calendar-day-hover: ButtonFace;
+      --krn-calendar-range-surface: Highlight;
+      --krn-calendar-range-text: HighlightText;
+      --krn-calendar-selected-surface: Highlight;
+      --krn-calendar-selected-text: HighlightText;
       --krn-shadow-xs: none;
       --krn-shadow-sm: none;
       --krn-shadow-md: none;
       --krn-shadow-lg: none;
       --krn-shadow-overlay: none;
+      --krn-form-focus-ring-width: var(--krn-focus-ring-width);
     }
   }
 }

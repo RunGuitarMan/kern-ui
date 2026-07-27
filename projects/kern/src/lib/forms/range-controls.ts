@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   forwardRef,
   input,
   numberAttribute,
@@ -15,6 +16,9 @@ import { KrnValueAccessor, useKrnControlA11y } from './value-accessor';
 
 @Component({
   selector: 'krn-slider',
+  host: {
+    '[attr.id]': 'null',
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -85,6 +89,13 @@ export class KrnSlider extends KrnValueAccessor<number> {
 
   constructor() {
     super(0);
+    effect(() => {
+      const current = this.controlValue();
+      const normalized = this.clamp(current);
+      if (!Object.is(current, normalized)) {
+        this.controlValue.set(normalized);
+      }
+    });
   }
 
   protected override normalizeIncomingValue(value: unknown): number {
@@ -110,6 +121,9 @@ export class KrnSlider extends KrnValueAccessor<number> {
 
 @Component({
   selector: 'krn-range-slider',
+  host: {
+    '[attr.id]': 'null',
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -136,6 +150,7 @@ export class KrnSlider extends KrnValueAccessor<number> {
         class="krn-dual-range"
         [attr.data-active-thumb]="activeThumb()"
         [attr.data-disabled]="isDisabled()"
+        (pointerdown)="moveNearestThumb($event)"
       >
         <div class="krn-dual-range__track" aria-hidden="true">
           <span class="krn-dual-range__selection"></span>
@@ -147,7 +162,7 @@ export class KrnSlider extends KrnValueAccessor<number> {
           [attr.aria-readonly]="readOnly()"
           [attr.aria-valuetext]="startLabel() + ': ' + controlValue().start"
           [disabled]="isDisabled()"
-          [max]="controlValue().end"
+          [max]="max()"
           [min]="min()"
           [step]="step()"
           [value]="controlValue().start"
@@ -164,7 +179,7 @@ export class KrnSlider extends KrnValueAccessor<number> {
           [attr.aria-valuetext]="endLabel() + ': ' + controlValue().end"
           [disabled]="isDisabled()"
           [max]="max()"
-          [min]="controlValue().start"
+          [min]="min()"
           [step]="step()"
           [value]="controlValue().end"
           (blur)="touch()"
@@ -202,6 +217,13 @@ export class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
 
   constructor() {
     super({ start: 0, end: 100 });
+    effect(() => {
+      const current = this.controlValue();
+      const normalized = this.normalizeRange(current.start, current.end);
+      if (current.start !== normalized.start || current.end !== normalized.end) {
+        this.controlValue.set(normalized);
+      }
+    });
   }
 
   protected override normalizeIncomingValue(value: unknown): KrnRangeValue {
@@ -219,8 +241,9 @@ export class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
       input.value = `${this.controlValue().start}`;
       return;
     }
-    const start = input.valueAsNumber;
-    this.emitRange(this.normalizeRange(start, this.controlValue().end));
+    const current = this.controlValue();
+    const start = Math.min(this.clamp(input.valueAsNumber), current.end);
+    this.emitRange({ start, end: current.end });
   }
 
   protected updateEnd(event: Event): void {
@@ -229,8 +252,43 @@ export class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
       input.value = `${this.controlValue().end}`;
       return;
     }
-    const end = input.valueAsNumber;
-    this.emitRange(this.normalizeRange(this.controlValue().start, end));
+    const current = this.controlValue();
+    const end = Math.max(this.clamp(input.valueAsNumber), current.start);
+    this.emitRange({ start: current.start, end });
+  }
+
+  protected moveNearestThumb(event: PointerEvent): void {
+    const host = event.currentTarget;
+    if (
+      !(host instanceof HTMLElement) ||
+      event.target instanceof HTMLInputElement ||
+      this.isDisabled() ||
+      this.readOnly()
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    const value = this.valueFromPointer(event, host);
+    const current = this.controlValue();
+    const startDistance = Math.abs(value - current.start);
+    const endDistance = Math.abs(value - current.end);
+    const thumb =
+      startDistance === endDistance
+        ? this.activeThumb()
+        : startDistance < endDistance
+          ? 'start'
+          : 'end';
+
+    this.activeThumb.set(thumb);
+    if (thumb === 'start') {
+      this.emitRange({ start: Math.min(value, current.end), end: current.end });
+    } else {
+      this.emitRange({ start: current.start, end: Math.max(value, current.start) });
+    }
+    host
+      .querySelector<HTMLInputElement>(thumb === 'start' ? '.krn-range--start' : '.krn-range--end')
+      ?.focus();
   }
 
   private emitRange(value: KrnRangeValue): void {
@@ -239,13 +297,48 @@ export class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
   }
 
   private normalizeRange(start: number, end: number): KrnRangeValue {
-    const safeStart = Number.isFinite(start)
-      ? Math.min(this.max(), Math.max(this.min(), start))
-      : this.min();
-    const safeEnd = Number.isFinite(end)
-      ? Math.min(this.max(), Math.max(safeStart, end))
-      : this.max();
-    return { start: Math.min(safeStart, safeEnd), end: safeEnd };
+    const safeStart = Number.isFinite(start) ? this.clamp(start) : this.min();
+    const safeEnd = Number.isFinite(end) ? this.clamp(end) : this.max();
+    return safeStart <= safeEnd
+      ? { start: safeStart, end: safeEnd }
+      : { start: safeEnd, end: safeStart };
+  }
+
+  private clamp(value: number): number {
+    return Math.min(this.max(), Math.max(this.min(), value));
+  }
+
+  private valueFromPointer(event: PointerEvent, host: HTMLElement): number {
+    const bounds = host.getBoundingClientRect();
+    const rootFontSize =
+      Number.parseFloat(getComputedStyle(host.ownerDocument.documentElement).fontSize) || 16;
+    const thumbRadius = rootFontSize * 0.5625;
+    const travel = Math.max(1, bounds.width - thumbRadius * 2);
+    const physicalOffset =
+      getComputedStyle(host).direction === 'rtl'
+        ? bounds.right - event.clientX
+        : event.clientX - bounds.left;
+    const ratio = Math.min(1, Math.max(0, (physicalOffset - thumbRadius) / travel));
+    const rawValue = this.min() + ratio * (this.max() - this.min());
+    const step = Math.abs(this.step());
+    if (!Number.isFinite(step) || step === 0) {
+      return this.clamp(rawValue);
+    }
+    const snapped = this.min() + Math.round((rawValue - this.min()) / step) * step;
+    const precision = Math.min(
+      12,
+      Math.max(
+        this.fractionDigits(this.min()),
+        this.fractionDigits(this.max()),
+        this.fractionDigits(step),
+      ),
+    );
+    return this.clamp(Number(snapped.toFixed(precision)));
+  }
+
+  private fractionDigits(value: number): number {
+    const fraction = `${value}`.split('.')[1];
+    return fraction?.length ?? 0;
   }
 
   private toPercent(value: number): number {

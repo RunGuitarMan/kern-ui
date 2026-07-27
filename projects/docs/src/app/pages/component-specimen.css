@@ -66,6 +66,7 @@
 .specimen-canvas {
   position: relative;
   display: grid;
+  scroll-margin-block-start: calc(var(--docs-header-height, 4rem) + 3.25rem);
   min-block-size: clamp(18rem, 34vw, 26rem);
   align-content: center;
   padding: clamp(2rem, 5vw, 3.5rem);
@@ -93,6 +94,11 @@
   ) {
   inline-size: min(100%, 64rem);
   margin-inline: auto;
+}
+
+.specimen-canvas.specimen-canvas > :is(krn-dropdown-button, krn-split-button) {
+  inline-size: max-content;
+  justify-self: center;
 }
 
 .live-indicator {
@@ -135,6 +141,10 @@
   border: 1px solid var(--krn-color-border);
   border-radius: var(--krn-radius-md);
   background: var(--krn-color-surface);
+}
+
+.bounded-surface {
+  overflow: clip;
 }
 
 .surface-copy {

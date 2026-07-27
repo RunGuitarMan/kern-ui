@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { KrnButton, KrnIconButton } from './button';
@@ -69,18 +70,19 @@ describe('Kern actions', () => {
     class DropdownHost {}
 
     const fixture: ComponentFixture<DropdownHost> = TestBed.createComponent(DropdownHost);
+    const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
     await fixture.whenStable();
     const trigger = fixture.nativeElement.querySelector(
       '.krn-select-trigger, .krn-action',
     ) as HTMLButtonElement;
     trigger.click();
     await fixture.whenStable();
-    expect(fixture.nativeElement.querySelector('[role="menu"]')).not.toBeNull();
+    expect(overlayContainer.querySelector('[role="menu"]')).not.toBeNull();
 
-    const menu = fixture.nativeElement.querySelector('[role="menu"]') as HTMLElement;
+    const menu = overlayContainer.querySelector('[role="menu"]') as HTMLElement;
     menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
     await fixture.whenStable();
-    expect(fixture.nativeElement.querySelector('[role="menu"]')).toBeNull();
+    expect(overlayContainer.querySelector('[role="menu"]')).toBeNull();
   });
 
   it('opens a dropdown from the keyboard and moves focus into its menu', async () => {
@@ -97,14 +99,47 @@ describe('Kern actions', () => {
     class KeyboardDropdownHost {}
 
     const fixture = TestBed.createComponent(KeyboardDropdownHost);
+    const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
     await fixture.whenStable();
     const trigger = fixture.nativeElement.querySelector('.krn-action') as HTMLButtonElement;
     trigger.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
     await fixture.whenStable();
     await new Promise<void>((resolve) => queueMicrotask(resolve));
 
-    expect(fixture.nativeElement.querySelector('[role="menu"]')).not.toBeNull();
+    expect(overlayContainer.querySelector('[role="menu"]')).not.toBeNull();
     expect((document.activeElement as HTMLElement | null)?.textContent).toContain('CSV');
+  });
+
+  it('closes a dropdown when focus leaves its connected overlay', async () => {
+    @Component({
+      imports: [KrnDropdownButton],
+      template: `
+        <krn-dropdown-button>
+          <span krnLabel>Export</span>
+          <button krnMenu role="menuitem">CSV</button>
+        </krn-dropdown-button>
+        <button type="button">After menu</button>
+      `,
+    })
+    class FocusOutDropdownHost {}
+
+    const fixture = TestBed.createComponent(FocusOutDropdownHost);
+    const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
+    await fixture.whenStable();
+    (fixture.nativeElement.querySelector('.krn-action') as HTMLButtonElement).click();
+    await fixture.whenStable();
+
+    const menu = overlayContainer.querySelector('[role="menu"]') as HTMLElement;
+    const next = fixture.nativeElement.querySelector('button:last-of-type') as HTMLButtonElement;
+    menu.dispatchEvent(
+      new FocusEvent('focusout', {
+        bubbles: true,
+        relatedTarget: next,
+      }),
+    );
+    await fixture.whenStable();
+
+    expect(overlayContainer.querySelector('[role="menu"]')).toBeNull();
   });
 
   it('moves focus from a split-button trigger into its first menu action', async () => {
@@ -121,6 +156,7 @@ describe('Kern actions', () => {
     class KeyboardSplitButtonHost {}
 
     const fixture = TestBed.createComponent(KeyboardSplitButtonHost);
+    const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
     await fixture.whenStable();
     const trigger = fixture.nativeElement.querySelector(
       '.krn-action[aria-haspopup="menu"]',
@@ -128,9 +164,7 @@ describe('Kern actions', () => {
     trigger.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
     await fixture.whenStable();
 
-    const firstAction = fixture.nativeElement.querySelector(
-      '[role="menuitem"]',
-    ) as HTMLButtonElement;
+    const firstAction = overlayContainer.querySelector('[role="menuitem"]') as HTMLButtonElement;
     expect(document.activeElement).toBe(firstAction);
   });
 

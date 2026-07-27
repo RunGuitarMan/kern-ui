@@ -47,6 +47,13 @@ export const KRN_TOKEN_NAMES = {
     infoSubtle: '--krn-color-info-subtle',
     onInfo: '--krn-color-on-info',
   },
+  calendar: {
+    dayHover: '--krn-calendar-day-hover',
+    rangeSurface: '--krn-calendar-range-surface',
+    rangeText: '--krn-calendar-range-text',
+    selectedSurface: '--krn-calendar-selected-surface',
+    selectedText: '--krn-calendar-selected-text',
+  },
   space: {
     0: '--krn-space-0',
     px: '--krn-space-px',
@@ -137,6 +144,7 @@ export const KRN_TOKEN_NAMES = {
   },
   focus: {
     width: '--krn-focus-ring-width',
+    formWidth: '--krn-form-focus-ring-width',
     offset: '--krn-focus-ring-offset',
     ring: '--krn-focus-ring',
     dangerRing: '--krn-focus-ring-danger',

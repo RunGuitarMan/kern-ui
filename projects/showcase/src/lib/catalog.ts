@@ -317,11 +317,82 @@ function keyboardFor(category: KernCategory): readonly string[] {
   return ['No custom keyboard behavior unless the composition is interactive'];
 }
 
+const EDITABLE_OPTION_API: readonly KernApiRow[] = [
+  ...FORM_API,
+  {
+    name: 'options',
+    type: 'readonly KrnSelectOption<string>[]',
+    defaultValue: 'required',
+    description: 'Known values used to filter and render the suggestion list.',
+  },
+  {
+    name: 'allowCustomValue',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: 'When enabled, typed text can be committed without matching an option.',
+  },
+  {
+    name: 'autocompleteMode',
+    type: "'none' | 'inline' | 'list' | 'both'",
+    defaultValue: "'list'",
+    description: 'Communicates how suggestions are exposed to assistive technology.',
+  },
+];
+
+const AUTOCOMPLETE_OPTION_API: readonly KernApiRow[] = EDITABLE_OPTION_API.map((row) => {
+  if (row.name === 'allowCustomValue') {
+    return { ...row, defaultValue: 'true' };
+  }
+  if (row.name === 'autocompleteMode') {
+    return { ...row, defaultValue: "'both'" };
+  }
+  return row;
+});
+
+const COMPONENT_OVERRIDES: Readonly<Record<string, Partial<KernCatalogItem>>> = {
+  combobox: {
+    summary:
+      'Combobox. Filters a defined option set and commits the value of one explicit selection.',
+    keyboard: [
+      'Typing filters the available options',
+      'Arrow keys move through the filtered list',
+      'Enter commits the active option',
+      'Escape closes the list without inventing a value',
+    ],
+    accessibility: [
+      'The input exposes role="combobox", list expansion, and the active option.',
+      'Option labels remain the source of truth for the committed value.',
+      'Empty results are announced without turning arbitrary text into a selection.',
+    ],
+    api: EDITABLE_OPTION_API,
+    do: 'Use it when the submitted value must come from an authoritative list, such as a plan, workspace, or assignee.',
+    dont: 'Do not enable custom values when downstream logic expects a known option identifier.',
+  },
+  autocomplete: {
+    summary:
+      'Autocomplete. Offers known suggestions while preserving valid free text as the final value.',
+    keyboard: [
+      'Typing updates the free-text value and filters suggestions',
+      'Arrow keys move through suggestions without discarding the query',
+      'Enter accepts the active suggestion or commits the typed text',
+      'Escape dismisses suggestions and keeps the current text',
+    ],
+    accessibility: [
+      'Use autocompleteMode="both" when the input and suggestion list work together.',
+      'Suggestions accelerate entry but do not imply that a match is required.',
+      'The final free-text value remains visible and editable after the list closes.',
+    ],
+    api: AUTOCOMPLETE_OPTION_API,
+    do: 'Use it when suggestions make entry faster but a new value is still valid, such as an alias, label, or location.',
+    dont: 'Do not use it as a constrained picker when only predefined option identifiers are accepted.',
+  },
+};
+
 function createItem(name: string, category: KernCategory): KernCatalogItem {
   const id = slugify(name);
   const isInteractive = category === 'Actions' || category === 'Forms' || category === 'Navigation';
 
-  return {
+  const item: KernCatalogItem = {
     id,
     name,
     category,
@@ -340,6 +411,7 @@ function createItem(name: string, category: KernCategory): KernCatalogItem {
     do: 'Use the smallest semantic primitive that communicates the intended relationship.',
     dont: 'Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.',
   };
+  return { ...item, ...COMPONENT_OVERRIDES[id] };
 }
 
 export const KERN_CATALOG: readonly KernCatalogItem[] = (

@@ -1,6 +1,4 @@
-import type {
-  Provider,
-  Signal} from '@angular/core';
+import type { Provider, Signal } from '@angular/core';
 import {
   APP_ID,
   booleanAttribute,
@@ -50,9 +48,12 @@ const FORM_FIELD_PROVIDER: Provider = {
   providers: [FORM_FIELD_PROVIDER],
   host: {
     class: 'krn-form-field',
+    '[attr.id]': 'null',
     '[attr.data-disabled]': 'disabled()',
     '[attr.data-invalid]': 'invalid()',
     '[attr.data-required]': 'required()',
+    '[attr.data-state]': 'state()',
+    '[attr.data-valid]': 'valid()',
   },
   template: `
     <div class="krn-field-heading">
@@ -103,6 +104,7 @@ export class KrnFormField implements KrnFormFieldController {
   readonly hintId = computed(() => `${this.controlId()}-hint`);
   readonly errorId = computed(() => `${this.controlId()}-error`);
   readonly invalid = computed(() => Boolean(this.error()) || this.state() === 'invalid');
+  readonly valid = computed(() => !this.invalid() && this.state() === 'valid');
   readonly describedBy = computed(() => {
     if (this.invalid() && this.error()) {
       return this.errorId();

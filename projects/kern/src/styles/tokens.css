@@ -189,6 +189,11 @@
     --krn-color-accent-strong: var(--krn-color-primary);
     --krn-color-accent-border: var(--krn-color-border-interactive);
     --krn-color-on-accent: var(--krn-color-on-primary);
+    --krn-calendar-day-hover: var(--krn-color-surface-hover);
+    --krn-calendar-range-surface: var(--krn-color-accent-soft);
+    --krn-calendar-range-text: var(--krn-color-accent-strong);
+    --krn-calendar-selected-surface: var(--krn-color-accent);
+    --krn-calendar-selected-text: var(--krn-color-on-accent);
 
     --krn-color-success-solid: var(--krn-color-success);
     --krn-color-success-soft: var(--krn-color-success-subtle);
@@ -236,6 +241,7 @@
     --krn-chart-3: var(--krn-color-blue-500);
     --krn-chart-4: var(--krn-color-amber-500);
     --krn-chart-5: var(--krn-color-violet-500);
+    --krn-form-focus-ring-width: var(--krn-border-width-1);
     --krn-focus-ring: var(--krn-focus-ring-shadow);
     --krn-focus-ring-danger:
       0 0 0 var(--krn-focus-ring-offset) var(--krn-color-surface),

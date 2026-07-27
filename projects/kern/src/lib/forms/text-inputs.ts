@@ -26,6 +26,7 @@ const optionalNumber = (value: unknown): number | undefined =>
     },
   ],
   host: {
+    '[attr.id]': 'null',
     '[attr.data-size]': 'size()',
   },
   template: `
@@ -115,11 +116,12 @@ export class KrnTextInput extends KrnValueAccessor<string> {
     },
   ],
   host: {
+    '[attr.id]': 'null',
     '[attr.data-size]': 'size()',
   },
   template: `
     <span
-      class="krn-control-shell"
+      class="krn-control-shell krn-control-shell--textarea"
       [attr.data-disabled]="isDisabled()"
       [attr.data-invalid]="a11y.invalid()"
       [attr.data-readonly]="readOnly()"
@@ -142,6 +144,11 @@ export class KrnTextInput extends KrnValueAccessor<string> {
         (blur)="touch()"
         (input)="updateText($event)"
       ></textarea>
+      @if (showCount() && maxLength() !== undefined) {
+        <span class="krn-textarea-count" aria-live="polite">
+          {{ controlValue().length }} / {{ maxLength() }}
+        </span>
+      }
     </span>
   `,
   styleUrl: './forms.css',
@@ -158,6 +165,7 @@ export class KrnTextarea extends KrnValueAccessor<string> {
   readonly maxLength = input<number | undefined>(undefined, {
     transform: optionalNumber,
   });
+  readonly showCount = input(false, { transform: booleanAttribute });
   readonly autoResize = input(false, { transform: booleanAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false, {
@@ -177,17 +185,26 @@ export class KrnTextarea extends KrnValueAccessor<string> {
 
   protected updateText(event: Event): void {
     const textarea = event.target as HTMLTextAreaElement;
+    const maxLength = this.maxLength();
+    const value =
+      maxLength === undefined ? textarea.value : textarea.value.slice(0, Math.max(0, maxLength));
+    if (textarea.value !== value) {
+      textarea.value = value;
+    }
     if (this.autoResize()) {
       textarea.style.height = 'auto';
       textarea.style.height = `${textarea.scrollHeight}px`;
     }
-    this.commitValue(textarea.value);
-    this.valueChange.emit(textarea.value);
+    this.commitValue(value);
+    this.valueChange.emit(value);
   }
 }
 
 @Component({
   selector: 'krn-password-input',
+  host: {
+    '[attr.id]': 'null',
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -271,6 +288,9 @@ export class KrnPasswordInput extends KrnValueAccessor<string> {
 
 @Component({
   selector: 'krn-search-input',
+  host: {
+    '[attr.id]': 'null',
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -362,6 +382,9 @@ export class KrnSearchInput extends KrnValueAccessor<string> {
 
 @Component({
   selector: 'krn-number-input',
+  host: {
+    '[attr.id]': 'null',
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

@@ -63,8 +63,10 @@ const EXAMPLE_MARKUP: Readonly<Record<string, string>> = {
   select: '<krn-select ariaLabel="Plan" [options]="[]" />',
   'native-select': '<krn-native-select ariaLabel="Plan" [options]="[]" />',
   'multi-select': '<krn-multi-select ariaLabel="Teams" [options]="[]" />',
-  combobox: '<krn-combobox ariaLabel="Workspace" [options]="[]" />',
-  autocomplete: '<krn-autocomplete ariaLabel="Workspace" [options]="[]" />',
+  combobox:
+    '<krn-combobox ariaLabel="Workspace plan" placeholder="Filter plans…" [options]="plans" />',
+  autocomplete:
+    '<krn-autocomplete ariaLabel="Workspace alias" placeholder="Type an alias…" [options]="suggestions" />',
   'segmented-control': '<krn-segmented-control [options]="[]" />',
   'date-range-picker': '<krn-date-range-picker ariaLabel="Reporting period" />',
   'file-upload': '<krn-file-upload label="Choose files" />',
@@ -161,10 +163,10 @@ const COMPANION_EXAMPLE_SYMBOLS: Readonly<Record<string, readonly string[]>> = {
         </header>
 
         <nav class="page-nav" aria-label="On this page">
-          <a href="#specimen-overview">Example</a>
-          <a href="#specimen-api">API</a>
-          <a href="#specimen-a11y">Accessibility</a>
-          <a href="#specimen-guidance">Guidance</a>
+          <a [routerLink]="['/components', current.id]" fragment="specimen-overview">Example</a>
+          <a [routerLink]="['/components', current.id]" fragment="specimen-api">API</a>
+          <a [routerLink]="['/components', current.id]" fragment="specimen-a11y"> Accessibility </a>
+          <a [routerLink]="['/components', current.id]" fragment="specimen-guidance">Guidance</a>
         </nav>
 
         <section class="workbench" id="specimen-overview" aria-labelledby="example-heading">

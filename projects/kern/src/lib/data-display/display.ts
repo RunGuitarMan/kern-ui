@@ -1019,27 +1019,32 @@ function codeTokenKind(value: string): KrnCodeTokenKind {
   `,
   styles: `
     :host {
-      --_syntax-comment: #85858f;
-      --_syntax-string: #9ed49a;
-      --_syntax-keyword: #c6a7f7;
-      --_syntax-literal: #f0b27a;
-      --_syntax-number: #e8c785;
-      --_syntax-decorator: #f09aa8;
-      --_syntax-tag: #f0a394;
-      --_syntax-attribute: #9eb7ff;
-      --_syntax-type: #82cfcb;
-      --_syntax-operator: #a8a8b3;
+      --_code-surface: var(--krn-color-surface-sunken, #f5f5f6);
+      --_code-header: var(--krn-color-surface-subtle, #fafafa);
+      --_code-border: var(--krn-color-border, #dedee2);
+      --_code-text: var(--krn-color-text, #1d1d1f);
+      --_code-muted: var(--krn-color-text-muted, #66666d);
+      --_code-action: var(--krn-color-link, #3154c8);
+      --_code-action-hover: var(--krn-color-surface-raised, #fff);
+      --_syntax-comment: var(--krn-color-text-muted, #66666d);
+      --_syntax-string: var(--krn-color-success, #207a4b);
+      --_syntax-keyword: var(--krn-color-primary, #3154c8);
+      --_syntax-literal: var(--krn-color-warning, #7b5511);
+      --_syntax-number: var(--krn-color-warning, #7b5511);
+      --_syntax-decorator: var(--krn-color-danger, #a42f46);
+      --_syntax-tag: var(--krn-color-danger, #a42f46);
+      --_syntax-attribute: var(--krn-color-primary, #3154c8);
+      --_syntax-type: var(--krn-color-info, #275ca8);
+      --_syntax-operator: var(--krn-color-text-muted, #66666d);
       display: block;
       min-inline-size: 0;
       max-inline-size: 100%;
       overflow: clip;
-      border: 1px solid #29292d;
+      border: var(--krn-border-width-1, 1px) solid var(--_code-border);
       border-radius: var(--krn-radius-surface, 0.75rem);
-      color: #eeeef0;
-      background: #0e0e11;
-      box-shadow:
-        inset 0 1px rgb(255 255 255 / 3%),
-        0 8px 30px rgb(0 0 0 / 14%);
+      color: var(--_code-text);
+      background: var(--_code-surface);
+      box-shadow: var(--krn-shadow-sm, 0 1px 3px rgb(0 0 0 / 10%));
     }
     .bar {
       display: flex;
@@ -1047,9 +1052,9 @@ function codeTokenKind(value: string): KrnCodeTokenKind {
       align-items: center;
       justify-content: space-between;
       padding-inline: 0.875rem;
-      border-block-end: 1px solid #29292d;
-      color: #92929c;
-      background: #121216;
+      border-block-end: var(--krn-border-width-1, 1px) solid var(--_code-border);
+      color: var(--_code-muted);
+      background: var(--_code-header);
       font:
         550 0.75rem/1 var(--krn-font-family-mono, ui-monospace),
         monospace;
@@ -1059,18 +1064,18 @@ function codeTokenKind(value: string): KrnCodeTokenKind {
       padding-inline: 0.5rem;
       border: 0;
       border-radius: 0.3125rem;
-      color: #a9bcff;
+      color: var(--_code-action);
       background: transparent;
       font: inherit;
       cursor: pointer;
     }
     button:hover {
-      color: #d5deff;
-      background: #202027;
+      color: var(--krn-color-primary-hover, var(--_code-action));
+      background: var(--_code-action-hover);
     }
     button:focus-visible,
     pre:focus-visible {
-      outline: 2px solid #7c9cff;
+      outline: var(--krn-focus-ring-width, 2px) solid var(--krn-color-focus, #3154c8);
       outline-offset: -3px;
     }
     pre {
@@ -1122,8 +1127,8 @@ function codeTokenKind(value: string): KrnCodeTokenKind {
       color: var(--_syntax-operator);
     }
     ::selection {
-      color: #fff;
-      background: #304f9e;
+      color: var(--_code-text);
+      background: var(--krn-color-selection, rgb(49 84 200 / 24%));
     }
     .sr-only {
       position: absolute;
