@@ -11,9 +11,9 @@ import {
   viewChild,
   viewChildren,
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import { OverlayModule } from '@angular/cdk/overlay';
-import type { KrnNavigationItem } from './navigation.types';
+import type { KrnContextMenuItem, KrnNavigationItem } from './navigation.types';
 
 @Component({
   selector: 'krn-menu',
@@ -35,8 +35,8 @@ import type { KrnNavigationItem } from './navigation.types';
     >
       <ng-content select="[krnMenuTrigger]" />
       @if (!hasProjectedTrigger()) {
-        <span>{{ triggerLabel() }}</span
-        ><span aria-hidden="true">⌄</span>
+        <span>{{ triggerLabel() }}</span>
+        <span class="trigger-chevron" aria-hidden="true"></span>
       }
     </button>
     <ng-template
@@ -120,6 +120,20 @@ import type { KrnNavigationItem } from './navigation.types';
       border-color: var(--krn-color-border-strong);
       background: var(--krn-color-surface-subtle);
     }
+    .trigger-chevron {
+      inline-size: 0.4375rem;
+      block-size: 0.4375rem;
+      margin-block-start: -0.1875rem;
+      border-inline-end: 1.5px solid currentColor;
+      border-block-end: 1.5px solid currentColor;
+      rotate: 45deg;
+      transform-origin: 62% 62%;
+      transition: rotate var(--krn-motion-duration-fast) var(--krn-motion-ease-standard);
+    }
+    .trigger[aria-expanded='true'] .trigger-chevron {
+      margin-block-start: 0.1875rem;
+      rotate: 225deg;
+    }
     .trigger:focus-visible,
     .menu-panel :is(a, button):focus-visible {
       outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
@@ -175,6 +189,11 @@ import type { KrnNavigationItem } from './navigation.types';
       padding: var(--krn-space-3);
       color: var(--krn-color-text-muted);
       font-size: var(--krn-font-size-sm);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .trigger-chevron {
+        transition: none;
+      }
     }
   `,
 })
@@ -392,6 +411,7 @@ export class KrnMenubar {
 @Component({
   selector: 'krn-context-menu',
   standalone: true,
+  imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(contextmenu)': 'onContextMenu($event)',
@@ -399,38 +419,74 @@ export class KrnMenubar {
   template: `
     <ng-content />
     @if (open()) {
+      <ng-container
+        [ngTemplateOutlet]="menuBranch"
+        [ngTemplateOutletContext]="{
+          $implicit: items(),
+          root: true,
+          label: ariaLabel(),
+        }"
+      />
+    }
+    <ng-template #menuBranch let-menuItems let-root="root" let-label="label">
       <div
         class="context-panel"
+        [class.context-panel--root]="root"
+        [class.submenu]="!root"
         role="menu"
-        [attr.aria-label]="ariaLabel()"
-        [style.inset-inline-start.px]="x()"
-        [style.inset-block-start.px]="y()"
+        [attr.aria-label]="label"
+        [style.inset-inline-start.px]="root ? x() : null"
+        [style.inset-block-start.px]="root ? y() : null"
+        (click)="$event.stopPropagation()"
         (keydown)="onKeydown($event)"
       >
-        @for (item of items(); track item.id; let index = $index) {
-          <button
-            #contextItem
-            type="button"
-            role="menuitem"
-            [disabled]="item.disabled"
-            [attr.tabindex]="index === activeIndex() ? 0 : -1"
-            (click)="activate(item)"
-          >
-            {{ item.label }}
-          </button>
+        @for (item of menuItems; track item.id) {
+          <div class="context-entry" (pointerenter)="onPointerEnter(item)">
+            <button
+              #contextItem
+              type="button"
+              role="menuitem"
+              [disabled]="item.disabled"
+              [attr.data-context-item]="item.id"
+              [attr.aria-haspopup]="item.children?.length ? 'menu' : null"
+              [attr.aria-expanded]="item.children?.length ? submenuOpen(item.id) : null"
+              [attr.tabindex]="activeId() === item.id ? 0 : -1"
+              (focus)="activeId.set(item.id)"
+              (click)="onItemClick($event, item)"
+            >
+              <span class="item-icon" aria-hidden="true">{{ item.icon || '' }}</span>
+              <span class="item-label">{{ item.label }}</span>
+              @if (item.shortcut) {
+                <kbd>{{ item.shortcut }}</kbd>
+              }
+              @if (item.children?.length) {
+                <span class="submenu-chevron" aria-hidden="true"></span>
+              }
+            </button>
+            @if (item.children?.length && submenuOpen(item.id)) {
+              <ng-container
+                [ngTemplateOutlet]="menuBranch"
+                [ngTemplateOutletContext]="{
+                  $implicit: item.children,
+                  root: false,
+                  label: item.label,
+                }"
+              />
+            }
+          </div>
         }
       </div>
-    }
+    </ng-template>
   `,
   styles: `
     :host {
       display: contents;
     }
     .context-panel {
-      position: fixed;
       z-index: var(--krn-z-dropdown);
       display: grid;
-      min-inline-size: 12rem;
+      min-inline-size: 14rem;
+      max-inline-size: min(18rem, calc(100vw - var(--krn-space-6)));
       gap: var(--krn-space-1);
       padding: var(--krn-space-2);
       border: var(--krn-border-width-1) solid var(--krn-color-border);
@@ -439,8 +495,24 @@ export class KrnMenubar {
       background: var(--krn-color-surface-raised);
       box-shadow: var(--krn-shadow-overlay);
     }
+    .context-panel--root {
+      position: fixed;
+    }
+    .context-entry {
+      position: relative;
+    }
+    .submenu {
+      position: absolute;
+      inset-block-start: calc(var(--krn-space-2) * -1);
+      inset-inline-start: calc(100% + var(--krn-space-1));
+    }
     button {
+      display: grid;
+      inline-size: 100%;
       min-block-size: var(--krn-control-height-sm);
+      grid-template-columns: 1.25rem minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: var(--krn-space-2);
       padding-inline: var(--krn-space-3);
       border: 0;
       border-radius: var(--krn-radius-sm);
@@ -450,7 +522,8 @@ export class KrnMenubar {
       text-align: start;
       cursor: pointer;
     }
-    button:hover {
+    button:hover,
+    button[aria-expanded='true'] {
       background: color-mix(in oklch, var(--krn-color-surface-subtle) 72%, transparent);
     }
     button:focus-visible {
@@ -462,18 +535,44 @@ export class KrnMenubar {
       color: var(--krn-color-text-disabled);
       cursor: not-allowed;
     }
+    .item-icon {
+      display: grid;
+      inline-size: 1.25rem;
+      color: var(--krn-color-text-muted);
+      font-size: var(--krn-font-size-sm);
+      place-items: center;
+    }
+    .item-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    kbd {
+      color: var(--krn-color-text-subtle);
+      font: inherit;
+      font-size: var(--krn-font-size-xs);
+    }
+    .submenu-chevron {
+      inline-size: 0.4rem;
+      block-size: 0.4rem;
+      margin-inline-end: var(--krn-space-1);
+      border-inline-end: 1.5px solid currentColor;
+      border-block-end: 1.5px solid currentColor;
+      rotate: -45deg;
+    }
   `,
 })
 export class KrnContextMenu {
   private readonly document = inject(DOCUMENT);
   private readonly elements = viewChildren<ElementRef<HTMLButtonElement>>('contextItem');
-  readonly items = input<readonly KrnNavigationItem[]>([]);
+  readonly items = input<readonly KrnContextMenuItem[]>([]);
   readonly ariaLabel = input('Context actions');
-  readonly itemSelected = output<KrnNavigationItem>();
+  readonly itemSelected = output<KrnContextMenuItem>();
   readonly open = signal(false);
   protected readonly x = signal(0);
   protected readonly y = signal(0);
-  protected readonly activeIndex = signal(0);
+  protected readonly activeId = signal('');
+  protected readonly openPath = signal<readonly string[]>([]);
   private previousFocus: HTMLElement | null = null;
 
   protected onContextMenu(event: MouseEvent): void {
@@ -481,49 +580,159 @@ export class KrnContextMenu {
     const view = this.document.defaultView;
     this.previousFocus =
       this.document.activeElement instanceof HTMLElement ? this.document.activeElement : null;
+    const panelWidth = this.items().some((item) => item.children?.length) ? 464 : 240;
     this.x.set(
-      Math.min(event.clientX, Math.max(0, (view?.innerWidth ?? event.clientX + 240) - 240)),
+      Math.min(event.clientX, Math.max(0, (view?.innerWidth ?? event.clientX + panelWidth) - panelWidth)),
     );
     this.y.set(
-      Math.min(event.clientY, Math.max(0, (view?.innerHeight ?? event.clientY + 240) - 240)),
+      Math.min(event.clientY, Math.max(0, (view?.innerHeight ?? event.clientY + 288) - 288)),
     );
-    this.activeIndex.set(
-      Math.max(
-        0,
-        this.items().findIndex((item) => !item.disabled),
-      ),
-    );
+    this.activeId.set(this.items().find((item) => !item.disabled)?.id ?? '');
+    this.openPath.set([]);
     this.open.set(true);
-    setTimeout(() => this.elements()[this.activeIndex()]?.nativeElement.focus());
+    this.focusById(this.activeId());
   }
 
-  protected activate(item: KrnNavigationItem): void {
+  protected submenuOpen(id: string): boolean {
+    return this.openPath().includes(id);
+  }
+
+  protected onPointerEnter(item: KrnContextMenuItem): void {
+    if (item.disabled) return;
+    this.activeId.set(item.id);
+    const path = this.pathTo(item.id);
+    this.openPath.set(
+      path.filter((candidate) => candidate.id !== item.id || candidate.children?.length).map((candidate) => candidate.id),
+    );
+  }
+
+  protected onItemClick(event: MouseEvent, item: KrnContextMenuItem): void {
+    event.stopPropagation();
+    if (item.children?.length) {
+      this.openBranch(item, true);
+      return;
+    }
+    this.activate(item);
+  }
+
+  protected activate(item: KrnContextMenuItem): void {
     if (item.disabled) return;
     this.itemSelected.emit(item);
     this.open.set(false);
+    this.openPath.set([]);
   }
 
   protected onKeydown(event: KeyboardEvent): void {
+    event.stopPropagation();
     if (event.key === 'Escape') {
       event.preventDefault();
+      const parent = this.findParent(this.activeId());
+      if (parent) {
+        this.openPath.set(this.pathTo(parent.id).slice(0, -1).map((item) => item.id));
+        this.activeId.set(parent.id);
+        this.focusById(parent.id);
+        return;
+      }
       this.open.set(false);
+      this.openPath.set([]);
       this.previousFocus?.focus();
       return;
     }
+    const current = this.findItem(this.activeId());
+    if (!current) return;
+    if (event.key === 'ArrowRight' && current.children?.length) {
+      event.preventDefault();
+      this.openBranch(current, true);
+      return;
+    }
+    if (event.key === 'ArrowLeft') {
+      const parent = this.findParent(current.id);
+      if (!parent) return;
+      event.preventDefault();
+      this.openPath.set(this.pathTo(parent.id).slice(0, -1).map((item) => item.id));
+      this.activeId.set(parent.id);
+      this.focusById(parent.id);
+      return;
+    }
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      if (current.children?.length) this.openBranch(current, true);
+      else this.activate(current);
+      return;
+    }
     const delta = event.key === 'ArrowDown' ? 1 : event.key === 'ArrowUp' ? -1 : 0;
-    if (!delta) return;
+    if (!delta && event.key !== 'Home' && event.key !== 'End') return;
     event.preventDefault();
-    const items = this.items();
-    let next = (this.activeIndex() + delta + items.length) % items.length;
-    while (items[next]?.disabled && next !== this.activeIndex())
-      next = (next + delta + items.length) % items.length;
-    this.activeIndex.set(next);
-    this.elements()[next]?.nativeElement.focus();
+    const siblings = this.findSiblings(current.id);
+    if (siblings.length === 0) return;
+    const currentIndex = siblings.findIndex((item) => item.id === current.id);
+    let next =
+      event.key === 'Home'
+        ? 0
+        : event.key === 'End'
+          ? siblings.length - 1
+          : (currentIndex + delta + siblings.length) % siblings.length;
+    while (siblings[next]?.disabled && next !== currentIndex) {
+      next = (next + (delta || 1) + siblings.length) % siblings.length;
+    }
+    const nextItem = siblings[next];
+    if (!nextItem || nextItem.disabled) return;
+    this.activeId.set(nextItem.id);
+    this.focusById(nextItem.id);
+  }
+
+  private openBranch(item: KrnContextMenuItem, focusChild: boolean): void {
+    const path = this.pathTo(item.id).filter((candidate) => candidate.children?.length);
+    this.openPath.set(path.map((candidate) => candidate.id));
+    if (!focusChild) return;
+    const child = item.children?.find((candidate) => !candidate.disabled);
+    if (!child) return;
+    this.activeId.set(child.id);
+    this.focusById(child.id);
+  }
+
+  private findItem(id: string): KrnContextMenuItem | null {
+    return this.pathTo(id).at(-1) ?? null;
+  }
+
+  private findParent(id: string): KrnContextMenuItem | null {
+    return this.pathTo(id).at(-2) ?? null;
+  }
+
+  private findSiblings(id: string): readonly KrnContextMenuItem[] {
+    const parent = this.findParent(id);
+    return parent?.children ?? this.items();
+  }
+
+  private pathTo(id: string): readonly KrnContextMenuItem[] {
+    const visit = (
+      items: readonly KrnContextMenuItem[],
+      path: readonly KrnContextMenuItem[],
+    ): readonly KrnContextMenuItem[] => {
+      for (const item of items) {
+        const nextPath = [...path, item];
+        if (item.id === id) return nextPath;
+        const found = visit(item.children ?? [], nextPath);
+        if (found.length) return found;
+      }
+      return [];
+    };
+    return visit(this.items(), []);
+  }
+
+  private focusById(id: string): void {
+    if (!id) return;
+    setTimeout(() => {
+      this.elements()
+        .find((element) => element.nativeElement.dataset['contextItem'] === id)
+        ?.nativeElement.focus();
+    });
   }
 
   @HostListener('document:click')
   @HostListener('window:blur')
   protected dismiss(): void {
     this.open.set(false);
+    this.openPath.set([]);
   }
 }

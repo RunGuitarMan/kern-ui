@@ -142,6 +142,45 @@ describe('Kern actions', () => {
     expect(overlayContainer.querySelector('[role="menu"]')).toBeNull();
   });
 
+  it('closes dropdown and split menus after Tab exits without trapping focus', async () => {
+    @Component({
+      imports: [KrnDropdownButton, KrnSplitButton],
+      template: `
+        <krn-dropdown-button>
+          <span krnLabel>Export</span>
+          <button krnMenu role="menuitem">CSV</button>
+        </krn-dropdown-button>
+        <krn-split-button>
+          <span krnLabel>Publish</span>
+          <button krnMenu role="menuitem">Publish now</button>
+        </krn-split-button>
+      `,
+    })
+    class TabbingMenuButtonsHost {}
+
+    const fixture = TestBed.createComponent(TabbingMenuButtonsHost);
+    const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
+    await fixture.whenStable();
+    const triggers = fixture.nativeElement.querySelectorAll(
+      '.krn-action[aria-haspopup="menu"]',
+    ) as NodeListOf<HTMLButtonElement>;
+
+    for (const [index, shiftKey] of [false, true].entries()) {
+      triggers[index]?.click();
+      await fixture.whenStable();
+      const menu = overlayContainer.querySelector('[role="menu"]') as HTMLElement;
+      expect(menu).not.toBeNull();
+
+      const tab = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, shiftKey });
+      menu.dispatchEvent(tab);
+      expect(tab.defaultPrevented).toBe(false);
+      await new Promise((resolve) => setTimeout(resolve));
+      await fixture.whenStable();
+
+      expect(overlayContainer.querySelector('[role="menu"]')).toBeNull();
+    }
+  });
+
   it('moves focus from a split-button trigger into its first menu action', async () => {
     @Component({
       imports: [KrnSplitButton],

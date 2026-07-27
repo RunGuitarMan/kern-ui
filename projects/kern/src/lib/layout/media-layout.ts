@@ -189,11 +189,16 @@ export class KrnAspectRatio {
       min-block-size: 0;
       max-inline-size: var(--krn-scroll-max-inline);
       max-block-size: var(--krn-scroll-max-block);
+      overflow: clip;
+      border-radius: inherit;
+      isolation: isolate;
     }
 
     .krn-scroll-area__viewport {
+      box-sizing: border-box;
       max-inline-size: inherit;
       max-block-size: inherit;
+      border-radius: inherit;
       overscroll-behavior: contain;
       scrollbar-color: var(--krn-color-border-strong) transparent;
       scrollbar-width: thin;
@@ -220,6 +225,23 @@ export class KrnAspectRatio {
         100% 0.5rem,
         100% 0.5rem;
       background-attachment: local, local, scroll, scroll;
+    }
+
+    .krn-scroll-area__viewport::-webkit-scrollbar {
+      inline-size: 0.625rem;
+      block-size: 0.625rem;
+    }
+
+    .krn-scroll-area__viewport::-webkit-scrollbar-track {
+      margin-block: var(--krn-space-1);
+      background: transparent;
+    }
+
+    .krn-scroll-area__viewport::-webkit-scrollbar-thumb {
+      border: 0.1875rem solid transparent;
+      border-radius: var(--krn-radius-full);
+      background: var(--krn-color-border-strong);
+      background-clip: padding-box;
     }
 
     :host([data-axis='vertical']) .krn-scroll-area__viewport {

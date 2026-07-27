@@ -63,6 +63,9 @@ describe('KrnChart', () => {
 
     points[1]?.dispatchEvent(new MouseEvent('mouseleave'));
     fixture.detectChanges();
+    expect(fixture.componentInstance.activeIndex()).toBe(1);
+    await new Promise((resolve) => setTimeout(resolve, 130));
+    fixture.detectChanges();
     expect((fixture.nativeElement as HTMLElement).querySelector('.chart-tooltip')).toBeNull();
   });
 

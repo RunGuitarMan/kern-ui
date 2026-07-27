@@ -142,6 +142,7 @@ import {
   KrnUserMenu,
   KrnValidationMessage,
   type KrnChartDatum,
+  type KrnContextMenuItem,
   type KrnDataColumn,
   type KrnFilterDefinition,
   type KrnFormStep,
@@ -316,6 +317,9 @@ export class ComponentSpecimen {
   protected readonly workspaceName = signal('');
   protected readonly workspaceNameTouched = signal(false);
   protected readonly paginationPage = signal(1);
+  protected readonly progressValue = signal(68);
+  protected readonly meterValue = signal(68);
+  private readonly toastSequence = signal(0);
   protected readonly paginationRange = computed(() => {
     const start = (this.paginationPage() - 1) * 20 + 1;
     return `${start}–${Math.min(248, start + 19)}`;
@@ -356,6 +360,21 @@ export class ComponentSpecimen {
     { id: 'activity', label: 'Activity', icon: '↗', badge: 4 },
     { id: 'reports', label: 'Reports', icon: '▤' },
     { id: 'archive', label: 'Archive', disabled: true },
+  ];
+  protected readonly contextMenuItems: readonly KrnContextMenuItem[] = [
+    { id: 'open', label: 'Open workspace', icon: '↗', shortcut: '↵' },
+    { id: 'duplicate', label: 'Duplicate', icon: '⧉', shortcut: '⌘D' },
+    {
+      id: 'move',
+      label: 'Move to',
+      icon: '↪',
+      children: [
+        { id: 'move-operations', label: 'Operations', icon: 'O' },
+        { id: 'move-research', label: 'Research', icon: 'R' },
+        { id: 'move-archive', label: 'Archive', icon: 'A', disabled: true },
+      ],
+    },
+    { id: 'archive', label: 'Archive workspace', icon: '□', disabled: true },
   ];
   protected readonly treeNavigationItems: readonly KrnTreeNavigationItem[] = [
     {
@@ -492,14 +511,33 @@ export class Toolbar {}`;
       this.workspaceName.set('');
       this.workspaceNameTouched.set(false);
       this.paginationPage.set(1);
+      this.progressValue.set(68);
+      this.meterValue.set(68);
     });
   }
 
   protected showToast(): void {
-    this.toasts.success('Workspace settings were published.', {
-      title: 'Changes saved',
+    const examples = [
+      { title: 'Changes saved', message: 'Workspace settings were published.', tone: 'success' },
+      { title: 'Export ready', message: 'The audit package is ready to download.', tone: 'info' },
+      { title: 'Review requested', message: 'Two policy changes need attention.', tone: 'warning' },
+    ] as const;
+    const index = this.toastSequence();
+    const example = examples[index % examples.length] ?? examples[0];
+    this.toastSequence.set(index + 1);
+    this.toasts.show(example.message, {
+      title: example.title,
+      tone: example.tone,
       duration: 0,
-      actionLabel: 'Review',
+      actionLabel: example.tone === 'warning' ? 'Review' : undefined,
     });
+  }
+
+  protected adjustProgress(delta: number): void {
+    this.progressValue.update((value) => Math.min(100, Math.max(0, value + delta)));
+  }
+
+  protected adjustMeter(delta: number): void {
+    this.meterValue.update((value) => Math.min(100, Math.max(0, value + delta)));
   }
 }

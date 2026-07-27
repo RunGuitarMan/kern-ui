@@ -101,6 +101,10 @@ abstract class KrnMenuButtonBase {
       this.focusTrigger();
       return;
     }
+    if (event.key === 'Tab') {
+      setTimeout(() => this.setOpen(false));
+      return;
+    }
 
     const items = this.menuItems();
     if (items.length === 0) {
@@ -215,7 +219,7 @@ abstract class KrnMenuButtonBase {
       [cdkConnectedOverlayPush]="true"
       [cdkConnectedOverlayFlexibleDimensions]="true"
       [cdkConnectedOverlayViewportMargin]="8"
-      cdkConnectedOverlayUsePopover="inline"
+      [cdkConnectedOverlayUsePopover]="null"
       cdkConnectedOverlayTransformOriginOn=".krn-action-menu"
       [cdkConnectedOverlayHasBackdrop]="true"
       cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
@@ -287,7 +291,7 @@ export class KrnDropdownButton extends KrnMenuButtonBase {}
       [cdkConnectedOverlayPush]="true"
       [cdkConnectedOverlayFlexibleDimensions]="true"
       [cdkConnectedOverlayViewportMargin]="8"
-      cdkConnectedOverlayUsePopover="inline"
+      [cdkConnectedOverlayUsePopover]="null"
       cdkConnectedOverlayTransformOriginOn=".krn-action-menu"
       [cdkConnectedOverlayHasBackdrop]="true"
       cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"

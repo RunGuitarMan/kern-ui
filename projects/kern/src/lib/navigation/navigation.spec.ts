@@ -83,7 +83,7 @@ describe('Kern navigation', () => {
     expect(fixture.componentInstance.page()).toBe(6);
   });
 
-  it('keeps a stable pagination slot count at the beginning, middle, and end', async () => {
+  it('keeps the current page inside a stable five-slot mobile pagination window', async () => {
     const fixture = await create(KrnPagination, {
       totalItems: 200,
       pageSize: 20,
@@ -95,9 +95,17 @@ describe('Kern navigation', () => {
       fixture.detectChanges();
 
       expect(fixture.nativeElement.querySelectorAll('ol > li')).toHaveLength(7);
+      expect(fixture.nativeElement.querySelectorAll('ol > li[data-mobile-visible]')).toHaveLength(
+        5,
+      );
       expect(
         fixture.nativeElement.querySelector('ol > li[data-current] button')?.textContent?.trim(),
       ).toBe(`${page}`);
+      expect(
+        fixture.nativeElement
+          .querySelector('ol > li[data-current]')
+          ?.hasAttribute('data-mobile-visible'),
+      ).toBe(true);
     }
   });
 
@@ -116,6 +124,117 @@ describe('Kern navigation', () => {
     await new Promise((resolve) => setTimeout(resolve));
 
     expect(document.activeElement?.textContent?.trim()).toBe('Overview');
+  });
+
+  it('skips disabled menu items while moving upward inside an open menu', async () => {
+    const fixture = await create(KrnMenu, {
+      items: [
+        { id: 'overview', label: 'Overview' },
+        { id: 'archive', label: 'Archive', disabled: true },
+        { id: 'reports', label: 'Reports' },
+      ],
+    });
+    const trigger = fixture.nativeElement.querySelector('.trigger') as HTMLButtonElement;
+
+    trigger.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(document.activeElement?.textContent?.trim()).toBe('Reports');
+
+    document.activeElement?.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }),
+    );
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(document.activeElement?.textContent?.trim()).toBe('Overview');
+    expect((document.activeElement as HTMLButtonElement).disabled).toBe(false);
+  });
+
+  it('keeps table-of-contents and skip-link anchors on the current route', async () => {
+    const originalUrl = `${location.pathname}${location.search}${location.hash}`;
+    history.pushState({}, '', '/components/table-of-contents?theme=dark');
+    await TestBed.configureTestingModule({
+      imports: [KrnTableOfContents, KrnSkipLink],
+    }).compileComponents();
+    const toc = TestBed.createComponent(KrnTableOfContents);
+    toc.componentRef.setInput('items', [{ id: 'api-contract', label: 'API contract', level: 2 }]);
+    toc.componentRef.setInput('observe', false);
+    toc.detectChanges();
+    const skip = TestBed.createComponent(KrnSkipLink);
+    skip.componentRef.setInput('targetId', 'main-specimen');
+    skip.detectChanges();
+    const target = document.createElement('main');
+    target.id = 'main-specimen';
+    target.tabIndex = -1;
+    document.body.append(target);
+
+    try {
+      expect((toc.nativeElement.querySelector('a') as HTMLAnchorElement).getAttribute('href')).toBe(
+        '/components/table-of-contents?theme=dark#api-contract',
+      );
+      expect(
+        (skip.nativeElement.querySelector('a') as HTMLAnchorElement).getAttribute('href'),
+      ).toBe('/components/table-of-contents?theme=dark#main-specimen');
+
+      (skip.nativeElement.querySelector('a') as HTMLAnchorElement).click();
+
+      expect(location.pathname).toBe('/components/table-of-contents');
+      expect(location.hash).toBe('#main-specimen');
+      expect(document.activeElement).toBe(target);
+    } finally {
+      target.remove();
+      history.replaceState({}, '', originalUrl || '/');
+    }
+  });
+
+  it('opens nested context-menu destinations and supports ArrowLeft return', async () => {
+    const fixture = await create(KrnContextMenu, {
+      items: [
+        { id: 'open', label: 'Open', icon: '↗' },
+        {
+          id: 'move',
+          label: 'Move to',
+          children: [
+            { id: 'operations', label: 'Operations' },
+            { id: 'archive', label: 'Archive', disabled: true },
+          ],
+        },
+      ],
+    });
+
+    (fixture.nativeElement as HTMLElement).dispatchEvent(
+      new MouseEvent('contextmenu', {
+        bubbles: true,
+        cancelable: true,
+        clientX: 24,
+        clientY: 24,
+      }),
+    );
+    fixture.detectChanges();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    const buttons = (fixture.nativeElement as HTMLElement).querySelectorAll(
+      'button',
+    ) as NodeListOf<HTMLButtonElement>;
+    const move = Array.from(buttons).find((button) => button.textContent?.includes('Move to'));
+    move?.click();
+    fixture.detectChanges();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(fixture.nativeElement.querySelectorAll('[role="menu"]')).toHaveLength(2);
+    expect(document.activeElement?.textContent?.trim()).toBe('Operations');
+
+    document.activeElement?.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true }),
+    );
+    fixture.detectChanges();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(document.activeElement?.textContent).toContain('Move to');
+    expect(fixture.nativeElement.querySelectorAll('[role="menu"]')).toHaveLength(1);
   });
 
   it('keeps horizontal step labels in a dedicated copy row below their markers', async () => {
@@ -176,6 +295,69 @@ describe('Kern navigation', () => {
     nodes[1].click();
     fixture.detectChanges();
     expect(fixture.componentInstance.selectedId()).toBe('catalog');
+    expect(fixture.nativeElement.querySelector('ul.branch.with-guides')).not.toBeNull();
+  });
+
+  it('keeps tree-navigation tab stops and arrow movement on enabled items', async () => {
+    const fixture = await create(KrnTreeNavigation, {
+      items: [
+        { id: 'disabled-root', label: 'Disabled root', disabled: true },
+        {
+          id: 'products',
+          label: 'Products',
+          children: [
+            {
+              id: 'disabled-group',
+              label: 'Disabled group',
+              disabled: true,
+              children: [{ id: 'nested', label: 'Nested' }],
+            },
+            { id: 'catalog', label: 'Catalog' },
+          ],
+        },
+        { id: 'archive', label: 'Archive' },
+      ],
+      expandedIds: ['products', 'disabled-group'],
+    });
+    const element = fixture.nativeElement as HTMLElement;
+    const node = (id: string): HTMLElement => {
+      const target = element.querySelector<HTMLElement>(`[data-tree-item="${id}"]`);
+      if (!target) throw new Error(`Expected navigation tree item ${id}`);
+      return target;
+    };
+    const press = (key: string): void => {
+      document.activeElement?.dispatchEvent(
+        new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }),
+      );
+      fixture.detectChanges();
+    };
+
+    expect(node('disabled-root').tabIndex).toBe(-1);
+    expect(node('products').tabIndex).toBe(0);
+    expect(node('disabled-group').closest('[role="treeitem"]')?.getAttribute('aria-disabled')).toBe(
+      'true',
+    );
+    node('products').focus();
+
+    press('ArrowRight');
+    expect(document.activeElement).toBe(node('nested'));
+    expect(fixture.componentInstance.selectedId()).toBe('nested');
+    press('ArrowLeft');
+    expect(document.activeElement).toBe(node('products'));
+
+    press('ArrowDown');
+    expect(document.activeElement).toBe(node('nested'));
+    press('ArrowDown');
+    expect(document.activeElement).toBe(node('catalog'));
+    press('ArrowDown');
+    expect(document.activeElement).toBe(node('archive'));
+    press('ArrowUp');
+    expect(document.activeElement).toBe(node('catalog'));
+    press('Home');
+    expect(document.activeElement).toBe(node('products'));
+    press('End');
+    expect(document.activeElement).toBe(node('archive'));
+    expect(fixture.componentInstance.selectedId()).toBe('archive');
   });
 });
 

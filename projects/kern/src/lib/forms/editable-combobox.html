@@ -1,4 +1,4 @@
-<div class="krn-combobox" (focusout)="closeOnFocusOut($event)" (keydown.escape)="open.set(false)">
+<div class="krn-combobox" (focusout)="closeOnFocusOut($event)" (keydown.escape)="cancelQuery()">
   <span
     class="krn-control-shell"
     [attr.data-disabled]="isDisabled()"

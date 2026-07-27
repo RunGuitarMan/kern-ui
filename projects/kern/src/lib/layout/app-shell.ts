@@ -42,6 +42,8 @@ import { krnCssLength } from './layout.types';
       display: block;
       min-block-size: 100dvb;
       min-inline-size: 0;
+      overflow: clip;
+      border-radius: inherit;
       background: var(--krn-color-canvas);
       color: var(--krn-color-text);
     }
@@ -49,6 +51,8 @@ import { krnCssLength } from './layout.types';
     .krn-shell {
       display: grid;
       min-block-size: inherit;
+      overflow: clip;
+      border-radius: inherit;
       grid-template:
         'header header header' auto
         'rail sidebar main' minmax(0, 1fr) /
@@ -59,6 +63,9 @@ import { krnCssLength } from './layout.types';
       z-index: var(--krn-z-sticky);
       grid-area: header;
       min-inline-size: 0;
+      overflow: clip;
+      border-start-start-radius: inherit;
+      border-start-end-radius: inherit;
     }
 
     .krn-shell__rail {
@@ -132,7 +139,7 @@ import { krnCssLength } from './layout.types';
 })
 export class KrnAppShell {
   readonly sidebarWidth = input<KrnLayoutSpace>('17rem');
-  readonly railWidth = input<KrnLayoutSpace>('4.25rem');
+  readonly railWidth = input<KrnLayoutSpace>('3.5rem');
   readonly mainMaxWidth = input<KrnLayoutSpace>('100%');
   readonly sidebarPosition = input<'start' | 'end'>('start');
   readonly mobileNavigation = input<'hidden' | 'sidebar' | 'rail'>('hidden');
@@ -141,7 +148,7 @@ export class KrnAppShell {
   protected readonly resolvedSidebarWidth = computed(() =>
     krnCssLength(this.sidebarWidth(), '17rem'),
   );
-  protected readonly resolvedRailWidth = computed(() => krnCssLength(this.railWidth(), '4.25rem'));
+  protected readonly resolvedRailWidth = computed(() => krnCssLength(this.railWidth(), '3.5rem'));
   protected readonly resolvedMainMaxWidth = computed(() =>
     krnCssLength(this.mainMaxWidth(), '100%'),
   );
@@ -200,9 +207,7 @@ export class KrnAppShell {
 
     :host([data-elevated]) .krn-header {
       border-block-end-color: color-mix(in oklch, var(--krn-color-border) 62%, transparent);
-      box-shadow:
-        0 1px 0 color-mix(in oklch, var(--krn-color-surface) 82%, transparent),
-        var(--krn-shadow-sm);
+      box-shadow: var(--krn-shadow-sm);
     }
 
     .krn-header__start,
@@ -399,9 +404,9 @@ export class KrnSidebar {
       min-block-size: 0;
       grid-template-rows: auto minmax(0, 1fr) auto;
       border-inline-end: 1px solid var(--krn-color-border);
-      background: var(--krn-color-surface-sunken);
+      background: var(--krn-color-surface);
       color: var(--krn-color-text);
-      padding-block: var(--krn-space-2);
+      padding-block: var(--krn-space-1);
       overflow: clip;
     }
 
@@ -416,16 +421,22 @@ export class KrnSidebar {
       display: flex;
       min-inline-size: 0;
       flex-direction: column;
-      align-items: stretch;
+      align-items: center;
       gap: var(--krn-space-1);
-      padding-inline: var(--krn-space-2);
+      padding-inline: var(--krn-space-1);
     }
 
     .krn-rail__body {
       min-block-size: 0;
       overflow-y: auto;
-      padding-block: var(--krn-space-3);
+      padding-block: var(--krn-space-2);
       scrollbar-width: thin;
+    }
+
+    :host([data-expanded])
+      :is(.krn-rail__header, .krn-rail__footer, .krn-rail__body) {
+      align-items: stretch;
+      padding-inline: var(--krn-space-2);
     }
 
     .krn-rail__header:empty,
@@ -442,12 +453,12 @@ export class KrnSidebar {
 })
 export class KrnNavigationRail {
   readonly expanded = model(false);
-  readonly width = input<KrnLayoutSpace>('var(--krn-shell-rail-width, 4.25rem)');
+  readonly width = input<KrnLayoutSpace>('var(--krn-shell-rail-width, 3.5rem)');
   readonly expandedWidth = input<KrnLayoutSpace>('14rem');
   readonly ariaLabel = input('Primary navigation');
   readonly side = input<'start' | 'end'>('start');
 
-  protected readonly resolvedWidth = computed(() => krnCssLength(this.width(), '4.25rem'));
+  protected readonly resolvedWidth = computed(() => krnCssLength(this.width(), '3.5rem'));
   protected readonly resolvedExpandedWidth = computed(() =>
     krnCssLength(this.expandedWidth(), '14rem'),
   );

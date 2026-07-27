@@ -98,7 +98,7 @@ test.describe('Quality regressions: menus and focus treatment', () => {
 
       await trigger.press('ArrowDown');
 
-      const menu = host.getByRole('menu');
+      const menu = page.getByRole('menu');
       const firstItem = menu.getByRole('menuitem', { name: config.firstItem });
       const lastItem = menu.getByRole('menuitem', { name: config.lastItem });
       await expect(menu).toBeVisible();
@@ -246,6 +246,9 @@ test.describe('Quality regressions: menus and focus treatment', () => {
     await tagsInput.fill('operations');
     await tagsInput.press('Enter');
     await expect(specimen.locator('.krn-token')).toContainText('operations');
+    await expect(specimen.locator('.krn-tag-feedback')).toHaveText('Added');
+    await expect(specimen.locator('[role="status"]')).toContainText('operations added');
+    await expect(specimen.locator('.krn-message')).not.toContainText(/added|removed|already/i);
     await expect(tagsInput).toBeFocused();
     assertNoRuntimeErrors();
   });
@@ -513,14 +516,16 @@ test.describe('Quality regressions: form controls', () => {
     let dialog = specimen.getByRole('dialog', { name: 'Digest time' });
     await expect(dialog).toBeVisible();
     expectStyledOverlay(await overlayStyle(dialog), 'time picker');
-    const hours = dialog.getByRole('listbox', { name: 'Hour' });
-    const minutes = dialog.getByRole('listbox', { name: 'Minute' });
-    await expect(hours.getByRole('option')).toHaveCount(24);
-    await expect(minutes.getByRole('option')).toHaveCount(4);
-    await hours.getByRole('option', { name: '09', exact: true }).click();
-    await minutes.getByRole('option', { name: '30', exact: true }).click();
+    await expect(dialog.getByRole('listbox')).toHaveCount(0);
+    const hour = dialog.getByRole('spinbutton', { name: 'Hour' });
+    const minute = dialog.getByRole('spinbutton', { name: 'Minute' });
+    await expect(hour).toBeVisible();
+    await expect(minute).toBeVisible();
+    await expect(dialog.locator('.krn-time-presets button')).toHaveCount(4);
+    await hour.fill('09');
+    await minute.fill('30');
+    await dialog.getByRole('button', { name: 'Apply' }).click();
     await expect(timeTrigger).toContainText('09:30');
-    await dialog.getByRole('button', { name: 'Done' }).click();
     await expect(dialog).toHaveCount(0);
 
     specimen = await openSpecimen(page, 'color-picker');
@@ -599,9 +604,31 @@ test.describe('Quality regressions: data and feedback', () => {
     assertNoRuntimeErrors();
   });
 
-  test('duplicate toasts group into a bounded stack and Clear all removes the batch', async ({
-    page,
-  }) => {
+  test('progress and meter specimens expose animated, bounded value controls', async ({ page }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    let specimen = await openSpecimen(page, 'progress-bar');
+    let progress = specimen.getByRole('progressbar', { name: 'Progress' });
+    await expect(progress).toHaveAttribute('aria-valuenow', '68');
+    await specimen.getByRole('button', { name: '+10' }).click();
+    await expect(progress).toHaveAttribute('aria-valuenow', '78');
+
+    specimen = await openSpecimen(page, 'circular-progress');
+    progress = specimen.getByRole('progressbar', { name: 'Storage used' });
+    await specimen.getByRole('button', { name: '−10' }).click();
+    await expect(progress).toHaveAttribute('aria-valuenow', '58');
+
+    specimen = await openSpecimen(page, 'meter');
+    const meter = specimen.getByRole('meter', { name: 'Storage used' });
+    await specimen.getByRole('button', { name: '+10' }).click();
+    await specimen.getByRole('button', { name: '+10' }).click();
+    await expect(meter).toHaveAttribute('aria-valuenow', '88');
+    await expect(meter).toHaveAttribute('data-tone', 'danger');
+
+    assertNoRuntimeErrors();
+  });
+
+  test('toasts remain individually dismissible in a bounded expandable stack', async ({ page }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
     const specimen = await openSpecimen(page, 'toast');
     const showToast = specimen.getByRole('button', { name: 'Show success toast' });
@@ -612,17 +639,22 @@ test.describe('Quality regressions: data and feedback', () => {
 
     const viewport = page.locator('krn-toast-viewport');
     const renderedToasts = viewport.locator('.toast');
-    await expect(renderedToasts).toHaveCount(1);
-    await expect(viewport.locator('.count')).toHaveText('×12');
-    await expect(viewport.locator('.count')).toHaveAttribute(
-      'aria-label',
-      '12 identical notifications',
-    );
+    await expect(renderedToasts).toHaveCount(4);
     await expect(viewport.locator('.stack-controls')).toContainText('12 notifications');
     expect(
       await renderedToasts.count(),
-      'rendered toast groups remain bounded',
+      'rendered toast stack remains bounded',
     ).toBeLessThanOrEqual(4);
+
+    await renderedToasts.first().getByRole('button', { name: 'Dismiss notification' }).click();
+    await expect(viewport.locator('.stack-controls')).toContainText('11 notifications');
+    await expect(renderedToasts).toHaveCount(4);
+
+    await viewport.locator('.toast-stack').hover();
+    await page.waitForTimeout(320);
+    const firstToast = await renderedToasts.nth(0).boundingBox();
+    const secondToast = await renderedToasts.nth(1).boundingBox();
+    expect((secondToast?.y ?? 0) - (firstToast?.y ?? 0)).toBeGreaterThan(40);
 
     await viewport.getByRole('button', { name: 'Clear all' }).click();
     await expect(renderedToasts).toHaveCount(0);

@@ -92,10 +92,28 @@
             @case ('navigation-rail') {
               <div class="rail-stage">
                 <krn-navigation-rail ariaLabel="Primary tools">
-                  <strong krnRailHeader>KN</strong>
-                  <button type="button" aria-label="Home">⌂</button>
-                  <button type="button" aria-label="Reports">▤</button>
-                  <button type="button" aria-label="Settings">⚙</button>
+                  <span krnRailHeader class="rail-brand" aria-label="Kern">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M6 4v16M18 4 9 12l9 8" />
+                    </svg>
+                  </span>
+                  <button type="button" aria-label="Home" aria-current="page">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="m4 11 8-7 8 7v9h-5v-6H9v6H4Z" />
+                    </svg>
+                  </button>
+                  <button type="button" aria-label="Reports">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M5 19V9m7 10V5m7 14v-7" />
+                    </svg>
+                  </button>
+                  <button type="button" aria-label="Settings">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm0-5v2m0 13v2m8.5-8.5h-2m-13 0h-2m14.5-6-1.4 1.4M7.4 16.6 6 18m12 0-1.4-1.4M7.4 7.4 6 6"
+                      />
+                    </svg>
+                  </button>
                   <krn-avatar krnRailFooter name="Avery Cole" size="sm" />
                 </krn-navigation-rail>
                 <div class="surface-copy">
@@ -116,10 +134,24 @@
               </div>
             }
             @case ('stack') {
-              <krn-stack class="layout-sample" gap="4">
-                <div>01 / Label</div>
-                <div>02 / Control</div>
-                <div>03 / Supporting message</div>
+              <krn-stack class="layout-sample stack-specimen" gap="3">
+                <article>
+                  <span>01</span>
+                  <div><strong>Workspace label</strong><small>Names the control</small></div>
+                  <i>required</i>
+                </article>
+                <article>
+                  <span>02</span>
+                  <div><strong>Control surface</strong><small>Receives user input</small></div>
+                  <i>interactive</i>
+                </article>
+                <article>
+                  <span>03</span>
+                  <div>
+                    <strong>Supporting message</strong><small>Explains the constraint</small>
+                  </div>
+                  <i>optional</i>
+                </article>
               </krn-stack>
             }
             @case ('inline') {
@@ -219,17 +251,35 @@
             }
             @case ('responsive-show-hide') {
               <div class="responsive-demo">
-                <krn-show from="md"
-                  ><strong>DESKTOP / visible from md</strong
-                  ><span>Wide navigation and contextual actions</span></krn-show
-                >
-                <krn-show until="md"
-                  ><strong>MOBILE / visible below md</strong
-                  ><span>Compact navigation and essential actions</span></krn-show
-                >
-                <div class="breakpoint-ruler">
-                  <i></i><span>Resize this page across 48rem</span><i></i>
+                <header>
+                  <div>
+                    <span>LIVE BREAKPOINT</span>
+                    <strong>One slot is rendered at a time</strong>
+                  </div>
+                  <span class="viewport-state"
+                    ><i></i><b class="viewport-mobile">Below 48rem</b
+                    ><b class="viewport-desktop">48rem and wider</b></span
+                  >
+                </header>
+                <krn-show from="md">
+                  <div class="responsive-card">
+                    <span>DESKTOP SLOT</span>
+                    <strong>Wide navigation + contextual actions</strong>
+                    <small><code>from="md"</code> becomes visible at 48rem.</small>
+                  </div>
+                </krn-show>
+                <krn-show until="md">
+                  <div class="responsive-card">
+                    <span>MOBILE SLOT</span>
+                    <strong>Compact navigation + essential actions</strong>
+                    <small><code>until="md"</code> stays visible below 48rem.</small>
+                  </div>
+                </krn-show>
+                <div class="breakpoint-map" aria-label="Medium breakpoint visibility">
+                  <div><span>0—47.99rem</span><strong>Mobile slot</strong></div>
+                  <div><span>48rem+</span><strong>Desktop slot</strong></div>
                 </div>
+                <p>Resize the browser across 48rem to see the rendered slot switch.</p>
               </div>
             }
             @case ('resizable-panels') {
@@ -365,7 +415,6 @@
                   <krn-text-input
                     placeholder="Northstar"
                     [invalid]="!!workspaceNameError()"
-                    [maxLength]="48"
                     [minLength]="3"
                     required
                     (valueChange)="workspaceName.set($event); workspaceNameTouched.set(true)"
@@ -374,10 +423,15 @@
               </div>
             }
             @case ('label') {
-              <div class="form-surface message-demo">
-                <krn-label for="data-region"
-                  >Data region <span aria-hidden="true">*</span></krn-label
-                ><krn-select id="data-region" [options]="selectOptions" />
+              <div class="form-surface label-primitive-demo">
+                <div class="control-contract">
+                  <strong>Accessible name</strong>
+                  <span>Describes a control; it does not own a value or popup.</span>
+                </div>
+                <div class="message-demo">
+                  <krn-label for="workspace-slug" required>Workspace slug</krn-label>
+                  <krn-text-input id="workspace-slug" placeholder="northstar-ops" required />
+                </div>
               </div>
             }
             @case ('hint') {
@@ -482,7 +536,11 @@
             }
             @case ('select') {
               <div class="form-surface">
-                <krn-form-field label="Workspace plan"
+                <div class="control-contract">
+                  <strong>Single selection</strong>
+                  <span>One value must come from the predefined list.</span>
+                </div>
+                <krn-form-field label="Workspace plan" hint="Choose exactly one available plan."
                   ><krn-select
                     ariaLabel="Workspace plan"
                     placeholder="Choose a plan"
@@ -492,7 +550,11 @@
             }
             @case ('native-select') {
               <div class="form-surface">
-                <krn-form-field label="Data region"
+                <div class="control-contract">
+                  <strong>Browser-native selection</strong>
+                  <span>The operating system renders the option surface.</span>
+                </div>
+                <krn-form-field label="Data region" hint="Best for compact, platform-native forms."
                   ><krn-native-select
                     ariaLabel="Data region"
                     placeholder="Choose a region"
@@ -502,6 +564,10 @@
             }
             @case ('multi-select') {
               <div class="form-surface">
+                <div class="control-contract">
+                  <strong>Multiple selection</strong>
+                  <span>Selected values remain visible as compact tokens.</span>
+                </div>
                 <krn-form-field label="Owners" hint="Choose one or more teams."
                   ><krn-multi-select
                     ariaLabel="Owners"
@@ -512,6 +578,10 @@
             }
             @case ('combobox') {
               <div class="form-surface">
+                <div class="control-contract">
+                  <strong>Constrained value</strong>
+                  <span>Typing filters the list, but the final value must match an option.</span>
+                </div>
                 <krn-form-field
                   label="Workspace plan"
                   hint="Filter the list, then choose one of the available plans."
@@ -524,6 +594,10 @@
             }
             @case ('autocomplete') {
               <div class="form-surface">
+                <div class="control-contract">
+                  <strong>Free text with suggestions</strong>
+                  <span>Suggestions accelerate entry; a new custom value is still valid.</span>
+                </div>
                 <krn-form-field
                   label="Workspace alias"
                   hint="Choose a suggestion or keep the custom text you entered."
@@ -575,7 +649,7 @@
             }
             @case ('time-picker') {
               <div class="form-surface narrow-form">
-                <krn-form-field label="Daily digest"
+                <krn-form-field label="Daily digest" hint="Type HH:mm or choose a common time."
                   ><krn-time-picker ariaLabel="Digest time" [step]="900"
                 /></krn-form-field>
               </div>
@@ -700,10 +774,10 @@
               </div>
             }
             @case ('context-menu') {
-              <krn-context-menu ariaLabel="Canvas actions" [items]="navigationItems"
+              <krn-context-menu ariaLabel="Canvas actions" [items]="contextMenuItems"
                 ><div class="context-target" tabindex="0">
                   <span>RIGHT CLICK / CONTEXT</span><strong>Northstar workspace</strong
-                  ><small>Open the context menu anywhere in this panel.</small>
+                  ><small>Open the menu, then hover “Move to” for its nested destinations.</small>
                 </div></krn-context-menu
               >
             }
@@ -748,6 +822,9 @@
                   <h3 id="specimen-overview">Component anatomy</h3>
                   <p>Local wayfinding tracks the reader inside a long technical page.</p>
                   <h3 id="specimen-api">API contract</h3>
+                  <p>Inputs and outputs stay on the current component route.</p>
+                  <h3 id="specimen-a11y">Accessibility</h3>
+                  <p>The active section is announced as a location.</p>
                 </div>
                 <krn-table-of-contents
                   title="On this page"
@@ -769,8 +846,15 @@
                 <krn-skip-link
                   targetId="specimen-skip-target"
                   label="Skip specimen navigation"
-                /><span>PRESS TAB</span><strong>The skip link appears on keyboard focus.</strong>
-                <p id="specimen-skip-target" tabindex="-1">Target: main specimen content</p>
+                /><span>KEYBOARD-ONLY SHORTCUT</span
+                ><strong>Press Tab, then Enter to bypass repeated navigation.</strong>
+                <p>The link stays off-screen until it receives keyboard focus.</p>
+                <div id="specimen-skip-target" tabindex="-1" class="skip-target">
+                  <span aria-hidden="true">✓</span>
+                  <div>
+                    <small>FOCUS TARGET</small><strong>Main specimen content begins here</strong>
+                  </div>
+                </div>
               </div>
             }
           }
@@ -800,7 +884,7 @@
             @case ('toast') {
               <div class="feedback-trigger">
                 <krn-button (activated)="showToast()">Show success toast</krn-button>
-                <p>Transient confirmation appears in a live region and remains dismissible.</p>
+                <p>Add several notifications, then hover or focus the stack to review each one.</p>
               </div>
               <krn-toast-viewport ariaLabel="Specimen notifications" />
             }
@@ -915,21 +999,66 @@
             }
             @case ('loading-overlay') {
               <div class="loading-stage">
-                <krn-card eyebrow="IMPORT / 84%" heading="Customer records"
-                  ><p>Processing 8,410 of 10,000 rows.</p></krn-card
-                ><krn-loading-overlay [active]="true" label="Importing customer records…" />
+                <krn-loading-overlay [active]="true" label="Importing customer records…">
+                  <krn-card eyebrow="IMPORT / 84%" heading="Customer records"
+                    ><p>Processing 8,410 of 10,000 rows.</p></krn-card
+                  >
+                </krn-loading-overlay>
               </div>
             }
             @case ('progress-bar') {
               <div class="progress-specimen">
-                <span>Importing records <strong>68%</strong></span
-                ><krn-progress-bar [value]="68" valueText="68 percent complete" />
+                <span
+                  >Importing records <strong>{{ progressValue() }}%</strong></span
+                ><krn-progress-bar
+                  [value]="progressValue()"
+                  [valueText]="progressValue() + ' percent complete'"
+                />
+                <div class="progress-controls" role="group" aria-label="Adjust import progress">
+                  <krn-button
+                    size="sm"
+                    variant="outline"
+                    tone="neutral"
+                    (activated)="adjustProgress(-10)"
+                    >−10</krn-button
+                  >
+                  <krn-button
+                    size="sm"
+                    variant="outline"
+                    tone="neutral"
+                    (activated)="adjustProgress(10)"
+                    >+10</krn-button
+                  >
+                </div>
               </div>
             }
             @case ('circular-progress') {
               <div class="circular-gallery">
-                <krn-circular-progress [value]="72" [showValue]="true" ariaLabel="Storage used" />
-                <div><strong>72% used</strong><small>28 GB available</small></div>
+                <krn-circular-progress
+                  [value]="progressValue()"
+                  [showValue]="true"
+                  ariaLabel="Storage used"
+                />
+                <div>
+                  <strong>{{ progressValue() }}% used</strong
+                  ><small>{{ 100 - progressValue() }} GB available</small>
+                </div>
+                <div class="progress-controls" role="group" aria-label="Adjust storage progress">
+                  <krn-button
+                    size="sm"
+                    variant="outline"
+                    tone="neutral"
+                    (activated)="adjustProgress(-10)"
+                    >−10</krn-button
+                  >
+                  <krn-button
+                    size="sm"
+                    variant="outline"
+                    tone="neutral"
+                    (activated)="adjustProgress(10)"
+                    >+10</krn-button
+                  >
+                </div>
               </div>
             }
             @case ('spinner') {
@@ -950,14 +1079,14 @@
               <krn-empty-state
                 title="No automations yet"
                 description="Create an automation to connect events with repeatable actions."
-                ><krn-button>Create automation</krn-button></krn-empty-state
+                ><krn-button krnStateAction>Create automation</krn-button></krn-empty-state
               >
             }
             @case ('error-state') {
               <krn-error-state
                 title="Could not load workspaces"
                 description="The service did not respond. Your changes are safe."
-                ><krn-button variant="outline" tone="neutral"
+                ><krn-button krnStateAction variant="outline" tone="neutral"
                   >Try again</krn-button
                 ></krn-error-state
               >
@@ -966,7 +1095,7 @@
               <krn-success-state
                 title="Workspace created"
                 description="Northstar is ready for collaborators."
-                ><krn-button>Invite people</krn-button></krn-success-state
+                ><krn-button krnStateAction>Invite people</krn-button></krn-success-state
               >
             }
             @case ('confirmation-pattern') {
@@ -1146,16 +1275,34 @@
             }
             @case ('meter') {
               <div class="meter-gallery">
-                <div><span>Storage</span><strong>68 GB / 100 GB</strong></div>
+                <div>
+                  <span>Storage</span><strong>{{ meterValue() }} GB / 100 GB</strong>
+                </div>
                 <krn-meter
                   label="Storage used"
-                  [value]="68"
+                  [value]="meterValue()"
                   [min]="0"
                   [max]="100"
                   [low]="40"
                   [high]="80"
                   [optimum]="20"
                 />
+                <div class="progress-controls" role="group" aria-label="Adjust storage meter">
+                  <krn-button
+                    size="sm"
+                    variant="outline"
+                    tone="neutral"
+                    (activated)="adjustMeter(-10)"
+                    >−10</krn-button
+                  >
+                  <krn-button
+                    size="sm"
+                    variant="outline"
+                    tone="neutral"
+                    (activated)="adjustMeter(10)"
+                    >+10</krn-button
+                  >
+                </div>
               </div>
             }
             @case ('rating') {

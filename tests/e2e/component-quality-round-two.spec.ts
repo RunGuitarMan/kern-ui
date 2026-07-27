@@ -210,7 +210,7 @@ test.describe('Round two: documentation and preview contracts', () => {
     const specimen = await openSpecimen(page, 'dropdown-button');
     const canvas = specimen.locator('.specimen-canvas');
     await specimen.getByRole('button', { name: 'Export' }).click();
-    const menu = specimen.getByRole('menu');
+    const menu = page.getByRole('menu');
     await expect(menu).toBeVisible();
 
     const canvasRect = await rect(canvas);
@@ -243,6 +243,11 @@ test.describe('Round two: form behavior and geometry', () => {
     await expect(specimen.locator('.krn-message--error')).toHaveCount(0);
 
     await input.fill('ab');
+    await expect(shell).toHaveAttribute('data-invalid', 'true');
+    await expect(specimen.locator('.krn-message--error')).toContainText('3–48');
+
+    await input.fill('x'.repeat(49));
+    await expect(input).toHaveValue('x'.repeat(49));
     await expect(shell).toHaveAttribute('data-invalid', 'true');
     await expect(specimen.locator('.krn-message--error')).toContainText('3–48');
 
@@ -289,22 +294,28 @@ test.describe('Round two: form behavior and geometry', () => {
     expect(await number.evaluate((element) => getComputedStyle(element).appearance)).toBe(
       'textfield',
     );
-    await expect(specimen.getByRole('button', { name: 'Increase value' })).toHaveCount(1);
+    const increase = specimen.getByRole('button', { name: 'Increase value' });
+    await expect(increase).toHaveCount(1);
     await expect(specimen.getByRole('button', { name: 'Decrease value' })).toHaveCount(1);
+    const incrementBackground = await increase.evaluate(
+      (element) => getComputedStyle(element).backgroundColor,
+    );
+    await increase.hover();
+    expect(
+      await increase.evaluate((element) => getComputedStyle(element).backgroundColor),
+    ).not.toBe(incrementBackground);
+    await increase.click();
+    await expect(number).toHaveValue('6');
 
     specimen = await openSpecimen(page, 'label');
     await expect(specimen.locator('select')).toHaveCount(0);
-    const region = specimen.getByRole('combobox', { name: 'Data region' });
-    const triggerRect = await rect(region);
-    await specimen.locator('label[for="data-region"]').click();
-    await expect(region).toBeFocused();
-    await expect(page.getByRole('listbox')).toBeVisible();
-    await page.keyboard.press('Escape');
-    await region.click();
-    const listbox = page.getByRole('listbox');
-    await expect(listbox).toBeVisible();
-    const listboxRect = await rect(listbox);
-    expect(listboxRect.y).toBeGreaterThanOrEqual(triggerRect.y + triggerRect.height - 1);
+    const slug = specimen.getByRole('textbox', { name: 'Workspace slug' });
+    await specimen.locator('label[for="workspace-slug"]').click();
+    await expect(slug).toBeFocused();
+    await expect(page.getByRole('listbox')).toHaveCount(0);
+    await expect(specimen.locator('.control-contract')).toContainText(
+      'does not own a value or popup',
+    );
     assertNoRuntimeErrors();
   });
 
@@ -427,8 +438,32 @@ test.describe('Round two: form behavior and geometry', () => {
     await rangeSurface.click({
       position: { x: rangeBounds.width * 0.1, y: rangeBounds.height / 2 },
     });
-    expect(Number(await thumbs.nth(0).inputValue())).toBeLessThan(20);
+    await expect
+      .poll(async () => Number(await thumbs.nth(0).inputValue()))
+      .toBeLessThan(20);
     await expect(thumbs.nth(1)).toHaveValue(`${clickedEnd}`);
+
+    await rangeSurface.scrollIntoViewIfNeeded();
+    const dragBounds = await rangeSurface.boundingBox();
+    expect(dragBounds).not.toBeNull();
+    if (!dragBounds) return;
+    const startBeforeDrag = Number(await thumbs.nth(0).inputValue());
+    const endBeforeDrag = Number(await thumbs.nth(1).inputValue());
+    const thumbRadius = 9;
+    const travel = dragBounds.width - thumbRadius * 2;
+    const startX = dragBounds.x + thumbRadius + travel * (startBeforeDrag / 100);
+    await page.mouse.move(startX, dragBounds.y + dragBounds.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(
+      dragBounds.x + thumbRadius + travel * 0.35,
+      dragBounds.y + dragBounds.height / 2,
+      { steps: 6 },
+    );
+    await page.mouse.up();
+    await expect
+      .poll(async () => Number(await thumbs.nth(0).inputValue()))
+      .toBeGreaterThan(startBeforeDrag);
+    await expect(thumbs.nth(1)).toHaveValue(`${endBeforeDrag}`);
     assertNoRuntimeErrors();
   });
 
@@ -584,31 +619,22 @@ test.describe('Round two: navigation and layout geometry', () => {
     const automations = tree.getByRole('treeitem', { name: 'Automations' });
     const overview = tree.getByRole('treeitem', { name: 'Overview' });
     await automations.getByRole('button', { name: 'Automations' }).click();
-    const automationStyle = await automations.locator('.node-row').evaluate((element) => {
-      const style = getComputedStyle(element);
-      const stripe = getComputedStyle(element, '::before');
-      return {
-        background: style.backgroundColor,
-        radius: style.borderRadius,
-        stripeColor: stripe.backgroundColor,
-        stripeOpacity: stripe.opacity,
-        stripeWidth: stripe.width,
-      };
-    });
+    const selectedStyle = (row: Locator) =>
+      row.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return {
+          background: style.backgroundColor,
+          radius: style.borderRadius,
+          stripeColor: style.borderInlineStartColor,
+          stripeStyle: style.borderInlineStartStyle,
+          stripeWidth: style.borderInlineStartWidth,
+        };
+      });
+    const automationStyle = await selectedStyle(automations.locator('.node-row'));
     await overview.getByRole('button', { name: 'Overview' }).click();
-    const overviewStyle = await overview.locator('.node-row').evaluate((element) => {
-      const style = getComputedStyle(element);
-      const stripe = getComputedStyle(element, '::before');
-      return {
-        background: style.backgroundColor,
-        radius: style.borderRadius,
-        stripeColor: stripe.backgroundColor,
-        stripeOpacity: stripe.opacity,
-        stripeWidth: stripe.width,
-      };
-    });
+    const overviewStyle = await selectedStyle(overview.locator('.node-row'));
     expect(overviewStyle).toEqual(automationStyle);
-    expect(overviewStyle.stripeOpacity).toBe('1');
+    expect(overviewStyle.stripeStyle).toBe('solid');
     expect(Number.parseFloat(overviewStyle.stripeWidth)).toBeGreaterThan(0);
     expect(overviewStyle.stripeColor).not.toBe('rgba(0, 0, 0, 0)');
 

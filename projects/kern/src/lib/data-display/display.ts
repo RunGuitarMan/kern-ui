@@ -1,5 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { NgTemplateOutlet } from '@angular/common';
+import type { ElementRef } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,6 +10,7 @@ import {
   input,
   model,
   output,
+  viewChildren,
 } from '@angular/core';
 
 export type KrnDisplayTone = 'neutral' | 'brand' | 'info' | 'success' | 'warning' | 'danger';
@@ -29,27 +31,29 @@ export type KrnDisplayTone = 'neutral' | 'brand' | 'info' | 'success' | 'warning
   styles: `
     :host {
       --_badge-accent: var(--krn-color-text-muted, #5d6470);
-      --_badge-color: var(--krn-color-text, #252932);
+      --_badge-color: var(--krn-color-text-muted, #5d6470);
+      --_badge-tint: var(--krn-color-surface-subtle, #f5f6f7);
       --_badge-surface: color-mix(
         in oklch,
-        var(--_badge-accent) 9%,
-        var(--krn-color-surface, #fff)
+        var(--krn-color-surface-raised, #fff) 86%,
+        var(--_badge-tint)
       );
       display: inline-flex;
-      min-block-size: 1.625rem;
+      min-block-size: 1.5rem;
       box-sizing: border-box;
       align-items: center;
       justify-content: center;
-      gap: 0.35rem;
-      padding: 0.25rem 0.5625rem;
-      border: 1px solid color-mix(in oklch, var(--_badge-accent) 32%, transparent);
+      gap: 0.375rem;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid
+        color-mix(in oklch, var(--_badge-accent) 22%, var(--krn-color-border, #d8dbe0));
       border-radius: var(--krn-radius-pill, 999px);
       color: var(--_badge-color);
       background: var(--_badge-surface);
-      box-shadow: inset 0 1px color-mix(in oklch, white 7%, transparent);
-      font: 600 0.75rem/1 var(--krn-font-family-ui, sans-serif);
+      box-shadow: inset 0 1px color-mix(in oklch, white 5%, transparent);
+      font: 600 0.75rem/1.05 var(--krn-font-family-ui, sans-serif);
       font-variant-numeric: tabular-nums;
-      letter-spacing: 0.005em;
+      letter-spacing: -0.004em;
       text-align: center;
       vertical-align: middle;
       white-space: nowrap;
@@ -57,56 +61,44 @@ export type KrnDisplayTone = 'neutral' | 'brand' | 'info' | 'success' | 'warning
     :host([data-tone='brand']) {
       --_badge-accent: var(--krn-color-primary, #4666da);
       --_badge-color: var(--krn-color-brand-text, #1d4ed8);
-      --_badge-surface: color-mix(
-        in oklch,
-        var(--krn-color-primary, #4666da) 15%,
-        var(--krn-color-surface, #fff)
-      );
+      --_badge-tint: var(--krn-color-primary-subtle, #e8edff);
     }
     :host([data-tone='success']) {
       --_badge-accent: var(--krn-color-success, #176b49);
       --_badge-color: var(--krn-color-success-text, #176b49);
-      --_badge-surface: color-mix(
-        in oklch,
-        var(--krn-color-success, #176b49) 16%,
-        var(--krn-color-surface, #fff)
-      );
+      --_badge-tint: var(--krn-color-success-subtle, #e4f3eb);
     }
     :host([data-tone='warning']) {
       --_badge-accent: var(--krn-color-warning, #725400);
       --_badge-color: var(--krn-color-warning-text, #725400);
-      --_badge-surface: color-mix(
-        in oklch,
-        var(--krn-color-warning, #725400) 17%,
-        var(--krn-color-surface, #fff)
-      );
+      --_badge-tint: var(--krn-color-warning-subtle, #fff1d0);
     }
     :host([data-tone='danger']) {
       --_badge-accent: var(--krn-color-danger, #a02d2d);
       --_badge-color: var(--krn-color-danger-text, #a02d2d);
-      --_badge-surface: color-mix(
-        in oklch,
-        var(--krn-color-danger, #a02d2d) 15%,
-        var(--krn-color-surface, #fff)
-      );
+      --_badge-tint: var(--krn-color-danger-subtle, #fce8ea);
     }
     :host([data-tone='info']) {
       --_badge-accent: var(--krn-color-info, #245ea7);
       --_badge-color: var(--krn-color-info-text, #245ea7);
+      --_badge-tint: var(--krn-color-info-subtle, #e5effb);
+    }
+    :host([data-status]) {
       --_badge-surface: color-mix(
         in oklch,
-        var(--krn-color-info, #245ea7) 15%,
-        var(--krn-color-surface, #fff)
+        var(--krn-color-surface-raised, #fff) 94%,
+        var(--_badge-tint)
       );
+      border-color: color-mix(in oklch, var(--_badge-accent) 18%, var(--krn-color-border, #d8dbe0));
     }
     .marker {
-      inline-size: 0.375rem;
-      block-size: 0.375rem;
+      inline-size: 0.4rem;
+      block-size: 0.4rem;
       flex: 0 0 auto;
       border: 0;
       border-radius: 50%;
       background: var(--_badge-accent);
-      box-shadow: 0 0 0 2px color-mix(in oklch, var(--_badge-accent) 16%, transparent);
+      box-shadow: 0 0 0 2px color-mix(in oklch, var(--_badge-accent) 11%, transparent);
     }
     @media (forced-colors: active) {
       :host {
@@ -614,25 +606,34 @@ export class KrnListItem {
       display: block;
       border-block-end: 1px solid var(--krn-color-border-subtle, #e0e3e7);
     }
+    details {
+      interpolate-size: allow-keywords;
+    }
     summary {
       display: flex;
       min-block-size: var(--krn-control-size, 2.5rem);
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      padding-block: 0.75rem;
+      padding: 0.75rem 0.375rem;
+      border-radius: var(--krn-radius-control, 0.375rem);
       color: var(--krn-color-text, #252932);
       font-weight: 620;
       cursor: pointer;
       list-style: none;
+      transition:
+        color var(--krn-motion-moderate, 160ms),
+        background var(--krn-motion-moderate, 160ms);
     }
     summary::-webkit-details-marker {
       display: none;
     }
     summary:focus-visible {
-      border-radius: var(--krn-radius-control, 0.375rem);
       outline: var(--krn-focus-ring, 2px solid #4f6feb);
       outline-offset: 3px;
+    }
+    summary:hover {
+      background: color-mix(in oklch, var(--krn-color-surface-subtle, #f3f4f6) 74%, transparent);
     }
     .indicator {
       inline-size: 0.5rem;
@@ -646,11 +647,27 @@ export class KrnListItem {
       rotate: 225deg;
     }
     .panel {
-      padding-block: 0 1rem;
+      padding: 0 var(--krn-space-4, 1rem) 1rem;
       color: var(--krn-color-text-muted, #626a76);
     }
+    @supports selector(details::details-content) {
+      details::details-content {
+        block-size: 0;
+        overflow: clip;
+        opacity: 0;
+        transition:
+          block-size var(--krn-motion-moderate, 160ms) var(--krn-motion-ease-standard, ease),
+          opacity var(--krn-motion-moderate, 160ms) var(--krn-motion-ease-standard, ease);
+      }
+      details[open]::details-content {
+        block-size: auto;
+        opacity: 1;
+      }
+    }
     @media (prefers-reduced-motion: reduce) {
-      .indicator {
+      summary,
+      .indicator,
+      details::details-content {
         transition: none;
       }
     }
@@ -769,6 +786,11 @@ export interface KrnTreeNode {
   readonly disabled?: boolean;
 }
 
+interface KrnVisibleTreeNode {
+  readonly node: KrnTreeNode;
+  readonly parent: KrnTreeNode | null;
+}
+
 @Component({
   selector: 'krn-tree',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -777,55 +799,81 @@ export interface KrnTreeNode {
     '[attr.aria-label]': 'ariaLabel()',
   },
   template: `
-    <ul role="group">
-      @for (node of nodes(); track node.id) {
-        <li
-          role="treeitem"
-          [attr.aria-expanded]="node.children?.length ? expanded().has(node.id) : null"
-          [attr.aria-selected]="selected() === node.id"
-          [attr.aria-disabled]="node.disabled || null"
-        >
-          <button
-            type="button"
-            [disabled]="node.disabled"
-            [attr.tabindex]="selected() === node.id ? 0 : -1"
-            (click)="activate(node)"
-            (keydown)="onKeydown($event, node)"
+    <ng-container
+      [ngTemplateOutlet]="branch"
+      [ngTemplateOutletContext]="{ $implicit: nodes(), depth: 0 }"
+    />
+    <ng-template #branch let-branchNodes let-depth="depth">
+      <ul role="group" class="branch" [attr.data-depth]="depth">
+        @for (node of branchNodes; track node.id) {
+          <li
+            role="treeitem"
+            [attr.aria-level]="depth + 1"
+            [attr.aria-expanded]="node.children?.length ? expanded().has(node.id) : null"
+            [attr.aria-selected]="selected() === node.id"
+            [attr.aria-disabled]="node.disabled || null"
           >
-            @if (node.children?.length) {
-              <span class="chevron" aria-hidden="true">{{
-                expanded().has(node.id) ? '−' : '+'
-              }}</span>
+            <button
+              #treeItem
+              type="button"
+              [disabled]="node.disabled"
+              [attr.data-tree-item]="node.id"
+              [attr.tabindex]="isTabStop(node) ? 0 : -1"
+              (click)="activate(node)"
+              (keydown)="onKeydown($event, node)"
+            >
+              <span
+                class="chevron"
+                [class.has-children]="node.children?.length"
+                [class.expanded]="expanded().has(node.id)"
+                aria-hidden="true"
+              ></span>
+              <span>{{ node.label }}</span>
+            </button>
+            @if (node.children?.length && expanded().has(node.id)) {
+              <ng-container
+                [ngTemplateOutlet]="branch"
+                [ngTemplateOutletContext]="{ $implicit: node.children, depth: depth + 1 }"
+              />
             }
-            <span>{{ node.label }}</span>
-          </button>
-          @if (node.children?.length && expanded().has(node.id)) {
-            <krn-tree
-              [nodes]="node.children"
-              [selected]="selected()"
-              (selectedChange)="selected.set($event)"
-              [ariaLabel]="node.label"
-            />
-          }
-        </li>
-      }
-    </ul>
+          </li>
+        }
+      </ul>
+    </ng-template>
   `,
-  imports: [],
+  imports: [NgTemplateOutlet],
   styles: `
     :host {
       display: block;
       color: var(--krn-color-text, #252932);
     }
-    ul {
+    .branch {
       display: grid;
       gap: 0.125rem;
       margin: 0;
       padding: 0;
       list-style: none;
     }
-    :host :host {
-      padding-inline-start: 1.25rem;
+    .branch:not([data-depth='0']) {
+      position: relative;
+      margin-block: 0.125rem 0.25rem;
+      margin-inline-start: 1rem;
+      padding-inline-start: 0.875rem;
+      border-inline-start: 1px solid
+        color-mix(in oklch, var(--krn-color-border, #cdd1d7) 72%, transparent);
+    }
+    li {
+      position: relative;
+      min-inline-size: 0;
+    }
+    .branch:not([data-depth='0']) > li::before {
+      position: absolute;
+      inset-block-start: 1rem;
+      inset-inline-start: -0.875rem;
+      inline-size: 0.625rem;
+      border-block-start: 1px solid
+        color-mix(in oklch, var(--krn-color-border, #cdd1d7) 72%, transparent);
+      content: '';
     }
     button {
       display: flex;
@@ -835,6 +883,7 @@ export interface KrnTreeNode {
       gap: 0.5rem;
       padding-inline: 0.5rem;
       border: 0;
+      border-inline-start: 2px solid transparent;
       border-radius: var(--krn-radius-control, 0.375rem);
       color: inherit;
       background: transparent;
@@ -843,26 +892,66 @@ export interface KrnTreeNode {
       cursor: pointer;
     }
     [aria-selected='true'] > button {
-      box-shadow: inset 3px 0 0 var(--krn-color-brand-solid, #4f6feb);
+      border-inline-start-color: var(--krn-color-brand-solid, #4f6feb);
       background: var(--krn-color-brand-surface, #fff0e8);
       font-weight: 620;
+    }
+    button:hover:not(:disabled) {
+      background: color-mix(in oklch, var(--krn-color-surface-subtle, #f3f4f6) 74%, transparent);
     }
     button:focus-visible {
       outline: var(--krn-focus-ring, 2px solid #4f6feb);
       outline-offset: 1px;
     }
     .chevron {
+      position: relative;
+      display: grid;
       inline-size: 1rem;
+      block-size: 1rem;
       color: var(--krn-color-text-muted, #626a76);
-      text-align: center;
+      place-items: center;
+    }
+    .chevron.has-children::before {
+      inline-size: 0.4rem;
+      block-size: 0.4rem;
+      border-inline-end: 1.5px solid currentColor;
+      border-block-end: 1.5px solid currentColor;
+      rotate: -45deg;
+      transition: rotate var(--krn-motion-moderate, 160ms);
+      content: '';
+    }
+    .chevron.expanded::before {
+      rotate: 45deg;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .chevron.has-children::before {
+        transition: none;
+      }
     }
   `,
 })
 export class KrnTree {
+  private readonly elements = viewChildren<ElementRef<HTMLButtonElement>>('treeItem');
   readonly nodes = input<readonly KrnTreeNode[]>([]);
   readonly ariaLabel = input('Tree');
   readonly selected = model('');
   readonly expanded = model<ReadonlySet<string>>(new Set<string>());
+  private readonly visibleNodes = computed<readonly KrnVisibleTreeNode[]>(() => {
+    const result: KrnVisibleTreeNode[] = [];
+    const visit = (nodes: readonly KrnTreeNode[], parent: KrnTreeNode | null): void => {
+      for (const node of nodes) {
+        result.push({ node, parent });
+        if (node.children?.length && this.expanded().has(node.id)) {
+          visit(node.children, node);
+        }
+      }
+    };
+    visit(this.nodes(), null);
+    return result;
+  });
+  private readonly focusableNodes = computed(() =>
+    this.visibleNodes().filter(({ node }) => !node.disabled),
+  );
 
   activate(node: KrnTreeNode): void {
     if (node.disabled) return;
@@ -870,15 +959,54 @@ export class KrnTree {
     if (node.children?.length) this.toggle(node.id);
   }
 
+  protected isTabStop(node: KrnTreeNode): boolean {
+    const focusable = this.focusableNodes();
+    const selected = focusable.find(({ node: candidate }) => candidate.id === this.selected());
+    return (selected ?? focusable[0])?.node.id === node.id;
+  }
+
   onKeydown(event: KeyboardEvent, node: KrnTreeNode): void {
-    if (event.key === 'ArrowRight' && node.children?.length && !this.expanded().has(node.id)) {
+    if (node.disabled) return;
+
+    if (event.key === 'ArrowRight' && node.children?.length) {
       event.preventDefault();
-      this.toggle(node.id);
+      if (!this.expanded().has(node.id)) {
+        this.toggle(node.id);
+      } else {
+        this.focusNode(this.firstFocusableVisibleDescendant(node));
+      }
+      return;
     }
-    if (event.key === 'ArrowLeft' && this.expanded().has(node.id)) {
+
+    if (event.key === 'ArrowLeft') {
+      const expanded = Boolean(node.children?.length && this.expanded().has(node.id));
+      const parent = expanded ? null : this.enabledParent(node.id);
+      if (!expanded && !parent) return;
       event.preventDefault();
-      this.toggle(node.id);
+      if (expanded) {
+        this.toggle(node.id);
+      } else {
+        this.focusNode(parent);
+      }
+      return;
     }
+
+    const focusable = this.focusableNodes();
+    const current = focusable.findIndex(({ node: candidate }) => candidate.id === node.id);
+    if (current < 0) return;
+    const target =
+      event.key === 'Home'
+        ? focusable[0]
+        : event.key === 'End'
+          ? focusable.at(-1)
+          : event.key === 'ArrowDown'
+            ? focusable[current + 1]
+            : event.key === 'ArrowUp'
+              ? focusable[current - 1]
+              : undefined;
+    if (!['Home', 'End', 'ArrowDown', 'ArrowUp'].includes(event.key)) return;
+    event.preventDefault();
+    this.focusNode(target?.node);
   }
 
   private toggle(id: string): void {
@@ -886,6 +1014,33 @@ export class KrnTree {
     if (next.has(id)) next.delete(id);
     else next.add(id);
     this.expanded.set(next);
+  }
+
+  private firstFocusableVisibleDescendant(node: KrnTreeNode): KrnTreeNode | null {
+    for (const child of node.children ?? []) {
+      if (!child.disabled) return child;
+      if (child.children?.length && this.expanded().has(child.id)) {
+        const descendant = this.firstFocusableVisibleDescendant(child);
+        if (descendant) return descendant;
+      }
+    }
+    return null;
+  }
+
+  private enabledParent(id: string): KrnTreeNode | null {
+    let parent = this.visibleNodes().find(({ node }) => node.id === id)?.parent ?? null;
+    while (parent?.disabled) {
+      parent = this.visibleNodes().find(({ node }) => node.id === parent?.id)?.parent ?? null;
+    }
+    return parent;
+  }
+
+  private focusNode(node?: KrnTreeNode | null): void {
+    if (!node || node.disabled) return;
+    this.selected.set(node.id);
+    this.elements()
+      .find(({ nativeElement }) => nativeElement.dataset['treeItem'] === node.id)
+      ?.nativeElement.focus();
   }
 }
 
@@ -1197,26 +1352,38 @@ export class KrnKeyboardShortcut {
 @Component({
   selector: 'krn-meter',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    role: 'meter',
+    '[attr.aria-label]': 'label()',
+    '[attr.aria-valuemin]': 'safeMin()',
+    '[attr.aria-valuemax]': 'safeMax()',
+    '[attr.aria-valuenow]': 'safeValue()',
+    '[attr.aria-valuetext]': 'displayValue()',
+    '[attr.data-tone]': 'meterTone()',
+  },
   template: `
     <div class="labels">
       <span>{{ label() }}</span>
       <strong>{{ displayValue() }}</strong>
     </div>
-    <meter
-      [min]="min()"
-      [max]="max()"
-      [low]="low()"
-      [high]="high()"
-      [optimum]="optimum()"
-      [value]="value()"
-    >
-      {{ displayValue() }}
-    </meter>
+    <span class="track" aria-hidden="true">
+      <span class="fill" [style.inline-size.%]="percentage()"></span>
+    </span>
   `,
   styles: `
     :host {
+      --_meter-color: var(--krn-color-primary, #4f6feb);
       display: grid;
       gap: 0.5rem;
+    }
+    :host([data-tone='success']) {
+      --_meter-color: var(--krn-color-success, #18724b);
+    }
+    :host([data-tone='warning']) {
+      --_meter-color: var(--krn-color-warning, #946200);
+    }
+    :host([data-tone='danger']) {
+      --_meter-color: var(--krn-color-danger, #b6293d);
     }
     .labels {
       display: flex;
@@ -1229,10 +1396,32 @@ export class KrnKeyboardShortcut {
       color: var(--krn-color-text, #252932);
       font-variant-numeric: tabular-nums;
     }
-    meter {
-      inline-size: 100%;
+    .track {
+      display: block;
       block-size: 0.625rem;
-      accent-color: var(--krn-color-brand-solid, #4f6feb);
+      overflow: hidden;
+      border: 1px solid var(--krn-color-border, #d8dbe0);
+      border-radius: var(--krn-radius-full, 999px);
+      background: var(--krn-color-surface-sunken, #eef0f2);
+    }
+    .fill {
+      display: block;
+      block-size: 100%;
+      border-radius: inherit;
+      background: linear-gradient(
+        90deg,
+        color-mix(in oklch, var(--_meter-color) 78%, white),
+        var(--_meter-color)
+      );
+      box-shadow: 0 0 0.65rem color-mix(in oklch, var(--_meter-color) 24%, transparent);
+      transition:
+        inline-size 360ms var(--krn-motion-ease-enter, cubic-bezier(0.16, 1, 0.3, 1)),
+        background 220ms var(--krn-motion-ease-standard, ease);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fill {
+        transition: none;
+      }
     }
   `,
 })
@@ -1244,9 +1433,25 @@ export class KrnMeter {
   readonly low = input(25);
   readonly high = input(75);
   readonly optimum = input(100);
-  readonly displayValue = computed(
-    () => `${Math.round(((this.value() - this.min()) / (this.max() - this.min())) * 100)}%`,
+  readonly safeMin = computed(() => Math.min(this.min(), this.max()));
+  readonly safeMax = computed(() => Math.max(this.min() + 1, this.max()));
+  readonly safeValue = computed(() =>
+    Math.min(this.safeMax(), Math.max(this.safeMin(), this.value())),
   );
+  readonly percentage = computed(
+    () => ((this.safeValue() - this.safeMin()) / (this.safeMax() - this.safeMin())) * 100,
+  );
+  readonly displayValue = computed(() => `${Math.round(this.percentage())}%`);
+  readonly meterTone = computed<'success' | 'warning' | 'danger'>(() => {
+    const value = this.safeValue();
+    if (this.optimum() <= this.low()) {
+      return value <= this.low() ? 'success' : value <= this.high() ? 'warning' : 'danger';
+    }
+    if (this.optimum() >= this.high()) {
+      return value >= this.high() ? 'success' : value >= this.low() ? 'warning' : 'danger';
+    }
+    return value >= this.low() && value <= this.high() ? 'success' : 'warning';
+  });
 }
 
 @Component({
@@ -1260,16 +1465,26 @@ export class KrnMeter {
   template: `
     @for (item of items(); track item) {
       <button
+        #ratingItem
         type="button"
         role="radio"
         [attr.aria-checked]="item === value()"
         [attr.aria-label]="item + ' of ' + max()"
+        [attr.data-rating-item]="item"
         [attr.tabindex]="item === value() || (!value() && item === 1) ? 0 : -1"
         [disabled]="disabled()"
         (click)="setValue(item)"
         (keydown)="onKeydown($event)"
       >
-        <span aria-hidden="true">{{ item <= value() ? '★' : '☆' }}</span>
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          [attr.data-filled]="item <= value() ? '' : null"
+        >
+          <path
+            d="m12 3.75 2.45 4.96 5.47.8-3.96 3.85.94 5.45L12 16.23 7.1 18.8l.94-5.45-3.96-3.85 5.47-.8L12 3.75Z"
+          />
+        </svg>
       </button>
     }
   `,
@@ -1279,6 +1494,7 @@ export class KrnMeter {
       gap: 0.125rem;
     }
     button {
+      --_rating-color: oklch(66% 0.16 76);
       display: grid;
       inline-size: 2rem;
       block-size: 2rem;
@@ -1286,13 +1502,34 @@ export class KrnMeter {
       padding: 0;
       border: 0;
       border-radius: var(--krn-radius-control, 0.375rem);
-      color: var(--krn-color-warning-solid, #a27700);
+      color: var(--_rating-color);
       background: transparent;
-      font-size: 1.25rem;
       cursor: pointer;
+      transition:
+        background var(--krn-motion-duration-fast, 90ms),
+        transform var(--krn-motion-duration-fast, 90ms);
+    }
+    svg {
+      inline-size: 1.25rem;
+      block-size: 1.25rem;
+      overflow: visible;
+    }
+    path {
+      fill: color-mix(in oklch, var(--krn-color-surface, #fff) 90%, var(--_rating-color));
+      stroke: color-mix(in oklch, var(--_rating-color) 64%, var(--krn-color-text-muted, #626a76));
+      stroke-linejoin: round;
+      stroke-width: 1.45;
+      transition:
+        fill var(--krn-motion-duration-fast, 90ms),
+        stroke var(--krn-motion-duration-fast, 90ms);
+    }
+    svg[data-filled] path {
+      fill: var(--_rating-color);
+      stroke: color-mix(in oklch, var(--_rating-color) 84%, var(--krn-color-text, #252932));
     }
     button:hover {
-      background: var(--krn-color-warning-surface, #fff6d8);
+      background: color-mix(in oklch, var(--_rating-color) 10%, transparent);
+      transform: translateY(-1px);
     }
     button:focus-visible {
       outline: var(--krn-focus-ring, 2px solid #4f6feb);
@@ -1305,6 +1542,7 @@ export class KrnMeter {
   `,
 })
 export class KrnRating {
+  private readonly ratingItems = viewChildren<ElementRef<HTMLButtonElement>>('ratingItem');
   readonly value = model(0);
   readonly max = input(5);
   readonly disabled = input(false, { transform: booleanAttribute });
@@ -1322,12 +1560,20 @@ export class KrnRating {
     if (this.disabled() || this.readonly()) return;
     if (event.key === 'ArrowRight' || event.key === 'ArrowUp') {
       event.preventDefault();
-      this.value.set(Math.min(this.max(), this.value() + 1));
+      const value = Math.min(this.max(), this.value() + 1);
+      this.value.set(value);
+      this.focusValue(value);
     }
     if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
       event.preventDefault();
-      this.value.set(Math.max(1, this.value() - 1));
+      const value = Math.max(1, this.value() - 1);
+      this.value.set(value);
+      this.focusValue(value);
     }
+  }
+
+  private focusValue(value: number): void {
+    this.ratingItems()[value - 1]?.nativeElement.focus();
   }
 }
 

@@ -1,5 +1,6 @@
 import type { ElementRef } from '@angular/core';
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   input,
@@ -19,16 +20,22 @@ import type { KrnTreeNavigationItem } from './navigation.types';
     <nav [attr.aria-label]="ariaLabel()">
       <ng-container
         [ngTemplateOutlet]="branch"
-        [ngTemplateOutletContext]="{ $implicit: items(), root: true }"
+        [ngTemplateOutletContext]="{ $implicit: items(), root: true, level: 0 }"
       />
     </nav>
-    <ng-template #branch let-nodes let-root="root">
-      <ul [attr.role]="root ? 'tree' : 'group'">
+    <ng-template #branch let-nodes let-root="root" let-level="level">
+      <ul
+        [attr.role]="root ? 'tree' : 'group'"
+        [attr.data-level]="level"
+        [class.branch]="!root"
+        [class.with-guides]="showGuides()"
+      >
         @for (node of nodes; track node.id) {
           <li
             role="treeitem"
             [attr.aria-expanded]="node.children?.length ? isExpanded(node.id) : null"
             [attr.aria-selected]="selectedId() === node.id"
+            [attr.aria-disabled]="node.disabled || null"
           >
             <div class="node-row" [class.selected]="selectedId() === node.id">
               @if (node.children?.length) {
@@ -39,7 +46,11 @@ import type { KrnTreeNavigationItem } from './navigation.types';
                   [attr.tabindex]="-1"
                   (click)="toggle(node.id)"
                 >
-                  <span aria-hidden="true">{{ isExpanded(node.id) ? '−' : '+' }}</span>
+                  <span
+                    class="caret"
+                    [class.expanded]="isExpanded(node.id)"
+                    aria-hidden="true"
+                  ></span>
                 </button>
               } @else {
                 <span class="spacer" aria-hidden="true"></span>
@@ -49,6 +60,7 @@ import type { KrnTreeNavigationItem } from './navigation.types';
                   #treeItem
                   class="node"
                   [href]="node.href"
+                  [attr.data-tree-item]="node.id"
                   [attr.tabindex]="isTabStop(node) ? 0 : -1"
                   (click)="activate(node)"
                   (keydown)="onKeydown($event, node)"
@@ -60,6 +72,7 @@ import type { KrnTreeNavigationItem } from './navigation.types';
                   type="button"
                   class="node"
                   [disabled]="node.disabled"
+                  [attr.data-tree-item]="node.id"
                   [attr.tabindex]="isTabStop(node) ? 0 : -1"
                   (click)="activate(node)"
                   (keydown)="onKeydown($event, node)"
@@ -71,7 +84,11 @@ import type { KrnTreeNavigationItem } from './navigation.types';
             @if (node.children?.length && isExpanded(node.id)) {
               <ng-container
                 [ngTemplateOutlet]="branch"
-                [ngTemplateOutletContext]="{ $implicit: node.children, root: false }"
+                [ngTemplateOutletContext]="{
+                  $implicit: node.children,
+                  root: false,
+                  level: level + 1,
+                }"
               />
             }
           </li>
@@ -79,6 +96,9 @@ import type { KrnTreeNavigationItem } from './navigation.types';
       </ul>
     </ng-template>
   `,
+  host: {
+    '[style.--krn-tree-indent]': 'indent()',
+  },
   styles: `
     :host {
       display: block;
@@ -95,17 +115,18 @@ import type { KrnTreeNavigationItem } from './navigation.types';
       padding: 0;
       list-style: none;
     }
-    ul ul {
+    ul.branch {
       position: relative;
       margin-block-start: var(--krn-space-1);
-      padding-inline-start: var(--krn-space-5);
+      margin-inline-start: calc(var(--krn-control-height-sm) / 2);
+      padding-inline-start: var(--krn-tree-indent);
     }
-    ul ul::before {
+    ul.branch.with-guides::before {
       position: absolute;
-      inset-block: 0;
-      inset-inline-start: calc(var(--krn-space-3) - var(--krn-border-width-1));
+      inset-block: 0 var(--krn-space-2);
+      inset-inline-start: 0;
       inline-size: var(--krn-border-width-1);
-      background: var(--krn-color-border);
+      background: color-mix(in oklch, var(--krn-color-border) 72%, transparent);
       content: '';
     }
     .node-row {
@@ -114,31 +135,19 @@ import type { KrnTreeNavigationItem } from './navigation.types';
       inline-size: 100%;
       min-inline-size: 0;
       align-items: center;
-      overflow: clip;
+      overflow: hidden;
+      border-inline-start: calc(var(--krn-border-width-1) * 2) solid transparent;
       border-radius: var(--krn-radius-sm);
-    }
-    .node-row::before {
-      position: absolute;
-      inset-block: var(--krn-space-1);
-      inset-inline-start: 0;
-      inline-size: calc(var(--krn-border-width-1) * 2);
-      border-radius: var(--krn-radius-full);
-      background: var(--krn-color-border-strong);
-      content: '';
-      opacity: 0;
+      transition:
+        background var(--krn-motion-duration-fast) var(--krn-motion-ease-standard),
+        border-color var(--krn-motion-duration-fast) var(--krn-motion-ease-standard);
     }
     .node-row:hover {
       background: color-mix(in oklch, var(--krn-color-surface-subtle) 72%, transparent);
     }
-    .node-row:hover::before {
-      opacity: 0.72;
-    }
     .node-row.selected {
+      border-inline-start-color: var(--krn-color-primary);
       background: var(--krn-color-surface-subtle);
-    }
-    .node-row.selected::before {
-      background: var(--krn-color-primary);
-      opacity: 1;
     }
     .toggle,
     .spacer {
@@ -157,6 +166,18 @@ import type { KrnTreeNavigationItem } from './navigation.types';
     }
     .toggle:hover {
       color: var(--krn-color-text);
+      background: color-mix(in oklch, var(--krn-color-surface-subtle) 72%, transparent);
+    }
+    .caret {
+      inline-size: 0.45rem;
+      block-size: 0.45rem;
+      border-inline-end: 1.5px solid currentColor;
+      border-block-end: 1.5px solid currentColor;
+      rotate: -45deg;
+      transition: rotate var(--krn-motion-duration-fast) var(--krn-motion-ease-standard);
+    }
+    .caret.expanded {
+      rotate: 45deg;
     }
     .node {
       display: flex;
@@ -186,6 +207,12 @@ import type { KrnTreeNavigationItem } from './navigation.types';
       color: var(--krn-color-text-disabled);
       cursor: not-allowed;
     }
+    @media (prefers-reduced-motion: reduce) {
+      .node-row,
+      .caret {
+        transition: none;
+      }
+    }
   `,
 })
 export class KrnTreeNavigation {
@@ -194,6 +221,8 @@ export class KrnTreeNavigation {
   readonly selectedId = model<string | null>(null);
   readonly expandedIds = model<readonly string[]>([]);
   readonly ariaLabel = input('Navigation tree');
+  readonly indent = input('1rem');
+  readonly showGuides = input(true, { transform: booleanAttribute });
   readonly itemSelected = output<KrnTreeNavigationItem>();
 
   protected isExpanded(id: string): boolean {
@@ -208,7 +237,10 @@ export class KrnTreeNavigation {
     if (collapsing) {
       const branch = this.findItem(id);
       if (branch && this.containsId(branch.children ?? [], this.selectedId())) {
-        this.selectedId.set(id);
+        const replacement = branch.disabled
+          ? (this.enabledParent(id) ?? this.visibleItems().find((item) => !item.disabled))
+          : branch;
+        this.selectedId.set(replacement?.id ?? null);
       }
     }
   }
@@ -220,12 +252,12 @@ export class KrnTreeNavigation {
   }
 
   protected onKeydown(event: KeyboardEvent, item: KrnTreeNavigationItem): void {
-    const visible = this.visibleItems();
-    const current = visible.findIndex((candidate) => candidate.id === item.id);
+    if (item.disabled) return;
+
     if (event.key === 'ArrowRight' && item.children?.length) {
       event.preventDefault();
       if (!this.isExpanded(item.id)) this.toggle(item.id);
-      else this.focusItem(visible[current + 1]?.id);
+      else this.focusItem(this.firstFocusableVisibleDescendant(item)?.id);
       return;
     }
     if (event.key === 'ArrowLeft' && item.children?.length && this.isExpanded(item.id)) {
@@ -234,13 +266,16 @@ export class KrnTreeNavigation {
       return;
     }
     if (event.key === 'ArrowLeft') {
-      const parent = this.findParent(item.id);
+      const parent = this.enabledParent(item.id);
       if (parent) {
         event.preventDefault();
         this.focusItem(parent.id);
       }
       return;
     }
+    const visible = this.focusableVisibleItems();
+    const current = visible.findIndex((candidate) => candidate.id === item.id);
+    if (current < 0) return;
     const next =
       event.key === 'Home'
         ? 0
@@ -251,10 +286,9 @@ export class KrnTreeNavigation {
             : event.key === 'ArrowUp'
               ? current - 1
               : -1;
-    if (next < 0 || next >= visible.length) return;
+    if (!['Home', 'End', 'ArrowDown', 'ArrowUp'].includes(event.key)) return;
     event.preventDefault();
-    this.selectedId.set(visible[next].id);
-    this.elements()[next]?.nativeElement.focus();
+    this.focusItem(visible[next]?.id);
   }
 
   private visibleItems(): readonly KrnTreeNavigationItem[] {
@@ -270,8 +304,13 @@ export class KrnTreeNavigation {
   }
 
   protected isTabStop(item: KrnTreeNavigationItem): boolean {
-    if (this.selectedId()) return this.selectedId() === item.id;
-    return this.visibleItems().find((candidate) => !candidate.disabled)?.id === item.id;
+    const visible = this.focusableVisibleItems();
+    const selected = visible.find((candidate) => candidate.id === this.selectedId());
+    return (selected ?? visible[0])?.id === item.id;
+  }
+
+  private focusableVisibleItems(): readonly KrnTreeNavigationItem[] {
+    return this.visibleItems().filter((item) => !item.disabled);
   }
 
   private findItem(id: string): KrnTreeNavigationItem | null {
@@ -306,12 +345,34 @@ export class KrnTreeNavigation {
     return items.some((item) => item.id === id || this.containsId(item.children ?? [], id));
   }
 
+  private firstFocusableVisibleDescendant(
+    item: KrnTreeNavigationItem,
+  ): KrnTreeNavigationItem | null {
+    for (const child of item.children ?? []) {
+      if (!child.disabled) return child;
+      if (child.children?.length && this.isExpanded(child.id)) {
+        const descendant = this.firstFocusableVisibleDescendant(child);
+        if (descendant) return descendant;
+      }
+    }
+    return null;
+  }
+
+  private enabledParent(id: string): KrnTreeNavigationItem | null {
+    let parent = this.findParent(id);
+    while (parent?.disabled) {
+      parent = this.findParent(parent.id);
+    }
+    return parent;
+  }
+
   private focusItem(id?: string): void {
     if (!id) return;
-    const index = this.visibleItems().findIndex((item) => item.id === id);
-    if (index >= 0) {
-      this.selectedId.set(id);
-      setTimeout(() => this.elements()[index]?.nativeElement.focus());
-    }
+    const item = this.visibleItems().find((candidate) => candidate.id === id);
+    if (!item || item.disabled) return;
+    this.selectedId.set(id);
+    this.elements()
+      .find(({ nativeElement }) => nativeElement.dataset['treeItem'] === id)
+      ?.nativeElement.focus();
   }
 }

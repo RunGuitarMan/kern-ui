@@ -4,3 +4,12 @@
 @import './density.css';
 @import './base.css';
 @import './utilities.css';
+
+/*
+ * CDK calculates connected-overlay positions from documentElement.clientWidth.
+ * With scrollbar-gutter: stable, a percentage-sized fixed container resolves
+ * against the narrower content box instead. Keep both coordinate spaces equal.
+ */
+.cdk-overlay-container {
+  inline-size: 100vw !important;
+}

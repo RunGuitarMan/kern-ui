@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  inject,
+  input,
+  model,
+} from '@angular/core';
 
 export interface KrnChartDatum {
   readonly label: string;
@@ -368,8 +376,9 @@ interface KrnTooltipPosition {
       stroke-width: 2.5;
       vector-effect: non-scaling-stroke;
       transition:
-        r var(--krn-motion-duration-fast, 90ms) var(--krn-motion-ease-standard, ease),
-        fill var(--krn-motion-duration-fast, 90ms) var(--krn-motion-ease-standard, ease);
+        r 180ms var(--krn-motion-ease-standard, ease),
+        fill 180ms var(--krn-motion-ease-standard, ease),
+        opacity 180ms var(--krn-motion-ease-standard, ease);
     }
     .point:hover .dot,
     .point[data-active] .dot,
@@ -390,8 +399,8 @@ interface KrnTooltipPosition {
       transform-box: fill-box;
       transform-origin: center bottom;
       transition:
-        opacity var(--krn-motion-duration-fast, 90ms) var(--krn-motion-ease-standard, ease),
-        transform var(--krn-motion-duration-normal, 160ms) var(--krn-motion-ease-enter, ease);
+        opacity 200ms var(--krn-motion-ease-standard, ease),
+        transform 240ms var(--krn-motion-ease-enter, ease);
     }
     .bar:hover rect,
     .bar[data-active] rect,
@@ -428,8 +437,8 @@ interface KrnTooltipPosition {
       rotate: -90deg;
       transform-origin: center;
       transition:
-        opacity var(--krn-motion-duration-fast, 90ms) var(--krn-motion-ease-standard, ease),
-        stroke-width var(--krn-motion-duration-normal, 160ms) var(--krn-motion-ease-enter, ease);
+        opacity 200ms var(--krn-motion-ease-standard, ease),
+        stroke-width 240ms var(--krn-motion-ease-enter, ease);
     }
     .donut-segment:hover,
     .donut-segment[data-active],
@@ -481,7 +490,7 @@ interface KrnTooltipPosition {
       font: inherit;
       text-align: start;
       cursor: pointer;
-      transition: background var(--krn-motion-duration-fast, 90ms);
+      transition: background 180ms var(--krn-motion-ease-standard, ease);
     }
     .legend button:hover,
     .legend li[data-active] button {
@@ -517,8 +526,10 @@ interface KrnTooltipPosition {
       pointer-events: none;
       transform: translate(-50%, calc(-100% - 0.5rem));
       backdrop-filter: blur(10px);
-      animation: krn-chart-tooltip-in var(--krn-motion-duration-fast, 90ms)
-        var(--krn-motion-ease-enter, ease-out);
+      transition:
+        inset-block-start 180ms var(--krn-motion-ease-enter, ease-out),
+        inset-inline-start 180ms var(--krn-motion-ease-enter, ease-out);
+      animation: krn-chart-tooltip-in 180ms var(--krn-motion-ease-enter, ease-out);
     }
     .chart-tooltip span,
     .chart-tooltip small {
@@ -607,6 +618,8 @@ interface KrnTooltipPosition {
   `,
 })
 export class KrnChart {
+  private readonly destroyRef = inject(DestroyRef);
+  private hideTimer: ReturnType<typeof setTimeout> | undefined;
   protected readonly Math = Math;
   readonly type = input<KrnChartType>('line');
   readonly title = input.required<string>();
@@ -709,6 +722,12 @@ export class KrnChart {
         .join(', ')}`,
   );
 
+  constructor() {
+    this.destroyRef.onDestroy(() => {
+      if (this.hideTimer) clearTimeout(this.hideTimer);
+    });
+  }
+
   color(index: number): string {
     const palette = this.palette();
     return palette[index % palette.length] ?? 'var(--krn-chart-1, #4f6feb)';
@@ -719,11 +738,20 @@ export class KrnChart {
   }
 
   setActive(index: number): void {
+    if (this.hideTimer) {
+      clearTimeout(this.hideTimer);
+      this.hideTimer = undefined;
+    }
     this.activeIndex.set(index);
   }
 
   clearActive(index: number): void {
-    if (this.activeIndex() === index) this.activeIndex.set(null);
+    if (this.activeIndex() !== index) return;
+    if (this.hideTimer) clearTimeout(this.hideTimer);
+    this.hideTimer = setTimeout(() => {
+      if (this.activeIndex() === index) this.activeIndex.set(null);
+      this.hideTimer = undefined;
+    }, 110);
   }
 
   abbreviated(label: string): string {

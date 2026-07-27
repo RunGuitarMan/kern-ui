@@ -4,7 +4,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   forwardRef,
+  inject,
   input,
   numberAttribute,
   output,
@@ -13,6 +15,12 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KrnValueAccessor, useKrnControlA11y } from './value-accessor';
+
+interface KrnTagFeedback {
+  readonly id: number;
+  readonly kind: 'added' | 'duplicate' | 'removed';
+  readonly text: string;
+}
 
 @Component({
   selector: 'krn-otp-input, krn-verification-code',
@@ -288,15 +296,30 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
           (input)="updateDraft($event)"
           (keydown)="handleKey($event)"
         />
+        @if (visualFeedback(); as feedback) {
+          <span
+            class="krn-tag-feedback"
+            aria-hidden="true"
+            [attr.data-feedback-id]="feedback.id"
+            [attr.data-kind]="feedback.kind"
+          >
+            {{ feedback.text }}
+          </span>
+        }
       </div>
     </div>
-    <span class="krn-message" aria-live="polite">{{ announcement() }}</span>
+    <span class="krn-visually-hidden" role="status" aria-live="polite">
+      {{ announcement() }}
+    </span>
   `,
   styleUrl: './forms.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
+  private readonly destroyRef = inject(DestroyRef);
   private readonly inputElement = viewChildren<ElementRef<HTMLInputElement>>('tagInput');
+  private feedbackTimer: ReturnType<typeof setTimeout> | undefined;
+  private feedbackId = 0;
 
   readonly id = input('');
   readonly ariaLabel = input('Tags');
@@ -319,12 +342,18 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
   readonly tagRemoved = output<string>();
   readonly draft = signal('');
   readonly announcement = signal('');
+  readonly visualFeedback = signal<KrnTagFeedback | null>(null);
 
   protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
   protected readonly a11y = useKrnControlA11y(this.id, this.invalid, 'tags');
 
   constructor() {
     super([]);
+    this.destroyRef.onDestroy(() => {
+      if (this.feedbackTimer) {
+        clearTimeout(this.feedbackTimer);
+      }
+    });
   }
 
   protected override normalizeIncomingValue(value: unknown): readonly string[] {
@@ -366,7 +395,7 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
     this.commitValue(next);
     this.valueChange.emit(next);
     this.tagRemoved.emit(removed);
-    this.announcement.set(`${removed} removed.`);
+    this.showFeedback(`${removed} removed.`, 'Removed', 'removed');
   }
 
   protected focusInput(): void {
@@ -382,7 +411,7 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
       return;
     }
     if (!this.allowDuplicates() && this.controlValue().includes(tag)) {
-      this.announcement.set(`${tag} is already present.`);
+      this.showFeedback(`${tag} is already present.`, 'Already added', 'duplicate');
       this.draft.set('');
       return;
     }
@@ -390,8 +419,22 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
     this.commitValue(next);
     this.valueChange.emit(next);
     this.tagAdded.emit(tag);
-    this.announcement.set(`${tag} added.`);
+    this.showFeedback(`${tag} added.`, 'Added', 'added');
     this.draft.set('');
+  }
+
+  private showFeedback(announcement: string, text: string, kind: KrnTagFeedback['kind']): void {
+    if (this.feedbackTimer) {
+      clearTimeout(this.feedbackTimer);
+    }
+    this.feedbackId += 1;
+    this.announcement.set('');
+    this.visualFeedback.set({ id: this.feedbackId, kind, text });
+    queueMicrotask(() => this.announcement.set(announcement));
+    this.feedbackTimer = setTimeout(() => {
+      this.visualFeedback.set(null);
+      this.feedbackTimer = undefined;
+    }, 1400);
   }
 }
 

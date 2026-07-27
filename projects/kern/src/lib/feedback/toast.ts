@@ -15,13 +15,6 @@ import type { KrnToastOptions, KrnToastPosition, KrnToastRecord } from './feedba
 let nextToastId = 0;
 const toastExitDuration = 160;
 
-interface KrnToastGroup {
-  readonly key: string;
-  readonly toast: KrnToastRecord;
-  readonly ids: readonly string[];
-  readonly count: number;
-}
-
 @Injectable({ providedIn: 'root' })
 export class KrnToastService {
   private readonly platformId = inject(PLATFORM_ID);
@@ -172,49 +165,46 @@ export class KrnToastService {
       </div>
     }
 
-    @for (group of visibleGroups(); track group.ids[0]; let index = $index) {
-      <article
-        class="toast"
-        [attr.data-tone]="group.toast.tone"
-        [attr.data-leaving]="groupLeaving(group) ? '' : null"
-        [style.--_stack-index]="index"
-        [attr.role]="group.toast.tone === 'danger' ? 'alert' : 'status'"
-        [attr.aria-atomic]="true"
+    @if (visibleToasts().length) {
+      <div
+        class="toast-stack"
+        [style.--_stack-count]="visibleToasts().length"
+        [attr.aria-label]="visibleToasts().length > 1 ? 'Notification stack' : null"
       >
-        <span class="indicator" aria-hidden="true">{{ toneIcon(group.toast) }}</span>
-        <div class="copy">
-          <span class="title-row">
-            @if (group.toast.title) {
-              <strong>{{ group.toast.title }}</strong>
-            }
-            @if (group.count > 1) {
-              <span class="count" [attr.aria-label]="group.count + ' identical notifications'">
-                ×{{ group.count }}
-              </span>
-            }
-          </span>
-          <p>{{ group.toast.message }}</p>
-        </div>
-        @if (group.toast.actionLabel) {
-          <button type="button" class="action" (click)="service.actGroup(group.toast, group.ids)">
-            {{ group.toast.actionLabel }}
-          </button>
-        }
-        @if (group.toast.dismissible) {
-          <button
-            type="button"
-            class="dismiss"
-            [attr.aria-label]="
-              group.count > 1
-                ? 'Dismiss ' + group.count + ' identical notifications'
-                : 'Dismiss notification'
-            "
-            (click)="service.dismissMany(group.ids)"
+        @for (toast of visibleToasts(); track toast.id; let index = $index) {
+          <article
+            class="toast"
+            [attr.data-tone]="toast.tone"
+            [attr.data-leaving]="service.isLeaving(toast.id) ? '' : null"
+            [style.--_stack-index]="index"
+            [attr.role]="toast.tone === 'danger' ? 'alert' : 'status'"
+            [attr.aria-atomic]="true"
           >
-            <span aria-hidden="true">×</span>
-          </button>
+            <span class="indicator" aria-hidden="true">{{ toneIcon(toast) }}</span>
+            <div class="copy">
+              @if (toast.title) {
+                <strong>{{ toast.title }}</strong>
+              }
+              <p>{{ toast.message }}</p>
+            </div>
+            @if (toast.actionLabel) {
+              <button type="button" class="action" (click)="service.act(toast)">
+                {{ toast.actionLabel }}
+              </button>
+            }
+            @if (toast.dismissible) {
+              <button
+                type="button"
+                class="dismiss"
+                aria-label="Dismiss notification"
+                (click)="service.dismiss(toast.id)"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            }
+          </article>
         }
-      </article>
+      </div>
     }
 
     @if (hiddenToastCount() > 0 && expanded()) {
@@ -245,6 +235,13 @@ export class KrnToastService {
       inset-inline-start: 50%;
       inset-inline-end: auto;
       transform: translateX(-50%);
+    }
+    .toast-stack {
+      display: flex;
+      flex-direction: column;
+      min-block-size: 4rem;
+      pointer-events: none;
+      perspective: 60rem;
     }
     .stack-controls,
     .limit-note {
@@ -312,6 +309,27 @@ export class KrnToastService {
       pointer-events: auto;
       backdrop-filter: blur(14px);
       transform-origin: top right;
+      transition:
+        margin-block-start 280ms var(--krn-motion-ease-enter, cubic-bezier(0.16, 1, 0.3, 1)),
+        opacity 220ms var(--krn-motion-ease-standard, ease),
+        transform 280ms var(--krn-motion-ease-enter, cubic-bezier(0.16, 1, 0.3, 1)),
+        box-shadow 220ms var(--krn-motion-ease-standard, ease);
+      z-index: calc(20 - var(--_stack-index));
+    }
+    .toast + .toast {
+      margin-block-start: -3.3rem;
+      opacity: calc(1 - var(--_stack-index) * 0.12);
+      transform: translateY(calc(var(--_stack-index) * 0.45rem))
+        scale(calc(1 - var(--_stack-index) * 0.018));
+    }
+    .toast-stack:is(:hover, :focus-within) .toast {
+      margin-block-start: 0;
+      opacity: 1;
+      transform: none;
+      box-shadow: var(--krn-shadow-lg, 0 12px 32px rgb(0 0 0 / 16%));
+    }
+    .toast-stack:is(:hover, :focus-within) .toast + .toast {
+      margin-block-start: var(--krn-space-2, 0.5rem);
     }
     .toast[data-tone='info'] {
       --_tone: var(--krn-color-info, #245ea7);
@@ -343,32 +361,12 @@ export class KrnToastService {
       gap: 0.1875rem;
       padding-block: 0.1875rem;
     }
-    .title-row {
-      display: flex;
-      min-inline-size: 0;
-      align-items: center;
-      gap: 0.4375rem;
-    }
-    .title-row strong {
+    .copy strong {
       overflow: hidden;
       font-weight: 650;
       line-height: 1.25;
       text-overflow: ellipsis;
       white-space: nowrap;
-    }
-    .count {
-      display: inline-grid;
-      min-inline-size: 1.5rem;
-      min-block-size: 1.25rem;
-      flex: 0 0 auto;
-      place-items: center;
-      padding-inline: 0.3125rem;
-      border-radius: var(--krn-radius-full, 9999px);
-      color: var(--_tone);
-      background: color-mix(in oklch, var(--_tone) 12%, transparent);
-      font-size: 0.6875rem;
-      font-weight: 700;
-      font-variant-numeric: tabular-nums;
     }
     p {
       margin: 0;
@@ -424,6 +422,12 @@ export class KrnToastService {
           var(--krn-motion-ease-exit, cubic-bezier(0.7, 0, 0.84, 0)) forwards;
       }
     }
+    @media (prefers-reduced-motion: reduce) {
+      .toast,
+      .toast + .toast {
+        transition: none;
+      }
+    }
     @keyframes krn-toast-enter {
       from {
         opacity: 0;
@@ -462,6 +466,7 @@ export class KrnToastService {
     }
     @media (forced-colors: active) {
       .stack-controls,
+      .toast-stack,
       .toast,
       .limit-note {
         border-color: CanvasText;
@@ -473,8 +478,7 @@ export class KrnToastService {
       .toast {
         border-inline-start-color: Highlight;
       }
-      .indicator,
-      .count {
+      .indicator {
         color: CanvasText;
         background: Canvas;
         box-shadow: inset 0 0 0 1px CanvasText;
@@ -491,43 +495,22 @@ export class KrnToastViewport {
   readonly expanded = model(false);
   protected readonly Math = Math;
   protected readonly toggle = (value: boolean): boolean => !value;
-  protected readonly groupedToasts = computed<readonly KrnToastGroup[]>(() => {
-    const groups: KrnToastGroup[] = [];
-    for (const toast of this.service.toasts()) {
-      const key = toastGroupKey(toast);
-      const previous = groups.at(-1);
-      if (previous?.key === key) {
-        groups[groups.length - 1] = {
-          key,
-          toast,
-          ids: [...previous.ids, toast.id],
-          count: previous.count + 1,
-        };
-      } else {
-        groups.push({ key, toast, ids: [toast.id], count: 1 });
-      }
-    }
-    return groups;
-  });
   protected readonly totalToasts = computed(() => this.service.toasts().length);
   protected readonly hasOverflow = computed(
-    () => this.groupedToasts().length > Math.max(1, this.maxVisible()),
+    () => this.totalToasts() > Math.max(1, this.maxVisible()),
   );
-  protected readonly visibleGroups = computed(() => {
+  protected readonly visibleToasts = computed(() => {
     const normalLimit = Math.max(1, this.maxVisible());
     const expandedLimit = Math.max(normalLimit, this.maxExpanded());
-    return this.groupedToasts().slice(-(this.expanded() ? expandedLimit : normalLimit));
+    return this.service
+      .toasts()
+      .slice(-(this.expanded() ? expandedLimit : normalLimit))
+      .reverse();
   });
-  protected readonly visibleToastCount = computed(() =>
-    this.visibleGroups().reduce((sum, group) => sum + group.count, 0),
-  );
+  protected readonly visibleToastCount = computed(() => this.visibleToasts().length);
   protected readonly hiddenToastCount = computed(
     () => this.totalToasts() - this.visibleToastCount(),
   );
-
-  protected groupLeaving(group: KrnToastGroup): boolean {
-    return group.ids.every((id) => this.service.isLeaving(id));
-  }
 
   protected toneIcon(toast: KrnToastRecord): string {
     return { neutral: '•', info: 'i', success: '✓', warning: '!', danger: '!' }[
@@ -537,14 +520,3 @@ export class KrnToastViewport {
 }
 
 export { KrnToastViewport as KrnSnackbar, KrnToastViewport as KrnToast };
-
-function toastGroupKey(toast: KrnToastRecord): string {
-  return JSON.stringify([
-    toast.title ?? '',
-    toast.message,
-    toast.tone ?? 'neutral',
-    toast.actionLabel ?? '',
-    toast.dismissible ?? true,
-    toast.action ? toast.id : '',
-  ]);
-}

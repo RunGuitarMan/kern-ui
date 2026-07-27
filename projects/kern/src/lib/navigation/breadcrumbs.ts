@@ -34,14 +34,99 @@ interface VisibleBreadcrumb extends KrnBreadcrumbItem {
     </nav>
   `,
   styles: `
-    :host{display:block;min-inline-size:0}.breadcrumbs{color:var(--krn-color-text-muted);font-size:var(--krn-font-size-sm);line-height:var(--krn-line-height-body)}ol{display:flex;align-items:center;gap:var(--krn-space-1);min-inline-size:0;margin:0;padding:0;list-style:none;overflow-x:auto;scrollbar-width:thin}li{display:flex;align-items:center;min-inline-size:0;white-space:nowrap}a,button{color:inherit;font:inherit}a{text-decoration-thickness:var(--krn-border-width-1);text-underline-offset:var(--krn-space-1)}a:hover{color:var(--krn-color-text)}a:focus-visible,button:focus-visible{outline:var(--krn-focus-ring-width) solid var(--krn-color-focus);outline-offset:var(--krn-focus-ring-offset);border-radius:var(--krn-radius-xs)}.current{max-inline-size:24ch;overflow:hidden;color:var(--krn-color-text);font-weight:var(--krn-font-weight-semibold);text-overflow:ellipsis}.separator{margin-inline:var(--krn-space-1);color:var(--krn-color-text-subtle)}.ellipsis{display:grid;min-inline-size:var(--krn-control-height-sm);min-block-size:var(--krn-control-height-sm);padding:0;border:0;border-radius:var(--krn-radius-sm);background:transparent;place-items:center;cursor:pointer}.ellipsis:hover{background:var(--krn-color-surface-subtle);color:var(--krn-color-text)}
+    :host {
+      display: block;
+      min-inline-size: 0;
+    }
+    .breadcrumbs {
+      color: var(--krn-color-text-muted);
+      font-size: var(--krn-font-size-sm);
+      line-height: var(--krn-line-height-body);
+    }
+    ol {
+      display: flex;
+      min-inline-size: 0;
+      align-items: center;
+      gap: var(--krn-space-0-5);
+      margin: 0;
+      padding: 0;
+      overflow-x: auto;
+      list-style: none;
+      scrollbar-width: thin;
+    }
+    li {
+      display: flex;
+      min-inline-size: 0;
+      align-items: center;
+      white-space: nowrap;
+    }
+    a,
+    button {
+      color: inherit;
+      font: inherit;
+    }
+    a {
+      display: inline-flex;
+      min-block-size: var(--krn-control-height-sm);
+      align-items: center;
+      padding-inline: var(--krn-space-2);
+      border-radius: var(--krn-radius-sm);
+      text-decoration: none;
+      transition:
+        color var(--krn-motion-duration-fast) var(--krn-motion-ease-standard),
+        background var(--krn-motion-duration-fast) var(--krn-motion-ease-standard);
+    }
+    a:hover {
+      color: var(--krn-color-text);
+      background: var(--krn-color-surface-subtle);
+    }
+    a:focus-visible,
+    button:focus-visible {
+      border-radius: var(--krn-radius-sm);
+      outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
+      outline-offset: var(--krn-focus-ring-offset);
+    }
+    .current {
+      max-inline-size: 24ch;
+      overflow: hidden;
+      padding-inline: var(--krn-space-2);
+      color: var(--krn-color-text);
+      font-weight: var(--krn-font-weight-semibold);
+      text-overflow: ellipsis;
+    }
+    .separator {
+      margin-inline: var(--krn-space-0-5);
+      color: var(--krn-color-text-subtle);
+      font-size: var(--krn-font-size-md);
+      line-height: 1;
+    }
+    .ellipsis {
+      display: grid;
+      min-inline-size: var(--krn-control-height-sm);
+      min-block-size: var(--krn-control-height-sm);
+      padding: 0;
+      border: 0;
+      border-radius: var(--krn-radius-sm);
+      background: transparent;
+      place-items: center;
+      cursor: pointer;
+    }
+    .ellipsis:hover {
+      color: var(--krn-color-text);
+      background: var(--krn-color-surface-subtle);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      a {
+        transition: none;
+      }
+    }
   `,
 })
 export class KrnBreadcrumbs {
   protected readonly ellipsis: VisibleBreadcrumb = { label: 'More', ellipsis: true };
   readonly items = input<readonly KrnBreadcrumbItem[]>([]);
   readonly maxItems = input(5);
-  readonly separator = input('/');
+  readonly separator = input('›');
   readonly ariaLabel = input('Breadcrumb');
   readonly itemActivated = output<KrnBreadcrumbItem>();
   protected readonly expanded = signal(false);

@@ -100,7 +100,13 @@ export class KrnTextInput extends KrnValueAccessor<string> {
   }
 
   protected updateText(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
+    const input = event.target as HTMLInputElement;
+    const maxLength = this.maxLength();
+    const value =
+      maxLength === undefined ? input.value : input.value.slice(0, Math.max(0, maxLength));
+    if (input.value !== value) {
+      input.value = value;
+    }
     this.commitValue(value);
     this.valueChange.emit(value);
   }
@@ -122,6 +128,7 @@ export class KrnTextInput extends KrnValueAccessor<string> {
   template: `
     <span
       class="krn-control-shell krn-control-shell--textarea"
+      [attr.data-auto-resize]="autoResize()"
       [attr.data-disabled]="isDisabled()"
       [attr.data-invalid]="a11y.invalid()"
       [attr.data-readonly]="readOnly()"
@@ -145,8 +152,10 @@ export class KrnTextInput extends KrnValueAccessor<string> {
         (input)="updateText($event)"
       ></textarea>
       @if (showCount() && maxLength() !== undefined) {
-        <span class="krn-textarea-count" aria-live="polite">
-          {{ controlValue().length }} / {{ maxLength() }}
+        <span class="krn-textarea-footer">
+          <span class="krn-textarea-count" aria-live="polite">
+            {{ controlValue().length }} / {{ maxLength() }}
+          </span>
         </span>
       }
     </span>

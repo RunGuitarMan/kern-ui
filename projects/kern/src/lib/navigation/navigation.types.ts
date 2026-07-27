@@ -36,6 +36,11 @@ export interface KrnNavigationItem {
   readonly badge?: string | number;
 }
 
+export interface KrnContextMenuItem extends KrnNavigationItem {
+  readonly children?: readonly KrnContextMenuItem[];
+  readonly shortcut?: string;
+}
+
 export interface KrnTreeNavigationItem extends KrnNavigationItem {
   readonly children?: readonly KrnTreeNavigationItem[];
 }

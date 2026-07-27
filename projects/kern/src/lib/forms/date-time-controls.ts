@@ -778,51 +778,83 @@ export class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
           class="krn-picker__panel krn-time-panel"
           popover="manual"
           role="dialog"
+          [attr.aria-describedby]="panelId() + '-help'"
           [attr.aria-label]="ariaLabel()"
           [id]="panelId()"
         >
           <div class="krn-time-panel__header">
             <span>
-              <small>Selected time</small>
-              <strong aria-live="polite">{{ displayTime() || '—:—' }}</strong>
+              <small>24-hour time</small>
+              <strong aria-live="polite">{{ draftTime() || displayTime() || '—:—' }}</strong>
             </span>
             <span class="krn-time-panel__zone">24-hour</span>
           </div>
-          <div class="krn-time-panel__columns">
-            <div class="krn-time-list" role="listbox" aria-label="Hour">
-              <span class="krn-time-list__label">Hour</span>
-              @for (hour of hours; track hour) {
+          <div class="krn-time-entry" role="group" aria-label="Time">
+            <label class="krn-time-part">
+              <span>Hour</span>
+              <input
+                type="text"
+                role="spinbutton"
+                autocomplete="off"
+                inputmode="numeric"
+                maxlength="2"
+                pattern="[0-9]*"
+                aria-label="Hour"
+                aria-valuemax="23"
+                aria-valuemin="0"
+                [attr.aria-valuenow]="draftHourNumber()"
+                [attr.aria-valuetext]="hourDraft() || 'Not set'"
+                [value]="hourDraft()"
+                (blur)="normalizeDraftPart('hour')"
+                (focus)="selectPart($event)"
+                (input)="updateDraftPart('hour', $event)"
+                (keydown)="handlePartKeydown('hour', $event)"
+              />
+            </label>
+            <span class="krn-time-entry__separator" aria-hidden="true">:</span>
+            <label class="krn-time-part">
+              <span>Minute</span>
+              <input
+                type="text"
+                role="spinbutton"
+                autocomplete="off"
+                inputmode="numeric"
+                maxlength="2"
+                pattern="[0-9]*"
+                aria-label="Minute"
+                aria-valuemax="59"
+                aria-valuemin="0"
+                [attr.aria-valuenow]="draftMinuteNumber()"
+                [attr.aria-valuetext]="minuteDraft() || 'Not set'"
+                [value]="minuteDraft()"
+                (blur)="normalizeDraftPart('minute')"
+                (focus)="selectPart($event)"
+                (input)="updateDraftPart('minute', $event)"
+                (keydown)="handlePartKeydown('minute', $event)"
+              />
+            </label>
+          </div>
+          <p class="krn-time-panel__help" [id]="panelId() + '-help'">
+            Type HH:mm or use ↑ and ↓ to adjust.
+          </p>
+          <div class="krn-time-presets" aria-label="Common times">
+            <span>Common times</span>
+            <div>
+              @for (preset of timePresets(); track preset) {
                 <button
                   type="button"
-                  role="option"
-                  [attr.aria-selected]="selectedHour() === hour"
-                  [attr.data-selected]="selectedHour() === hour"
-                  [disabled]="hourDisabled(hour)"
-                  (click)="selectHour(hour)"
+                  [attr.aria-pressed]="draftTime() === preset"
+                  [attr.data-selected]="draftTime() === preset"
+                  (click)="selectPreset(preset)"
                 >
-                  {{ formatPart(hour) }}
-                </button>
-              }
-            </div>
-            <div class="krn-time-list" role="listbox" aria-label="Minute">
-              <span class="krn-time-list__label">Minute</span>
-              @for (minute of minutes(); track minute) {
-                <button
-                  type="button"
-                  role="option"
-                  [attr.aria-selected]="selectedMinute() === minute"
-                  [attr.data-selected]="selectedMinute() === minute"
-                  [disabled]="timeDisabled(selectedHour() ?? fallbackHour(), minute)"
-                  (click)="selectMinute(minute)"
-                >
-                  {{ formatPart(minute) }}
+                  {{ preset }}
                 </button>
               }
             </div>
           </div>
           <div class="krn-picker__footer">
             <button type="button" [disabled]="!controlValue()" (click)="clear()">Clear</button>
-            <button type="button" [disabled]="!controlValue()" (click)="close()">Done</button>
+            <button type="button" [disabled]="!draftTime()" (click)="applyDraft()">Apply</button>
           </div>
         </div>
       }
@@ -846,19 +878,12 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly valueChange = output<string>();
   readonly open = signal(false);
-  protected readonly hours = Array.from({ length: 24 }, (_, hour) => hour);
+  readonly hourDraft = signal('');
+  readonly minuteDraft = signal('');
   protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
   protected readonly a11y = useKrnControlA11y(this.id, this.invalid, 'time');
   protected readonly panelId = computed(() => `${this.a11y.id()}-panel`);
   protected readonly displayTime = computed(() => this.controlValue().slice(0, 5));
-  protected readonly selectedHour = computed(() => {
-    const hour = Number(this.controlValue().slice(0, 2));
-    return Number.isInteger(hour) ? hour : null;
-  });
-  protected readonly selectedMinute = computed(() => {
-    const minute = Number(this.controlValue().slice(3, 5));
-    return Number.isInteger(minute) ? minute : null;
-  });
   protected readonly minutes = computed(() => {
     const increment = Math.min(60, Math.max(1, Math.round(this.step() / 60) || 1));
     const values: number[] = [];
@@ -866,6 +891,47 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
       values.push(minute);
     }
     return values;
+  });
+  protected readonly availableTimes = computed(() => {
+    const values: string[] = [];
+    for (let hour = 0; hour < 24; hour += 1) {
+      for (const minute of this.minutes()) {
+        if (!this.timeDisabled(hour, minute)) {
+          values.push(`${pad(hour)}:${pad(minute)}`);
+        }
+      }
+    }
+    return values;
+  });
+  protected readonly draftHourNumber = computed(() => this.parseDraftPart(this.hourDraft(), 23));
+  protected readonly draftMinuteNumber = computed(() =>
+    this.parseDraftPart(this.minuteDraft(), 59),
+  );
+  protected readonly draftTime = computed(() => {
+    const hour = this.draftHourNumber();
+    const minute = this.draftMinuteNumber();
+    if (hour === null || minute === null || !this.minutes().includes(minute)) {
+      return '';
+    }
+    const value = `${pad(hour)}:${pad(minute)}`;
+    return this.availableTimes().includes(value) ? value : '';
+  });
+  protected readonly timePresets = computed(() => {
+    const available = this.availableTimes();
+    if (!available.length) {
+      return [];
+    }
+    const preferred = ['09:00', '12:00', '15:00', '18:00'].filter((value) =>
+      available.includes(value),
+    );
+    if (preferred.length >= 3) {
+      return preferred;
+    }
+    const supplements = [0.25, 0.5, 0.75].map(
+      (ratio) =>
+        available[Math.min(available.length - 1, Math.round((available.length - 1) * ratio))]!,
+    );
+    return [...new Set([...preferred, ...supplements])].slice(0, 4);
   });
   private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
   private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
@@ -876,7 +942,7 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
     const trigger = this.trigger()?.nativeElement;
     const panel = this.panel()?.nativeElement;
     if (trigger && panel) {
-      connectPickerPopover(trigger, panel, 304, 392, onCleanup);
+      connectPickerPopover(trigger, panel, 320, 340, onCleanup);
     }
   });
 
@@ -890,11 +956,18 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
 
   protected toggleOpen(): void {
     if (!this.isDisabled() && !this.readOnly()) {
-      this.open.update((value) => !value);
+      const shouldOpen = !this.open();
+      if (shouldOpen) {
+        this.seedDraft();
+        this.open.set(true);
+      } else {
+        this.close();
+      }
     }
   }
 
   protected close(): void {
+    this.seedDraft();
     this.open.set(false);
     this.touch();
   }
@@ -903,17 +976,41 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
     closeWhenFocusLeaves(event, () => this.close());
   }
 
-  protected fallbackHour(): number {
-    const minimum = this.min().slice(0, 2);
-    return minimum ? Number(minimum) : 9;
+  protected updateDraftPart(part: 'hour' | 'minute', event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value.replace(/\D/g, '').slice(0, 2);
+    if (input.value !== value) {
+      input.value = value;
+    }
+    this.partSignal(part).set(value);
   }
 
-  protected formatPart(value: number): string {
-    return pad(value);
+  protected normalizeDraftPart(part: 'hour' | 'minute'): void {
+    const signal = this.partSignal(part);
+    const maximum = part === 'hour' ? 23 : 59;
+    const value = this.parseDraftPart(signal(), maximum);
+    if (value === null) {
+      this.seedDraft();
+      return;
+    }
+    signal.set(pad(value));
   }
 
-  protected hourDisabled(hour: number): boolean {
-    return this.minutes().every((minute) => this.timeDisabled(hour, minute));
+  protected selectPart(event: FocusEvent): void {
+    (event.target as HTMLInputElement).select();
+  }
+
+  protected handlePartKeydown(part: 'hour' | 'minute', event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      this.applyDraft();
+      return;
+    }
+    if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') {
+      return;
+    }
+    event.preventDefault();
+    this.nudgePart(part, event.key === 'ArrowUp' ? 1 : -1);
   }
 
   protected timeDisabled(hour: number, minute: number): boolean {
@@ -923,18 +1020,17 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
     return Boolean((min && value < min) || (max && value > max));
   }
 
-  protected selectHour(hour: number): void {
-    const currentMinute = this.selectedMinute() ?? this.minutes()[0] ?? 0;
-    const availableMinute =
-      this.minutes().find((minute) => !this.timeDisabled(hour, minute)) ?? currentMinute;
-    this.emitTime(`${pad(hour)}:${pad(availableMinute)}`);
+  protected selectPreset(value: string): void {
+    this.setDraft(value);
   }
 
-  protected selectMinute(minute: number): void {
-    const hour = this.selectedHour() ?? this.fallbackHour();
-    if (!this.timeDisabled(hour, minute)) {
-      this.emitTime(`${pad(hour)}:${pad(minute)}`);
+  protected applyDraft(): void {
+    const value = this.draftTime();
+    if (!value) {
+      return;
     }
+    this.emitTime(value);
+    this.close();
   }
 
   protected clear(): void {
@@ -947,6 +1043,63 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
   private emitTime(value: string): void {
     this.commitValue(value);
     this.valueChange.emit(value);
+  }
+
+  private seedDraft(): void {
+    const fallback =
+      this.controlValue().slice(0, 5) ||
+      (isTime(this.min()) ? this.min().slice(0, 5) : '') ||
+      this.timePresets()[0] ||
+      this.availableTimes()[0] ||
+      '00:00';
+    this.setDraft(fallback);
+  }
+
+  private setDraft(value: string): void {
+    this.hourDraft.set(value.slice(0, 2));
+    this.minuteDraft.set(value.slice(3, 5));
+  }
+
+  private partSignal(part: 'hour' | 'minute') {
+    return part === 'hour' ? this.hourDraft : this.minuteDraft;
+  }
+
+  private parseDraftPart(value: string, maximum: number): number | null {
+    if (!/^\d{1,2}$/.test(value)) {
+      return null;
+    }
+    const numeric = Number(value);
+    return Number.isInteger(numeric) && numeric >= 0 && numeric <= maximum ? numeric : null;
+  }
+
+  private nudgePart(part: 'hour' | 'minute', direction: 1 | -1): void {
+    const fallback =
+      this.draftTime() || this.controlValue().slice(0, 5) || this.availableTimes()[0];
+    if (!fallback) {
+      return;
+    }
+    const currentHour = Number(fallback.slice(0, 2));
+    const currentMinute = Number(fallback.slice(3, 5));
+    const candidates =
+      part === 'hour'
+        ? Array.from({ length: 24 }, (_, offset) => {
+            const hour = (currentHour + direction * (offset + 1) + 24 * 2) % 24;
+            return `${pad(hour)}:${pad(currentMinute)}`;
+          })
+        : this.minuteCandidates(currentHour, currentMinute, direction);
+    const next = candidates.find((value) => this.availableTimes().includes(value));
+    if (next) {
+      this.setDraft(next);
+    }
+  }
+
+  private minuteCandidates(hour: number, minute: number, direction: 1 | -1): string[] {
+    const minutes = this.minutes();
+    const currentIndex = Math.max(0, minutes.indexOf(minute));
+    return Array.from({ length: minutes.length }, (_, offset) => {
+      const index = (currentIndex + direction * (offset + 1) + minutes.length * 2) % minutes.length;
+      return `${pad(hour)}:${pad(minutes[index] ?? 0)}`;
+    });
   }
 }
 

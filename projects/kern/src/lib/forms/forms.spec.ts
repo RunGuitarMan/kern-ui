@@ -96,6 +96,7 @@ describe('Kern form controls', () => {
     fixture.componentRef.setInput('id', 'change-summary');
     fixture.componentRef.setInput('maxLength', 280);
     fixture.componentRef.setInput('showCount', true);
+    fixture.componentRef.setInput('autoResize', true);
     const change = vi.fn();
     fixture.componentInstance.registerOnChange(change);
     await fixture.whenStable();
@@ -104,6 +105,10 @@ describe('Kern form controls', () => {
     expect(textarea.maxLength).toBe(280);
     expect((fixture.nativeElement as HTMLElement).hasAttribute('id')).toBe(false);
     expect(textarea.id).toBe('change-summary');
+    expect(
+      fixture.nativeElement.querySelector('.krn-control-shell')?.getAttribute('data-auto-resize'),
+    ).toBe('true');
+    expect(fixture.nativeElement.querySelector('.krn-textarea-footer')).not.toBeNull();
     expect(fixture.nativeElement.querySelector('.krn-textarea-count')?.textContent).toContain(
       '0 / 280',
     );
@@ -349,6 +354,22 @@ describe('Kern form controls', () => {
     expect(comboboxChange).not.toHaveBeenCalled();
     expect(autocompleteChange).toHaveBeenLastCalledWith('Custom alias');
 
+    comboboxInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await combobox.whenStable();
+    expect(comboboxInput.value).toBe('');
+
+    combobox.componentInstance.writeValue('alpha');
+    await combobox.whenStable();
+    comboboxInput.value = 'Uncommitted plan';
+    comboboxInput.dispatchEvent(new Event('input', { bubbles: true }));
+    comboboxInput.dispatchEvent(
+      new FocusEvent('focusout', { bubbles: true, relatedTarget: document.body }),
+    );
+    await combobox.whenStable();
+    expect(combobox.componentInstance.query()).toBe('Alpha');
+    expect(comboboxInput.value).toBe('Alpha');
+    expect(comboboxChange).not.toHaveBeenCalled();
+
     autocomplete.componentRef.setInput('allowCustomValue', false);
     autocomplete.componentRef.setInput('autocompleteMode', 'list');
     await autocomplete.whenStable();
@@ -441,6 +462,26 @@ describe('Kern form controls', () => {
     await fixture.whenStable();
     expect(change).toHaveBeenLastCalledWith({ start: 35, end: 88 });
     expect(document.activeElement).toBe(inputs[1]);
+    expect(sliderSurface.getAttribute('data-dragging')).toBe('true');
+
+    sliderSurface.dispatchEvent(
+      new MouseEvent('pointermove', {
+        bubbles: true,
+        cancelable: true,
+        clientX: 190,
+      }),
+    );
+    await fixture.whenStable();
+    expect((change.mock.calls.at(-1)?.[0] as { end: number }).end).toBeGreaterThan(88);
+    sliderSurface.dispatchEvent(
+      new MouseEvent('pointerup', {
+        bubbles: true,
+        cancelable: true,
+        clientX: 190,
+      }),
+    );
+    await fixture.whenStable();
+    expect(sliderSurface.getAttribute('data-dragging')).toBe('false');
 
     sliderSurface.dispatchEvent(
       new MouseEvent('pointerdown', {
@@ -450,7 +491,7 @@ describe('Kern form controls', () => {
       }),
     );
     await fixture.whenStable();
-    expect(change).toHaveBeenLastCalledWith({ start: 20, end: 88 });
+    expect(change).toHaveBeenLastCalledWith({ start: 20, end: 99 });
     expect(document.activeElement).toBe(inputs[0]);
   });
 
@@ -523,12 +564,36 @@ describe('Kern form controls', () => {
   it('uses custom time and color panels instead of browser-native popups', async () => {
     const timeFixture = TestBed.createComponent(KrnTimePicker);
     timeFixture.componentRef.setInput('step', 900);
+    const timeChange = vi.fn();
+    timeFixture.componentInstance.registerOnChange(timeChange);
     await timeFixture.whenStable();
     (timeFixture.nativeElement.querySelector('.krn-picker__trigger') as HTMLButtonElement).click();
     await timeFixture.whenStable();
 
     expect(timeFixture.nativeElement.querySelector('input[type="time"]')).toBeNull();
-    expect(timeFixture.nativeElement.querySelectorAll('[role="listbox"]')).toHaveLength(2);
+    expect(timeFixture.nativeElement.querySelectorAll('[role="listbox"]')).toHaveLength(0);
+    const timeParts = [
+      ...(timeFixture.nativeElement as HTMLElement).querySelectorAll<HTMLInputElement>(
+        '[role="spinbutton"]',
+      ),
+    ];
+    expect(timeParts).toHaveLength(2);
+    expect(
+      timeFixture.nativeElement.querySelectorAll('.krn-time-presets button').length,
+    ).toBeGreaterThanOrEqual(3);
+    timeParts[0]!.value = '09';
+    timeParts[0]!.dispatchEvent(new Event('input', { bubbles: true }));
+    timeParts[1]!.value = '30';
+    timeParts[1]!.dispatchEvent(new Event('input', { bubbles: true }));
+    await timeFixture.whenStable();
+    (
+      timeFixture.nativeElement.querySelector(
+        '.krn-picker__footer button:last-child',
+      ) as HTMLButtonElement
+    ).click();
+    await timeFixture.whenStable();
+    expect(timeChange).toHaveBeenLastCalledWith('09:30');
+    expect(timeFixture.componentInstance.open()).toBe(false);
 
     const colorFixture = TestBed.createComponent(KrnColorPicker);
     await colorFixture.whenStable();
@@ -539,6 +604,47 @@ describe('Kern form controls', () => {
     expect(colorFixture.nativeElement.querySelectorAll('.krn-color-swatches button')).toHaveLength(
       8,
     );
+  });
+
+  it('keeps time presets and arrow adjustments as a draft until Apply', async () => {
+    const fixture = TestBed.createComponent(KrnTimePicker);
+    fixture.componentRef.setInput('step', 900);
+    fixture.componentInstance.writeValue('08:00');
+    const change = vi.fn();
+    fixture.componentInstance.registerOnChange(change);
+    await fixture.whenStable();
+
+    (fixture.nativeElement.querySelector('.krn-picker__trigger') as HTMLButtonElement).click();
+    await fixture.whenStable();
+    const preset = fixture.nativeElement.querySelector(
+      '.krn-time-presets button',
+    ) as HTMLButtonElement;
+    preset.click();
+    await fixture.whenStable();
+    expect(change).not.toHaveBeenCalled();
+
+    const picker = fixture.nativeElement.querySelector('.krn-picker') as HTMLElement;
+    picker.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.open()).toBe(false);
+    expect(change).not.toHaveBeenCalled();
+
+    (fixture.nativeElement.querySelector('.krn-picker__trigger') as HTMLButtonElement).click();
+    await fixture.whenStable();
+    const hour = fixture.nativeElement.querySelector(
+      '[role="spinbutton"][aria-label="Hour"]',
+    ) as HTMLInputElement;
+    expect(hour.value).toBe('08');
+    hour.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+    await fixture.whenStable();
+    expect(change).not.toHaveBeenCalled();
+    (
+      fixture.nativeElement.querySelector(
+        '.krn-picker__footer button:last-child',
+      ) as HTMLButtonElement
+    ).click();
+    await fixture.whenStable();
+    expect(change).toHaveBeenCalledWith('09:00');
   });
 
   it('exposes a single selected segment', async () => {
@@ -644,5 +750,12 @@ describe('Kern form controls', () => {
 
     expect(change).toHaveBeenCalledWith(['Angular']);
     expect(fixture.nativeElement.textContent).toContain('Angular');
+    expect(fixture.nativeElement.querySelector('.krn-tag-feedback')?.textContent).toContain(
+      'Added',
+    );
+    expect(fixture.nativeElement.querySelector('.krn-message')).toBeNull();
+    expect(fixture.nativeElement.querySelector('[role="status"]')?.textContent).toContain(
+      'Angular added.',
+    );
   });
 });

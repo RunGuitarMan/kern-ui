@@ -2,8 +2,35 @@ import { ChangeDetectionStrategy, Component, input, model, output } from '@angul
 import type { KrnFeedbackTone } from './feedback.types';
 
 const STATE_TEMPLATE = `
-  <section class="state" [attr.data-tone]="tone()" [attr.role]="tone() === 'danger' ? 'alert' : 'status'">
-    <div class="visual" aria-hidden="true"><ng-content select="[krnStateVisual]" /></div>
+  <section
+    class="state"
+    [attr.data-tone]="tone()"
+    [attr.data-kind]="stateKind()"
+    [attr.role]="tone() === 'danger' ? 'alert' : 'status'"
+  >
+    <div class="visual" aria-hidden="true">
+      <ng-content select="[krnStateVisual]" />
+      @switch (stateKind()) {
+        @case ('success') {
+          <svg class="default-visual" viewBox="0 0 24 24">
+            <path d="m7.5 12.5 3 3 6-7" />
+            <circle cx="12" cy="12" r="8.25" />
+          </svg>
+        }
+        @case ('error') {
+          <svg class="default-visual" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="8.25" />
+            <path d="M12 7.75v5.5M12 16.5h.01" />
+          </svg>
+        }
+        @default {
+          <svg class="default-visual" viewBox="0 0 24 24">
+            <path d="M4.75 9.5h14.5v8.25a1.5 1.5 0 0 1-1.5 1.5H6.25a1.5 1.5 0 0 1-1.5-1.5V9.5Z" />
+            <path d="m7.25 9.5 1.6-4.25h6.3l1.6 4.25M4.75 14h4l1.2 1.75h4.1L15.25 14h4" />
+          </svg>
+        }
+      }
+    </div>
     <h2>{{ title() }}</h2>
     @if (description()) {
       <p>{{ description() }}</p>
@@ -14,7 +41,7 @@ const STATE_TEMPLATE = `
 `;
 
 const STATE_STYLES = `
-  :host{display:block}.state{--tone:var(--krn-color-text-muted);display:grid;justify-items:center;gap:var(--krn-space-3);max-inline-size:34rem;margin-inline:auto;padding:clamp(var(--krn-space-6),7vw,var(--krn-space-12));color:var(--krn-color-text);text-align:center}.state[data-tone=success]{--tone:var(--krn-color-success)}.state[data-tone=danger]{--tone:var(--krn-color-danger)}.visual{display:grid;inline-size:var(--krn-space-12);block-size:var(--krn-space-12);border:var(--krn-border-width-1) solid var(--tone);border-radius:var(--krn-radius-full);place-items:center;color:var(--tone);font-size:var(--krn-font-size-2xl)}.visual:empty::before{content:"—"}h2{margin:0;font-size:var(--krn-font-size-xl);line-height:var(--krn-line-height-tight)}p,.body{margin:0;color:var(--krn-color-text-muted);line-height:var(--krn-line-height-body)}.body:empty,.actions:empty{display:none}.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--krn-space-2);padding-block-start:var(--krn-space-2)}
+  :host{display:block}.state{--tone:var(--krn-color-text-muted);--tone-subtle:var(--krn-color-surface-subtle);display:grid;justify-items:center;gap:var(--krn-space-3);max-inline-size:36rem;margin-inline:auto;padding:clamp(var(--krn-space-6),7vw,var(--krn-space-12));color:var(--krn-color-text);text-align:center}.state[data-tone=success]{--tone:var(--krn-color-success);--tone-subtle:var(--krn-color-success-subtle)}.state[data-tone=danger]{--tone:var(--krn-color-danger);--tone-subtle:var(--krn-color-danger-subtle)}.visual{display:grid;inline-size:3.5rem;block-size:3.5rem;border:var(--krn-border-width-1) solid color-mix(in oklch,var(--tone) 32%,var(--krn-color-border));border-radius:var(--krn-radius-lg);place-items:center;background:color-mix(in oklch,var(--krn-color-surface-raised) 84%,var(--tone-subtle));color:var(--tone);box-shadow:var(--krn-shadow-xs)}.visual:has([krnStateVisual]) .default-visual{display:none}.default-visual{inline-size:1.5rem;block-size:1.5rem;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.7}h2{margin:var(--krn-space-1) 0 0;font-size:var(--krn-font-size-xl);line-height:var(--krn-line-height-tight);letter-spacing:-.018em}p,.body{max-inline-size:48ch;margin:0;color:var(--krn-color-text-muted);line-height:var(--krn-line-height-body)}.body:empty,.actions:empty{display:none}.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--krn-space-2);padding-block-start:var(--krn-space-2)}
 `;
 
 @Component({
@@ -28,6 +55,10 @@ export class KrnEmptyState {
   readonly title = input('Nothing here yet');
   readonly description = input('');
   readonly tone = input<KrnFeedbackTone>('neutral');
+
+  protected stateKind(): 'empty' | 'error' | 'success' {
+    return 'empty';
+  }
 }
 
 @Component({
@@ -40,6 +71,10 @@ export class KrnEmptyState {
 export class KrnErrorState extends KrnEmptyState {
   override readonly title = input('Something went wrong');
   override readonly tone = input<KrnFeedbackTone>('danger');
+
+  protected override stateKind(): 'empty' | 'error' | 'success' {
+    return 'error';
+  }
 }
 
 @Component({
@@ -52,6 +87,10 @@ export class KrnErrorState extends KrnEmptyState {
 export class KrnSuccessState extends KrnEmptyState {
   override readonly title = input('Completed');
   override readonly tone = input<KrnFeedbackTone>('success');
+
+  protected override stateKind(): 'empty' | 'error' | 'success' {
+    return 'success';
+  }
 }
 
 @Component({
@@ -60,7 +99,9 @@ export class KrnSuccessState extends KrnEmptyState {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (!confirming()) {
-      <button type="button" class="request" (click)="confirming.set(true)">{{ requestLabel() }}</button>
+      <button type="button" class="request" (click)="confirming.set(true)">
+        {{ requestLabel() }}
+      </button>
     } @else {
       <div class="confirmation" role="group" [attr.aria-label]="prompt()">
         <span>{{ prompt() }}</span>
@@ -70,7 +111,46 @@ export class KrnSuccessState extends KrnEmptyState {
     }
   `,
   styles: `
-    :host{display:inline-block}.request,.confirmation button{min-block-size:var(--krn-control-height-sm);padding-inline:var(--krn-space-3);border:var(--krn-border-width-1) solid var(--krn-color-border-interactive);border-radius:var(--krn-radius-sm);background:var(--krn-color-surface);color:var(--krn-color-text);font:inherit;font-weight:var(--krn-font-weight-medium);cursor:pointer}.request:hover,.cancel:hover{background:var(--krn-color-surface-subtle)}.confirmation{display:flex;align-items:center;flex-wrap:wrap;gap:var(--krn-space-2);padding:var(--krn-space-2);border:var(--krn-border-width-1) solid var(--krn-color-danger);border-radius:var(--krn-radius-md);background:var(--krn-color-danger-subtle);color:var(--krn-color-text);font-size:var(--krn-font-size-sm)}.confirm{border-color:var(--krn-color-danger)!important;background:var(--krn-color-danger)!important;color:var(--krn-color-on-danger)!important}:is(button):focus-visible{outline:var(--krn-focus-ring-width) solid var(--krn-color-focus);outline-offset:var(--krn-focus-ring-offset)}
+    :host {
+      display: inline-block;
+    }
+    .request,
+    .confirmation button {
+      min-block-size: var(--krn-control-height-sm);
+      padding-inline: var(--krn-space-3);
+      border: var(--krn-border-width-1) solid var(--krn-color-border-interactive);
+      border-radius: var(--krn-radius-sm);
+      background: var(--krn-color-surface);
+      color: var(--krn-color-text);
+      font: inherit;
+      font-weight: var(--krn-font-weight-medium);
+      cursor: pointer;
+    }
+    .request:hover,
+    .cancel:hover {
+      background: var(--krn-color-surface-subtle);
+    }
+    .confirmation {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--krn-space-2);
+      padding: var(--krn-space-2);
+      border: var(--krn-border-width-1) solid var(--krn-color-danger);
+      border-radius: var(--krn-radius-md);
+      background: var(--krn-color-danger-subtle);
+      color: var(--krn-color-text);
+      font-size: var(--krn-font-size-sm);
+    }
+    .confirm {
+      border-color: var(--krn-color-danger) !important;
+      background: var(--krn-color-danger) !important;
+      color: var(--krn-color-on-danger) !important;
+    }
+    :is(button):focus-visible {
+      outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
+      outline-offset: var(--krn-focus-ring-offset);
+    }
   `,
 })
 export class KrnConfirmation {

@@ -350,6 +350,42 @@ const AUTOCOMPLETE_OPTION_API: readonly KernApiRow[] = EDITABLE_OPTION_API.map((
 });
 
 const COMPONENT_OVERRIDES: Readonly<Record<string, Partial<KernCatalogItem>>> = {
+  label: {
+    summary:
+      'Label. Gives a form control its visible accessible name without owning a value, list, or popup.',
+    keyboard: ['Click moves focus to the associated control', 'The label itself is not a tab stop'],
+    accessibility: [
+      'The for value resolves to exactly one control id.',
+      'Required state is visible but is not communicated by color alone.',
+      'Use a fieldset and legend instead when naming a group of related controls.',
+    ],
+    do: 'Use it to name an input, select, textarea, or other labelable form control.',
+    dont: 'Do not use Label as a picker; it has no selection behavior of its own.',
+  },
+  select: {
+    summary:
+      'Select. Opens a styled list and commits exactly one value from a predefined option set.',
+    keyboard: [
+      'Enter or Space opens the option list',
+      'Arrow keys move through options',
+      'Enter commits one option',
+      'Escape closes without changing the value',
+    ],
+    do: 'Use it when one known value must be selected and a custom popup is appropriate.',
+    dont: 'Do not use it for free-text entry; use Autocomplete when custom values are valid.',
+  },
+  'native-select': {
+    summary:
+      'Native Select. Delegates a single predefined selection surface to the browser and operating system.',
+    do: 'Use it when platform familiarity, compactness, or native mobile selection is the priority.',
+    dont: 'Do not expect the option popup to inherit Kern surface styling across operating systems.',
+  },
+  'multi-select': {
+    summary:
+      'Multi Select. Commits several predefined values while keeping the trigger width and selected tokens stable.',
+    do: 'Use it when users need a small set of known values and benefit from seeing selections inline.',
+    dont: 'Do not use it for an unbounded vocabulary; use Tags Input for user-authored values.',
+  },
   combobox: {
     summary:
       'Combobox. Filters a defined option set and commits the value of one explicit selection.',
@@ -385,6 +421,18 @@ const COMPONENT_OVERRIDES: Readonly<Record<string, Partial<KernCatalogItem>>> = 
     api: AUTOCOMPLETE_OPTION_API,
     do: 'Use it when suggestions make entry faster but a new value is still valid, such as an alias, label, or location.',
     dont: 'Do not use it as a constrained picker when only predefined option identifiers are accepted.',
+  },
+  'time-picker': {
+    summary:
+      'Time Picker. Accepts a precise typeable 24-hour time and offers a short set of common choices.',
+    keyboard: [
+      'Type two digits in the hour and minute fields',
+      'Arrow Up and Arrow Down adjust the focused part',
+      'Enter applies a valid time',
+      'Escape closes without trapping focus',
+    ],
+    do: 'Use it for precise scheduling when typing HH:mm is faster than scanning a long list.',
+    dont: 'Do not render every hour and minute as scrolling columns.',
   },
 };
 

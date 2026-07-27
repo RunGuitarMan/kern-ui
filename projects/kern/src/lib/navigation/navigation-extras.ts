@@ -12,6 +12,29 @@ import {
 import { DOCUMENT, Location, isPlatformBrowser } from '@angular/common';
 import type { KrnNavigationItem, KrnTocItem } from './navigation.types';
 
+function sameDocumentHref(document: Document, targetId: string): string {
+  const current = document.defaultView?.location.href ?? document.baseURI;
+  const url = new URL(current);
+  return `${url.pathname}${url.search}#${encodeURIComponent(targetId)}`;
+}
+
+function navigateToAnchor(
+  document: Document,
+  targetId: string,
+  event: MouseEvent,
+  moveFocus = false,
+): void {
+  const target = document.getElementById(targetId);
+  if (!target) return;
+  event.preventDefault();
+  const view = document.defaultView;
+  view?.history.pushState(view.history.state, '', sameDocumentHref(document, targetId));
+  target.scrollIntoView?.({ behavior: 'auto', block: 'start' });
+  if (moveFocus && target instanceof HTMLElement) {
+    target.focus({ preventScroll: true });
+  }
+}
+
 @Component({
   selector: 'krn-bottom-navigation',
   standalone: true,
@@ -53,7 +76,7 @@ import type { KrnNavigationItem, KrnTocItem } from './navigation.types';
     </nav>
   `,
   styles: `
-    :host{display:block}.bottom-nav{display:grid;grid-template-columns:repeat(var(--krn-bottom-nav-count,4),minmax(0,1fr));padding:var(--krn-space-1);border-block-start:var(--krn-border-width-1) solid var(--krn-color-border);background:var(--krn-color-surface)}.bottom-nav :is(a,button){position:relative;display:grid;justify-items:center;gap:var(--krn-space-1);min-inline-size:0;min-block-size:var(--krn-touch-target-min);padding:var(--krn-space-2);border:0;border-radius:var(--krn-radius-sm);background:transparent;color:var(--krn-color-text-muted);font:inherit;font-size:var(--krn-font-size-xs);line-height:var(--krn-line-height-tight);text-decoration:none;cursor:pointer}.bottom-nav :is(a,button):hover{background:var(--krn-color-surface-subtle);color:var(--krn-color-text)}.bottom-nav [aria-current=page]{color:var(--krn-color-primary);font-weight:var(--krn-font-weight-semibold)}.bottom-nav [aria-current=page]::before{position:absolute;inset-block-start:0;inline-size:var(--krn-space-4);block-size:calc(var(--krn-border-width-1) * 2);background:var(--krn-color-primary);content:""}.bottom-nav :is(a,button):focus-visible{outline:var(--krn-focus-ring-width) solid var(--krn-color-focus);outline-offset:calc(var(--krn-focus-ring-offset) * -1)}.bottom-nav button:disabled{color:var(--krn-color-text-disabled);cursor:not-allowed}.icon{font-size:var(--krn-icon-size-md)}.badge{position:absolute;inset-block-start:var(--krn-space-1);inset-inline-start:calc(50% + var(--krn-space-2));min-inline-size:var(--krn-space-4);padding-inline:var(--krn-space-1);border-radius:var(--krn-radius-full);background:var(--krn-color-danger);color:var(--krn-color-on-danger);font-variant-numeric:tabular-nums}
+    :host{display:block}.bottom-nav{display:grid;grid-template-columns:repeat(var(--krn-bottom-nav-count,4),minmax(0,1fr));padding:var(--krn-space-1);border-block-start:var(--krn-border-width-1) solid var(--krn-color-border);background:var(--krn-color-surface)}.bottom-nav :is(a,button){position:relative;display:grid;justify-items:center;gap:var(--krn-space-1);min-inline-size:0;min-block-size:var(--krn-touch-target-min);padding:var(--krn-space-2);border:0;border-radius:var(--krn-radius-sm);background:transparent;color:var(--krn-color-text-muted);font:inherit;font-size:var(--krn-font-size-xs);font-weight:var(--krn-font-weight-medium);line-height:var(--krn-line-height-tight);text-decoration:none;cursor:pointer}.bottom-nav :is(a,button):hover{background:var(--krn-color-surface-subtle);color:var(--krn-color-text)}.bottom-nav [aria-current=page]{color:var(--krn-color-primary)}.bottom-nav [aria-current=page]::before{position:absolute;inset-block-start:0;inline-size:var(--krn-space-4);block-size:calc(var(--krn-border-width-1) * 2);background:var(--krn-color-primary);content:""}.bottom-nav :is(a,button):focus-visible{outline:var(--krn-focus-ring-width) solid var(--krn-color-focus);outline-offset:calc(var(--krn-focus-ring-offset) * -1)}.bottom-nav button:disabled{color:var(--krn-color-text-disabled);cursor:not-allowed}.icon{font-size:var(--krn-icon-size-md)}.badge{position:absolute;inset-block-start:var(--krn-space-1);inset-inline-start:calc(50% + var(--krn-space-2));min-inline-size:var(--krn-space-4);padding-inline:var(--krn-space-1);border-radius:var(--krn-radius-full);background:var(--krn-color-danger);color:var(--krn-color-on-danger);font-variant-numeric:tabular-nums}
   `,
   host: {
     '[style.--krn-bottom-nav-count]': 'items().length',
@@ -83,9 +106,9 @@ export class KrnBottomNavigation {
         @for (item of items(); track item.id) {
           <li [style.--toc-level]="item.level ?? 2">
             <a
-              [href]="'#' + item.id"
+              [href]="anchorHref(item.id)"
               [attr.aria-current]="activeId() === item.id ? 'location' : null"
-              (click)="activeId.set(item.id); itemActivated.emit(item)"
+              (click)="activate($event, item)"
               >{{ item.label }}</a
             >
           </li>
@@ -127,6 +150,16 @@ export class KrnTableOfContents {
       onCleanup(() => observer.disconnect());
     });
   }
+
+  protected anchorHref(id: string): string {
+    return sameDocumentHref(this.document, id);
+  }
+
+  protected activate(event: MouseEvent, item: KrnTocItem): void {
+    this.activeId.set(item.id);
+    this.itemActivated.emit(item);
+    navigateToAnchor(this.document, item.id, event);
+  }
 }
 
 @Component({
@@ -160,12 +193,23 @@ export class KrnBackButton {
   selector: 'krn-skip-link',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<a class="skip-link" [href]="'#' + targetId()">{{ label() }}</a>`,
+  template: `<a class="skip-link" [href]="href()" (click)="activate($event)">{{ label() }}</a>`,
   styles: `
     .skip-link{position:fixed;z-index:var(--krn-z-toast);inset-block-start:var(--krn-space-3);inset-inline-start:var(--krn-space-3);padding:var(--krn-space-2) var(--krn-space-4);border:var(--krn-border-width-1) solid var(--krn-color-border-strong);border-radius:var(--krn-radius-sm);box-shadow:var(--krn-shadow-md);background:var(--krn-color-surface-inverse);color:var(--krn-color-text-inverse);font-weight:var(--krn-font-weight-semibold);text-decoration:none;transform:translateY(calc(-100% - var(--krn-space-6)));transition:transform var(--krn-motion-duration-fast) var(--krn-motion-ease-enter)}.skip-link:focus{outline:var(--krn-focus-ring-width) solid var(--krn-color-focus);outline-offset:var(--krn-focus-ring-offset);transform:translateY(0)}@media(prefers-reduced-motion:reduce){.skip-link{transition:none}}
   `,
 })
 export class KrnSkipLink {
+  private readonly document = inject(DOCUMENT);
   readonly targetId = input('main-content');
   readonly label = input('Skip to main content');
+  readonly activated = output<void>();
+
+  protected href(): string {
+    return sameDocumentHref(this.document, this.targetId());
+  }
+
+  protected activate(event: MouseEvent): void {
+    navigateToAnchor(this.document, this.targetId(), event, true);
+    this.activated.emit();
+  }
 }

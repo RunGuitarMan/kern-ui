@@ -9,6 +9,7 @@ import {
   model,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 import { Combobox, ComboboxPopup, ComboboxWidget } from '@angular/aria/combobox';
 import { Listbox, Option } from '@angular/aria/listbox';
@@ -437,6 +438,7 @@ const COMBOBOX_IMPORTS = [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Opti
 
 @Directive()
 abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
+  private readonly comboboxDirective = viewChild<Combobox>('combo');
   protected readonly defaultAutocompleteMode: KrnAutocompleteMode = 'list';
   protected readonly defaultAllowCustomValue: boolean = false;
   protected readonly autocompleteModeInput = input<KrnAutocompleteMode | undefined>(undefined, {
@@ -545,10 +547,21 @@ abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
       (option) => option.label.toLocaleLowerCase() === this.query().trim().toLocaleLowerCase(),
     );
     if (exact) {
-      this.selectValues([exact.value]);
+      if (this.controlValue() === exact.value) {
+        this.query.set(exact.label);
+        this.open.set(false);
+      } else {
+        this.selectValues([exact.value]);
+      }
     } else if (this.allowCustomValue()) {
-      this.commitValue(this.query());
-      this.valueChange.emit(this.query());
+      const query = this.query();
+      if (this.controlValue() !== query) {
+        this.commitValue(query);
+        this.valueChange.emit(query);
+      }
+      this.open.set(false);
+    } else {
+      this.restoreCommittedQuery();
       this.open.set(false);
     }
   }
@@ -559,21 +572,39 @@ abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     if (current instanceof Node && next instanceof Node && current.contains(next)) {
       return;
     }
-    this.open.set(false);
+    this.commitQuery();
     this.touch();
   }
 
   protected setOpen(open: boolean): void {
-    this.open.set(open && !this.isDisabled() && !this.readOnly());
+    const next = open && !this.isDisabled() && !this.readOnly();
+    if (!next && !this.allowCustomValue()) {
+      this.restoreCommittedQuery();
+    }
+    this.open.set(next);
   }
 
   protected openOptions(): void {
     this.setOpen(true);
   }
 
+  protected cancelQuery(): void {
+    if (!this.allowCustomValue()) {
+      this.restoreCommittedQuery();
+    }
+    this.open.set(false);
+  }
+
   protected toggleOptions(input: HTMLInputElement): void {
     this.setOpen(!this.open());
     input.focus();
+  }
+
+  private restoreCommittedQuery(): void {
+    const option = this.options().find((item) => item.value === this.controlValue());
+    const query = option?.label ?? (this.allowCustomValue() ? this.controlValue() : '');
+    this.query.set(query);
+    this.comboboxDirective()?.value.set(query);
   }
 }
 

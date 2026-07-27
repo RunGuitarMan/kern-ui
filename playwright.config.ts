@@ -1,8 +1,9 @@
+/// <reference types="node" />
+
 import { defineConfig, devices } from '@playwright/test';
 
 const docsUrl = 'http://localhost:4200';
 const labUrl = 'http://localhost:4201';
-const configuredChrome = process.env['PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH'];
 
 export default defineConfig({
   testDir: './tests',
@@ -27,6 +28,7 @@ export default defineConfig({
   use: {
     ...devices['Desktop Chrome'],
     baseURL: docsUrl,
+    browserName: 'chromium',
     colorScheme: 'light',
     locale: 'en-US',
     serviceWorkers: 'block',
@@ -34,11 +36,6 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    launchOptions: configuredChrome
-      ? {
-          executablePath: configuredChrome,
-        }
-      : undefined,
   },
   webServer: {
     command: 'node tests/support/serve-workspace.mjs',

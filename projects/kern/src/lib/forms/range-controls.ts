@@ -150,7 +150,11 @@ export class KrnSlider extends KrnValueAccessor<number> {
         class="krn-dual-range"
         [attr.data-active-thumb]="activeThumb()"
         [attr.data-disabled]="isDisabled()"
-        (pointerdown)="moveNearestThumb($event)"
+        [attr.data-dragging]="draggingThumb() !== null"
+        (pointercancel)="finishPointerInteraction($event)"
+        (pointerdown)="beginPointerInteraction($event)"
+        (pointermove)="continuePointerInteraction($event)"
+        (pointerup)="finishPointerInteraction($event)"
       >
         <div class="krn-dual-range__track" aria-hidden="true">
           <span class="krn-dual-range__selection"></span>
@@ -209,6 +213,8 @@ export class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly valueChange = output<KrnRangeValue>();
   readonly activeThumb = signal<'start' | 'end'>('end');
+  readonly draggingThumb = signal<'start' | 'end' | null>(null);
+  private activePointerId: number | null = null;
 
   protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
   protected readonly a11y = useKrnControlA11y(this.id, this.invalid, 'range-slider');
@@ -257,38 +263,88 @@ export class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
     this.emitRange({ start: current.start, end });
   }
 
-  protected moveNearestThumb(event: PointerEvent): void {
+  protected beginPointerInteraction(event: PointerEvent): void {
     const host = event.currentTarget;
-    if (
-      !(host instanceof HTMLElement) ||
-      event.target instanceof HTMLInputElement ||
-      this.isDisabled() ||
-      this.readOnly()
-    ) {
+    if (!(host instanceof HTMLElement) || this.isDisabled() || this.readOnly()) {
       return;
     }
 
     event.preventDefault();
     const value = this.valueFromPointer(event, host);
     const current = this.controlValue();
-    const startDistance = Math.abs(value - current.start);
-    const endDistance = Math.abs(value - current.end);
-    const thumb =
-      startDistance === endDistance
-        ? this.activeThumb()
-        : startDistance < endDistance
+    const explicitThumb =
+      event.target instanceof HTMLElement
+        ? event.target.closest('.krn-range--start')
           ? 'start'
-          : 'end';
+          : event.target.closest('.krn-range--end')
+            ? 'end'
+            : null
+        : null;
+    const thumb = explicitThumb ?? this.nearestThumb(value, current);
+    const pointerId = Number.isFinite(event.pointerId) ? event.pointerId : 1;
 
     this.activeThumb.set(thumb);
+    this.draggingThumb.set(thumb);
+    this.activePointerId = pointerId;
+    try {
+      host.setPointerCapture?.(pointerId);
+    } catch {
+      // Synthetic pointer events and older browsers may not expose an active pointer capture.
+    }
+    this.updateThumbFromPointer(thumb, value);
+    host
+      .querySelector<HTMLInputElement>(thumb === 'start' ? '.krn-range--start' : '.krn-range--end')
+      ?.focus();
+  }
+
+  protected continuePointerInteraction(event: PointerEvent): void {
+    const host = event.currentTarget;
+    const thumb = this.draggingThumb();
+    const pointerId = Number.isFinite(event.pointerId) ? event.pointerId : 1;
+    if (!(host instanceof HTMLElement) || thumb === null || this.activePointerId !== pointerId) {
+      return;
+    }
+    event.preventDefault();
+    this.updateThumbFromPointer(thumb, this.valueFromPointer(event, host));
+  }
+
+  protected finishPointerInteraction(event: PointerEvent): void {
+    const host = event.currentTarget;
+    const pointerId = Number.isFinite(event.pointerId) ? event.pointerId : 1;
+    if (
+      !(host instanceof HTMLElement) ||
+      this.activePointerId === null ||
+      this.activePointerId !== pointerId
+    ) {
+      return;
+    }
+    try {
+      host.releasePointerCapture?.(pointerId);
+    } catch {
+      // The pointer may already have been released by the browser.
+    }
+    this.activePointerId = null;
+    this.draggingThumb.set(null);
+    this.touch();
+  }
+
+  private nearestThumb(value: number, current: KrnRangeValue): 'start' | 'end' {
+    const startDistance = Math.abs(value - current.start);
+    const endDistance = Math.abs(value - current.end);
+    return startDistance === endDistance
+      ? this.activeThumb()
+      : startDistance < endDistance
+        ? 'start'
+        : 'end';
+  }
+
+  private updateThumbFromPointer(thumb: 'start' | 'end', value: number): void {
+    const current = this.controlValue();
     if (thumb === 'start') {
       this.emitRange({ start: Math.min(value, current.end), end: current.end });
     } else {
       this.emitRange({ start: current.start, end: Math.max(value, current.start) });
     }
-    host
-      .querySelector<HTMLInputElement>(thumb === 'start' ? '.krn-range--start' : '.krn-range--end')
-      ?.focus();
   }
 
   private emitRange(value: KrnRangeValue): void {

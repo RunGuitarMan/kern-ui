@@ -62,7 +62,7 @@ describe('Kern feedback', () => {
     expect(service.toasts()).toHaveLength(0);
   });
 
-  it('groups consecutive duplicate toasts and dismisses the group in one action', async () => {
+  it('keeps duplicate toasts individually dismissible', async () => {
     await TestBed.configureTestingModule({ imports: [KrnToastViewport] }).compileComponents();
     const fixture = TestBed.createComponent(KrnToastViewport);
     const service = TestBed.inject(KrnToastService);
@@ -71,11 +71,12 @@ describe('Kern feedback', () => {
     fixture.detectChanges();
 
     const element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelectorAll('.toast')).toHaveLength(1);
-    expect(element.querySelector('.count')?.textContent?.trim()).toBe('×2');
-    (element.querySelector('.dismiss') as HTMLButtonElement | null)?.click();
+    expect(element.querySelectorAll('.toast')).toHaveLength(2);
+    const dismissButtons = element.querySelectorAll<HTMLButtonElement>('.dismiss');
+    dismissButtons[0]?.click();
     fixture.detectChanges();
-    expect(service.toasts()).toHaveLength(0);
+    expect(service.toasts()).toHaveLength(1);
+    expect(element.querySelectorAll('.toast')).toHaveLength(1);
   });
 
   it('bounds a large toast stack and offers review and clear-all controls', async () => {
@@ -112,6 +113,51 @@ describe('Kern feedback', () => {
     expect(
       (fixture.nativeElement.querySelector('.indicator') as HTMLElement | null)?.style.inlineSize,
     ).toBe('100%');
+  });
+
+  it('removes projected controls from keyboard and accessibility navigation while blocking', async () => {
+    const fixture = await create(KrnLoadingOverlay, {
+      active: true,
+      blocking: true,
+    });
+    const content = fixture.nativeElement.querySelector('.loading-content') as HTMLElement;
+    expect(content.getAttribute('inert')).toBe('');
+    expect(content.getAttribute('aria-hidden')).toBe('true');
+
+    fixture.componentRef.setInput('blocking', false);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(content.hasAttribute('inert')).toBe(false);
+    expect(content.hasAttribute('aria-hidden')).toBe(false);
+
+    fixture.componentRef.setInput('blocking', true);
+    fixture.componentRef.setInput('active', false);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(content.hasAttribute('inert')).toBe(false);
+    expect(content.hasAttribute('aria-hidden')).toBe(false);
+  });
+
+  it('renders distinct semantic fallback visuals for empty, error, and success states', async () => {
+    await TestBed.configureTestingModule({
+      imports: [KrnEmptyState, KrnErrorState, KrnSuccessState],
+    }).compileComponents();
+    const empty = TestBed.createComponent(KrnEmptyState);
+    const error = TestBed.createComponent(KrnErrorState);
+    const success = TestBed.createComponent(KrnSuccessState);
+    empty.detectChanges();
+    error.detectChanges();
+    success.detectChanges();
+    await Promise.all([empty.whenStable(), error.whenStable(), success.whenStable()]);
+
+    expect(empty.nativeElement.querySelector('.state')?.getAttribute('data-kind')).toBe('empty');
+    expect(error.nativeElement.querySelector('.state')?.getAttribute('data-kind')).toBe('error');
+    expect(success.nativeElement.querySelector('.state')?.getAttribute('data-kind')).toBe(
+      'success',
+    );
+    expect(empty.nativeElement.querySelector('.default-visual path')?.getAttribute('d')).not.toBe(
+      error.nativeElement.querySelector('.default-visual path')?.getAttribute('d'),
+    );
   });
 
   it('closes a dialog on Escape and restores controlled state', async () => {

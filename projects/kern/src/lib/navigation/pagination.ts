@@ -24,9 +24,12 @@ type PageToken = number | 'ellipsis';
       >
         <span aria-hidden="true">←</span><span class="direction-label">{{ previousLabel() }}</span>
       </button>
-      <ol>
+      <ol [attr.data-mobile-window]="pageTokens().length > mobileSlotCount ? '' : null">
         @for (token of pageTokens(); track $index) {
-          <li [attr.data-current]="token !== 'ellipsis' && currentPage() === token ? '' : null">
+          <li
+            [attr.data-current]="token !== 'ellipsis' && currentPage() === token ? '' : null"
+            [attr.data-mobile-visible]="mobileVisibleIndexes().has($index) ? '' : null"
+          >
             @if (token === 'ellipsis') {
               <span class="ellipsis" aria-hidden="true">…</span>
             } @else {
@@ -127,7 +130,10 @@ type PageToken = number | 'ellipsis';
       white-space: nowrap;
     }
     @media (max-width: 35rem) {
-      ol li:not(:first-child):not(:last-child):not([data-current]) {
+      ol[data-mobile-window] {
+        grid-template-columns: repeat(5, var(--krn-control-height-sm));
+      }
+      ol[data-mobile-window] li:not([data-mobile-visible]) {
         display: none;
       }
       .direction-label {
@@ -141,6 +147,7 @@ type PageToken = number | 'ellipsis';
   `,
 })
 export class KrnPagination {
+  protected readonly mobileSlotCount = 5;
   readonly totalItems = input(0);
   readonly pageSize = input(20);
   readonly siblingCount = input(1);
@@ -192,6 +199,28 @@ export class KrnPagination {
       'ellipsis',
       total,
     ];
+  });
+  protected readonly mobileVisibleIndexes = computed<ReadonlySet<number>>(() => {
+    const tokens = this.pageTokens();
+    if (tokens.length <= this.mobileSlotCount) {
+      return new Set(tokens.map((_, index) => index));
+    }
+
+    const lastIndex = tokens.length - 1;
+    const currentIndex = tokens.findIndex((token) => token === this.currentPage());
+    const visible = new Set<number>([0, lastIndex, Math.max(0, currentIndex)]);
+    const candidates = Array.from({ length: Math.max(0, tokens.length - 2) }, (_, index) => index + 1)
+      .filter((index) => !visible.has(index))
+      .sort((left, right) => {
+        const distance = Math.abs(left - currentIndex) - Math.abs(right - currentIndex);
+        return distance || left - right;
+      });
+
+    for (const index of candidates) {
+      if (visible.size >= this.mobileSlotCount) break;
+      visible.add(index);
+    }
+    return visible;
   });
 
   constructor() {
