@@ -196,7 +196,12 @@ test.describe('Round three: form behavior', () => {
     expect(
       await increase.evaluate((element) => getComputedStyle(element).backgroundColor),
     ).not.toBe(restBackground);
-    await increase.click();
+    const restingBounds = await rect(increase);
+    await page.mouse.down();
+    const pressedBounds = await rect(increase);
+    expect(pressedBounds).toEqual(restingBounds);
+    await expect(increase).toHaveCSS('border-bottom-width', '1px');
+    await page.mouse.up();
     await expect(number).toHaveValue('6');
     await specimen.getByRole('button', { name: 'Decrease value' }).click();
     await expect(number).toHaveValue('1');

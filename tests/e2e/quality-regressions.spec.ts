@@ -68,6 +68,41 @@ function boxShadowLayerCount(value: string): number {
 }
 
 test.describe('Quality regressions: menus and focus treatment', () => {
+  test('split-button menu items expose a subtle pointer hover without shifting', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    const specimen = await openSpecimen(page, 'split-button');
+    const trigger = specimen.getByRole('button', { name: 'More actions' });
+
+    await trigger.click();
+
+    const menu = page.getByRole('menu');
+    const firstItem = menu.getByRole('menuitem', { name: 'Publish now' });
+    await expect(menu).toBeVisible();
+
+    const beforeRect = await elementRect(firstItem);
+    const restingBackground = await firstItem.evaluate(
+      (element) => getComputedStyle(element).backgroundColor,
+    );
+
+    await firstItem.hover();
+    await expect
+      .poll(() => firstItem.evaluate((element) => getComputedStyle(element).backgroundColor))
+      .not.toBe(restingBackground);
+
+    const hoverBackground = await firstItem.evaluate(
+      (element) => getComputedStyle(element).backgroundColor,
+    );
+    const menuBackground = await menu.evaluate(
+      (element) => getComputedStyle(element).backgroundColor,
+    );
+    expect(hoverBackground).not.toBe('rgba(0, 0, 0, 0)');
+    expect(hoverBackground).not.toBe(menuBackground);
+    expectStableRect(beforeRect, await elementRect(firstItem), 'split-button hover item');
+    assertNoRuntimeErrors();
+  });
+
   test('split and dropdown menus keep their trigger geometry, styling, and keyboard contract', async ({
     page,
   }) => {
@@ -547,6 +582,166 @@ test.describe('Quality regressions: form controls', () => {
 });
 
 test.describe('Quality regressions: data and feedback', () => {
+  test('drawer runs translate and opacity transitions before its closing DOM is removed', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    const specimen = await openSpecimen(page, 'drawer');
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.evaluate(() => {
+      document.documentElement.style.setProperty('--krn-motion-duration-normal', '220ms');
+      document.documentElement.style.setProperty('--krn-motion-duration-slow', '240ms');
+    });
+
+    const drawer = specimen.locator('krn-drawer');
+    await specimen.getByRole('button', { name: 'Open activity drawer' }).click();
+
+    const backdrop = drawer.locator('.backdrop');
+    const surface = backdrop.locator('.surface');
+    await expect(backdrop).toHaveAttribute('data-state', 'open');
+    await expect(surface).toBeVisible();
+
+    const openingMotion = await backdrop.evaluate(async (backdropElement) => {
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      const surfaceElement = backdropElement.querySelector<HTMLElement>('.surface');
+      if (!surfaceElement) throw new Error('Drawer surface was not rendered.');
+
+      const transitionProperties = (element: Element): string[] =>
+        element
+          .getAnimations()
+          .filter((animation) => 'transitionProperty' in animation)
+          .map((animation) => String(Reflect.get(animation, 'transitionProperty')));
+      const backdropStyle = getComputedStyle(backdropElement);
+      const surfaceStyle = getComputedStyle(surfaceElement);
+
+      return {
+        backdropOpacity: Number.parseFloat(backdropStyle.opacity),
+        backdropTransitions: transitionProperties(backdropElement),
+        surfaceOpacity: Number.parseFloat(surfaceStyle.opacity),
+        surfaceTransitions: transitionProperties(surfaceElement),
+        surfaceTranslate: Math.abs(Number.parseFloat(surfaceStyle.translate) || 0),
+      };
+    });
+
+    expect(openingMotion.backdropTransitions).toContain('opacity');
+    expect(openingMotion.surfaceTransitions).toEqual(
+      expect.arrayContaining(['opacity', 'translate']),
+    );
+    expect(openingMotion.backdropOpacity).toBeLessThan(1);
+    expect(openingMotion.surfaceOpacity).toBeLessThan(1);
+    expect(openingMotion.surfaceTranslate).toBeGreaterThan(0);
+
+    await expect
+      .poll(() =>
+        backdrop.evaluate((backdropElement) => {
+          const surfaceElement = backdropElement.querySelector<HTMLElement>('.surface');
+          if (!surfaceElement) return false;
+          const backdropStyle = getComputedStyle(backdropElement);
+          const surfaceStyle = getComputedStyle(surfaceElement);
+          return (
+            Number.parseFloat(backdropStyle.opacity) === 1 &&
+            Number.parseFloat(surfaceStyle.opacity) === 1 &&
+            Math.abs(Number.parseFloat(surfaceStyle.translate) || 0) < 0.01 &&
+            backdropElement.getAnimations().length === 0 &&
+            surfaceElement.getAnimations().length === 0
+          );
+        }),
+      )
+      .toBe(true);
+
+    await backdrop.evaluate((backdropElement) => {
+      const traceWindow = window as typeof window & {
+        __krnDrawerExitTrace?: {
+          removedAt: number | null;
+          transitionEndedAt: number | null;
+        };
+      };
+      const trace = {
+        removedAt: null as number | null,
+        transitionEndedAt: null as number | null,
+      };
+      traceWindow.__krnDrawerExitTrace = trace;
+      backdropElement.addEventListener('transitionend', (event) => {
+        if (event.target === backdropElement && event.propertyName === 'opacity') {
+          trace.transitionEndedAt = performance.now();
+        }
+      });
+
+      const host = backdropElement.closest('krn-drawer');
+      if (!host) throw new Error('Drawer host was not found.');
+      const observer = new MutationObserver(() => {
+        if (!backdropElement.isConnected) {
+          trace.removedAt = performance.now();
+          observer.disconnect();
+        }
+      });
+      observer.observe(host, { childList: true, subtree: true });
+    });
+
+    await surface.getByRole('button', { name: 'Close' }).click();
+    await expect(backdrop).toHaveAttribute('data-state', 'closing');
+    await expect(backdrop).toHaveAttribute('aria-hidden', 'true');
+    await expect(backdrop).toHaveCount(1);
+
+    const closingMotion = await backdrop.evaluate(async (backdropElement) => {
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      const surfaceElement = backdropElement.querySelector<HTMLElement>('.surface');
+      if (!surfaceElement) throw new Error('Closing drawer surface disappeared too early.');
+
+      const transitionProperties = (element: Element): string[] =>
+        element
+          .getAnimations()
+          .filter((animation) => 'transitionProperty' in animation)
+          .map((animation) => String(Reflect.get(animation, 'transitionProperty')));
+      const backdropStyle = getComputedStyle(backdropElement);
+      const surfaceStyle = getComputedStyle(surfaceElement);
+
+      return {
+        backdropOpacity: Number.parseFloat(backdropStyle.opacity),
+        backdropTransitions: transitionProperties(backdropElement),
+        surfaceOpacity: Number.parseFloat(surfaceStyle.opacity),
+        surfaceTransitions: transitionProperties(surfaceElement),
+        surfaceTranslate: Math.abs(Number.parseFloat(surfaceStyle.translate) || 0),
+      };
+    });
+
+    expect(closingMotion.backdropTransitions).toContain('opacity');
+    expect(closingMotion.surfaceTransitions).toEqual(
+      expect.arrayContaining(['opacity', 'translate']),
+    );
+    expect(closingMotion.backdropOpacity).toBeLessThan(1);
+    expect(closingMotion.surfaceOpacity).toBeLessThan(1);
+    expect(closingMotion.surfaceTranslate).toBeGreaterThan(0);
+
+    await expect(backdrop).toHaveCount(0);
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const traceWindow = window as typeof window & {
+            __krnDrawerExitTrace?: {
+              removedAt: number | null;
+              transitionEndedAt: number | null;
+            };
+          };
+          return traceWindow.__krnDrawerExitTrace?.removedAt ?? null;
+        }),
+      )
+      .not.toBeNull();
+    const exitTrace = await page.evaluate(() => {
+      const traceWindow = window as typeof window & {
+        __krnDrawerExitTrace?: {
+          removedAt: number | null;
+          transitionEndedAt: number | null;
+        };
+      };
+      return traceWindow.__krnDrawerExitTrace;
+    });
+    expect(exitTrace?.transitionEndedAt).not.toBeNull();
+    expect(exitTrace?.removedAt).not.toBeNull();
+    expect(exitTrace?.removedAt ?? 0).toBeGreaterThanOrEqual(exitTrace?.transitionEndedAt ?? 1);
+    assertNoRuntimeErrors();
+  });
+
   test('code blocks render multiple syntax token classes with distinct colors', async ({
     page,
   }) => {

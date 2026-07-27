@@ -167,6 +167,78 @@ describe('Kern feedback', () => {
     fixture.detectChanges();
     expect(fixture.componentInstance.open()).toBe(false);
   });
+
+  it('keeps a closing drawer present only for its exit animation', async () => {
+    vi.stubGlobal(
+      'matchMedia',
+      (query: string): MediaQueryList =>
+        ({
+          matches: false,
+          media: query,
+          onchange: null,
+          addListener: () => undefined,
+          removeListener: () => undefined,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+          dispatchEvent: () => true,
+        }) as MediaQueryList,
+    );
+    const fixture = await create(KrnDrawer, { open: true, title: 'Workspace settings' });
+    const closeReasons: string[] = [];
+    fixture.componentInstance.closed.subscribe((reason) => closeReasons.push(reason));
+
+    (fixture.nativeElement.querySelector('.close') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    const closingBackdrop = fixture.nativeElement.querySelector('.backdrop') as HTMLElement;
+    expect(fixture.componentInstance.open()).toBe(false);
+    expect(closeReasons).toEqual(['action']);
+    expect(closingBackdrop.dataset['state']).toBe('closing');
+    expect(closingBackdrop.getAttribute('aria-hidden')).toBe('true');
+    expect(closingBackdrop.hasAttribute('inert')).toBe(true);
+
+    fixture.componentInstance.open.set(true);
+    fixture.detectChanges();
+    const reopenedBackdrop = fixture.nativeElement.querySelector('.backdrop') as HTMLElement;
+    expect(reopenedBackdrop.dataset['state']).toBe('open');
+    expect(reopenedBackdrop.hasAttribute('aria-hidden')).toBe(false);
+    expect(reopenedBackdrop.hasAttribute('inert')).toBe(false);
+
+    (fixture.nativeElement.querySelector('.close') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    const exitEvent = new Event('transitionend');
+    Object.defineProperty(exitEvent, 'propertyName', { value: 'opacity' });
+    reopenedBackdrop.dispatchEvent(exitEvent);
+    fixture.detectChanges();
+    expect(closeReasons).toEqual(['action', 'action']);
+    expect(fixture.nativeElement.querySelector('.backdrop')).toBeNull();
+    vi.unstubAllGlobals();
+  });
+
+  it('removes a closing drawer immediately when reduced motion is requested', async () => {
+    vi.stubGlobal(
+      'matchMedia',
+      (query: string): MediaQueryList =>
+        ({
+          matches: true,
+          media: query,
+          onchange: null,
+          addListener: () => undefined,
+          removeListener: () => undefined,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+          dispatchEvent: () => true,
+        }) as MediaQueryList,
+    );
+    const fixture = await create(KrnDrawer, { open: true, title: 'Workspace settings' });
+
+    (fixture.nativeElement.querySelector('.close') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.open()).toBe(false);
+    expect(fixture.nativeElement.querySelector('.backdrop')).toBeNull();
+    vi.unstubAllGlobals();
+  });
 });
 
 async function create<T>(

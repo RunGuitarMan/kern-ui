@@ -278,6 +278,16 @@
 }
 
 .krn-action-menu {
+  --_action-menu-item-active: color-mix(
+    in oklch,
+    var(--krn-color-text, #17201c) 10%,
+    var(--krn-color-surface-overlay, #fff)
+  );
+  --_action-menu-item-hover: color-mix(
+    in oklch,
+    var(--krn-color-text, #17201c) 6%,
+    var(--krn-color-surface-overlay, #fff)
+  );
   animation: krn-action-menu-in var(--krn-motion-fast, 120ms) var(--krn-ease-enter, ease-out);
   background: var(--krn-color-surface-overlay, #fff);
   border: 1px solid var(--krn-color-border, #cbd3cf);
@@ -315,12 +325,22 @@
   padding: 0.5rem 0.75rem;
   text-align: start;
   text-decoration: none;
+  transition: background-color var(--krn-motion-fast, 120ms)
+    var(--krn-ease-standard, ease);
   white-space: nowrap;
 }
 
-::ng-deep .krn-action-menu [role='menuitem']:is(:hover, :focus-visible) {
-  background: var(--krn-color-surface-hover, var(--krn-color-surface-raised));
+::ng-deep
+  .krn-action-menu
+  [role='menuitem']:is(:hover, :focus-visible):not(:disabled):not([aria-disabled='true']) {
+  background: var(--_action-menu-item-hover);
   outline: 0;
+}
+
+::ng-deep
+  .krn-action-menu
+  [role='menuitem']:active:not(:disabled):not([aria-disabled='true']) {
+  background: var(--_action-menu-item-active);
 }
 
 ::ng-deep .krn-action-menu [role='menuitem']:focus-visible {
