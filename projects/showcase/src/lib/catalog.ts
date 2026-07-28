@@ -1,13 +1,21 @@
+import {
+  KERN_RUNTIME_COMPONENTS,
+  type KernRuntimeApiKind,
+  type KernRuntimeComponentContract,
+} from './generated-component-contract';
+
 export type KernCategory =
   'Layout' | 'Actions' | 'Forms' | 'Navigation' | 'Feedback' | 'Data display' | 'Patterns';
 
-export type KernComponentStatus = 'stable' | 'beta';
+export type KernComponentStatus = 'stable' | 'beta' | 'experimental' | 'recipe' | 'deprecated';
 
 export interface KernApiRow {
   readonly name: string;
   readonly type: string;
   readonly defaultValue: string;
   readonly description: string;
+  readonly kind?: KernRuntimeApiKind;
+  readonly required?: boolean;
 }
 
 export interface KernCatalogItem {
@@ -48,63 +56,6 @@ const INTERACTIVE_STATES = [
   'invalid',
   'readonly',
 ] as const;
-
-const ACTION_API: readonly KernApiRow[] = [
-  {
-    name: 'size',
-    type: "'sm' | 'md' | 'lg'",
-    defaultValue: "'md'",
-    description: 'Control height and internal spacing without shrinking text.',
-  },
-  {
-    name: 'variant',
-    type: "'solid' | 'soft' | 'outline' | 'ghost'",
-    defaultValue: "'solid'",
-    description: 'Visual emphasis within an action hierarchy.',
-  },
-  {
-    name: 'tone',
-    type: "'neutral' | 'brand' | 'success' | 'warning' | 'danger'",
-    defaultValue: "'neutral'",
-    description: 'Semantic intent; never the only state indicator.',
-  },
-];
-
-const FORM_API: readonly KernApiRow[] = [
-  {
-    name: 'value',
-    type: 'T',
-    defaultValue: '—',
-    description: 'Typed control value; compatible controls expose Angular Forms integration.',
-  },
-  {
-    name: 'disabled',
-    type: 'boolean',
-    defaultValue: 'false',
-    description: 'Removes the control from interaction and form submission.',
-  },
-  {
-    name: 'readonly',
-    type: 'boolean',
-    defaultValue: 'false',
-    description: 'Keeps the value focusable and readable while preventing edits.',
-  },
-];
-
-const DATA_API: readonly KernApiRow[] = [
-  {
-    name: 'data',
-    type: 'readonly T[]',
-    defaultValue: '[]',
-    description: 'Immutable data supplied by the consumer.',
-  },
-  {
-    name: 'emptyLabel',
-    type: 'string',
-    defaultValue: "'No data'",
-    description: 'Human-readable empty state announced to assistive technology.',
-  },
-];
 
 const GROUPS: Readonly<Record<KernCategory, readonly string[]>> = {
   Layout: [
@@ -290,18 +241,45 @@ function summaryFor(name: string, category: KernCategory): string {
   return `${name}. ${summaries[category]}`;
 }
 
-function apiFor(category: KernCategory): readonly KernApiRow[] {
-  if (category === 'Actions') return ACTION_API;
-  if (category === 'Forms') return FORM_API;
-  if (category === 'Data display') return DATA_API;
-  return [
-    {
-      name: 'ariaLabel',
-      type: 'string | undefined',
-      defaultValue: 'undefined',
-      description: 'Optional accessible label when visible content is not sufficient.',
-    },
-  ];
+const RUNTIME_COMPONENTS: Readonly<Record<string, KernRuntimeComponentContract>> =
+  KERN_RUNTIME_COMPONENTS;
+
+const API_DESCRIPTIONS: Readonly<Record<string, string>> = {
+  ariaLabel: 'Accessible name used when visible content is not sufficient.',
+  disabled: 'Prevents interaction and participates in the component disabled contract.',
+  readOnly: 'Keeps the value perceivable while preventing user edits.',
+  required: 'Marks the value as required and participates in Angular Forms validation.',
+  invalid: 'Exposes an externally controlled invalid presentation state.',
+  loading: 'Prevents duplicate actions and exposes an accessible busy state.',
+  value: 'Controlled component value.',
+  open: 'Controlled disclosure or overlay state.',
+  size: 'Semantic component size.',
+  tone: 'Semantic intent; color is never the only state indicator.',
+  variant: 'Visual emphasis within the component hierarchy.',
+  appearance: 'Named visual treatment resolved through the appearance system.',
+  data: 'Immutable data supplied by the consumer.',
+  emptyLabel: 'Human-readable empty state announced to assistive technology.',
+};
+
+function apiDescription(name: string, kind: KernRuntimeApiKind): string {
+  const explicit = API_DESCRIPTIONS[name];
+  if (explicit) return explicit;
+  if (kind === 'model') return `Controlled ${name} state with a matching ${name}Change output.`;
+  if (kind === 'output') return `Emitted when the component completes the ${name} action.`;
+  return `Configures the component ${name} contract.`;
+}
+
+function apiFor(selector: string): readonly KernApiRow[] {
+  const contract = RUNTIME_COMPONENTS[selector];
+  if (!contract) return [];
+  return contract.api.map((row) => ({
+    name: row.name,
+    type: row.type,
+    defaultValue: row.defaultValue,
+    description: apiDescription(row.name, row.kind),
+    kind: row.kind,
+    required: row.required,
+  }));
 }
 
 function keyboardFor(category: KernCategory): readonly string[] {
@@ -317,39 +295,41 @@ function keyboardFor(category: KernCategory): readonly string[] {
   return ['No custom keyboard behavior unless the composition is interactive'];
 }
 
-const EDITABLE_OPTION_API: readonly KernApiRow[] = [
-  ...FORM_API,
-  {
-    name: 'options',
-    type: 'readonly KrnSelectOption<string>[]',
-    defaultValue: 'required',
-    description: 'Known values used to filter and render the suggestion list.',
-  },
-  {
-    name: 'allowCustomValue',
-    type: 'boolean',
-    defaultValue: 'false',
-    description: 'When enabled, typed text can be committed without matching an option.',
-  },
-  {
-    name: 'autocompleteMode',
-    type: "'none' | 'inline' | 'list' | 'both'",
-    defaultValue: "'list'",
-    description: 'Communicates how suggestions are exposed to assistive technology.',
-  },
-];
-
-const AUTOCOMPLETE_OPTION_API: readonly KernApiRow[] = EDITABLE_OPTION_API.map((row) => {
-  if (row.name === 'allowCustomValue') {
-    return { ...row, defaultValue: 'true' };
-  }
-  if (row.name === 'autocompleteMode') {
-    return { ...row, defaultValue: "'both'" };
-  }
-  return row;
-});
-
 const COMPONENT_OVERRIDES: Readonly<Record<string, Partial<KernCatalogItem>>> = {
+  tree: {
+    summary:
+      'Tree. Presents hierarchical data with one roving tab stop, expansion, selection, and locale-aware typeahead.',
+    keyboard: [
+      'Arrow Up and Arrow Down move through visible enabled items',
+      'Arrow Right expands or enters a branch; Arrow Left collapses or returns to its parent',
+      'Home and End jump to the first and last enabled visible items',
+      'Typing moves to the next matching visible item',
+    ],
+    accessibility: [
+      'Every node id is a stable, non-empty identifier unique across the complete tree.',
+      'Disabled nodes remain perceivable but are skipped by roving focus.',
+      'Expansion, hierarchy, position, and selection are exposed through tree semantics.',
+    ],
+    do: 'Use stable domain identifiers for nodes and preserve them across filtering and refreshes.',
+    dont: 'Do not reuse an id in another branch or derive ids from a mutable array index.',
+  },
+  'data-grid': {
+    summary:
+      'Data Grid. Provides a typed interactive grid with stable row identity, controlled or client data flow, virtualization, and managed cell actions.',
+    keyboard: [
+      'Arrow keys, Home, End, Page Up, and Page Down move the single roving grid focus',
+      'Enter or F2 enters actions or editing within the focused cell',
+      'Escape restores grid navigation from cell action mode',
+      'Tab enters or leaves the grid without adding every cell action to the page tab sequence',
+    ],
+    accessibility: [
+      'The grid has one page tab stop and exposes row, column, sort, selection, and virtual position semantics.',
+      'Every source occurrence has a stable unique row identity, including repeated object or primitive values.',
+      'Virtual mode uses measurable fixed-height rows and intentionally rejects expandable detail rows.',
+    ],
+    do: 'Use controlled mode for server data, stable domain keys for rows, and cell templates for typed product actions.',
+    dont: 'Do not use array indexes as persistent row identity after sorting or filtering, or combine virtual mode with row expansion.',
+  },
   label: {
     summary:
       'Label. Gives a form control its visible accessible name without owning a value, list, or popup.',
@@ -400,7 +380,6 @@ const COMPONENT_OVERRIDES: Readonly<Record<string, Partial<KernCatalogItem>>> = 
       'Option labels remain the source of truth for the committed value.',
       'Empty results are announced without turning arbitrary text into a selection.',
     ],
-    api: EDITABLE_OPTION_API,
     do: 'Use it when the submitted value must come from an authoritative list, such as a plan, workspace, or assignee.',
     dont: 'Do not enable custom values when downstream logic expects a known option identifier.',
   },
@@ -418,7 +397,6 @@ const COMPONENT_OVERRIDES: Readonly<Record<string, Partial<KernCatalogItem>>> = 
       'Suggestions accelerate entry but do not imply that a match is required.',
       'The final free-text value remains visible and editable after the list closes.',
     ],
-    api: AUTOCOMPLETE_OPTION_API,
     do: 'Use it when suggestions make entry faster but a new value is still valid, such as an alias, label, or location.',
     dont: 'Do not use it as a constrained picker when only predefined option identifiers are accepted.',
   },
@@ -436,18 +414,50 @@ const COMPONENT_OVERRIDES: Readonly<Record<string, Partial<KernCatalogItem>>> = 
   },
 };
 
+const BETA_COMPONENTS = new Set([
+  'autocomplete',
+  'color-picker',
+  'combobox',
+  'command-palette',
+  'data-grid',
+  'data-table',
+  'date-picker',
+  'date-range-picker',
+  'dialog',
+  'drawer',
+  'bottom-sheet',
+  'multi-select',
+  'select',
+  'time-picker',
+  'tree',
+  'tree-navigation',
+  'line-chart',
+  'bar-chart',
+  'donut-chart',
+]);
+
+const EXPERIMENTAL_COMPONENTS = new Set(['resizable-panels']);
+
+function statusFor(id: string, category: KernCategory): KernComponentStatus {
+  if (category === 'Patterns') return 'recipe';
+  if (EXPERIMENTAL_COMPONENTS.has(id)) return 'experimental';
+  if (BETA_COMPONENTS.has(id)) return 'beta';
+  return 'stable';
+}
+
 function createItem(name: string, category: KernCategory): KernCatalogItem {
   const id = slugify(name);
   const isInteractive = category === 'Actions' || category === 'Forms' || category === 'Navigation';
+  const selector = id === 'tooltip' ? '[krnTooltip]' : `krn-${id}`;
 
   const item: KernCatalogItem = {
     id,
     name,
     category,
-    selector: id === 'tooltip' ? '[krnTooltip]' : `krn-${id}`,
+    selector,
     variantOf: VARIANT_OF[id],
     summary: summaryFor(name, category),
-    status: 'stable',
+    status: statusFor(id, category),
     states: isInteractive ? INTERACTIVE_STATES : COMMON_STATES,
     keyboard: keyboardFor(category),
     accessibility: [
@@ -455,7 +465,7 @@ function createItem(name: string, category: KernCategory): KernCatalogItem {
       'Works at 200% text zoom and in narrow containers.',
       'State is communicated by text, shape, or icon in addition to color.',
     ],
-    api: apiFor(category),
+    api: apiFor(selector),
     do: 'Use the smallest semantic primitive that communicates the intended relationship.',
     dont: 'Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.',
   };

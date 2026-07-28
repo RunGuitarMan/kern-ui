@@ -3,7 +3,7 @@ import { expect, type Page } from '@playwright/test';
 export const DOCS_URL = 'http://localhost:4200';
 export const LAB_URL = 'http://localhost:4201';
 
-export type LabScenario = 'default' | 'states' | 'stress';
+export type LabScenario = 'default' | 'states' | 'stress' | 'virtual';
 export type LabTheme = 'light' | 'dark' | 'high-contrast';
 export type LabDensity = 'compact' | 'comfortable' | 'spacious';
 export type LabDirection = 'ltr' | 'rtl';

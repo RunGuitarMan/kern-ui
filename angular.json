@@ -12,7 +12,7 @@
     "kern": {
       "projectType": "library",
       "root": "projects/kern",
-      "sourceRoot": "projects/kern/src",
+      "sourceRoot": "projects/kern",
       "prefix": "krn",
       "architect": {
         "build": {
@@ -57,7 +57,7 @@
             "server": "projects/docs/src/main.server.ts",
             "outputMode": "server",
             "security": {
-              "allowedHosts": []
+              "allowedHosts": ["localhost", "127.0.0.1"]
             },
             "ssr": {
               "entry": "projects/docs/src/server.ts"
@@ -68,8 +68,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1.14MB",
-                  "maximumError": "1.15MB"
+                  "maximumWarning": "1.29MB",
+                  "maximumError": "1.32MB"
                 },
                 {
                   "type": "anyComponentStyle",

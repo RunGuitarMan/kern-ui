@@ -8,6 +8,8 @@
     --krn-control-padding-inline: var(--krn-space-3);
     --krn-density-gap: var(--krn-space-3);
     --krn-density-section-gap: var(--krn-space-6);
+    --krn-density-cell-padding-block: var(--krn-space-1-5);
+    --krn-density-cell-padding-inline: var(--krn-space-3);
     --krn-table-row-height: 2.75rem;
   }
 
@@ -19,6 +21,8 @@
     --krn-control-padding-inline: var(--krn-space-2);
     --krn-density-gap: var(--krn-space-2);
     --krn-density-section-gap: var(--krn-space-4);
+    --krn-density-cell-padding-block: var(--krn-space-1);
+    --krn-density-cell-padding-inline: var(--krn-space-2);
     --krn-table-row-height: 2.25rem;
   }
 
@@ -30,6 +34,8 @@
     --krn-control-padding-inline: var(--krn-space-4);
     --krn-density-gap: var(--krn-space-4);
     --krn-density-section-gap: var(--krn-space-8);
+    --krn-density-cell-padding-block: var(--krn-space-2);
+    --krn-density-cell-padding-inline: var(--krn-space-4);
     --krn-table-row-height: 3.25rem;
   }
 

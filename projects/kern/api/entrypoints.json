@@ -1,0 +1,36 @@
+{
+  "entrypoints": [
+    {
+      "subpath": ".",
+      "baseline": "root.api.d.ts"
+    },
+    {
+      "subpath": "./addon-charts",
+      "baseline": "addon-charts.api.d.ts"
+    },
+    {
+      "subpath": "./addon-grid",
+      "baseline": "addon-grid.api.d.ts"
+    },
+    {
+      "subpath": "./cdk",
+      "baseline": "cdk.api.d.ts"
+    },
+    {
+      "subpath": "./core",
+      "baseline": "core.api.d.ts"
+    },
+    {
+      "subpath": "./kit",
+      "baseline": "kit.api.d.ts"
+    },
+    {
+      "subpath": "./patterns",
+      "baseline": "patterns.api.d.ts"
+    },
+    {
+      "subpath": "./testing",
+      "baseline": "testing.api.d.ts"
+    }
+  ]
+}

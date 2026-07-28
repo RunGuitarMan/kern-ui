@@ -7,5 +7,6 @@
     "noEmit": true,
     "types": ["node", "@playwright/test"]
   },
-  "include": ["./**/*.ts", "./support/*.mjs", "../playwright.config.ts"]
+  "include": ["./**/*.ts", "./support/*.mjs", "../playwright.config.ts"],
+  "exclude": ["./.artifacts/**", "./consumer-fixtures/**"]
 }

@@ -21,8 +21,15 @@
   "dependencies": {
     "tslib": "^2.3.0"
   },
+  "schematics": "./schematics/collection.json",
   "exports": {
-    "./styles/kern.css": "./styles/kern.css"
+    "./styles/kern.css": "./styles/kern.css",
+    "./styles/tokens.css": "./styles/tokens.css",
+    "./styles/themes.css": "./styles/themes.css",
+    "./styles/density.css": "./styles/density.css",
+    "./styles/preferences.css": "./styles/preferences.css",
+    "./styles/base.css": "./styles/base.css",
+    "./styles/utilities.css": "./styles/utilities.css"
   },
   "sideEffects": [
     "./styles/*.css"

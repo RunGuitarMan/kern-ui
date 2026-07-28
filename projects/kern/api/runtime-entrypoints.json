@@ -1,0 +1,82 @@
+{
+  "packageName": "@kern-ui/angular",
+  "primarySourceRoot": "projects/kern/src",
+  "rootPublicApi": "projects/kern/src/public-api.ts",
+  "entrypoints": [
+    {
+      "name": "cdk",
+      "subpath": "./cdk",
+      "sourceRoot": "projects/kern/cdk/src",
+      "publicApi": "projects/kern/cdk/src/public-api.ts",
+      "owns": ["lib/cdk"],
+      "dependencies": [],
+      "identityExports": [
+        "KRN_OVERLAY_HOST",
+        "KRN_PLATFORM",
+        "KrnIdService",
+        "KrnOverlayCoordinator"
+      ]
+    },
+    {
+      "name": "core",
+      "subpath": "./core",
+      "sourceRoot": "projects/kern/core/src",
+      "publicApi": "projects/kern/core/src/public-api.ts",
+      "owns": ["lib/core", "lib/foundations"],
+      "dependencies": ["cdk"],
+      "identityExports": [
+        "KRN_CONFIG",
+        "KRN_DIRECTION",
+        "KRN_LOCALE",
+        "KRN_MOTION",
+        "KRN_THEME_CONFIG",
+        "KRN_TRANSLATIONS",
+        "KrnIconRegistry",
+        "KrnThemeService"
+      ]
+    },
+    {
+      "name": "kit",
+      "subpath": "./kit",
+      "sourceRoot": "projects/kern/kit/src",
+      "publicApi": "projects/kern/kit/src/public-api.ts",
+      "owns": [
+        "lib/actions",
+        "lib/data-display",
+        "lib/feedback",
+        "lib/forms",
+        "lib/layout",
+        "lib/navigation"
+      ],
+      "dependencies": ["cdk", "core"],
+      "identityExports": ["KrnButton", "KrnCard", "KrnFormField", "KrnSelect", "KrnToastService"]
+    },
+    {
+      "name": "addon-grid",
+      "subpath": "./addon-grid",
+      "sourceRoot": "projects/kern/addon-grid/src",
+      "publicApi": "projects/kern/addon-grid/src/public-api.ts",
+      "owns": ["lib/data-grid.ts"],
+      "dependencies": ["cdk", "core"],
+      "identityExports": ["KrnDataGrid"]
+    },
+    {
+      "name": "addon-charts",
+      "subpath": "./addon-charts",
+      "sourceRoot": "projects/kern/addon-charts/src",
+      "publicApi": "projects/kern/addon-charts/src/public-api.ts",
+      "owns": ["lib/charts"],
+      "dependencies": ["cdk", "core"],
+      "identityExports": ["KrnBarChart", "KrnChart"]
+    },
+    {
+      "name": "patterns",
+      "subpath": "./patterns",
+      "sourceRoot": "projects/kern/patterns/src",
+      "publicApi": "projects/kern/patterns/src/public-api.ts",
+      "owns": ["lib/patterns"],
+      "dependencies": ["cdk", "core", "kit"],
+      "identityExports": ["KrnLoginForm", "KrnPageHeader"]
+    }
+  ]
+}

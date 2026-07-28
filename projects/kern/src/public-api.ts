@@ -1,16 +1,13 @@
 /*
  * Public API Surface of @kern-ui/angular.
  *
- * Internal collection, form-control, platform and overlay kernels deliberately
- * stay behind these explicit family barrels to prevent unsupported deep imports.
+ * The primary entrypoint is a compatibility aggregator. New applications may
+ * import from narrower runtime entrypoints for explicit package boundaries.
  */
 
-export * from './lib/foundations';
-export * from './lib/layout';
-export * from './lib/actions';
-export * from './lib/forms';
-export * from './lib/navigation';
-export * from './lib/feedback';
-export * from './lib/data-display';
-export * from './lib/charts';
-export * from './lib/patterns';
+export * from '@kern-ui/angular/cdk';
+export * from '@kern-ui/angular/core';
+export * from '@kern-ui/angular/kit';
+export * from '@kern-ui/angular/addon-grid';
+export * from '@kern-ui/angular/addon-charts';
+export * from '@kern-ui/angular/patterns';

@@ -12,6 +12,7 @@ export default [
       'node_modules/**',
       'out-tsc/**',
       'playwright-report/**',
+      'projects/kern/api/**/*.d.ts',
       'test-results/**',
     ],
   },
@@ -57,6 +58,90 @@ export default [
       '@angular-eslint/template/banana-in-box': 'error',
       '@angular-eslint/template/eqeqeq': 'error',
       '@angular-eslint/template/no-negated-async': 'error',
+    },
+  },
+  {
+    files: ['projects/kern/cdk/src/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@kern-ui/angular',
+              message: 'Kern CDK must not import the compatibility root.',
+            },
+          ],
+          patterns: [
+            {
+              group: [
+                '@kern-ui/angular/addon-charts',
+                '@kern-ui/angular/addon-grid',
+                '@kern-ui/angular/core',
+                '@kern-ui/angular/kit',
+                '@kern-ui/angular/patterns',
+              ],
+              message: 'Kern CDK must not depend on higher-level library layers.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['projects/kern/core/src/lib/foundations/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@kern-ui/angular',
+              message: 'Kern foundations must not import the compatibility root.',
+            },
+          ],
+          patterns: [
+            {
+              group: [
+                '../core/**',
+                '@kern-ui/angular/addon-charts',
+                '@kern-ui/angular/addon-grid',
+                '@kern-ui/angular/cdk',
+                '@kern-ui/angular/kit',
+                '@kern-ui/angular/patterns',
+              ],
+              message: 'Kern foundations must not depend on component or product layers.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['projects/kern/core/src/lib/core/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@kern-ui/angular',
+              message: 'Kern core must not import the compatibility root.',
+            },
+          ],
+          patterns: [
+            {
+              group: [
+                '@kern-ui/angular/addon-charts',
+                '@kern-ui/angular/addon-grid',
+                '@kern-ui/angular/kit',
+                '@kern-ui/angular/patterns',
+              ],
+              message: 'Kern core may depend only on Angular, CDK, and foundations.',
+            },
+          ],
+        },
+      ],
     },
   },
 ];

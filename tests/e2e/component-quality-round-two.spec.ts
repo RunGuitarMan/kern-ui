@@ -438,9 +438,7 @@ test.describe('Round two: form behavior and geometry', () => {
     await rangeSurface.click({
       position: { x: rangeBounds.width * 0.1, y: rangeBounds.height / 2 },
     });
-    await expect
-      .poll(async () => Number(await thumbs.nth(0).inputValue()))
-      .toBeLessThan(20);
+    await expect.poll(async () => Number(await thumbs.nth(0).inputValue())).toBeLessThan(20);
     await expect(thumbs.nth(1)).toHaveValue(`${clickedEnd}`);
 
     await rangeSurface.scrollIntoViewIfNeeded();
@@ -618,10 +616,12 @@ test.describe('Round two: navigation and layout geometry', () => {
     const tree = specimen.getByRole('tree');
     const automations = tree.getByRole('treeitem', { name: 'Automations' });
     const overview = tree.getByRole('treeitem', { name: 'Overview' });
-    await automations.getByRole('button', { name: 'Automations' }).click();
-    const selectedStyle = (row: Locator) =>
-      row.evaluate((element) => {
-        const style = getComputedStyle(element);
+    await automations.click();
+    const selectedStyle = (item: Locator) =>
+      item.evaluate((element) => {
+        const row = element.closest('.node-row');
+        if (!row) throw new Error('Tree item is missing its visual row.');
+        const style = getComputedStyle(row);
         return {
           background: style.backgroundColor,
           radius: style.borderRadius,
@@ -630,9 +630,9 @@ test.describe('Round two: navigation and layout geometry', () => {
           stripeWidth: style.borderInlineStartWidth,
         };
       });
-    const automationStyle = await selectedStyle(automations.locator('.node-row'));
-    await overview.getByRole('button', { name: 'Overview' }).click();
-    const overviewStyle = await selectedStyle(overview.locator('.node-row'));
+    const automationStyle = await selectedStyle(automations);
+    await overview.click();
+    const overviewStyle = await selectedStyle(overview);
     expect(overviewStyle).toEqual(automationStyle);
     expect(overviewStyle.stripeStyle).toBe('solid');
     expect(Number.parseFloat(overviewStyle.stripeWidth)).toBeGreaterThan(0);

@@ -1,4 +1,4 @@
-@layer krn.reset, krn.tokens, krn.themes, krn.density, krn.base,
+@layer krn.reset, krn.tokens, krn.themes, krn.density, krn.preferences, krn.base,
   krn.utilities;
 
 @layer krn.base {
@@ -64,18 +64,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    :root {
-      --krn-motion-duration-fast: 0.01ms;
-      --krn-motion-duration-normal: 0.01ms;
-      --krn-motion-duration-slow: 0.01ms;
-      --krn-motion-duration-deliberate: 0.01ms;
-      --krn-motion-ease-standard: linear;
-      --krn-motion-ease-enter: linear;
-      --krn-motion-ease-exit: linear;
-      --krn-motion-ease-spring: linear;
-    }
-
-    :where(html:focus-within) {
+    :where(html:not([data-krn-motion='full']):focus-within) {
       scroll-behavior: auto;
     }
   }

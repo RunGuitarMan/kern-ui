@@ -1,0 +1,68 @@
+name: Accessibility report
+description: Report a semantic, keyboard, zoom, contrast, motion, or assistive-technology defect.
+title: '[A11y]: '
+body:
+  - type: input
+    id: component
+    attributes:
+      label: Component or pattern
+      placeholder: Dialog
+    validations:
+      required: true
+
+  - type: input
+    id: versions
+    attributes:
+      label: Kern and Angular versions
+      placeholder: Kern 0.1.0, Angular 22.0.8
+    validations:
+      required: true
+
+  - type: textarea
+    id: setup
+    attributes:
+      label: Test setup
+      description: Include browser, OS, input method, zoom, contrast mode, and assistive technology with versions.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction and steps
+      description: Include the exact focus position and keys or gestures used.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected accessible behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and impact
+      description: Explain which task is blocked or made difficult.
+    validations:
+      required: true
+
+  - type: input
+    id: reference
+    attributes:
+      label: Relevant standard or pattern
+      description: Optional WCAG criterion, ARIA Authoring Practices pattern, or platform convention.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues and tested the latest supported Kern release.
+          required: true
+        - label: I removed sensitive information from this report.
+          required: true
+        - label: I agree to follow the Code of Conduct.
+          required: true

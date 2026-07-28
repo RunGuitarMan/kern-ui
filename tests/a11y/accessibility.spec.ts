@@ -16,9 +16,7 @@ const docsRoutes = [
 function summarizeViolations(violations: readonly Result[]): string {
   return violations
     .map((violation) => {
-      const targets = violation.nodes
-        .map((node) => node.target.map(String).join(' > '))
-        .join(', ');
+      const targets = violation.nodes.map((node) => node.target.map(String).join(' > ')).join(', ');
       return `${violation.id} [${violation.impact ?? 'unknown'}] · ${violation.nodes.length} node(s) · ${targets}`;
     })
     .join('\n');
@@ -66,7 +64,9 @@ test.describe('WCAG automated checks', () => {
   ] as const;
 
   for (const [index, url] of labStates.entries()) {
-    test(`Lab state ${index + 1} has no serious automated violations`, async ({ page }, testInfo) => {
+    test(`Lab state ${index + 1} has no serious automated violations`, async ({
+      page,
+    }, testInfo) => {
       await page.goto(url);
       await settlePage(page);
 

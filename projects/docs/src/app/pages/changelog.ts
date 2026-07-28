@@ -13,17 +13,17 @@ import { KrnBadge, KrnPageHeader } from '@kern-ui/angular';
         heading="Every release, clearly documented."
         description="Kern follows semantic versioning. Accessibility regressions and public API changes are documented as product changes, not hidden as implementation details."
       >
-        <krn-badge tone="brand">0.1.0</krn-badge>
+        <krn-badge tone="brand">0.1.0 · unreleased</krn-badge>
       </krn-page-header>
 
       <section class="release">
         <aside>
-          <strong>0.1.0</strong>
-          <time datetime="2026-07-26">26 July 2026</time>
-          <krn-badge status tone="success">Initial release</krn-badge>
+          <strong>Unreleased</strong>
+          <span class="release-target">Target 0.1.0</span>
+          <krn-badge status tone="warning">Release candidate</krn-badge>
         </aside>
         <div>
-          <h2>Foundation release</h2>
+          <h2>Foundation candidate</h2>
           @for (group of groups; track group.title) {
             <section>
               <h3>{{ group.title }}</h3>
@@ -67,7 +67,7 @@ import { KrnBadge, KrnPageHeader } from '@kern-ui/angular';
     aside strong {
       font: 600 1.5rem/1 var(--krn-font-family-mono);
     }
-    time {
+    .release-target {
       color: var(--krn-color-text-muted);
     }
     .release > div {
@@ -131,7 +131,7 @@ export class ChangelogPage {
       items: [
         'Light, dark, system, and high-contrast themes with runtime brand generation.',
         'Compact, comfortable, and spacious density scales.',
-        'Typed CSS/TypeScript token contract, RTL, reduced motion, and forced-colors support.',
+        'Typed tokens, application configuration, English UI-copy overrides, RTL, motion, and forced-color foundations.',
       ],
     },
     {
@@ -148,6 +148,8 @@ export class ChangelogPage {
         'Zoneless Angular 22 workspace with strict TypeScript and standalone components.',
         'Vitest unit coverage plus Playwright accessibility, responsive, keyboard, and visual projects.',
         'SSR documentation application and deterministic component laboratory.',
+        'Idempotent installation/doctor schematics and a public CDK component-harness entry point.',
+        'Generated runtime API metadata with curated lifecycle status for every catalog entry.',
       ],
     },
   ] as const;

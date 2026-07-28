@@ -1,0 +1,83 @@
+name: Prepare release candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Package version to validate (for example, 1.2.0 or 1.2.0-rc.1)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-candidate
+  cancel-in-progress: false
+
+env:
+  CI: true
+  RELEASE_VERSION: ${{ inputs.version }}
+
+jobs:
+  package:
+    name: Validate and assemble package
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate source version
+        run: |
+          node -e '
+            const { readFileSync } = require("node:fs");
+            const requested = process.env.RELEASE_VERSION.replace(/^v/, "");
+            const source = JSON.parse(readFileSync("projects/kern/package.json", "utf8")).version;
+            const semver = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?$/;
+            if (!semver.test(requested)) throw new Error(`Invalid release version: ${requested}`);
+            if (source !== requested) {
+              throw new Error(`Requested ${requested}, but projects/kern/package.json is ${source}`);
+            }
+          '
+
+      - name: Run release quality gate
+        run: npm run verify
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Run the complete Playwright suite
+        run: npm run test:e2e
+
+      - name: Validate built package version
+        run: |
+          node -e '
+            const { readFileSync } = require("node:fs");
+            const requested = process.env.RELEASE_VERSION.replace(/^v/, "");
+            const built = JSON.parse(readFileSync("dist/kern/package.json", "utf8")).version;
+            if (built !== requested) {
+              throw new Error(`Requested ${requested}, but dist/kern/package.json is ${built}`);
+            }
+          '
+
+      - name: Upload immutable release candidate
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: kern-angular-${{ inputs.version }}
+          path: dist/kern/
+          if-no-files-found: error
+          retention-days: 30

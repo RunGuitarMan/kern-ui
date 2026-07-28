@@ -1,0 +1,151 @@
+{
+  "cases": [
+    {
+      "name": "button",
+      "project": "button",
+      "entryFile": "src/button.ts",
+      "maximumJsBytes": 161000,
+      "maximumGzipBytes": 52000,
+      "requiredMarkers": ["krn-button"],
+      "forbiddenMarkers": [
+        "krn-text-input",
+        "krn-select",
+        "krn-data-grid",
+        "krn-bar-chart",
+        "cdk-virtual-scroll-viewport"
+      ]
+    },
+    {
+      "name": "form",
+      "project": "form",
+      "entryFile": "src/form.ts",
+      "maximumJsBytes": 165000,
+      "maximumGzipBytes": 53000,
+      "requiredMarkers": ["krn-form-field", "krn-text-input"],
+      "forbiddenMarkers": [
+        "krn-select",
+        "krn-data-grid",
+        "krn-bar-chart",
+        "cdk-virtual-scroll-viewport"
+      ]
+    },
+    {
+      "name": "select",
+      "project": "select",
+      "entryFile": "src/select.ts",
+      "maximumJsBytes": 230000,
+      "maximumGzipBytes": 71000,
+      "requiredMarkers": ["krn-select"],
+      "forbiddenMarkers": [
+        "krn-text-input",
+        "krn-data-grid",
+        "krn-bar-chart",
+        "cdk-virtual-scroll-viewport"
+      ]
+    },
+    {
+      "name": "grid",
+      "project": "grid",
+      "entryFile": "src/grid.ts",
+      "maximumJsBytes": 268000,
+      "maximumGzipBytes": 83000,
+      "requiredMarkers": ["krn-data-grid", "cdk-virtual-scroll-viewport"],
+      "forbiddenMarkers": ["krn-text-input", "krn-select", "krn-bar-chart"]
+    },
+    {
+      "name": "charts",
+      "project": "charts",
+      "entryFile": "src/charts.ts",
+      "maximumJsBytes": 176000,
+      "maximumGzipBytes": 56000,
+      "requiredMarkers": ["krn-bar-chart"],
+      "forbiddenMarkers": [
+        "krn-text-input",
+        "krn-select",
+        "krn-data-grid",
+        "cdk-virtual-scroll-viewport"
+      ]
+    },
+    {
+      "name": "button-kit",
+      "project": "button",
+      "entryFile": "src/button-kit.ts",
+      "maximumJsBytes": 161000,
+      "maximumGzipBytes": 52000,
+      "compareWith": "button",
+      "maximumDifferenceBytes": 1024,
+      "maximumDifferenceGzipBytes": 512,
+      "requiredMarkers": ["krn-button"],
+      "forbiddenMarkers": [
+        "krn-text-input",
+        "krn-select",
+        "krn-data-grid",
+        "krn-bar-chart",
+        "cdk-virtual-scroll-viewport"
+      ]
+    },
+    {
+      "name": "form-kit",
+      "project": "form",
+      "entryFile": "src/form-kit.ts",
+      "maximumJsBytes": 165000,
+      "maximumGzipBytes": 53000,
+      "compareWith": "form",
+      "maximumDifferenceBytes": 1024,
+      "maximumDifferenceGzipBytes": 512,
+      "requiredMarkers": ["krn-form-field", "krn-text-input"],
+      "forbiddenMarkers": [
+        "krn-select",
+        "krn-data-grid",
+        "krn-bar-chart",
+        "cdk-virtual-scroll-viewport"
+      ]
+    },
+    {
+      "name": "select-kit",
+      "project": "select",
+      "entryFile": "src/select-kit.ts",
+      "maximumJsBytes": 230000,
+      "maximumGzipBytes": 71000,
+      "compareWith": "select",
+      "maximumDifferenceBytes": 1024,
+      "maximumDifferenceGzipBytes": 512,
+      "requiredMarkers": ["krn-select"],
+      "forbiddenMarkers": [
+        "krn-text-input",
+        "krn-data-grid",
+        "krn-bar-chart",
+        "cdk-virtual-scroll-viewport"
+      ]
+    },
+    {
+      "name": "grid-addon",
+      "project": "grid",
+      "entryFile": "src/grid-addon.ts",
+      "maximumJsBytes": 268000,
+      "maximumGzipBytes": 83000,
+      "compareWith": "grid",
+      "maximumDifferenceBytes": 1024,
+      "maximumDifferenceGzipBytes": 512,
+      "requiredMarkers": ["krn-data-grid", "cdk-virtual-scroll-viewport"],
+      "forbiddenMarkers": ["krn-text-input", "krn-select", "krn-bar-chart"]
+    },
+    {
+      "name": "charts-addon",
+      "project": "charts",
+      "entryFile": "src/charts-addon.ts",
+      "maximumJsBytes": 176000,
+      "maximumGzipBytes": 56000,
+      "compareWith": "charts",
+      "maximumDifferenceBytes": 1024,
+      "maximumDifferenceGzipBytes": 512,
+      "requiredMarkers": ["krn-bar-chart"],
+      "forbiddenMarkers": [
+        "krn-text-input",
+        "krn-select",
+        "krn-data-grid",
+        "cdk-virtual-scroll-viewport"
+      ]
+    }
+  ]
+}

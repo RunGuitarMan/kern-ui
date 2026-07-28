@@ -6,6 +6,11 @@
       "input": "src/styles",
       "glob": "**/*",
       "output": "styles"
+    },
+    {
+      "input": "schematics",
+      "glob": "**/*",
+      "output": "schematics"
     }
   ],
   "lib": {

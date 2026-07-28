@@ -8,7 +8,10 @@
     </a>
     <div class="run-state" role="status">
       <span class="run-state-light" aria-hidden="true"></span>
-      <span><strong>Deterministic render</strong><small>motion locked · fixed data · local state</small></span>
+      <span
+        ><strong>Deterministic render</strong
+        ><small>motion locked · fixed data · local state</small></span
+      >
     </div>
     <div class="build-stamp">
       <span>BUILD</span>
@@ -49,11 +52,7 @@
 
       <label>
         <span>Scenario</span>
-        <select
-          data-testid="scenario-control"
-          [value]="scenario()"
-          (change)="setScenario($event)"
-        >
+        <select data-testid="scenario-control" [value]="scenario()" (change)="setScenario($event)">
           @for (option of scenarios; track option) {
             <option [value]="option" [selected]="option === scenario()">{{ option }}</option>
           }
@@ -71,11 +70,7 @@
 
       <label>
         <span>Density</span>
-        <select
-          data-testid="density-control"
-          [value]="density()"
-          (change)="setDensity($event)"
-        >
+        <select data-testid="density-control" [value]="density()" (change)="setDensity($event)">
           @for (option of densities; track option) {
             <option [value]="option" [selected]="option === density()">{{ option }}</option>
           }
@@ -105,7 +100,12 @@
     </div>
   </section>
 
-  <section id="specimen-stage" class="stage" aria-labelledby="stage-title" data-testid="specimen-stage">
+  <section
+    id="specimen-stage"
+    class="stage"
+    aria-labelledby="stage-title"
+    data-testid="specimen-stage"
+  >
     @if (selectedItem(); as item) {
       <header class="stage-header">
         <div class="stage-index" aria-hidden="true">{{ selectedOrdinal() }}</div>
@@ -288,6 +288,12 @@
                   [data]="records"
                   [columns]="recordColumns"
                   [rowIdentity]="rowIdentity"
+                  [mode]="
+                    componentId() === 'data-grid' && scenario() === 'virtual'
+                      ? virtualGridMode
+                      : null
+                  "
+                  [viewportHeight]="220"
                   [pageSize]="4"
                   selectable
                   [expandable]="scenario() === 'states'"
@@ -325,9 +331,18 @@
 
       <footer class="stage-footer">
         <dl>
-          <div><dt>States</dt><dd>{{ item.states.length }}</dd></div>
-          <div><dt>Keyboard rules</dt><dd>{{ item.keyboard.length }}</dd></div>
-          <div><dt>A11y notes</dt><dd>{{ item.accessibility.length }}</dd></div>
+          <div>
+            <dt>States</dt>
+            <dd>{{ item.states.length }}</dd>
+          </div>
+          <div>
+            <dt>Keyboard rules</dt>
+            <dd>{{ item.keyboard.length }}</dd>
+          </div>
+          <div>
+            <dt>A11y notes</dt>
+            <dd>{{ item.accessibility.length }}</dd>
+          </div>
         </dl>
         <p>
           <span>PASS CRITERIA</span>
@@ -337,7 +352,12 @@
     }
   </section>
 
-  <section id="catalog-matrix" class="matrix" aria-labelledby="matrix-title" data-testid="catalog-matrix">
+  <section
+    id="catalog-matrix"
+    class="matrix"
+    aria-labelledby="matrix-title"
+    data-testid="catalog-matrix"
+  >
     <header class="matrix-header">
       <div class="matrix-index" aria-hidden="true">02</div>
       <div>
@@ -349,9 +369,18 @@
         </p>
       </div>
       <dl>
-        <div><dt>{{ coverage.components }}</dt><dd>entries</dd></div>
-        <div><dt>{{ coverage.keyboardContracts }}</dt><dd>keyboard contracts</dd></div>
-        <div><dt>{{ visibleCatalogCount() }}</dt><dd>visible</dd></div>
+        <div>
+          <dt>{{ coverage.components }}</dt>
+          <dd>entries</dd>
+        </div>
+        <div>
+          <dt>{{ coverage.keyboardContracts }}</dt>
+          <dd>keyboard contracts</dd>
+        </div>
+        <div>
+          <dt>{{ visibleCatalogCount() }}</dt>
+          <dd>visible</dd>
+        </div>
       </dl>
     </header>
 
@@ -383,7 +412,10 @@
 
     <div class="matrix-board">
       @for (group of matrixGroups(); track group.category) {
-        <section class="matrix-group" [attr.aria-labelledby]="'group-' + categoryCode(group.category)">
+        <section
+          class="matrix-group"
+          [attr.aria-labelledby]="'group-' + categoryCode(group.category)"
+        >
           <header>
             <span>{{ categoryCode(group.category) }}</span>
             <h3 [id]="'group-' + categoryCode(group.category)">{{ group.category }}</h3>

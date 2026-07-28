@@ -1,4 +1,4 @@
-import type { ApplicationConfig} from '@angular/core';
+import type { ApplicationConfig } from '@angular/core';
 import { provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideKrnTheme } from '@kern-ui/angular';

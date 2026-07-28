@@ -213,7 +213,7 @@ test.describe('Representative live specimen interactions', () => {
     await expect(specimen.locator('.detail-row')).toContainText('is owned by');
 
     await specimen.getByPlaceholder('Filter rows…').fill('Fieldnote');
-    await expect(specimen.getByText('1 rows')).toBeVisible();
+    await expect(specimen.getByText('1 row', { exact: true })).toBeVisible();
     await expect(specimen).toContainText('Fieldnote');
 
     assertNoRuntimeErrors();

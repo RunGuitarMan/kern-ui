@@ -587,8 +587,9 @@ test.describe('Quality regressions: data and feedback', () => {
   }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
     const specimen = await openSpecimen(page, 'drawer');
-    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.evaluate(() => {
+      document.documentElement.setAttribute('data-krn-motion', 'full');
       document.documentElement.style.setProperty('--krn-motion-duration-normal', '220ms');
       document.documentElement.style.setProperty('--krn-motion-duration-slow', '240ms');
     });
@@ -662,7 +663,11 @@ test.describe('Quality regressions: data and feedback', () => {
       };
       traceWindow.__krnDrawerExitTrace = trace;
       backdropElement.addEventListener('transitionend', (event) => {
-        if (event.target === backdropElement && event.propertyName === 'opacity') {
+        if (
+          event instanceof TransitionEvent &&
+          event.target === backdropElement &&
+          event.propertyName === 'opacity'
+        ) {
           trace.transitionEndedAt = performance.now();
         }
       });

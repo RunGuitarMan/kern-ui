@@ -1,0 +1,1768 @@
+import { NgTemplateOutlet } from '@angular/common';
+import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
+import type { AfterViewChecked, TemplateRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  afterEveryRender,
+  booleanAttribute,
+  computed,
+  inject,
+  input,
+  model,
+  numberAttribute,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { filter, take } from 'rxjs';
+import type { Subscription } from 'rxjs';
+import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
+import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import type { KrnDataGridTranslations } from '@kern-ui/angular/core';
+
+export type KrnDataRowKey = string | number;
+export type KrnDataSortDirection = 'asc' | 'desc';
+
+export interface KrnDataCellContext<T> {
+  readonly $implicit: unknown;
+  readonly value: unknown;
+  readonly row: T;
+  readonly column: KrnDataColumn<T>;
+  readonly rowIndex: number;
+}
+
+export interface KrnDataHeaderContext<T> {
+  readonly $implicit: KrnDataColumn<T>;
+  readonly column: KrnDataColumn<T>;
+  readonly columnIndex: number;
+}
+
+export interface KrnDataRowContext<T> {
+  readonly $implicit: T;
+  readonly row: T;
+  readonly rowIndex: number;
+}
+
+export interface KrnDataColumnOptions<T, V = unknown> {
+  readonly label: string;
+  readonly sortable?: boolean;
+  readonly width?: number;
+  readonly minWidth?: number;
+  readonly maxWidth?: number;
+  readonly align?: 'start' | 'center' | 'end';
+  readonly priority?: 'primary' | 'secondary' | 'tertiary';
+  readonly sortValue?: (row: T) => unknown;
+  readonly filterValue?: (row: T) => unknown;
+  readonly compare?: (left: unknown, right: unknown, leftRow: T, rightRow: T) => number;
+  readonly format?: (value: V, row: T) => string;
+  readonly cellTemplate?: TemplateRef<KrnDataCellContext<T>>;
+  readonly headerTemplate?: TemplateRef<KrnDataHeaderContext<T>>;
+}
+
+export type KrnDataPropertyColumn<T> = T extends object
+  ? {
+      [K in Extract<keyof T, string>]: KrnDataColumnOptions<T, T[K]> & {
+        /** Property key used as the stable column identifier and default accessor. */
+        readonly key: K;
+        readonly accessor?: undefined;
+      };
+    }[Extract<keyof T, string>]
+  : never;
+
+export type KrnDataComputedColumn<T> = KrnDataColumnOptions<T, unknown> & {
+  /** Stable identifier and value accessor for a computed column. */
+  readonly key: string;
+  readonly accessor: (row: T) => unknown;
+};
+
+export type KrnDataColumn<T> = KrnDataPropertyColumn<T> | KrnDataComputedColumn<T>;
+
+export interface KrnDataGridClientMode {
+  readonly kind: 'client';
+  readonly pagination?: boolean;
+}
+
+export interface KrnDataGridControlledMode {
+  readonly kind: 'controlled';
+  readonly totalRows: number;
+}
+
+/**
+ * Fixed-height virtualization supports the same selection, sorting, filtering, and resize
+ * contracts as the client grid. Row expansion is intentionally unsupported and is enforced at
+ * runtime because `expandable` is a separate component input.
+ */
+export interface KrnDataGridVirtualMode {
+  readonly kind: 'virtual';
+}
+
+export type KrnDataGridMode =
+  KrnDataGridClientMode | KrnDataGridControlledMode | KrnDataGridVirtualMode;
+
+export interface KrnDataGridQuery {
+  readonly filter: string;
+  readonly page: number;
+  readonly pageSize: number;
+  readonly sortKey: string;
+  readonly sortDirection: KrnDataSortDirection;
+}
+
+export type KrnDataFilterPredicate<T> = (
+  row: T,
+  query: string,
+  columns: readonly KrnDataColumn<T>[],
+) => boolean;
+
+interface KrnDataGridCellPosition {
+  readonly row: number;
+  readonly column: number;
+}
+
+type KrnDataGridActionElement = Element & {
+  readonly tabIndex: number;
+  focus(options?: FocusOptions): void;
+};
+
+interface KrnDataRowOccurrence<T> {
+  readonly row: T;
+  readonly key: KrnDataRowKey;
+  readonly sourceIndex: number;
+}
+
+const GRID_CELL_SELECTOR = '[data-cell]';
+const GRID_CELL_ACTION_SELECTOR = [
+  'a[href]',
+  'button',
+  'input:not([type="hidden"])',
+  'select',
+  'textarea',
+  '[contenteditable]:not([contenteditable="false"])',
+  '[tabindex]',
+].join(',');
+
+@Component({
+  selector: 'krn-data-grid, krn-data-table',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgTemplateOutlet, ScrollingModule],
+  host: {
+    '[attr.aria-busy]': 'loading()',
+    '[attr.data-compact]': 'compact() ? "" : null',
+  },
+  template: `
+    <section class="grid-shell" [attr.aria-label]="copy().ariaLabel">
+      @if (filterable() || columnChooser()) {
+        <div class="toolbar">
+          @if (filterable()) {
+            <label>
+              <span class="sr-only">{{ copy().filterLabel(copy().ariaLabel) }}</span>
+              <span aria-hidden="true">⌕</span>
+              <input
+                type="search"
+                [value]="filter()"
+                [placeholder]="copy().filterPlaceholder"
+                (input)="setFilter($event)"
+              />
+            </label>
+          }
+          <span class="result-count" aria-live="polite">{{
+            copy().rowCount(totalRowCount())
+          }}</span>
+          @if (columnChooser() && columns().length > 1) {
+            <details class="column-chooser">
+              <summary>{{ copy().columns }}</summary>
+              <div>
+                @for (column of columns(); track column.key) {
+                  <label>
+                    <input
+                      type="checkbox"
+                      [checked]="isColumnVisible(column.key)"
+                      [disabled]="isColumnVisible(column.key) && visibleColumns().length === 1"
+                      (change)="setColumnVisible(column.key, $event)"
+                    />
+                    <span>{{ column.label }}</span>
+                  </label>
+                }
+              </div>
+            </details>
+          }
+        </div>
+      }
+
+      @if (error()) {
+        <div class="state error" role="alert">
+          <strong>{{ copy().errorTitle }}</strong>
+          <span>{{ error() }}</span>
+        </div>
+      } @else if (loading()) {
+        <div class="loading" role="status" [attr.aria-label]="copy().loading">
+          @for (row of loadingRows; track row) {
+            <span></span>
+          }
+        </div>
+      } @else if (!processed().length) {
+        <div class="state" role="status">
+          <strong>{{ copy().empty }}</strong>
+          @if (filter()) {
+            <button type="button" (click)="clearFilter()">{{ copy().clearFilter }}</button>
+          }
+        </div>
+      } @else if (isVirtual()) {
+        <div
+          class="virtual-grid"
+          role="grid"
+          [attr.aria-label]="copy().ariaLabel"
+          [attr.aria-rowcount]="processed().length + 1"
+          [attr.aria-colcount]="gridColumnCount()"
+          [attr.aria-multiselectable]="selectable() ? 'true' : null"
+          (focusout)="onGridFocusOut($event)"
+        >
+          <div class="virtual-header" role="row" aria-rowindex="1">
+            @if (selectable()) {
+              <div
+                role="columnheader"
+                class="selection-cell"
+                aria-colindex="1"
+                [attr.tabindex]="
+                  focusCellPosition().row === -1 && focusCellPosition().column === 0 ? 0 : -1
+                "
+                data-cell="-1-0"
+                [attr.data-action-mode]="isActionCell(-1, 0) ? '' : null"
+                (focusin)="onCellFocusIn($event, -1, 0)"
+                (pointerdown)="onCellPointerDown($event, -1, 0)"
+                (keydown)="onCellKeydown($event, -1, 0, processed().length)"
+              >
+                <input
+                  type="checkbox"
+                  data-grid-action
+                  [attr.tabindex]="isActionCell(-1, 0) ? 0 : -1"
+                  [attr.aria-label]="copy().selectAllVisible"
+                  [checked]="allVisibleSelected()"
+                  [indeterminate]="someVisibleSelected()"
+                  (change)="toggleAllVisible()"
+                />
+              </div>
+            }
+            @for (column of visibleColumns(); track column.key; let columnIndex = $index) {
+              <div
+                role="columnheader"
+                [attr.aria-colindex]="dataColumnOffset() + columnIndex + 1"
+                [attr.aria-sort]="ariaSort(column)"
+                [style.inline-size.px]="columnWidth(column)"
+                [attr.data-align]="column.align ?? 'start'"
+                [attr.data-priority]="column.priority ?? 'secondary'"
+                [attr.tabindex]="
+                  focusCellPosition().row === -1 &&
+                  focusCellPosition().column === dataColumnOffset() + columnIndex
+                    ? 0
+                    : -1
+                "
+                [attr.data-cell]="'-1-' + (dataColumnOffset() + columnIndex)"
+                [attr.data-action-mode]="
+                  isActionCell(-1, dataColumnOffset() + columnIndex) ? '' : null
+                "
+                (focusin)="onCellFocusIn($event, -1, dataColumnOffset() + columnIndex)"
+                (pointerdown)="onCellPointerDown($event, -1, dataColumnOffset() + columnIndex)"
+                (keydown)="
+                  onCellKeydown($event, -1, dataColumnOffset() + columnIndex, processed().length)
+                "
+              >
+                @if (column.sortable) {
+                  <button
+                    type="button"
+                    data-grid-action
+                    [attr.tabindex]="isActionCell(-1, dataColumnOffset() + columnIndex) ? 0 : -1"
+                    (click)="sort(column)"
+                  >
+                    @if (resolveHeaderTemplate(column); as headerTemplate) {
+                      <ng-container
+                        [ngTemplateOutlet]="headerTemplate"
+                        [ngTemplateOutletContext]="headerContext(column, columnIndex)"
+                      />
+                    } @else {
+                      {{ column.label }}
+                    }
+                    <span aria-hidden="true">{{ sortMark(column) }}</span>
+                  </button>
+                } @else {
+                  @if (resolveHeaderTemplate(column); as headerTemplate) {
+                    <ng-container
+                      [ngTemplateOutlet]="headerTemplate"
+                      [ngTemplateOutletContext]="headerContext(column, columnIndex)"
+                    />
+                  } @else {
+                    {{ column.label }}
+                  }
+                }
+                @if (resizable()) {
+                  <span
+                    class="resize-handle"
+                    role="separator"
+                    data-grid-action
+                    aria-orientation="vertical"
+                    [attr.aria-label]="copy().resizeColumn(column.label)"
+                    [attr.aria-valuemin]="column.minWidth ?? 96"
+                    [attr.aria-valuemax]="column.maxWidth ?? 960"
+                    [attr.aria-valuenow]="columnWidth(column)"
+                    [attr.aria-valuetext]="copy().widthInPixels(columnWidth(column))"
+                    [attr.tabindex]="isActionCell(-1, dataColumnOffset() + columnIndex) ? 0 : -1"
+                    (pointerdown)="startResize($event, column)"
+                    (pointermove)="resize($event, column)"
+                    (pointerup)="endResize($event)"
+                    (keydown)="resizeWithKeyboard($event, column)"
+                  ></span>
+                }
+              </div>
+            }
+          </div>
+          <cdk-virtual-scroll-viewport
+            #viewport
+            [itemSize]="rowHeight()"
+            [attr.data-item-size]="rowHeight()"
+            [style.block-size.px]="viewportHeight()"
+            [minBufferPx]="rowHeight() * 5"
+            [maxBufferPx]="rowHeight() * 10"
+          >
+            <div
+              *cdkVirtualFor="
+                let occurrence of processed();
+                let rowIndex = index;
+                trackBy: trackRow
+              "
+              class="virtual-row"
+              role="row"
+              [attr.aria-rowindex]="rowIndex + 2"
+              [attr.aria-selected]="selectable() ? isSelected(occurrence) : null"
+            >
+              @if (selectable()) {
+                <div
+                  role="gridcell"
+                  class="selection-cell"
+                  aria-colindex="1"
+                  [attr.tabindex]="
+                    focusCellPosition().row === rowIndex && focusCellPosition().column === 0
+                      ? 0
+                      : -1
+                  "
+                  [attr.data-cell]="rowIndex + '-0'"
+                  [attr.data-action-mode]="isActionCell(rowIndex, 0) ? '' : null"
+                  (focusin)="onCellFocusIn($event, rowIndex, 0)"
+                  (pointerdown)="onCellPointerDown($event, rowIndex, 0)"
+                  (keydown)="onCellKeydown($event, rowIndex, 0, processed().length)"
+                >
+                  <input
+                    type="checkbox"
+                    data-grid-action
+                    [attr.tabindex]="isActionCell(rowIndex, 0) ? 0 : -1"
+                    [checked]="isSelected(occurrence)"
+                    [attr.aria-label]="copy().selectRow(rowIndex + 1)"
+                    (change)="toggleRow(occurrence)"
+                  />
+                </div>
+              }
+              @for (column of visibleColumns(); track column.key; let columnIndex = $index) {
+                <div
+                  role="gridcell"
+                  [attr.aria-colindex]="dataColumnOffset() + columnIndex + 1"
+                  [style.inline-size.px]="columnWidth(column)"
+                  [attr.data-align]="column.align ?? 'start'"
+                  [attr.data-priority]="column.priority ?? 'secondary'"
+                  [attr.tabindex]="
+                    focusCellPosition().row === rowIndex &&
+                    focusCellPosition().column === dataColumnOffset() + columnIndex
+                      ? 0
+                      : -1
+                  "
+                  [attr.data-cell]="rowIndex + '-' + (dataColumnOffset() + columnIndex)"
+                  [attr.data-action-mode]="
+                    isActionCell(rowIndex, dataColumnOffset() + columnIndex) ? '' : null
+                  "
+                  (focusin)="onCellFocusIn($event, rowIndex, dataColumnOffset() + columnIndex)"
+                  (pointerdown)="
+                    onCellPointerDown($event, rowIndex, dataColumnOffset() + columnIndex)
+                  "
+                  (keydown)="
+                    onCellKeydown(
+                      $event,
+                      rowIndex,
+                      dataColumnOffset() + columnIndex,
+                      processed().length
+                    )
+                  "
+                >
+                  @if (resolveCellTemplate(column); as cellTemplate) {
+                    <ng-container
+                      [ngTemplateOutlet]="cellTemplate"
+                      [ngTemplateOutletContext]="cellContext(occurrence.row, column, rowIndex)"
+                    />
+                  } @else {
+                    {{ cellText(occurrence.row, column) }}
+                  }
+                </div>
+              }
+            </div>
+          </cdk-virtual-scroll-viewport>
+        </div>
+      } @else {
+        <div class="table-scroll">
+          <table
+            role="grid"
+            [attr.aria-label]="copy().ariaLabel"
+            [attr.aria-rowcount]="totalRowCount() + 1"
+            [attr.aria-colcount]="gridColumnCount()"
+            [attr.aria-multiselectable]="selectable() ? 'true' : null"
+            (focusout)="onGridFocusOut($event)"
+          >
+            <thead>
+              <tr role="row" aria-rowindex="1">
+                @if (selectable()) {
+                  <th
+                    role="columnheader"
+                    class="selection-cell"
+                    aria-colindex="1"
+                    [attr.tabindex]="
+                      focusCellPosition().row === -1 && focusCellPosition().column === 0 ? 0 : -1
+                    "
+                    data-cell="-1-0"
+                    [attr.data-action-mode]="isActionCell(-1, 0) ? '' : null"
+                    (focusin)="onCellFocusIn($event, -1, 0)"
+                    (pointerdown)="onCellPointerDown($event, -1, 0)"
+                    (keydown)="onCellKeydown($event, -1, 0, pageRows().length)"
+                  >
+                    <input
+                      type="checkbox"
+                      data-grid-action
+                      [attr.tabindex]="isActionCell(-1, 0) ? 0 : -1"
+                      [attr.aria-label]="copy().selectAllPage"
+                      [checked]="allVisibleSelected()"
+                      [indeterminate]="someVisibleSelected()"
+                      (change)="toggleAllVisible()"
+                    />
+                  </th>
+                }
+                @if (expandable()) {
+                  <th
+                    role="columnheader"
+                    class="expand-cell"
+                    [attr.aria-colindex]="(selectable() ? 1 : 0) + 1"
+                    [attr.tabindex]="
+                      focusCellPosition().row === -1 &&
+                      focusCellPosition().column === (selectable() ? 1 : 0)
+                        ? 0
+                        : -1
+                    "
+                    [attr.data-cell]="'-1-' + (selectable() ? 1 : 0)"
+                    [attr.data-action-mode]="isActionCell(-1, selectable() ? 1 : 0) ? '' : null"
+                    (focusin)="onCellFocusIn($event, -1, selectable() ? 1 : 0)"
+                    (pointerdown)="onCellPointerDown($event, -1, selectable() ? 1 : 0)"
+                    (keydown)="onCellKeydown($event, -1, selectable() ? 1 : 0, pageRows().length)"
+                  >
+                    <span class="sr-only">{{ copy().expand }}</span>
+                  </th>
+                }
+                @for (column of visibleColumns(); track column.key; let columnIndex = $index) {
+                  <th
+                    scope="col"
+                    role="columnheader"
+                    [attr.aria-colindex]="dataColumnOffset() + columnIndex + 1"
+                    [attr.aria-sort]="ariaSort(column)"
+                    [style.inline-size.px]="columnWidth(column)"
+                    [attr.data-align]="column.align ?? 'start'"
+                    [attr.data-priority]="column.priority ?? 'secondary'"
+                    [attr.tabindex]="
+                      focusCellPosition().row === -1 &&
+                      focusCellPosition().column === dataColumnOffset() + columnIndex
+                        ? 0
+                        : -1
+                    "
+                    [attr.data-cell]="'-1-' + (dataColumnOffset() + columnIndex)"
+                    [attr.data-action-mode]="
+                      isActionCell(-1, dataColumnOffset() + columnIndex) ? '' : null
+                    "
+                    (focusin)="onCellFocusIn($event, -1, dataColumnOffset() + columnIndex)"
+                    (pointerdown)="onCellPointerDown($event, -1, dataColumnOffset() + columnIndex)"
+                    (keydown)="
+                      onCellKeydown($event, -1, dataColumnOffset() + columnIndex, pageRows().length)
+                    "
+                  >
+                    @if (column.sortable) {
+                      <button
+                        type="button"
+                        data-grid-action
+                        [attr.tabindex]="
+                          isActionCell(-1, dataColumnOffset() + columnIndex) ? 0 : -1
+                        "
+                        (click)="sort(column)"
+                      >
+                        @if (resolveHeaderTemplate(column); as headerTemplate) {
+                          <ng-container
+                            [ngTemplateOutlet]="headerTemplate"
+                            [ngTemplateOutletContext]="headerContext(column, columnIndex)"
+                          />
+                        } @else {
+                          {{ column.label }}
+                        }
+                        <span aria-hidden="true">{{ sortMark(column) }}</span>
+                      </button>
+                    } @else {
+                      @if (resolveHeaderTemplate(column); as headerTemplate) {
+                        <ng-container
+                          [ngTemplateOutlet]="headerTemplate"
+                          [ngTemplateOutletContext]="headerContext(column, columnIndex)"
+                        />
+                      } @else {
+                        {{ column.label }}
+                      }
+                    }
+                    @if (resizable()) {
+                      <span
+                        class="resize-handle"
+                        role="separator"
+                        data-grid-action
+                        aria-orientation="vertical"
+                        [attr.aria-label]="copy().resizeColumn(column.label)"
+                        [attr.aria-valuemin]="column.minWidth ?? 96"
+                        [attr.aria-valuemax]="column.maxWidth ?? 960"
+                        [attr.aria-valuenow]="columnWidth(column)"
+                        [attr.aria-valuetext]="copy().widthInPixels(columnWidth(column))"
+                        [attr.tabindex]="
+                          isActionCell(-1, dataColumnOffset() + columnIndex) ? 0 : -1
+                        "
+                        (pointerdown)="startResize($event, column)"
+                        (pointermove)="resize($event, column)"
+                        (pointerup)="endResize($event)"
+                        (keydown)="resizeWithKeyboard($event, column)"
+                      ></span>
+                    }
+                  </th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (occurrence of pageRows(); track occurrence.key; let rowIndex = $index) {
+                <tr
+                  role="row"
+                  [attr.aria-rowindex]="rowOffset() + rowIndex + 2"
+                  [attr.aria-selected]="selectable() ? isSelected(occurrence) : null"
+                  [attr.data-selected]="isSelected(occurrence) ? '' : null"
+                >
+                  @if (selectable()) {
+                    <td
+                      role="gridcell"
+                      class="selection-cell"
+                      aria-colindex="1"
+                      [attr.tabindex]="
+                        focusCellPosition().row === rowIndex && focusCellPosition().column === 0
+                          ? 0
+                          : -1
+                      "
+                      [attr.data-cell]="rowIndex + '-0'"
+                      [attr.data-action-mode]="isActionCell(rowIndex, 0) ? '' : null"
+                      (focusin)="onCellFocusIn($event, rowIndex, 0)"
+                      (pointerdown)="onCellPointerDown($event, rowIndex, 0)"
+                      (keydown)="onCellKeydown($event, rowIndex, 0, pageRows().length)"
+                    >
+                      <input
+                        type="checkbox"
+                        data-grid-action
+                        [attr.tabindex]="isActionCell(rowIndex, 0) ? 0 : -1"
+                        [checked]="isSelected(occurrence)"
+                        [attr.aria-label]="copy().selectRow(rowOffset() + rowIndex + 1)"
+                        (change)="toggleRow(occurrence)"
+                      />
+                    </td>
+                  }
+                  @if (expandable()) {
+                    <td
+                      role="gridcell"
+                      class="expand-cell"
+                      [attr.aria-colindex]="(selectable() ? 1 : 0) + 1"
+                      [attr.tabindex]="
+                        focusCellPosition().row === rowIndex &&
+                        focusCellPosition().column === (selectable() ? 1 : 0)
+                          ? 0
+                          : -1
+                      "
+                      [attr.data-cell]="rowIndex + '-' + (selectable() ? 1 : 0)"
+                      [attr.data-action-mode]="
+                        isActionCell(rowIndex, selectable() ? 1 : 0) ? '' : null
+                      "
+                      (focusin)="onCellFocusIn($event, rowIndex, selectable() ? 1 : 0)"
+                      (pointerdown)="onCellPointerDown($event, rowIndex, selectable() ? 1 : 0)"
+                      (keydown)="
+                        onCellKeydown($event, rowIndex, selectable() ? 1 : 0, pageRows().length)
+                      "
+                    >
+                      <button
+                        type="button"
+                        data-grid-action
+                        [attr.tabindex]="isActionCell(rowIndex, selectable() ? 1 : 0) ? 0 : -1"
+                        [attr.aria-label]="
+                          isExpanded(occurrence) ? copy().collapseRow : copy().expandRow
+                        "
+                        [attr.aria-expanded]="isExpanded(occurrence)"
+                        (click)="toggleExpanded(occurrence)"
+                      >
+                        <span aria-hidden="true">{{ isExpanded(occurrence) ? '−' : '+' }}</span>
+                      </button>
+                    </td>
+                  }
+                  @for (column of visibleColumns(); track column.key; let columnIndex = $index) {
+                    <td
+                      role="gridcell"
+                      [attr.aria-colindex]="dataColumnOffset() + columnIndex + 1"
+                      [attr.data-align]="column.align ?? 'start'"
+                      [attr.data-priority]="column.priority ?? 'secondary'"
+                      [attr.tabindex]="
+                        focusCellPosition().row === rowIndex &&
+                        focusCellPosition().column === dataColumnOffset() + columnIndex
+                          ? 0
+                          : -1
+                      "
+                      [attr.data-cell]="rowIndex + '-' + (dataColumnOffset() + columnIndex)"
+                      [attr.data-action-mode]="
+                        isActionCell(rowIndex, dataColumnOffset() + columnIndex) ? '' : null
+                      "
+                      (focusin)="onCellFocusIn($event, rowIndex, dataColumnOffset() + columnIndex)"
+                      (pointerdown)="
+                        onCellPointerDown($event, rowIndex, dataColumnOffset() + columnIndex)
+                      "
+                      (keydown)="
+                        onCellKeydown(
+                          $event,
+                          rowIndex,
+                          dataColumnOffset() + columnIndex,
+                          pageRows().length
+                        )
+                      "
+                    >
+                      @if (resolveCellTemplate(column); as cellTemplate) {
+                        <ng-container
+                          [ngTemplateOutlet]="cellTemplate"
+                          [ngTemplateOutletContext]="
+                            cellContext(occurrence.row, column, rowOffset() + rowIndex)
+                          "
+                        />
+                      } @else {
+                        {{ cellText(occurrence.row, column) }}
+                      }
+                    </td>
+                  }
+                </tr>
+                @if (expandable() && isExpanded(occurrence)) {
+                  <tr class="detail-row" role="presentation">
+                    <td role="presentation" [attr.colspan]="gridColumnCount()">
+                      @if (expandedTemplate(); as detailTemplate) {
+                        <ng-container
+                          [ngTemplateOutlet]="detailTemplate"
+                          [ngTemplateOutletContext]="
+                            rowContext(occurrence.row, rowOffset() + rowIndex)
+                          "
+                        />
+                      } @else {
+                        {{ expandedContent()(occurrence.row) }}
+                      }
+                    </td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      @if (!isVirtual() && usesPagination() && totalRowCount()) {
+        <div class="pagination" [attr.aria-label]="copy().pagination">
+          <span>{{ copy().pageRange(pageStart(), pageEnd(), totalRowCount()) }}</span>
+          <div>
+            <button type="button" [disabled]="page() === 1" (click)="goToPage(page() - 1)">
+              {{ copy().previousPage }}
+            </button>
+            <button type="button" [disabled]="page() >= pageCount()" (click)="goToPage(page() + 1)">
+              {{ copy().nextPage }}
+            </button>
+          </div>
+        </div>
+      }
+    </section>
+  `,
+  styles: `
+    :host {
+      display: block;
+      min-inline-size: 0;
+      container: krn-data-grid / inline-size;
+      color: var(--krn-color-text, #252932);
+      font: var(--krn-font-body-sm, 500 0.8125rem/1.25rem sans-serif);
+    }
+    :host([data-compact]) {
+      --krn-data-row-size: 2.25rem;
+    }
+    .grid-shell {
+      overflow: clip;
+      border: 1px solid var(--krn-color-border-subtle, #e0e3e7);
+      border-radius: var(--krn-radius-surface, 0.75rem);
+      background: var(--krn-color-surface, #fff);
+    }
+    .toolbar,
+    .pagination {
+      display: flex;
+      min-block-size: var(--krn-control-height-lg);
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--krn-density-gap);
+      padding-inline: var(--krn-control-padding-inline);
+    }
+    .toolbar {
+      border-block-end: 1px solid var(--krn-color-border-subtle, #e0e3e7);
+    }
+    .toolbar > label {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      gap: var(--krn-density-gap);
+      max-inline-size: 22rem;
+    }
+    .toolbar > label input {
+      inline-size: 100%;
+      min-block-size: var(--krn-control-height-sm);
+      border: 0;
+      color: inherit;
+      background: transparent;
+      font: inherit;
+    }
+    .toolbar > label input:focus-visible {
+      border-radius: 0.25rem;
+      outline: var(--krn-focus-ring, 2px solid #4f6feb);
+      outline-offset: 2px;
+    }
+    .result-count,
+    .pagination {
+      color: var(--krn-color-text-muted, #626a76);
+      font-variant-numeric: tabular-nums;
+    }
+    .column-chooser {
+      flex: 0 0 auto;
+    }
+    .column-chooser summary {
+      min-block-size: var(--krn-control-height-sm);
+      padding-block: var(--krn-density-cell-padding-block);
+      padding-inline: var(--krn-density-cell-padding-inline);
+      border: 1px solid var(--krn-color-border, #cdd1d7);
+      border-radius: var(--krn-radius-control, 0.375rem);
+      background: var(--krn-color-surface, #fff);
+      cursor: pointer;
+      list-style: none;
+    }
+    .column-chooser summary::-webkit-details-marker {
+      display: none;
+    }
+    .column-chooser summary:focus-visible {
+      outline: var(--krn-focus-ring, 2px solid #4f6feb);
+      outline-offset: 2px;
+    }
+    .column-chooser > div {
+      display: grid;
+      min-inline-size: 12rem;
+      gap: var(--krn-space-1);
+      margin-block-start: 0.375rem;
+      padding: var(--krn-density-cell-padding-block);
+      border: 1px solid var(--krn-color-border, #cdd1d7);
+      border-radius: var(--krn-radius-md, 0.5rem);
+      box-shadow: var(--krn-shadow-overlay, 0 18px 44px rgb(0 0 0 / 18%));
+      background: var(--krn-color-surface-raised, #fff);
+    }
+    .column-chooser label {
+      display: flex;
+      align-items: center;
+      gap: var(--krn-density-gap);
+      min-block-size: var(--krn-control-height-sm);
+      padding-inline: var(--krn-density-cell-padding-inline);
+    }
+    .table-scroll {
+      max-inline-size: 100%;
+      overflow: auto;
+    }
+    table {
+      inline-size: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    th,
+    td {
+      position: relative;
+      block-size: var(--krn-data-row-size, 2.75rem);
+      padding-block: var(--krn-density-cell-padding-block);
+      padding-inline: var(--krn-density-cell-padding-inline);
+      border-block-end: 1px solid var(--krn-color-border-subtle, #e0e3e7);
+      overflow: hidden;
+      text-align: start;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    th {
+      position: sticky;
+      z-index: 2;
+      inset-block-start: 0;
+      color: var(--krn-color-text-muted, #626a76);
+      background: var(--krn-color-surface-raised, #f2f3f5);
+      font-weight: 650;
+    }
+    th button,
+    .virtual-header button,
+    .expand-cell button,
+    .pagination button,
+    .state button {
+      border: 0;
+      color: inherit;
+      background: transparent;
+      font: inherit;
+      cursor: pointer;
+    }
+    th > button,
+    .virtual-header [role='columnheader'] > button {
+      display: flex;
+      inline-size: 100%;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      text-align: start;
+    }
+    button:focus-visible,
+    [role='columnheader']:focus-visible,
+    [role='gridcell']:focus-visible,
+    td:focus-visible {
+      border-radius: 0.25rem;
+      outline: var(--krn-focus-ring, 2px solid #4f6feb);
+      outline-offset: -3px;
+    }
+    tr[data-selected] td,
+    .virtual-row[aria-selected='true'] {
+      background: var(--krn-color-brand-surface, #fff0e8);
+    }
+    [data-align='center'] {
+      text-align: center;
+    }
+    [data-align='end'] {
+      text-align: end;
+      font-variant-numeric: tabular-nums;
+    }
+    .selection-cell,
+    .expand-cell {
+      inline-size: 2.75rem;
+      text-align: center;
+    }
+    .selection-cell input {
+      inline-size: 1rem;
+      block-size: 1rem;
+      accent-color: var(--krn-color-brand-solid, #4f6feb);
+    }
+    .resize-handle {
+      position: absolute;
+      inset-block: 0;
+      inset-inline-end: -0.25rem;
+      inline-size: 0.5rem;
+      cursor: col-resize;
+      touch-action: none;
+    }
+    .resize-handle::after {
+      position: absolute;
+      inset-block: 0.375rem;
+      inset-inline-start: 0.25rem;
+      inline-size: 1px;
+      background: var(--krn-color-border, #cdd1d7);
+      content: '';
+    }
+    .resize-handle:focus-visible::after {
+      inline-size: 2px;
+      background: var(--krn-color-focus, #4f6feb);
+    }
+    .detail-row td {
+      padding: 1rem 3.5rem;
+      color: var(--krn-color-text-muted, #626a76);
+      background: var(--krn-color-surface-raised, #f2f3f5);
+      white-space: normal;
+    }
+    .pagination {
+      border-block-start: 1px solid var(--krn-color-border-subtle, #e0e3e7);
+    }
+    .pagination div {
+      display: flex;
+      gap: 0.375rem;
+    }
+    .pagination button {
+      min-block-size: var(--krn-control-height-sm);
+      padding-inline: var(--krn-control-padding-inline);
+      border: 1px solid var(--krn-color-border, #cdd1d7);
+      border-radius: var(--krn-radius-control, 0.375rem);
+      background: var(--krn-color-surface, #fff);
+    }
+    .pagination button:disabled {
+      opacity: var(--krn-opacity-disabled, 0.48);
+      cursor: not-allowed;
+    }
+    .state {
+      display: grid;
+      min-block-size: 12rem;
+      place-content: center;
+      gap: 0.5rem;
+      padding: 2rem;
+      color: var(--krn-color-text-muted, #626a76);
+      text-align: center;
+    }
+    .state strong {
+      color: var(--krn-color-text, #252932);
+    }
+    .state button {
+      color: var(--krn-color-brand-text, #1d4ed8);
+      text-decoration: underline;
+    }
+    .error strong {
+      color: var(--krn-color-danger-text, #a02d2d);
+    }
+    .loading {
+      display: grid;
+      gap: 1px;
+      background: var(--krn-color-border-subtle, #e0e3e7);
+    }
+    .loading span {
+      block-size: var(--krn-data-row-size, 2.75rem);
+      background:
+        linear-gradient(
+            90deg,
+            transparent,
+            color-mix(in srgb, var(--krn-color-surface, #fff), #9199a5 15%),
+            transparent
+          )
+          0 0 / 16rem 100% no-repeat,
+        var(--krn-color-surface, #fff);
+      animation: scan var(--krn-motion-duration-feedback) linear
+        var(--krn-motion-iteration-continuous);
+    }
+    .virtual-grid {
+      max-inline-size: 100%;
+      overflow: auto;
+    }
+    .virtual-header,
+    .virtual-row {
+      display: flex;
+      min-inline-size: max-content;
+      block-size: var(--krn-data-row-size, 2.75rem);
+    }
+    .virtual-header {
+      position: sticky;
+      z-index: 2;
+      inset-block-start: 0;
+      background: var(--krn-color-surface-raised, #f2f3f5);
+      font-weight: 650;
+    }
+    .virtual-header > *,
+    .virtual-row > * {
+      position: relative;
+      flex: 0 0 auto;
+      block-size: 100%;
+      padding-block: var(--krn-density-cell-padding-block);
+      padding-inline: var(--krn-density-cell-padding-inline);
+      border-block-end: 1px solid var(--krn-color-border-subtle, #e0e3e7);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    [data-cell][data-action-mode] {
+      box-shadow: inset 0 0 0 1px var(--krn-color-focus, #4f6feb);
+    }
+    @keyframes scan {
+      to {
+        background-position-x: calc(100% + 16rem);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      :host-context(html:not([data-krn-motion='full'])) .loading span {
+        animation: none;
+      }
+    }
+    @container krn-data-grid (max-width: 28rem) {
+      .toolbar,
+      .pagination {
+        align-items: stretch;
+        flex-direction: column;
+        padding-block: 0.625rem;
+      }
+    }
+    .sr-only {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+  `,
+})
+export class KrnDataGrid<T> implements AfterViewChecked {
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly platform = inject(KRN_PLATFORM);
+  private readonly locale = inject(KRN_LOCALE);
+  private readonly translations = inject(KRN_TRANSLATIONS);
+  private readonly collator = new Intl.Collator(this.locale, {
+    numeric: true,
+    sensitivity: 'base',
+    usage: 'sort',
+  });
+  private readonly viewport = viewChild(CdkVirtualScrollViewport);
+  private virtualFocusSubscription: Subscription | null = null;
+  private virtualRowResizeObserver: ResizeObserver | null = null;
+  private observedVirtualRow: HTMLElement | null = null;
+  private readonly measuredVirtualRowHeight = signal<number | null>(null);
+  private readonly managedTabIndexes = new Map<KrnDataGridActionElement, string | null>();
+  private readonly effectiveMode = computed<KrnDataGridMode>(() => {
+    const mode =
+      this.mode() ??
+      (this.virtualize()
+        ? ({ kind: 'virtual' } as const)
+        : ({ kind: 'client', pagination: this.pagination() } as const));
+    if (mode.kind === 'virtual' && this.expandable()) {
+      throw new Error(
+        'KrnDataGrid virtual mode uses fixed-height rows and does not support row expansion. Disable `expandable` or use client/controlled mode.',
+      );
+    }
+    return mode;
+  });
+  private readonly sourceRows = computed<readonly KrnDataRowOccurrence<T>[]>(() => {
+    const firstIndexByKey = new Map<KrnDataRowKey, number>();
+    return this.data().map((row, sourceIndex) => {
+      const key = this.rowIdentity()(row, sourceIndex);
+      const firstIndex = firstIndexByKey.get(key);
+      if (firstIndex !== undefined) {
+        throw new Error(
+          `KrnDataGrid requires unique row identities; received duplicate "${key}" at source indexes ${firstIndex} and ${sourceIndex}.`,
+        );
+      }
+      firstIndexByKey.set(key, sourceIndex);
+      return { row, key, sourceIndex };
+    });
+  });
+  private readonly validatedColumns = computed(() => {
+    const keys = new Set<string>();
+    for (const column of this.columns()) {
+      if (keys.has(column.key)) {
+        throw new Error(`KrnDataGrid requires unique column keys; received "${column.key}" twice.`);
+      }
+      keys.add(column.key);
+    }
+    return this.columns();
+  });
+
+  readonly data = input.required<readonly T[]>();
+  readonly columns = input.required<readonly KrnDataColumn<T>[]>();
+  readonly rowIdentity = input.required<(row: T, index: number) => KrnDataRowKey>();
+  readonly mode = input<KrnDataGridMode | null>(null);
+  readonly labels = input<Partial<KrnDataGridTranslations>>({});
+  readonly ariaLabel = input(this.translations.dataGrid.ariaLabel);
+  readonly loading = input(false, { transform: booleanAttribute });
+  readonly error = input('');
+  readonly emptyLabel = input(this.translations.dataGrid.empty);
+  readonly filterable = input(true, { transform: booleanAttribute });
+  readonly filterPlaceholder = input(this.translations.dataGrid.filterPlaceholder);
+  readonly filterPredicate = input<KrnDataFilterPredicate<T> | null>(null);
+  readonly selectable = input(false, { transform: booleanAttribute });
+  readonly expandable = input(false, { transform: booleanAttribute });
+  readonly expandedContent = input<(row: T) => string>(() => '');
+  readonly expandedTemplate = input<TemplateRef<KrnDataRowContext<T>> | null>(null);
+  readonly defaultCellTemplate = input<TemplateRef<KrnDataCellContext<T>> | null>(null);
+  readonly defaultHeaderTemplate = input<TemplateRef<KrnDataHeaderContext<T>> | null>(null);
+  readonly resizable = input(true, { transform: booleanAttribute });
+  /** @deprecated Prefer the discriminated `mode` input. */
+  readonly pagination = input(true, { transform: booleanAttribute });
+  readonly compact = input(false, { transform: booleanAttribute });
+  /** @deprecated Prefer `{ kind: 'virtual' }` through the `mode` input. */
+  readonly virtualize = input(false, { transform: booleanAttribute });
+  readonly viewportHeight = input(360, { transform: numberAttribute });
+  readonly pageSize = input(10, { transform: numberAttribute });
+  readonly columnChooser = input(false, { transform: booleanAttribute });
+  protected readonly copy = computed(() => ({
+    ...this.translations.dataGrid,
+    ariaLabel: this.ariaLabel(),
+    empty: this.emptyLabel(),
+    filterPlaceholder: this.filterPlaceholder(),
+    ...this.labels(),
+  }));
+
+  readonly filter = model('');
+  readonly page = model(1);
+  readonly selected = model<ReadonlySet<KrnDataRowKey>>(new Set<KrnDataRowKey>());
+  readonly expanded = model<ReadonlySet<KrnDataRowKey>>(new Set<KrnDataRowKey>());
+  readonly hiddenColumnKeys = model<ReadonlySet<string>>(new Set<string>());
+  readonly sortKey = model<string>('');
+  readonly sortDirection = model<KrnDataSortDirection>('asc');
+  readonly queryChange = output<KrnDataGridQuery>();
+  protected readonly activeCell = signal<KrnDataGridCellPosition>({ row: 0, column: 0 });
+  protected readonly actionCell = signal<KrnDataGridCellPosition | null>(null);
+  protected readonly widths = signal<Readonly<Record<string, number>>>({});
+
+  protected readonly rowHeight = computed(
+    () => this.measuredVirtualRowHeight() ?? (this.compact() ? 36 : 44),
+  );
+  protected readonly isVirtual = computed(() => this.effectiveMode().kind === 'virtual');
+  protected readonly isControlled = computed(() => this.effectiveMode().kind === 'controlled');
+  protected readonly usesPagination = computed(() => {
+    const mode = this.effectiveMode();
+    return mode.kind === 'controlled' || (mode.kind === 'client' && (mode.pagination ?? true));
+  });
+  protected readonly visibleColumns = computed(() => {
+    const hidden = this.hiddenColumnKeys();
+    return this.validatedColumns().filter((column) => !hidden.has(column.key));
+  });
+  protected readonly dataColumnOffset = computed(
+    () => Number(this.selectable()) + Number(this.expandable()),
+  );
+  protected readonly gridColumnCount = computed(
+    () => this.dataColumnOffset() + this.visibleColumns().length,
+  );
+
+  protected readonly processed = computed(() => {
+    const columns = this.validatedColumns();
+    const sourceRows = this.sourceRows();
+    if (this.isControlled()) return [...sourceRows];
+
+    const query = this.normalizeForSearch(this.filter().trim());
+    const predicate = this.filterPredicate();
+    let result = query
+      ? sourceRows.filter(({ row }) =>
+          predicate
+            ? predicate(row, query, columns)
+            : columns.some((column) =>
+                String(column.filterValue?.(row) ?? this.value(row, column) ?? '')
+                  .toLocaleLowerCase(this.locale)
+                  .includes(query),
+              ),
+        )
+      : [...sourceRows];
+
+    const key = this.sortKey();
+    const column = key ? columns.find((candidate) => candidate.key === key) : undefined;
+    if (column) {
+      const direction = this.sortDirection() === 'asc' ? 1 : -1;
+      result = result.sort((leftOccurrence, rightOccurrence) => {
+        const left = leftOccurrence.row;
+        const right = rightOccurrence.row;
+        const leftValue = column.sortValue?.(left) ?? this.value(left, column);
+        const rightValue = column.sortValue?.(right) ?? this.value(right, column);
+        const comparison = column.compare
+          ? column.compare(leftValue, rightValue, left, right)
+          : this.collator.compare(String(leftValue ?? ''), String(rightValue ?? ''));
+        return comparison === 0
+          ? leftOccurrence.sourceIndex - rightOccurrence.sourceIndex
+          : comparison * direction;
+      });
+    }
+    return result;
+  });
+
+  private normalizeForSearch(value: string): string {
+    return value.toLocaleLowerCase(this.locale);
+  }
+
+  protected readonly totalRowCount = computed(() => {
+    const mode = this.effectiveMode();
+    return mode.kind === 'controlled' ? Math.max(0, mode.totalRows) : this.processed().length;
+  });
+  protected readonly pageCount = computed(() =>
+    Math.max(1, Math.ceil(this.totalRowCount() / Math.max(1, this.pageSize()))),
+  );
+  protected readonly rowOffset = computed(
+    () => (Math.min(Math.max(1, this.page()), this.pageCount()) - 1) * Math.max(1, this.pageSize()),
+  );
+  protected readonly pageRows = computed(() => {
+    if (this.isControlled()) return this.processed();
+    return this.usesPagination()
+      ? this.processed().slice(this.rowOffset(), this.rowOffset() + Math.max(1, this.pageSize()))
+      : this.processed();
+  });
+  protected readonly visibleRows = computed(() =>
+    this.isVirtual() ? this.processed() : this.pageRows(),
+  );
+  protected readonly focusCellPosition = computed(() => ({
+    row: Math.max(-1, Math.min(this.activeCell().row, this.visibleRows().length - 1)),
+    column: Math.max(0, Math.min(this.activeCell().column, this.gridColumnCount() - 1)),
+  }));
+  protected readonly pageStart = computed(() =>
+    this.pageRows().length ? this.rowOffset() + 1 : 0,
+  );
+  protected readonly pageEnd = computed(() =>
+    Math.min(this.rowOffset() + this.pageRows().length, this.totalRowCount()),
+  );
+  protected readonly allVisibleSelected = computed(
+    () =>
+      this.visibleRows().length > 0 &&
+      this.visibleRows().every((occurrence) => this.selected().has(occurrence.key)),
+  );
+  protected readonly someVisibleSelected = computed(
+    () =>
+      !this.allVisibleSelected() &&
+      this.visibleRows().some((occurrence) => this.selected().has(occurrence.key)),
+  );
+
+  protected readonly loadingRows = [0, 1, 2, 3, 4];
+  protected readonly trackRow = (
+    _index: number,
+    occurrence: KrnDataRowOccurrence<T>,
+  ): KrnDataRowKey => occurrence.key;
+
+  private resizeState:
+    | {
+        readonly pointerId: number;
+        readonly startX: number;
+        readonly startWidth: number;
+        readonly key: string;
+      }
+    | undefined;
+
+  constructor() {
+    afterEveryRender({
+      mixedReadWrite: () => this.syncVirtualRowMeasurement(),
+    });
+    this.destroyRef.onDestroy(() => {
+      this.virtualFocusSubscription?.unsubscribe();
+      this.virtualRowResizeObserver?.disconnect();
+      this.restoreManagedTabIndexes();
+    });
+  }
+
+  ngAfterViewChecked(): void {
+    this.syncManagedTabStops();
+  }
+
+  protected value(row: T, column: KrnDataColumn<T>): unknown {
+    return column.accessor
+      ? column.accessor(row)
+      : (row as unknown as Record<string, unknown>)[column.key];
+  }
+
+  protected cellText(row: T, column: KrnDataColumn<T>): string {
+    const value = this.value(row, column);
+    return column.format
+      ? (column.format as (cellValue: unknown, currentRow: T) => string)(value, row)
+      : String(value ?? '—');
+  }
+
+  protected resolveCellTemplate(
+    column: KrnDataColumn<T>,
+  ): TemplateRef<KrnDataCellContext<T>> | null {
+    return column.cellTemplate ?? this.defaultCellTemplate();
+  }
+
+  protected resolveHeaderTemplate(
+    column: KrnDataColumn<T>,
+  ): TemplateRef<KrnDataHeaderContext<T>> | null {
+    return column.headerTemplate ?? this.defaultHeaderTemplate();
+  }
+
+  protected cellContext(row: T, column: KrnDataColumn<T>, rowIndex: number): KrnDataCellContext<T> {
+    const value = this.value(row, column);
+    return { $implicit: value, value, row, column, rowIndex };
+  }
+
+  protected headerContext(column: KrnDataColumn<T>, columnIndex: number): KrnDataHeaderContext<T> {
+    return { $implicit: column, column, columnIndex };
+  }
+
+  protected rowContext(row: T, rowIndex: number): KrnDataRowContext<T> {
+    return { $implicit: row, row, rowIndex };
+  }
+
+  protected setFilter(event: Event): void {
+    this.filter.set((event.currentTarget as HTMLInputElement).value);
+    this.page.set(1);
+    this.emitQuery();
+  }
+
+  protected clearFilter(): void {
+    this.filter.set('');
+    this.page.set(1);
+    this.emitQuery();
+  }
+
+  protected sort(column: KrnDataColumn<T>): void {
+    if (!column.sortable) return;
+    if (this.sortKey() === column.key) {
+      this.sortDirection.update((direction) => (direction === 'asc' ? 'desc' : 'asc'));
+    } else {
+      this.sortKey.set(column.key);
+      this.sortDirection.set('asc');
+    }
+    this.emitQuery();
+  }
+
+  protected goToPage(page: number): void {
+    this.page.set(Math.max(1, Math.min(this.pageCount(), page)));
+    this.emitQuery();
+  }
+
+  protected ariaSort(column: KrnDataColumn<T>): 'ascending' | 'descending' | 'none' | null {
+    if (!column.sortable) return null;
+    if (this.sortKey() !== column.key) return 'none';
+    return this.sortDirection() === 'asc' ? 'ascending' : 'descending';
+  }
+
+  protected sortMark(column: KrnDataColumn<T>): string {
+    if (this.sortKey() !== column.key) return '↕';
+    return this.sortDirection() === 'asc' ? '↑' : '↓';
+  }
+
+  protected isSelected(occurrence: KrnDataRowOccurrence<T>): boolean {
+    return this.selected().has(occurrence.key);
+  }
+
+  protected toggleRow(occurrence: KrnDataRowOccurrence<T>): void {
+    this.toggleSet(this.selected, occurrence.key);
+  }
+
+  protected toggleAllVisible(): void {
+    const next = new Set(this.selected());
+    const allSelected = this.allVisibleSelected();
+    this.visibleRows().forEach((occurrence) => {
+      if (allSelected) next.delete(occurrence.key);
+      else next.add(occurrence.key);
+    });
+    this.selected.set(next);
+  }
+
+  protected isExpanded(occurrence: KrnDataRowOccurrence<T>): boolean {
+    return this.expanded().has(occurrence.key);
+  }
+
+  protected toggleExpanded(occurrence: KrnDataRowOccurrence<T>): void {
+    this.toggleSet(this.expanded, occurrence.key);
+  }
+
+  protected isColumnVisible(key: string): boolean {
+    return !this.hiddenColumnKeys().has(key);
+  }
+
+  protected setColumnVisible(key: string, event: Event): void {
+    const visible = (event.currentTarget as HTMLInputElement).checked;
+    if (!visible && this.visibleColumns().length === 1) return;
+    const hidden = new Set(this.hiddenColumnKeys());
+    if (visible) hidden.delete(key);
+    else hidden.add(key);
+    this.hiddenColumnKeys.set(hidden);
+    this.activeCell.update((cell) => ({
+      ...cell,
+      column: Math.min(cell.column, Math.max(0, this.gridColumnCount() - 1)),
+    }));
+  }
+
+  protected columnWidth(column: KrnDataColumn<T>): number {
+    return this.widths()[column.key] ?? column.width ?? 180;
+  }
+
+  protected startResize(event: PointerEvent, column: KrnDataColumn<T>): void {
+    const target = event.currentTarget as HTMLElement;
+    target.setPointerCapture(event.pointerId);
+    this.resizeState = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startWidth: this.columnWidth(column),
+      key: column.key,
+    };
+  }
+
+  protected resize(event: PointerEvent, column: KrnDataColumn<T>): void {
+    const state = this.resizeState;
+    if (!state || state.pointerId !== event.pointerId || state.key !== column.key) return;
+    const direction = this.isRtl() ? -1 : 1;
+    this.setColumnWidth(column, state.startWidth + (event.clientX - state.startX) * direction);
+  }
+
+  protected endResize(event: PointerEvent): void {
+    const target = event.currentTarget as HTMLElement;
+    if (target.hasPointerCapture(event.pointerId)) target.releasePointerCapture(event.pointerId);
+    this.resizeState = undefined;
+  }
+
+  protected resizeWithKeyboard(event: KeyboardEvent, column: KrnDataColumn<T>): void {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
+    const rtl = this.isRtl();
+    const direction = event.key === 'ArrowRight' ? 1 : -1;
+    this.setColumnWidth(column, this.columnWidth(column) + direction * (rtl ? -10 : 10));
+  }
+
+  protected isActionCell(row: number, column: number): boolean {
+    const actionCell = this.actionCell();
+    return actionCell?.row === row && actionCell.column === column;
+  }
+
+  protected onCellFocusIn(event: FocusEvent, row: number, column: number): void {
+    this.activeCell.set({ row, column });
+    const cell = this.eventCell(event, row, column);
+    if (!cell) return;
+
+    if (this.findActionTarget(cell, event.target)) {
+      this.enterActionMode(cell, row, column, false);
+    } else if (event.target === cell && this.actionCell()) {
+      this.exitActionMode();
+    }
+  }
+
+  protected onCellPointerDown(event: PointerEvent, row: number, column: number): void {
+    const cell = this.eventCell(event, row, column);
+    if (cell && this.findActionTarget(cell, event.target)) {
+      this.enterActionMode(cell, row, column, false);
+    }
+  }
+
+  protected onGridFocusOut(event: FocusEvent): void {
+    const actionCell = this.actionCell();
+    if (!actionCell) return;
+    const grid = this.asHTMLElement(event.currentTarget);
+    const next = event.relatedTarget;
+    const NodeConstructor = this.platform.window?.Node;
+    const cell = grid?.querySelector<HTMLElement>(
+      `[data-cell="${actionCell.row}-${actionCell.column}"]`,
+    );
+    if (!cell || !NodeConstructor || !(next instanceof NodeConstructor) || !cell.contains(next)) {
+      this.exitActionMode();
+    }
+  }
+
+  protected onCellKeydown(
+    event: KeyboardEvent,
+    row: number,
+    column: number,
+    rowCount: number,
+  ): void {
+    const cell = this.eventCell(event, row, column);
+    if (cell && event.target !== cell) {
+      this.onActionKeydown(event, cell);
+      return;
+    }
+
+    if ((event.key === 'Enter' || event.key === 'F2') && cell) {
+      if (this.enterActionMode(cell, row, column, true)) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      return;
+    }
+
+    if (event.key === 'Tab') return;
+
+    let nextRow = row;
+    let nextColumn = column;
+    if (event.key === 'ArrowRight') nextColumn += 1;
+    else if (event.key === 'ArrowLeft') nextColumn -= 1;
+    else if (event.key === 'ArrowDown') nextRow += 1;
+    else if (event.key === 'ArrowUp') nextRow -= 1;
+    else if (event.key === 'PageDown')
+      nextRow += Math.max(1, Math.floor(this.viewportHeight() / this.rowHeight()));
+    else if (event.key === 'PageUp')
+      nextRow -= Math.max(1, Math.floor(this.viewportHeight() / this.rowHeight()));
+    else if (event.key === 'Home' && event.ctrlKey) {
+      nextRow = -1;
+      nextColumn = 0;
+    } else if (event.key === 'End' && event.ctrlKey) {
+      nextRow = rowCount - 1;
+      nextColumn = this.gridColumnCount() - 1;
+    } else if (event.key === 'Home') nextColumn = 0;
+    else if (event.key === 'End') nextColumn = this.gridColumnCount() - 1;
+    else return;
+
+    event.preventDefault();
+    nextRow = Math.max(-1, Math.min(rowCount - 1, nextRow));
+    nextColumn = Math.max(0, Math.min(this.gridColumnCount() - 1, nextColumn));
+    this.activeCell.set({ row: nextRow, column: nextColumn });
+    this.focusCell(nextRow, nextColumn);
+  }
+
+  private onActionKeydown(event: KeyboardEvent, cell: HTMLElement): void {
+    if (event.key === 'Escape' || event.key === 'F2') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.exitActionMode();
+      cell.focus({ preventScroll: true });
+      return;
+    }
+
+    if (event.key !== 'Tab') return;
+
+    const actions = this.actionableDescendants(cell);
+    const target = this.asElement(event.target);
+    const currentIndex = actions.findIndex(
+      (action) => action === target || (target ? action.contains(target) : false),
+    );
+    const direction = event.shiftKey ? -1 : 1;
+    const nextAction = actions[currentIndex + direction];
+    if (nextAction) {
+      event.preventDefault();
+      event.stopPropagation();
+      nextAction.focus({ preventScroll: true });
+      return;
+    }
+
+    if (direction < 0) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.exitActionMode();
+      cell.focus({ preventScroll: true });
+      return;
+    }
+
+    this.platform.queueMicrotask(() => this.exitActionMode());
+  }
+
+  private enterActionMode(
+    cell: HTMLElement,
+    row: number,
+    column: number,
+    focusFirst: boolean,
+  ): boolean {
+    const actions = this.actionableDescendants(cell);
+    if (!actions.length) return false;
+
+    this.actionCell.set({ row, column });
+    this.syncManagedTabStops();
+    if (focusFirst) {
+      this.platform.queueMicrotask(() => actions[0]?.focus({ preventScroll: true }));
+    }
+    return true;
+  }
+
+  private exitActionMode(): void {
+    if (!this.actionCell()) return;
+    this.actionCell.set(null);
+    this.syncManagedTabStops();
+  }
+
+  private syncManagedTabStops(): void {
+    const cells = [...this.host.nativeElement.querySelectorAll<HTMLElement>(GRID_CELL_SELECTOR)];
+    const liveActions = new Set<KrnDataGridActionElement>();
+    const actionCell = this.actionCell();
+    let actionCellRendered = actionCell === null;
+
+    for (const cell of cells) {
+      const position = this.cellPosition(cell);
+      const inActionMode =
+        position !== null &&
+        actionCell?.row === position.row &&
+        actionCell.column === position.column;
+      if (inActionMode) actionCellRendered = true;
+
+      for (const action of this.actionableDescendants(cell)) {
+        liveActions.add(action);
+        if (!action.hasAttribute('data-grid-action')) {
+          this.setManagedTabIndex(action, inActionMode);
+        }
+      }
+    }
+
+    for (const [action, originalTabIndex] of this.managedTabIndexes) {
+      if (liveActions.has(action)) continue;
+      this.restoreTabIndex(action, originalTabIndex);
+      this.managedTabIndexes.delete(action);
+    }
+
+    if (!actionCellRendered) {
+      this.actionCell.set(null);
+    }
+  }
+
+  private actionableDescendants(cell: HTMLElement): readonly KrnDataGridActionElement[] {
+    return [...cell.querySelectorAll<KrnDataGridActionElement>(GRID_CELL_ACTION_SELECTOR)].filter(
+      (element) => {
+        if (element.closest<HTMLElement>(GRID_CELL_SELECTOR) !== cell) return false;
+        if (
+          element.hasAttribute('disabled') ||
+          element.getAttribute('aria-disabled') === 'true' ||
+          ('hidden' in element && element.hidden === true) ||
+          element.closest('[inert]')
+        ) {
+          return false;
+        }
+        if (element.hasAttribute('data-grid-action')) return true;
+        if (this.managedTabIndexes.has(element)) return true;
+        if (element.tabIndex < 0) return false;
+
+        this.managedTabIndexes.set(element, element.getAttribute('tabindex'));
+        return true;
+      },
+    );
+  }
+
+  private findActionTarget(
+    cell: HTMLElement,
+    target: EventTarget | null,
+  ): KrnDataGridActionElement | null {
+    const element = this.asElement(target);
+    const action = element?.closest<KrnDataGridActionElement>(GRID_CELL_ACTION_SELECTOR) ?? null;
+    return action && this.actionableDescendants(cell).includes(action) ? action : null;
+  }
+
+  private setManagedTabIndex(element: KrnDataGridActionElement, enabled: boolean): void {
+    const originalTabIndex = this.managedTabIndexes.get(element);
+    if (originalTabIndex === undefined && !this.managedTabIndexes.has(element)) return;
+
+    if (enabled) {
+      this.restoreTabIndex(element, originalTabIndex ?? null);
+    } else if (element.getAttribute('tabindex') !== '-1') {
+      element.setAttribute('tabindex', '-1');
+    }
+  }
+
+  private restoreManagedTabIndexes(): void {
+    for (const [element, originalTabIndex] of this.managedTabIndexes) {
+      this.restoreTabIndex(element, originalTabIndex);
+    }
+    this.managedTabIndexes.clear();
+  }
+
+  private restoreTabIndex(
+    element: KrnDataGridActionElement,
+    originalTabIndex: string | null,
+  ): void {
+    if (originalTabIndex === null) {
+      element.removeAttribute('tabindex');
+    } else if (element.getAttribute('tabindex') !== originalTabIndex) {
+      element.setAttribute('tabindex', originalTabIndex);
+    }
+  }
+
+  private syncVirtualRowMeasurement(): void {
+    const row = this.isVirtual()
+      ? this.host.nativeElement.querySelector<HTMLElement>('.virtual-row')
+      : null;
+    if (row === this.observedVirtualRow) {
+      if (row) this.measureVirtualRow(row);
+      return;
+    }
+
+    this.virtualRowResizeObserver?.disconnect();
+    this.virtualRowResizeObserver = null;
+    this.observedVirtualRow = row;
+    if (!row) {
+      this.measuredVirtualRowHeight.set(null);
+      return;
+    }
+
+    this.measureVirtualRow(row);
+    const ResizeObserverConstructor = this.platform.window?.ResizeObserver;
+    if (!ResizeObserverConstructor) return;
+
+    this.virtualRowResizeObserver = new ResizeObserverConstructor(() => {
+      if (this.observedVirtualRow) this.measureVirtualRow(this.observedVirtualRow);
+    });
+    this.virtualRowResizeObserver.observe(row);
+  }
+
+  private measureVirtualRow(row: HTMLElement): void {
+    const measured = row.getBoundingClientRect().height;
+    if (!Number.isFinite(measured) || measured < 1) return;
+
+    const nextHeight = Math.round(measured * 100) / 100;
+    if (Math.abs((this.measuredVirtualRowHeight() ?? 0) - nextHeight) < 0.25) return;
+
+    this.measuredVirtualRowHeight.set(nextHeight);
+    this.platform.queueMicrotask(() => this.viewport()?.checkViewportSize());
+  }
+
+  private eventCell(event: Event, row: number, column: number): HTMLElement | null {
+    const currentTarget = this.asHTMLElement(event.currentTarget);
+    return currentTarget?.matches(GRID_CELL_SELECTOR)
+      ? currentTarget
+      : this.host.nativeElement.querySelector<HTMLElement>(`[data-cell="${row}-${column}"]`);
+  }
+
+  private cellPosition(cell: HTMLElement): KrnDataGridCellPosition | null {
+    const match = /^(-?\d+)-(\d+)$/.exec(cell.getAttribute('data-cell') ?? '');
+    if (!match) return null;
+    return { row: Number(match[1]), column: Number(match[2]) };
+  }
+
+  private asHTMLElement(target: EventTarget | null): HTMLElement | null {
+    const HTMLElementConstructor = this.platform.window?.HTMLElement;
+    return HTMLElementConstructor && target instanceof HTMLElementConstructor ? target : null;
+  }
+
+  private asElement(target: EventTarget | null): Element | null {
+    const ElementConstructor = this.platform.window?.Element;
+    return ElementConstructor && target instanceof ElementConstructor ? target : null;
+  }
+
+  private focusCell(row: number, column: number): void {
+    const focus = (): void => {
+      this.host.nativeElement
+        .querySelector<HTMLElement>(`[data-cell="${row}-${column}"]`)
+        ?.focus({ preventScroll: true });
+    };
+    if (!this.isVirtual() || row < 0) {
+      this.platform.queueMicrotask(focus);
+      return;
+    }
+
+    const viewport = this.viewport();
+    this.virtualFocusSubscription?.unsubscribe();
+    const rendered = viewport?.renderedRangeStream
+      .pipe(
+        filter((range) => range.start <= row && row < range.end),
+        take(1),
+      )
+      .subscribe(() =>
+        this.platform.queueMicrotask(() => {
+          focus();
+          if (this.virtualFocusSubscription === rendered) this.virtualFocusSubscription = null;
+        }),
+      );
+    this.virtualFocusSubscription = rendered ?? null;
+    viewport?.scrollToIndex(row, 'auto');
+    this.platform.queueMicrotask(() => {
+      viewport?.checkViewportSize();
+      const element = this.host.nativeElement.querySelector<HTMLElement>(
+        `[data-cell="${row}-${column}"]`,
+      );
+      if (element) {
+        this.virtualFocusSubscription?.unsubscribe();
+        this.virtualFocusSubscription = null;
+        element.focus({ preventScroll: true });
+      }
+    });
+  }
+
+  private emitQuery(): void {
+    this.queryChange.emit({
+      filter: this.filter(),
+      page: this.page(),
+      pageSize: Math.max(1, this.pageSize()),
+      sortKey: this.sortKey(),
+      sortDirection: this.sortDirection(),
+    });
+  }
+
+  private setColumnWidth(column: KrnDataColumn<T>, width: number): void {
+    const minimum = column.minWidth ?? 96;
+    const maximum = Math.max(minimum, column.maxWidth ?? 960);
+    const nextWidth = Math.min(maximum, Math.max(minimum, Math.round(width)));
+    this.widths.update((current) => ({ ...current, [column.key]: nextWidth }));
+  }
+
+  private isRtl(): boolean {
+    const element = this.host.nativeElement;
+    return this.platform.window?.getComputedStyle(element).direction === 'rtl';
+  }
+
+  private toggleSet(
+    target: {
+      set(value: ReadonlySet<KrnDataRowKey>): void;
+      (): ReadonlySet<KrnDataRowKey>;
+    },
+    key: KrnDataRowKey,
+  ): void {
+    const next = new Set(target());
+    if (next.has(key)) next.delete(key);
+    else next.add(key);
+    target.set(next);
+  }
+}
+
+export { KrnDataGrid as KrnDataTable };

@@ -28,9 +28,9 @@ describe('Kern QA Lab', () => {
     expect(root.querySelector('[data-testid="specimen-stage"]')).toBeTruthy();
     expect(root.querySelectorAll('[data-testid^="catalog-item-"]').length).toBeGreaterThan(100);
     expect(root.querySelector('[data-testid="specimen-button"]')).toBeTruthy();
-    expect((root.querySelector('[data-testid="component-control"]') as HTMLSelectElement).value).toBe(
-      'button',
-    );
+    expect(
+      (root.querySelector('[data-testid="component-control"]') as HTMLSelectElement).value,
+    ).toBe('button');
     expect((root.querySelector('[data-testid="density-control"]') as HTMLSelectElement).value).toBe(
       'comfortable',
     );
@@ -58,9 +58,9 @@ describe('Kern QA Lab', () => {
     expect(root.getAttribute('data-density')).toBe('compact');
     expect(root.getAttribute('data-scenario')).toBe('stress');
     expect(root.querySelector('[data-testid="specimen-data-grid"]')).toBeTruthy();
-    expect((root.querySelector('[data-testid="component-control"]') as HTMLSelectElement).value).toBe(
-      'data-grid',
-    );
+    expect(
+      (root.querySelector('[data-testid="component-control"]') as HTMLSelectElement).value,
+    ).toBe('data-grid');
     expect(TestBed.inject(DOCUMENT).documentElement.dir).toBe('rtl');
   });
 

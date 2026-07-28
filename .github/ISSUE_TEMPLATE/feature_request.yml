@@ -1,0 +1,53 @@
+name: Feature request
+description: Propose a reusable capability or component contract.
+title: '[Feature]: '
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe the product or developer problem without assuming a particular solution.
+    validations:
+      required: true
+
+  - type: textarea
+    id: users
+    attributes:
+      label: Users and use cases
+      description: Explain who needs this and which applications or workflows it should support.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed contract
+      description: Include a concise API sketch, composition model, and expected keyboard behavior when relevant.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Include existing Kern primitives, native HTML, or application-level composition.
+    validations:
+      required: true
+
+  - type: textarea
+    id: enterprise
+    attributes:
+      label: Enterprise requirements
+      description: Note SSR, forms, localization, theming, density, RTL, performance, accessibility, or migration constraints.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues, pull requests, and documented components.
+          required: true
+        - label: This proposal is reusable across applications rather than product-specific.
+          required: true
+        - label: I agree to follow the Code of Conduct.
+          required: true

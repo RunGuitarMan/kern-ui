@@ -127,6 +127,17 @@
     --krn-motion-ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
     --krn-motion-ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
     --krn-motion-ease-spring: cubic-bezier(0.2, 1.35, 0.4, 1);
+    /* Semantic recipes used by components; raw timing values stay centralized here. */
+    --krn-motion-duration-interaction: var(--krn-motion-duration-fast);
+    --krn-motion-duration-selection: var(--krn-motion-duration-normal);
+    --krn-motion-duration-enter: var(--krn-motion-duration-slow);
+    --krn-motion-duration-exit: var(--krn-motion-duration-normal);
+    --krn-motion-duration-layout: var(--krn-motion-duration-deliberate);
+    --krn-motion-duration-feedback: 1400ms;
+    --krn-motion-duration-spinner: 900ms;
+    --krn-motion-duration-progress: 1100ms;
+    --krn-motion-duration-skeleton: 1550ms;
+    --krn-motion-iteration-continuous: infinite;
 
     --krn-icon-size-sm: 1rem;
     --krn-icon-size-md: 1.25rem;
@@ -157,9 +168,9 @@
     --krn-radius-overlay: var(--krn-radius-lg);
     --krn-radius-pill: var(--krn-radius-full);
 
-    --krn-motion-fast: var(--krn-motion-duration-fast);
-    --krn-motion-moderate: var(--krn-motion-duration-normal);
-    --krn-motion-slow: var(--krn-motion-duration-slow);
+    --krn-motion-fast: var(--krn-motion-duration-interaction);
+    --krn-motion-moderate: var(--krn-motion-duration-selection);
+    --krn-motion-slow: var(--krn-motion-duration-enter);
     --krn-ease-standard: var(--krn-motion-ease-standard);
     --krn-ease-enter: var(--krn-motion-ease-enter);
 

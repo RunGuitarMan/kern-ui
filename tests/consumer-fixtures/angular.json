@@ -1,0 +1,161 @@
+{
+  "$schema": "../../node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "cache": {
+      "enabled": false
+    }
+  },
+  "projects": {
+    "button": {
+      "projectType": "application",
+      "root": ".",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/button.ts",
+            "index": "src/index.html",
+            "tsConfig": "tsconfig.build.json",
+            "styles": ["node_modules/@kern-ui/angular/styles/kern.css"]
+          },
+          "configurations": {
+            "production": {
+              "aot": true,
+              "optimization": true,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "extractLicenses": true
+            }
+          }
+        }
+      }
+    },
+    "form": {
+      "projectType": "application",
+      "root": ".",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/form.ts",
+            "index": "src/index.html",
+            "tsConfig": "tsconfig.build.json",
+            "styles": ["node_modules/@kern-ui/angular/styles/kern.css"]
+          },
+          "configurations": {
+            "production": {
+              "aot": true,
+              "optimization": true,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "extractLicenses": true
+            }
+          }
+        }
+      }
+    },
+    "select": {
+      "projectType": "application",
+      "root": ".",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/select.ts",
+            "index": "src/index.html",
+            "tsConfig": "tsconfig.build.json",
+            "styles": ["node_modules/@kern-ui/angular/styles/kern.css"]
+          },
+          "configurations": {
+            "production": {
+              "aot": true,
+              "optimization": true,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "extractLicenses": true
+            }
+          }
+        }
+      }
+    },
+    "grid": {
+      "projectType": "application",
+      "root": ".",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/grid.ts",
+            "index": "src/index.html",
+            "tsConfig": "tsconfig.build.json",
+            "styles": ["node_modules/@kern-ui/angular/styles/kern.css"]
+          },
+          "configurations": {
+            "production": {
+              "aot": true,
+              "optimization": true,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "extractLicenses": true
+            }
+          }
+        }
+      }
+    },
+    "charts": {
+      "projectType": "application",
+      "root": ".",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/charts.ts",
+            "index": "src/index.html",
+            "tsConfig": "tsconfig.build.json",
+            "styles": ["node_modules/@kern-ui/angular/styles/kern.css"]
+          },
+          "configurations": {
+            "production": {
+              "aot": true,
+              "optimization": true,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "extractLicenses": true
+            }
+          }
+        }
+      }
+    },
+    "identity": {
+      "projectType": "application",
+      "root": ".",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/entrypoint-identity.ts",
+            "index": "src/index.html",
+            "tsConfig": "tsconfig.build.json",
+            "styles": []
+          },
+          "configurations": {
+            "production": {
+              "aot": true,
+              "optimization": true,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "extractLicenses": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

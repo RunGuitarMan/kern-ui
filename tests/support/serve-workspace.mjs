@@ -1,4 +1,4 @@
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { createServer } from 'node:http';
 import { join } from 'node:path';
 
@@ -10,6 +10,8 @@ const docsUrl = 'http://localhost:4200/';
 const labUrl = 'http://localhost:4201/';
 /** @type {import('node:http').Server[]} */
 const applicationServers = [];
+/** @type {import('node:child_process').ChildProcess[]} */
+const applicationProcesses = [];
 /** @type {import('node:http').Server | undefined} */
 let healthServer;
 let shuttingDown = false;
@@ -76,9 +78,42 @@ function startProject(label, root, fallback, port) {
   });
 }
 
-async function shutdown() {
+/**
+ * Runs the built Angular Node server so browser tests exercise server rendering
+ * and hydration instead of a client-side index fallback.
+ *
+ * @param {string} entry
+ * @param {number} port
+ */
+function startDocsServer(entry, port) {
+  const child = spawn(process.execPath, [entry], {
+    cwd: workspace,
+    env: {
+      ...process.env,
+      PORT: String(port),
+    },
+    stdio: 'inherit',
+  });
+  applicationProcesses.push(child);
+  child.once('exit', (code, signal) => {
+    if (!shuttingDown) {
+      console.error(
+        `Docs SSR server exited unexpectedly (${signal ?? `status ${code ?? 'unknown'}`}).`,
+      );
+      void shutdown(1);
+    }
+  });
+}
+
+/** @param {number} [exitCode] */
+async function shutdown(exitCode = 0) {
   if (shuttingDown) return;
   shuttingDown = true;
+  for (const child of applicationProcesses) {
+    if (child.exitCode === null && child.signalCode === null) {
+      child.kill('SIGTERM');
+    }
+  }
   for (const server of applicationServers) {
     await new Promise((resolve) => server.close(resolve));
   }
@@ -86,7 +121,7 @@ async function shutdown() {
     const server = healthServer;
     await new Promise((resolve) => server.close(resolve));
   }
-  process.exit(0);
+  process.exit(exitCode);
 }
 
 const docsAlreadyRunning = await responds(docsUrl);
@@ -102,8 +137,7 @@ if (!docsAlreadyRunning || !labAlreadyRunning) {
 }
 
 if (!docsAlreadyRunning) {
-  const docsRoot = join(workspace, 'dist', 'docs', 'browser');
-  startProject('Docs', docsRoot, join(docsRoot, 'index.csr.html'), 4200);
+  startDocsServer(join(workspace, 'dist', 'docs', 'server', 'server.mjs'), 4200);
   await waitFor(docsUrl, 'Docs');
 }
 if (!labAlreadyRunning) {

@@ -62,6 +62,22 @@
   background: var(--krn-color-success);
 }
 
+.status[data-status='beta'] i {
+  background: var(--krn-color-info);
+}
+
+.status[data-status='experimental'] i {
+  background: var(--krn-color-warning);
+}
+
+.status[data-status='recipe'] i {
+  background: var(--krn-color-primary);
+}
+
+.status[data-status='deprecated'] i {
+  background: var(--krn-color-danger);
+}
+
 h1 {
   margin: 0;
   font-size: clamp(2.75rem, 6vw, 4.75rem);
@@ -76,6 +92,20 @@ h1 {
   color: var(--krn-color-text-muted);
   font-size: 1rem;
   line-height: 1.55;
+}
+
+.status-description {
+  max-inline-size: 68ch;
+  margin: 0;
+  color: var(--krn-color-text-subtle);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.status-description strong {
+  margin-inline-end: 0.35rem;
+  color: var(--krn-color-text);
+  font-weight: 600;
 }
 
 .component-actions {
@@ -377,6 +407,18 @@ thead th {
 code {
   font-family: var(--krn-font-family-mono);
   font-size: 0.75rem;
+}
+
+.required-api {
+  display: inline-flex;
+  margin-inline-start: 0.4rem;
+  padding: 0.15rem 0.35rem;
+  border-radius: var(--krn-radius-full);
+  color: var(--krn-color-danger);
+  background: var(--krn-color-danger-subtle);
+  font: 600 0.625rem/1 var(--krn-font-family-sans);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 .contract-grid,

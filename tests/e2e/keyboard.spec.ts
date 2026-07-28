@@ -10,7 +10,9 @@ test.describe('Keyboard interaction', () => {
     const search = page.getByRole('combobox', { name: 'Search Kern components' });
     await search.focus();
     await search.pressSequentially('button');
-    await expect(page.getByRole('listbox', { name: 'Search Kern components results' })).toBeVisible();
+    await expect(
+      page.getByRole('listbox', { name: 'Search Kern components results' }),
+    ).toBeVisible();
     await expect(page.getByRole('option', { name: /Button/ }).first()).toHaveAttribute(
       'aria-selected',
       'true',
@@ -61,7 +63,9 @@ test.describe('Keyboard interaction', () => {
     await expect(page.getByTestId('specimen-data-grid')).toBeVisible();
   });
 
-  test('skip link is the first focus target and reaches documentation content', async ({ page }) => {
+  test('skip link is the first focus target and reaches documentation content', async ({
+    page,
+  }) => {
     await page.goto(DOCS_URL);
     await settlePage(page);
 

@@ -48,16 +48,17 @@ import { KrnAlert, KrnBadge, KrnCodeBlock, KrnPageHeader } from '@kern-ui/angula
       <section class="matrix-section">
         <header>
           <p>09.2 / VERIFICATION MATRIX</p>
-          <h2>Every component, every difficult state.</h2>
+          <h2>One acceptance matrix for every stable component.</h2>
           <p>
-            {{ coverage.components }} catalog entries share the same minimum visual and interaction
-            matrix.
+            All {{ coverage.components }} catalog entries declare expected visual and interaction
+            states. The matrix is a release requirement, not proof that every state has a dedicated
+            screenshot or manual assistive-technology certificate.
           </p>
         </header>
         <div class="matrix" role="table" aria-label="Accessibility verification matrix">
           <div role="row" class="matrix-head">
             <span role="columnheader">Dimension</span>
-            <span role="columnheader">Automation</span>
+            <span role="columnheader">Repository evidence</span>
             <span role="columnheader">Human review</span>
           </div>
           @for (row of matrix; track row.dimension) {
@@ -93,10 +94,11 @@ import { KrnAlert, KrnBadge, KrnCodeBlock, KrnPageHeader } from '@kern-ui/angula
       <section class="zoom-section">
         <header>
           <p>09.4 / REFLOW + CONTRAST</p>
-          <h2>No clipped meaning at 200%.</h2>
+          <h2>Design for meaningful reflow at 200%.</h2>
           <p>
-            Logical properties and container queries let content reflow without hiding overflow.
-            High contrast is a structural theme; forced colors map to system roles.
+            Logical properties and container queries are the implementation tools; representative
+            responsive suites verify narrow and enlarged-text surfaces. High contrast is a
+            structural theme, while forced-color behavior still requires Windows review.
           </p>
         </header>
         <div class="contrast-demo">
@@ -151,7 +153,7 @@ export class AccessibilityPage {
       index: '03',
       title: 'Perceivable state',
       copy: 'Color is never the only signal. Text, iconography, borders, and announcements reinforce change.',
-      items: ['4.5:1 body contrast', 'Status icon + label', 'Forced-color system roles'],
+      items: ['AA contrast targets', 'Status icon + label', 'Forced-color system roles'],
     },
     {
       index: '04',
@@ -163,22 +165,34 @@ export class AccessibilityPage {
   protected readonly matrix = [
     {
       dimension: 'Keyboard',
-      automation: 'Playwright key sequences',
+      automation: 'Unit contracts + representative Playwright sequences',
       human: 'Order and discoverability',
     },
     { dimension: 'Accessible name', automation: 'axe + role queries', human: 'Clarity in context' },
     { dimension: 'Focus', automation: 'Focus assertions', human: 'Visibility and restoration' },
-    { dimension: 'Contrast', automation: 'axe color checks', human: 'All themes and imagery' },
+    {
+      dimension: 'Contrast',
+      automation: 'axe + theme/token assertions',
+      human: 'All product themes',
+    },
     {
       dimension: 'Zoom / reflow',
       automation: '200% viewport suite',
       human: 'Reading order and clipping',
     },
-    { dimension: 'Motion', automation: 'Reduced-motion emulation', human: 'Causality and comfort' },
-    { dimension: 'RTL', automation: 'Direction matrix', human: 'Meaningful icon mirroring' },
+    {
+      dimension: 'Motion',
+      automation: 'Representative reduced-motion emulation',
+      human: 'Causality and comfort',
+    },
+    {
+      dimension: 'RTL',
+      automation: 'Representative direction matrix',
+      human: 'Meaningful icon mirroring',
+    },
     {
       dimension: 'Forced colors',
-      automation: 'Media emulation where available',
+      automation: 'CSS rules + high-contrast scenarios',
       human: 'Windows HC pass',
     },
   ] as const;

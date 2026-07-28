@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "KernNgAdd",
+  "title": "KERN installation options",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Angular application to configure.",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "skipStyles": {
+      "type": "boolean",
+      "default": false,
+      "description": "Skip registration of KERN's global CSS bundle."
+    }
+  }
+}

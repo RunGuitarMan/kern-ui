@@ -1,0 +1,89 @@
+name: Bug report
+description: Report a reproducible defect in a supported Kern release.
+title: '[Bug]: '
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for the report. Do not include vulnerabilities, credentials, or private data.
+        Security reports belong in the private process described in `SECURITY.md`.
+
+  - type: input
+    id: kern-version
+    attributes:
+      label: Kern version
+      description: Use the exact installed version, not a range.
+      placeholder: 0.1.0
+    validations:
+      required: true
+
+  - type: input
+    id: angular-version
+    attributes:
+      label: Angular version
+      placeholder: 22.0.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include browser, operating system, Node version, rendering mode, and assistive technology when relevant.
+      placeholder: Chrome 140, macOS 16, Node 24.18, SSR with hydration
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Link a small repository or provide the smallest complete code needed to reproduce the defect.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Render ...
+        2. Focus ...
+        3. Press ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or screenshots
+      description: Remove secrets, tokens, customer data, and personal information.
+      render: shell
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I reproduced this with the latest supported Kern release.
+          required: true
+        - label: I searched existing issues and pull requests.
+          required: true
+        - label: I have not included a security vulnerability or sensitive data.
+          required: true
+        - label: I agree to follow the Code of Conduct.
+          required: true

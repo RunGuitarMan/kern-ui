@@ -69,5 +69,32 @@ export default defineConfig({
         viewport: { width: 1440, height: 1000 },
       },
     },
+    {
+      name: 'cross-browser-chromium',
+      testMatch: /cross-browser\/.*\.spec\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: docsUrl,
+        browserName: 'chromium',
+      },
+    },
+    {
+      name: 'cross-browser-firefox',
+      testMatch: /cross-browser\/.*\.spec\.ts/,
+      use: {
+        ...devices['Desktop Firefox'],
+        baseURL: docsUrl,
+        browserName: 'firefox',
+      },
+    },
+    {
+      name: 'cross-browser-webkit',
+      testMatch: /cross-browser\/.*\.spec\.ts/,
+      use: {
+        ...devices['Desktop Safari'],
+        baseURL: docsUrl,
+        browserName: 'webkit',
+      },
+    },
   ],
 });

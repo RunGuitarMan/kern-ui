@@ -4,8 +4,25 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/kern-spec",
-    "rootDir": "./src",
+    "rootDir": ".",
+    "paths": {
+      "@kern-ui/angular/addon-charts": ["./addon-charts/src/public-api.ts"],
+      "@kern-ui/angular/addon-grid": ["./addon-grid/src/public-api.ts"],
+      "@kern-ui/angular/cdk": ["./cdk/src/public-api.ts"],
+      "@kern-ui/angular/core": ["./core/src/public-api.ts"],
+      "@kern-ui/angular/kit": ["./kit/src/public-api.ts"],
+      "@kern-ui/angular/patterns": ["./patterns/src/public-api.ts"]
+    },
     "types": ["vitest/globals"]
   },
-  "include": ["src/**/*.d.ts", "src/**/*.spec.ts"]
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.spec.ts",
+    "addon-charts/src/**/*.spec.ts",
+    "addon-grid/src/**/*.spec.ts",
+    "cdk/src/**/*.spec.ts",
+    "core/src/**/*.spec.ts",
+    "kit/src/**/*.spec.ts",
+    "patterns/src/**/*.spec.ts"
+  ]
 }

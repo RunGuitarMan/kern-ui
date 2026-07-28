@@ -1,0 +1,43 @@
+@layer krn.preferences {
+  /*
+   * Motion is controlled through semantic duration tokens. This preserves
+   * component state transitions without relying on a destructive global
+   * `animation: none` override.
+   */
+  [data-krn-motion='reduce'] {
+    --krn-motion-duration-fast: 0.01ms;
+    --krn-motion-duration-normal: 0.01ms;
+    --krn-motion-duration-slow: 0.01ms;
+    --krn-motion-duration-deliberate: 0.01ms;
+    --krn-motion-duration-feedback: 0.01ms;
+    --krn-motion-duration-spinner: 0.01ms;
+    --krn-motion-duration-progress: 0.01ms;
+    --krn-motion-duration-skeleton: 0.01ms;
+    --krn-motion-iteration-continuous: 1;
+    --krn-motion-ease-standard: linear;
+    --krn-motion-ease-enter: linear;
+    --krn-motion-ease-exit: linear;
+    --krn-motion-ease-spring: linear;
+    scroll-behavior: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root:not([data-krn-motion='full']),
+    [data-krn-motion='system'] {
+      --krn-motion-duration-fast: 0.01ms;
+      --krn-motion-duration-normal: 0.01ms;
+      --krn-motion-duration-slow: 0.01ms;
+      --krn-motion-duration-deliberate: 0.01ms;
+      --krn-motion-duration-feedback: 0.01ms;
+      --krn-motion-duration-spinner: 0.01ms;
+      --krn-motion-duration-progress: 0.01ms;
+      --krn-motion-duration-skeleton: 0.01ms;
+      --krn-motion-iteration-continuous: 1;
+      --krn-motion-ease-standard: linear;
+      --krn-motion-ease-enter: linear;
+      --krn-motion-ease-exit: linear;
+      --krn-motion-ease-spring: linear;
+      scroll-behavior: auto;
+    }
+  }
+}

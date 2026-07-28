@@ -4,11 +4,27 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/kern-lib",
-    "rootDir": "./src",
+    "rootDir": ".",
     "declaration": true,
     "declarationMap": true,
+    "paths": {
+      "@kern-ui/angular/addon-charts": ["./addon-charts/src/public-api.ts"],
+      "@kern-ui/angular/addon-grid": ["./addon-grid/src/public-api.ts"],
+      "@kern-ui/angular/cdk": ["./cdk/src/public-api.ts"],
+      "@kern-ui/angular/core": ["./core/src/public-api.ts"],
+      "@kern-ui/angular/kit": ["./kit/src/public-api.ts"],
+      "@kern-ui/angular/patterns": ["./patterns/src/public-api.ts"]
+    },
     "types": []
   },
-  "include": ["src/**/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "addon-charts/src/**/*.ts",
+    "addon-grid/src/**/*.ts",
+    "cdk/src/**/*.ts",
+    "core/src/**/*.ts",
+    "kit/src/**/*.ts",
+    "patterns/src/**/*.ts"
+  ],
   "exclude": ["**/*.spec.ts"]
 }

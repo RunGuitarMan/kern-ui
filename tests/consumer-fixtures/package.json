@@ -1,0 +1,30 @@
+{
+  "name": "kern-packed-consumer-fixtures",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "dependencies": {
+    "@angular/aria": "22.0.6",
+    "@angular/cdk": "22.0.6",
+    "@angular/common": "22.0.8",
+    "@angular/compiler": "22.0.8",
+    "@angular/core": "22.0.8",
+    "@angular/forms": "22.0.8",
+    "@angular/platform-browser": "22.0.8",
+    "rxjs": "7.8.2",
+    "zod": "4.4.2"
+  },
+  "devDependencies": {
+    "@angular/build": "22.0.8",
+    "@angular/cli": "22.0.8",
+    "@angular/compiler-cli": "22.0.8",
+    "typescript": "6.0.3"
+  },
+  "overrides": {
+    "@hono/node-server": "1.19.15",
+    "baseline-browser-mapping": "2.11.4",
+    "electron-to-chromium": "1.5.396",
+    "express-rate-limit": "8.6.0",
+    "minimatch": "10.2.5"
+  }
+}

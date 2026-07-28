@@ -2,8 +2,11 @@
 @import './tokens.css';
 @import './themes.css';
 @import './density.css';
+@import './preferences.css';
 @import './base.css';
 @import './utilities.css';
+@import './components/actions.css';
+@import './components/forms.css';
 
 /*
  * CDK calculates connected-overlay positions from documentElement.clientWidth.

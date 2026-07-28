@@ -36,7 +36,7 @@ interface StartRoute {
           </div>
           <ul class="hero-facts" aria-label="Library coverage">
             <li>
-              <strong>{{ coverage.components }}</strong> documented components
+              <strong>{{ coverage.components }}</strong> catalog entries
             </li>
             <li><strong>AA</strong> accessibility target</li>
             <li><strong>4</strong> runtime themes</li>
@@ -76,7 +76,7 @@ interface StartRoute {
           </ol>
           <krn-code-block
             language="typescript"
-            [code]="'import { provideKrnTheme } from \\'@kern-ui/angular\\';\\n\\nexport const appConfig = {\\n  providers: [provideKrnTheme({ theme: \\'system\\' })],\\n};'"
+            [code]="'import { provideKrn } from \\'@kern-ui/angular\\';\\n\\nexport const appConfig = {\\n  providers: [provideKrn({ theme: \\'system\\', density: \\'comfortable\\' })],\\n};'"
           />
         </aside>
       </section>
@@ -211,7 +211,7 @@ export class HomePage {
       index: '03',
       eyebrow: 'Patterns',
       title: 'Compose a product flow',
-      description: 'Production patterns for forms, settings, navigation, and data-heavy screens.',
+      description: 'Adaptable recipes for forms, settings, navigation, and data-heavy screens.',
       href: '/patterns',
       cta: 'View patterns',
     },

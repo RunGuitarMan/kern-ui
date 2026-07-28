@@ -47,6 +47,40 @@ function expectStablePosition(before: Rect, after: Rect, label: string): void {
 }
 
 test.describe('Round three: layout specimens', () => {
+  test('app shell mobile navigation is modal and restores its trigger', async ({ page }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    await page.setViewportSize({ width: 600, height: 900 });
+    const specimen = await openSpecimen(page, 'app-shell');
+    const trigger = specimen.locator('.krn-shell__mobile-trigger');
+    const navigation = specimen.locator('.krn-shell__navigation');
+    const close = navigation.locator('.krn-shell__mobile-close');
+
+    await expect(trigger).toBeVisible();
+    await trigger.click();
+    await expect(navigation).toBeVisible();
+    await expect(navigation).toHaveAttribute('role', 'dialog');
+    await expect(navigation).toHaveAttribute('aria-modal', 'true');
+    await expect(close).toBeFocused();
+    await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
+
+    await navigation.evaluate((element) => {
+      const event = new KeyboardEvent('keydown', {
+        key: 'Escape',
+        bubbles: true,
+        cancelable: true,
+      });
+      event.preventDefault();
+      element.dispatchEvent(event);
+    });
+    await expect(navigation).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(navigation).toBeHidden();
+    await expect(trigger).toBeFocused();
+    await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('');
+    assertNoRuntimeErrors();
+  });
+
   test('header elevation connects directly to its boundary line', async ({ page }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
     const specimen = await openSpecimen(page, 'header');

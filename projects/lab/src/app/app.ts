@@ -57,7 +57,7 @@ import {
 
 type LabTheme = Exclude<KrnTheme, 'system'>;
 type LabDirection = 'ltr' | 'rtl';
-type LabScenario = 'default' | 'states' | 'stress';
+type LabScenario = 'default' | 'states' | 'stress' | 'virtual';
 type CatalogFilter = 'All' | KernCategory;
 
 interface LabRecord extends Record<string, unknown> {
@@ -76,7 +76,7 @@ interface MatrixGroup {
 const THEMES: readonly LabTheme[] = ['light', 'dark', 'high-contrast'];
 const DENSITIES: readonly KrnDensity[] = ['compact', 'comfortable', 'spacious'];
 const DIRECTIONS: readonly LabDirection[] = ['ltr', 'rtl'];
-const SCENARIOS: readonly LabScenario[] = ['default', 'states', 'stress'];
+const SCENARIOS: readonly LabScenario[] = ['default', 'states', 'stress', 'virtual'];
 
 function includesValue<T extends string>(values: readonly T[], value: string | null): value is T {
   return value !== null && values.includes(value as T);
@@ -241,6 +241,7 @@ export class App {
     },
   ];
   protected readonly rowIdentity = (row: LabRecord): number => row.id;
+  protected readonly virtualGridMode = { kind: 'virtual' } as const;
 
   constructor() {
     const root = this.document.documentElement;

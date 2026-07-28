@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "schematics": {
+    "ng-add": {
+      "description": "Configures KERN's global styles for an Angular application.",
+      "factory": "./ng-add/index#default",
+      "schema": "./ng-add/schema.json",
+      "aliases": ["install"],
+      "hidden": true
+    },
+    "doctor": {
+      "description": "Checks an Angular workspace for a complete, non-duplicated KERN style setup.",
+      "factory": "./doctor/index#default",
+      "schema": "./doctor/schema.json"
+    }
+  }
+}

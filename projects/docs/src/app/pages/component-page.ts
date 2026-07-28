@@ -9,7 +9,12 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { KERN_CATALOG, findKernComponent, type KernCatalogItem } from '@kern-ui/showcase';
+import {
+  KERN_CATALOG,
+  findKernComponent,
+  type KernCatalogItem,
+  type KernComponentStatus,
+} from '@kern-ui/showcase';
 import {
   KrnBreadcrumbs,
   KrnCodeBlock,
@@ -130,6 +135,14 @@ const COMPANION_EXAMPLE_SYMBOLS: Readonly<Record<string, readonly string[]>> = {
   timeline: ['KrnTimelineItem'],
 };
 
+const STATUS_DESCRIPTIONS: Readonly<Record<KernComponentStatus, string>> = {
+  stable: 'Supported contract; the documented compatibility policy applies.',
+  beta: 'Available for controlled production evaluation; the contract may still be refined.',
+  experimental: 'Early contract that may change in a pre-1.0 minor release.',
+  recipe: 'An adaptable composition rather than a sealed primitive.',
+  deprecated: 'Temporarily supported with a documented replacement.',
+};
+
 @Component({
   selector: 'kdocs-component-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -144,10 +157,21 @@ const COMPANION_EXAMPLE_SYMBOLS: Readonly<Record<string, readonly string[]>> = {
             <p class="eyebrow">
               <span>{{ categoryIndex(current.category) }}</span>
               {{ current.category }}
-              <span class="status"><i aria-hidden="true"></i>{{ current.status }}</span>
+              <span
+                class="status"
+                [attr.data-status]="current.status"
+                [attr.aria-label]="'Lifecycle status: ' + current.status"
+                [attr.title]="statusDescription(current.status)"
+              >
+                <i aria-hidden="true"></i>{{ current.status }}
+              </span>
             </p>
             <h1>{{ current.name }}</h1>
             <p class="summary">{{ current.summary }}</p>
+            <p class="status-description">
+              <strong>Lifecycle</strong>
+              {{ statusDescription(current.status) }}
+            </p>
           </div>
           <div class="component-actions">
             @if (current.variantOf) {
@@ -247,8 +271,8 @@ const COMPANION_EXAMPLE_SYMBOLS: Readonly<Record<string, readonly string[]>> = {
               <h2 id="reference-heading">Everything needed to ship.</h2>
             </div>
             <p>
-              The API stays open by default. Behavior, quality states, and usage guidance are
-              grouped below so the example remains close to the top.
+              API names, kinds, types, required flags, and defaults are generated from runtime
+              source. Lifecycle status, behavior, and usage guidance remain curated contracts.
             </p>
           </header>
 
@@ -256,7 +280,7 @@ const COMPANION_EXAMPLE_SYMBOLS: Readonly<Record<string, readonly string[]>> = {
             <details id="specimen-api" open>
               <summary>
                 <span>API</span>
-                <strong>Inputs and configuration</strong>
+                <strong>Generated public contract</strong>
                 <small>{{ current.api.length }} entries</small>
               </summary>
               <div class="detail-content">
@@ -265,17 +289,24 @@ const COMPANION_EXAMPLE_SYMBOLS: Readonly<Record<string, readonly string[]>> = {
                     <thead>
                       <tr>
                         <th>Name</th>
+                        <th>Kind</th>
                         <th>Type</th>
                         <th>Default</th>
                         <th>Description</th>
                       </tr>
                     </thead>
                     <tbody>
-                      @for (row of current.api; track row.name) {
+                      @for (row of current.api; track (row.kind ?? 'api') + ':' + row.name) {
                         <tr>
                           <th scope="row">
                             <code>{{ row.name }}</code>
+                            @if (row.required) {
+                              <span class="required-api">required</span>
+                            }
                           </th>
+                          <td>
+                            <code>{{ row.kind ?? 'input' }}</code>
+                          </td>
                           <td>
                             <code>{{ row.type }}</code>
                           </td>
@@ -436,6 +467,10 @@ export class ComponentPage {
 
   protected variantName(item: KernCatalogItem): string {
     return findKernComponent(item.variantOf ?? '')?.name ?? item.variantOf ?? '';
+  }
+
+  protected statusDescription(status: KernComponentStatus): string {
+    return STATUS_DESCRIPTIONS[status];
   }
 
   protected codeExample(): string {

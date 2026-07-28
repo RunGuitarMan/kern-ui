@@ -1,11 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import {
-  DOCS_URL,
-  labUrl,
-  settlePage,
-  watchRuntimeErrors,
-} from '../support/browser';
+import { DOCS_URL, labUrl, settlePage, watchRuntimeErrors } from '../support/browser';
 
 test.describe('Docs smoke contracts', () => {
   test('renders the calibration bench and complete navigation catalog', async ({ page }) => {
