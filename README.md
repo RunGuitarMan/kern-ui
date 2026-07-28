@@ -1,4 +1,4 @@
-# Kern
+# KERN
 
 Kern is a production-oriented Angular design system for dense product interfaces. Its visual
 language is **Editorial Instrument**: graphite and paper surfaces, a restrained ember accent,
