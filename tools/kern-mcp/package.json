@@ -1,0 +1,13 @@
+{
+  "name": "@kern-ui/mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Read-only Model Context Protocol server for the KERN Angular component contract.",
+  "bin": {
+    "kern-mcp": "./server.mjs"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  }
+}

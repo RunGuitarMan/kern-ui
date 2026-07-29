@@ -56,6 +56,7 @@ export interface KrnCalendarTranslations {
 }
 
 export interface KrnChartTranslations {
+  readonly empty?: string;
   readonly viewData: string;
   readonly hideData: string;
   readonly total: string;
@@ -64,7 +65,13 @@ export interface KrnChartTranslations {
   readonly valueColumn: string;
   readonly shareColumn: string;
   readonly legend: string;
+  /**
+   * Backward-compatible template. Prefer `formatPercentOfTotal` for new
+   * locale packs that need grammar beyond the `{value}` token.
+   */
   readonly percentOfTotal: string;
+  readonly formatPercentOfTotal?: (value: string) => string;
+  readonly additionalItems?: (count: number) => string;
   readonly datumLabel: (label: string, value: string) => string;
   readonly datumShareLabel: (label: string, value: string, share: string) => string;
   readonly sourceDataCaption: (title: string, sourceData: string) => string;
@@ -140,8 +147,12 @@ export interface KrnNavigationTranslations {
   readonly previous: string;
   readonly next: string;
   readonly noResults: string;
+  /** Backward-compatible template containing the `{page}` token. */
   readonly pageLabel: string;
+  readonly formatPageLabel?: (page: number) => string;
+  /** Backward-compatible template containing `{start}`, `{end}`, and `{total}`. */
   readonly resultRangeLabel: string;
+  readonly formatResultRangeLabel?: (start: number, end: number, total: number) => string;
   readonly actions: string;
   readonly openMenu: string;
   readonly applicationMenu: string;
@@ -152,11 +163,15 @@ export interface KrnNavigationTranslations {
   readonly commands: string;
   readonly escapeShortcut: string;
   readonly commandSearch: string;
+  /** Backward-compatible template containing the `{query}` token. */
   readonly noCommandResults: string;
+  readonly formatNoCommandResults?: (query: string) => string;
   readonly commandNavigate: string;
   readonly commandSelect: string;
   readonly commandAvailableOne: string;
+  /** Backward-compatible template containing the `{count}` token. */
   readonly commandAvailableMany: string;
+  readonly formatCommandAvailableMany?: (count: number) => string;
   readonly primary: string;
   readonly tableOfContentsTitle: string;
   readonly tableOfContents: string;
@@ -164,6 +179,8 @@ export interface KrnNavigationTranslations {
   readonly skipToMainContent: string;
   readonly expandNode: (label: string) => string;
   readonly collapseNode: (label: string) => string;
+  readonly loadingChildren?: (label: string) => string;
+  readonly childrenLoadFailed?: (label: string) => string;
   readonly tabItemCount: (count: string | number) => string;
 }
 
@@ -186,6 +203,8 @@ export interface KrnFormTranslations {
   readonly noOptions: string;
   readonly startTyping: string;
   readonly noMatches: string;
+  readonly loadingOptions?: string;
+  readonly optionsLoadFailed?: string;
   readonly showOptions: string;
   readonly showPassword: string;
   readonly hidePassword: string;
@@ -285,6 +304,10 @@ export interface KrnLayoutTranslations {
   readonly mobileNavigation: string;
   readonly openNavigation: string;
   readonly closeNavigation: string;
+  readonly primaryNavigation: string;
+  readonly secondaryNavigation: string;
+  readonly scrollableContent: string;
+  readonly resizeAdjacentPanels: string;
 }
 
 export interface KrnTranslations {
@@ -307,6 +330,47 @@ export interface KrnTranslations {
 export type KrnTranslationsPatch = {
   readonly [Group in keyof KrnTranslations]?: Partial<KrnTranslations[Group]>;
 };
+
+/**
+ * Resolves a typed translation formatter or, for backward compatibility,
+ * interpolates only exact `{token}` entries from a legacy string template.
+ *
+ * Interpolation is single-pass: replacement values are text, are never
+ * evaluated, and cannot introduce a second placeholder expansion.
+ */
+export function krnFormatTranslation<Arguments extends readonly unknown[]>(
+  template: string,
+  parameters: Readonly<Record<string, string | number>>,
+  formatter: ((...args: Arguments) => string) | undefined,
+  ...args: Arguments
+): string {
+  if (formatter) return formatter(...args);
+
+  let result = '';
+  let cursor = 0;
+  while (cursor < template.length) {
+    const tokenStart = template.indexOf('{', cursor);
+    if (tokenStart < 0) {
+      result += template.slice(cursor);
+      break;
+    }
+
+    const tokenEnd = template.indexOf('}', tokenStart + 1);
+    if (tokenEnd < 0) {
+      result += template.slice(cursor);
+      break;
+    }
+
+    const token = template.slice(tokenStart + 1, tokenEnd);
+    result += template.slice(cursor, tokenStart);
+    result += Object.prototype.hasOwnProperty.call(parameters, token)
+      ? String(parameters[token])
+      : template.slice(tokenStart, tokenEnd + 1);
+    cursor = tokenEnd + 1;
+  }
+
+  return result;
+}
 
 export const KRN_ENGLISH_TRANSLATIONS: Readonly<KrnTranslations> = Object.freeze({
   actions: Object.freeze({
@@ -361,6 +425,7 @@ export const KRN_ENGLISH_TRANSLATIONS: Readonly<KrnTranslations> = Object.freeze
     today: 'Today',
   }),
   chart: Object.freeze({
+    empty: 'No chart data',
     viewData: 'View data',
     hideData: 'Hide data',
     total: 'Total',
@@ -370,6 +435,8 @@ export const KRN_ENGLISH_TRANSLATIONS: Readonly<KrnTranslations> = Object.freeze
     shareColumn: 'Share',
     legend: 'Chart legend',
     percentOfTotal: '{value} of total',
+    formatPercentOfTotal: (value: string): string => `${value} of total`,
+    additionalItems: (count: number): string => `${count} more data points`,
     datumLabel: (label: string, value: string): string => `${label}: ${value}`,
     datumShareLabel: (label: string, value: string, share: string): string =>
       `${label}: ${value}, ${share}`,
@@ -443,7 +510,10 @@ export const KRN_ENGLISH_TRANSLATIONS: Readonly<KrnTranslations> = Object.freeze
     next: 'Next',
     noResults: 'No results',
     pageLabel: 'Page {page}',
+    formatPageLabel: (page: number): string => `Page ${page}`,
     resultRangeLabel: 'Showing {start} to {end} of {total}',
+    formatResultRangeLabel: (start: number, end: number, total: number): string =>
+      `Showing ${start} to ${end} of ${total}`,
     actions: 'Actions',
     openMenu: 'Open menu',
     applicationMenu: 'Application menu',
@@ -455,10 +525,12 @@ export const KRN_ENGLISH_TRANSLATIONS: Readonly<KrnTranslations> = Object.freeze
     escapeShortcut: 'Esc',
     commandSearch: 'Search commands',
     noCommandResults: 'No commands match “{query}”',
+    formatNoCommandResults: (query: string): string => `No commands match “${query}”`,
     commandNavigate: 'Navigate',
     commandSelect: 'Select',
     commandAvailableOne: '1 command available',
     commandAvailableMany: '{count} commands available',
+    formatCommandAvailableMany: (count: number): string => `${count} commands available`,
     primary: 'Primary',
     tableOfContentsTitle: 'On this page',
     tableOfContents: 'Table of contents',
@@ -466,6 +538,8 @@ export const KRN_ENGLISH_TRANSLATIONS: Readonly<KrnTranslations> = Object.freeze
     skipToMainContent: 'Skip to main content',
     expandNode: (label: string): string => `Expand ${label}`,
     collapseNode: (label: string): string => `Collapse ${label}`,
+    loadingChildren: (label: string): string => `Loading children for ${label}`,
+    childrenLoadFailed: (label: string): string => `Could not load children for ${label}`,
     tabItemCount: (count: string | number): string =>
       typeof count === 'number' ? `${count} ${count === 1 ? 'item' : 'items'}` : count,
   }),
@@ -488,6 +562,8 @@ export const KRN_ENGLISH_TRANSLATIONS: Readonly<KrnTranslations> = Object.freeze
     noOptions: 'No options',
     startTyping: 'Start typing',
     noMatches: 'No matches',
+    loadingOptions: 'Loading options…',
+    optionsLoadFailed: 'Could not load options',
     showOptions: 'Show options',
     showPassword: 'Show password',
     hidePassword: 'Hide password',
@@ -591,20 +667,80 @@ export const KRN_ENGLISH_TRANSLATIONS: Readonly<KrnTranslations> = Object.freeze
     mobileNavigation: 'Mobile navigation',
     openNavigation: 'Open navigation',
     closeNavigation: 'Close navigation',
+    primaryNavigation: 'Primary navigation',
+    secondaryNavigation: 'Secondary navigation',
+    scrollableContent: 'Scrollable content',
+    resizeAdjacentPanels: 'Resize adjacent panels',
   }),
 });
 
-/** Creates an immutable, complete translation set from a typed partial override. */
+const LEGACY_FORMATTER_FIELDS: Readonly<
+  Partial<
+    Record<
+      keyof KrnTranslations,
+      readonly (readonly [legacyField: string, formatterField: string, tokens: readonly string[]])[]
+    >
+  >
+> = Object.freeze({
+  chart: Object.freeze([
+    Object.freeze(['percentOfTotal', 'formatPercentOfTotal', Object.freeze(['value'])] as const),
+  ]),
+  navigation: Object.freeze([
+    Object.freeze(['pageLabel', 'formatPageLabel', Object.freeze(['page'])] as const),
+    Object.freeze([
+      'resultRangeLabel',
+      'formatResultRangeLabel',
+      Object.freeze(['start', 'end', 'total']),
+    ] as const),
+    Object.freeze([
+      'noCommandResults',
+      'formatNoCommandResults',
+      Object.freeze(['query']),
+    ] as const),
+    Object.freeze([
+      'commandAvailableMany',
+      'formatCommandAvailableMany',
+      Object.freeze(['count']),
+    ] as const),
+  ]),
+});
+
+/**
+ * Creates an immutable, complete translation set from a typed partial
+ * override. When a patch overrides a legacy template without its corresponding
+ * typed formatter, the resulting complete dictionary derives a safe formatter
+ * from that template instead of retaining the unrelated English formatter.
+ */
 export function createKrnTranslations(patch: KrnTranslationsPatch = {}): Readonly<KrnTranslations> {
   return Object.freeze(
     Object.fromEntries(
-      Object.entries(KRN_ENGLISH_TRANSLATIONS).map(([group, defaults]) => [
-        group,
-        Object.freeze({
+      Object.entries(KRN_ENGLISH_TRANSLATIONS).map(([groupName, defaults]) => {
+        const group = groupName as keyof KrnTranslations;
+        const overrides = (patch[group] ?? {}) as Readonly<Record<string, unknown>>;
+        const translations: Record<string, unknown> = {
           ...defaults,
-          ...(patch[group as keyof KrnTranslations] ?? {}),
-        }),
-      ]),
+          ...overrides,
+        };
+
+        for (const [legacyField, formatterField, tokens] of LEGACY_FORMATTER_FIELDS[group] ?? []) {
+          if (
+            Object.prototype.hasOwnProperty.call(overrides, legacyField) &&
+            !Object.prototype.hasOwnProperty.call(overrides, formatterField)
+          ) {
+            const template = translations[legacyField];
+            if (typeof template === 'string') {
+              translations[formatterField] = (...args: unknown[]): string => {
+                const parameters = Object.fromEntries(
+                  tokens.map((token, index) => [token, String(args[index] ?? '')]),
+                ) as Readonly<Record<string, string>>;
+                return krnFormatTranslation(template, parameters, undefined);
+              };
+            }
+          }
+        }
+
+        return [group, Object.freeze(translations)];
+      }),
     ) as unknown as KrnTranslations,
   );
 }

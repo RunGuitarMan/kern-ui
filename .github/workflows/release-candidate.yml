@@ -1,35 +1,50 @@
-name: Prepare release candidate
+name: Prepare and publish release
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: Package version to validate (for example, 1.2.0 or 1.2.0-rc.1)
+        description: Exact package version (for example, 1.2.0 or 1.2.0-rc.1)
         required: true
         type: string
+      npm_dist_tag:
+        description: npm distribution tag; prereleases must use next
+        required: true
+        default: next
+        type: choice
+        options:
+          - next
+          - latest
 
-permissions:
-  contents: read
+permissions: {}
 
 concurrency:
-  group: release-candidate
+  group: kern-release-${{ inputs.version }}
   cancel-in-progress: false
 
 env:
   CI: true
   RELEASE_VERSION: ${{ inputs.version }}
+  RELEASE_TAG: ${{ github.ref_name }}
+  RELEASE_COMMIT: ${{ github.sha }}
+  NPM_DIST_TAG: ${{ inputs.npm_dist_tag }}
 
 jobs:
   package:
-    name: Validate and assemble package
-    if: github.ref_name == github.event.repository.default_branch
+    name: Validate and assemble immutable candidate
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    outputs:
+      artifact_digest: ${{ steps.upload.outputs.artifact-digest }}
+      artifact_name: ${{ steps.artifact-name.outputs.value }}
 
     steps:
-      - name: Check out source
+      - name: Check out the selected release tag
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Node
@@ -37,22 +52,49 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - name: Validate tag, version, and default-branch ancestry
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          RELEASE_REF_TYPE: ${{ github.ref_type }}
+        run: |
+          node -e '
+            const { readFileSync } = require("node:fs");
+            const requested = process.env.RELEASE_VERSION;
+            const source = JSON.parse(readFileSync("projects/kern/package.json", "utf8")).version;
+            const semver = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?$/;
+            if (!semver.test(requested)) throw new Error(`Invalid release version: ${requested}`);
+            if (process.env.RELEASE_REF_TYPE !== "tag") {
+              throw new Error("Dispatch the workflow from the exact release tag, not a branch.");
+            }
+            if (process.env.RELEASE_TAG !== `v${requested}`) {
+              throw new Error(`Expected tag v${requested}, received ${process.env.RELEASE_TAG}`);
+            }
+            if (source !== requested) {
+              throw new Error(`Requested ${requested}, but projects/kern/package.json is ${source}`);
+            }
+            if (requested.includes("-") && process.env.NPM_DIST_TAG === "latest") {
+              throw new Error("Prereleases cannot use the latest npm distribution tag.");
+            }
+          '
+          git merge-base --is-ancestor "$RELEASE_COMMIT" "origin/$DEFAULT_BRANCH"
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Validate source version
+      - name: Verify release documentation identity
         run: |
-          node -e '
-            const { readFileSync } = require("node:fs");
-            const requested = process.env.RELEASE_VERSION.replace(/^v/, "");
-            const source = JSON.parse(readFileSync("projects/kern/package.json", "utf8")).version;
-            const semver = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?$/;
-            if (!semver.test(requested)) throw new Error(`Invalid release version: ${requested}`);
-            if (source !== requested) {
-              throw new Error(`Requested ${requested}, but projects/kern/package.json is ${source}`);
-            }
-          '
+          node tools/verify-kern-release-identity.mjs \
+            "--version=${RELEASE_VERSION}" \
+            "--tag=${RELEASE_TAG}"
+
+      - name: Verify lifecycle and evidence governance
+        run: |
+          node tools/verify-kern-lifecycle.mjs
+          node tools/verify-kern-accessibility-evidence.mjs
+          node tools/verify-kern-package-policy.mjs
+          node --test tools/tests/kern-governance.test.mjs
 
       - name: Run release quality gate
         run: npm run verify
@@ -67,17 +109,140 @@ jobs:
         run: |
           node -e '
             const { readFileSync } = require("node:fs");
-            const requested = process.env.RELEASE_VERSION.replace(/^v/, "");
             const built = JSON.parse(readFileSync("dist/kern/package.json", "utf8")).version;
-            if (built !== requested) {
-              throw new Error(`Requested ${requested}, but dist/kern/package.json is ${built}`);
+            if (built !== process.env.RELEASE_VERSION) {
+              throw new Error(`Requested ${process.env.RELEASE_VERSION}, but built package is ${built}`);
             }
           '
 
+      - name: Build immutable versioned SSR documentation
+        run: |
+          npx ng build docs \
+            --configuration production \
+            "--base-href=/versions/${RELEASE_VERSION}/" \
+            --output-path dist/versioned-docs
+
+      - name: Smoke-test the versioned SSR mount
+        run: |
+          node tools/smoke-kern-versioned-docs.mjs \
+            "--input-dir=dist/versioned-docs" \
+            "--base-path=/versions/${RELEASE_VERSION}/"
+
+      - name: Pack the exact npm tarball
+        run: |
+          mkdir release
+          npm pack ./dist/kern --pack-destination release
+
+      - name: Prepare deterministic documentation archive and file manifest
+        run: |
+          node tools/verify-kern-versioned-docs.mjs prepare \
+            "--version=${RELEASE_VERSION}" \
+            "--tag=${RELEASE_TAG}" \
+            "--commit=${RELEASE_COMMIT}" \
+            "--base-path=/versions/${RELEASE_VERSION}/" \
+            "--input-dir=dist/versioned-docs" \
+            "--artifact-dir=release"
+
+      - name: Resolve final dependency graph and enforce vulnerability policy
+        working-directory: dist/kern
+        run: |
+          npm install --package-lock-only --ignore-scripts --audit=false --include=peer
+          npm audit --package-lock-only --omit=dev --audit-level=high
+
+      - name: Generate npm CycloneDX SBOM
+        working-directory: dist/kern
+        run: |
+          npm sbom --package-lock-only --sbom-format cyclonedx --sbom-type library > \
+            "../../release/kern-ui-angular-${RELEASE_VERSION}.cdx.json"
+
+      - name: Bind package, documentation, SBOM, tag, commit, and checksums
+        run: |
+          node tools/verify-kern-release-artifacts.mjs prepare \
+            "--version=${RELEASE_VERSION}" \
+            "--tag=${RELEASE_TAG}" \
+            "--commit=${RELEASE_COMMIT}" \
+            "--npm-tag=${NPM_DIST_TAG}" \
+            "--artifact-dir=release"
+
+      - name: Define immutable artifact name
+        id: artifact-name
+        run: echo "value=kern-angular-${RELEASE_VERSION}-${RELEASE_COMMIT}" >> "$GITHUB_OUTPUT"
+
       - name: Upload immutable release candidate
+        id: upload
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: kern-angular-${{ inputs.version }}
-          path: dist/kern/
+          name: ${{ steps.artifact-name.outputs.value }}
+          path: release/
           if-no-files-found: error
           retention-days: 30
+
+  publish:
+    name: Approve and publish trusted artifact
+    needs: package
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: npm-production
+      url: https://www.npmjs.com/package/@kern-ui/angular/v/${{ inputs.version }}
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Check out the exact release tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node for npm trusted publishing
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
+
+      - name: Download the approved candidate
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          name: ${{ needs.package.outputs.artifact_name }}
+          path: release
+
+      - name: Reverify tag linkage, documentation, policy, and SHA256 checksums
+        run: |
+          node tools/verify-kern-release-identity.mjs \
+            "--version=${RELEASE_VERSION}" \
+            "--tag=${RELEASE_TAG}"
+          node tools/verify-kern-release-artifacts.mjs verify \
+            "--version=${RELEASE_VERSION}" \
+            "--tag=${RELEASE_TAG}" \
+            "--commit=${RELEASE_COMMIT}" \
+            "--npm-tag=${NPM_DIST_TAG}" \
+            "--artifact-dir=release"
+
+      - name: Create draft GitHub release with evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$RELEASE_TAG" \
+            "release/SHA256SUMS" \
+            "release/release-manifest.json" \
+            "release/kern-docs-${RELEASE_VERSION}.manifest.json" \
+            "release/kern-docs-${RELEASE_VERSION}.tgz" \
+            "release/kern-ui-angular-${RELEASE_VERSION}.cdx.json" \
+            "release/kern-ui-angular-${RELEASE_VERSION}.tgz" \
+            --draft \
+            --generate-notes \
+            --title "Kern ${RELEASE_TAG}" \
+            --verify-tag
+
+      - name: Publish exact tarball with npm OIDC provenance
+        run: |
+          npm publish "release/kern-ui-angular-${RELEASE_VERSION}.tgz" \
+            --access public \
+            --tag "$NPM_DIST_TAG" \
+            --provenance
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release edit "$RELEASE_TAG" --draft=false

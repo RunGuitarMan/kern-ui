@@ -14,18 +14,27 @@ contract or upgrade decision.
 - Open-source contribution, support, security, conduct, versioning, and browser-support policies.
 - Pull request and issue templates plus automated quality, browser, dependency, and CodeQL
   workflows.
-- A manual, non-publishing release-candidate workflow.
+- A protected release workflow that binds package, tag, documentation state, dated changelog,
+  artifacts, and checksums into one immutable candidate, pauses for maintainer approval, and
+  publishes the exact verified tarball through npm trusted publishing.
 - Cross-cutting `provideKrn` configuration for locale, direction, theme, density, motion,
   preference persistence, overlay host, platform adaptation, and typed translation overrides.
 - Shared SSR-safe platform, deterministic-ID, overlay-coordination, and typed-content primitives.
 - Physical `/cdk`, `/core`, `/kit`, `/addon-grid`, `/addon-charts`, and `/patterns` runtime
   entrypoints with a compatibility-only package root and strict mixed-import identity gates.
 - The isolated `@kern-ui/angular/testing` secondary entry point with harnesses for buttons, forms,
-  select, dialogs, and data grid.
+  selection controls, date/time controls, navigation, feedback, uploads, dialogs, and data grid.
 - Typed shared-copy contracts across component families plus locale-aware search and generated
   value labels.
+- Complete English and Russian locale packs with schema-parity verification.
 - Generated component input/model/output metadata and curated lifecycle status for all catalog
   entries.
+- A package-distributed component manifest, per-component agent guidance, `llms.txt`, runnable
+  recipes, and a packed read-only `kern-mcp` executable.
+- Typed form, data-grid, CRUD/master-detail, doctor, install, and versioned migration schematics.
+- A cancellable, latest-request-wins server data-source adapter for controlled Data Grid use.
+- Runtime performance budgets for large Grid, Tree, Select, Chart, 200-field Forms, frame latency,
+  and retained overlay heap.
 - Chromium, Firefox, and WebKit hydration, keyboard/focus, semantics, and axe smoke coverage.
 
 ### Changed
@@ -35,7 +44,12 @@ contract or upgrade decision.
 - Strengthened form-field projection, typed selection controls, date/calendar keyboard behavior,
   and Angular Forms contracts.
 - Strengthened data-grid identity, typed rendering, responsive column access, virtual focus, and
-  column-management contracts, including nested-control action mode and measured virtual rows.
+  column-management contracts, including nested-control action mode, density-measured fixed-height
+  virtual rows, logical start/end pinning, and a cancellable controlled data source.
+- Added explicit async loading/error states and server-query control to selection components, plus
+  retryable lazy-child state for Tree and Tree Navigation.
+- Strengthened Charts with stable datum identity, finite-value validation, negative-value policy,
+  explicit empty state, and bounded accessible summaries.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned
@@ -44,12 +58,22 @@ contract or upgrade decision.
 
 ### Deprecated
 
+- `KrnDataGrid.pagination`; use the discriminated client `mode` with `pagination: true`.
+- `KrnDataGrid.virtualize`; use `{ kind: 'virtual' }` through the `mode` input.
+- `KrnMenu.hasProjectedTrigger`; apply `KrnMenuTrigger` to the projected trigger instead.
+
 ### Removed
 
 ### Fixed
 
+- Restored source-compatible string templates for Pagination, Command Palette, Charts, and
+  `KrnTranslations`; optional typed formatters now add plural-aware semantics without recursively
+  evaluating legacy translation tokens.
+- Russian truncated-chart summaries now use the correct singular, paucal, and plural forms.
 - Tree and tree-navigation semantics now expose state on the focusable tree item.
 - Tree rejects empty or duplicate node identifiers before rendering an ambiguous hierarchy.
+- Constrained Combobox resolves a committed value to a late asynchronous option label without
+  replacing an in-progress remote query.
 - Calendar normalizes out-of-range views, skips fully blocked months without losing its roving
   focus target, restores focus after outside-month selection, and disables its “Today” action
   when the configured date is invalid, out of range, or explicitly blocked.
@@ -60,6 +84,9 @@ contract or upgrade decision.
   without string coercion, and serializes its null/selected state correctly before hydration.
 - Data Grid keeps repeated object and primitive occurrences distinct, rejects duplicate row keys,
   gives virtual mode resize parity, and rejects unsupported virtual row expansion.
+- Virtual Grid preserves logical pinned columns after its row layout rules are applied, including
+  in RTL; public Grid and Tree harnesses exclude utility/decorative content and expose async tree
+  state predicates.
 - Grid headers, selection controls, resize handles, and projected actions participate in one
   managed grid focus model instead of adding uncontrolled page tab stops; action mode is cleared
   when focus leaves the grid.

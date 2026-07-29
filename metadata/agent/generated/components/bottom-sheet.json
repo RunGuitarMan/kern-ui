@@ -1,0 +1,282 @@
+{
+  "id": "bottom-sheet",
+  "name": "Bottom Sheet",
+  "category": "Feedback",
+  "kind": "component",
+  "selector": "krn-bottom-sheet",
+  "selectors": ["krn-bottom-sheet"],
+  "symbol": "KrnBottomSheet",
+  "canonicalSymbol": "KrnBottomSheet",
+  "canonicalId": "bottom-sheet",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Bottom Sheet. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "closed",
+    "open",
+    "nested",
+    "dismissed"
+  ],
+  "lifecycle": {
+    "status": "beta",
+    "compatibility": "Available for controlled production evaluation; the contract may still be refined.",
+    "owner": "kern/feedback",
+    "evidenceProfile": "beta-promotion",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "hydration",
+      "keyboard",
+      "automated-a11y",
+      "manual-at",
+      "visual-regression",
+      "runtime-performance",
+      "consumer-harness"
+    ],
+    "rationale": "The responsive modal geometry and nested-overlay behavior remain beta until cross-device and manual assistive-technology evidence is complete.",
+    "knownLimitations": [
+      "There is no public imperative overlay service; open state is currently template-owned.",
+      "Applications must verify virtual-keyboard and safe-area behavior on their supported mobile devices."
+    ],
+    "promotionCriteria": [
+      "Public API, defaults, aliases and entrypoint ownership are reviewed.",
+      "SSR/hydration, keyboard, accessibility and visual evidence are linked.",
+      "Runtime scale limits and consumer testing contract are documented.",
+      "Migration impact is classified before lifecycle promotion."
+    ],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "open",
+      "property": "open",
+      "kind": "model",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controls whether the disclosure or overlay surface is visible.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "title",
+      "property": "title",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Visible title that also names the component surface or data view.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "description",
+      "property": "description",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Visible supporting description for the component content.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "eyebrow",
+      "property": "eyebrow",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Human-readable copy for the eyebrow state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.feedback.dialog",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "showClose",
+      "property": "showClose",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Controls whether the component applies the show close behavior.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "closeLabel",
+      "property": "closeLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.feedback.close",
+      "description": "Human-readable copy for the close state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "closeOnEscape",
+      "property": "closeOnEscape",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Allows Escape to dismiss the topmost owned overlay.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "closeOnOutside",
+      "property": "closeOnOutside",
+      "kind": "input",
+      "type": "boolean | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Allows an interaction outside the owned overlay to dismiss it.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "initialFocus",
+      "property": "initialFocus",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "'first-tabbable'",
+      "description": "Identifies the element that receives focus when the modal surface opens.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "contentTemplate",
+      "property": "contentTemplate",
+      "kind": "input",
+      "type": "TemplateRef<unknown> | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Template used to render the component body with its typed context.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "actionsTemplate",
+      "property": "actionsTemplate",
+      "kind": "input",
+      "type": "TemplateRef<unknown> | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Template used to render product-owned actions in the designated slot.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "closed",
+      "property": "closed",
+      "kind": "output",
+      "type": "KrnOverlayCloseReason",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the closed interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": [
+      "Tab and Shift+Tab stay inside the open modal surface.",
+      "Escape closes the topmost dismissible sheet.",
+      "Focus returns to the element that opened the sheet."
+    ],
+    "notes": [
+      "The surface exposes modal dialog semantics and a visible title.",
+      "Nested overlays register ownership so Escape and focus restoration affect only the top layer.",
+      "Body scrolling is restored after the last modal layer closes."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Controlled mobile action sheet",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Controlled mobile action sheet\n *\n * Present compact actions from the bottom edge on narrow screens.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBottomSheet } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-bottom-sheet-agent-example',\n  standalone: true,\n  imports: [KrnBottomSheet],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button type=\"button\" (click)=\"open = true\">Open Customer actions</button>\n    <krn-bottom-sheet\n      [(open)]=\"open\"\n      title=\"Customer actions\"\n      description=\"Choose an action for the selected customer.\"\n    >\n      <p>Choose an action for the selected customer.</p>\n      <button krnDialogAction type=\"button\" (click)=\"open = false\">Done</button>\n    </krn-bottom-sheet>\n  `,\n})\nexport class KernBottomSheetAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernBottomSheetAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/bottom-sheet.ts"
+    }
+  ],
+  "related": ["alert", "banner", "toast", "tooltip"],
+  "keywords": [
+    "bottom-sheet",
+    "Bottom Sheet",
+    "Feedback",
+    "krn-bottom-sheet",
+    "KrnBottomSheet",
+    "open",
+    "title",
+    "description",
+    "eyebrow",
+    "ariaLabel",
+    "showClose",
+    "closeLabel",
+    "closeOnEscape",
+    "closeOnOutside",
+    "initialFocus",
+    "contentTemplate",
+    "actionsTemplate",
+    "closed"
+  ],
+  "guidance": {
+    "useWhen": "Use Bottom Sheet for a focused modal task that must remain reachable on narrow touch layouts.",
+    "avoidWhen": "Use Dialog for viewport-independent modal work and Drawer for a side-oriented workflow."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/bottom-sheet",
+    "json": "components/bottom-sheet.json",
+    "markdown": "components/bottom-sheet.md"
+  }
+}

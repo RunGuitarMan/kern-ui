@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { provideRouter, Router } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
-import { provideKrnTheme } from '@kern-ui/angular';
+import { provideKrnTheme } from '@kern-ui/angular/core';
 
 import { App } from './app';
 
@@ -45,6 +45,7 @@ describe('Kern QA Lab', () => {
         theme: 'dark',
         density: 'compact',
         direction: 'rtl',
+        locale: 'ru-RU',
       },
     });
 
@@ -57,11 +58,15 @@ describe('Kern QA Lab', () => {
     expect(root.getAttribute('data-theme')).toBe('dark');
     expect(root.getAttribute('data-density')).toBe('compact');
     expect(root.getAttribute('data-scenario')).toBe('stress');
+    expect((root.querySelector('[data-testid="locale-control"]') as HTMLSelectElement).value).toBe(
+      'ru-RU',
+    );
     expect(root.querySelector('[data-testid="specimen-data-grid"]')).toBeTruthy();
     expect(
       (root.querySelector('[data-testid="component-control"]') as HTMLSelectElement).value,
     ).toBe('data-grid');
     expect(TestBed.inject(DOCUMENT).documentElement.dir).toBe('rtl');
+    expect(TestBed.inject(DOCUMENT).documentElement.lang).toBe('ru-RU');
   });
 
   it('falls back to canonical values for unsupported query parameters', async () => {
@@ -73,6 +78,7 @@ describe('Kern QA Lab', () => {
         theme: 'ultraviolet',
         density: 'tiny',
         direction: 'up',
+        locale: 'invalid',
       },
     });
 
@@ -85,6 +91,9 @@ describe('Kern QA Lab', () => {
     expect(root.getAttribute('data-theme')).toBe('light');
     expect(root.getAttribute('data-density')).toBe('comfortable');
     expect(root.getAttribute('data-scenario')).toBe('default');
+    expect((root.querySelector('[data-testid="locale-control"]') as HTMLSelectElement).value).toBe(
+      'en-US',
+    );
     expect(root.querySelector('[data-testid="specimen-button"]')).toBeTruthy();
   });
 });

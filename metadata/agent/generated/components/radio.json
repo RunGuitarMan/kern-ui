@@ -1,0 +1,216 @@
+{
+  "id": "radio",
+  "name": "Radio",
+  "category": "Forms",
+  "kind": "component",
+  "selector": "krn-radio",
+  "selectors": ["krn-radio"],
+  "symbol": "KrnRadio",
+  "canonicalSymbol": "KrnRadio",
+  "canonicalId": "radio",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Radio. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled",
+    "filled",
+    "empty",
+    "selected",
+    "unselected"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/forms",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "value",
+      "property": "value",
+      "kind": "input",
+      "type": "string",
+      "required": true,
+      "defaultValue": "required",
+      "description": "Controlled component value.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "name",
+      "property": "name",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "createKrnId('radio')",
+      "description": "Required human-readable name for the represented person, item, or action.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "description",
+      "property": "description",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Visible supporting description for the component content.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "disabled",
+      "property": "disabled",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Prevents user interaction and participates in the disabled-state contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "readonly",
+      "property": "readOnly",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Keeps the value perceivable while preventing user edits.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "selected",
+      "property": "selected",
+      "kind": "output",
+      "type": "string",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controlled selected state, distinct from keyboard focus.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "selector": "*",
+      "required": false,
+      "description": "Projects default component content."
+    }
+  ],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": ["disabled", "readonly"],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": [
+      "Tab focuses",
+      "Arrow keys operate grouped controls",
+      "Escape cancels transient UI"
+    ],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Individual radio option",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Individual radio option\n *\n * Provide a stable submitted value and visible option label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnRadio } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-radio-agent-example',\n  standalone: true,\n  imports: [KrnRadio],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-radio name=\"plan\" value=\"enterprise\">Enterprise plan</krn-radio> `,\n})\nexport class KernRadioAgentExample {}\n\nvoid bootstrapApplication(KernRadioAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/radio.ts"
+    }
+  ],
+  "related": ["form-field", "label", "hint", "validation-message"],
+  "keywords": [
+    "radio",
+    "Radio",
+    "Forms",
+    "krn-radio",
+    "KrnRadio",
+    "value",
+    "name",
+    "ariaLabel",
+    "description",
+    "disabled",
+    "readonly",
+    "selected"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Do not omit required inputs: `value`.",
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/radio",
+    "json": "components/radio.json",
+    "markdown": "components/radio.md"
+  }
+}

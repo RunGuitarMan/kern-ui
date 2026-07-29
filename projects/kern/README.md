@@ -54,19 +54,35 @@ export const appConfig = {
 
 Use the narrow entrypoint that owns the capability:
 
-| Entrypoint                       | Contents                                              |
-| -------------------------------- | ----------------------------------------------------- |
-| `@kern-ui/angular/cdk`           | Platform, IDs, content, and overlay infrastructure    |
-| `@kern-ui/angular/core`          | Tokens, icons, configuration, theming, and i18n       |
-| `@kern-ui/angular/kit`           | Layout, actions, forms, navigation, feedback, display |
-| `@kern-ui/angular/addon-grid`    | Virtualized enterprise data grid                      |
-| `@kern-ui/angular/addon-charts`  | Accessible chart components                           |
-| `@kern-ui/angular/patterns`      | Opinionated product compositions                      |
-| `@kern-ui/angular/testing`       | Angular CDK component harnesses                       |
+| Entrypoint                      | Contents                                              |
+| ------------------------------- | ----------------------------------------------------- |
+| `@kern-ui/angular/cdk`          | Platform, IDs, content, and overlay infrastructure    |
+| `@kern-ui/angular/core`         | Tokens, icons, configuration, theming, and i18n       |
+| `@kern-ui/angular/kit`          | Layout, actions, forms, navigation, feedback, display |
+| `@kern-ui/angular/addon-grid`   | Virtualized enterprise data grid                      |
+| `@kern-ui/angular/addon-charts` | Accessible chart components                           |
+| `@kern-ui/angular/patterns`     | Opinionated product compositions                      |
+| `@kern-ui/angular/testing`      | Angular CDK component harnesses                       |
 
 `@kern-ui/angular` remains a supported compatibility aggregator and preserves the same runtime
 identities as direct imports. Deep source imports and undeclared family paths such as
 `@kern-ui/angular/forms` are unsupported.
+
+## Lifecycle
+
+Component and public-symbol maturity is explicit:
+
+- `stable` APIs follow the documented compatibility contract;
+- `beta` APIs are suitable for controlled production evaluation but may be refined before
+  promotion;
+- `experimental` extension APIs may change or be removed before `1.0`;
+- `recipe` exports are adaptable product compositions rather than sealed widgets;
+- `deprecated` APIs retain a documented replacement and removal window.
+
+The repository lifecycle registry covers every catalog entry and named package export. Review the
+[lifecycle policy](https://github.com/RunGuitarMan/kern-ui/blob/main/docs/LIFECYCLE.md) and
+[active deprecations](https://github.com/RunGuitarMan/kern-ui/blob/main/docs/DEPRECATIONS.md)
+before adopting beta or extension contracts.
 
 ## Runtime configuration
 
@@ -86,12 +102,26 @@ identities as direct imports. Deep source imports and undeclared family paths su
 | `platform`             | Advanced replacement for the SSR/browser capability adapter             |
 | `translations`         | Typed partial override of Kern's English component UI copy              |
 
+`provideKrn` is optional: components have SSR-safe defaults and do not require a root provider.
 Locale, direction, and motion document attributes are written only when explicitly configured;
 the theme provider manages its own theme and density attributes. Locale-aware formatting uses the
 configured locale where a component exposes that behavior. `KRN_TRANSLATIONS` provides a complete
 typed English default, and `createKrnTranslations` can build a full immutable dictionary from a
-partial override. Kern does not ship additional language packs or application copy; component
-label inputs remain available for one-off overrides.
+partial override. Existing `{token}` string overrides remain compatible; optional typed
+`format…` fields should be used for plural- or grammar-sensitive copy. Token interpolation is
+single-pass and never evaluates translation text. Kern ships schema-checked `en-US` and `ru-RU`
+locale packs:
+
+```ts
+import { krnLocaleConfig, KRN_RU_RU_LOCALE, provideKrn } from '@kern-ui/angular/core';
+
+export const appConfig = {
+  providers: [provideKrn(krnLocaleConfig(KRN_RU_RU_LOCALE))],
+};
+```
+
+Application copy remains outside the locale packs; component label inputs remain available for
+one-off overrides.
 
 The overlay host is resolved whenever Angular CDK requests its container, so a host rendered after
 bootstrap is supported; a missing host falls back to `document.body`. Use a dedicated host element
@@ -153,14 +183,70 @@ Kern runtime entry point and ships in lockstep with the component package. Harne
 filters are the supported locator API; internal classes and component DOM structure are not
 application-facing contracts.
 
+## Generators and diagnostics
+
+Kern can scaffold the repetitive, contract-sensitive parts of common enterprise features:
+
+```bash
+ng generate @kern-ui/angular:typed-form profile --project my-app
+ng generate @kern-ui/angular:data-grid accounts --project my-app --mode controlled
+ng generate @kern-ui/angular:crud customers --project my-app
+```
+
+`doctor --json` emits a versioned machine-readable report; `doctor --strict` is suitable for CI.
+`ng update @kern-ui/angular` applies only deterministic migrations. Dynamic provider expressions
+and ambiguous deprecated inputs remain explicit manual review items.
+
+## Agent contract
+
+The npm package distributes the same compiler-derived contract used by Kern's documentation and
+CI:
+
+- `@kern-ui/angular/agent/component-manifest.json`
+- `@kern-ui/angular/agent/root-export-map.json`
+- `@kern-ui/angular/agent/llms.txt` and `llms-full.txt`
+- `@kern-ui/angular/agent/components/<component>.json`
+- `@kern-ui/angular/agent/components/<component>.md`
+- `@kern-ui/angular/agent/recipes/<recipe>.ts`
+
+Each catalog component has canonical ownership, typed public API, lifecycle, accessibility and SSR
+notes, mistakes, checklist, and a compile-verified example. The root export map is the
+compiler-generated source of truth used by `ng update` to narrow compatibility imports. The
+13 curated enterprise recipes are complete standalone sources verified through the same packed
+strict-AOT consumer gate. The package exposes the read-only MCP server as
+`npx --no-install kern-mcp`; it reads the manifest from the installed tarball, parses imports with
+the TypeScript AST, and never evaluates consumer code. Angular compiler and TypeScript are optional
+tooling peers, so runtime-only consumers do not install them through Kern. The documentation build
+exposes the same files as `llms.txt`, `component-manifest.json`, and `agent/`
+at its deployment root so web agents do not need repository knowledge to discover the contract.
+Manifest artifact fields (`documentation.json`, `documentation.markdown`, example `source`, and
+recipe `source`) are URLs relative to `component-manifest.json`; sources in
+`examples/index.json` are relative to that index. `documentation.route` is instead an application
+route relative to the documentation deployment mount. This distinction keeps the contract
+self-contained at both the deployment root and its `/agent/` mirror, including versioned mounts.
+
 Committed declaration baselines guard every runtime and testing entrypoint. The workspace also
 installs the packed tarball into isolated root and direct-subpath Button, Form, Select, Grid, and
 Charts applications to verify package exports, strict compilation, identity, tree-shaking, and
-bundle budgets. See
-[consumer quality gates](../../docs/CONSUMER_QUALITY_GATES.md).
+bundle budgets. See the
+[consumer quality gates](https://github.com/RunGuitarMan/kern-ui/blob/main/docs/CONSUMER_QUALITY_GATES.md).
 
-See the workspace [README](../../README.md) and
-[component inventory](../../docs/COMPONENTS.md) for usage, lifecycle status, development, and
-coverage details. Compatibility and support are defined in
-[VERSIONING.md](../../docs/VERSIONING.md) and
-[BROWSER_SUPPORT.md](../../docs/BROWSER_SUPPORT.md).
+Official releases are produced from a protected Git tag by an approval-gated GitHub environment
+and npm trusted publishing. The exact tarball is linked to its source commit and tag by a release
+manifest, SHA-256 checksums, npm provenance, and a CycloneDX SBOM. See the
+[release policy](https://github.com/RunGuitarMan/kern-ui/blob/main/docs/RELEASING.md).
+
+See the workspace
+[README](https://github.com/RunGuitarMan/kern-ui#readme) and
+[component inventory](https://github.com/RunGuitarMan/kern-ui/blob/main/docs/COMPONENTS.md) for
+usage, lifecycle status, development, and coverage details. Compatibility and support are defined
+in
+[VERSIONING.md](https://github.com/RunGuitarMan/kern-ui/blob/main/docs/VERSIONING.md) and
+[BROWSER_SUPPORT.md](https://github.com/RunGuitarMan/kern-ui/blob/main/docs/BROWSER_SUPPORT.md).
+Complex adoption scenarios are covered in the
+[enterprise cookbook](https://github.com/RunGuitarMan/kern-ui/blob/main/docs/COOKBOOK.md).
+
+Security issues should follow the private process in the
+[security policy](https://github.com/RunGuitarMan/kern-ui/blob/main/SECURITY.md). General help and
+maintenance expectations are documented in
+[SUPPORT.md](https://github.com/RunGuitarMan/kern-ui/blob/main/SUPPORT.md).

@@ -1,11 +1,11 @@
 import { DOCUMENT, ViewportScroller } from '@angular/common';
 import type { ApplicationConfig } from '@angular/core';
 import { inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideClientHydration } from '@angular/platform-browser';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
-import { provideKrn } from '@kern-ui/angular';
+import { provideKrn } from '@kern-ui/angular/core';
 
 import { routes } from './app.routes';
-import { provideClientHydration } from '@angular/platform-browser';
 
 export const appConfig: ApplicationConfig = {
   providers: [

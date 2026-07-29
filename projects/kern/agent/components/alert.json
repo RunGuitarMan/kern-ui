@@ -1,0 +1,185 @@
+{
+  "id": "alert",
+  "name": "Alert",
+  "category": "Feedback",
+  "kind": "component",
+  "selector": "krn-alert",
+  "selectors": ["krn-alert"],
+  "symbol": "KrnAlert",
+  "canonicalSymbol": "KrnAlert",
+  "canonicalId": "alert",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Alert. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/feedback",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "tone",
+      "property": "tone",
+      "kind": "input",
+      "type": "KrnFeedbackTone",
+      "required": false,
+      "defaultValue": "'info'",
+      "description": "Semantic intent that selects coordinated text, icon, border, and surface tokens.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "title",
+      "property": "title",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Visible title that also names the component surface or data view.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "icon",
+      "property": "icon",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Semantic icon name rendered alongside the visible component content.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "dismissible",
+      "property": "dismissible",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controls whether the user can dismiss the surface before completing an action.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "dismissLabel",
+      "property": "dismissLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.feedback.dismissMessage",
+      "description": "Human-readable copy for the dismiss state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "closed",
+      "property": "closed",
+      "kind": "output",
+      "type": "void",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the closed interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["Escape closes modal layers", "Focus returns to the trigger"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Persistent warning alert",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Persistent warning alert\n *\n * Communicate a recoverable issue with title and supporting action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAlert } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-alert-agent-example',\n  standalone: true,\n  imports: [KrnAlert],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-alert tone=\"warning\" title=\"Verification required\">\n      Confirm the billing owner before the next renewal.\n      <button type=\"button\">Review owner</button>\n    </krn-alert>\n  `,\n})\nexport class KernAlertAgentExample {}\n\nvoid bootstrapApplication(KernAlertAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/alert.ts"
+    }
+  ],
+  "related": ["banner", "toast", "tooltip", "popover"],
+  "keywords": [
+    "alert",
+    "Alert",
+    "Feedback",
+    "krn-alert",
+    "KrnAlert",
+    "tone",
+    "title",
+    "icon",
+    "dismissible",
+    "dismissLabel",
+    "closed"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/alert",
+    "json": "components/alert.json",
+    "markdown": "components/alert.md"
+  }
+}

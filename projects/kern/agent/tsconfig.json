@@ -1,0 +1,18 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": [],
+    "paths": {
+      "@kern-ui/angular": ["../src/public-api.ts"],
+      "@kern-ui/angular/addon-charts": ["../addon-charts/src/public-api.ts"],
+      "@kern-ui/angular/addon-grid": ["../addon-grid/src/public-api.ts"],
+      "@kern-ui/angular/cdk": ["../cdk/src/public-api.ts"],
+      "@kern-ui/angular/core": ["../core/src/public-api.ts"],
+      "@kern-ui/angular/kit": ["../kit/src/public-api.ts"],
+      "@kern-ui/angular/patterns": ["../patterns/src/public-api.ts"],
+      "@kern-ui/angular/testing": ["../testing/src/public-api.ts"]
+    }
+  },
+  "include": ["examples/**/*.ts", "recipes/**/*.ts"]
+}

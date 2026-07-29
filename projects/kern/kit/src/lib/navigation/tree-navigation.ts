@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { KRN_PLATFORM, KrnIdService, type KrnScheduledHandle } from '@kern-ui/angular/cdk';
-import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { KRN_ENGLISH_TRANSLATIONS, KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnTreeNavigationItem } from './navigation.types';
 
 @Component({
@@ -38,18 +38,16 @@ import type { KrnTreeNavigationItem } from './navigation.types';
       >
         @for (node of nodes; track node.id; let nodeIndex = $index; let nodeCount = $count) {
           <li role="none">
-            <div class="node-row" [class.selected]="selectedId() === node.id">
-              @if (node.children?.length) {
-                <button
-                  type="button"
+            <div class="node-row" role="none" [class.selected]="selectedId() === node.id">
+              @if (isExpandable(node)) {
+                <span
                   class="toggle"
-                  [attr.aria-label]="
+                  aria-hidden="true"
+                  [attr.title]="
                     isExpanded(node.id)
                       ? translations.navigation.collapseNode(node.label)
                       : translations.navigation.expandNode(node.label)
                   "
-                  [attr.aria-controls]="treeGroupId(node.id)"
-                  [attr.tabindex]="-1"
                   (click)="toggleFromPointer(node.id)"
                 >
                   <span
@@ -57,7 +55,7 @@ import type { KrnTreeNavigationItem } from './navigation.types';
                     [class.expanded]="isExpanded(node.id)"
                     aria-hidden="true"
                   ></span>
-                </button>
+                </span>
               } @else {
                 <span class="spacer" aria-hidden="true"></span>
               }
@@ -71,8 +69,11 @@ import type { KrnTreeNavigationItem } from './navigation.types';
                   [attr.aria-level]="level + 1"
                   [attr.aria-posinset]="nodeIndex + 1"
                   [attr.aria-setsize]="nodeCount"
-                  [attr.aria-expanded]="node.children?.length ? isExpanded(node.id) : null"
+                  [attr.aria-expanded]="isExpandable(node) ? isExpanded(node.id) : null"
                   [attr.aria-selected]="selectedId() === node.id"
+                  [attr.aria-busy]="node.childrenState === 'loading' ? 'true' : null"
+                  [attr.aria-invalid]="node.childrenState === 'error' ? 'true' : null"
+                  [attr.aria-label]="nodeStateLabel(node)"
                   [attr.aria-owns]="
                     node.children?.length && isExpanded(node.id) ? treeGroupId(node.id) : null
                   "
@@ -80,8 +81,14 @@ import type { KrnTreeNavigationItem } from './navigation.types';
                   [attr.tabindex]="isTabStop(node) ? 0 : -1"
                   (click)="activate(node)"
                   (keydown)="onKeydown($event, node)"
-                  >{{ node.label }}</a
                 >
+                  <span>{{ node.label }}</span>
+                  @if (node.childrenState === 'loading') {
+                    <span class="node-state" aria-hidden="true">…</span>
+                  } @else if (node.childrenState === 'error') {
+                    <span class="node-state node-state--error" aria-hidden="true">!</span>
+                  }
+                </a>
               } @else {
                 <button
                   #treeItem
@@ -93,9 +100,12 @@ import type { KrnTreeNavigationItem } from './navigation.types';
                   [attr.aria-level]="level + 1"
                   [attr.aria-posinset]="nodeIndex + 1"
                   [attr.aria-setsize]="nodeCount"
-                  [attr.aria-expanded]="node.children?.length ? isExpanded(node.id) : null"
+                  [attr.aria-expanded]="isExpandable(node) ? isExpanded(node.id) : null"
                   [attr.aria-selected]="selectedId() === node.id"
                   [attr.aria-disabled]="node.disabled || null"
+                  [attr.aria-busy]="node.childrenState === 'loading' ? 'true' : null"
+                  [attr.aria-invalid]="node.childrenState === 'error' ? 'true' : null"
+                  [attr.aria-label]="nodeStateLabel(node)"
                   [attr.aria-owns]="
                     node.children?.length && isExpanded(node.id) ? treeGroupId(node.id) : null
                   "
@@ -105,6 +115,11 @@ import type { KrnTreeNavigationItem } from './navigation.types';
                   (keydown)="onKeydown($event, node)"
                 >
                   {{ node.label }}
+                  @if (node.childrenState === 'loading') {
+                    <span class="node-state" aria-hidden="true">…</span>
+                  } @else if (node.childrenState === 'error') {
+                    <span class="node-state node-state--error" aria-hidden="true">!</span>
+                  }
                 </button>
               }
             </div>
@@ -235,6 +250,15 @@ import type { KrnTreeNavigationItem } from './navigation.types';
       color: var(--krn-color-text-disabled);
       cursor: not-allowed;
     }
+    .node-state {
+      margin-inline-start: auto;
+      color: var(--krn-color-text-muted);
+      font-size: var(--krn-font-size-xs);
+      font-weight: var(--krn-font-weight-semibold);
+    }
+    .node-state--error {
+      color: var(--krn-color-danger-text);
+    }
     @media (prefers-reduced-motion: reduce) {
       :host-context(html:not([data-krn-motion='full'])) .node-row,
       :host-context(html:not([data-krn-motion='full'])) .caret {
@@ -260,6 +284,8 @@ export class KrnTreeNavigation {
   readonly indent = input('1rem');
   readonly showGuides = input(true, { transform: booleanAttribute });
   readonly itemSelected = output<KrnTreeNavigationItem>();
+  /** Requests children when an unloaded item is expanded or its failed request is retried. */
+  readonly loadChildren = output<KrnTreeNavigationItem>();
   protected readonly treeItems = computed(() => {
     const ids = new Set<string>();
     const visit = (items: readonly KrnTreeNavigationItem[]): void => {
@@ -311,19 +337,42 @@ export class KrnTreeNavigation {
     return this.expandedIds().includes(id);
   }
 
+  protected isExpandable(item: KrnTreeNavigationItem): boolean {
+    return Boolean(item.children?.length || item.childrenState);
+  }
+
+  protected nodeStateLabel(item: KrnTreeNavigationItem): string | null {
+    return item.childrenState === 'loading'
+      ? (
+          this.translations.navigation.loadingChildren ??
+          KRN_ENGLISH_TRANSLATIONS.navigation.loadingChildren ??
+          ((label: string) => `Loading children for ${label}`)
+        )(item.label)
+      : item.childrenState === 'error'
+        ? (
+            this.translations.navigation.childrenLoadFailed ??
+            KRN_ENGLISH_TRANSLATIONS.navigation.childrenLoadFailed ??
+            ((label: string) => `Could not load children for ${label}`)
+          )(item.label)
+        : null;
+  }
+
   protected toggle(id: string): void {
+    const item = this.findItem(id);
     const collapsing = this.isExpanded(id);
     this.expandedIds.update((ids) =>
       ids.includes(id) ? ids.filter((value) => value !== id) : [...ids, id],
     );
     if (collapsing) {
-      const branch = this.findItem(id);
+      const branch = item;
       if (branch && this.containsId(branch.children ?? [], this.selectedId())) {
         const replacement = branch.disabled
           ? (this.enabledParent(id) ?? this.visibleItems().find((item) => !item.disabled))
           : branch;
         this.selectedId.set(replacement?.id ?? null);
       }
+    } else if (item) {
+      this.requestChildren(item);
     }
   }
 
@@ -348,13 +397,14 @@ export class KrnTreeNavigation {
 
     if (this.handleTypeahead(event, item)) return;
 
-    if (event.key === 'ArrowRight' && item.children?.length) {
+    if (event.key === 'ArrowRight' && this.isExpandable(item)) {
       event.preventDefault();
       if (!this.isExpanded(item.id)) this.toggle(item.id);
+      else if (!item.children?.length) this.requestChildren(item);
       else this.focusItem(this.firstFocusableVisibleDescendant(item)?.id);
       return;
     }
-    if (event.key === 'ArrowLeft' && item.children?.length && this.isExpanded(item.id)) {
+    if (event.key === 'ArrowLeft' && this.isExpandable(item) && this.isExpanded(item.id)) {
       event.preventDefault();
       this.toggle(item.id);
       return;
@@ -477,6 +527,12 @@ export class KrnTreeNavigation {
       }
     }
     return null;
+  }
+
+  private requestChildren(item: KrnTreeNavigationItem): void {
+    if (!item.children?.length && item.childrenState && item.childrenState !== 'loading') {
+      this.loadChildren.emit(item);
+    }
   }
 
   private enabledParent(id: string): KrnTreeNavigationItem | null {

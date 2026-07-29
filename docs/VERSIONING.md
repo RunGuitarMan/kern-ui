@@ -44,8 +44,9 @@ source. Lifecycle status and behavior guidance remain curated contracts.
 | `recipe`       | Adaptable composition; its primitives are supported at their own status      |
 | `deprecated`   | Still supported for the documented window; replacement is identified         |
 
-Status is not a certification of every browser or assistive-technology combination. Support
-evidence and limitations are documented in [COMPONENTS.md](COMPONENTS.md) and
+Status is not a certification of every browser or assistive-technology combination. The
+machine-readable status and promotion profiles are described in [LIFECYCLE.md](LIFECYCLE.md);
+support evidence and limitations are documented in [COMPONENTS.md](COMPONENTS.md) and
 [BROWSER_SUPPORT.md](BROWSER_SUPPORT.md).
 
 ## Change classification
@@ -88,7 +89,9 @@ that exception.
 ## Deprecation and removal
 
 Deprecations use `@deprecated` in TypeScript where possible and appear in the documentation and
-changelog. Every deprecation identifies the replacement and planned removal window.
+changelog. Every deprecation identifies the replacement and planned removal window in
+`projects/kern/api/deprecations.json`; CI compares the registry with the public declaration
+baselines. Current migration guidance is in [DEPRECATIONS.md](DEPRECATIONS.md).
 
 After `1.0.0`, a stable API remains available through the rest of its current major line and is
 removed only in a subsequent major release. Automated migrations should accompany broad or
@@ -99,12 +102,16 @@ mechanical breaking changes.
 Release tags use `vMAJOR.MINOR.PATCH`; prereleases use identifiers such as
 `v1.0.0-rc.1`. A release candidate must:
 
-1. originate from the default branch;
+1. be dispatched from an exact protected tag whose commit belongs to the default branch;
 2. have matching source and built package versions;
-3. pass `npm run verify` and the complete Playwright suite;
+3. pass lifecycle, evidence, `npm run verify`, and complete Playwright gates;
 4. include an updated `CHANGELOG.md`;
-5. be inspected from the workflow-produced package artifact before publication.
+5. include the exact npm tarball, versioned SSR documentation tarball and file manifest, npm
+   CycloneDX SBOM, release manifest, and SHA-256 checksums;
+6. wait for approval in the protected `npm-production` GitHub environment.
 
-The repository's release-candidate workflow never publishes to npm. Publication and GitHub release
-creation remain explicit maintainer actions so an artifact cannot ship solely because a tag or
-pull request was created.
+After approval, npm trusted publishing uses GitHub OIDC and `--provenance` to publish the exact
+verified tarball; no long-lived npm token is required. The same evidence is attached to the GitHub
+release. Repository and npm configuration requirements are in [RELEASING.md](RELEASING.md).
+The provider-neutral documentation artifact contract is in
+[VERSIONED_DOCUMENTATION.md](VERSIONED_DOCUMENTATION.md).

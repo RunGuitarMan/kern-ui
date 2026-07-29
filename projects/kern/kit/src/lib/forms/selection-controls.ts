@@ -55,9 +55,9 @@ const CHECKBOX_GROUP_PROVIDER: Provider = {
       class="krn-choice-group"
       [attr.aria-describedby]="describedBy() || a11y.describedBy()"
       [attr.aria-invalid]="a11y.invalid()"
-      [attr.aria-readonly]="isReadOnly()"
       [attr.aria-required]="a11y.required()"
       [attr.data-orientation]="orientation()"
+      [attr.data-readonly]="isReadOnly()"
       [disabled]="isDisabled()"
       [id]="a11y.id()"
     >

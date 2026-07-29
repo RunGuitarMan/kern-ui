@@ -24,11 +24,11 @@ styles ─→ every rendered component
 | `patterns`     | Opinionated product compositions; depends on Kit, never the reverse |
 | `testing`      | Runtime-free Angular CDK harnesses                                  |
 
-`provideKrn` is the preferred application entry point. It configures locale, direction,
-density, motion preference, theme, shared UI-copy translations, overlay host, and a replaceable
-platform adapter. Scoped injectors may override individual tokens for embedded applications.
-`provideKrnTheme` is the narrower provider when only theme, density, brand, and preference
-persistence are needed.
+Components have safe root-provided defaults; `provideKrn` is not mandatory. Applications use it
+when they own locale, direction, density, motion preference, theme, shared UI-copy translations,
+overlay host, or a replaceable platform adapter. Scoped injectors may override individual tokens
+for embedded applications. `provideKrnTheme` is the narrower provider when only theme, density,
+brand, and preference persistence are needed.
 
 ## Boundaries
 
@@ -44,6 +44,9 @@ persistence are needed.
   families.
 - `lab` consumes the same public package and exposes stable query-driven specimens for browser
   automation.
+- `metadata/agent` is a compiler-derived, closed 131-component contract. Its examples are mirrored
+  into the package, strict-AOT compiled against the tarball, exposed through the read-only MCP
+  adapter, and used by the Docs Code tab.
 
 Each runtime source file has one owner recorded in `projects/kern/api/runtime-entrypoints.json`.
 Cross-entrypoint imports use only published package subpaths. The root compatibility entrypoint is
@@ -74,6 +77,11 @@ The documentation application is built in Angular SSR mode with client hydration
 repository integration evidence, not a guarantee for an arbitrary consumer route: applications
 must verify their own overlay host, locale registration, deferred content, CSP, and custom
 platform adapter.
+
+Release builds bind that application to the immutable `/versions/<semver>/` mount, package the
+complete browser and server output deterministically, and record every file hash. The Express
+entry point accepts the same mount through `KERN_DOCS_BASE_PATH`; hosting remains an external
+deployment choice. See [VERSIONED_DOCUMENTATION.md](VERSIONED_DOCUMENTATION.md).
 
 `provideKrn` supplies the package-wide Angular CDK `OverlayContainer`. Its host resolver is
 evaluated on access, falls back to `document.body`, and preserves a single container when a late
@@ -112,9 +120,13 @@ though the stylesheet is required.
 Theme modes are `light`, `dark`, `system`, and `high-contrast`; density modes are `compact`,
 `comfortable`, and `spacious`. Motion uses semantic duration tokens and the `system`, `reduce`,
 or `full` preference. Locale defaults to Angular's `LOCALE_ID`, while direction defaults to the
-document `dir`. `KRN_TRANSLATIONS` supplies typed English component UI-copy defaults;
+document `dir`. `KRN_TRANSLATIONS` supplies typed English component UI-copy defaults; complete
+schema-checked English and Russian packs can be adapted through `krnLocaleConfig`.
 `provideKrn({ translations })` accepts a typed partial override, and component label inputs remain
-available for one-off copy. Kern does not bundle other languages or application content.
+available for one-off copy. Existing token templates such as `Page {page}` remain source-compatible;
+new locale packs can add the corresponding optional typed formatter for grammar that cannot be
+expressed by a template. Runtime interpolation is single-pass and resolves only named tokens.
+Kern does not bundle application content.
 
 ## Accessibility contract
 
@@ -149,14 +161,21 @@ checks, and a focused cross-engine matrix. See [COMPONENTS.md](COMPONENTS.md) an
   global sheet. Consumers cannot omit `styles/kern.css`.
 - The root compatibility API intentionally exposes the complete surface; direct runtime
   entrypoints are the preferred bundle and ownership boundary.
-- Charts are accessible, dependency-free SVG primitives rather than a full analytical charting
-  grammar.
+- Charts are accessible, dependency-free SVG primitives with stable datum identity, validation,
+  bounded summaries, explicit negative-value policy, and a source-data table; they are not yet a
+  full analytical charting grammar.
 - Data-grid virtualization is optional and aimed at measurable fixed-height row sets. It supports
-  selection, sorting, filtering, managed cell actions, and column resizing, but rejects expandable
-  detail rows. Variable-height or server-driven grids require an application adapter.
-- Locale-aware components accept locale, typed shared-copy overrides, and label configuration,
-  but Kern currently bundles English defaults only. Product teams own other language dictionaries
-  and all product-specific visible and accessible copy.
+  selection, sorting, filtering, managed cell actions, column resizing, logical column pinning,
+  and a cancellable controlled/server data-source adapter, but rejects expandable detail rows.
+  Grouping, variable-height virtualization, and two-dimensional column virtualization require
+  the reviewed row/column identity, ARIA, focus, and scroll-strategy decision in
+  [ADR 0003](adr/0003-data-grid-grouping-and-two-dimensional-virtualization.md).
+- Locale-aware components accept locale, complete English/Russian packs, typed shared-copy
+  overrides, and label configuration. Product teams own other language dictionaries and all
+  product-specific visible and accessible copy.
+- Programmatic overlay results and externally controlled picker popup state remain outside the
+  beta contract until the focus, provider, SSR, disposal, and result model in
+  [ADR 0004](adr/0004-programmatic-overlays-and-picker-state.md) is accepted.
 
 The staged pre-split decision is recorded in historical
 [ADR 0001](adr/0001-runtime-boundaries.md). The implemented physical ownership model is recorded

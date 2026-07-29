@@ -10,6 +10,8 @@ import {
   BaseHarnessFilters,
   HarnessPredicate,
   TestElement,
+  TestKey,
+  ComponentHarnessConstructor,
   ContentContainerComponentHarness,
 } from '@angular/cdk/testing';
 
@@ -52,6 +54,288 @@ declare class KrnButtonHarness extends ComponentHarness {
   focus(): Promise<void>;
   isFocused(): Promise<boolean>;
   getNativeButton(): Promise<TestElement>;
+}
+
+interface KrnChartHarnessFilters extends BaseHarnessFilters {
+  /** Matches the visible chart title. */
+  readonly title?: KrnHarnessText;
+  readonly type?: 'line' | 'bar' | 'donut';
+  readonly empty?: boolean;
+  readonly tableVisible?: boolean;
+}
+interface KrnChartDatumHarnessFilters extends BaseHarnessFilters {
+  /** Matches the datum's accessible label. */
+  readonly label?: KrnHarnessText;
+  readonly active?: boolean;
+}
+/** Harness for an interactive line point, bar, or donut legend entry. */
+declare class KrnChartDatumHarness extends ComponentHarness {
+  static readonly hostSelector: string;
+  static with(options?: KrnChartDatumHarnessFilters): HarnessPredicate<KrnChartDatumHarness>;
+  private readonly legendLabel;
+  private readonly legendValue;
+  getAccessibleLabel(): Promise<string | null>;
+  getValueText(): Promise<string | null>;
+  getIndex(): Promise<number | null>;
+  isActive(): Promise<boolean>;
+  click(): Promise<void>;
+  focus(): Promise<void>;
+  isFocused(): Promise<boolean>;
+  sendKeys(...keys: (string | TestKey)[]): Promise<void>;
+}
+/** Harness for a row in the optional accessible chart data table. */
+declare class KrnChartTableRowHarness extends ComponentHarness {
+  static readonly hostSelector = 'tbody > tr';
+  private readonly label;
+  private readonly cells;
+  getLabelText(): Promise<string>;
+  getValueText(): Promise<string>;
+  getShareText(): Promise<string>;
+}
+/**
+ * Harness for `krn-chart`.
+ *
+ * The same consumer-facing methods are available on the typed line, bar, and
+ * donut wrapper harnesses below.
+ *
+ * @publicApi
+ */
+declare class KrnChartHarness extends ComponentHarness {
+  static readonly hostSelector: string;
+  static with(options?: KrnChartHarnessFilters): HarnessPredicate<KrnChartHarness>;
+  private readonly nestedChart;
+  private readonly title;
+  private readonly description;
+  private readonly dataToggle;
+  private readonly emptyState;
+  private readonly summary;
+  private readonly table;
+  private readonly tableCaption;
+  protected getChartHost(): Promise<TestElement>;
+  getType(): Promise<'line' | 'bar' | 'donut' | null>;
+  getTitleText(): Promise<string>;
+  getDescriptionText(): Promise<string | null>;
+  getAccessibleSummary(): Promise<string | null>;
+  isEmpty(): Promise<boolean>;
+  getEmptyText(): Promise<string | null>;
+  isTableVisible(): Promise<boolean>;
+  showTable(): Promise<void>;
+  hideTable(): Promise<void>;
+  getTableCaption(): Promise<string | null>;
+  getTableRows(): Promise<readonly KrnChartTableRowHarness[]>;
+  getData(filters?: KrnChartDatumHarnessFilters): Promise<readonly KrnChartDatumHarness[]>;
+  activateDatum(filters: KrnChartDatumHarnessFilters): Promise<void>;
+  getActiveDatum(): Promise<KrnChartDatumHarness | null>;
+}
+/** Harness for `krn-line-chart`. */
+declare class KrnLineChartHarness extends KrnChartHarness {
+  static readonly hostSelector: string;
+  static with(options?: KrnChartHarnessFilters): HarnessPredicate<KrnLineChartHarness>;
+}
+/** Harness for `krn-bar-chart`. */
+declare class KrnBarChartHarness extends KrnChartHarness {
+  static readonly hostSelector: string;
+  static with(options?: KrnChartHarnessFilters): HarnessPredicate<KrnBarChartHarness>;
+}
+/** Harness for `krn-donut-chart`. */
+declare class KrnDonutChartHarness extends KrnChartHarness {
+  static readonly hostSelector: string;
+  static with(options?: KrnChartHarnessFilters): HarnessPredicate<KrnDonutChartHarness>;
+}
+
+interface KrnColorPickerHarnessFilters extends BaseHarnessFilters {
+  readonly value?: KrnHarnessText;
+  readonly ariaLabel?: KrnHarnessText;
+  readonly disabled?: boolean;
+  readonly readonly?: boolean;
+  readonly invalid?: boolean;
+  readonly open?: boolean;
+}
+interface KrnColorPresetHarnessFilters extends BaseHarnessFilters {
+  readonly ariaLabel?: KrnHarnessText;
+  readonly selected?: boolean;
+  readonly disabled?: boolean;
+}
+/** Harness for a color preset exposed inside `krn-color-picker`. */
+declare class KrnColorPresetHarness extends ComponentHarness {
+  static readonly hostSelector = '.krn-color-swatches button';
+  static with(options?: KrnColorPresetHarnessFilters): HarnessPredicate<KrnColorPresetHarness>;
+  getAriaLabel(): Promise<string | null>;
+  isSelected(): Promise<boolean>;
+  isDisabled(): Promise<boolean>;
+  click(): Promise<void>;
+}
+/**
+ * Harness for `krn-color-picker`.
+ *
+ * @publicApi
+ */
+declare class KrnColorPickerHarness extends ComponentHarness {
+  static readonly hostSelector = 'krn-color-picker';
+  static with(options?: KrnColorPickerHarnessFilters): HarnessPredicate<KrnColorPickerHarness>;
+  private readonly shell;
+  private readonly trigger;
+  private readonly triggerValue;
+  private readonly textInput;
+  private readonly hueInput;
+  private readonly saturationInput;
+  private readonly status;
+  private readonly doneButton;
+  getValueText(): Promise<string>;
+  getAriaLabel(): Promise<string | null>;
+  isDisabled(): Promise<boolean>;
+  isReadonly(): Promise<boolean>;
+  isInvalid(): Promise<boolean>;
+  isOpen(): Promise<boolean>;
+  open(): Promise<void>;
+  close(): Promise<void>;
+  getPresets(filters?: KrnColorPresetHarnessFilters): Promise<readonly KrnColorPresetHarness[]>;
+  selectPreset(filters: KrnColorPresetHarnessFilters): Promise<void>;
+  getTextValue(): Promise<string>;
+  setValue(value: string): Promise<void>;
+  getHue(): Promise<number>;
+  setHue(value: number): Promise<void>;
+  getSaturation(): Promise<number>;
+  setSaturation(value: number): Promise<void>;
+  getStatusText(): Promise<string | null>;
+  finish(): Promise<void>;
+  focus(): Promise<void>;
+  isFocused(): Promise<boolean>;
+  getTrigger(): Promise<TestElement>;
+}
+
+interface KrnCommandPaletteHarnessFilters extends BaseHarnessFilters {
+  readonly title?: KrnHarnessText;
+  readonly query?: KrnHarnessText;
+  readonly open?: boolean;
+  readonly resultCount?: number;
+}
+interface KrnCommandPaletteOptionHarnessFilters extends BaseHarnessFilters {
+  readonly label?: KrnHarnessText;
+  readonly selected?: boolean;
+}
+/** Harness for a command-palette result option. */
+declare class KrnCommandPaletteOptionHarness extends ComponentHarness {
+  static readonly hostSelector = '[role="listbox"] > [role="option"]';
+  static with(
+    options?: KrnCommandPaletteOptionHarnessFilters,
+  ): HarnessPredicate<KrnCommandPaletteOptionHarness>;
+  private readonly label;
+  private readonly description;
+  private readonly shortcut;
+  getId(): Promise<string | null>;
+  getLabelText(): Promise<string>;
+  getDescriptionText(): Promise<string | null>;
+  getShortcutText(): Promise<string | null>;
+  isSelected(): Promise<boolean>;
+  click(): Promise<void>;
+}
+/**
+ * Harness for `krn-command-palette`.
+ *
+ * Opening the palette remains an application concern because the component has
+ * no visual trigger of its own. Once open, this harness owns all palette
+ * interactions.
+ *
+ * @publicApi
+ */
+declare class KrnCommandPaletteHarness extends ComponentHarness {
+  static readonly hostSelector = 'krn-command-palette';
+  static with(
+    options?: KrnCommandPaletteHarnessFilters,
+  ): HarnessPredicate<KrnCommandPaletteHarness>;
+  private readonly dialog;
+  private readonly title;
+  private readonly description;
+  private readonly search;
+  private readonly empty;
+  isOpen(): Promise<boolean>;
+  getTitleText(): Promise<string | null>;
+  getDescriptionText(): Promise<string | null>;
+  getQuery(): Promise<string | null>;
+  getPlaceholder(): Promise<string | null>;
+  setQuery(value: string): Promise<void>;
+  getOptions(
+    filters?: KrnCommandPaletteOptionHarnessFilters,
+  ): Promise<readonly KrnCommandPaletteOptionHarness[]>;
+  getResultCount(): Promise<number>;
+  getResultLabels(): Promise<readonly string[]>;
+  getActiveOption(): Promise<KrnCommandPaletteOptionHarness | null>;
+  selectOption(filters: KrnCommandPaletteOptionHarnessFilters): Promise<void>;
+  getEmptyText(): Promise<string | null>;
+  sendKeys(...keys: (string | TestKey)[]): Promise<void>;
+  close(): Promise<void>;
+  getSearchInput(): Promise<TestElement>;
+  private requireSearch;
+}
+
+interface KrnPickerHarnessFilters extends BaseHarnessFilters {
+  readonly value?: KrnHarnessText;
+  readonly ariaLabel?: KrnHarnessText;
+  readonly disabled?: boolean;
+  readonly open?: boolean;
+}
+interface KrnCalendarCellHarnessFilters extends BaseHarnessFilters {
+  readonly date?: string;
+  readonly selected?: boolean;
+  readonly disabled?: boolean;
+}
+/** Harness for a calendar grid cell. */
+declare class KrnCalendarCellHarness extends ComponentHarness {
+  static readonly hostSelector = '[role="gridcell"][data-date]';
+  static with(options?: KrnCalendarCellHarnessFilters): HarnessPredicate<KrnCalendarCellHarness>;
+  getDate(): Promise<string | null>;
+  getLabel(): Promise<string | null>;
+  isSelected(): Promise<boolean>;
+  isDisabled(): Promise<boolean>;
+  click(): Promise<void>;
+}
+/** Harness for `krn-calendar`. */
+declare class KrnCalendarHarness extends ComponentHarness {
+  static readonly hostSelector = 'krn-calendar';
+  private readonly grid;
+  getMonthLabel(): Promise<string | null>;
+  getCells(filters?: KrnCalendarCellHarnessFilters): Promise<readonly KrnCalendarCellHarness[]>;
+  selectDate(date: string): Promise<void>;
+  goToPreviousMonth(): Promise<void>;
+  goToNextMonth(): Promise<void>;
+}
+/** Shared harness contract for popup date and time controls. */
+declare abstract class KrnPickerHarness extends ComponentHarness {
+  protected readonly trigger: () => Promise<TestElement>;
+  protected static predicate<T extends KrnPickerHarness>(
+    harnessType: ComponentHarnessConstructor<T>,
+    options: KrnPickerHarnessFilters,
+  ): HarnessPredicate<T>;
+  getValueText(): Promise<string>;
+  getAriaLabel(): Promise<string | null>;
+  isDisabled(): Promise<boolean>;
+  isOpen(): Promise<boolean>;
+  open(): Promise<void>;
+  close(): Promise<void>;
+  getTrigger(): Promise<TestElement>;
+}
+declare abstract class KrnCalendarPickerHarness extends KrnPickerHarness {
+  getCells(filters?: KrnCalendarCellHarnessFilters): Promise<readonly KrnCalendarCellHarness[]>;
+  selectDate(date: string): Promise<void>;
+}
+/** Harness for `krn-date-picker`. */
+declare class KrnDatePickerHarness extends KrnCalendarPickerHarness {
+  static readonly hostSelector = 'krn-date-picker';
+  static with(options?: KrnPickerHarnessFilters): HarnessPredicate<KrnDatePickerHarness>;
+}
+/** Harness for `krn-date-range-picker`. */
+declare class KrnDateRangePickerHarness extends KrnCalendarPickerHarness {
+  static readonly hostSelector = 'krn-date-range-picker';
+  static with(options?: KrnPickerHarnessFilters): HarnessPredicate<KrnDateRangePickerHarness>;
+}
+/** Harness for `krn-time-picker`. */
+declare class KrnTimePickerHarness extends KrnPickerHarness {
+  static readonly hostSelector = 'krn-time-picker';
+  static with(options?: KrnPickerHarnessFilters): HarnessPredicate<KrnTimePickerHarness>;
+  private readonly parts;
+  setTime(hour: number, minute: number): Promise<void>;
+  getHourInput(): Promise<TestElement>;
 }
 
 interface KrnDataGridHarnessFilters extends BaseHarnessFilters {
@@ -138,6 +422,38 @@ declare class KrnDataGridHarness extends ComponentHarness {
   getFilterInput(): Promise<TestElement | null>;
 }
 
+/** Harness for `krn-toast-viewport`. */
+declare class KrnToastViewportHarness extends ComponentHarness {
+  static readonly hostSelector = 'krn-toast, krn-toast-viewport, krn-snackbar';
+  private readonly toasts;
+  private readonly messages;
+  getMessages(): Promise<readonly string[]>;
+  getCount(): Promise<number>;
+  dismiss(index?: number): Promise<void>;
+  clearAll(): Promise<void>;
+}
+/** Shared harness contract for file upload controls. */
+declare abstract class KrnUploadHarness extends ComponentHarness {
+  private readonly input;
+  private readonly button;
+  private readonly files;
+  getLabel(): Promise<string>;
+  getAccept(): Promise<string | null>;
+  isMultiple(): Promise<boolean>;
+  isDisabled(): Promise<boolean>;
+  getFileNames(): Promise<readonly string[]>;
+  removeFile(index?: number): Promise<void>;
+  getNativeInput(): Promise<TestElement>;
+}
+/** Harness for `krn-file-upload`. */
+declare class KrnFileUploadHarness extends KrnUploadHarness {
+  static readonly hostSelector = 'krn-file-upload';
+}
+/** Harness for `krn-drop-upload` and its documented alias. */
+declare class KrnDropUploadHarness extends KrnUploadHarness {
+  static readonly hostSelector = 'krn-drop-upload, krn-drag-drop-upload';
+}
+
 interface KrnFormControlHarnessFilters extends BaseHarnessFilters {
   readonly value?: KrnHarnessText;
   readonly ariaLabel?: KrnHarnessText;
@@ -212,6 +528,60 @@ declare class KrnFormFieldHarness extends ContentContainerComponentHarness {
   getControlDescribedBy(): Promise<readonly string[]>;
 }
 
+interface KrnCompositeItemHarnessFilters extends BaseHarnessFilters {
+  readonly text?: KrnHarnessText;
+  readonly selected?: boolean;
+  readonly disabled?: boolean;
+  readonly loading?: boolean;
+  readonly error?: boolean;
+}
+/** Harness for tree and tree-navigation items. */
+declare class KrnTreeItemHarness extends ComponentHarness {
+  static readonly hostSelector = '[role="treeitem"]';
+  static with(options?: KrnCompositeItemHarnessFilters): HarnessPredicate<KrnTreeItemHarness>;
+  getText(): Promise<string>;
+  getId(): Promise<string | null>;
+  getLevel(): Promise<number | null>;
+  isExpanded(): Promise<boolean | null>;
+  isSelected(): Promise<boolean>;
+  isDisabled(): Promise<boolean>;
+  isLoading(): Promise<boolean>;
+  hasError(): Promise<boolean>;
+  click(): Promise<void>;
+  expand(): Promise<void>;
+  collapse(): Promise<void>;
+}
+declare abstract class KrnTreeLikeHarness extends ComponentHarness {
+  getItems(filters?: KrnCompositeItemHarnessFilters): Promise<readonly KrnTreeItemHarness[]>;
+  selectItem(filters: KrnCompositeItemHarnessFilters): Promise<void>;
+}
+/** Harness for `krn-tree`. */
+declare class KrnTreeHarness extends KrnTreeLikeHarness {
+  static readonly hostSelector = 'krn-tree';
+}
+/** Harness for `krn-tree-navigation`. */
+declare class KrnTreeNavigationHarness extends KrnTreeLikeHarness {
+  static readonly hostSelector = 'krn-tree-navigation';
+}
+/** Harness for `krn-menu`. */
+declare class KrnMenuHarness extends ComponentHarness {
+  static readonly hostSelector = 'krn-menu';
+  private readonly trigger;
+  isOpen(): Promise<boolean>;
+  open(): Promise<void>;
+  close(): Promise<void>;
+  getItemTexts(): Promise<readonly string[]>;
+  clickItem(text: KrnHarnessText): Promise<void>;
+}
+/** Harness for `krn-tabs` and `krn-vertical-tabs`. */
+declare class KrnTabsHarness extends ComponentHarness {
+  static readonly hostSelector = 'krn-tabs, krn-vertical-tabs';
+  private readonly tabs;
+  getTabTexts(): Promise<readonly string[]>;
+  getSelectedTabText(): Promise<string | null>;
+  selectTab(text: KrnHarnessText): Promise<void>;
+}
+
 interface KrnOverlayHarnessFilters extends BaseHarnessFilters {
   readonly title?: KrnHarnessText;
   readonly ariaLabel?: KrnHarnessText;
@@ -264,6 +634,75 @@ declare class KrnBottomSheetHarness extends KrnOverlayHarness {
   static with(options?: KrnOverlayHarnessFilters): HarnessPredicate<KrnBottomSheetHarness>;
 }
 
+interface KrnResizablePanelsHarnessFilters extends BaseHarnessFilters {
+  readonly orientation?: 'horizontal' | 'vertical';
+  readonly disabled?: boolean;
+  readonly resizing?: boolean;
+  readonly panelCount?: number;
+}
+interface KrnResizablePanelHarnessFilters extends BaseHarnessFilters {
+  readonly ariaLabel?: KrnHarnessText;
+  readonly overflow?: 'auto' | 'visible' | 'clip';
+  readonly size?: number;
+}
+interface KrnResizeHandleHarnessFilters extends BaseHarnessFilters {
+  readonly ariaLabel?: KrnHarnessText;
+  readonly orientation?: 'horizontal' | 'vertical';
+  readonly value?: number;
+  readonly disabled?: boolean;
+}
+/** Harness for `krn-resizable-panel`. */
+declare class KrnResizablePanelHarness extends ComponentHarness {
+  static readonly hostSelector = 'krn-resizable-panel';
+  static with(
+    options?: KrnResizablePanelHarnessFilters,
+  ): HarnessPredicate<KrnResizablePanelHarness>;
+  getId(): Promise<string | null>;
+  getAriaLabel(): Promise<string | null>;
+  getOverflow(): Promise<'auto' | 'visible' | 'clip' | null>;
+  getSize(): Promise<number>;
+}
+/** Harness for `krn-resize-handle`. */
+declare class KrnResizeHandleHarness extends ComponentHarness {
+  static readonly hostSelector = 'krn-resize-handle';
+  static with(options?: KrnResizeHandleHarnessFilters): HarnessPredicate<KrnResizeHandleHarness>;
+  getAriaLabel(): Promise<string | null>;
+  getOrientation(): Promise<'horizontal' | 'vertical' | null>;
+  getMinimum(): Promise<number | null>;
+  getMaximum(): Promise<number | null>;
+  getValue(): Promise<number | null>;
+  getValueText(): Promise<string | null>;
+  isDisabled(): Promise<boolean>;
+  sendKeys(...keys: (string | TestKey)[]): Promise<void>;
+  moveTowardStart(): Promise<void>;
+  moveTowardEnd(): Promise<void>;
+  setToMinimum(): Promise<void>;
+  setToMaximum(): Promise<void>;
+  reset(): Promise<void>;
+  focus(): Promise<void>;
+  isFocused(): Promise<boolean>;
+}
+/**
+ * Harness for `krn-resizable-panels` and its panels and separator handles.
+ *
+ * @publicApi
+ */
+declare class KrnResizablePanelsHarness extends ComponentHarness {
+  static readonly hostSelector = 'krn-resizable-panels';
+  static with(
+    options?: KrnResizablePanelsHarnessFilters,
+  ): HarnessPredicate<KrnResizablePanelsHarness>;
+  getOrientation(): Promise<'horizontal' | 'vertical' | null>;
+  isDisabled(): Promise<boolean>;
+  isResizing(): Promise<boolean>;
+  getPanels(
+    filters?: KrnResizablePanelHarnessFilters,
+  ): Promise<readonly KrnResizablePanelHarness[]>;
+  getPanelCount(): Promise<number>;
+  getSizes(): Promise<readonly number[]>;
+  getHandles(filters?: KrnResizeHandleHarnessFilters): Promise<readonly KrnResizeHandleHarness[]>;
+}
+
 interface KrnSelectHarnessFilters extends BaseHarnessFilters {
   readonly value?: KrnHarnessText;
   readonly ariaLabel?: KrnHarnessText;
@@ -292,7 +731,7 @@ declare class KrnSelectOptionHarness extends ComponentHarness {
  * @publicApi
  */
 declare class KrnSelectHarness extends ComponentHarness {
-  static readonly hostSelector = 'krn-select';
+  static readonly hostSelector: string;
   static with(options?: KrnSelectHarnessFilters): HarnessPredicate<KrnSelectHarness>;
   private readonly trigger;
   private readonly value;
@@ -316,30 +755,125 @@ declare class KrnSelectHarness extends ComponentHarness {
   getTrigger(): Promise<TestElement>;
 }
 
+interface KrnEditableComboboxHarnessFilters extends BaseHarnessFilters {
+  readonly value?: KrnHarnessText;
+  readonly ariaLabel?: KrnHarnessText;
+  readonly disabled?: boolean;
+  readonly open?: boolean;
+}
+/** Harness for `krn-multi-select`. */
+declare class KrnMultiSelectHarness extends KrnSelectHarness {
+  static readonly hostSelector: string;
+  static with(options?: KrnSelectHarnessFilters): HarnessPredicate<KrnMultiSelectHarness>;
+  private readonly tokens;
+  getValueText(): Promise<string | null>;
+  getVisibleTokenTexts(): Promise<readonly string[]>;
+  getSelectedTexts(): Promise<readonly string[]>;
+  toggleOption(filters: KrnSelectOptionHarnessFilters): Promise<void>;
+}
+/** Shared harness contract for editable comboboxes. */
+declare abstract class KrnEditableComboboxHarness extends ComponentHarness {
+  private readonly input;
+  private readonly toggle;
+  protected static predicate<T extends KrnEditableComboboxHarness>(
+    harnessType: ComponentHarnessConstructor<T>,
+    options: KrnEditableComboboxHarnessFilters,
+  ): HarnessPredicate<T>;
+  getValue(): Promise<string | null>;
+  getAriaLabel(): Promise<string | null>;
+  isDisabled(): Promise<boolean>;
+  isReadonly(): Promise<boolean>;
+  isOpen(): Promise<boolean>;
+  setValue(value: string): Promise<void>;
+  open(): Promise<void>;
+  close(): Promise<void>;
+  getOptions(filters?: KrnSelectOptionHarnessFilters): Promise<readonly KrnSelectOptionHarness[]>;
+  selectOption(filters: KrnSelectOptionHarnessFilters): Promise<void>;
+  getInput(): Promise<TestElement>;
+  getPlaceholder(): Promise<string | null>;
+}
+/** Harness for constrained `krn-combobox`. */
+declare class KrnComboboxHarness extends KrnEditableComboboxHarness {
+  static readonly hostSelector = 'krn-combobox';
+  static with(options?: KrnEditableComboboxHarnessFilters): HarnessPredicate<KrnComboboxHarness>;
+}
+/** Harness for free-text `krn-autocomplete`. */
+declare class KrnAutocompleteHarness extends KrnEditableComboboxHarness {
+  static readonly hostSelector = 'krn-autocomplete';
+  static with(
+    options?: KrnEditableComboboxHarnessFilters,
+  ): HarnessPredicate<KrnAutocompleteHarness>;
+}
+
 export {
   KrnAlertDialogHarness,
+  KrnAutocompleteHarness,
+  KrnBarChartHarness,
   KrnBottomSheetHarness,
   KrnButtonHarness,
+  KrnCalendarCellHarness,
+  KrnCalendarHarness,
+  KrnChartDatumHarness,
+  KrnChartHarness,
+  KrnChartTableRowHarness,
+  KrnColorPickerHarness,
+  KrnColorPresetHarness,
+  KrnComboboxHarness,
+  KrnCommandPaletteHarness,
+  KrnCommandPaletteOptionHarness,
   KrnDataGridHarness,
   KrnDataGridHeaderHarness,
   KrnDataGridRowHarness,
+  KrnDatePickerHarness,
+  KrnDateRangePickerHarness,
   KrnDialogHarness,
+  KrnDonutChartHarness,
   KrnDrawerHarness,
+  KrnDropUploadHarness,
+  KrnEditableComboboxHarness,
+  KrnFileUploadHarness,
   KrnFormControlHarness,
   KrnFormFieldHarness,
+  KrnLineChartHarness,
+  KrnMenuHarness,
+  KrnMultiSelectHarness,
   KrnOverlayHarness,
+  KrnPickerHarness,
+  KrnResizablePanelHarness,
+  KrnResizablePanelsHarness,
+  KrnResizeHandleHarness,
   KrnSelectHarness,
   KrnSelectOptionHarness,
+  KrnTabsHarness,
+  KrnTimePickerHarness,
+  KrnToastViewportHarness,
+  KrnTreeHarness,
+  KrnTreeItemHarness,
+  KrnTreeNavigationHarness,
+  KrnUploadHarness,
 };
 export type {
   KrnButtonHarnessFilters,
+  KrnCalendarCellHarnessFilters,
+  KrnChartDatumHarnessFilters,
+  KrnChartHarnessFilters,
+  KrnColorPickerHarnessFilters,
+  KrnColorPresetHarnessFilters,
+  KrnCommandPaletteHarnessFilters,
+  KrnCommandPaletteOptionHarnessFilters,
+  KrnCompositeItemHarnessFilters,
   KrnDataGridHarnessFilters,
   KrnDataGridHeaderHarnessFilters,
   KrnDataGridRowHarnessFilters,
+  KrnEditableComboboxHarnessFilters,
   KrnFormControlHarnessFilters,
   KrnFormFieldHarnessFilters,
   KrnHarnessText,
   KrnOverlayHarnessFilters,
+  KrnPickerHarnessFilters,
+  KrnResizablePanelHarnessFilters,
+  KrnResizablePanelsHarnessFilters,
+  KrnResizeHandleHarnessFilters,
   KrnSelectHarnessFilters,
   KrnSelectOptionHarnessFilters,
 };

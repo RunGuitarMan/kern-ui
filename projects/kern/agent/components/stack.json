@@ -1,0 +1,150 @@
+{
+  "id": "stack",
+  "name": "Stack",
+  "category": "Layout",
+  "kind": "component",
+  "selector": "krn-stack",
+  "selectors": ["krn-stack"],
+  "symbol": "KrnStack",
+  "canonicalSymbol": "KrnStack",
+  "canonicalId": "stack",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Stack. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/layout",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "gap",
+      "property": "gap",
+      "kind": "input",
+      "type": "KrnLayoutSpace",
+      "required": false,
+      "defaultValue": "'4'",
+      "description": "Logical spacing inserted between adjacent layout children.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "align",
+      "property": "align",
+      "kind": "input",
+      "type": "KrnLayoutAlignment",
+      "required": false,
+      "defaultValue": "'stretch'",
+      "description": "Logical cross-axis alignment applied to children by the layout.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "justify",
+      "property": "justify",
+      "kind": "input",
+      "type": "KrnLayoutJustification",
+      "required": false,
+      "defaultValue": "'start'",
+      "description": "Logical main-axis distribution applied to layout children.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "selector": "*",
+      "required": false,
+      "description": "Projects default component content."
+    }
+  ],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Vertical form stack",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Vertical form stack\n *\n * Apply consistent vertical rhythm to related content.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnStack } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-stack-agent-example',\n  standalone: true,\n  imports: [KrnStack],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-stack gap=\"4\">\n      <h2>Billing profile</h2>\n      <p>Invoices are sent to the finance owner.</p>\n      <button type=\"button\">Edit profile</button>\n    </krn-stack>\n  `,\n})\nexport class KernStackAgentExample {}\n\nvoid bootstrapApplication(KernStackAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/stack.ts"
+    }
+  ],
+  "related": ["app-shell", "header", "sidebar", "navigation-rail"],
+  "keywords": ["stack", "Stack", "Layout", "krn-stack", "KrnStack", "gap", "align", "justify"],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/stack",
+    "json": "components/stack.json",
+    "markdown": "components/stack.md"
+  }
+}

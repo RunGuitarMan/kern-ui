@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "policy": {
+    "minimumNotice": "one published minor release when a compatibility layer is practical",
+    "requiredFields": ["replacement", "migration", "introducedIn", "removeIn", "documentation"]
+  },
+  "entries": [
+    {
+      "id": "krn-data-grid-pagination",
+      "entrypoint": "./addon-grid",
+      "symbol": "KrnDataGrid",
+      "member": "pagination",
+      "kind": "input",
+      "status": "active",
+      "introducedIn": "0.1.0",
+      "removeIn": "0.2.0",
+      "replacement": "KrnDataGrid.mode with { kind: 'client', pagination: true }",
+      "migration": "Replace the pagination input with the discriminated client-mode object.",
+      "documentation": "docs/DEPRECATIONS.md#krn-data-grid-pagination"
+    },
+    {
+      "id": "krn-data-grid-virtualize",
+      "entrypoint": "./addon-grid",
+      "symbol": "KrnDataGrid",
+      "member": "virtualize",
+      "kind": "input",
+      "status": "active",
+      "introducedIn": "0.1.0",
+      "removeIn": "0.2.0",
+      "replacement": "KrnDataGrid.mode with { kind: 'virtual' }",
+      "migration": "Replace the virtualize input with the discriminated virtual-mode object.",
+      "documentation": "docs/DEPRECATIONS.md#krn-data-grid-virtualize"
+    },
+    {
+      "id": "krn-menu-has-projected-trigger",
+      "entrypoint": "./kit",
+      "symbol": "KrnMenu",
+      "member": "hasProjectedTrigger",
+      "kind": "input",
+      "status": "active",
+      "introducedIn": "0.1.0",
+      "removeIn": "0.2.0",
+      "replacement": "KrnMenuTrigger applied directly to projected trigger content",
+      "migration": "Import KrnMenuTrigger and apply the directive to the projected menu trigger.",
+      "documentation": "docs/DEPRECATIONS.md#krn-menu-has-projected-trigger"
+    }
+  ]
+}

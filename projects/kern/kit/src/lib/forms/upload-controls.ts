@@ -238,9 +238,9 @@ export abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
     <div
       class="krn-upload"
       [attr.aria-invalid]="a11y.invalid()"
-      [attr.aria-readonly]="a11y.readOnly()"
       [attr.data-disabled]="isDisabled()"
       [attr.data-invalid]="a11y.invalid()"
+      [attr.data-readonly]="a11y.readOnly()"
     >
       <input
         #fileInput
@@ -317,10 +317,10 @@ export class KrnFileUpload extends KrnUploadBase {
     <div
       class="krn-upload"
       [attr.aria-invalid]="a11y.invalid()"
-      [attr.aria-readonly]="a11y.readOnly()"
       [attr.data-disabled]="isDisabled()"
       [attr.data-dragging]="dragging()"
       [attr.data-invalid]="a11y.invalid()"
+      [attr.data-readonly]="a11y.readOnly()"
       (dragleave)="leaveDrag($event)"
       (dragover)="enterDrag($event)"
       (drop)="dropFiles($event)"

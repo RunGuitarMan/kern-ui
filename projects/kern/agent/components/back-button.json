@@ -1,0 +1,157 @@
+{
+  "id": "back-button",
+  "name": "Back Button",
+  "category": "Navigation",
+  "kind": "component",
+  "selector": "krn-back-button",
+  "selectors": ["krn-back-button"],
+  "symbol": "KrnBackButton",
+  "canonicalSymbol": "KrnBackButton",
+  "canonicalId": "back-button",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Back Button. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled",
+    "current"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/navigation",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "href",
+      "property": "href",
+      "kind": "input",
+      "type": "string | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Required destination URL used by the semantic link element.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "label",
+      "property": "label",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.navigation.back",
+      "description": "Visible text that names the control or data value.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "activated",
+      "property": "activated",
+      "kind": "output",
+      "type": "void",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the activated interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["Arrow keys move within composites", "Home / End jump", "Enter activates"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Explicit back navigation",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Explicit back navigation\n *\n * Provide a deterministic href when browser history is not sufficient.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBackButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-back-button-agent-example',\n  standalone: true,\n  imports: [KrnBackButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-back-button href=\"/customers\" label=\"Back to customers\" /> `,\n})\nexport class KernBackButtonAgentExample {}\n\nvoid bootstrapApplication(KernBackButtonAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/back-button.ts"
+    }
+  ],
+  "related": ["breadcrumbs", "tabs", "vertical-tabs", "pagination"],
+  "keywords": [
+    "back-button",
+    "Back Button",
+    "Navigation",
+    "krn-back-button",
+    "KrnBackButton",
+    "href",
+    "label",
+    "activated"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/back-button",
+    "json": "components/back-button.json",
+    "markdown": "components/back-button.md"
+  }
+}

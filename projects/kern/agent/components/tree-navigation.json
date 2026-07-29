@@ -1,0 +1,238 @@
+{
+  "id": "tree-navigation",
+  "name": "Tree Navigation",
+  "category": "Navigation",
+  "kind": "component",
+  "selector": "krn-tree-navigation",
+  "selectors": ["krn-tree-navigation"],
+  "symbol": "KrnTreeNavigation",
+  "canonicalSymbol": "KrnTreeNavigation",
+  "canonicalId": "tree-navigation",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Tree Navigation. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled",
+    "current",
+    "loading branch",
+    "error branch",
+    "collapsed",
+    "expanded",
+    "selected"
+  ],
+  "lifecycle": {
+    "status": "beta",
+    "compatibility": "Available for controlled production evaluation; the contract may still be refined.",
+    "owner": "kern/navigation",
+    "evidenceProfile": "beta-promotion",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "hydration",
+      "keyboard",
+      "automated-a11y",
+      "manual-at",
+      "visual-regression",
+      "runtime-performance",
+      "consumer-harness"
+    ],
+    "rationale": "The hierarchical navigation contract remains beta while router integration patterns and manual assistive-technology evidence are completed.",
+    "knownLimitations": [
+      "Consumers own router authorization, preloading, and failed-navigation feedback.",
+      "Deep trees require consumer validation for label overflow and mobile disclosure."
+    ],
+    "promotionCriteria": [
+      "Public API, defaults, aliases and entrypoint ownership are reviewed.",
+      "SSR/hydration, keyboard, accessibility and visual evidence are linked.",
+      "Runtime scale limits and consumer testing contract are documented.",
+      "Migration impact is classified before lifecycle promotion."
+    ],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "items",
+      "property": "items",
+      "kind": "input",
+      "type": "ReadonlyArray<KrnTreeNavigationItem>",
+      "required": false,
+      "defaultValue": "[]",
+      "description": "Ordered item collection rendered by the composite widget.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "selectedId",
+      "property": "selectedId",
+      "kind": "model",
+      "type": "string | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Stable id of the currently selected item.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "expandedIds",
+      "property": "expandedIds",
+      "kind": "model",
+      "type": "ReadonlyArray<string>",
+      "required": false,
+      "defaultValue": "[]",
+      "description": "Stable ids of the currently expanded hierarchical items.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.navigation.navigationTree",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "indent",
+      "property": "indent",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "'1rem'",
+      "description": "Logical inline indentation applied for each hierarchical depth level.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "showGuides",
+      "property": "showGuides",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Controls whether the component applies the show guides behavior.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "itemSelected",
+      "property": "itemSelected",
+      "kind": "output",
+      "type": "KrnTreeNavigationItem",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the item selected interaction completes.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "loadChildren",
+      "property": "loadChildren",
+      "kind": "output",
+      "type": "KrnTreeNavigationItem",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Requests children when an unloaded item is expanded or its failed request is retried.",
+      "descriptionSource": "source"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": [
+      "Arrow Up and Arrow Down move through visible enabled items.",
+      "Arrow Right expands or enters a branch; Arrow Left collapses or returns to its parent.",
+      "Home and End jump; typing moves to the next matching visible item; Enter activates."
+    ],
+    "notes": [
+      "Every navigation item id is non-empty, stable, and unique.",
+      "Current location is distinct from focus and selection.",
+      "Expansion and hierarchy remain perceivable when labels overflow."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+      "Uses the shared deterministic KERN id service."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Controlled product navigation tree",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Controlled product navigation tree\n *\n * Own selected and expanded ids for a typed nested navigation model.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTreeNavigation, type KrnTreeNavigationItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-tree-navigation-agent-example',\n  standalone: true,\n  imports: [KrnTreeNavigation],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tree-navigation\n      ariaLabel=\"Product navigation\"\n      [items]=\"items\"\n      [(selectedId)]=\"selectedId\"\n      [(expandedIds)]=\"expandedIds\"\n    />\n  `,\n})\nexport class KernTreeNavigationAgentExample {\n  readonly items: readonly KrnTreeNavigationItem[] = [\n    {\n      id: 'customers',\n      label: 'Customers',\n      children: [\n        { id: 'active-customers', label: 'Active' },\n        { id: 'risk-customers', label: 'At risk' },\n      ],\n    },\n  ];\n\n  selectedId: string | null = 'active-customers';\n\n  expandedIds: readonly string[] = ['customers'];\n}\n\nvoid bootstrapApplication(KernTreeNavigationAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/tree-navigation.ts"
+    }
+  ],
+  "related": ["tree", "menu", "sidebar", "breadcrumbs", "tabs", "vertical-tabs", "pagination"],
+  "keywords": [
+    "tree-navigation",
+    "Tree Navigation",
+    "Navigation",
+    "krn-tree-navigation",
+    "KrnTreeNavigation",
+    "hierarchical navigation",
+    "roving focus",
+    "typeahead",
+    "items",
+    "selectedId",
+    "expandedIds",
+    "ariaLabel",
+    "indent",
+    "showGuides",
+    "itemSelected",
+    "loadChildren"
+  ],
+  "guidance": {
+    "useWhen": "Use Tree Navigation for hierarchical route or document wayfinding with expandable branches.",
+    "avoidWhen": "Use Tree for selectable domain data and Menu for a short transient action hierarchy."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Every item id must be non-empty, unique and stable across updates."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/tree-navigation",
+    "json": "components/tree-navigation.json",
+    "markdown": "components/tree-navigation.md"
+  }
+}

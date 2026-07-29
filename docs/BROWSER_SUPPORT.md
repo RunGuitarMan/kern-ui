@@ -23,13 +23,14 @@ validation to their application release gate. Internet Explorer is not supported
 
 The Playwright projects cover:
 
-| Project                                   | Coverage                                                    |
-| ----------------------------------------- | ----------------------------------------------------------- |
-| `e2e`                                     | Chromium user flows, component behavior, keyboard contracts |
-| `a11y`                                    | Full Chromium automated accessibility suite                 |
-| `responsive`                              | Chromium viewport, zoom, reflow, and responsive behavior    |
-| `visual`                                  | Deterministic Chromium Lab screenshots                      |
-| `cross-browser-{chromium,firefox,webkit}` | Tier 1 hydration, semantics, keyboard/focus, and axe smoke  |
+| Project                                   | Coverage                                                       |
+| ----------------------------------------- | -------------------------------------------------------------- |
+| `e2e`                                     | Chromium user flows, component behavior, keyboard contracts    |
+| `a11y`                                    | Full Chromium automated accessibility suite                    |
+| `responsive`                              | Chromium viewport, zoom, reflow, and responsive behavior       |
+| `visual`                                  | Deterministic Chromium Lab screenshots                         |
+| `performance`                             | Large-data DOM, frame latency, form, heap, and cleanup budgets |
+| `cross-browser-{chromium,firefox,webkit}` | Tier 1 hydration, semantics, keyboard/focus, and axe smoke     |
 
 The focused Tier 1 matrix runs with `npm run test:browsers`. `npm run test:e2e` remains the complete
 Playwright release suite and includes the focused matrix plus the Chromium-only full suites.
@@ -56,6 +57,11 @@ assistive-technology pairing has been manually certified.
 
 Critical workflows should be validated by the consuming organization with its own required
 browser, operating system, screen-reader, input, and enterprise policy matrix.
+
+Kern tracks its own manual target matrix in
+[accessibility/manual-evidence.json](accessibility/manual-evidence.json). Every initial record is
+`pending` and the certification status is explicitly `not-certified`; Playwright results cannot
+change a manual record to passing evidence.
 
 ## Adding a supported browser
 

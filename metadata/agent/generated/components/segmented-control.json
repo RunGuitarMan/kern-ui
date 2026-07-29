@@ -1,0 +1,267 @@
+{
+  "id": "segmented-control",
+  "name": "Segmented Control",
+  "category": "Forms",
+  "kind": "component",
+  "selector": "krn-segmented-control",
+  "selectors": ["krn-segmented-control"],
+  "symbol": "KrnSegmentedControl",
+  "canonicalSymbol": "KrnSegmentedControl",
+  "canonicalId": "segmented-control",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Segmented Control. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled",
+    "filled",
+    "empty"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/forms",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "id",
+      "property": "id",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Stable identifier value used by the id contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "options",
+      "property": "options",
+      "kind": "input",
+      "type": "ReadonlyArray<KrnSegmentOption<T>>",
+      "required": true,
+      "defaultValue": "required",
+      "description": "Authoritative option collection presented by the selection control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "identityMatcher",
+      "property": "identityMatcher",
+      "kind": "input",
+      "type": "KrnIdentityMatcher<T>",
+      "required": false,
+      "defaultValue": "Object.is",
+      "description": "Compares option values when object identity is not stable across refreshes.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "trackBy",
+      "property": "trackBy",
+      "kind": "input",
+      "type": "KrnSegmentTrackBy<T>",
+      "required": false,
+      "defaultValue": "(option) => option.value",
+      "description": "Returns the stable identity used to retain rendered items across updates.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "disabledHandler",
+      "property": "disabledHandler",
+      "kind": "input",
+      "type": "KrnSegmentDisabledHandler<T>",
+      "required": false,
+      "defaultValue": "(option) => option.disabled ?? false",
+      "description": "Determines whether an individual option or item is unavailable.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "optionTemplate",
+      "property": "optionTemplate",
+      "kind": "input",
+      "type": "TemplateRef<KrnSegmentOptionContext<T>> | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Template used to render one option with its typed context.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.forms.chooseOption",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "disabled",
+      "property": "disabled",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Prevents user interaction and participates in the disabled-state contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "readonly",
+      "property": "readOnly",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Keeps the value perceivable while preventing user edits.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "required",
+      "property": "required",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Marks the value as required and participates in Angular Forms validation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "invalid",
+      "property": "invalid",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Exposes an externally controlled invalid presentation state.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "valueChange",
+      "property": "valueChange",
+      "kind": "output",
+      "type": "T | null",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the value change interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": true,
+    "validator": true,
+    "valueType": "T | null",
+    "reactiveForms": true,
+    "templateDrivenForms": true,
+    "stateInputs": ["disabled", "readonly", "required", "invalid"],
+    "notes": [
+      "Works with Angular Forms through ControlValueAccessor.",
+      "Angular validator state and explicit KERN state inputs are combined."
+    ]
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": [
+      "Tab focuses",
+      "Arrow keys operate grouped controls",
+      "Escape cancels transient UI"
+    ],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Typed report period",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Typed report period\n *\n * Select one typed period from stable segment options.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSegmentedControl, type KrnSegmentOption } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-segmented-control-agent-example',\n  standalone: true,\n  imports: [KrnSegmentedControl, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-segmented-control\n      ariaLabel=\"Report period\"\n      [options]=\"periodOptions\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernSegmentedControlAgentExample {\n  readonly control = new FormControl<string | null>('quarter', { nonNullable: true });\n\n  readonly periodOptions: readonly KrnSegmentOption<string>[] = [\n    { value: 'month', label: 'Month' },\n    { value: 'quarter', label: 'Quarter' },\n    { value: 'year', label: 'Year' },\n  ];\n}\n\nvoid bootstrapApplication(KernSegmentedControlAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/segmented-control.ts"
+    }
+  ],
+  "related": ["form-field", "label", "hint", "validation-message"],
+  "keywords": [
+    "segmented-control",
+    "Segmented Control",
+    "Forms",
+    "krn-segmented-control",
+    "KrnSegmentedControl",
+    "id",
+    "options",
+    "identityMatcher",
+    "trackBy",
+    "disabledHandler",
+    "optionTemplate",
+    "ariaLabel",
+    "disabled",
+    "readonly",
+    "required",
+    "invalid",
+    "valueChange"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Do not omit required inputs: `options`.",
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Do not manually duplicate value and disabled state when Angular Forms owns the control."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify reactive-form value, touched, disabled, required and invalid state.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/segmented-control",
+    "json": "components/segmented-control.json",
+    "markdown": "components/segmented-control.md"
+  }
+}

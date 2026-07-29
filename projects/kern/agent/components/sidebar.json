@@ -1,0 +1,204 @@
+{
+  "id": "sidebar",
+  "name": "Sidebar",
+  "category": "Layout",
+  "kind": "component",
+  "selector": "krn-sidebar",
+  "selectors": ["krn-sidebar"],
+  "symbol": "KrnSidebar",
+  "canonicalSymbol": "KrnSidebar",
+  "canonicalId": "sidebar",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Sidebar. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/layout",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "collapsed",
+      "property": "collapsed",
+      "kind": "model",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controlled collapsed state with a matching Angular model-change output.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "collapsedMode",
+      "property": "collapsedMode",
+      "kind": "input",
+      "type": "\"hidden\" | \"icons\"",
+      "required": false,
+      "defaultValue": "'icons'",
+      "description": "Controls whether the component applies the collapsed mode behavior.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "width",
+      "property": "width",
+      "kind": "input",
+      "type": "KrnLayoutSpace",
+      "required": false,
+      "defaultValue": "'var(--krn-shell-sidebar-width, 17rem)'",
+      "description": "Explicit inline size of the rendered surface.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "collapsedWidth",
+      "property": "collapsedWidth",
+      "kind": "input",
+      "type": "KrnLayoutSpace",
+      "required": false,
+      "defaultValue": "'4rem'",
+      "description": "Controls whether the component applies the collapsed width behavior.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.layout.secondaryNavigation",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "side",
+      "property": "side",
+      "kind": "input",
+      "type": "\"start\" | \"end\"",
+      "required": false,
+      "defaultValue": "'start'",
+      "description": "Logical side on which the anchored or modal surface is placed.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [
+    {
+      "name": "krnSidebarHeader",
+      "selector": "[krnSidebarHeader]",
+      "required": false,
+      "description": "Projects content matching [krnSidebarHeader]."
+    },
+    {
+      "name": "default-2",
+      "selector": "*",
+      "required": false,
+      "description": "Projects default component content."
+    },
+    {
+      "name": "krnSidebarFooter",
+      "selector": "[krnSidebarFooter]",
+      "required": false,
+      "description": "Projects content matching [krnSidebarFooter]."
+    }
+  ],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Collapsible workspace sidebar",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Collapsible workspace sidebar\n *\n * Keep sidebar collapse state application-owned.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSidebar } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-sidebar-agent-example',\n  standalone: true,\n  imports: [KrnSidebar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-sidebar [(collapsed)]=\"collapsed\" ariaLabel=\"Workspace navigation\">\n      <strong krnSidebarHeader>Workspace</strong>\n      <nav aria-label=\"Sections\">Overview · Members · Audit log</nav>\n      <small krnSidebarFooter>Acme Europe</small>\n    </krn-sidebar>\n  `,\n})\nexport class KernSidebarAgentExample {\n  collapsed = false;\n}\n\nvoid bootstrapApplication(KernSidebarAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/sidebar.ts"
+    }
+  ],
+  "related": ["app-shell", "header", "navigation-rail", "container"],
+  "keywords": [
+    "sidebar",
+    "Sidebar",
+    "Layout",
+    "krn-sidebar",
+    "KrnSidebar",
+    "collapsed",
+    "collapsedMode",
+    "width",
+    "collapsedWidth",
+    "ariaLabel",
+    "side"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/sidebar",
+    "json": "components/sidebar.json",
+    "markdown": "components/sidebar.md"
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "id": "code-block",
+  "name": "Code Block",
+  "category": "Data display",
+  "kind": "component",
+  "selector": "krn-code-block",
+  "selectors": ["krn-code-block"],
+  "symbol": "KrnCodeBlock",
+  "canonicalSymbol": "KrnCodeBlock",
+  "canonicalId": "code-block",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Code Block. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/data-display",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "code",
+      "property": "code",
+      "kind": "input",
+      "type": "string",
+      "required": true,
+      "defaultValue": "required",
+      "description": "Required source text rendered by the syntax-aware code presentation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "language",
+      "property": "language",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "'text'",
+      "description": "Language identifier used by syntax highlighting and accessible code metadata.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "languageLabel",
+      "property": "languageLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Human-readable copy for the language state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "copied",
+      "property": "copied",
+      "kind": "model",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controlled copied state with a matching Angular model-change output.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+      "Browser capabilities are nullable or become available only after hydration."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Copyable API request example",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Copyable API request example\n *\n * Render a complete short code sample with language metadata.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCodeBlock } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-code-block-agent-example',\n  standalone: true,\n  imports: [KrnCodeBlock],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-code-block\n      language=\"typescript\"\n      languageLabel=\"TypeScript\"\n      [code]=\"sourceCode\"\n      [(copied)]=\"copied\"\n    />\n  `,\n})\nexport class KernCodeBlockAgentExample {\n  readonly sourceCode = \"const customer = await client.customers.get('cus-2048');\";\n\n  copied = false;\n}\n\nvoid bootstrapApplication(KernCodeBlockAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/code-block.ts"
+    }
+  ],
+  "related": ["badge", "status-badge", "chip", "tag"],
+  "keywords": [
+    "code-block",
+    "Code Block",
+    "Data display",
+    "krn-code-block",
+    "KrnCodeBlock",
+    "code",
+    "language",
+    "languageLabel",
+    "copied"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Do not omit required inputs: `code`.",
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/code-block",
+    "json": "components/code-block.json",
+    "markdown": "components/code-block.md"
+  }
+}

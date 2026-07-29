@@ -2,6 +2,7 @@
   "name": "@kern-ui/angular",
   "version": "0.1.0",
   "description": "Kern — a precise, accessible Angular design system for product interfaces.",
+  "author": "Kern contributors",
   "keywords": [
     "angular",
     "design-system",
@@ -10,18 +11,48 @@
     "zoneless"
   ],
   "license": "MIT",
+  "homepage": "https://github.com/RunGuitarMan/kern-ui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RunGuitarMan/kern-ui.git",
+    "directory": "projects/kern"
+  },
+  "bugs": {
+    "url": "https://github.com/RunGuitarMan/kern-ui/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "provenance": true
+  },
   "peerDependencies": {
+    "@angular/compiler": "^22.0.0",
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
     "@angular/cdk": "^22.0.0",
     "@angular/aria": "^22.0.0",
-    "rxjs": "^7.4.0"
+    "rxjs": "^7.4.0",
+    "typescript": ">=6.0.0 <6.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@angular/compiler": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    }
   },
   "dependencies": {
     "tslib": "^2.3.0"
   },
   "schematics": "./schematics/collection.json",
+  "bin": {
+    "kern-mcp": "./mcp/server.mjs"
+  },
+  "ng-update": {
+    "migrations": "./schematics/migration.json"
+  },
   "exports": {
     "./styles/kern.css": "./styles/kern.css",
     "./styles/tokens.css": "./styles/tokens.css",
@@ -29,7 +60,22 @@
     "./styles/density.css": "./styles/density.css",
     "./styles/preferences.css": "./styles/preferences.css",
     "./styles/base.css": "./styles/base.css",
-    "./styles/utilities.css": "./styles/utilities.css"
+    "./styles/utilities.css": "./styles/utilities.css",
+    "./agent/component-manifest.json": "./agent/component-manifest.json",
+    "./agent/component-manifest.schema.json": "./agent/component-manifest.schema.json",
+    "./agent/import-map.json": "./agent/import-map.json",
+    "./agent/root-export-map.json": "./agent/root-export-map.json",
+    "./agent/checklist.md": "./agent/checklist.md",
+    "./agent/common-mistakes.md": "./agent/common-mistakes.md",
+    "./agent/llms.txt": "./agent/llms.txt",
+    "./agent/llms-full.txt": "./agent/llms-full.txt",
+    "./agent/examples/index.json": "./agent/examples/index.json",
+    "./agent/examples/README.md": "./agent/examples/README.md",
+    "./agent/examples/*.ts": "./agent/examples/*.ts",
+    "./agent/recipes/*.ts": "./agent/recipes/*.ts",
+    "./agent/components/*.json": "./agent/components/*.json",
+    "./agent/components/*.md": "./agent/components/*.md",
+    "./mcp": "./mcp/lib.mjs"
   },
   "sideEffects": [
     "./styles/*.css"

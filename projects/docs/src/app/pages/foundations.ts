@@ -1,11 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import {
-  KRN_TOKEN_NAMES,
-  KrnBadge,
-  KrnCodeBlock,
-  KrnPageHeader,
-  generateKrnBrandPalette,
-} from '@kern-ui/angular';
+import { KRN_TOKEN_NAMES, generateKrnBrandPalette } from '@kern-ui/angular/core';
+import { KrnBadge, KrnCodeBlock } from '@kern-ui/angular/kit';
+import { KrnPageHeader } from '@kern-ui/angular/patterns';
 
 import { DocsPreferences, type DocsDensity, type DocsTheme } from '../preferences';
 

@@ -61,6 +61,15 @@ export default [
     },
   },
   {
+    files: ['projects/kern/agent/{examples,recipes}/**/*.ts'],
+    rules: {
+      '@angular-eslint/component-selector': [
+        'error',
+        { type: 'element', prefix: 'app', style: 'kebab-case' },
+      ],
+    },
+  },
+  {
     files: ['projects/kern/cdk/src/**/*.ts'],
     rules: {
       'no-restricted-imports': [

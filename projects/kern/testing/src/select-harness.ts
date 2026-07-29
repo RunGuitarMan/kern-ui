@@ -62,7 +62,7 @@ export class KrnSelectOptionHarness extends ComponentHarness {
  * @publicApi
  */
 export class KrnSelectHarness extends ComponentHarness {
-  static readonly hostSelector = 'krn-select';
+  static readonly hostSelector: string = 'krn-select';
 
   static with(options: KrnSelectHarnessFilters = {}): HarnessPredicate<KrnSelectHarness> {
     return new HarnessPredicate(KrnSelectHarness, options)

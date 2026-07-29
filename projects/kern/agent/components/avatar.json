@@ -1,0 +1,196 @@
+{
+  "id": "avatar",
+  "name": "Avatar",
+  "category": "Data display",
+  "kind": "component",
+  "selector": "krn-avatar",
+  "selectors": ["krn-avatar"],
+  "symbol": "KrnAvatar",
+  "canonicalSymbol": "KrnAvatar",
+  "canonicalId": "avatar",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Avatar. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/data-display",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "locale",
+      "property": "locale",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "inject(KRN_LOCALE)",
+      "description": "Locale identifier used for collation, formatting, and component-owned copy.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "src",
+      "property": "src",
+      "kind": "input",
+      "type": "string | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Required media source URL loaded by the component.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "alt",
+      "property": "alt",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Text alternative that communicates the meaning of visual media.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "name",
+      "property": "name",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Required human-readable name for the represented person, item, or action.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "size",
+      "property": "size",
+      "kind": "input",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "required": false,
+      "defaultValue": "'md'",
+      "description": "Named semantic size resolved through KERN density and sizing tokens.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "status",
+      "property": "status",
+      "kind": "input",
+      "type": "\"online\" | \"away\" | \"busy\" | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Current domain status rendered as visible text and a non-color-only treatment.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "imageFailed",
+      "property": "imageFailed",
+      "kind": "model",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controlled image failed state with a matching Angular model-change output.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Named account-owner avatar",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Named account-owner avatar\n *\n * Provide initials fallback and meaningful alternative text.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAvatar } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-avatar-agent-example',\n  standalone: true,\n  imports: [KrnAvatar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-avatar name=\"Ada Lovelace\" alt=\"Ada Lovelace, account owner\" status=\"online\" />\n  `,\n})\nexport class KernAvatarAgentExample {}\n\nvoid bootstrapApplication(KernAvatarAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/avatar.ts"
+    }
+  ],
+  "related": ["badge", "status-badge", "chip", "tag"],
+  "keywords": [
+    "avatar",
+    "Avatar",
+    "Data display",
+    "krn-avatar",
+    "KrnAvatar",
+    "locale",
+    "src",
+    "alt",
+    "name",
+    "size",
+    "status",
+    "imageFailed"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/avatar",
+    "json": "components/avatar.json",
+    "markdown": "components/avatar.md"
+  }
+}

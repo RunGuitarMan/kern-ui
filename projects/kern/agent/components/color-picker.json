@@ -1,0 +1,238 @@
+{
+  "id": "color-picker",
+  "name": "Color Picker",
+  "category": "Forms",
+  "kind": "component",
+  "selector": "krn-color-picker",
+  "selectors": ["krn-color-picker"],
+  "symbol": "KrnColorPicker",
+  "canonicalSymbol": "KrnColorPicker",
+  "canonicalId": "color-picker",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Color Picker. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled",
+    "filled",
+    "empty",
+    "closed",
+    "open",
+    "empty results",
+    "async loading"
+  ],
+  "lifecycle": {
+    "status": "beta",
+    "compatibility": "Available for controlled production evaluation; the contract may still be refined.",
+    "owner": "kern/forms",
+    "evidenceProfile": "beta-promotion",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "hydration",
+      "keyboard",
+      "automated-a11y",
+      "manual-at",
+      "visual-regression",
+      "runtime-performance",
+      "consumer-harness"
+    ],
+    "rationale": "The color model and picker interaction remain beta while input-format scope and manual assistive-technology evidence are finalized.",
+    "knownLimitations": [
+      "The public value contract is limited to documented CSS color formats and is not a color-management system.",
+      "Consumers requiring constrained brand colors should provide a semantic palette instead of unrestricted input."
+    ],
+    "promotionCriteria": [
+      "Public API, defaults, aliases and entrypoint ownership are reviewed.",
+      "SSR/hydration, keyboard, accessibility and visual evidence are linked.",
+      "Runtime scale limits and consumer testing contract are documented.",
+      "Migration impact is classified before lifecycle promotion."
+    ],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "id",
+      "property": "id",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Stable identifier value used by the id contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "labels",
+      "property": "labels",
+      "kind": "input",
+      "type": "Partial<KrnColorPickerTranslations>",
+      "required": false,
+      "defaultValue": "{}",
+      "description": "Localized copy overrides for the component-owned interface text.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "pickerLabel",
+      "property": "pickerLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.colorPicker.chooseColor",
+      "description": "Human-readable copy for the picker state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "textLabel",
+      "property": "textLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.colorPicker.colorValue",
+      "description": "Human-readable copy for the text state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "disabled",
+      "property": "disabled",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Prevents user interaction and participates in the disabled-state contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "readonly",
+      "property": "readOnly",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Keeps the value perceivable while preventing user edits.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "invalid",
+      "property": "invalid",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Exposes an externally controlled invalid presentation state.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "valueChange",
+      "property": "valueChange",
+      "kind": "output",
+      "type": "string",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the value change interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": true,
+    "validator": true,
+    "valueType": "string",
+    "reactiveForms": true,
+    "templateDrivenForms": true,
+    "stateInputs": ["disabled", "readonly", "invalid"],
+    "notes": [
+      "Works with Angular Forms through ControlValueAccessor.",
+      "Angular validator state and explicit KERN state inputs are combined."
+    ]
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": [
+      "Enter or Space opens the picker and Escape closes it.",
+      "Arrow keys adjust the focused hue, saturation, or lightness control.",
+      "Tab follows the visible controls and Apply commits the draft color."
+    ],
+    "notes": [
+      "Every visual color axis has a named keyboard-operable control and numeric value.",
+      "The text value remains visible so color is not the only representation.",
+      "Invalid color text is announced without silently replacing the committed value."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Typed chart accent color",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Typed chart accent color\n *\n * Bind a normalized color value for user-configurable reporting.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnColorPicker } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-color-picker-agent-example',\n  standalone: true,\n  imports: [KrnColorPicker, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-color-picker pickerLabel=\"Chart accent\" textLabel=\"Hex color\" [formControl]=\"control\" />\n  `,\n})\nexport class KernColorPickerAgentExample {\n  readonly control = new FormControl<string>('#4666da', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernColorPickerAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/color-picker.ts"
+    }
+  ],
+  "related": ["form-field", "label", "hint", "validation-message"],
+  "keywords": [
+    "color-picker",
+    "Color Picker",
+    "Forms",
+    "krn-color-picker",
+    "KrnColorPicker",
+    "id",
+    "labels",
+    "pickerLabel",
+    "textLabel",
+    "disabled",
+    "readonly",
+    "invalid",
+    "valueChange"
+  ],
+  "guidance": {
+    "useWhen": "Use Color Picker when users need a validated color value plus visual hue, saturation, lightness, and preview controls.",
+    "avoidWhen": "Use a fixed Select or Radio Group when the product accepts only a small semantic palette."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Do not manually duplicate value and disabled state when Angular Forms owns the control."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify reactive-form value, touched, disabled, required and invalid state.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/color-picker",
+    "json": "components/color-picker.json",
+    "markdown": "components/color-picker.md"
+  }
+}

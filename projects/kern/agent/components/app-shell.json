@@ -1,0 +1,266 @@
+{
+  "id": "app-shell",
+  "name": "App Shell",
+  "category": "Layout",
+  "kind": "component",
+  "selector": "krn-app-shell",
+  "selectors": ["krn-app-shell"],
+  "symbol": "KrnAppShell",
+  "canonicalSymbol": "KrnAppShell",
+  "canonicalId": "app-shell",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "App Shell. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/layout",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "sidebarWidth",
+      "property": "sidebarWidth",
+      "kind": "input",
+      "type": "KrnLayoutSpace",
+      "required": false,
+      "defaultValue": "'17rem'",
+      "description": "Inline size reserved for the expanded application sidebar.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "railWidth",
+      "property": "railWidth",
+      "kind": "input",
+      "type": "KrnLayoutSpace",
+      "required": false,
+      "defaultValue": "'3.5rem'",
+      "description": "Inline size reserved for the application navigation rail.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "mainMaxWidth",
+      "property": "mainMaxWidth",
+      "kind": "input",
+      "type": "KrnLayoutSpace",
+      "required": false,
+      "defaultValue": "'100%'",
+      "description": "Maximum inline size allocated to the primary application content.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "sidebarPosition",
+      "property": "sidebarPosition",
+      "kind": "input",
+      "type": "\"start\" | \"end\"",
+      "required": false,
+      "defaultValue": "'start'",
+      "description": "Logical start or end placement of the application sidebar.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "mobileNavigation",
+      "property": "mobileNavigation",
+      "kind": "input",
+      "type": "\"hidden\" | \"auto\" | \"sidebar\" | \"rail\"",
+      "required": false,
+      "defaultValue": "'auto'",
+      "description": "Template rendered as the application’s narrow-viewport navigation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "mobileNavigationOpen",
+      "property": "mobileNavigationOpen",
+      "kind": "model",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controlled mobile navigation open state with a matching Angular model-change output.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "mobileNavigationId",
+      "property": "mobileNavigationId",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.ids.next('mobile-navigation')",
+      "description": "Stable identifier value used by the mobile navigation contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "mobileNavigationLabel",
+      "property": "mobileNavigationLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.layout.mobileNavigation",
+      "description": "Human-readable copy for the mobile navigation state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "openNavigationLabel",
+      "property": "openNavigationLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.layout.openNavigation",
+      "description": "Human-readable copy for the open navigation state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "closeNavigationLabel",
+      "property": "closeNavigationLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.layout.closeNavigation",
+      "description": "Human-readable copy for the close navigation state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "mainId",
+      "property": "mainId",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "'main-content'",
+      "description": "Stable identifier value used by the main contract.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [
+    {
+      "name": "krn-header-krnappheader",
+      "selector": "krn-header,[krnAppHeader]",
+      "required": false,
+      "description": "Projects content matching krn-header,[krnAppHeader]."
+    },
+    {
+      "name": "krn-navigation-rail-krnapprail",
+      "selector": "krn-navigation-rail,[krnAppRail]",
+      "required": false,
+      "description": "Projects content matching krn-navigation-rail,[krnAppRail]."
+    },
+    {
+      "name": "krn-sidebar-krnappsidebar",
+      "selector": "krn-sidebar,[krnAppSidebar]",
+      "required": false,
+      "description": "Projects content matching krn-sidebar,[krnAppSidebar]."
+    },
+    {
+      "name": "default-4",
+      "selector": "*",
+      "required": false,
+      "description": "Projects default component content."
+    }
+  ],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+      "Uses the shared deterministic KERN id service."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Responsive application shell",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Responsive application shell\n *\n * Compose header, navigation and main content with controlled mobile navigation.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAppShell } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-app-shell-agent-example',\n  standalone: true,\n  imports: [KrnAppShell],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-app-shell [(mobileNavigationOpen)]=\"navigationOpen\">\n      <header krnAppHeader>Operations workspace</header>\n      <nav krnAppSidebar aria-label=\"Workspace\">Overview · Reports · Settings</nav>\n      <main>\n        <h1>Overview</h1>\n        <p>Quarterly operating summary.</p>\n      </main>\n    </krn-app-shell>\n  `,\n})\nexport class KernAppShellAgentExample {\n  navigationOpen = false;\n}\n\nvoid bootstrapApplication(KernAppShellAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/app-shell.ts"
+    }
+  ],
+  "related": ["header", "sidebar", "navigation-rail", "container"],
+  "keywords": [
+    "app-shell",
+    "App Shell",
+    "Layout",
+    "krn-app-shell",
+    "KrnAppShell",
+    "sidebarWidth",
+    "railWidth",
+    "mainMaxWidth",
+    "sidebarPosition",
+    "mobileNavigation",
+    "mobileNavigationOpen",
+    "mobileNavigationId",
+    "mobileNavigationLabel",
+    "openNavigationLabel",
+    "closeNavigationLabel",
+    "mainId"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/app-shell",
+    "json": "components/app-shell.json",
+    "markdown": "components/app-shell.md"
+  }
+}

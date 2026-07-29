@@ -1,0 +1,197 @@
+{
+  "id": "confirmation-pattern",
+  "name": "Confirmation Pattern",
+  "category": "Feedback",
+  "kind": "component",
+  "selector": "krn-confirmation-pattern",
+  "selectors": ["krn-confirmation", "krn-confirmation-pattern"],
+  "symbol": "KrnConfirmationPattern",
+  "canonicalSymbol": "KrnConfirmation",
+  "canonicalId": "confirmation-pattern",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": ["KrnConfirmation"],
+    "selectors": ["krn-confirmation"],
+    "componentIds": []
+  },
+  "summary": "Confirmation Pattern. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/feedback",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "confirming",
+      "property": "confirming",
+      "kind": "model",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controlled confirming state with a matching Angular model-change output.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "requestLabel",
+      "property": "requestLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.feedback.delete",
+      "description": "Human-readable copy for the request state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "prompt",
+      "property": "prompt",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.feedback.confirmPrompt",
+      "description": "Human-readable copy for the prompt state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "confirmLabel",
+      "property": "confirmLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.feedback.confirm",
+      "description": "Human-readable copy for the confirm state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "cancelLabel",
+      "property": "cancelLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.feedback.cancel",
+      "description": "Human-readable copy for the cancel state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "confirmed",
+      "property": "confirmed",
+      "kind": "output",
+      "type": "void",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the confirmed interaction completes.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "cancelled",
+      "property": "cancelled",
+      "kind": "output",
+      "type": "void",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the cancelled interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["Escape closes modal layers", "Focus returns to the trigger"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Inline archive confirmation",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Inline archive confirmation\n *\n * Use a reversible inline confirmation for a local record action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnConfirmationPattern } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-confirmation-pattern-agent-example',\n  standalone: true,\n  imports: [KrnConfirmationPattern],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-confirmation-pattern\n      requestLabel=\"Archive customer\"\n      prompt=\"Archive Acme Europe?\"\n      confirmLabel=\"Archive\"\n      [(confirming)]=\"confirming\"\n    />\n  `,\n})\nexport class KernConfirmationPatternAgentExample {\n  confirming = false;\n}\n\nvoid bootstrapApplication(KernConfirmationPatternAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/confirmation-pattern.ts"
+    }
+  ],
+  "related": ["alert", "banner", "toast", "tooltip"],
+  "keywords": [
+    "confirmation-pattern",
+    "Confirmation Pattern",
+    "Feedback",
+    "krn-confirmation-pattern",
+    "KrnConfirmationPattern",
+    "KrnConfirmation",
+    "confirming",
+    "requestLabel",
+    "prompt",
+    "confirmLabel",
+    "cancelLabel",
+    "confirmed",
+    "cancelled"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/confirmation-pattern",
+    "json": "components/confirmation-pattern.json",
+    "markdown": "components/confirmation-pattern.md"
+  }
+}

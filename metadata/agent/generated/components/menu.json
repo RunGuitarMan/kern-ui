@@ -1,0 +1,238 @@
+{
+  "id": "menu",
+  "name": "Menu",
+  "category": "Navigation",
+  "kind": "component",
+  "selector": "krn-menu",
+  "selectors": ["krn-menu"],
+  "symbol": "KrnMenu",
+  "canonicalSymbol": "KrnMenu",
+  "canonicalId": "menu",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Menu. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled",
+    "current",
+    "closed",
+    "open",
+    "nested",
+    "dismissed"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/navigation",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "items",
+      "property": "items",
+      "kind": "input",
+      "type": "ReadonlyArray<KrnNavigationItem & { readonly shortcut?: string; }>",
+      "required": false,
+      "defaultValue": "[]",
+      "description": "Ordered item collection rendered by the composite widget.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "open",
+      "property": "open",
+      "kind": "model",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controls whether the disclosure or overlay surface is visible.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "triggerLabel",
+      "property": "triggerLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.navigation.actions",
+      "description": "Human-readable copy for the trigger state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "triggerAriaLabel",
+      "property": "triggerAriaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.navigation.openMenu",
+      "description": "Human-readable copy for the trigger aria state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "menuAriaLabel",
+      "property": "menuAriaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.navigation.actions",
+      "description": "Human-readable copy for the menu aria state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "emptyLabel",
+      "property": "emptyLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.navigation.menuEmpty",
+      "description": "Accessible copy that explains the empty state.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "hasProjectedTrigger",
+      "property": "hasProjectedTrigger",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Legacy signal indicating that trigger content is projected by the consumer.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "itemSelected",
+      "property": "itemSelected",
+      "kind": "output",
+      "type": "KrnNavigationItem",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the item selected interaction completes.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "closed",
+      "property": "closed",
+      "kind": "output",
+      "type": "\"selection\" | \"escape\" | \"outside\" | \"detach\"",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the closed interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [
+    {
+      "name": "krnMenuTrigger",
+      "selector": "[krnMenuTrigger]",
+      "required": false,
+      "description": "Optional non-interactive label content projected into the Menu-owned trigger button; omit it to use triggerLabel and never project a button, link, form control, or krn-button."
+    }
+  ],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["Arrow keys move within composites", "Home / End jump", "Enter activates"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Controlled record action menu",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Controlled record action menu\n *\n * Render typed actions and own disclosure state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnMenu, type KrnNavigationItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-menu-agent-example',\n  standalone: true,\n  imports: [KrnMenu],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-menu triggerLabel=\"Record actions\" [items]=\"items\" [(open)]=\"open\" /> `,\n})\nexport class KernMenuAgentExample {\n  readonly items: readonly (KrnNavigationItem & { readonly shortcut?: string })[] = [\n    { id: 'duplicate', label: 'Duplicate', shortcut: '⌘D' },\n    { id: 'archive', label: 'Archive' },\n  ];\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernMenuAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/menu.ts"
+    }
+  ],
+  "related": ["context-menu", "menubar", "breadcrumbs", "tabs", "vertical-tabs", "pagination"],
+  "keywords": [
+    "menu",
+    "Menu",
+    "Navigation",
+    "krn-menu",
+    "KrnMenu",
+    "actions",
+    "popup menu",
+    "keyboard navigation",
+    "items",
+    "open",
+    "triggerLabel",
+    "triggerAriaLabel",
+    "menuAriaLabel",
+    "emptyLabel",
+    "hasProjectedTrigger",
+    "itemSelected",
+    "closed"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "The krnMenuTrigger slot is button label content; the Menu owns trigger semantics, focus, keyboard behavior, and ARIA state."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/menu",
+    "json": "components/menu.json",
+    "markdown": "components/menu.md"
+  }
+}

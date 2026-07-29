@@ -1,0 +1,174 @@
+{
+  "id": "hover-card",
+  "name": "Hover Card",
+  "category": "Feedback",
+  "kind": "component",
+  "selector": "krn-hover-card",
+  "selectors": ["krn-hover-card"],
+  "symbol": "KrnHoverCard",
+  "canonicalSymbol": "KrnHoverCard",
+  "canonicalId": "hover-card",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Hover Card. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "closed",
+    "open",
+    "nested",
+    "dismissed"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/feedback",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.feedback.preview",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "openDelay",
+      "property": "openDelay",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "350",
+      "description": "Delay in milliseconds before the transient surface becomes visible.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "closeDelay",
+      "property": "closeDelay",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "120",
+      "description": "Controls whether the component applies the close delay behavior.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [
+    {
+      "name": "krnHoverCardTrigger",
+      "selector": "[krnHoverCardTrigger]",
+      "required": true,
+      "description": "Required non-interactive label content projected into the Hover Card-owned trigger button; do not project a button, link, form control, or krn-button."
+    },
+    {
+      "name": "default-2",
+      "selector": "*",
+      "required": false,
+      "description": "Projects default component content."
+    }
+  ],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["Escape closes modal layers", "Focus returns to the trigger"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+      "Uses the shared deterministic KERN id service."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Account preview hover card",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Account preview hover card\n *\n * Provide supplemental preview content through the component-owned focusable trigger.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnHoverCard } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-hover-card-agent-example',\n  standalone: true,\n  imports: [KrnHoverCard],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-hover-card ariaLabel=\"Acme Europe preview\">\n      <span krnHoverCardTrigger>Acme Europe</span>\n      <strong>Acme Europe</strong>\n      <p>Enterprise · Renewal 15 October</p>\n    </krn-hover-card>\n  `,\n})\nexport class KernHoverCardAgentExample {}\n\nvoid bootstrapApplication(KernHoverCardAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/hover-card.ts"
+    }
+  ],
+  "related": ["popover", "tooltip", "alert", "banner", "toast"],
+  "keywords": [
+    "hover-card",
+    "Hover Card",
+    "Feedback",
+    "krn-hover-card",
+    "KrnHoverCard",
+    "supplemental preview",
+    "hover focus",
+    "anchored preview",
+    "ariaLabel",
+    "openDelay",
+    "closeDelay"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "The krnHoverCardTrigger slot is button label content; the Hover Card owns trigger semantics, focus, keyboard behavior, and ARIA state."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/hover-card",
+    "json": "components/hover-card.json",
+    "markdown": "components/hover-card.md"
+  }
+}

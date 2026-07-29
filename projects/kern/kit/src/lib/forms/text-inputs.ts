@@ -424,7 +424,7 @@ export class KrnSearchInput extends KrnValueAccessor<string> {
   providers: [...provideKrnFormControl(() => KrnNumberInput)],
   template: `
     <span
-      class="krn-control-shell"
+      class="krn-control-shell krn-number-control"
       [attr.data-disabled]="isDisabled()"
       [attr.data-invalid]="a11y.invalid()"
       [attr.data-readonly]="a11y.readOnly()"

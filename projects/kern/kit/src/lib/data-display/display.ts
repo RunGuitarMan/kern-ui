@@ -13,7 +13,8 @@ import {
   output,
   viewChildren,
 } from '@angular/core';
-import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { KRN_ENGLISH_TRANSLATIONS, KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import type { KrnTreeChildrenState } from '../navigation/tree.types';
 
 export type KrnDisplayTone = 'neutral' | 'brand' | 'info' | 'success' | 'warning' | 'danger';
 
@@ -461,19 +462,12 @@ export class KrnStat {
 @Component({
   selector: 'krn-description-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<dl><ng-content /></dl>`,
+  template: `<ng-content />`,
   styles: `
-    dl {
-      display: grid;
-      grid-template-columns: minmax(7rem, 0.45fr) minmax(0, 1fr);
-      gap: 0;
+    :host {
+      display: block;
       margin: 0;
       border-block-start: 1px solid var(--krn-color-border-subtle, #e0e3e7);
-    }
-    @container (max-width: 28rem) {
-      dl {
-        grid-template-columns: 1fr;
-      }
     }
   `,
 })
@@ -483,15 +477,21 @@ export class KrnDescriptionList {}
   selector: 'krn-description-item',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <dt>{{ term() }}</dt>
-    <dd><ng-content /></dd>
+    <dl>
+      <dt>{{ term() }}</dt>
+      <dd><ng-content /></dd>
+    </dl>
   `,
   styles: `
     :host {
-      display: grid;
-      grid-column: 1 / -1;
-      grid-template-columns: subgrid;
+      display: block;
       border-block-end: 1px solid var(--krn-color-border-subtle, #e0e3e7);
+    }
+    dl {
+      display: grid;
+      grid-template-columns: minmax(7rem, 0.45fr) minmax(0, 1fr);
+      gap: 0;
+      margin: 0;
     }
     dt,
     dd {
@@ -508,7 +508,7 @@ export class KrnDescriptionList {}
       color: var(--krn-color-text, #252932);
     }
     @container (max-width: 28rem) {
-      :host {
+      dl {
         grid-template-columns: 1fr;
       }
       dt {
@@ -791,6 +791,8 @@ export interface KrnTreeNode {
   readonly id: string;
   readonly label: string;
   readonly children?: readonly KrnTreeNode[];
+  /** Describes an expandable node whose children are loaded by the consumer. */
+  readonly childrenState?: KrnTreeChildrenState;
   readonly disabled?: boolean;
 }
 
@@ -841,20 +843,28 @@ function assertValidTreeNodeIds(nodes: readonly KrnTreeNode[]): void {
               [attr.aria-level]="depth + 1"
               [attr.aria-posinset]="index + 1"
               [attr.aria-setsize]="branchNodes.length"
-              [attr.aria-expanded]="node.children?.length ? expanded().has(node.id) : null"
+              [attr.aria-expanded]="isExpandable(node) ? expanded().has(node.id) : null"
               [attr.aria-selected]="selected() === node.id"
               [attr.aria-disabled]="node.disabled || null"
+              [attr.aria-busy]="node.childrenState === 'loading' ? 'true' : null"
+              [attr.aria-invalid]="node.childrenState === 'error' ? 'true' : null"
+              [attr.aria-label]="nodeStateLabel(node)"
               [attr.tabindex]="isTabStop(node) ? 0 : -1"
               (click)="activate(node)"
               (keydown)="onKeydown($event, node)"
             >
               <span
                 class="chevron"
-                [class.has-children]="node.children?.length"
+                [class.has-children]="isExpandable(node)"
                 [class.expanded]="expanded().has(node.id)"
                 aria-hidden="true"
               ></span>
               <span>{{ node.label }}</span>
+              @if (node.childrenState === 'loading') {
+                <span class="node-state" aria-hidden="true">…</span>
+              } @else if (node.childrenState === 'error') {
+                <span class="node-state node-state--error" aria-hidden="true">!</span>
+              }
             </button>
             @if (node.children?.length && expanded().has(node.id)) {
               <ng-container
@@ -949,6 +959,15 @@ function assertValidTreeNodeIds(nodes: readonly KrnTreeNode[]): void {
     .chevron.expanded::before {
       rotate: 45deg;
     }
+    .node-state {
+      margin-inline-start: auto;
+      color: var(--krn-color-text-muted, #626a76);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .node-state--error {
+      color: var(--krn-color-danger-text, #a1342f);
+    }
     :host-context([dir='rtl']) .chevron.has-children:not(.expanded)::before {
       rotate: 135deg;
     }
@@ -969,6 +988,8 @@ export class KrnTree {
   readonly ariaLabel = input(this.translations.navigation.tree);
   readonly selected = model('');
   readonly expanded = model<ReadonlySet<string>>(new Set<string>());
+  /** Requests children when an unloaded node is expanded or its failed request is retried. */
+  readonly loadChildren = output<KrnTreeNode>();
   protected readonly validatedNodes = computed(() => {
     const nodes = this.nodes();
     assertValidTreeNodeIds(nodes);
@@ -994,7 +1015,27 @@ export class KrnTree {
   protected activate(node: KrnTreeNode): void {
     if (node.disabled) return;
     this.selected.set(node.id);
-    if (node.children?.length) this.toggle(node.id);
+    if (this.isExpandable(node)) this.toggle(node);
+  }
+
+  protected isExpandable(node: KrnTreeNode): boolean {
+    return Boolean(node.children?.length || node.childrenState);
+  }
+
+  protected nodeStateLabel(node: KrnTreeNode): string | null {
+    return node.childrenState === 'loading'
+      ? (
+          this.translations.navigation.loadingChildren ??
+          KRN_ENGLISH_TRANSLATIONS.navigation.loadingChildren ??
+          ((label: string) => `Loading children for ${label}`)
+        )(node.label)
+      : node.childrenState === 'error'
+        ? (
+            this.translations.navigation.childrenLoadFailed ??
+            KRN_ENGLISH_TRANSLATIONS.navigation.childrenLoadFailed ??
+            ((label: string) => `Could not load children for ${label}`)
+          )(node.label)
+        : null;
   }
 
   protected isTabStop(node: KrnTreeNode): boolean {
@@ -1018,10 +1059,12 @@ export class KrnTree {
       return;
     }
 
-    if (event.key === 'ArrowRight' && node.children?.length) {
+    if (event.key === 'ArrowRight' && this.isExpandable(node)) {
       event.preventDefault();
       if (!this.expanded().has(node.id)) {
-        this.toggle(node.id);
+        this.toggle(node);
+      } else if (!node.children?.length) {
+        this.requestChildren(node);
       } else {
         this.focusNode(this.firstFocusableVisibleDescendant(node));
       }
@@ -1029,12 +1072,12 @@ export class KrnTree {
     }
 
     if (event.key === 'ArrowLeft') {
-      const expanded = Boolean(node.children?.length && this.expanded().has(node.id));
+      const expanded = Boolean(this.isExpandable(node) && this.expanded().has(node.id));
       const parent = expanded ? null : this.enabledParent(node.id);
       if (!expanded && !parent) return;
       event.preventDefault();
       if (expanded) {
-        this.toggle(node.id);
+        this.toggle(node);
       } else {
         this.focusNode(parent);
       }
@@ -1059,11 +1102,21 @@ export class KrnTree {
     this.focusNode(target?.node);
   }
 
-  private toggle(id: string): void {
+  private toggle(node: KrnTreeNode): void {
     const next = new Set(this.expanded());
-    if (next.has(id)) next.delete(id);
-    else next.add(id);
+    const expanding = !next.has(node.id);
+    if (expanding) next.add(node.id);
+    else next.delete(node.id);
     this.expanded.set(next);
+    if (expanding) {
+      this.requestChildren(node);
+    }
+  }
+
+  private requestChildren(node: KrnTreeNode): void {
+    if (!node.children?.length && node.childrenState && node.childrenState !== 'loading') {
+      this.loadChildren.emit(node);
+    }
   }
 
   private firstFocusableVisibleDescendant(node: KrnTreeNode): KrnTreeNode | null {

@@ -761,6 +761,7 @@ interface KrnCalendarTranslations {
   readonly today: string;
 }
 interface KrnChartTranslations {
+  readonly empty?: string;
   readonly viewData: string;
   readonly hideData: string;
   readonly total: string;
@@ -769,7 +770,13 @@ interface KrnChartTranslations {
   readonly valueColumn: string;
   readonly shareColumn: string;
   readonly legend: string;
+  /**
+   * Backward-compatible template. Prefer `formatPercentOfTotal` for new
+   * locale packs that need grammar beyond the `{value}` token.
+   */
   readonly percentOfTotal: string;
+  readonly formatPercentOfTotal?: (value: string) => string;
+  readonly additionalItems?: (count: number) => string;
   readonly datumLabel: (label: string, value: string) => string;
   readonly datumShareLabel: (label: string, value: string, share: string) => string;
   readonly sourceDataCaption: (title: string, sourceData: string) => string;
@@ -840,8 +847,12 @@ interface KrnNavigationTranslations {
   readonly previous: string;
   readonly next: string;
   readonly noResults: string;
+  /** Backward-compatible template containing the `{page}` token. */
   readonly pageLabel: string;
+  readonly formatPageLabel?: (page: number) => string;
+  /** Backward-compatible template containing `{start}`, `{end}`, and `{total}`. */
   readonly resultRangeLabel: string;
+  readonly formatResultRangeLabel?: (start: number, end: number, total: number) => string;
   readonly actions: string;
   readonly openMenu: string;
   readonly applicationMenu: string;
@@ -852,11 +863,15 @@ interface KrnNavigationTranslations {
   readonly commands: string;
   readonly escapeShortcut: string;
   readonly commandSearch: string;
+  /** Backward-compatible template containing the `{query}` token. */
   readonly noCommandResults: string;
+  readonly formatNoCommandResults?: (query: string) => string;
   readonly commandNavigate: string;
   readonly commandSelect: string;
   readonly commandAvailableOne: string;
+  /** Backward-compatible template containing the `{count}` token. */
   readonly commandAvailableMany: string;
+  readonly formatCommandAvailableMany?: (count: number) => string;
   readonly primary: string;
   readonly tableOfContentsTitle: string;
   readonly tableOfContents: string;
@@ -864,6 +879,8 @@ interface KrnNavigationTranslations {
   readonly skipToMainContent: string;
   readonly expandNode: (label: string) => string;
   readonly collapseNode: (label: string) => string;
+  readonly loadingChildren?: (label: string) => string;
+  readonly childrenLoadFailed?: (label: string) => string;
   readonly tabItemCount: (count: string | number) => string;
 }
 interface KrnFormTranslations {
@@ -885,6 +902,8 @@ interface KrnFormTranslations {
   readonly noOptions: string;
   readonly startTyping: string;
   readonly noMatches: string;
+  readonly loadingOptions?: string;
+  readonly optionsLoadFailed?: string;
   readonly showOptions: string;
   readonly showPassword: string;
   readonly hidePassword: string;
@@ -981,6 +1000,10 @@ interface KrnLayoutTranslations {
   readonly mobileNavigation: string;
   readonly openNavigation: string;
   readonly closeNavigation: string;
+  readonly primaryNavigation: string;
+  readonly secondaryNavigation: string;
+  readonly scrollableContent: string;
+  readonly resizeAdjacentPanels: string;
 }
 interface KrnTranslations {
   readonly actions: KrnActionTranslations;
@@ -1001,8 +1024,26 @@ interface KrnTranslations {
 type KrnTranslationsPatch = {
   readonly [Group in keyof KrnTranslations]?: Partial<KrnTranslations[Group]>;
 };
+/**
+ * Resolves a typed translation formatter or, for backward compatibility,
+ * interpolates only exact `{token}` entries from a legacy string template.
+ *
+ * Interpolation is single-pass: replacement values are text, are never
+ * evaluated, and cannot introduce a second placeholder expansion.
+ */
+declare function krnFormatTranslation<Arguments extends readonly unknown[]>(
+  template: string,
+  parameters: Readonly<Record<string, string | number>>,
+  formatter: ((...args: Arguments) => string) | undefined,
+  ...args: Arguments
+): string;
 declare const KRN_ENGLISH_TRANSLATIONS: Readonly<KrnTranslations>;
-/** Creates an immutable, complete translation set from a typed partial override. */
+/**
+ * Creates an immutable, complete translation set from a typed partial
+ * override. When a patch overrides a legacy template without its corresponding
+ * typed formatter, the resulting complete dictionary derives a safe formatter
+ * from that template instead of retaining the unrelated English formatter.
+ */
 declare function createKrnTranslations(patch?: KrnTranslationsPatch): Readonly<KrnTranslations>;
 /**
  * Replaceable application-wide UI copy. Component-level label inputs remain
@@ -1036,6 +1077,24 @@ declare const KRN_MOTION: InjectionToken<KrnMotionPreference>;
  * injector when an embedded application needs a different locale or direction.
  */
 declare function provideKrn(config?: KrnConfig): EnvironmentProviders;
+
+interface KrnLocalePack {
+  readonly locale: string;
+  readonly direction: KrnDirection;
+  readonly translations: Readonly<KrnTranslations>;
+}
+type KrnLocaleConfig = Readonly<Required<Pick<KrnConfig, 'locale' | 'direction' | 'translations'>>>;
+/**
+ * Adapts a complete locale pack to `provideKrn` without making consumers copy
+ * its locale, direction, and translation fields manually.
+ */
+declare function krnLocaleConfig(pack: Readonly<KrnLocalePack>): KrnLocaleConfig;
+/** Built-in English locale pack. */
+declare const KRN_EN_US_LOCALE: Readonly<KrnLocalePack>;
+/** Complete built-in Russian locale pack maintained with the public translation schema. */
+declare const KRN_RU_RU_LOCALE: Readonly<KrnLocalePack>;
+/** Locale packs shipped and schema-checked with KERN. */
+declare const KRN_LOCALE_PACKS: Readonly<Record<'en-US' | 'ru-RU', Readonly<KrnLocalePack>>>;
 
 interface KrnThemeConfig {
   readonly theme?: KrnTheme;
@@ -1146,9 +1205,12 @@ export {
   KRN_CONFIG,
   KRN_DIRECTION,
   KRN_ENGLISH_TRANSLATIONS,
+  KRN_EN_US_LOCALE,
   KRN_ICONS,
   KRN_LOCALE,
+  KRN_LOCALE_PACKS,
   KRN_MOTION,
+  KRN_RU_RU_LOCALE,
   KRN_THEME_CONFIG,
   KRN_TOKEN_MANIFEST,
   KRN_TOKEN_NAMES,
@@ -1161,6 +1223,8 @@ export {
   createKrnTranslations,
   generateKrnBrandPalette,
   krnBrandPaletteVariables,
+  krnFormatTranslation,
+  krnLocaleConfig,
   krnTokens,
   parseHexColor,
   provideKrn,
@@ -1191,6 +1255,8 @@ export type {
   KrnIconName,
   KrnIconSize,
   KrnLayoutTranslations,
+  KrnLocaleConfig,
+  KrnLocalePack,
   KrnMotionPreference,
   KrnNavigationTranslations,
   KrnOklchColor,

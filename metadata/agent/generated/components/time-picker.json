@@ -1,0 +1,282 @@
+{
+  "id": "time-picker",
+  "name": "Time Picker",
+  "category": "Forms",
+  "kind": "component",
+  "selector": "krn-time-picker",
+  "selectors": ["krn-time-picker"],
+  "symbol": "KrnTimePicker",
+  "canonicalSymbol": "KrnTimePicker",
+  "canonicalId": "time-picker",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Time Picker. Accepts a precise typeable 24-hour time and offers a short set of common choices.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled",
+    "filled",
+    "empty",
+    "closed",
+    "open",
+    "empty results",
+    "async loading"
+  ],
+  "lifecycle": {
+    "status": "beta",
+    "compatibility": "Available for controlled production evaluation; the contract may still be refined.",
+    "owner": "kern/forms",
+    "evidenceProfile": "beta-promotion",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "hydration",
+      "keyboard",
+      "automated-a11y",
+      "manual-at",
+      "visual-regression",
+      "runtime-performance",
+      "consumer-harness"
+    ],
+    "rationale": "The wall-clock editing contract remains beta while locale display and manual assistive-technology evidence are completed.",
+    "knownLimitations": [
+      "Timezone, daylight-saving transitions, dates, and instants are application concerns.",
+      "Consumers must validate domain-specific minute increments and unavailable times."
+    ],
+    "promotionCriteria": [
+      "Public API, defaults, aliases and entrypoint ownership are reviewed.",
+      "SSR/hydration, keyboard, accessibility and visual evidence are linked.",
+      "Runtime scale limits and consumer testing contract are documented.",
+      "Migration impact is classified before lifecycle promotion."
+    ],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "id",
+      "property": "id",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Stable identifier value used by the id contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "labels",
+      "property": "labels",
+      "kind": "input",
+      "type": "Partial<KrnTimePickerTranslations>",
+      "required": false,
+      "defaultValue": "{}",
+      "description": "Localized copy overrides for the component-owned interface text.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.timePicker.chooseTime",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "min",
+      "property": "min",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Smallest accepted numeric or temporal value.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "max",
+      "property": "max",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Largest accepted numeric or temporal value.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "step",
+      "property": "step",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "60",
+      "description": "Increment applied by keyboard and pointer value adjustments.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "disabled",
+      "property": "disabled",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Prevents user interaction and participates in the disabled-state contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "readonly",
+      "property": "readOnly",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Keeps the value perceivable while preventing user edits.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "required",
+      "property": "required",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Marks the value as required and participates in Angular Forms validation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "invalid",
+      "property": "invalid",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Exposes an externally controlled invalid presentation state.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "valueChange",
+      "property": "valueChange",
+      "kind": "output",
+      "type": "string",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the value change interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": true,
+    "validator": true,
+    "valueType": "string",
+    "reactiveForms": true,
+    "templateDrivenForms": true,
+    "stateInputs": ["disabled", "readonly", "required", "invalid"],
+    "notes": [
+      "Works with Angular Forms through ControlValueAccessor.",
+      "Angular validator state and explicit KERN state inputs are combined."
+    ]
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": [
+      "Enter or Space opens the time panel and Escape closes it.",
+      "Arrow Up and Arrow Down adjust the focused hour or minute spinbutton.",
+      "Enter applies a valid draft time."
+    ],
+    "notes": [
+      "Hour and minute are named spinbuttons with numeric bounds and values.",
+      "The formatted draft and validation state remain perceivable.",
+      "The form value is a stable 24-hour HH:mm string independent of display copy."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Typed maintenance time",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Typed maintenance time\n *\n * Bind a 24-hour time string within an allowed operating window.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTimePicker } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-time-picker-agent-example',\n  standalone: true,\n  imports: [KrnTimePicker, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-time-picker\n      ariaLabel=\"Maintenance start\"\n      min=\"06:00\"\n      max=\"22:00\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernTimePickerAgentExample {\n  readonly control = new FormControl<string>('18:30', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernTimePickerAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/time-picker.ts"
+    }
+  ],
+  "related": [
+    "date-picker",
+    "date-range-picker",
+    "form-field",
+    "label",
+    "hint",
+    "validation-message"
+  ],
+  "keywords": [
+    "time-picker",
+    "Time Picker",
+    "Forms",
+    "krn-time-picker",
+    "KrnTimePicker",
+    "24 hour time",
+    "scheduling",
+    "reactive forms",
+    "id",
+    "labels",
+    "ariaLabel",
+    "min",
+    "max",
+    "step",
+    "disabled",
+    "readonly",
+    "required",
+    "invalid",
+    "valueChange"
+  ],
+  "guidance": {
+    "useWhen": "Use Time Picker for a precise local wall-clock value represented as a 24-hour HH:mm string.",
+    "avoidWhen": "Use a short Select when only a few fixed times are valid, and keep timezone conversion outside the picker."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "The value is a 24-hour HH:mm string; timezone conversion remains an application concern.",
+    "Do not manually duplicate value and disabled state when Angular Forms owns the control."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify reactive-form value, touched, disabled, required and invalid state.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/time-picker",
+    "json": "components/time-picker.json",
+    "markdown": "components/time-picker.md"
+  }
+}

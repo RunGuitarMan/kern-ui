@@ -15,10 +15,12 @@ import {
   catalogByCategory,
   type KernCategory,
 } from '@kern-ui/showcase';
-import { KrnBadge, KrnGlobalSearch, type KrnSearchResult } from '@kern-ui/angular';
+import { KrnBadge } from '@kern-ui/angular/kit';
+import { KrnGlobalSearch, type KrnSearchResult } from '@kern-ui/angular/patterns';
 import { filter, map, startWith } from 'rxjs';
 
 import { DocsPreferences } from './preferences';
+import { KERN_DOCS_RELEASE_STATE_LABEL, KERN_DOCS_VERSION_LABEL } from './release-identity';
 
 @Component({
   selector: 'kdocs-root',
@@ -33,6 +35,8 @@ export class App {
   private readonly docsSearch = viewChild<KrnGlobalSearch>('docsSearch');
   protected readonly categories = KERN_CATEGORIES;
   protected readonly catalog = KERN_CATALOG;
+  protected readonly docsVersionLabel = KERN_DOCS_VERSION_LABEL;
+  protected readonly docsReleaseStateLabel = KERN_DOCS_RELEASE_STATE_LABEL;
   protected readonly essentials = [
     'button',
     'text-input',

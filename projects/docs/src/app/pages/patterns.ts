@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { KrnBarChart, type KrnChartDatum } from '@kern-ui/angular/addon-charts';
+import { KrnAlert, KrnBadge, KrnButton } from '@kern-ui/angular/kit';
 import {
-  KrnAlert,
-  KrnBarChart,
-  KrnBadge,
-  KrnButton,
   KrnCrudToolbar,
   KrnDashboardWidget,
   KrnLoginForm,
@@ -14,12 +12,11 @@ import {
   KrnProfileForm,
   KrnSettingsPanel,
   KrnUserMenu,
-  type KrnChartDatum,
   type KrnFormStep,
   type KrnLoginCredentials,
   type KrnNotification,
   type KrnProfileValue,
-} from '@kern-ui/angular';
+} from '@kern-ui/angular/patterns';
 
 @Component({
   selector: 'kdocs-patterns-page',

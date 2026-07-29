@@ -1,0 +1,382 @@
+{
+  "autocomplete": {
+    "useWhen": "Use Autocomplete when suggestions accelerate text entry but a value outside the suggestion set remains valid.",
+    "avoidWhen": "Use Combobox or Select when the submitted value must match an authoritative option identifier.",
+    "keyboard": [
+      "Typing changes the free-text value and filters suggestions.",
+      "Arrow Down and Arrow Up move the active suggestion.",
+      "Enter accepts the active suggestion; Escape dismisses suggestions without clearing text."
+    ],
+    "a11yNotes": [
+      "The editable value remains the source of truth even when no suggestion matches.",
+      "The combobox exposes expansion, controls, autocomplete mode, and active descendant.",
+      "Loading, empty, and error result states remain perceivable without moving focus."
+    ],
+    "lifecycleRationale": "The free-text and suggestion state contract remains beta while async replacement and assistive-technology evidence are completed.",
+    "knownLimitations": [
+      "Applications must validate async suggestion replacement and announcement timing with their own data source.",
+      "Manual screen-reader evidence is required before promotion to stable."
+    ]
+  },
+  "bar-chart": {
+    "useWhen": "Use Bar Chart to compare a small set of categorical values where a common baseline makes differences meaningful.",
+    "avoidWhen": "Use Line Chart for ordered trends and a table when exact values or many categories dominate the task.",
+    "keyboard": [
+      "Tab reaches the source-data toggle, then the single roving data mark.",
+      "Arrow Left and Arrow Right move between marks and reverse in RTL.",
+      "Home and End move to the first and last mark; Enter or Space discloses its value."
+    ],
+    "a11yNotes": [
+      "The chart has a specific title and a keyboard-operable data representation.",
+      "A semantic source-data table exposes the same labels and values.",
+      "Color is supplemented by labels, focus treatment, and the value detail."
+    ],
+    "lifecycleRationale": "The accessible mark-navigation and source-table contract remains beta while chart scale and manual assistive-technology evidence mature.",
+    "knownLimitations": [
+      "The primitive does not yet provide grouped or stacked series, axes customization, or large-series virtualization.",
+      "Consumers must verify value formatting and mark density with production data."
+    ]
+  },
+  "bottom-sheet": {
+    "useWhen": "Use Bottom Sheet for a focused modal task that must remain reachable on narrow touch layouts.",
+    "avoidWhen": "Use Dialog for viewport-independent modal work and Drawer for a side-oriented workflow.",
+    "keyboard": [
+      "Tab and Shift+Tab stay inside the open modal surface.",
+      "Escape closes the topmost dismissible sheet.",
+      "Focus returns to the element that opened the sheet."
+    ],
+    "a11yNotes": [
+      "The surface exposes modal dialog semantics and a visible title.",
+      "Nested overlays register ownership so Escape and focus restoration affect only the top layer.",
+      "Body scrolling is restored after the last modal layer closes."
+    ],
+    "lifecycleRationale": "The responsive modal geometry and nested-overlay behavior remain beta until cross-device and manual assistive-technology evidence is complete.",
+    "knownLimitations": [
+      "There is no public imperative overlay service; open state is currently template-owned.",
+      "Applications must verify virtual-keyboard and safe-area behavior on their supported mobile devices."
+    ]
+  },
+  "color-picker": {
+    "useWhen": "Use Color Picker when users need a validated color value plus visual hue, saturation, lightness, and preview controls.",
+    "avoidWhen": "Use a fixed Select or Radio Group when the product accepts only a small semantic palette.",
+    "keyboard": [
+      "Enter or Space opens the picker and Escape closes it.",
+      "Arrow keys adjust the focused hue, saturation, or lightness control.",
+      "Tab follows the visible controls and Apply commits the draft color."
+    ],
+    "a11yNotes": [
+      "Every visual color axis has a named keyboard-operable control and numeric value.",
+      "The text value remains visible so color is not the only representation.",
+      "Invalid color text is announced without silently replacing the committed value."
+    ],
+    "lifecycleRationale": "The color model and picker interaction remain beta while input-format scope and manual assistive-technology evidence are finalized.",
+    "knownLimitations": [
+      "The public value contract is limited to documented CSS color formats and is not a color-management system.",
+      "Consumers requiring constrained brand colors should provide a semantic palette instead of unrestricted input."
+    ]
+  },
+  "combobox": {
+    "useWhen": "Use Combobox when typing should filter options and the committed value must come from an authoritative list.",
+    "avoidWhen": "Use Autocomplete when unmatched free text is valid, or Select when filtering adds no value.",
+    "keyboard": [
+      "Typing filters options; Arrow Down and Arrow Up move the active option.",
+      "Enter commits the active option.",
+      "Escape closes the popup without inventing or changing a value."
+    ],
+    "a11yNotes": [
+      "The input exposes combobox, expanded, controls, and active-descendant state.",
+      "A committed value resolves back to its option label after asynchronous options arrive.",
+      "Loading, empty, and error option states are announced without stealing focus."
+    ],
+    "lifecycleRationale": "The constrained async-selection contract remains beta while late option hydration and assistive-technology evidence are completed.",
+    "knownLimitations": [
+      "Consumers must provide stable option identity across asynchronous refreshes.",
+      "Manual screen-reader validation is required for application-specific loading and error copy."
+    ]
+  },
+  "command-palette": {
+    "useWhen": "Use Command Palette for a searchable, temporary launcher over a bounded set of application commands.",
+    "avoidWhen": "Use Menu for a small contextual action set and Global Search for content discovery with a results page.",
+    "keyboard": [
+      "Arrow Down and Arrow Up move through enabled results.",
+      "Enter invokes the active command.",
+      "Escape closes the palette and restores focus to its opener."
+    ],
+    "a11yNotes": [
+      "The modal surface has a visible heading and labelled combobox/listbox relationship.",
+      "The active result is exposed through aria-activedescendant.",
+      "Empty results and command execution remain perceivable without adding duplicate tab stops."
+    ],
+    "lifecycleRationale": "The command registration and modal search contract remains beta while scale limits and manual assistive-technology evidence are established.",
+    "knownLimitations": [
+      "The component does not provide a global command registry or application keyboard-shortcut service.",
+      "Consumers own command authorization, asynchronous execution, and route-transition error handling."
+    ]
+  },
+  "data-grid": {
+    "useWhen": "Use Data Grid for interactive tabular data that needs stable row identity, sorting, selection, controlled loading, or fixed-height row virtualization.",
+    "avoidWhen": "Use a semantic table for static content, and do not enable virtual mode for variable-height or expandable detail rows.",
+    "keyboard": [
+      "Arrow keys, Home, End, Page Up, and Page Down move the single roving grid focus.",
+      "Enter or F2 enters the focused cell action; Escape returns to grid navigation.",
+      "Tab enters or leaves the grid without tabbing through every cell."
+    ],
+    "a11yNotes": [
+      "Rows, columns, sort direction, selection, and virtual positions are exposed through grid semantics.",
+      "Every source occurrence requires a stable unique rowIdentity result.",
+      "Pinned columns preserve logical reading and focus order in LTR and RTL."
+    ],
+    "lifecycleRationale": "The grid remains beta because server data, virtualization, pinning, and consumer harness evidence must mature together before API freeze.",
+    "knownLimitations": [
+      "Virtual mode currently requires measurable fixed-height rows and rejects expandable detail rows.",
+      "Grouping, variable-height rows, and column virtualization are not part of the current public contract."
+    ]
+  },
+  "data-table": {
+    "useWhen": "Use Data Table as the Data Grid alias when product language prefers table while retaining the same interactive contract.",
+    "avoidWhen": "Use a native table for read-only content that does not need grid navigation, selection, or virtualization.",
+    "keyboard": [
+      "Arrow keys, Home, End, Page Up, and Page Down move the single roving grid focus.",
+      "Enter or F2 enters a cell action; Escape restores grid navigation.",
+      "Tab enters or leaves the table as one composite widget."
+    ],
+    "a11yNotes": [
+      "Data Table deliberately exposes grid semantics because it is an alias of Data Grid.",
+      "Stable row identity is mandatory across sorting, filtering, and paging.",
+      "Interactive cell content participates in managed action mode rather than the page tab sequence."
+    ],
+    "lifecycleRationale": "The alias follows the beta lifecycle and evidence requirements of the canonical Data Grid contract.",
+    "knownLimitations": [
+      "All Data Grid virtualization and grouping limitations also apply to Data Table.",
+      "The alias must not be treated as a separate native-table implementation."
+    ]
+  },
+  "date-picker": {
+    "useWhen": "Use Date Picker for one locale-formatted plain date while preserving an ISO YYYY-MM-DD domain value.",
+    "avoidWhen": "Use Date Range Picker for an interval and a native date input only when platform behavior is the explicit requirement.",
+    "keyboard": [
+      "Enter or Space opens the calendar and Escape closes it.",
+      "Arrow keys move by day; Home and End move within the week.",
+      "Page Up and Page Down move by month; Enter or Space selects the focused date."
+    ],
+    "a11yNotes": [
+      "The trigger exposes dialog expansion and the calendar uses grid semantics.",
+      "Month changes, disabled dates, selected date, and today remain perceivable.",
+      "Locale formatting never changes the ISO plain-date form value."
+    ],
+    "lifecycleRationale": "The plain-date contract remains beta while locale, boundary, hydration, and manual screen-reader evidence are completed.",
+    "knownLimitations": [
+      "Timezone conversion and date-time instants remain application concerns.",
+      "Consumers must provide deterministic today when server and client clocks can differ."
+    ]
+  },
+  "date-range-picker": {
+    "useWhen": "Use Date Range Picker when users must choose an ordered inclusive start and end plain-date interval.",
+    "avoidWhen": "Use two independent Date Pickers only when the dates do not form one validated interval.",
+    "keyboard": [
+      "Enter or Space opens the calendar and Escape closes it.",
+      "Arrow, Home, End, Page Up, and Page Down move the calendar focus.",
+      "Enter or Space selects the start, then the end, while keeping the interval visible."
+    ],
+    "a11yNotes": [
+      "The current range phase and selected endpoints are announced.",
+      "The calendar exposes grid position, disabled dates, today, and selected endpoints.",
+      "The form value uses stable ISO plain dates and rejects an end before the start."
+    ],
+    "lifecycleRationale": "The two-phase range selection contract remains beta while boundary, locale, and manual assistive-technology evidence are completed.",
+    "knownLimitations": [
+      "Timezone conversion, recurrence, and date-time intervals are outside this component.",
+      "Consumers must validate domain-specific inclusivity and unavailable-date rules."
+    ]
+  },
+  "dialog": {
+    "useWhen": "Use Dialog for a focused modal decision or form that must temporarily block interaction with the page.",
+    "avoidWhen": "Use Popover for non-modal supplemental content and a route when the task needs durable navigation or deep linking.",
+    "keyboard": [
+      "Tab and Shift+Tab stay inside the topmost modal surface.",
+      "Escape closes the topmost dismissible dialog.",
+      "Focus returns to the element that opened the dialog."
+    ],
+    "a11yNotes": [
+      "The surface exposes modal dialog semantics with a visible title and optional description.",
+      "Initial focus never lands on an inert or hidden element.",
+      "Nested overlays register ownership for deterministic Escape and focus restoration."
+    ],
+    "lifecycleRationale": "The template-owned modal contract remains beta while programmatic opening and complete cross-browser assistive-technology evidence are evaluated.",
+    "knownLimitations": [
+      "There is no public typed imperative overlay service in the current release.",
+      "Consumers must verify initial focus and destructive-flow copy for each product dialog."
+    ]
+  },
+  "donut-chart": {
+    "useWhen": "Use Donut Chart for a small part-to-whole composition with clearly distinguishable proportions.",
+    "avoidWhen": "Use Bar Chart when precise comparison matters or when many small segments would be difficult to distinguish.",
+    "keyboard": [
+      "Tab reaches the source-data toggle and each native legend button.",
+      "Focus on a legend button reveals its matching segment and value.",
+      "Enter and Space use native button activation; SVG segments do not duplicate tab stops."
+    ],
+    "a11yNotes": [
+      "Legend buttons provide the keyboard interaction surface for visual segments.",
+      "A semantic source-data table exposes the same labels and values.",
+      "Labels and values supplement color and geometry."
+    ],
+    "lifecycleRationale": "The part-to-whole primitive remains beta while legend scale, formatting, and manual assistive-technology evidence mature.",
+    "knownLimitations": [
+      "The primitive is intentionally limited to one series and does not group very small segments.",
+      "Consumers must choose a different representation when segment count or similarity impairs comparison."
+    ]
+  },
+  "drawer": {
+    "useWhen": "Use Drawer for a focused modal workflow whose spatial relationship is naturally anchored to a viewport side.",
+    "avoidWhen": "Do not use a modal Drawer as permanent application navigation; use Sidebar or Navigation Rail.",
+    "keyboard": [
+      "Tab and Shift+Tab stay inside the open drawer.",
+      "Escape closes the topmost dismissible drawer.",
+      "Focus returns to the drawer opener."
+    ],
+    "a11yNotes": [
+      "The drawer exposes modal dialog semantics and a visible title.",
+      "Logical start/end placement remains correct in LTR and RTL.",
+      "Nested overlays preserve deterministic Escape ordering and focus restoration."
+    ],
+    "lifecycleRationale": "The modal side-surface contract remains beta while placement, nested overlays, and manual assistive-technology evidence are completed.",
+    "knownLimitations": [
+      "There is no public typed imperative overlay service in the current release.",
+      "Consumers must verify narrow-layout fallback and safe content width with production forms."
+    ]
+  },
+  "line-chart": {
+    "useWhen": "Use Line Chart for an ordered trend where direction and change over adjacent values are the primary task.",
+    "avoidWhen": "Use Bar Chart for unordered category comparison and a table when exact values dominate.",
+    "keyboard": [
+      "Tab reaches the source-data toggle, then the single roving data mark.",
+      "Arrow Left and Arrow Right move between marks and reverse in RTL.",
+      "Home and End move to the first and last mark; Enter or Space discloses its value."
+    ],
+    "a11yNotes": [
+      "The chart has a specific title and keyboard-operable data marks.",
+      "A semantic source-data table exposes the same ordered labels and values.",
+      "Focus treatment and value details supplement line geometry and color."
+    ],
+    "lifecycleRationale": "The accessible trend primitive remains beta while scale, multi-series direction, and manual assistive-technology evidence mature.",
+    "knownLimitations": [
+      "The primitive does not yet provide multiple series, axes customization, zoom, or large-series virtualization.",
+      "Consumers must verify label density and value formatting with production data."
+    ]
+  },
+  "multi-select": {
+    "useWhen": "Use Multi Select when users choose several values from a bounded authoritative option set.",
+    "avoidWhen": "Use Tags Input for user-authored values and Checkbox Group when the complete short option set should stay visible.",
+    "keyboard": [
+      "Enter or Space opens the list; Arrow keys move the active option.",
+      "Enter toggles the active option without closing the list.",
+      "Escape closes the list and Backspace removes the last token only from an empty query."
+    ],
+    "a11yNotes": [
+      "The trigger exposes expansion, list ownership, and active descendant.",
+      "Selected values remain visible as named removable tokens.",
+      "Loading, empty, error, and selection-count changes are announced."
+    ],
+    "lifecycleRationale": "The multi-value popup and token contract remains beta while async option replacement and manual assistive-technology evidence are completed.",
+    "knownLimitations": [
+      "Consumers must keep object option identity stable across refreshes.",
+      "Very large selected sets require a product-specific summary or review surface."
+    ]
+  },
+  "resizable-panels": {
+    "useWhen": "Use Resizable Panels when adjacent workspace regions need a persisted user-adjustable size within explicit minimum and maximum bounds.",
+    "avoidWhen": "Use Split Layout when regions should follow responsive rules without direct manipulation.",
+    "keyboard": [
+      "Arrow keys adjust the focused separator by the configured step and respect orientation and RTL.",
+      "Home and End move to the minimum and maximum allowed size.",
+      "Enter or Space toggles the documented collapsed size when collapse is enabled."
+    ],
+    "a11yNotes": [
+      "The handle exposes separator orientation, value minimum, maximum, current value, and disabled state.",
+      "The separator has an explicit localized accessible name.",
+      "Pointer and keyboard changes use the same clamped size model."
+    ],
+    "lifecycleRationale": "The component is experimental while nested layouts, persistence ownership, touch behavior, and cross-browser accessibility evidence are incubated.",
+    "knownLimitations": [
+      "Consumers own persistence and must reconcile stored size with changed minimum and maximum bounds.",
+      "Nested panels and touch resizing require explicit product testing before production adoption."
+    ]
+  },
+  "select": {
+    "useWhen": "Use Select when exactly one value must be chosen from a bounded authoritative option set.",
+    "avoidWhen": "Use Native Select for platform selection, Combobox for searchable options, or Autocomplete for valid free text.",
+    "keyboard": [
+      "Enter or Space opens the list; Arrow keys move the active option.",
+      "Enter commits the active option.",
+      "Escape closes without changing the committed value."
+    ],
+    "a11yNotes": [
+      "The trigger exposes expansion, list ownership, and active descendant.",
+      "The selected option label remains the visible source of truth.",
+      "Loading, empty, and error states remain perceivable without moving focus."
+    ],
+    "lifecycleRationale": "The custom listbox contract remains beta while async states and manual assistive-technology evidence are completed.",
+    "knownLimitations": [
+      "Object values require a stable identityMatcher and trackBy contract.",
+      "Consumers must validate long option labels and async error recovery in their layout."
+    ]
+  },
+  "time-picker": {
+    "useWhen": "Use Time Picker for a precise local wall-clock value represented as a 24-hour HH:mm string.",
+    "avoidWhen": "Use a short Select when only a few fixed times are valid, and keep timezone conversion outside the picker.",
+    "keyboard": [
+      "Enter or Space opens the time panel and Escape closes it.",
+      "Arrow Up and Arrow Down adjust the focused hour or minute spinbutton.",
+      "Enter applies a valid draft time."
+    ],
+    "a11yNotes": [
+      "Hour and minute are named spinbuttons with numeric bounds and values.",
+      "The formatted draft and validation state remain perceivable.",
+      "The form value is a stable 24-hour HH:mm string independent of display copy."
+    ],
+    "lifecycleRationale": "The wall-clock editing contract remains beta while locale display and manual assistive-technology evidence are completed.",
+    "knownLimitations": [
+      "Timezone, daylight-saving transitions, dates, and instants are application concerns.",
+      "Consumers must validate domain-specific minute increments and unavailable times."
+    ]
+  },
+  "tree": {
+    "useWhen": "Use Tree for hierarchical data that needs roving focus, expansion, selection, and optional asynchronous branches.",
+    "avoidWhen": "Use Tree Navigation for route wayfinding and nested lists when items do not require composite-widget keyboard behavior.",
+    "keyboard": [
+      "Arrow Up and Arrow Down move through visible enabled nodes.",
+      "Arrow Right expands or enters a branch; Arrow Left collapses or returns to its parent.",
+      "Home and End jump; typing moves to the next matching visible node."
+    ],
+    "a11yNotes": [
+      "Every node id is non-empty, stable, and unique across the complete tree.",
+      "Hierarchy, position, expansion, selection, loading, and error states are exposed.",
+      "Disabled nodes stay perceivable but are skipped by roving focus."
+    ],
+    "lifecycleRationale": "The hierarchical async-state contract remains beta while large-tree performance and manual assistive-technology evidence are completed.",
+    "knownLimitations": [
+      "Consumers must merge lazy children without creating duplicate ids anywhere in the tree.",
+      "Very large trees require consumer performance validation with representative depth and expansion."
+    ]
+  },
+  "tree-navigation": {
+    "useWhen": "Use Tree Navigation for hierarchical route or document wayfinding with expandable branches.",
+    "avoidWhen": "Use Tree for selectable domain data and Menu for a short transient action hierarchy.",
+    "keyboard": [
+      "Arrow Up and Arrow Down move through visible enabled items.",
+      "Arrow Right expands or enters a branch; Arrow Left collapses or returns to its parent.",
+      "Home and End jump; typing moves to the next matching visible item; Enter activates."
+    ],
+    "a11yNotes": [
+      "Every navigation item id is non-empty, stable, and unique.",
+      "Current location is distinct from focus and selection.",
+      "Expansion and hierarchy remain perceivable when labels overflow."
+    ],
+    "lifecycleRationale": "The hierarchical navigation contract remains beta while router integration patterns and manual assistive-technology evidence are completed.",
+    "knownLimitations": [
+      "Consumers own router authorization, preloading, and failed-navigation feedback.",
+      "Deep trees require consumer validation for label overflow and mobile disclosure."
+    ]
+  }
+}

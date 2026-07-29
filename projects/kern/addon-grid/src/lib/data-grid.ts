@@ -25,6 +25,7 @@ import type { KrnDataGridTranslations } from '@kern-ui/angular/core';
 
 export type KrnDataRowKey = string | number;
 export type KrnDataSortDirection = 'asc' | 'desc';
+export type KrnDataColumnPin = 'start' | 'end';
 
 export interface KrnDataCellContext<T> {
   readonly $implicit: unknown;
@@ -54,6 +55,13 @@ export interface KrnDataColumnOptions<T, V = unknown> {
   readonly maxWidth?: number;
   readonly align?: 'start' | 'center' | 'end';
   readonly priority?: 'primary' | 'secondary' | 'tertiary';
+  /**
+   * Keeps the column at the logical start or end edge while the grid scrolls horizontally.
+   *
+   * Pinned columns are partitioned around unpinned columns without mutating the supplied array.
+   * Logical edges make the same configuration work in both LTR and RTL documents.
+   */
+  readonly pinned?: KrnDataColumnPin;
   readonly sortValue?: (row: T) => unknown;
   readonly filterValue?: (row: T) => unknown;
   readonly compare?: (left: unknown, right: unknown, leftRow: T, rightRow: T) => number;
@@ -225,6 +233,8 @@ const GRID_CELL_ACTION_SELECTOR = [
                 role="columnheader"
                 class="selection-cell"
                 aria-colindex="1"
+                [attr.data-pinned]="hasPinnedStartColumns() ? 'start' : null"
+                [style.inset-inline-start]="hasPinnedStartColumns() ? utilityColumnOffset(0) : null"
                 [attr.tabindex]="
                   focusCellPosition().row === -1 && focusCellPosition().column === 0 ? 0 : -1
                 "
@@ -250,7 +260,12 @@ const GRID_CELL_ACTION_SELECTOR = [
                 role="columnheader"
                 [attr.aria-colindex]="dataColumnOffset() + columnIndex + 1"
                 [attr.aria-sort]="ariaSort(column)"
+                [attr.data-column-key]="column.key"
                 [style.inline-size.px]="columnWidth(column)"
+                [attr.data-pinned]="column.pinned ?? null"
+                [attr.data-pin-boundary]="columnPinBoundary(column)"
+                [style.inset-inline-start]="columnPinnedStart(column)"
+                [style.inset-inline-end]="columnPinnedEnd(column)"
                 [attr.data-align]="column.align ?? 'start'"
                 [attr.data-priority]="column.priority ?? 'secondary'"
                 [attr.tabindex]="
@@ -319,6 +334,7 @@ const GRID_CELL_ACTION_SELECTOR = [
           </div>
           <cdk-virtual-scroll-viewport
             #viewport
+            tabindex="-1"
             [itemSize]="rowHeight()"
             [attr.data-item-size]="rowHeight()"
             [style.block-size.px]="viewportHeight()"
@@ -341,6 +357,10 @@ const GRID_CELL_ACTION_SELECTOR = [
                   role="gridcell"
                   class="selection-cell"
                   aria-colindex="1"
+                  [attr.data-pinned]="hasPinnedStartColumns() ? 'start' : null"
+                  [style.inset-inline-start]="
+                    hasPinnedStartColumns() ? utilityColumnOffset(0) : null
+                  "
                   [attr.tabindex]="
                     focusCellPosition().row === rowIndex && focusCellPosition().column === 0
                       ? 0
@@ -367,6 +387,10 @@ const GRID_CELL_ACTION_SELECTOR = [
                   role="gridcell"
                   [attr.aria-colindex]="dataColumnOffset() + columnIndex + 1"
                   [style.inline-size.px]="columnWidth(column)"
+                  [attr.data-pinned]="column.pinned ?? null"
+                  [attr.data-pin-boundary]="columnPinBoundary(column)"
+                  [style.inset-inline-start]="columnPinnedStart(column)"
+                  [style.inset-inline-end]="columnPinnedEnd(column)"
                   [attr.data-align]="column.align ?? 'start'"
                   [attr.data-priority]="column.priority ?? 'secondary'"
                   [attr.tabindex]="
@@ -422,6 +446,10 @@ const GRID_CELL_ACTION_SELECTOR = [
                     role="columnheader"
                     class="selection-cell"
                     aria-colindex="1"
+                    [attr.data-pinned]="hasPinnedStartColumns() ? 'start' : null"
+                    [style.inset-inline-start]="
+                      hasPinnedStartColumns() ? utilityColumnOffset(0) : null
+                    "
                     [attr.tabindex]="
                       focusCellPosition().row === -1 && focusCellPosition().column === 0 ? 0 : -1
                     "
@@ -447,6 +475,10 @@ const GRID_CELL_ACTION_SELECTOR = [
                     role="columnheader"
                     class="expand-cell"
                     [attr.aria-colindex]="(selectable() ? 1 : 0) + 1"
+                    [attr.data-pinned]="hasPinnedStartColumns() ? 'start' : null"
+                    [style.inset-inline-start]="
+                      hasPinnedStartColumns() ? utilityColumnOffset(selectable() ? 1 : 0) : null
+                    "
                     [attr.tabindex]="
                       focusCellPosition().row === -1 &&
                       focusCellPosition().column === (selectable() ? 1 : 0)
@@ -468,7 +500,12 @@ const GRID_CELL_ACTION_SELECTOR = [
                     role="columnheader"
                     [attr.aria-colindex]="dataColumnOffset() + columnIndex + 1"
                     [attr.aria-sort]="ariaSort(column)"
+                    [attr.data-column-key]="column.key"
                     [style.inline-size.px]="columnWidth(column)"
+                    [attr.data-pinned]="column.pinned ?? null"
+                    [attr.data-pin-boundary]="columnPinBoundary(column)"
+                    [style.inset-inline-start]="columnPinnedStart(column)"
+                    [style.inset-inline-end]="columnPinnedEnd(column)"
                     [attr.data-align]="column.align ?? 'start'"
                     [attr.data-priority]="column.priority ?? 'secondary'"
                     [attr.tabindex]="
@@ -553,6 +590,10 @@ const GRID_CELL_ACTION_SELECTOR = [
                       role="gridcell"
                       class="selection-cell"
                       aria-colindex="1"
+                      [attr.data-pinned]="hasPinnedStartColumns() ? 'start' : null"
+                      [style.inset-inline-start]="
+                        hasPinnedStartColumns() ? utilityColumnOffset(0) : null
+                      "
                       [attr.tabindex]="
                         focusCellPosition().row === rowIndex && focusCellPosition().column === 0
                           ? 0
@@ -579,6 +620,10 @@ const GRID_CELL_ACTION_SELECTOR = [
                       role="gridcell"
                       class="expand-cell"
                       [attr.aria-colindex]="(selectable() ? 1 : 0) + 1"
+                      [attr.data-pinned]="hasPinnedStartColumns() ? 'start' : null"
+                      [style.inset-inline-start]="
+                        hasPinnedStartColumns() ? utilityColumnOffset(selectable() ? 1 : 0) : null
+                      "
                       [attr.tabindex]="
                         focusCellPosition().row === rowIndex &&
                         focusCellPosition().column === (selectable() ? 1 : 0)
@@ -613,6 +658,11 @@ const GRID_CELL_ACTION_SELECTOR = [
                     <td
                       role="gridcell"
                       [attr.aria-colindex]="dataColumnOffset() + columnIndex + 1"
+                      [style.inline-size.px]="columnWidth(column)"
+                      [attr.data-pinned]="column.pinned ?? null"
+                      [attr.data-pin-boundary]="columnPinBoundary(column)"
+                      [style.inset-inline-start]="columnPinnedStart(column)"
+                      [style.inset-inline-end]="columnPinnedEnd(column)"
                       [attr.data-align]="column.align ?? 'start'"
                       [attr.data-priority]="column.priority ?? 'secondary'"
                       [attr.tabindex]="
@@ -690,6 +740,8 @@ const GRID_CELL_ACTION_SELECTOR = [
   `,
   styles: `
     :host {
+      --krn-data-utility-column-size: 2.75rem;
+
       display: block;
       min-inline-size: 0;
       container: krn-data-grid / inline-size;
@@ -841,6 +893,29 @@ const GRID_CELL_ACTION_SELECTOR = [
     .virtual-row[aria-selected='true'] {
       background: var(--krn-color-brand-surface, #fff0e8);
     }
+    [data-pinned] {
+      position: sticky;
+      z-index: 1;
+    }
+    th[data-pinned],
+    .virtual-header > [data-pinned] {
+      z-index: 3;
+      background: var(--krn-color-surface-raised, #f2f3f5);
+    }
+    td[data-pinned],
+    .virtual-row > [data-pinned] {
+      background: var(--krn-color-surface, #fff);
+    }
+    tr[data-selected] td[data-pinned],
+    .virtual-row[aria-selected='true'] > [data-pinned] {
+      background: var(--krn-color-brand-surface, #fff0e8);
+    }
+    [data-pin-boundary='start'] {
+      border-inline-end: 1px solid var(--krn-color-border, #cdd1d7);
+    }
+    [data-pin-boundary='end'] {
+      border-inline-start: 1px solid var(--krn-color-border, #cdd1d7);
+    }
     [data-align='center'] {
       text-align: center;
     }
@@ -850,7 +925,7 @@ const GRID_CELL_ACTION_SELECTOR = [
     }
     .selection-cell,
     .expand-cell {
-      inline-size: 2.75rem;
+      inline-size: var(--krn-data-utility-column-size);
       text-align: center;
     }
     .selection-cell input {
@@ -969,6 +1044,14 @@ const GRID_CELL_ACTION_SELECTOR = [
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+    .virtual-header > [data-pinned],
+    .virtual-row > [data-pinned] {
+      position: sticky;
+    }
+    .virtual-header > .selection-cell,
+    .virtual-row > .selection-cell {
+      flex-basis: var(--krn-data-utility-column-size);
+    }
     [data-cell][data-action-mode] {
       box-shadow: inset 0 0 0 1px var(--krn-color-focus, #4f6feb);
     }
@@ -1015,6 +1098,9 @@ export class KrnDataGrid<T> implements AfterViewChecked {
   private virtualRowResizeObserver: ResizeObserver | null = null;
   private observedVirtualRow: HTMLElement | null = null;
   private readonly measuredVirtualRowHeight = signal<number | null>(null);
+  private columnResizeObserver: ResizeObserver | null = null;
+  private readonly observedColumnHeaders = new Set<HTMLElement>();
+  private readonly measuredColumnWidths = signal<Readonly<Record<string, number>>>({});
   private readonly managedTabIndexes = new Map<KrnDataGridActionElement, string | null>();
   private readonly effectiveMode = computed<KrnDataGridMode>(() => {
     const mode =
@@ -1048,6 +1134,11 @@ export class KrnDataGrid<T> implements AfterViewChecked {
     for (const column of this.columns()) {
       if (keys.has(column.key)) {
         throw new Error(`KrnDataGrid requires unique column keys; received "${column.key}" twice.`);
+      }
+      if (column.pinned !== undefined && column.pinned !== 'start' && column.pinned !== 'end') {
+        throw new Error(
+          `KrnDataGrid column "${column.key}" has an invalid pinned edge "${String(column.pinned)}". Use "start", "end", or omit pinned.`,
+        );
       }
       keys.add(column.key);
     }
@@ -1112,7 +1203,41 @@ export class KrnDataGrid<T> implements AfterViewChecked {
   });
   protected readonly visibleColumns = computed(() => {
     const hidden = this.hiddenColumnKeys();
-    return this.validatedColumns().filter((column) => !hidden.has(column.key));
+    const visible = this.validatedColumns().filter((column) => !hidden.has(column.key));
+    return [
+      ...visible.filter((column) => column.pinned === 'start'),
+      ...visible.filter((column) => column.pinned === undefined),
+      ...visible.filter((column) => column.pinned === 'end'),
+    ];
+  });
+  protected readonly hasPinnedStartColumns = computed(() =>
+    this.visibleColumns().some((column) => column.pinned === 'start'),
+  );
+  private readonly pinnedBoundaryKeys = computed(() => {
+    const columns = this.visibleColumns();
+    return {
+      start: [...columns].reverse().find((column) => column.pinned === 'start')?.key,
+      end: columns.find((column) => column.pinned === 'end')?.key,
+    };
+  });
+  private readonly pinnedColumnOffsets = computed(() => {
+    const start = new Map<string, number>();
+    const end = new Map<string, number>();
+    let startOffset = 0;
+    let endOffset = 0;
+
+    for (const column of this.visibleColumns()) {
+      if (column.pinned !== 'start') continue;
+      start.set(column.key, startOffset);
+      startOffset += this.pinnedColumnWidth(column);
+    }
+    for (const column of [...this.visibleColumns()].reverse()) {
+      if (column.pinned !== 'end') continue;
+      end.set(column.key, endOffset);
+      endOffset += this.pinnedColumnWidth(column);
+    }
+
+    return { start, end };
   });
   protected readonly dataColumnOffset = computed(
     () => Number(this.selectable()) + Number(this.expandable()),
@@ -1221,11 +1346,15 @@ export class KrnDataGrid<T> implements AfterViewChecked {
 
   constructor() {
     afterEveryRender({
-      mixedReadWrite: () => this.syncVirtualRowMeasurement(),
+      mixedReadWrite: () => {
+        this.syncVirtualRowMeasurement();
+        this.syncPinnedColumnMeasurements();
+      },
     });
     this.destroyRef.onDestroy(() => {
       this.virtualFocusSubscription?.unsubscribe();
       this.virtualRowResizeObserver?.disconnect();
+      this.columnResizeObserver?.disconnect();
       this.restoreManagedTabIndexes();
     });
   }
@@ -1356,6 +1485,34 @@ export class KrnDataGrid<T> implements AfterViewChecked {
 
   protected columnWidth(column: KrnDataColumn<T>): number {
     return this.widths()[column.key] ?? column.width ?? 180;
+  }
+
+  private pinnedColumnWidth(column: KrnDataColumn<T>): number {
+    return this.measuredColumnWidths()[column.key] ?? this.columnWidth(column);
+  }
+
+  protected utilityColumnOffset(index: number): string {
+    return index === 0 ? '0px' : `calc(${index} * var(--krn-data-utility-column-size, 2.75rem))`;
+  }
+
+  protected columnPinnedStart(column: KrnDataColumn<T>): string | null {
+    if (column.pinned !== 'start') return null;
+    const offset = this.pinnedColumnOffsets().start.get(column.key) ?? 0;
+    const utilityColumns = this.dataColumnOffset();
+    if (!utilityColumns) return `${offset}px`;
+    const utilityOffset = `${utilityColumns} * var(--krn-data-utility-column-size, 2.75rem)`;
+    return offset ? `calc(${utilityOffset} + ${offset}px)` : `calc(${utilityOffset})`;
+  }
+
+  protected columnPinnedEnd(column: KrnDataColumn<T>): string | null {
+    if (column.pinned !== 'end') return null;
+    return `${this.pinnedColumnOffsets().end.get(column.key) ?? 0}px`;
+  }
+
+  protected columnPinBoundary(column: KrnDataColumn<T>): KrnDataColumnPin | null {
+    if (column.pinned === 'start' && this.pinnedBoundaryKeys().start === column.key) return 'start';
+    if (column.pinned === 'end' && this.pinnedBoundaryKeys().end === column.key) return 'end';
+    return null;
   }
 
   protected startResize(event: PointerEvent, column: KrnDataColumn<T>): void {
@@ -1627,6 +1784,62 @@ export class KrnDataGrid<T> implements AfterViewChecked {
     } else if (element.getAttribute('tabindex') !== originalTabIndex) {
       element.setAttribute('tabindex', originalTabIndex);
     }
+  }
+
+  private syncPinnedColumnMeasurements(): void {
+    const hasPinnedColumns = this.visibleColumns().some((column) => column.pinned !== undefined);
+    if (!hasPinnedColumns) {
+      this.columnResizeObserver?.disconnect();
+      this.columnResizeObserver = null;
+      this.observedColumnHeaders.clear();
+      if (Object.keys(this.measuredColumnWidths()).length) this.measuredColumnWidths.set({});
+      return;
+    }
+
+    const headers = [
+      ...this.host.nativeElement.querySelectorAll<HTMLElement>(
+        '.virtual-header [data-column-key], thead [data-column-key]',
+      ),
+    ];
+    const headersChanged =
+      headers.length !== this.observedColumnHeaders.size ||
+      headers.some((header) => !this.observedColumnHeaders.has(header));
+    if (headersChanged) {
+      this.columnResizeObserver?.disconnect();
+      this.columnResizeObserver = null;
+      this.observedColumnHeaders.clear();
+      headers.forEach((header) => this.observedColumnHeaders.add(header));
+
+      const ResizeObserverConstructor = this.platform.window?.ResizeObserver;
+      if (ResizeObserverConstructor) {
+        this.columnResizeObserver = new ResizeObserverConstructor(() =>
+          this.measurePinnedColumnHeaders(),
+        );
+        headers.forEach((header) => this.columnResizeObserver?.observe(header));
+      }
+    }
+
+    this.measurePinnedColumnHeaders();
+  }
+
+  private measurePinnedColumnHeaders(): void {
+    const measured: Record<string, number> = {};
+    for (const header of this.observedColumnHeaders) {
+      const key = header.dataset['columnKey'];
+      const width = header.getBoundingClientRect().width;
+      if (!key || !Number.isFinite(width) || width < 1) continue;
+      measured[key] = Math.round(width * 100) / 100;
+    }
+
+    const current = this.measuredColumnWidths();
+    const keys = Object.keys(measured);
+    if (
+      keys.length === Object.keys(current).length &&
+      keys.every((key) => Math.abs((current[key] ?? 0) - (measured[key] ?? 0)) < 0.25)
+    ) {
+      return;
+    }
+    this.measuredColumnWidths.set(measured);
   }
 
   private syncVirtualRowMeasurement(): void {

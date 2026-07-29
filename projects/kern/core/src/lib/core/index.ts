@@ -1,5 +1,16 @@
 export { KRN_CONFIG, KRN_DIRECTION, KRN_LOCALE, KRN_MOTION, provideKrn } from './config';
-export { KRN_ENGLISH_TRANSLATIONS, KRN_TRANSLATIONS, createKrnTranslations } from './i18n';
+export {
+  KRN_ENGLISH_TRANSLATIONS,
+  KRN_TRANSLATIONS,
+  createKrnTranslations,
+  krnFormatTranslation,
+} from './i18n';
+export {
+  krnLocaleConfig,
+  KRN_EN_US_LOCALE,
+  KRN_LOCALE_PACKS,
+  KRN_RU_RU_LOCALE,
+} from './locale-packs';
 export {
   KRN_THEME_CONFIG,
   KrnThemeDirective,
@@ -27,4 +38,5 @@ export type {
   KrnTranslations,
   KrnTranslationsPatch,
 } from './i18n';
+export type { KrnLocaleConfig, KrnLocalePack } from './locale-packs';
 export type { KrnPrepaintThemeOptions, KrnPrepaintThemeState, KrnThemeConfig } from './theme';

@@ -1,0 +1,274 @@
+{
+  "id": "multi-step-form",
+  "name": "Multi Step Form",
+  "category": "Patterns",
+  "kind": "component",
+  "selector": "krn-multi-step-form",
+  "selectors": ["krn-multi-step-form"],
+  "symbol": "KrnMultiStepForm",
+  "canonicalSymbol": "KrnMultiStepForm",
+  "canonicalId": "multi-step-form",
+  "owner": "patterns",
+  "importPath": "@kern-ui/angular/patterns",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Multi Step Form. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "loading",
+    "empty",
+    "error",
+    "success"
+  ],
+  "lifecycle": {
+    "status": "recipe",
+    "compatibility": "Adaptable composition whose primitive dependencies have their own lifecycle.",
+    "owner": "kern/patterns",
+    "evidenceProfile": "recipe-validation",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "responsive",
+      "automated-a11y",
+      "adaptation-guidance"
+    ],
+    "rationale": "Adaptable composition whose primitive dependencies have their own lifecycle.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "steps",
+      "property": "steps",
+      "kind": "input",
+      "type": "ReadonlyArray<KrnFormStep>",
+      "required": true,
+      "defaultValue": "required",
+      "description": "Ordered domain values supplied to the step collection.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "current",
+      "property": "current",
+      "kind": "model",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Controlled current state with a matching Angular model-change output.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "furthestStep",
+      "property": "furthestStep",
+      "kind": "model",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Controlled furthest step state with a matching Angular model-change output.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "allowStepNavigation",
+      "property": "allowStepNavigation",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Controls whether the component applies the allow step navigation behavior.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "orientation",
+      "property": "orientation",
+      "kind": "input",
+      "type": "\"horizontal\" | \"vertical\"",
+      "required": false,
+      "defaultValue": "'horizontal'",
+      "description": "Defines the logical axis used by layout and keyboard navigation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "completeLabel",
+      "property": "completeLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.complete",
+      "description": "Human-readable copy for the complete state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.formProgress",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "optionalLabel",
+      "property": "optionalLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.optional",
+      "description": "Human-readable copy for the optional state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "backLabel",
+      "property": "backLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.back",
+      "description": "Human-readable copy for the back state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "continueLabel",
+      "property": "continueLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.continue",
+      "description": "Human-readable copy for the continue state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "emptyStepLabel",
+      "property": "emptyStepLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.step",
+      "description": "Human-readable copy for the empty step state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "stepCounterLabel",
+      "property": "stepCounterLabel",
+      "kind": "input",
+      "type": "(current: number, total: number) => string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.stepCounter",
+      "description": "Human-readable copy for the step counter state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "completed",
+      "property": "completed",
+      "kind": "output",
+      "type": "void",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the completed interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "selector": "*",
+      "required": false,
+      "description": "Projects default component content."
+    }
+  ],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+      "Uses the shared deterministic KERN id service."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Controlled typed onboarding form",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Controlled typed onboarding form\n *\n * Supply required typed steps and own current and furthest progress.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnMultiStepForm, type KrnFormStep } from '@kern-ui/angular/patterns';\n\n@Component({\n  selector: 'app-kern-multi-step-form-agent-example',\n  standalone: true,\n  imports: [KrnMultiStepForm],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-multi-step-form\n      ariaLabel=\"Customer onboarding\"\n      [steps]=\"steps\"\n      [(current)]=\"currentStep\"\n      [(furthestStep)]=\"furthestStep\"\n    >\n      <p>Complete the current onboarding section.</p>\n    </krn-multi-step-form>\n  `,\n})\nexport class KernMultiStepFormAgentExample {\n  readonly steps: readonly KrnFormStep[] = [\n    { id: 'company', label: 'Company', valid: true },\n    { id: 'owners', label: 'Owners', valid: false },\n    { id: 'review', label: 'Review', optional: true },\n  ];\n\n  currentStep = 1;\n\n  furthestStep = 1;\n}\n\nvoid bootstrapApplication(KernMultiStepFormAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/multi-step-form.ts"
+    }
+  ],
+  "related": ["user-menu", "notification-center", "global-search", "filter-bar"],
+  "keywords": [
+    "multi-step-form",
+    "Multi Step Form",
+    "Patterns",
+    "krn-multi-step-form",
+    "KrnMultiStepForm",
+    "steps",
+    "current",
+    "furthestStep",
+    "allowStepNavigation",
+    "orientation",
+    "completeLabel",
+    "ariaLabel",
+    "optionalLabel",
+    "backLabel",
+    "continueLabel",
+    "emptyStepLabel",
+    "stepCounterLabel",
+    "completed"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Do not omit required inputs: `steps`.",
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/multi-step-form",
+    "json": "components/multi-step-form.json",
+    "markdown": "components/multi-step-form.md"
+  }
+}

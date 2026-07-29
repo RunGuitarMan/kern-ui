@@ -149,5 +149,7 @@ Architecture boundaries and current trade-offs are documented in
 ## Releases
 
 Only maintainers prepare releases. The manual release-candidate workflow validates the exact
-source revision and uploads a package artifact; it does not publish to npm. See
-[docs/VERSIONING.md](docs/VERSIONING.md) and [CHANGELOG.md](CHANGELOG.md).
+source revision, assembles one immutable candidate, pauses at the protected `npm-production`
+environment, and then publishes that exact verified tarball through npm trusted publishing with
+OIDC provenance after maintainer approval. See [docs/RELEASING.md](docs/RELEASING.md),
+[docs/VERSIONING.md](docs/VERSIONING.md), and [CHANGELOG.md](CHANGELOG.md).

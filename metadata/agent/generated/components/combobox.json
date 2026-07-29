@@ -1,0 +1,373 @@
+{
+  "id": "combobox",
+  "name": "Combobox",
+  "category": "Forms",
+  "kind": "component",
+  "selector": "krn-combobox",
+  "selectors": ["krn-combobox"],
+  "symbol": "KrnCombobox",
+  "canonicalSymbol": "KrnCombobox",
+  "canonicalId": "combobox",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Combobox. Filters a defined option set and commits the value of one explicit selection.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled",
+    "filled",
+    "empty",
+    "closed",
+    "open",
+    "empty results",
+    "async loading"
+  ],
+  "lifecycle": {
+    "status": "beta",
+    "compatibility": "Available for controlled production evaluation; the contract may still be refined.",
+    "owner": "kern/forms",
+    "evidenceProfile": "beta-promotion",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "hydration",
+      "keyboard",
+      "automated-a11y",
+      "manual-at",
+      "visual-regression",
+      "runtime-performance",
+      "consumer-harness"
+    ],
+    "rationale": "The constrained async-selection contract remains beta while late option hydration and assistive-technology evidence are completed.",
+    "knownLimitations": [
+      "Consumers must provide stable option identity across asynchronous refreshes.",
+      "Manual screen-reader validation is required for application-specific loading and error copy."
+    ],
+    "promotionCriteria": [
+      "Public API, defaults, aliases and entrypoint ownership are reviewed.",
+      "SSR/hydration, keyboard, accessibility and visual evidence are linked.",
+      "Runtime scale limits and consumer testing contract are documented.",
+      "Migration impact is classified before lifecycle promotion."
+    ],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "id",
+      "property": "id",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Stable identifier value used by the id contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "placeholder",
+      "property": "placeholder",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.forms.startTyping",
+      "description": "Short input hint shown only while no value is present.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "emptyText",
+      "property": "emptyText",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.forms.noMatches",
+      "description": "Visible and announced copy when the data collection has no items.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "loadingText",
+      "property": "loadingText",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? ''",
+      "description": "Visible and announced copy while asynchronous data is loading.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "errorText",
+      "property": "errorText",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.forms.optionsLoadFailed ??\n      KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??\n      ''",
+      "description": "Visible and announced copy when loading the data collection fails.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "toggleLabel",
+      "property": "toggleLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.forms.showOptions",
+      "description": "Human-readable copy for the toggle state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "options",
+      "property": "options",
+      "kind": "input",
+      "type": "ReadonlyArray<KrnSelectOption<string>>",
+      "required": true,
+      "defaultValue": "required",
+      "description": "Authoritative option collection presented by the selection control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "optionsState",
+      "property": "optionsState",
+      "kind": "input",
+      "type": "KrnOptionsState",
+      "required": false,
+      "defaultValue": "'ready'",
+      "description": "Controls whether options are interactive or replaced by an announced loading/error state.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "filterLocally",
+      "property": "filterLocally",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Set to false when the consumer filters options remotely in response to queryChange.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "optionFilter",
+      "property": "optionFilter",
+      "kind": "input",
+      "type": "KrnOptionFilter<string> | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Overrides the default case-insensitive local option filter.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "disabled",
+      "property": "disabled",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Prevents user interaction and participates in the disabled-state contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "readonly",
+      "property": "readOnly",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Keeps the value perceivable while preventing user edits.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "required",
+      "property": "required",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Marks the value as required and participates in Angular Forms validation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "invalid",
+      "property": "invalid",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Exposes an externally controlled invalid presentation state.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "open",
+      "property": "open",
+      "kind": "model",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controls whether the disclosure or overlay surface is visible.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "valueChange",
+      "property": "valueChange",
+      "kind": "output",
+      "type": "string",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the value change interaction completes.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "queryChange",
+      "property": "queryChange",
+      "kind": "output",
+      "type": "string",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Emits every user query so remote option sources can load and replace options.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "optionSelected",
+      "property": "optionSelected",
+      "kind": "output",
+      "type": "KrnSelectOption<string>",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the option selected interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": true,
+    "validator": true,
+    "valueType": "string",
+    "reactiveForms": true,
+    "templateDrivenForms": true,
+    "stateInputs": ["disabled", "readonly", "required", "invalid"],
+    "notes": [
+      "Works with Angular Forms through ControlValueAccessor.",
+      "Angular validator state and explicit KERN state inputs are combined."
+    ]
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": [
+      "Typing filters options; Arrow Down and Arrow Up move the active option.",
+      "Enter commits the active option.",
+      "Escape closes the popup without inventing or changing a value."
+    ],
+    "notes": [
+      "The input exposes combobox, expanded, controls, and active-descendant state.",
+      "A committed value resolves back to its option label after asynchronous options arrive.",
+      "Loading, empty, and error option states are announced without stealing focus."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Typed editable owner combobox",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Typed editable owner combobox\n *\n * Offer typed suggestions for an application-owned text value.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCombobox, type KrnSelectOption } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-combobox-agent-example',\n  standalone: true,\n  imports: [KrnCombobox, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-combobox\n      ariaLabel=\"Escalation owner\"\n      [options]=\"ownerOptions\"\n      [formControl]=\"control\"\n      [(open)]=\"open\"\n    />\n  `,\n})\nexport class KernComboboxAgentExample {\n  readonly control = new FormControl<string>('Platform team', { nonNullable: true });\n\n  readonly ownerOptions: readonly KrnSelectOption<string>[] = [\n    { value: 'Platform team', label: 'Platform team' },\n    { value: 'Security team', label: 'Security team' },\n  ];\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernComboboxAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/combobox.ts"
+    }
+  ],
+  "related": [
+    "select",
+    "autocomplete",
+    "multi-select",
+    "form-field",
+    "label",
+    "hint",
+    "validation-message"
+  ],
+  "keywords": [
+    "combobox",
+    "Combobox",
+    "Forms",
+    "krn-combobox",
+    "KrnCombobox",
+    "constrained search",
+    "authoritative options",
+    "typeahead",
+    "id",
+    "placeholder",
+    "emptyText",
+    "loadingText",
+    "errorText",
+    "ariaLabel",
+    "toggleLabel",
+    "options",
+    "optionsState",
+    "filterLocally",
+    "optionFilter",
+    "disabled",
+    "readonly",
+    "required",
+    "invalid",
+    "open",
+    "valueChange",
+    "queryChange",
+    "optionSelected"
+  ],
+  "guidance": {
+    "useWhen": "Use Combobox when typing should filter options and the committed value must come from an authoritative list.",
+    "avoidWhen": "Use Autocomplete when unmatched free text is valid, or Select when filtering adds no value."
+  },
+  "commonMistakes": [
+    "Do not omit required inputs: `options`.",
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Combobox commits only a known option; do not treat unmatched text as a value.",
+    "Keep option identity stable across async refreshes.",
+    "Do not manually duplicate value and disabled state when Angular Forms owns the control."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify reactive-form value, touched, disabled, required and invalid state.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/combobox",
+    "json": "components/combobox.json",
+    "markdown": "components/combobox.md"
+  }
+}

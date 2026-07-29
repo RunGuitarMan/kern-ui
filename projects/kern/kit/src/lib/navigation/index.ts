@@ -1,4 +1,5 @@
 export * from './navigation.types';
+export * from './tree.types';
 export * from './breadcrumbs';
 export * from './tabs';
 export * from './pagination';

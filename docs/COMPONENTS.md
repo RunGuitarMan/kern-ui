@@ -1,9 +1,10 @@
 # Component and state coverage
 
 The typed catalog in `projects/showcase/src/lib/catalog.ts` is the documentation manifest. It
-contains 131 entries; every entry has a route, exact generated input/model/output metadata, a
-curated lifecycle status, keyboard and accessibility notes, do/don't guidance, and a declared
-state matrix.
+contains 131 entries; every entry has a route, exact generated input/model/output metadata,
+keyboard and accessibility notes, do/don't guidance, and a declared state matrix. The
+machine-readable lifecycle source of truth is `projects/kern/api/lifecycle.json`; CI requires the
+catalog to match it exactly.
 
 | Category     | Entries | Representative capabilities                                   |
 | ------------ | ------: | ------------------------------------------------------------- |
@@ -21,6 +22,12 @@ The generated API contract in
 checked against every catalog selector. Do not edit it by hand. Summary, behavior, status, and
 usage guidance remain deliberate human-authored documentation.
 
+The Code tab does not use handwritten snippets. It reads the generated showcase registry built
+from `metadata/agent/examples`: one explicit standalone application for every catalog entry.
+Those same sources are mirrored into the npm package, installed into an isolated consumer, and
+strict-AOT compiled against the packed artifact. The shared specimen secondary entrypoint powers
+both Docs and Lab, and its coverage gate requires a focused render branch for all 131 entries.
+
 ## Lifecycle manifest
 
 Lifecycle status communicates compatibility and ownership, not visual completeness:
@@ -33,9 +40,11 @@ Lifecycle status communicates compatibility and ownership, not visual completene
 | `recipe`       |              15 | Opinionated composition to adapt, not a sealed primitive        |
 | `deprecated`   |               0 | Supported temporarily with a documented replacement             |
 
-Statuses are assigned in the catalog rather than inferred from test counts. A status change is a
-consumer-visible decision and requires review, changelog context, and migration guidance when it
-reduces stability. The full compatibility rules are in [VERSIONING.md](VERSIONING.md).
+Statuses are curated rather than inferred from test counts. The lifecycle registry also covers
+every named public export and blocks an unregistered symbol from silently defaulting to stable. A
+status change is a consumer-visible decision and requires review, evidence, changelog context, and
+migration guidance when it reduces stability. See [LIFECYCLE.md](LIFECYCLE.md) and
+[VERSIONING.md](VERSIONING.md).
 
 ## Visual matrix
 
@@ -61,6 +70,9 @@ Repository evidence is intentionally split by purpose:
 Automated evidence is release-blocking where configured, but it complements rather than replaces
 manual review in the consuming application's browser, operating-system, assistive-technology,
 locale, and policy matrix. See [BROWSER_SUPPORT.md](BROWSER_SUPPORT.md).
+
+The repository manual matrix is intentionally pending and explicitly not certified. See
+[accessibility evidence](accessibility/README.md).
 
 ## Maintainer rule
 

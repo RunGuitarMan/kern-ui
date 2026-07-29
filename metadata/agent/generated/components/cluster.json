@@ -1,0 +1,181 @@
+{
+  "id": "cluster",
+  "name": "Cluster",
+  "category": "Layout",
+  "kind": "component",
+  "selector": "krn-cluster",
+  "selectors": ["krn-cluster"],
+  "symbol": "KrnCluster",
+  "canonicalSymbol": "KrnCluster",
+  "canonicalId": "cluster",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Cluster. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/layout",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "gap",
+      "property": "gap",
+      "kind": "input",
+      "type": "KrnLayoutSpace",
+      "required": false,
+      "defaultValue": "'2'",
+      "description": "Logical spacing inserted between adjacent layout children.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "rowGap",
+      "property": "rowGap",
+      "kind": "input",
+      "type": "KrnLayoutSpace | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Logical spacing inserted between grid rows.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "columnGap",
+      "property": "columnGap",
+      "kind": "input",
+      "type": "KrnLayoutSpace | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Logical spacing inserted between grid columns.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "align",
+      "property": "align",
+      "kind": "input",
+      "type": "KrnLayoutAlignment",
+      "required": false,
+      "defaultValue": "'center'",
+      "description": "Logical cross-axis alignment applied to children by the layout.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "justify",
+      "property": "justify",
+      "kind": "input",
+      "type": "KrnLayoutJustification",
+      "required": false,
+      "defaultValue": "'start'",
+      "description": "Logical main-axis distribution applied to layout children.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "selector": "*",
+      "required": false,
+      "description": "Projects default component content."
+    }
+  ],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Wrapping metadata cluster",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Wrapping metadata cluster\n *\n * Wrap independent metadata items without manual margins.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCluster } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-cluster-agent-example',\n  standalone: true,\n  imports: [KrnCluster],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-cluster gap=\"2\">\n      <span>Owner: Platform</span>\n      <span>Region: EU</span>\n      <span>Status: Healthy</span>\n    </krn-cluster>\n  `,\n})\nexport class KernClusterAgentExample {}\n\nvoid bootstrapApplication(KernClusterAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/cluster.ts"
+    }
+  ],
+  "related": ["app-shell", "header", "sidebar", "navigation-rail"],
+  "keywords": [
+    "cluster",
+    "Cluster",
+    "Layout",
+    "krn-cluster",
+    "KrnCluster",
+    "gap",
+    "rowGap",
+    "columnGap",
+    "align",
+    "justify"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/cluster",
+    "json": "components/cluster.json",
+    "markdown": "components/cluster.md"
+  }
+}

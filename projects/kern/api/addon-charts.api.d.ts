@@ -8,12 +8,18 @@
 import * as _angular_core from '@angular/core';
 
 interface KrnChartDatum {
+  /** Stable identity used to preserve keyboard focus across immutable updates. */
+  readonly id?: string | number;
   readonly label: string;
   readonly value: number;
   readonly description?: string;
 }
 type KrnChartType = 'line' | 'bar' | 'donut';
+type KrnChartDatumKey = string | number;
+type KrnChartDatumIdentity = (datum: KrnChartDatum, index: number) => KrnChartDatumKey;
+type KrnChartNegativeValuePolicy = 'clamp' | 'reject';
 interface KrnChartLabels {
+  readonly empty?: string;
   readonly viewData: string;
   readonly hideData: string;
   readonly total: string;
@@ -22,18 +28,28 @@ interface KrnChartLabels {
   readonly valueColumn: string;
   readonly shareColumn: string;
   readonly legend: string;
+  /** Backward-compatible template containing the `{value}` token. */
   readonly percentOfTotal: string;
+  readonly formatPercentOfTotal?: (value: string) => string;
+  readonly additionalItems?: (count: number) => string;
   readonly datumLabel: (label: string, value: string) => string;
   readonly datumShareLabel: (label: string, value: string, share: string) => string;
   readonly sourceDataCaption: (title: string, sourceData: string) => string;
   readonly summary: (title: string, items: readonly string[]) => string;
 }
+interface KrnResolvedChartLabels extends KrnChartLabels {
+  readonly empty: string;
+  readonly additionalItems: (count: number) => string;
+}
 type KrnChartValueFormatter = (value: number) => string;
-interface KrnLinePoint extends KrnChartDatum {
+interface KrnNormalizedDatum extends KrnChartDatum {
+  readonly key: KrnChartDatumKey;
+}
+interface KrnLinePoint extends KrnNormalizedDatum {
   readonly x: number;
   readonly y: number;
 }
-interface KrnDonutSegment extends KrnChartDatum {
+interface KrnDonutSegment extends KrnNormalizedDatum {
   readonly percent: number;
   readonly dashPercent: number;
   readonly offset: number;
@@ -58,16 +74,28 @@ declare class KrnChart {
   readonly eyebrow: _angular_core.InputSignal<string>;
   readonly description: _angular_core.InputSignal<string>;
   readonly data: _angular_core.InputSignal<readonly KrnChartDatum[]>;
+  /** Returns a stable unique key used to preserve DOM and active state across data reordering. */
+  readonly datumIdentity: _angular_core.InputSignal<KrnChartDatumIdentity>;
+  /** Clamps negative values to zero by default or rejects them with a validation error. */
+  readonly negativeValuePolicy: _angular_core.InputSignal<KrnChartNegativeValuePolicy>;
+  /** Limits the accessible text summary while the full data table remains available. */
+  readonly summaryItemLimit: _angular_core.InputSignal<number>;
   readonly locale: _angular_core.InputSignal<string | string[]>;
   readonly labels: _angular_core.InputSignal<Partial<KrnChartLabels>>;
   readonly valueFormatter: _angular_core.InputSignal<KrnChartValueFormatter | null>;
   readonly percentFormatter: _angular_core.InputSignal<KrnChartValueFormatter | null>;
   readonly tableVisible: _angular_core.ModelSignal<boolean>;
   readonly activeIndex: _angular_core.ModelSignal<number | null>;
+  private readonly activeKey;
+  private readonly hoveredKey;
+  private readonly focusedKey;
+  private previousValidatedData;
+  private previousActiveIndex;
   readonly palette: _angular_core.InputSignal<readonly string[]>;
-  protected readonly resolvedLabels: _angular_core.Signal<KrnChartLabels>;
+  protected readonly resolvedLabels: _angular_core.Signal<KrnResolvedChartLabels>;
   private readonly numberFormatter;
   private readonly percentageNumberFormatter;
+  protected readonly validatedData: _angular_core.Signal<readonly KrnNormalizedDatum[]>;
   protected readonly total: _angular_core.Signal<number>;
   private readonly maxValue;
   protected readonly linePoints: _angular_core.Signal<readonly KrnLinePoint[]>;
@@ -79,13 +107,15 @@ declare class KrnChart {
       y: number;
       width: number;
       height: number;
+      key: KrnChartDatumKey;
+      id?: string | number;
       label: string;
       value: number;
       description?: string;
     }[]
   >;
   protected readonly donutSegments: _angular_core.Signal<readonly KrnDonutSegment[]>;
-  protected readonly activeDatum: _angular_core.Signal<KrnChartDatum | null>;
+  protected readonly activeDatum: _angular_core.Signal<KrnNormalizedDatum | null>;
   protected readonly tooltipPosition: _angular_core.Signal<KrnTooltipPosition>;
   protected readonly accessibleSummary: _angular_core.Signal<string>;
   constructor();
@@ -93,6 +123,13 @@ declare class KrnChart {
   protected barOpacity(index: number): number;
   protected setActive(index: number): void;
   protected clearActive(index: number): void;
+  protected setHovered(key: KrnChartDatumKey): void;
+  protected clearHovered(key: KrnChartDatumKey): void;
+  protected setFocused(key: KrnChartDatumKey): void;
+  protected clearFocused(key: KrnChartDatumKey): void;
+  private activateKey;
+  private reconcileAfterInteraction;
+  private scheduleClear;
   protected markTabIndex(index: number): 0 | -1;
   protected onMarkKeydown(event: KeyboardEvent, index: number): void;
   protected accessibleDatumLabel(datum: KrnChartDatum): string;
@@ -103,6 +140,8 @@ declare class KrnChart {
   protected formattedPercent(value: number): string;
   protected percentOfTotal(value: number): string;
   private cancelHideTimer;
+  private preferredInteractionKey;
+  private clearMissingInteractionKeys;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnChart, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnChart,
@@ -114,6 +153,9 @@ declare class KrnChart {
       eyebrow: { alias: 'eyebrow'; required: false; isSignal: true };
       description: { alias: 'description'; required: false; isSignal: true };
       data: { alias: 'data'; required: true; isSignal: true };
+      datumIdentity: { alias: 'datumIdentity'; required: false; isSignal: true };
+      negativeValuePolicy: { alias: 'negativeValuePolicy'; required: false; isSignal: true };
+      summaryItemLimit: { alias: 'summaryItemLimit'; required: false; isSignal: true };
       locale: { alias: 'locale'; required: false; isSignal: true };
       labels: { alias: 'labels'; required: false; isSignal: true };
       valueFormatter: { alias: 'valueFormatter'; required: false; isSignal: true };
@@ -139,6 +181,12 @@ declare class KrnLineChart {
   readonly labels: _angular_core.InputSignal<Partial<KrnChartLabels>>;
   readonly valueFormatter: _angular_core.InputSignal<KrnChartValueFormatter | null>;
   readonly percentFormatter: _angular_core.InputSignal<KrnChartValueFormatter | null>;
+  /** Returns a stable unique key used to preserve DOM and active state across data reordering. */
+  readonly datumIdentity: _angular_core.InputSignal<KrnChartDatumIdentity>;
+  /** Clamps negative values to zero by default or rejects them with a validation error. */
+  readonly negativeValuePolicy: _angular_core.InputSignal<KrnChartNegativeValuePolicy>;
+  /** Limits the accessible text summary while the full data table remains available. */
+  readonly summaryItemLimit: _angular_core.InputSignal<number>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnLineChart, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnLineChart,
@@ -154,6 +202,9 @@ declare class KrnLineChart {
       labels: { alias: 'labels'; required: false; isSignal: true };
       valueFormatter: { alias: 'valueFormatter'; required: false; isSignal: true };
       percentFormatter: { alias: 'percentFormatter'; required: false; isSignal: true };
+      datumIdentity: { alias: 'datumIdentity'; required: false; isSignal: true };
+      negativeValuePolicy: { alias: 'negativeValuePolicy'; required: false; isSignal: true };
+      summaryItemLimit: { alias: 'summaryItemLimit'; required: false; isSignal: true };
     },
     {},
     never,
@@ -172,6 +223,12 @@ declare class KrnBarChart {
   readonly labels: _angular_core.InputSignal<Partial<KrnChartLabels>>;
   readonly valueFormatter: _angular_core.InputSignal<KrnChartValueFormatter | null>;
   readonly percentFormatter: _angular_core.InputSignal<KrnChartValueFormatter | null>;
+  /** Returns a stable unique key used to preserve DOM and active state across data reordering. */
+  readonly datumIdentity: _angular_core.InputSignal<KrnChartDatumIdentity>;
+  /** Clamps negative values to zero by default or rejects them with a validation error. */
+  readonly negativeValuePolicy: _angular_core.InputSignal<KrnChartNegativeValuePolicy>;
+  /** Limits the accessible text summary while the full data table remains available. */
+  readonly summaryItemLimit: _angular_core.InputSignal<number>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnBarChart, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnBarChart,
@@ -187,6 +244,9 @@ declare class KrnBarChart {
       labels: { alias: 'labels'; required: false; isSignal: true };
       valueFormatter: { alias: 'valueFormatter'; required: false; isSignal: true };
       percentFormatter: { alias: 'percentFormatter'; required: false; isSignal: true };
+      datumIdentity: { alias: 'datumIdentity'; required: false; isSignal: true };
+      negativeValuePolicy: { alias: 'negativeValuePolicy'; required: false; isSignal: true };
+      summaryItemLimit: { alias: 'summaryItemLimit'; required: false; isSignal: true };
     },
     {},
     never,
@@ -205,6 +265,12 @@ declare class KrnDonutChart {
   readonly labels: _angular_core.InputSignal<Partial<KrnChartLabels>>;
   readonly valueFormatter: _angular_core.InputSignal<KrnChartValueFormatter | null>;
   readonly percentFormatter: _angular_core.InputSignal<KrnChartValueFormatter | null>;
+  /** Returns a stable unique key used to preserve DOM and active state across data reordering. */
+  readonly datumIdentity: _angular_core.InputSignal<KrnChartDatumIdentity>;
+  /** Clamps negative values to zero by default or rejects them with a validation error. */
+  readonly negativeValuePolicy: _angular_core.InputSignal<KrnChartNegativeValuePolicy>;
+  /** Limits the accessible text summary while the full data table remains available. */
+  readonly summaryItemLimit: _angular_core.InputSignal<number>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDonutChart, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnDonutChart,
@@ -220,6 +286,9 @@ declare class KrnDonutChart {
       labels: { alias: 'labels'; required: false; isSignal: true };
       valueFormatter: { alias: 'valueFormatter'; required: false; isSignal: true };
       percentFormatter: { alias: 'percentFormatter'; required: false; isSignal: true };
+      datumIdentity: { alias: 'datumIdentity'; required: false; isSignal: true };
+      negativeValuePolicy: { alias: 'negativeValuePolicy'; required: false; isSignal: true };
+      summaryItemLimit: { alias: 'summaryItemLimit'; required: false; isSignal: true };
     },
     {},
     never,
@@ -230,4 +299,12 @@ declare class KrnDonutChart {
 }
 
 export { KrnBarChart, KrnChart, KrnDonutChart, KrnLineChart };
-export type { KrnChartDatum, KrnChartLabels, KrnChartType, KrnChartValueFormatter };
+export type {
+  KrnChartDatum,
+  KrnChartDatumIdentity,
+  KrnChartDatumKey,
+  KrnChartLabels,
+  KrnChartNegativeValuePolicy,
+  KrnChartType,
+  KrnChartValueFormatter,
+};

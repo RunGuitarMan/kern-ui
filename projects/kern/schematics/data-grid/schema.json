@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "KernDataGrid",
+  "title": "Generate a typed KERN data-grid wrapper",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    },
+    "project": {
+      "type": "string",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "path": {
+      "type": "string"
+    },
+    "prefix": {
+      "type": "string",
+      "default": "app"
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["client", "controlled", "virtual"],
+      "default": "client",
+      "description": "Generate an explicit discriminated data-grid mode."
+    },
+    "flat": {
+      "type": "boolean",
+      "default": false
+    },
+    "force": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": ["name"]
+}

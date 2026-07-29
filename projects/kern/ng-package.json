@@ -11,6 +11,17 @@
       "input": "schematics",
       "glob": "**/*",
       "output": "schematics"
+    },
+    {
+      "input": "agent",
+      "glob": "**/*",
+      "ignore": ["**/tsconfig.json"],
+      "output": "agent"
+    },
+    {
+      "input": "mcp",
+      "glob": "{lib,server}.mjs",
+      "output": "mcp"
     }
   ],
   "lib": {

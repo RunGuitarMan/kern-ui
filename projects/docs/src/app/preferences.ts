@@ -1,6 +1,6 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Injectable, PLATFORM_ID, effect, inject, signal } from '@angular/core';
-import { KrnThemeService } from '@kern-ui/angular';
+import { KrnThemeService } from '@kern-ui/angular/core';
 
 export type DocsTheme = 'system' | 'light' | 'dark' | 'contrast';
 export type DocsDensity = 'compact' | 'comfortable' | 'spacious';

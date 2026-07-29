@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/RunGuitarMan/kern-ui/blob/main/docs/accessibility/manual-evidence.schema.json",
+  "title": "Kern manual accessibility evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "libraryVersion",
+    "certification",
+    "targetComponentIds",
+    "records"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "./manual-evidence.schema.json"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "libraryVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$"
+    },
+    "certification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "statement"],
+      "properties": {
+        "status": {
+          "const": "not-certified"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 20
+        }
+      }
+    },
+    "targetComponentIds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/record"
+      }
+    }
+  },
+  "$defs": {
+    "namedVersion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": ["string", "null"],
+          "minLength": 1
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operatingSystem", "browser", "assistiveTechnology", "input"],
+      "properties": {
+        "operatingSystem": {
+          "$ref": "#/$defs/namedVersion"
+        },
+        "browser": {
+          "$ref": "#/$defs/namedVersion"
+        },
+        "assistiveTechnology": {
+          "$ref": "#/$defs/namedVersion"
+        },
+        "input": {
+          "$ref": "#/$defs/namedVersion"
+        }
+      }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "purpose",
+        "componentIds",
+        "environment",
+        "checks",
+        "status",
+        "required",
+        "releaseBlocking",
+        "testedAt",
+        "tester",
+        "verifiedBy",
+        "evidence",
+        "notes"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 20
+        },
+        "componentIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "environment": {
+          "$ref": "#/$defs/environment"
+        },
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "name-role-value",
+              "keyboard",
+              "focus-order",
+              "focus-restoration",
+              "announcements",
+              "browse-mode",
+              "forms-mode",
+              "high-contrast",
+              "zoom-200",
+              "zoom-400",
+              "reflow",
+              "reduced-motion"
+            ]
+          }
+        },
+        "status": {
+          "enum": ["pending", "pass", "fail", "blocked"]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "releaseBlocking": {
+          "type": "boolean"
+        },
+        "testedAt": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "tester": {
+          "type": ["string", "null"],
+          "minLength": 2
+        },
+        "verifiedBy": {
+          "type": ["string", "null"],
+          "minLength": 2
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 10
+        }
+      }
+    }
+  }
+}

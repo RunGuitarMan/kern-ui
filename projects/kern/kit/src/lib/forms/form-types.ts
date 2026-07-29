@@ -28,6 +28,17 @@ export type KrnOptionTrackBy<T> = (option: KrnSelectOption<T>, index: number) =>
 
 export type KrnOptionDisabledHandler<T> = (option: KrnSelectOption<T>) => boolean;
 
+/**
+ * Loading contract for option-backed controls.
+ *
+ * `ready` includes both populated and genuinely empty results. Consumers keep
+ * the previous options out of the interaction model while a request is loading
+ * or has failed, avoiding accidental selection of stale data.
+ */
+export type KrnOptionsState = 'ready' | 'loading' | 'error';
+
+export type KrnOptionFilter<T> = (option: KrnSelectOption<T>, query: string) => boolean;
+
 export interface KrnSegmentOption<T = string> {
   readonly value: T;
   readonly label: string;

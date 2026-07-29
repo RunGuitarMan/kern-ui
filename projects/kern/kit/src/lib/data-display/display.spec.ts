@@ -1,13 +1,56 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { KrnBadge, KrnChip, KrnCodeBlock, KrnMeter, KrnRating, KrnTree } from './display';
+import {
+  KrnBadge,
+  KrnChip,
+  KrnCodeBlock,
+  KrnDescriptionItem,
+  KrnDescriptionList,
+  KrnMeter,
+  KrnRating,
+  KrnTree,
+} from './display';
 
 @Component({
   imports: [KrnChip],
   template: `<krn-chip interactive [selected]="true">Enterprise</krn-chip>`,
 })
 class ChipHost {}
+
+@Component({
+  imports: [KrnDescriptionItem, KrnDescriptionList],
+  template: `
+    <krn-description-list>
+      <krn-description-item term="Owner">Avery Cole</krn-description-item>
+      <krn-description-item term="Plan">Scale</krn-description-item>
+    </krn-description-list>
+  `,
+})
+class DescriptionListHost {}
+
+describe('KrnDescriptionList', () => {
+  it('keeps every term and description as direct children of a native description list', async () => {
+    await TestBed.configureTestingModule({ imports: [DescriptionListHost] }).compileComponents();
+    const fixture = TestBed.createComponent(DescriptionListHost);
+    await fixture.whenStable();
+
+    const lists = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLDListElement>(
+        'krn-description-item > dl',
+      ),
+    ];
+    expect(lists).toHaveLength(2);
+    expect(
+      lists.every(
+        (list) =>
+          list.children.length === 2 &&
+          list.children.item(0)?.tagName === 'DT' &&
+          list.children.item(1)?.tagName === 'DD',
+      ),
+    ).toBe(true);
+  });
+});
 
 describe('KrnChip', () => {
   it('keeps projected content inside its interactive native button', async () => {
@@ -120,6 +163,56 @@ describe('KrnCodeBlock', () => {
 });
 
 describe('KrnTree', () => {
+  it('exposes a retryable lazy-children contract with explicit accessible states', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnTree] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnTree);
+    const requested: string[] = [];
+    fixture.componentInstance.loadChildren.subscribe((node) => requested.push(node.id));
+    fixture.componentRef.setInput('nodes', [
+      { id: 'accounts', label: 'Accounts', childrenState: 'idle' },
+    ]);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const item = (): HTMLButtonElement =>
+      fixture.nativeElement.querySelector('[data-tree-item="accounts"]') as HTMLButtonElement;
+    item().click();
+    fixture.detectChanges();
+    expect(requested).toEqual(['accounts']);
+    expect(item().getAttribute('aria-expanded')).toBe('true');
+
+    fixture.componentRef.setInput('nodes', [
+      { id: 'accounts', label: 'Accounts', childrenState: 'loading' },
+    ]);
+    fixture.detectChanges();
+    expect(item().getAttribute('aria-busy')).toBe('true');
+    expect(item().getAttribute('aria-label')).toBe('Loading children for Accounts');
+
+    item().click();
+    fixture.detectChanges();
+    fixture.componentRef.setInput('nodes', [
+      { id: 'accounts', label: 'Accounts', childrenState: 'error' },
+    ]);
+    fixture.detectChanges();
+    item().click();
+    fixture.detectChanges();
+    expect(requested).toEqual(['accounts', 'accounts']);
+    expect(item().getAttribute('aria-invalid')).toBe('true');
+    expect(item().getAttribute('aria-label')).toBe('Could not load children for Accounts');
+
+    fixture.componentRef.setInput('nodes', [
+      {
+        id: 'accounts',
+        label: 'Accounts',
+        children: [{ id: 'revenue', label: 'Revenue' }],
+      },
+    ]);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[data-tree-item="revenue"]')).not.toBeNull();
+    expect(item().getAttribute('aria-busy')).toBeNull();
+    expect(item().getAttribute('aria-invalid')).toBeNull();
+  });
+
   it('renders nested branches at explicit cumulative depths', async () => {
     await TestBed.configureTestingModule({ imports: [KrnTree] }).compileComponents();
     const fixture = TestBed.createComponent(KrnTree);

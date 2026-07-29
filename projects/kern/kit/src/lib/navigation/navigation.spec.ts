@@ -1,9 +1,14 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import type { Type } from '@angular/core';
-import { KRN_LOCALE } from '@kern-ui/angular/core';
+import {
+  createKrnTranslations,
+  KRN_LOCALE,
+  KRN_TRANSLATIONS,
+  type KrnTranslationsPatch,
+} from '@kern-ui/angular/core';
 import { KrnBreadcrumbs } from './breadcrumbs';
-import { KrnCommandPalette } from './command-palette';
+import { KrnCommandPalette, type KrnCommandPaletteLabels } from './command-palette';
 import { KrnContextMenu, KrnMenu, KrnMenubar } from './menu';
 import {
   KrnBackButton,
@@ -102,6 +107,53 @@ describe('Kern navigation', () => {
     )?.click();
     fixture.detectChanges();
     expect(fixture.componentInstance.page()).toBe(6);
+  });
+
+  it('preserves legacy pagination translation patches', async () => {
+    const patch = {
+      navigation: {
+        pageLabel: 'Seite {page}',
+        resultRangeLabel: '{start}–{end} von {total}',
+      },
+    } satisfies KrnTranslationsPatch;
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: KRN_TRANSLATIONS,
+          useValue: createKrnTranslations(patch),
+        },
+      ],
+    });
+    const fixture = await create(KrnPagination, {
+      totalItems: 45,
+      pageSize: 20,
+      page: 2,
+    });
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('[aria-current="page"]')?.getAttribute('aria-label')).toBe(
+      'Seite 2',
+    );
+    expect(element.querySelector('.summary')?.textContent?.trim()).toBe('21–40 von 45');
+  });
+
+  it('prefers typed pagination formatter inputs when supplied', async () => {
+    const fixture = await create(KrnPagination, {
+      totalItems: 45,
+      pageSize: 20,
+      page: 2,
+      pageLabel: 'ignored {page}',
+      pageLabelFormatter: (page: number) => `Blatt ${page}`,
+      rangeLabel: 'ignored {start} {end} {total}',
+      rangeLabelFormatter: (start: number, end: number, total: number) =>
+        `${start}–${end} aus insgesamt ${total}`,
+    });
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('[aria-current="page"]')?.getAttribute('aria-label')).toBe(
+      'Blatt 2',
+    );
+    expect(element.querySelector('.summary')?.textContent?.trim()).toBe('21–40 aus insgesamt 45');
   });
 
   it('keeps the current page inside a stable five-slot mobile pagination window', async () => {
@@ -360,15 +412,16 @@ describe('Kern navigation', () => {
     TestBed.configureTestingModule({
       providers: [{ provide: KRN_LOCALE, useValue: 'tr-TR' }],
     });
+    const labels = {
+      search: 'Komut ara',
+      noResults: '“{query}” için sonuç yok',
+      navigate: 'Gezin',
+      select: 'Seçin',
+    } satisfies Partial<KrnCommandPaletteLabels>;
     const fixture = await create(KrnCommandPalette, {
       open: true,
       description: 'Komutları arayın',
-      labels: {
-        search: 'Komut ara',
-        noResults: '“{query}” için sonuç yok',
-        navigate: 'Gezin',
-        select: 'Seçin',
-      },
+      labels,
       items: [{ id: 'light', label: 'Işık ayarları' }],
     });
     const element = fixture.nativeElement as HTMLElement;
@@ -406,6 +459,7 @@ describe('Kern navigation', () => {
     fixture.detectChanges();
     const nodes = fixture.nativeElement.querySelectorAll('.node') as NodeListOf<HTMLElement>;
     expect(nodes).toHaveLength(2);
+    expect(fixture.nativeElement.querySelector('.node-row')?.getAttribute('role')).toBe('none');
     nodes[1].click();
     fixture.detectChanges();
     expect(fixture.componentInstance.selectedId()).toBe('catalog');
@@ -419,6 +473,42 @@ describe('Kern navigation', () => {
     expect(() => blank.detectChanges()).toThrowError(
       'KrnTreeNavigation requires non-empty unique item ids; received "   ".',
     );
+  });
+
+  it('requests lazy navigation children and exposes loading and retry states', async () => {
+    const fixture = await create(KrnTreeNavigation, {
+      items: [{ id: 'billing', label: 'Billing', childrenState: 'idle' }],
+    });
+    const requested: string[] = [];
+    fixture.componentInstance.loadChildren.subscribe((item) => requested.push(item.id));
+    const toggle = (): HTMLElement => fixture.nativeElement.querySelector('.toggle') as HTMLElement;
+    const item = (): HTMLElement =>
+      fixture.nativeElement.querySelector('[data-tree-item="billing"]') as HTMLElement;
+
+    toggle().click();
+    fixture.detectChanges();
+    expect(requested).toEqual(['billing']);
+    expect(item().getAttribute('aria-expanded')).toBe('true');
+    expect(toggle().getAttribute('aria-hidden')).toBe('true');
+
+    fixture.componentRef.setInput('items', [
+      { id: 'billing', label: 'Billing', childrenState: 'loading' },
+    ]);
+    fixture.detectChanges();
+    expect(item().getAttribute('aria-busy')).toBe('true');
+    expect(item().getAttribute('aria-label')).toBe('Loading children for Billing');
+
+    toggle().click();
+    fixture.detectChanges();
+    fixture.componentRef.setInput('items', [
+      { id: 'billing', label: 'Billing', childrenState: 'error' },
+    ]);
+    fixture.detectChanges();
+    toggle().click();
+    fixture.detectChanges();
+    expect(requested).toEqual(['billing', 'billing']);
+    expect(item().getAttribute('aria-invalid')).toBe('true');
+    expect(item().getAttribute('aria-label')).toBe('Could not load children for Billing');
   });
 
   it('rejects duplicate ids across separate navigation-tree branches', async () => {

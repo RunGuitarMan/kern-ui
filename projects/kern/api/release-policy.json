@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "packageName": "@kern-ui/angular",
+  "registry": "https://registry.npmjs.org/",
+  "license": "MIT",
+  "repository": "https://github.com/RunGuitarMan/kern-ui.git",
+  "auditLevel": "high",
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "@angular/compiler": "^22.0.0",
+    "@angular/aria": "^22.0.0",
+    "@angular/cdk": "^22.0.0",
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "rxjs": "^7.4.0",
+    "typescript": ">=6.0.0 <6.1.0"
+  },
+  "allowedLicenses": ["0BSD", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "MIT"],
+  "sbom": {
+    "format": "CycloneDX",
+    "specVersions": ["1.5", "1.6"],
+    "generator": "npm"
+  }
+}

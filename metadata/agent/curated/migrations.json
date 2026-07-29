@@ -1,0 +1,42 @@
+[
+  {
+    "id": "narrow-owner-imports",
+    "from": "@kern-ui/angular",
+    "to": "@kern-ui/angular/<owner>",
+    "summary": "Move root compatibility imports to the canonical cdk, core, kit, addon-grid, addon-charts, patterns, or testing owner.",
+    "components": [],
+    "before": "import { KrnButton, KrnDataGrid } from '@kern-ui/angular';",
+    "after": "import { KrnButton } from '@kern-ui/angular/kit';\nimport { KrnDataGrid } from '@kern-ui/angular/addon-grid';",
+    "automatic": true
+  },
+  {
+    "id": "data-grid-pagination-mode",
+    "from": "KrnDataGrid.pagination",
+    "to": "KrnDataGrid.mode",
+    "summary": "Replace the compatibility pagination input with an explicit client-mode object.",
+    "components": ["data-grid", "data-table"],
+    "before": "<krn-data-grid [pagination]=\"true\" />",
+    "after": "<krn-data-grid [mode]=\"{ kind: 'client', pagination: true }\" />",
+    "automatic": true
+  },
+  {
+    "id": "data-grid-virtual-mode",
+    "from": "KrnDataGrid.virtualize",
+    "to": "KrnDataGrid.mode",
+    "summary": "Replace the compatibility virtualize input with the discriminated virtual-mode object.",
+    "components": ["data-grid", "data-table"],
+    "before": "<krn-data-grid [virtualize]=\"true\" />",
+    "after": "<krn-data-grid [mode]=\"{ kind: 'virtual' }\" />",
+    "automatic": true
+  },
+  {
+    "id": "menu-trigger-directive",
+    "from": "KrnMenu.hasProjectedTrigger",
+    "to": "KrnMenuTrigger",
+    "summary": "Apply the explicit trigger directive to projected menu trigger content.",
+    "components": ["menu"],
+    "before": "<krn-menu [hasProjectedTrigger]=\"true\">...</krn-menu>",
+    "after": "<span krnMenuTrigger>Actions</span>",
+    "automatic": false
+  }
+]

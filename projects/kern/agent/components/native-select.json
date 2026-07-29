@@ -1,0 +1,293 @@
+{
+  "id": "native-select",
+  "name": "Native Select",
+  "category": "Forms",
+  "kind": "component",
+  "selector": "krn-native-select",
+  "selectors": ["krn-native-select"],
+  "symbol": "KrnNativeSelect",
+  "canonicalSymbol": "KrnNativeSelect",
+  "canonicalId": "native-select",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Native Select. Delegates a single predefined selection surface to the browser and operating system.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled",
+    "filled",
+    "empty"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/forms",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "id",
+      "property": "id",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Stable identifier value used by the id contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "name",
+      "property": "name",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Required human-readable name for the represented person, item, or action.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "placeholder",
+      "property": "placeholder",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Short input hint shown only while no value is present.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "options",
+      "property": "options",
+      "kind": "input",
+      "type": "ReadonlyArray<KrnSelectOption<T>>",
+      "required": true,
+      "defaultValue": "required",
+      "description": "Authoritative option collection presented by the selection control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "identityMatcher",
+      "property": "identityMatcher",
+      "kind": "input",
+      "type": "KrnIdentityMatcher<T>",
+      "required": false,
+      "defaultValue": "Object.is",
+      "description": "Compares option values when object identity is not stable across refreshes.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "trackBy",
+      "property": "trackBy",
+      "kind": "input",
+      "type": "KrnOptionTrackBy<T>",
+      "required": false,
+      "defaultValue": "(option) => option.value",
+      "description": "Returns the stable identity used to retain rendered items across updates.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "stringify",
+      "property": "stringify",
+      "kind": "input",
+      "type": "KrnOptionStringifier<T>",
+      "required": false,
+      "defaultValue": "(option) => option.label",
+      "description": "Converts a domain value into the human-readable label shown to users.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "disabledHandler",
+      "property": "disabledHandler",
+      "kind": "input",
+      "type": "KrnOptionDisabledHandler<T>",
+      "required": false,
+      "defaultValue": "(option) => option.disabled ?? false",
+      "description": "Determines whether an individual option or item is unavailable.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "disabled",
+      "property": "disabled",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Prevents user interaction and participates in the disabled-state contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "readonly",
+      "property": "readOnly",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Keeps the value perceivable while preventing user edits.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "required",
+      "property": "required",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Marks the value as required and participates in Angular Forms validation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "invalid",
+      "property": "invalid",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Exposes an externally controlled invalid presentation state.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "valueChange",
+      "property": "valueChange",
+      "kind": "output",
+      "type": "T | null",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the value change interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": true,
+    "validator": true,
+    "valueType": "T | null",
+    "reactiveForms": true,
+    "templateDrivenForms": true,
+    "stateInputs": ["disabled", "readonly", "required", "invalid"],
+    "notes": [
+      "Works with Angular Forms through ControlValueAccessor.",
+      "Angular validator state and explicit KERN state inputs are combined."
+    ]
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": [
+      "Tab focuses",
+      "Arrow keys operate grouped controls",
+      "Escape cancels transient UI"
+    ],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Typed native region select",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Typed native region select\n *\n * Use native select semantics with the same typed option contract.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnNativeSelect, type KrnSelectOption } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-native-select-agent-example',\n  standalone: true,\n  imports: [KrnNativeSelect, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-native-select ariaLabel=\"Data region\" [options]=\"regionOptions\" [formControl]=\"control\" />\n  `,\n})\nexport class KernNativeSelectAgentExample {\n  readonly control = new FormControl<string | null>('eu-central', { nonNullable: true });\n\n  readonly regionOptions: readonly KrnSelectOption<string>[] = [\n    { value: 'eu-central', label: 'EU Central' },\n    { value: 'us-east', label: 'US East' },\n  ];\n}\n\nvoid bootstrapApplication(KernNativeSelectAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/native-select.ts"
+    }
+  ],
+  "related": ["select", "combobox", "form-field", "label", "hint", "validation-message"],
+  "keywords": [
+    "native-select",
+    "Native Select",
+    "Forms",
+    "krn-native-select",
+    "KrnNativeSelect",
+    "platform picker",
+    "mobile select",
+    "single choice",
+    "id",
+    "name",
+    "placeholder",
+    "ariaLabel",
+    "options",
+    "identityMatcher",
+    "trackBy",
+    "stringify",
+    "disabledHandler",
+    "disabled",
+    "readonly",
+    "required",
+    "invalid",
+    "valueChange"
+  ],
+  "guidance": {
+    "useWhen": "Use it when platform familiarity, compactness, or native mobile selection is the priority.",
+    "avoidWhen": "Do not expect the option popup to inherit Kern surface styling across operating systems."
+  },
+  "commonMistakes": [
+    "Do not omit required inputs: `options`.",
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Do not expect the operating-system option popup to inherit KERN surface styling.",
+    "Do not manually duplicate value and disabled state when Angular Forms owns the control."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify reactive-form value, touched, disabled, required and invalid state.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/native-select",
+    "json": "components/native-select.json",
+    "markdown": "components/native-select.md"
+  }
+}

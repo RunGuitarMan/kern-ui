@@ -1,0 +1,328 @@
+{
+  "id": "date-range-picker",
+  "name": "Date Range Picker",
+  "category": "Forms",
+  "kind": "component",
+  "selector": "krn-date-range-picker",
+  "selectors": ["krn-date-range-picker"],
+  "symbol": "KrnDateRangePicker",
+  "canonicalSymbol": "KrnDateRangePicker",
+  "canonicalId": "date-range-picker",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Date Range Picker. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled",
+    "filled",
+    "empty",
+    "closed",
+    "open",
+    "empty results",
+    "async loading"
+  ],
+  "lifecycle": {
+    "status": "beta",
+    "compatibility": "Available for controlled production evaluation; the contract may still be refined.",
+    "owner": "kern/forms",
+    "evidenceProfile": "beta-promotion",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "hydration",
+      "keyboard",
+      "automated-a11y",
+      "manual-at",
+      "visual-regression",
+      "runtime-performance",
+      "consumer-harness"
+    ],
+    "rationale": "The two-phase range selection contract remains beta while boundary, locale, and manual assistive-technology evidence are completed.",
+    "knownLimitations": [
+      "Timezone conversion, recurrence, and date-time intervals are outside this component.",
+      "Consumers must validate domain-specific inclusivity and unavailable-date rules."
+    ],
+    "promotionCriteria": [
+      "Public API, defaults, aliases and entrypoint ownership are reviewed.",
+      "SSR/hydration, keyboard, accessibility and visual evidence are linked.",
+      "Runtime scale limits and consumer testing contract are documented.",
+      "Migration impact is classified before lifecycle promotion."
+    ],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "id",
+      "property": "id",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Stable identifier value used by the id contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "locale",
+      "property": "locale",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "inject(KRN_LOCALE)",
+      "description": "Locale identifier used for collation, formatting, and component-owned copy.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "today",
+      "property": "today",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "toIsoDate(new Date(this.platform.now()))",
+      "description": "Deterministic plain date treated as today on both server and client.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "weekStartsOn",
+      "property": "weekStartsOn",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Zero-based weekday used as the first calendar column.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "labels",
+      "property": "labels",
+      "kind": "input",
+      "type": "Partial<KrnDatePickerLabels>",
+      "required": false,
+      "defaultValue": "{}",
+      "description": "Localized copy overrides for the component-owned interface text.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "startLabel",
+      "property": "startLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.datePicker.startDate",
+      "description": "Human-readable copy for the start state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "endLabel",
+      "property": "endLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.datePicker.endDate",
+      "description": "Human-readable copy for the end state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "min",
+      "property": "min",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Smallest accepted numeric or temporal value.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "max",
+      "property": "max",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Largest accepted numeric or temporal value.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "disabled",
+      "property": "disabled",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Prevents user interaction and participates in the disabled-state contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "readonly",
+      "property": "readOnly",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Keeps the value perceivable while preventing user edits.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "required",
+      "property": "required",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Marks the value as required and participates in Angular Forms validation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "invalid",
+      "property": "invalid",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Exposes an externally controlled invalid presentation state.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "valueChange",
+      "property": "valueChange",
+      "kind": "output",
+      "type": "KrnDateRangeValue",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the value change interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": true,
+    "validator": true,
+    "valueType": "KrnDateRangeValue",
+    "reactiveForms": true,
+    "templateDrivenForms": true,
+    "stateInputs": ["disabled", "readonly", "required", "invalid"],
+    "notes": [
+      "Works with Angular Forms through ControlValueAccessor.",
+      "Angular validator state and explicit KERN state inputs are combined."
+    ]
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": [
+      "Enter or Space opens the calendar and Escape closes it.",
+      "Arrow, Home, End, Page Up, and Page Down move the calendar focus.",
+      "Enter or Space selects the start, then the end, while keeping the interval visible."
+    ],
+    "notes": [
+      "The current range phase and selected endpoints are announced.",
+      "The calendar exposes grid position, disabled dates, today, and selected endpoints.",
+      "The form value uses stable ISO plain dates and rejects an end before the start."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Typed reporting period",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Typed reporting period\n *\n * Bind an explicit ISO start and end date range.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDateRangePicker, type KrnDateRangeValue } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-date-range-picker-agent-example',\n  standalone: true,\n  imports: [KrnDateRangePicker, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-date-range-picker\n      ariaLabel=\"Reporting period\"\n      locale=\"en-GB\"\n      today=\"2026-07-29\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernDateRangePickerAgentExample {\n  readonly control = new FormControl<KrnDateRangeValue>(\n    { start: '2026-07-01', end: '2026-09-30' },\n    { nonNullable: true },\n  );\n}\n\nvoid bootstrapApplication(KernDateRangePickerAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/date-range-picker.ts"
+    }
+  ],
+  "related": [
+    "date-picker",
+    "calendar",
+    "time-picker",
+    "form-field",
+    "label",
+    "hint",
+    "validation-message"
+  ],
+  "keywords": [
+    "date-range-picker",
+    "Date Range Picker",
+    "Forms",
+    "krn-date-range-picker",
+    "KrnDateRangePicker",
+    "date interval",
+    "calendar popup",
+    "reactive forms",
+    "id",
+    "ariaLabel",
+    "locale",
+    "today",
+    "weekStartsOn",
+    "labels",
+    "startLabel",
+    "endLabel",
+    "min",
+    "max",
+    "disabled",
+    "readonly",
+    "required",
+    "invalid",
+    "valueChange"
+  ],
+  "guidance": {
+    "useWhen": "Use Date Range Picker when users must choose an ordered inclusive start and end plain-date interval.",
+    "avoidWhen": "Use two independent Date Pickers only when the dates do not form one validated interval."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Do not submit an end date before the start date.",
+    "Use stable ISO plain-date values rather than parsing visible localized labels.",
+    "Do not manually duplicate value and disabled state when Angular Forms owns the control."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify reactive-form value, touched, disabled, required and invalid state.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/date-range-picker",
+    "json": "components/date-range-picker.json",
+    "markdown": "components/date-range-picker.md"
+  }
+}

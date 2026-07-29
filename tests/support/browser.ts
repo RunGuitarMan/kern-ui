@@ -7,6 +7,7 @@ export type LabScenario = 'default' | 'states' | 'stress' | 'virtual';
 export type LabTheme = 'light' | 'dark' | 'high-contrast';
 export type LabDensity = 'compact' | 'comfortable' | 'spacious';
 export type LabDirection = 'ltr' | 'rtl';
+export type LabLocale = 'en-US' | 'ru-RU';
 
 interface LabUrlState {
   readonly component?: string;
@@ -14,6 +15,7 @@ interface LabUrlState {
   readonly theme?: LabTheme;
   readonly density?: LabDensity;
   readonly direction?: LabDirection;
+  readonly locale?: LabLocale;
 }
 
 export function labUrl(state: LabUrlState = {}): string {
@@ -23,6 +25,7 @@ export function labUrl(state: LabUrlState = {}): string {
     theme: state.theme ?? 'light',
     density: state.density ?? 'comfortable',
     direction: state.direction ?? 'ltr',
+    locale: state.locale ?? 'en-US',
   });
   return `${LAB_URL}/?${query.toString()}`;
 }

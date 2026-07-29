@@ -1,0 +1,170 @@
+{
+  "id": "bulk-actions",
+  "name": "Bulk Actions",
+  "category": "Patterns",
+  "kind": "component",
+  "selector": "krn-bulk-actions",
+  "selectors": ["krn-crud-toolbar", "krn-bulk-actions"],
+  "symbol": "KrnBulkActions",
+  "canonicalSymbol": "KrnCrudToolbar",
+  "canonicalId": "crud-toolbar",
+  "owner": "patterns",
+  "importPath": "@kern-ui/angular/patterns",
+  "aliases": {
+    "symbols": ["KrnCrudToolbar", "KrnCRUDToolbar"],
+    "selectors": ["krn-crud-toolbar"],
+    "componentIds": ["crud-toolbar"]
+  },
+  "summary": "Bulk Actions. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "loading",
+    "empty",
+    "error",
+    "success"
+  ],
+  "lifecycle": {
+    "status": "recipe",
+    "compatibility": "Adaptable composition whose primitive dependencies have their own lifecycle.",
+    "owner": "kern/patterns",
+    "evidenceProfile": "recipe-validation",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "responsive",
+      "automated-a11y",
+      "adaptation-guidance"
+    ],
+    "rationale": "Adaptable composition whose primitive dependencies have their own lifecycle.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.actions",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "selectedCount",
+      "property": "selectedCount",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Number of selected records summarized by the surrounding pattern.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "selectedLabel",
+      "property": "selectedLabel",
+      "kind": "input",
+      "type": "(count: number) => string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.selectedCount",
+      "description": "Human-readable copy for the selected state or control.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [
+    {
+      "name": "krnToolbarTitle",
+      "selector": "[krnToolbarTitle]",
+      "required": false,
+      "description": "Projects content matching [krnToolbarTitle]."
+    },
+    {
+      "name": "default-2",
+      "selector": "*",
+      "required": false,
+      "description": "Projects default component content."
+    }
+  ],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Selected-customer bulk actions",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Selected-customer bulk actions\n *\n * Use the bulk-action alias with explicit selected record count.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBulkActions } from '@kern-ui/angular/patterns';\n\n@Component({\n  selector: 'app-kern-bulk-actions-agent-example',\n  standalone: true,\n  imports: [KrnBulkActions],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-bulk-actions ariaLabel=\"Selected customer actions\" [selectedCount]=\"selectedCount\">\n      <strong krnToolbarTitle>{{ selectedCount }} customers selected</strong>\n      <button type=\"button\">Assign owner</button>\n      <button type=\"button\">Archive</button>\n    </krn-bulk-actions>\n  `,\n})\nexport class KernBulkActionsAgentExample {\n  selectedCount = 3;\n}\n\nvoid bootstrapApplication(KernBulkActionsAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/bulk-actions.ts"
+    }
+  ],
+  "related": ["crud-toolbar", "user-menu", "notification-center", "global-search", "filter-bar"],
+  "keywords": [
+    "bulk-actions",
+    "Bulk Actions",
+    "Patterns",
+    "krn-bulk-actions",
+    "KrnBulkActions",
+    "KrnCrudToolbar",
+    "KrnCRUDToolbar",
+    "ariaLabel",
+    "selectedCount",
+    "selectedLabel"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/bulk-actions",
+    "json": "components/bulk-actions.json",
+    "markdown": "components/bulk-actions.md"
+  }
+}

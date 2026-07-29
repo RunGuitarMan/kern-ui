@@ -230,8 +230,11 @@ describe('KrnDataGrid', () => {
 
     const root = fixture.nativeElement as HTMLElement;
     const headerCell = root.querySelector<HTMLElement>('[data-cell="-1-0"]')!;
+    const viewport = root.querySelector<HTMLElement>('cdk-virtual-scroll-viewport')!;
     const sortButton = headerCell.querySelector<HTMLButtonElement>('button')!;
     const separator = headerCell.querySelector<HTMLElement>('[role="separator"]')!;
+    expect(viewport.tabIndex).toBe(-1);
+    expect(viewport.getAttribute('tabindex')).toBe('-1');
     expect(separator.getAttribute('aria-valuenow')).toBe('180');
     expect(sortButton.tabIndex).toBe(-1);
     expect(separator.tabIndex).toBe(-1);
@@ -437,6 +440,103 @@ describe('KrnDataGrid', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll('thead th')).toHaveLength(1);
     expect(fixture.nativeElement.querySelector('thead')?.textContent).not.toContain('Amount');
+  });
+
+  it('partitions pinned columns at logical edges and preserves grid semantics', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnDataGrid] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnDataGrid<DemoRow>);
+    const pinnedColumns: readonly KrnDataColumn<DemoRow>[] = [
+      { key: 'amount', label: 'Amount', width: 120 },
+      { key: 'id', label: 'ID', width: 80, pinned: 'end' },
+      { key: 'name', label: 'Name', width: 160, pinned: 'start' },
+    ];
+    fixture.componentRef.setInput('data', rows);
+    fixture.componentRef.setInput('columns', pinnedColumns);
+    fixture.componentRef.setInput('rowIdentity', (row: DemoRow) => row.id);
+    fixture.componentRef.setInput('mode', { kind: 'client', pagination: false });
+    fixture.componentRef.setInput('selectable', true);
+    fixture.componentRef.setInput('expandable', true);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const root = fixture.nativeElement as HTMLElement;
+    const headers = [
+      ...root.querySelectorAll<HTMLElement>('thead th:not(.selection-cell):not(.expand-cell)'),
+    ];
+    expect(headers.map((header) => header.textContent?.trim())).toEqual(['Name', 'Amount', 'ID']);
+    expect(headers.map((header) => header.getAttribute('aria-colindex'))).toEqual(['3', '4', '5']);
+    expect(headers[0]?.dataset['pinned']).toBe('start');
+    expect(headers[0]?.dataset['pinBoundary']).toBe('start');
+    expect(headers[0]?.style.insetInlineStart).toBe(
+      'calc(2 * var(--krn-data-utility-column-size, 2.75rem))',
+    );
+    expect(headers[1]?.dataset['pinned']).toBeUndefined();
+    expect(headers[2]?.dataset['pinned']).toBe('end');
+    expect(headers[2]?.dataset['pinBoundary']).toBe('end');
+    expect(headers[2]?.style.insetInlineEnd).toBe('0px');
+
+    const utilityHeaders = root.querySelectorAll<HTMLElement>(
+      'thead .selection-cell, thead .expand-cell',
+    );
+    expect([...utilityHeaders].every((header) => header.dataset['pinned'] === 'start')).toBe(true);
+    expect(utilityHeaders[0]?.style.insetInlineStart).toBe('0px');
+    expect(utilityHeaders[1]?.style.insetInlineStart).toContain(
+      'var(--krn-data-utility-column-size',
+    );
+
+    const firstRowCells = root.querySelectorAll<HTMLElement>('tbody > tr:first-child > td');
+    expect(firstRowCells[2]?.dataset['pinned']).toBe('start');
+    expect(firstRowCells[4]?.dataset['pinned']).toBe('end');
+  });
+
+  it('recomputes pinned offsets after resize and column visibility changes', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnDataGrid] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnDataGrid<DemoRow>);
+    const pinnedColumns: readonly KrnDataColumn<DemoRow>[] = [
+      { key: 'name', label: 'Name', width: 160, pinned: 'start', minWidth: 100 },
+      { key: 'amount', label: 'Amount', width: 100, pinned: 'start' },
+      { key: 'id', label: 'ID' },
+    ];
+    fixture.componentRef.setInput('data', rows);
+    fixture.componentRef.setInput('columns', pinnedColumns);
+    fixture.componentRef.setInput('rowIdentity', (row: DemoRow) => row.id);
+    fixture.componentRef.setInput('mode', { kind: 'client', pagination: false });
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const headers = (): HTMLElement[] => [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLElement>('thead th'),
+    ];
+    expect(headers()[0]?.style.insetInlineStart).toBe('0px');
+    expect(headers()[1]?.style.insetInlineStart).toBe('160px');
+
+    headers()[0]
+      ?.querySelector<HTMLElement>('[role="separator"]')
+      ?.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }),
+      );
+    fixture.detectChanges();
+    expect(headers()[1]?.style.insetInlineStart).toBe('170px');
+
+    fixture.componentInstance.hiddenColumnKeys.set(new Set(['name']));
+    fixture.detectChanges();
+    expect(headers()[0]?.textContent).toContain('Amount');
+    expect(headers()[0]?.style.insetInlineStart).toBe('0px');
+    expect(headers()[0]?.dataset['pinBoundary']).toBe('start');
+  });
+
+  it('rejects invalid runtime pin values with an actionable error', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnDataGrid] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnDataGrid<DemoRow>);
+    fixture.componentRef.setInput('data', rows);
+    fixture.componentRef.setInput('columns', [
+      { key: 'name', label: 'Name', pinned: 'left' },
+    ] as unknown as readonly KrnDataColumn<DemoRow>[]);
+    fixture.componentRef.setInput('rowIdentity', (row: DemoRow) => row.id);
+
+    expect(() => fixture.detectChanges()).toThrowError(
+      /column "name" has an invalid pinned edge "left".*Use "start", "end"/,
+    );
   });
 
   it('renders typed default cell templates', async () => {

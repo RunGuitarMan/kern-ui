@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KERN_CATALOG, KERN_COVERAGE } from '@kern-ui/showcase';
-import { KrnCodeBlock } from '@kern-ui/angular';
+import { KrnCodeBlock } from '@kern-ui/angular/kit';
 
 import { DocsPreferences, type DocsDensity, type DocsTheme } from '../preferences';
 
@@ -76,7 +76,7 @@ interface StartRoute {
           </ol>
           <krn-code-block
             language="typescript"
-            [code]="'import { provideKrn } from \\'@kern-ui/angular\\';\\n\\nexport const appConfig = {\\n  providers: [provideKrn({ theme: \\'system\\', density: \\'comfortable\\' })],\\n};'"
+            [code]="'import { provideKrn } from \\'@kern-ui/angular/core\\';\\n\\nexport const appConfig = {\\n  providers: [provideKrn({ theme: \\'system\\', density: \\'comfortable\\' })],\\n};'"
           />
         </aside>
       </section>

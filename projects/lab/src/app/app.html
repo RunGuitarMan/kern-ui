@@ -91,6 +91,15 @@
           }
         </select>
       </label>
+
+      <label>
+        <span>Locale</span>
+        <select data-testid="locale-control" [value]="locale()" (change)="setLocale($event)">
+          @for (option of locales; track option) {
+            <option [value]="option" [selected]="option === locale()">{{ option }}</option>
+          }
+        </select>
+      </label>
     </div>
 
     <div class="state-tape" aria-label="Current lab state">
@@ -117,7 +126,7 @@
         <div class="stage-contract">
           <span>SELECTOR</span>
           <code>&lt;{{ item.selector }}&gt;</code>
-          <krn-badge status tone="success">ready</krn-badge>
+          <span class="evidence-state" [attr.data-status]="item.status">{{ item.status }}</span>
         </div>
       </header>
 
@@ -140,191 +149,10 @@
             <span>{{ scenario() }} / {{ direction().toUpperCase() }}</span>
           </div>
 
-          @switch (item.category) {
-            @case ('Layout') {
-              <krn-stack gap="5">
-                <div class="layout-rail">
-                  <span>PRIMARY RAIL</span>
-                  <span>CONTENT PLANE</span>
-                  <span>CONTEXT</span>
-                </div>
-                <krn-grid [columns]="3" gap="3">
-                  <krn-card eyebrow="01" heading="Navigation">Stable wayfinding</krn-card>
-                  <krn-card eyebrow="02" heading="Workspace">
-                    {{ scenario() === 'stress' ? specimenCopy() : 'Fluid primary content' }}
-                  </krn-card>
-                  <krn-card eyebrow="03" heading="Context">Container-aware details</krn-card>
-                </krn-grid>
-                <krn-divider label="Responsive boundary" />
-                <krn-alert tone="info" title="Resize contract">
-                  The composition stacks below 46rem without clipping its content.
-                </krn-alert>
-              </krn-stack>
-            }
-
-            @case ('Actions') {
-              <div class="action-specimen">
-                <krn-button>{{ specimenCopy() }}</krn-button>
-                <krn-button variant="outline" tone="neutral">Secondary</krn-button>
-                <krn-button variant="ghost" tone="danger">Delete</krn-button>
-                @if (scenario() === 'states') {
-                  <krn-button loading>Processing</krn-button>
-                  <krn-button disabled>Disabled</krn-button>
-                  <krn-button [pressed]="true" variant="soft">Pressed</krn-button>
-                }
-                <krn-button-group ariaLabel="Record actions">
-                  <krn-icon-button ariaLabel="Add record">+</krn-icon-button>
-                  <krn-icon-button ariaLabel="Duplicate record">⧉</krn-icon-button>
-                  <krn-icon-button ariaLabel="More record actions">•••</krn-icon-button>
-                </krn-button-group>
-                <krn-floating-action-button ariaLabel="Create record">
-                  <span krnFabIcon>+</span>
-                  New record
-                </krn-floating-action-button>
-              </div>
-            }
-
-            @case ('Forms') {
-              <div class="form-specimen">
-                <krn-form-field
-                  id="lab-workspace"
-                  label="Workspace name"
-                  hint="Visible to every workspace member."
-                  [required]="true"
-                >
-                  <krn-text-input
-                    id="lab-workspace"
-                    placeholder="Northstar operations"
-                    [required]="true"
-                    [invalid]="scenario() === 'states'"
-                  />
-                </krn-form-field>
-                <krn-form-field label="Plan" hint="Change this at any time.">
-                  <krn-native-select
-                    ariaLabel="Plan"
-                    placeholder="Choose a plan"
-                    [options]="selectOptions"
-                  />
-                </krn-form-field>
-                <krn-checkbox
-                  description="Receive a weekly operations summary"
-                  [invalid]="scenario() === 'states'"
-                >
-                  Email reports
-                </krn-checkbox>
-                <krn-switch [disabled]="scenario() === 'states'">
-                  Require approval for external guests
-                </krn-switch>
-                @if (scenario() === 'states') {
-                  <p class="validation-note" role="alert">
-                    Workspace name already exists. Choose a unique name.
-                  </p>
-                }
-              </div>
-            }
-
-            @case ('Navigation') {
-              <krn-stack gap="5">
-                <krn-breadcrumbs [items]="breadcrumbs" />
-                <krn-tabs [items]="tabs">
-                  <p class="panel-copy">
-                    Arrow keys move focus through the tab list. Home and End move to its boundaries.
-                  </p>
-                </krn-tabs>
-                <krn-pagination [totalItems]="248" [pageSize]="20" />
-              </krn-stack>
-            }
-
-            @case ('Feedback') {
-              <krn-stack gap="4">
-                <krn-alert tone="success" title="Configuration published" [dismissible]="true">
-                  All twelve environments now use the current policy revision.
-                </krn-alert>
-                @if (scenario() !== 'default') {
-                  <krn-alert tone="warning" title="Review required">
-                    Two workspaces exceed the configured seat threshold.
-                  </krn-alert>
-                }
-                <div class="progress-specimen">
-                  <span>Importing deterministic records <strong>68%</strong></span>
-                  <krn-progress-bar [value]="68" valueText="68 percent complete" />
-                </div>
-                <div class="loading-row">
-                  <krn-spinner label="Loading specimen" />
-                  <krn-skeleton width="36%" height="2.5rem" />
-                  <krn-skeleton width="58%" height="2.5rem" />
-                </div>
-                @if (scenario() === 'states') {
-                  <krn-confirmation
-                    requestLabel="Delete environment"
-                    prompt="Delete the staging environment?"
-                  />
-                }
-              </krn-stack>
-            }
-
-            @case ('Data display') {
-              <div class="data-specimen">
-                <div class="metric-strip">
-                  <krn-stat
-                    label="Active workspaces"
-                    value="2,481"
-                    detail="+12.4% this quarter"
-                    trend="up"
-                  />
-                  <krn-stat label="Automations" value="18.7k" detail="+4.2%" trend="up" />
-                  <div class="identity-cell">
-                    <krn-avatar name="Avery Cole" status="online" />
-                    <span><strong>Avery Cole</strong><small>Release steward</small></span>
-                  </div>
-                </div>
-                <div class="chip-row">
-                  <krn-badge status tone="success">Healthy</krn-badge>
-                  <krn-chip interactive [selected]="true">Enterprise</krn-chip>
-                  <krn-chip removable accessibleLabel="Review">Review</krn-chip>
-                </div>
-                <krn-data-grid
-                  ariaLabel="Service health"
-                  [data]="records"
-                  [columns]="recordColumns"
-                  [rowIdentity]="rowIdentity"
-                  [mode]="
-                    componentId() === 'data-grid' && scenario() === 'virtual'
-                      ? virtualGridMode
-                      : null
-                  "
-                  [viewportHeight]="220"
-                  [pageSize]="4"
-                  selectable
-                  [expandable]="scenario() === 'states'"
-                />
-              </div>
-            }
-
-            @case ('Patterns') {
-              <div class="pattern-specimen">
-                <krn-page-header
-                  index="08"
-                  eyebrow="Operations / Q3"
-                  heading="Workspace health"
-                  [description]="
-                    scenario() === 'stress'
-                      ? specimenCopy()
-                      : 'Review service health, owners, and release thresholds.'
-                  "
-                >
-                  <krn-button>New workspace</krn-button>
-                </krn-page-header>
-                <krn-global-search
-                  ariaLabel="Search the specimen"
-                  placeholder="Search projects…"
-                  [results]="searchResults"
-                />
-                <krn-alert tone="info" title="Composable pattern">
-                  Patterns connect public primitives while preserving product-specific slots.
-                </krn-alert>
-              </div>
-            }
+          @defer (when selectedItem()) {
+            <kshow-component-specimen [item]="item" [scenario]="scenario()" />
+          } @placeholder {
+            <p class="specimen-loading" role="status">Preparing the selected component fixture…</p>
           }
         </div>
       </div>

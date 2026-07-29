@@ -17,7 +17,12 @@
     "strict": {
       "type": "boolean",
       "default": false,
-      "description": "Fail when styles are missing or duplicated; useful in CI."
+      "description": "Fail on error or warning diagnostics; useful in CI."
+    },
+    "json": {
+      "type": "boolean",
+      "default": false,
+      "description": "Emit one versioned JSON report suitable for CI and agents."
     }
   }
 }

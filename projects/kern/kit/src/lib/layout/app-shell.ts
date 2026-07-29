@@ -538,11 +538,12 @@ export class KrnHeader {
   `,
 })
 export class KrnSidebar {
+  private readonly translations = inject(KRN_TRANSLATIONS);
   readonly collapsed = model(false);
   readonly collapsedMode = input<'icons' | 'hidden'>('icons');
   readonly width = input<KrnLayoutSpace>('var(--krn-shell-sidebar-width, 17rem)');
   readonly collapsedWidth = input<KrnLayoutSpace>('4rem');
-  readonly ariaLabel = input('Secondary navigation');
+  readonly ariaLabel = input(this.translations.layout.secondaryNavigation);
   readonly side = input<'start' | 'end'>('start');
 
   protected readonly resolvedWidth = computed(() => krnCssLength(this.width(), '17rem'));
@@ -642,10 +643,11 @@ export class KrnSidebar {
   `,
 })
 export class KrnNavigationRail {
+  private readonly translations = inject(KRN_TRANSLATIONS);
   readonly expanded = model(false);
   readonly width = input<KrnLayoutSpace>('var(--krn-shell-rail-width, 3.5rem)');
   readonly expandedWidth = input<KrnLayoutSpace>('14rem');
-  readonly ariaLabel = input('Primary navigation');
+  readonly ariaLabel = input(this.translations.layout.primaryNavigation);
   readonly side = input<'start' | 'end'>('start');
 
   protected readonly resolvedWidth = computed(() => krnCssLength(this.width(), '3.5rem'));

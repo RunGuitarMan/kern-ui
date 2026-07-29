@@ -18,16 +18,20 @@ import {
   KrnOverlayCoordinator,
   krnIsHtmlElement,
 } from '@kern-ui/angular/cdk';
-import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { KRN_LOCALE, KRN_TRANSLATIONS, krnFormatTranslation } from '@kern-ui/angular/core';
 import type { KrnCommandItem } from './navigation.types';
 
 export interface KrnCommandPaletteLabels {
   readonly search: string;
+  /** Backward-compatible template containing the `{query}` token. */
   readonly noResults: string;
+  readonly formatNoResults?: (query: string) => string;
   readonly navigate: string;
   readonly select: string;
   readonly availableOne: string;
+  /** Backward-compatible template containing the `{count}` token. */
   readonly availableMany: string;
+  readonly formatAvailableMany?: (count: number) => string;
 }
 
 @Component({
@@ -310,17 +314,33 @@ export class KrnCommandPalette {
   protected readonly headingId = `${this.instanceId}-heading`;
   protected readonly descriptionId = `${this.instanceId}-description`;
   protected readonly resultsId = `${this.instanceId}-results`;
-  protected readonly resolvedLabels = computed<KrnCommandPaletteLabels>(() => ({
-    search: this.translations.navigation.commandSearch,
-    noResults: this.translations.navigation.noCommandResults,
-    navigate: this.translations.navigation.commandNavigate,
-    select: this.translations.navigation.commandSelect,
-    availableOne: this.translations.navigation.commandAvailableOne,
-    availableMany: this.translations.navigation.commandAvailableMany,
-    ...this.labels(),
-  }));
+  protected readonly resolvedLabels = computed<KrnCommandPaletteLabels>(() => {
+    const overrides = this.labels();
+    return {
+      search: this.translations.navigation.commandSearch,
+      noResults: this.translations.navigation.noCommandResults,
+      formatNoResults:
+        overrides.noResults !== undefined && overrides.formatNoResults === undefined
+          ? undefined
+          : this.translations.navigation.formatNoCommandResults,
+      navigate: this.translations.navigation.commandNavigate,
+      select: this.translations.navigation.commandSelect,
+      availableOne: this.translations.navigation.commandAvailableOne,
+      availableMany: this.translations.navigation.commandAvailableMany,
+      formatAvailableMany:
+        overrides.availableMany !== undefined && overrides.formatAvailableMany === undefined
+          ? undefined
+          : this.translations.navigation.formatCommandAvailableMany,
+      ...overrides,
+    };
+  });
   protected readonly noResultsMessage = computed(() =>
-    this.resolvedLabels().noResults.replace('{query}', this.query()),
+    krnFormatTranslation(
+      this.resolvedLabels().noResults,
+      { query: this.query() },
+      this.resolvedLabels().formatNoResults,
+      this.query(),
+    ),
   );
   protected readonly filteredItems = computed(() => {
     const query = this.query().trim().toLocaleLowerCase(this.locale());
@@ -366,7 +386,12 @@ export class KrnCommandPalette {
         void this.announcer.announce(
           count === 1
             ? this.resolvedLabels().availableOne
-            : this.resolvedLabels().availableMany.replace('{count}', String(count)),
+            : krnFormatTranslation(
+                this.resolvedLabels().availableMany,
+                { count },
+                this.resolvedLabels().formatAvailableMany,
+                count,
+              ),
           'polite',
         );
     });

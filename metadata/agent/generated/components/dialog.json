@@ -1,0 +1,297 @@
+{
+  "id": "dialog",
+  "name": "Dialog",
+  "category": "Feedback",
+  "kind": "component",
+  "selector": "krn-dialog",
+  "selectors": ["krn-dialog"],
+  "symbol": "KrnDialog",
+  "canonicalSymbol": "KrnDialog",
+  "canonicalId": "dialog",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Dialog. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "closed",
+    "open",
+    "nested",
+    "dismissed"
+  ],
+  "lifecycle": {
+    "status": "beta",
+    "compatibility": "Available for controlled production evaluation; the contract may still be refined.",
+    "owner": "kern/feedback",
+    "evidenceProfile": "beta-promotion",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "hydration",
+      "keyboard",
+      "automated-a11y",
+      "manual-at",
+      "visual-regression",
+      "runtime-performance",
+      "consumer-harness"
+    ],
+    "rationale": "The template-owned modal contract remains beta while programmatic opening and complete cross-browser assistive-technology evidence are evaluated.",
+    "knownLimitations": [
+      "There is no public typed imperative overlay service in the current release.",
+      "Consumers must verify initial focus and destructive-flow copy for each product dialog."
+    ],
+    "promotionCriteria": [
+      "Public API, defaults, aliases and entrypoint ownership are reviewed.",
+      "SSR/hydration, keyboard, accessibility and visual evidence are linked.",
+      "Runtime scale limits and consumer testing contract are documented.",
+      "Migration impact is classified before lifecycle promotion."
+    ],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "open",
+      "property": "open",
+      "kind": "model",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controls whether the disclosure or overlay surface is visible.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "title",
+      "property": "title",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Visible title that also names the component surface or data view.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "description",
+      "property": "description",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Visible supporting description for the component content.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "eyebrow",
+      "property": "eyebrow",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Human-readable copy for the eyebrow state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.feedback.dialog",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "showClose",
+      "property": "showClose",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Controls whether the component applies the show close behavior.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "closeLabel",
+      "property": "closeLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.feedback.close",
+      "description": "Human-readable copy for the close state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "closeOnEscape",
+      "property": "closeOnEscape",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Allows Escape to dismiss the topmost owned overlay.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "closeOnOutside",
+      "property": "closeOnOutside",
+      "kind": "input",
+      "type": "boolean | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Allows an interaction outside the owned overlay to dismiss it.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "initialFocus",
+      "property": "initialFocus",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "'first-tabbable'",
+      "description": "Identifies the element that receives focus when the modal surface opens.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "contentTemplate",
+      "property": "contentTemplate",
+      "kind": "input",
+      "type": "TemplateRef<unknown> | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Template used to render the component body with its typed context.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "actionsTemplate",
+      "property": "actionsTemplate",
+      "kind": "input",
+      "type": "TemplateRef<unknown> | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Template used to render product-owned actions in the designated slot.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "closed",
+      "property": "closed",
+      "kind": "output",
+      "type": "KrnOverlayCloseReason",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the closed interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": [
+      "Tab and Shift+Tab stay inside the topmost modal surface.",
+      "Escape closes the topmost dismissible dialog.",
+      "Focus returns to the element that opened the dialog."
+    ],
+    "notes": [
+      "The surface exposes modal dialog semantics with a visible title and optional description.",
+      "Initial focus never lands on an inert or hidden element.",
+      "Nested overlays register ownership for deterministic Escape and focus restoration."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Controlled edit dialog",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Controlled edit dialog\n *\n * Open and close a modal dialog through application-owned state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDialog } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-dialog-agent-example',\n  standalone: true,\n  imports: [KrnDialog],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button type=\"button\" (click)=\"open = true\">Open Edit customer</button>\n    <krn-dialog\n      [(open)]=\"open\"\n      title=\"Edit customer\"\n      description=\"Update customer ownership and renewal details.\"\n    >\n      <p>Update customer ownership and renewal details.</p>\n      <button krnDialogAction type=\"button\" (click)=\"open = false\">Done</button>\n    </krn-dialog>\n  `,\n})\nexport class KernDialogAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernDialogAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/dialog.ts"
+    }
+  ],
+  "related": [
+    "alert-dialog",
+    "drawer",
+    "bottom-sheet",
+    "popover",
+    "alert",
+    "banner",
+    "toast",
+    "tooltip"
+  ],
+  "keywords": [
+    "dialog",
+    "Dialog",
+    "Feedback",
+    "krn-dialog",
+    "KrnDialog",
+    "modal",
+    "focus trap",
+    "overlay",
+    "form dialog",
+    "open",
+    "title",
+    "description",
+    "eyebrow",
+    "ariaLabel",
+    "showClose",
+    "closeLabel",
+    "closeOnEscape",
+    "closeOnOutside",
+    "initialFocus",
+    "contentTemplate",
+    "actionsTemplate",
+    "closed"
+  ],
+  "guidance": {
+    "useWhen": "Use Dialog for a focused modal decision or form that must temporarily block interaction with the page.",
+    "avoidWhen": "Use Popover for non-modal supplemental content and a route when the task needs durable navigation or deep linking."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Keep the trigger available so focus can be restored after close.",
+    "Register ownership when a custom CDK overlay opens from inside the dialog."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/dialog",
+    "json": "components/dialog.json",
+    "markdown": "components/dialog.md"
+  }
+}

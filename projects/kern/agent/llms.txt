@@ -1,0 +1,169 @@
+# KERN Angular agent index
+
+KERN is a standalone Angular component library for enterprise product interfaces.
+
+## Required setup
+
+- Package: `@kern-ui/angular`
+- Required global stylesheet: `@kern-ui/angular/styles/kern.css`
+- Runtime provider: `provideKrn` is preferred for application preferences but is not required.
+- Prefer each component's owner entrypoint; the package root is a supported compatibility aggregator.
+- Machine contract: [component-manifest.json](./component-manifest.json)
+- Import map: [import-map.json](./import-map.json)
+- Root compatibility export map: [root-export-map.json](./root-export-map.json)
+- Checklist: [checklist.md](./checklist.md)
+- Common mistakes: [common-mistakes.md](./common-mistakes.md)
+- Full reference: [llms-full.txt](./llms-full.txt)
+- Compile-verified examples: [examples/index.json](./examples/index.json)
+
+## Layout
+
+- [App Shell](./components/app-shell.md): `krn-app-shell`, stable, import from `@kern-ui/angular/kit`.
+- [Header](./components/header.md): `krn-header`, stable, import from `@kern-ui/angular/kit`.
+- [Sidebar](./components/sidebar.md): `krn-sidebar`, stable, import from `@kern-ui/angular/kit`.
+- [Navigation Rail](./components/navigation-rail.md): `krn-navigation-rail`, stable, import from `@kern-ui/angular/kit`.
+- [Container](./components/container.md): `krn-container`, stable, import from `@kern-ui/angular/kit`.
+- [Stack](./components/stack.md): `krn-stack`, stable, import from `@kern-ui/angular/kit`.
+- [Inline](./components/inline.md): `krn-inline`, stable, import from `@kern-ui/angular/kit`.
+- [Cluster](./components/cluster.md): `krn-cluster`, stable, import from `@kern-ui/angular/kit`.
+- [Grid](./components/grid.md): `krn-grid`, stable, import from `@kern-ui/angular/kit`.
+- [Split Layout](./components/split-layout.md): `krn-split-layout`, stable, import from `@kern-ui/angular/kit`.
+- [Center](./components/center.md): `krn-center`, stable, import from `@kern-ui/angular/kit`.
+- [Spacer](./components/spacer.md): `krn-spacer`, stable, import from `@kern-ui/angular/kit`.
+- [Divider](./components/divider.md): `krn-divider`, stable, import from `@kern-ui/angular/kit`.
+- [Aspect Ratio](./components/aspect-ratio.md): `krn-aspect-ratio`, stable, import from `@kern-ui/angular/kit`.
+- [Scroll Area](./components/scroll-area.md): `krn-scroll-area`, stable, import from `@kern-ui/angular/kit`.
+- [Responsive Show Hide](./components/responsive-show-hide.md): `krn-responsive-show-hide`, stable, import from `@kern-ui/angular/kit`.
+- [Resizable Panels](./components/resizable-panels.md): `krn-resizable-panels`, experimental, import from `@kern-ui/angular/kit`.
+
+## Actions
+
+- [Button](./components/button.md): `krn-button`, stable, import from `@kern-ui/angular/kit`.
+- [Icon Button](./components/icon-button.md): `krn-icon-button`, stable, import from `@kern-ui/angular/kit`.
+- [Button Group](./components/button-group.md): `krn-button-group`, stable, import from `@kern-ui/angular/kit`.
+- [Split Button](./components/split-button.md): `krn-split-button`, stable, import from `@kern-ui/angular/kit`.
+- [Floating Action Button](./components/floating-action-button.md): `krn-floating-action-button`, stable, import from `@kern-ui/angular/kit`.
+- [Toggle Button](./components/toggle-button.md): `krn-toggle-button`, stable, import from `@kern-ui/angular/kit`.
+- [Toggle Group](./components/toggle-group.md): `krn-toggle-group`, stable, import from `@kern-ui/angular/kit`.
+- [Copy Button](./components/copy-button.md): `krn-copy-button`, stable, import from `@kern-ui/angular/kit`.
+- [Link](./components/link.md): `krn-link`, stable, import from `@kern-ui/angular/kit`.
+- [Dropdown Button](./components/dropdown-button.md): `krn-dropdown-button`, stable, import from `@kern-ui/angular/kit`.
+
+## Forms
+
+- [Form Field](./components/form-field.md): `krn-form-field`, stable, import from `@kern-ui/angular/kit`.
+- [Label](./components/label.md): `krn-label`, stable, import from `@kern-ui/angular/kit`.
+- [Hint](./components/hint.md): `krn-hint`, stable, import from `@kern-ui/angular/kit`.
+- [Validation Message](./components/validation-message.md): `krn-validation-message`, stable, import from `@kern-ui/angular/kit`.
+- [Text Input](./components/text-input.md): `krn-text-input`, stable, import from `@kern-ui/angular/kit`.
+- [Textarea](./components/textarea.md): `krn-textarea`, stable, import from `@kern-ui/angular/kit`.
+- [Password Input](./components/password-input.md): `krn-password-input`, stable, import from `@kern-ui/angular/kit`.
+- [Search Input](./components/search-input.md): `krn-search-input`, stable, import from `@kern-ui/angular/kit`.
+- [Number Input](./components/number-input.md): `krn-number-input`, stable, import from `@kern-ui/angular/kit`.
+- [Checkbox](./components/checkbox.md): `krn-checkbox`, stable, import from `@kern-ui/angular/kit`.
+- [Checkbox Group](./components/checkbox-group.md): `krn-checkbox-group`, stable, import from `@kern-ui/angular/kit`.
+- [Radio](./components/radio.md): `krn-radio`, stable, import from `@kern-ui/angular/kit`.
+- [Radio Group](./components/radio-group.md): `krn-radio-group`, stable, import from `@kern-ui/angular/kit`.
+- [Switch](./components/switch.md): `krn-switch`, stable, import from `@kern-ui/angular/kit`.
+- [Select](./components/select.md): `krn-select`, beta, import from `@kern-ui/angular/kit`.
+- [Native Select](./components/native-select.md): `krn-native-select`, stable, import from `@kern-ui/angular/kit`.
+- [Multi Select](./components/multi-select.md): `krn-multi-select`, beta, import from `@kern-ui/angular/kit`.
+- [Combobox](./components/combobox.md): `krn-combobox`, beta, import from `@kern-ui/angular/kit`.
+- [Autocomplete](./components/autocomplete.md): `krn-autocomplete`, beta, import from `@kern-ui/angular/kit`.
+- [Slider](./components/slider.md): `krn-slider`, stable, import from `@kern-ui/angular/kit`.
+- [Range Slider](./components/range-slider.md): `krn-range-slider`, stable, import from `@kern-ui/angular/kit`.
+- [Segmented Control](./components/segmented-control.md): `krn-segmented-control`, stable, import from `@kern-ui/angular/kit`.
+- [Date Picker](./components/date-picker.md): `krn-date-picker`, beta, import from `@kern-ui/angular/kit`.
+- [Date Range Picker](./components/date-range-picker.md): `krn-date-range-picker`, beta, import from `@kern-ui/angular/kit`.
+- [Time Picker](./components/time-picker.md): `krn-time-picker`, beta, import from `@kern-ui/angular/kit`.
+- [Color Picker](./components/color-picker.md): `krn-color-picker`, beta, import from `@kern-ui/angular/kit`.
+- [File Upload](./components/file-upload.md): `krn-file-upload`, stable, import from `@kern-ui/angular/kit`.
+- [Drag Drop Upload](./components/drag-drop-upload.md): `krn-drag-drop-upload`, stable, import from `@kern-ui/angular/kit`.
+- [Verification Code](./components/verification-code.md): `krn-verification-code`, stable, import from `@kern-ui/angular/kit`.
+- [Tags Input](./components/tags-input.md): `krn-tags-input`, stable, import from `@kern-ui/angular/kit`.
+
+## Navigation
+
+- [Breadcrumbs](./components/breadcrumbs.md): `krn-breadcrumbs`, stable, import from `@kern-ui/angular/kit`.
+- [Tabs](./components/tabs.md): `krn-tabs`, stable, import from `@kern-ui/angular/kit`.
+- [Vertical Tabs](./components/vertical-tabs.md): `krn-vertical-tabs`, stable, import from `@kern-ui/angular/kit`.
+- [Pagination](./components/pagination.md): `krn-pagination`, stable, import from `@kern-ui/angular/kit`.
+- [Stepper](./components/stepper.md): `krn-stepper`, stable, import from `@kern-ui/angular/kit`.
+- [Menu](./components/menu.md): `krn-menu`, stable, import from `@kern-ui/angular/kit`.
+- [Menubar](./components/menubar.md): `krn-menubar`, stable, import from `@kern-ui/angular/kit`.
+- [Context Menu](./components/context-menu.md): `krn-context-menu`, stable, import from `@kern-ui/angular/kit`.
+- [Tree Navigation](./components/tree-navigation.md): `krn-tree-navigation`, beta, import from `@kern-ui/angular/kit`.
+- [Bottom Navigation](./components/bottom-navigation.md): `krn-bottom-navigation`, stable, import from `@kern-ui/angular/kit`.
+- [Command Palette](./components/command-palette.md): `krn-command-palette`, beta, import from `@kern-ui/angular/kit`.
+- [Table of Contents](./components/table-of-contents.md): `krn-table-of-contents`, stable, import from `@kern-ui/angular/kit`.
+- [Back Button](./components/back-button.md): `krn-back-button`, stable, import from `@kern-ui/angular/kit`.
+- [Skip Link](./components/skip-link.md): `krn-skip-link`, stable, import from `@kern-ui/angular/kit`.
+
+## Feedback
+
+- [Alert](./components/alert.md): `krn-alert`, stable, import from `@kern-ui/angular/kit`.
+- [Banner](./components/banner.md): `krn-banner`, stable, import from `@kern-ui/angular/kit`.
+- [Toast](./components/toast.md): `krn-toast`, stable, import from `@kern-ui/angular/kit`.
+- [Tooltip](./components/tooltip.md): `[krnTooltip]`, stable, import from `@kern-ui/angular/kit`.
+- [Popover](./components/popover.md): `krn-popover`, stable, import from `@kern-ui/angular/kit`.
+- [Hover Card](./components/hover-card.md): `krn-hover-card`, stable, import from `@kern-ui/angular/kit`.
+- [Dialog](./components/dialog.md): `krn-dialog`, beta, import from `@kern-ui/angular/kit`.
+- [Alert Dialog](./components/alert-dialog.md): `krn-alert-dialog`, stable, import from `@kern-ui/angular/kit`.
+- [Drawer](./components/drawer.md): `krn-drawer`, beta, import from `@kern-ui/angular/kit`.
+- [Bottom Sheet](./components/bottom-sheet.md): `krn-bottom-sheet`, beta, import from `@kern-ui/angular/kit`.
+- [Loading Overlay](./components/loading-overlay.md): `krn-loading-overlay`, stable, import from `@kern-ui/angular/kit`.
+- [Progress Bar](./components/progress-bar.md): `krn-progress-bar`, stable, import from `@kern-ui/angular/kit`.
+- [Circular Progress](./components/circular-progress.md): `krn-circular-progress`, stable, import from `@kern-ui/angular/kit`.
+- [Spinner](./components/spinner.md): `krn-spinner`, stable, import from `@kern-ui/angular/kit`.
+- [Skeleton](./components/skeleton.md): `krn-skeleton`, stable, import from `@kern-ui/angular/kit`.
+- [Empty State](./components/empty-state.md): `krn-empty-state`, stable, import from `@kern-ui/angular/kit`.
+- [Error State](./components/error-state.md): `krn-error-state`, stable, import from `@kern-ui/angular/kit`.
+- [Success State](./components/success-state.md): `krn-success-state`, stable, import from `@kern-ui/angular/kit`.
+- [Confirmation Pattern](./components/confirmation-pattern.md): `krn-confirmation-pattern`, stable, import from `@kern-ui/angular/kit`.
+
+## Data display
+
+- [Badge](./components/badge.md): `krn-badge`, stable, import from `@kern-ui/angular/kit`.
+- [Status Badge](./components/status-badge.md): `krn-status-badge`, stable, import from `@kern-ui/angular/kit`.
+- [Chip](./components/chip.md): `krn-chip`, stable, import from `@kern-ui/angular/kit`.
+- [Tag](./components/tag.md): `krn-tag`, stable, import from `@kern-ui/angular/kit`.
+- [Avatar](./components/avatar.md): `krn-avatar`, stable, import from `@kern-ui/angular/kit`.
+- [Avatar Group](./components/avatar-group.md): `krn-avatar-group`, stable, import from `@kern-ui/angular/kit`.
+- [Card](./components/card.md): `krn-card`, stable, import from `@kern-ui/angular/kit`.
+- [Stat](./components/stat.md): `krn-stat`, stable, import from `@kern-ui/angular/kit`.
+- [Description List](./components/description-list.md): `krn-description-list`, stable, import from `@kern-ui/angular/kit`.
+- [List](./components/list.md): `krn-list`, stable, import from `@kern-ui/angular/kit`.
+- [List Item](./components/list-item.md): `krn-list-item`, stable, import from `@kern-ui/angular/kit`.
+- [Accordion](./components/accordion.md): `krn-accordion`, stable, import from `@kern-ui/angular/kit`.
+- [Disclosure](./components/disclosure.md): `krn-disclosure`, stable, import from `@kern-ui/angular/kit`.
+- [Timeline](./components/timeline.md): `krn-timeline`, stable, import from `@kern-ui/angular/kit`.
+- [Tree](./components/tree.md): `krn-tree`, beta, import from `@kern-ui/angular/kit`.
+- [Data Table](./components/data-table.md): `krn-data-table`, beta, import from `@kern-ui/angular/addon-grid`.
+- [Data Grid](./components/data-grid.md): `krn-data-grid`, beta, import from `@kern-ui/angular/addon-grid`.
+- [Calendar](./components/calendar.md): `krn-calendar`, stable, import from `@kern-ui/angular/kit`.
+- [Code Block](./components/code-block.md): `krn-code-block`, stable, import from `@kern-ui/angular/kit`.
+- [Keyboard Shortcut](./components/keyboard-shortcut.md): `krn-keyboard-shortcut`, stable, import from `@kern-ui/angular/kit`.
+- [Meter](./components/meter.md): `krn-meter`, stable, import from `@kern-ui/angular/kit`.
+- [Rating](./components/rating.md): `krn-rating`, stable, import from `@kern-ui/angular/kit`.
+- [Line Chart](./components/line-chart.md): `krn-line-chart`, beta, import from `@kern-ui/angular/addon-charts`.
+- [Bar Chart](./components/bar-chart.md): `krn-bar-chart`, beta, import from `@kern-ui/angular/addon-charts`.
+- [Donut Chart](./components/donut-chart.md): `krn-donut-chart`, beta, import from `@kern-ui/angular/addon-charts`.
+- [Responsive Media](./components/responsive-media.md): `krn-responsive-media`, stable, import from `@kern-ui/angular/kit`.
+
+## Patterns
+
+- [User Menu](./components/user-menu.md): `krn-user-menu`, recipe, import from `@kern-ui/angular/patterns`.
+- [Notification Center](./components/notification-center.md): `krn-notification-center`, recipe, import from `@kern-ui/angular/patterns`.
+- [Global Search](./components/global-search.md): `krn-global-search`, recipe, import from `@kern-ui/angular/patterns`.
+- [Filter Bar](./components/filter-bar.md): `krn-filter-bar`, recipe, import from `@kern-ui/angular/patterns`.
+- [Page Header](./components/page-header.md): `krn-page-header`, recipe, import from `@kern-ui/angular/patterns`.
+- [Settings Panel](./components/settings-panel.md): `krn-settings-panel`, recipe, import from `@kern-ui/angular/patterns`.
+- [CRUD Toolbar](./components/crud-toolbar.md): `krn-crud-toolbar`, recipe, import from `@kern-ui/angular/patterns`.
+- [Bulk Actions](./components/bulk-actions.md): `krn-bulk-actions`, recipe, import from `@kern-ui/angular/patterns`.
+- [Master Detail Layout](./components/master-detail-layout.md): `krn-master-detail-layout`, recipe, import from `@kern-ui/angular/patterns`.
+- [Dashboard Widget](./components/dashboard-widget.md): `krn-dashboard-widget`, recipe, import from `@kern-ui/angular/patterns`.
+- [Login Form](./components/login-form.md): `krn-login-form`, recipe, import from `@kern-ui/angular/patterns`.
+- [Profile Form](./components/profile-form.md): `krn-profile-form`, recipe, import from `@kern-ui/angular/patterns`.
+- [Multi Step Form](./components/multi-step-form.md): `krn-multi-step-form`, recipe, import from `@kern-ui/angular/patterns`.
+- [Mobile Navigation](./components/mobile-navigation.md): `krn-mobile-navigation`, recipe, import from `@kern-ui/angular/patterns`.
+- [Responsive Application Shell](./components/responsive-application-shell.md): `krn-responsive-application-shell`, recipe, import from `@kern-ui/angular/patterns`.

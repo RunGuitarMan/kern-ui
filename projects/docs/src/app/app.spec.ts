@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+
 import { App } from './app';
+import { KERN_DOCS_RELEASE_STATE_LABEL, KERN_DOCS_VERSION_LABEL } from './release-identity';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -22,6 +24,10 @@ describe('App', () => {
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.brand')?.textContent).toContain('KERN');
+    expect(compiled.querySelector('.docs-version')?.textContent).toContain(KERN_DOCS_VERSION_LABEL);
+    expect(compiled.querySelector('.docs-version')?.textContent).toContain(
+      KERN_DOCS_RELEASE_STATE_LABEL,
+    );
     expect(compiled.querySelector('#docs-main')).toBeTruthy();
   });
 });

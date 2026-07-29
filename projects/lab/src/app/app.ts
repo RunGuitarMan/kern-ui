@@ -17,56 +17,14 @@ import {
   type KernCatalogItem,
   type KernCategory,
 } from '@kern-ui/showcase';
-import {
-  KrnAlert,
-  KrnAvatar,
-  KrnBadge,
-  KrnBreadcrumbs,
-  KrnButton,
-  KrnButtonGroup,
-  KrnCard,
-  KrnCheckbox,
-  KrnChip,
-  KrnConfirmation,
-  KrnDataGrid,
-  KrnDivider,
-  KrnFloatingActionButton,
-  KrnFormField,
-  KrnGlobalSearch,
-  KrnGrid,
-  KrnIconButton,
-  KrnNativeSelect,
-  KrnPageHeader,
-  KrnPagination,
-  KrnProgressBar,
-  KrnSkeleton,
-  KrnSpinner,
-  KrnStack,
-  KrnStat,
-  KrnSwitch,
-  KrnTabs,
-  KrnTextInput,
-  KrnThemeService,
-  type KrnBreadcrumbItem,
-  type KrnDataColumn,
-  type KrnDensity,
-  type KrnSelectOption,
-  type KrnTabItem,
-  type KrnTheme,
-} from '@kern-ui/angular';
+import { KernComponentSpecimen } from '@kern-ui/showcase/specimen';
+import { KrnThemeService, type KrnDensity, type KrnTheme } from '@kern-ui/angular/core';
 
 type LabTheme = Exclude<KrnTheme, 'system'>;
 type LabDirection = 'ltr' | 'rtl';
 type LabScenario = 'default' | 'states' | 'stress' | 'virtual';
+type LabLocale = 'en-US' | 'ru-RU';
 type CatalogFilter = 'All' | KernCategory;
-
-interface LabRecord extends Record<string, unknown> {
-  readonly id: number;
-  readonly service: string;
-  readonly owner: string;
-  readonly state: string;
-  readonly latency: number;
-}
 
 interface MatrixGroup {
   readonly category: KernCategory;
@@ -77,6 +35,7 @@ const THEMES: readonly LabTheme[] = ['light', 'dark', 'high-contrast'];
 const DENSITIES: readonly KrnDensity[] = ['compact', 'comfortable', 'spacious'];
 const DIRECTIONS: readonly LabDirection[] = ['ltr', 'rtl'];
 const SCENARIOS: readonly LabScenario[] = ['default', 'states', 'stress', 'virtual'];
+const LOCALES: readonly LabLocale[] = ['en-US', 'ru-RU'];
 
 function includesValue<T extends string>(values: readonly T[], value: string | null): value is T {
   return value !== null && values.includes(value as T);
@@ -85,36 +44,7 @@ function includesValue<T extends string>(values: readonly T[], value: string | n
 @Component({
   selector: 'klab-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    KrnAlert,
-    KrnAvatar,
-    KrnBadge,
-    KrnBreadcrumbs,
-    KrnButton,
-    KrnButtonGroup,
-    KrnCard,
-    KrnCheckbox,
-    KrnChip,
-    KrnConfirmation,
-    KrnDataGrid,
-    KrnDivider,
-    KrnFloatingActionButton,
-    KrnFormField,
-    KrnGlobalSearch,
-    KrnGrid,
-    KrnIconButton,
-    KrnNativeSelect,
-    KrnPageHeader,
-    KrnPagination,
-    KrnProgressBar,
-    KrnSkeleton,
-    KrnSpinner,
-    KrnStack,
-    KrnStat,
-    KrnSwitch,
-    KrnTabs,
-    KrnTextInput,
-  ],
+  imports: [KernComponentSpecimen],
   host: {
     '[attr.dir]': 'direction()',
     '[attr.data-theme]': 'theme()',
@@ -138,12 +68,14 @@ export class App {
   protected readonly densities = DENSITIES;
   protected readonly directions = DIRECTIONS;
   protected readonly scenarios = SCENARIOS;
+  protected readonly locales = LOCALES;
 
   protected readonly componentId = signal('button');
   protected readonly scenario = signal<LabScenario>('default');
   protected readonly theme = signal<LabTheme>('light');
   protected readonly density = signal<KrnDensity>('comfortable');
   protected readonly direction = signal<LabDirection>('ltr');
+  protected readonly locale = signal<LabLocale>('en-US');
   protected readonly catalogQuery = signal('');
   protected readonly catalogFilter = signal<CatalogFilter>('All');
 
@@ -156,7 +88,7 @@ export class App {
   });
   protected readonly stateSignature = computed(
     () =>
-      `${this.componentId()} / ${this.scenario()} / ${this.theme()} / ${this.density()} / ${this.direction()}`,
+      `${this.componentId()} / ${this.scenario()} / ${this.theme()} / ${this.density()} / ${this.direction()} / ${this.locale()}`,
   );
   protected readonly matrixGroups = computed<readonly MatrixGroup[]>(() => {
     const query = this.catalogQuery().trim().toLocaleLowerCase();
@@ -179,69 +111,6 @@ export class App {
   protected readonly visibleCatalogCount = computed(() =>
     this.matrixGroups().reduce((total, group) => total + group.items.length, 0),
   );
-  protected readonly specimenCopy = computed(() =>
-    this.scenario() === 'stress'
-      ? 'A deliberately long specimen label that verifies wrapping, narrow containers, bidirectional layout, and resilient overflow without losing the action hierarchy'
-      : 'Publish configuration',
-  );
-
-  protected readonly breadcrumbs: readonly KrnBreadcrumbItem[] = [
-    { label: 'Kern', href: '#catalog-matrix' },
-    { label: 'QA lab', href: '#specimen-stage' },
-    { label: 'Current specimen', current: true },
-  ];
-  protected readonly tabs: readonly KrnTabItem[] = [
-    { id: 'overview', label: 'Overview', badge: 8 },
-    { id: 'signals', label: 'Signals', badge: 24 },
-    { id: 'policy', label: 'Policy' },
-    { id: 'archive', label: 'Archive', disabled: true },
-  ];
-  protected readonly selectOptions: readonly KrnSelectOption<string>[] = [
-    { value: 'starter', label: 'Starter' },
-    { value: 'team', label: 'Team', description: 'For collaborative product teams' },
-    { value: 'scale', label: 'Scale', description: 'Advanced controls and governance' },
-  ];
-  protected readonly searchResults = [
-    {
-      id: 'northstar',
-      label: 'Northstar',
-      description: 'Operations workspace',
-      group: 'Workspace',
-    },
-    {
-      id: 'fieldnote',
-      label: 'Fieldnote',
-      description: 'Research project',
-      group: 'Project',
-    },
-    {
-      id: 'orchard',
-      label: 'Orchard',
-      description: 'Customer success workspace',
-      group: 'Workspace',
-    },
-  ] as const;
-  protected readonly records: readonly LabRecord[] = [
-    { id: 1, service: 'Identity', owner: 'M. Chen', state: 'Healthy', latency: 84 },
-    { id: 2, service: 'Billing', owner: 'R. Singh', state: 'Review', latency: 128 },
-    { id: 3, service: 'Events', owner: 'A. Cole', state: 'Healthy', latency: 67 },
-    { id: 4, service: 'Exports', owner: 'N. Costa', state: 'Healthy', latency: 92 },
-  ];
-  protected readonly recordColumns: readonly KrnDataColumn<LabRecord>[] = [
-    { key: 'service', label: 'Service', sortable: true, priority: 'primary', width: 160 },
-    { key: 'owner', label: 'Owner', sortable: true, priority: 'secondary', width: 120 },
-    { key: 'state', label: 'State', sortable: true, priority: 'secondary', width: 112 },
-    {
-      key: 'latency',
-      label: 'Latency · ms',
-      sortable: true,
-      align: 'end',
-      priority: 'primary',
-      width: 112,
-    },
-  ];
-  protected readonly rowIdentity = (row: LabRecord): number => row.id;
-  protected readonly virtualGridMode = { kind: 'virtual' } as const;
 
   constructor() {
     const root = this.document.documentElement;
@@ -256,6 +125,7 @@ export class App {
       const requestedTheme = params.get('theme');
       const requestedDensity = params.get('density');
       const requestedDirection = params.get('direction');
+      const requestedLocale = params.get('locale');
 
       this.componentId.set(nextComponent);
       this.scenario.set(
@@ -268,11 +138,12 @@ export class App {
       this.direction.set(
         includesValue(DIRECTIONS, requestedDirection) ? requestedDirection : 'ltr',
       );
+      this.locale.set(includesValue(LOCALES, requestedLocale) ? requestedLocale : 'en-US');
 
       this.themeService.setTheme(this.theme());
       this.themeService.setDensity(this.density());
       root.dir = this.direction();
-      root.lang = 'en';
+      root.lang = this.locale();
       this.title.setTitle(`${this.selectedItem()?.name ?? 'Component'} · Kern QA Lab`);
     });
 
@@ -299,6 +170,22 @@ export class App {
 
   protected setDirection(event: Event): void {
     this.updateQuery({ direction: (event.currentTarget as HTMLSelectElement).value });
+  }
+
+  protected setLocale(event: Event): void {
+    const locale = (event.currentTarget as HTMLSelectElement).value;
+    const tree = this.router.createUrlTree([], {
+      relativeTo: this.route,
+      queryParams: { locale },
+      queryParamsHandling: 'merge',
+    });
+    const url = this.router.serializeUrl(tree);
+    const view = this.document.defaultView;
+    if (view) {
+      view.location.assign(url);
+      return;
+    }
+    void this.router.navigateByUrl(tree);
   }
 
   protected selectCatalogItem(id: string): void {

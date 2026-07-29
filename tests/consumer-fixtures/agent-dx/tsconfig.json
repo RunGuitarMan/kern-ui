@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": false,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": [],
+    "rootDir": "./src",
+    "outDir": "./out-tsc",
+    "declaration": false,
+    "sourceMap": false,
+    "noEmitOnError": true
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true,
+    "extendedDiagnostics": {
+      "checks": {
+        "invalidBananaInBox": "error",
+        "missingControlFlowDirective": "error",
+        "missingNgForOfLet": "error",
+        "nullishCoalescingNotNullable": "error",
+        "optionalChainNotNullable": "error",
+        "suffixNotSupported": "error",
+        "textAttributeNotBinding": "error",
+        "uninvokedFunctionInEventBinding": "error",
+        "unusedLetDeclaration": "error"
+      }
+    }
+  },
+  "include": ["src/examples/**/*.ts", "src/recipes/**/*.ts"]
+}

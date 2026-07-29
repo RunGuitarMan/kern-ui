@@ -1,0 +1,379 @@
+{
+  "$schema": "./manual-evidence.schema.json",
+  "schemaVersion": 1,
+  "libraryVersion": "0.1.0",
+  "certification": {
+    "status": "not-certified",
+    "statement": "No manual assistive-technology certification is claimed; every matrix record is pending execution."
+  },
+  "targetComponentIds": [
+    "app-shell",
+    "calendar",
+    "combobox",
+    "command-palette",
+    "context-menu",
+    "data-grid",
+    "date-picker",
+    "dialog",
+    "donut-chart",
+    "line-chart",
+    "menu",
+    "menubar",
+    "select",
+    "stepper",
+    "tabs",
+    "tree",
+    "tree-navigation"
+  ],
+  "records": [
+    {
+      "id": "nvda-firefox-windows",
+      "purpose": "Validate semantic navigation, forms mode, announcements, and focus with NVDA and Firefox.",
+      "componentIds": [
+        "calendar",
+        "combobox",
+        "command-palette",
+        "context-menu",
+        "data-grid",
+        "date-picker",
+        "dialog",
+        "donut-chart",
+        "line-chart",
+        "menu",
+        "menubar",
+        "select",
+        "stepper",
+        "tabs",
+        "tree",
+        "tree-navigation"
+      ],
+      "environment": {
+        "operatingSystem": {
+          "name": "Windows",
+          "version": null
+        },
+        "browser": {
+          "name": "Firefox",
+          "version": null
+        },
+        "assistiveTechnology": {
+          "name": "NVDA",
+          "version": null
+        },
+        "input": {
+          "name": "Keyboard",
+          "version": null
+        }
+      },
+      "checks": [
+        "name-role-value",
+        "keyboard",
+        "focus-order",
+        "focus-restoration",
+        "announcements",
+        "browse-mode",
+        "forms-mode"
+      ],
+      "status": "pending",
+      "required": true,
+      "releaseBlocking": false,
+      "testedAt": null,
+      "tester": null,
+      "verifiedBy": null,
+      "evidence": [],
+      "notes": "Pending execution on a recorded physical or managed Windows environment."
+    },
+    {
+      "id": "jaws-edge-windows",
+      "purpose": "Validate enterprise Windows screen-reader behavior with JAWS and branded Microsoft Edge.",
+      "componentIds": [
+        "calendar",
+        "combobox",
+        "command-palette",
+        "context-menu",
+        "data-grid",
+        "date-picker",
+        "dialog",
+        "donut-chart",
+        "line-chart",
+        "menu",
+        "menubar",
+        "select",
+        "stepper",
+        "tabs",
+        "tree",
+        "tree-navigation"
+      ],
+      "environment": {
+        "operatingSystem": {
+          "name": "Windows",
+          "version": null
+        },
+        "browser": {
+          "name": "Microsoft Edge",
+          "version": null
+        },
+        "assistiveTechnology": {
+          "name": "JAWS",
+          "version": null
+        },
+        "input": {
+          "name": "Keyboard",
+          "version": null
+        }
+      },
+      "checks": [
+        "name-role-value",
+        "keyboard",
+        "focus-order",
+        "focus-restoration",
+        "announcements",
+        "browse-mode",
+        "forms-mode"
+      ],
+      "status": "pending",
+      "required": true,
+      "releaseBlocking": false,
+      "testedAt": null,
+      "tester": null,
+      "verifiedBy": null,
+      "evidence": [],
+      "notes": "Pending execution with licensed JAWS on a recorded Windows environment."
+    },
+    {
+      "id": "voiceover-safari-macos",
+      "purpose": "Validate VoiceOver navigation and focus behavior in real Safari on Apple hardware.",
+      "componentIds": [
+        "app-shell",
+        "calendar",
+        "combobox",
+        "command-palette",
+        "context-menu",
+        "data-grid",
+        "date-picker",
+        "dialog",
+        "donut-chart",
+        "line-chart",
+        "menu",
+        "menubar",
+        "select",
+        "stepper",
+        "tabs",
+        "tree",
+        "tree-navigation"
+      ],
+      "environment": {
+        "operatingSystem": {
+          "name": "macOS",
+          "version": null
+        },
+        "browser": {
+          "name": "Safari",
+          "version": null
+        },
+        "assistiveTechnology": {
+          "name": "VoiceOver",
+          "version": null
+        },
+        "input": {
+          "name": "Keyboard and VoiceOver commands",
+          "version": null
+        }
+      },
+      "checks": [
+        "name-role-value",
+        "keyboard",
+        "focus-order",
+        "focus-restoration",
+        "announcements",
+        "browse-mode",
+        "forms-mode"
+      ],
+      "status": "pending",
+      "required": true,
+      "releaseBlocking": false,
+      "testedAt": null,
+      "tester": null,
+      "verifiedBy": null,
+      "evidence": [],
+      "notes": "Pending real-Safari execution; Playwright WebKit does not satisfy this record."
+    },
+    {
+      "id": "keyboard-only-windows",
+      "purpose": "Validate complete operation, visible focus, entry, escape, and restoration without a pointer.",
+      "componentIds": [
+        "app-shell",
+        "calendar",
+        "combobox",
+        "command-palette",
+        "context-menu",
+        "data-grid",
+        "date-picker",
+        "dialog",
+        "menu",
+        "menubar",
+        "select",
+        "stepper",
+        "tabs",
+        "tree",
+        "tree-navigation"
+      ],
+      "environment": {
+        "operatingSystem": {
+          "name": "Windows",
+          "version": null
+        },
+        "browser": {
+          "name": "Google Chrome",
+          "version": null
+        },
+        "assistiveTechnology": {
+          "name": "None",
+          "version": null
+        },
+        "input": {
+          "name": "Keyboard only",
+          "version": null
+        }
+      },
+      "checks": ["keyboard", "focus-order", "focus-restoration"],
+      "status": "pending",
+      "required": true,
+      "releaseBlocking": false,
+      "testedAt": null,
+      "tester": null,
+      "verifiedBy": null,
+      "evidence": [],
+      "notes": "Pending manual keyboard walkthrough on a recorded branded-browser build."
+    },
+    {
+      "id": "windows-high-contrast",
+      "purpose": "Validate forced-color visibility, selected state, focus, and non-color state indicators.",
+      "componentIds": [
+        "app-shell",
+        "calendar",
+        "combobox",
+        "command-palette",
+        "data-grid",
+        "date-picker",
+        "dialog",
+        "donut-chart",
+        "line-chart",
+        "menu",
+        "select",
+        "tabs",
+        "tree"
+      ],
+      "environment": {
+        "operatingSystem": {
+          "name": "Windows High Contrast",
+          "version": null
+        },
+        "browser": {
+          "name": "Microsoft Edge",
+          "version": null
+        },
+        "assistiveTechnology": {
+          "name": "None",
+          "version": null
+        },
+        "input": {
+          "name": "Keyboard and pointer",
+          "version": null
+        }
+      },
+      "checks": ["keyboard", "focus-order", "high-contrast"],
+      "status": "pending",
+      "required": true,
+      "releaseBlocking": false,
+      "testedAt": null,
+      "tester": null,
+      "verifiedBy": null,
+      "evidence": [],
+      "notes": "Pending manual Windows forced-colors validation with screenshots and issue links."
+    },
+    {
+      "id": "zoom-reflow-desktop",
+      "purpose": "Validate text zoom, browser zoom, reflow, clipping, and overlay reachability at enterprise settings.",
+      "componentIds": [
+        "app-shell",
+        "calendar",
+        "combobox",
+        "command-palette",
+        "data-grid",
+        "date-picker",
+        "dialog",
+        "menu",
+        "select",
+        "tabs",
+        "tree"
+      ],
+      "environment": {
+        "operatingSystem": {
+          "name": "Windows",
+          "version": null
+        },
+        "browser": {
+          "name": "Google Chrome and Firefox",
+          "version": null
+        },
+        "assistiveTechnology": {
+          "name": "None",
+          "version": null
+        },
+        "input": {
+          "name": "Keyboard and pointer",
+          "version": null
+        }
+      },
+      "checks": ["keyboard", "zoom-200", "zoom-400", "reflow"],
+      "status": "pending",
+      "required": true,
+      "releaseBlocking": false,
+      "testedAt": null,
+      "tester": null,
+      "verifiedBy": null,
+      "evidence": [],
+      "notes": "Pending manual 200 and 400 percent validation on recorded browser versions."
+    },
+    {
+      "id": "voiceover-safari-ios",
+      "purpose": "Collect non-blocking mobile VoiceOver evidence for high-risk touch and overlay interactions.",
+      "componentIds": ["app-shell", "combobox", "date-picker", "dialog", "menu", "select"],
+      "environment": {
+        "operatingSystem": {
+          "name": "iOS",
+          "version": null
+        },
+        "browser": {
+          "name": "Mobile Safari",
+          "version": null
+        },
+        "assistiveTechnology": {
+          "name": "VoiceOver",
+          "version": null
+        },
+        "input": {
+          "name": "Touch and VoiceOver gestures",
+          "version": null
+        }
+      },
+      "checks": [
+        "name-role-value",
+        "focus-order",
+        "focus-restoration",
+        "announcements",
+        "browse-mode",
+        "forms-mode"
+      ],
+      "status": "pending",
+      "required": false,
+      "releaseBlocking": false,
+      "testedAt": null,
+      "tester": null,
+      "verifiedBy": null,
+      "evidence": [],
+      "notes": "Pending best-effort Tier 3 evidence; this record is not a browser support claim."
+    }
+  ]
+}

@@ -56,7 +56,7 @@
       "subpath": "./addon-grid",
       "sourceRoot": "projects/kern/addon-grid/src",
       "publicApi": "projects/kern/addon-grid/src/public-api.ts",
-      "owns": ["lib/data-grid.ts"],
+      "owns": ["lib/data-grid.ts", "lib/data-grid-data-source.ts"],
       "dependencies": ["cdk", "core"],
       "identityExports": ["KrnDataGrid"]
     },

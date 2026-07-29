@@ -1,0 +1,10 @@
+{
+  "coldRouteMs": 8000,
+  "interactionMs": 2500,
+  "gridScrollFrameP95Ms": 100,
+  "formInputFrameP95Ms": 100,
+  "retainedHeapBytes": 4194304,
+  "gridRenderedRows": 80,
+  "gridDomNodes": 2000,
+  "formDomNodes": 7000
+}

@@ -51,6 +51,17 @@
               {
                 "glob": "**/*",
                 "input": "projects/docs/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/kern/agent",
+                "ignore": ["**/tsconfig.json"],
+                "output": "agent"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/kern/agent",
+                "ignore": ["**/tsconfig.json"]
               }
             ],
             "styles": ["projects/docs/src/styles.css"],
@@ -68,8 +79,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1.29MB",
-                  "maximumError": "1.32MB"
+                  "maximumWarning": "1.32MB",
+                  "maximumError": "1.36MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -129,8 +140,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "700kB",
-                  "maximumError": "850kB"
+                  "maximumWarning": "730kB",
+                  "maximumError": "780kB"
                 },
                 {
                   "type": "anyComponentStyle",

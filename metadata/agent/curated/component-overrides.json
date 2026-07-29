@@ -1,0 +1,191 @@
+{
+  "select": {
+    "keywords": ["single choice", "listbox", "typed option", "reactive forms"],
+    "related": ["native-select", "combobox", "autocomplete", "multi-select"],
+    "commonMistakes": [
+      "Do not bind object options without a stable identityMatcher and trackBy contract.",
+      "Do not use Select when arbitrary free text is valid; use Autocomplete."
+    ]
+  },
+  "native-select": {
+    "keywords": ["platform picker", "mobile select", "single choice"],
+    "related": ["select", "combobox"],
+    "commonMistakes": [
+      "Do not expect the operating-system option popup to inherit KERN surface styling."
+    ]
+  },
+  "multi-select": {
+    "keywords": ["multiple choice", "listbox", "typed options", "reactive forms"],
+    "related": ["select", "combobox", "tags-input"],
+    "commonMistakes": [
+      "Use stable option values and identityMatcher for object values.",
+      "Use Tags Input instead when users may create an unbounded vocabulary."
+    ]
+  },
+  "combobox": {
+    "keywords": ["constrained search", "authoritative options", "typeahead"],
+    "related": ["select", "autocomplete", "multi-select"],
+    "commonMistakes": [
+      "Combobox commits only a known option; do not treat unmatched text as a value.",
+      "Keep option identity stable across async refreshes."
+    ]
+  },
+  "autocomplete": {
+    "keywords": ["free text", "suggestions", "typeahead"],
+    "related": ["combobox", "select", "search-input"],
+    "commonMistakes": [
+      "Autocomplete preserves valid free text; use Combobox when a known identifier is required."
+    ]
+  },
+  "date-picker": {
+    "keywords": ["plain date", "calendar popup", "reactive forms"],
+    "related": ["calendar", "date-range-picker", "time-picker"],
+    "commonMistakes": [
+      "Pass ISO plain-date values (YYYY-MM-DD), not locale-formatted display strings.",
+      "Keep min, max, disabled dates, locale and deterministic today consistent between server and client."
+    ]
+  },
+  "date-range-picker": {
+    "keywords": ["date interval", "calendar popup", "reactive forms"],
+    "related": ["date-picker", "calendar", "time-picker"],
+    "commonMistakes": [
+      "Do not submit an end date before the start date.",
+      "Use stable ISO plain-date values rather than parsing visible localized labels."
+    ]
+  },
+  "time-picker": {
+    "keywords": ["24 hour time", "scheduling", "reactive forms"],
+    "related": ["date-picker", "date-range-picker"],
+    "commonMistakes": [
+      "The value is a 24-hour HH:mm string; timezone conversion remains an application concern."
+    ]
+  },
+  "calendar": {
+    "keywords": ["month grid", "plain date", "date navigation"],
+    "related": ["date-picker", "date-range-picker"],
+    "commonMistakes": [
+      "Do not configure min after max.",
+      "Provide deterministic today when server and client clocks or timezones may differ."
+    ]
+  },
+  "data-grid": {
+    "keywords": [
+      "enterprise table",
+      "virtualization",
+      "controlled data",
+      "sorting",
+      "filtering",
+      "selection"
+    ],
+    "related": ["data-table", "pagination", "tree"],
+    "commonMistakes": [
+      "rowIdentity must return a unique stable key for every source occurrence.",
+      "Do not combine virtual mode with expandable detail rows.",
+      "Use controlled mode for server-owned sorting, filtering and pagination."
+    ]
+  },
+  "data-table": {
+    "keywords": ["table", "data grid", "tabular data"],
+    "related": ["data-grid", "pagination"],
+    "commonMistakes": [
+      "Data Table is an alias of Data Grid; follow the same stable rowIdentity contract."
+    ]
+  },
+  "tree": {
+    "keywords": ["hierarchy", "roving focus", "selection", "typeahead"],
+    "related": ["tree-navigation", "data-grid"],
+    "commonMistakes": [
+      "Every node id must be non-empty and unique across the complete tree.",
+      "Do not derive persistent ids from mutable array indexes."
+    ]
+  },
+  "tree-navigation": {
+    "keywords": ["hierarchical navigation", "roving focus", "typeahead"],
+    "related": ["tree", "menu", "sidebar"],
+    "commonMistakes": ["Every item id must be non-empty, unique and stable across updates."]
+  },
+  "dialog": {
+    "keywords": ["modal", "focus trap", "overlay", "form dialog"],
+    "related": ["alert-dialog", "drawer", "bottom-sheet", "popover"],
+    "commonMistakes": [
+      "Keep the trigger available so focus can be restored after close.",
+      "Register ownership when a custom CDK overlay opens from inside the dialog."
+    ]
+  },
+  "alert-dialog": {
+    "keywords": ["destructive confirmation", "modal", "focus trap"],
+    "related": ["dialog", "confirmation-pattern"],
+    "commonMistakes": [
+      "Use Alert Dialog only when an explicit decision is required before continuing."
+    ]
+  },
+  "drawer": {
+    "keywords": ["modal side panel", "overlay", "focus trap"],
+    "related": ["dialog", "bottom-sheet", "settings-panel"],
+    "commonMistakes": ["Do not use a modal Drawer for persistent page navigation."]
+  },
+  "popover": {
+    "keywords": ["non-modal overlay", "disclosure", "anchored content"],
+    "related": ["tooltip", "hover-card", "dialog"],
+    "slots": {
+      "[krnPopoverTrigger]": {
+        "required": true,
+        "description": "Required non-interactive label content projected into the Popover-owned trigger button; do not project a button, link, form control, or krn-button."
+      }
+    },
+    "commonMistakes": [
+      "Use Tooltip for a short label and Dialog for a modal workflow.",
+      "The krnPopoverTrigger slot is button label content; the Popover owns trigger semantics, focus, keyboard behavior, and ARIA state."
+    ]
+  },
+  "hover-card": {
+    "keywords": ["supplemental preview", "hover focus", "anchored preview"],
+    "related": ["popover", "tooltip"],
+    "slots": {
+      "[krnHoverCardTrigger]": {
+        "required": true,
+        "description": "Required non-interactive label content projected into the Hover Card-owned trigger button; do not project a button, link, form control, or krn-button."
+      }
+    },
+    "commonMistakes": [
+      "The krnHoverCardTrigger slot is button label content; the Hover Card owns trigger semantics, focus, keyboard behavior, and ARIA state."
+    ]
+  },
+  "menu": {
+    "keywords": ["actions", "popup menu", "keyboard navigation"],
+    "related": ["context-menu", "menubar"],
+    "slots": {
+      "[krnMenuTrigger]": {
+        "required": false,
+        "description": "Optional non-interactive label content projected into the Menu-owned trigger button; omit it to use triggerLabel and never project a button, link, form control, or krn-button."
+      }
+    },
+    "commonMistakes": [
+      "The krnMenuTrigger slot is button label content; the Menu owns trigger semantics, focus, keyboard behavior, and ARIA state."
+    ]
+  },
+  "tooltip": {
+    "keywords": ["hint", "accessible description", "hover focus"],
+    "related": ["popover", "hover-card"],
+    "commonMistakes": ["Never place essential or interactive content only inside a Tooltip."]
+  },
+  "line-chart": {
+    "keywords": ["trend", "time series", "accessible data table"],
+    "related": ["bar-chart", "donut-chart"],
+    "commonMistakes": [
+      "Provide a specific title and meaningful labels; visual marks are not the only data representation."
+    ]
+  },
+  "bar-chart": {
+    "keywords": ["comparison", "categorical data", "accessible data table"],
+    "related": ["line-chart", "donut-chart"],
+    "commonMistakes": ["Keep datum labels unique and provide a title that explains the comparison."]
+  },
+  "donut-chart": {
+    "keywords": ["part to whole", "proportion", "accessible data table"],
+    "related": ["bar-chart", "line-chart"],
+    "commonMistakes": [
+      "Avoid Donut Chart when many segments or small differences make comparison unreliable."
+    ]
+  }
+}

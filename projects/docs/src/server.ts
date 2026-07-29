@@ -5,45 +5,57 @@ import {
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
+
+import { documentationAssetCacheControl } from './agent-contract-cache';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
-/**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
- */
+function normalizeBasePath(value: string | undefined): string {
+  if (!value || value === '/') {
+    return '/';
+  }
+  if (!value.startsWith('/') || value.includes('\\') || value.split('/').includes('..')) {
+    throw new Error(`KERN_DOCS_BASE_PATH must be an absolute URL path, received "${value}".`);
+  }
+  return value.replace(/\/+$/, '');
+}
+
+const basePath = normalizeBasePath(process.env['KERN_DOCS_BASE_PATH']);
+const documentation = express.Router();
 
 /**
  * Serve static files from /browser
  */
-app.use(
+documentation.use(
   express.static(browserDistFolder, {
     maxAge: '1y',
+    immutable: basePath !== '/',
     index: false,
     redirect: false,
+    setHeaders(response, filePath) {
+      response.setHeader(
+        'Cache-Control',
+        documentationAssetCacheControl(basePath, relative(browserDistFolder, filePath)),
+      );
+    },
   }),
 );
 
 /**
  * Handle all other requests by rendering the Angular application.
  */
-app.use((req, res, next) => {
+documentation.use((req, res, next) => {
   angularApp
     .handle(req)
     .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))
     .catch(next);
 });
+
+app.use(basePath, documentation);
 
 /**
  * Start the server if this module is the main entry point, or it is ran via PM2.

@@ -44,7 +44,10 @@ test.describe('Tier 1 browser contract', () => {
 
     const specimen = await openSpecimen(page, 'data-grid');
     const gridRegion = specimen.getByRole('region', { name: 'Workspace usage' });
-    await expect(gridRegion.getByRole('table')).toBeVisible();
+    const grid = gridRegion.getByRole('grid', { name: 'Workspace usage' });
+    await expect(grid).toBeVisible();
+    await expect(grid).toHaveAttribute('aria-rowcount', /^[1-9]\d*$/);
+    await expect(grid).toHaveAttribute('aria-colcount', /^[1-9]\d*$/);
     await expect(gridRegion.getByRole('columnheader', { name: /Workspace/ })).toBeVisible();
 
     assertNoRuntimeErrors();

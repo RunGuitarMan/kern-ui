@@ -1,0 +1,240 @@
+{
+  "id": "checkbox-group",
+  "name": "Checkbox Group",
+  "category": "Forms",
+  "kind": "component",
+  "selector": "krn-checkbox-group",
+  "selectors": ["krn-checkbox-group"],
+  "symbol": "KrnCheckboxGroup",
+  "canonicalSymbol": "KrnCheckboxGroup",
+  "canonicalId": "checkbox-group",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Checkbox Group. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled",
+    "filled",
+    "empty"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/forms",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "id",
+      "property": "id",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Stable identifier value used by the id contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "label",
+      "property": "label",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Visible text that names the control or data value.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "orientation",
+      "property": "orientation",
+      "kind": "input",
+      "type": "KrnOrientation",
+      "required": false,
+      "defaultValue": "'vertical'",
+      "description": "Defines the logical axis used by layout and keyboard navigation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "disabled",
+      "property": "disabled",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Prevents user interaction and participates in the disabled-state contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "readonly",
+      "property": "readOnly",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Keeps the value perceivable while preventing user edits.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "required",
+      "property": "required",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Marks the value as required and participates in Angular Forms validation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "invalid",
+      "property": "invalid",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Exposes an externally controlled invalid presentation state.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "describedBy",
+      "property": "describedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that provide the accessible description.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "valueChange",
+      "property": "valueChange",
+      "kind": "output",
+      "type": "ReadonlyArray<string>",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the value change interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "selector": "*",
+      "required": false,
+      "description": "Projects default component content."
+    }
+  ],
+  "forms": {
+    "controlValueAccessor": true,
+    "validator": true,
+    "valueType": "ReadonlyArray<string>",
+    "reactiveForms": true,
+    "templateDrivenForms": true,
+    "stateInputs": ["disabled", "readonly", "required", "invalid"],
+    "notes": [
+      "Works with Angular Forms through ControlValueAccessor.",
+      "Angular validator state and explicit KERN state inputs are combined."
+    ]
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": [
+      "Tab focuses",
+      "Arrow keys operate grouped controls",
+      "Escape cancels transient UI"
+    ],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Typed notification channels",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Typed notification channels\n *\n * Bind a stable array of selected string values.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCheckbox, KrnCheckboxGroup } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-checkbox-group-agent-example',\n  standalone: true,\n  imports: [KrnCheckboxGroup, ReactiveFormsModule, KrnCheckbox],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-checkbox-group label=\"Notification channels\" [formControl]=\"control\">\n      <krn-checkbox value=\"email\">Email</krn-checkbox>\n      <krn-checkbox value=\"slack\">Slack</krn-checkbox>\n    </krn-checkbox-group>\n  `,\n})\nexport class KernCheckboxGroupAgentExample {\n  readonly control = new FormControl<readonly string[]>(['email'], { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernCheckboxGroupAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/checkbox-group.ts"
+    }
+  ],
+  "related": ["form-field", "label", "hint", "validation-message"],
+  "keywords": [
+    "checkbox-group",
+    "Checkbox Group",
+    "Forms",
+    "krn-checkbox-group",
+    "KrnCheckboxGroup",
+    "id",
+    "label",
+    "orientation",
+    "disabled",
+    "readonly",
+    "required",
+    "invalid",
+    "describedBy",
+    "valueChange"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Do not manually duplicate value and disabled state when Angular Forms owns the control."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify reactive-form value, touched, disabled, required and invalid state.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/checkbox-group",
+    "json": "components/checkbox-group.json",
+    "markdown": "components/checkbox-group.md"
+  }
+}

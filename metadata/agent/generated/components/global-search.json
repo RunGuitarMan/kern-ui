@@ -1,0 +1,255 @@
+{
+  "id": "global-search",
+  "name": "Global Search",
+  "category": "Patterns",
+  "kind": "component",
+  "selector": "krn-global-search",
+  "selectors": ["krn-global-search"],
+  "symbol": "KrnGlobalSearch",
+  "canonicalSymbol": "KrnGlobalSearch",
+  "canonicalId": "global-search",
+  "owner": "patterns",
+  "importPath": "@kern-ui/angular/patterns",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Global Search. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "loading",
+    "empty",
+    "error",
+    "success"
+  ],
+  "lifecycle": {
+    "status": "recipe",
+    "compatibility": "Adaptable composition whose primitive dependencies have their own lifecycle.",
+    "owner": "kern/patterns",
+    "evidenceProfile": "recipe-validation",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "responsive",
+      "automated-a11y",
+      "adaptation-guidance"
+    ],
+    "rationale": "Adaptable composition whose primitive dependencies have their own lifecycle.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.globalSearch",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "placeholder",
+      "property": "placeholder",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.searchPlaceholder",
+      "description": "Short input hint shown only while no value is present.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "clearLabel",
+      "property": "clearLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.clearSearch",
+      "description": "Human-readable copy for the clear state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "resultsLabel",
+      "property": "resultsLabel",
+      "kind": "input",
+      "type": "(label: string) => string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.resultLabel",
+      "description": "Human-readable copy for the results state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "emptyResultsLabel",
+      "property": "emptyResultsLabel",
+      "kind": "input",
+      "type": "(query: string) => string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.noSearchResults",
+      "description": "Accessible copy announced when a search has no matching results.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "results",
+      "property": "results",
+      "kind": "input",
+      "type": "ReadonlyArray<KrnSearchResult>",
+      "required": false,
+      "defaultValue": "[]",
+      "description": "Search result collection rendered in response to the current query.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "maxResults",
+      "property": "maxResults",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "8",
+      "description": "Upper or lower bound applied to the results value.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "resultsId",
+      "property": "resultsId",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.ids.next('global-search-results')",
+      "description": "Stable identifier value used by the results contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "query",
+      "property": "query",
+      "kind": "model",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Current controlled search text used to derive visible results.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "open",
+      "property": "open",
+      "kind": "model",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controls whether the disclosure or overlay surface is visible.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "activeIndex",
+      "property": "activeIndex",
+      "kind": "model",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Zero-based index currently participating in managed keyboard focus.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "resultSelected",
+      "property": "resultSelected",
+      "kind": "output",
+      "type": "KrnSearchResult",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the result selected interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+      "Uses the shared deterministic KERN id service."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Controlled typed global search",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Controlled typed global search\n *\n * Own query, popup and active result state while supplying stable results.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnGlobalSearch, type KrnSearchResult } from '@kern-ui/angular/patterns';\n\n@Component({\n  selector: 'app-kern-global-search-agent-example',\n  standalone: true,\n  imports: [KrnGlobalSearch],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-global-search\n      [results]=\"results\"\n      [(query)]=\"query\"\n      [(open)]=\"open\"\n      [(activeIndex)]=\"activeIndex\"\n    />\n  `,\n})\nexport class KernGlobalSearchAgentExample {\n  readonly results: readonly KrnSearchResult[] = [\n    {\n      id: 'customer-acme',\n      label: 'Acme Europe',\n      description: 'Enterprise customer',\n      group: 'Customers',\n      keywords: ['renewal', 'ada'],\n    },\n    {\n      id: 'report-risk',\n      label: 'Risk report',\n      description: 'Accounts requiring review',\n      group: 'Reports',\n    },\n  ];\n\n  query = '';\n\n  open = false;\n\n  activeIndex = 0;\n}\n\nvoid bootstrapApplication(KernGlobalSearchAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/global-search.ts"
+    }
+  ],
+  "related": ["user-menu", "notification-center", "filter-bar", "page-header"],
+  "keywords": [
+    "global-search",
+    "Global Search",
+    "Patterns",
+    "krn-global-search",
+    "KrnGlobalSearch",
+    "ariaLabel",
+    "placeholder",
+    "clearLabel",
+    "resultsLabel",
+    "emptyResultsLabel",
+    "results",
+    "maxResults",
+    "resultsId",
+    "query",
+    "open",
+    "activeIndex",
+    "resultSelected"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/global-search",
+    "json": "components/global-search.json",
+    "markdown": "components/global-search.md"
+  }
+}

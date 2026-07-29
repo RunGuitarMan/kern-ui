@@ -1,0 +1,168 @@
+{
+  "id": "master-detail-layout",
+  "name": "Master Detail Layout",
+  "category": "Patterns",
+  "kind": "component",
+  "selector": "krn-master-detail-layout",
+  "selectors": ["krn-master-detail-layout"],
+  "symbol": "KrnMasterDetailLayout",
+  "canonicalSymbol": "KrnMasterDetailLayout",
+  "canonicalId": "master-detail-layout",
+  "owner": "patterns",
+  "importPath": "@kern-ui/angular/patterns",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Master Detail Layout. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "loading",
+    "empty",
+    "error",
+    "success"
+  ],
+  "lifecycle": {
+    "status": "recipe",
+    "compatibility": "Adaptable composition whose primitive dependencies have their own lifecycle.",
+    "owner": "kern/patterns",
+    "evidenceProfile": "recipe-validation",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "responsive",
+      "automated-a11y",
+      "adaptation-guidance"
+    ],
+    "rationale": "Adaptable composition whose primitive dependencies have their own lifecycle.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "masterLabel",
+      "property": "masterLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.masterList",
+      "description": "Human-readable copy for the master state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "detailLabel",
+      "property": "detailLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.detail",
+      "description": "Human-readable copy for the detail state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "detailOpen",
+      "property": "detailOpen",
+      "kind": "model",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controlled detail open state with a matching Angular model-change output.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [
+    {
+      "name": "krnMaster",
+      "selector": "[krnMaster]",
+      "required": false,
+      "description": "Projects content matching [krnMaster]."
+    },
+    {
+      "name": "krnDetail",
+      "selector": "[krnDetail]",
+      "required": false,
+      "description": "Projects content matching [krnDetail]."
+    }
+  ],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Controlled customer master-detail layout",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Controlled customer master-detail layout\n *\n * Keep compact detail visibility synchronized with route or selection state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnMasterDetailLayout } from '@kern-ui/angular/patterns';\n\n@Component({\n  selector: 'app-kern-master-detail-layout-agent-example',\n  standalone: true,\n  imports: [KrnMasterDetailLayout],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-master-detail-layout\n      masterLabel=\"Customers\"\n      detailLabel=\"Customer details\"\n      [(detailOpen)]=\"detailOpen\"\n    >\n      <section krnMaster>\n        <button type=\"button\" (click)=\"detailOpen = true\">Acme Europe</button>\n      </section>\n      <section krnDetail>\n        <h2>Acme Europe</h2>\n        <button type=\"button\" (click)=\"detailOpen = false\">Back to customers</button>\n      </section>\n    </krn-master-detail-layout>\n  `,\n})\nexport class KernMasterDetailLayoutAgentExample {\n  detailOpen = false;\n}\n\nvoid bootstrapApplication(KernMasterDetailLayoutAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/master-detail-layout.ts"
+    }
+  ],
+  "related": ["user-menu", "notification-center", "global-search", "filter-bar"],
+  "keywords": [
+    "master-detail-layout",
+    "Master Detail Layout",
+    "Patterns",
+    "krn-master-detail-layout",
+    "KrnMasterDetailLayout",
+    "masterLabel",
+    "detailLabel",
+    "detailOpen"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/master-detail-layout",
+    "json": "components/master-detail-layout.json",
+    "markdown": "components/master-detail-layout.md"
+  }
+}

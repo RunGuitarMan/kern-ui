@@ -34,12 +34,8 @@ export interface KernCatalogItem {
   readonly dont: string;
 }
 
-const COMMON_STATES = [
+const VISUAL_STATES = [
   'default',
-  'hover',
-  'focus-visible',
-  'active',
-  'disabled',
   'overflow',
   'long text',
   'dark',
@@ -49,13 +45,141 @@ const COMMON_STATES = [
   'mobile',
 ] as const;
 
-const INTERACTIVE_STATES = [
-  ...COMMON_STATES,
-  'loading',
-  'selected',
-  'invalid',
-  'readonly',
+const NON_TEXT_VISUAL_STATES = [
+  'default',
+  'dark',
+  'high contrast',
+  'compact',
+  'RTL',
+  'mobile',
 ] as const;
+
+const INTERACTION_STATES = ['hover', 'focus-visible', 'active', 'disabled'] as const;
+
+const FORM_FOUNDATION_IDS = new Set(['form-field', 'label', 'hint', 'validation-message']);
+const OVERLAY_IDS = new Set([
+  'tooltip',
+  'popover',
+  'hover-card',
+  'dialog',
+  'alert-dialog',
+  'drawer',
+  'bottom-sheet',
+  'context-menu',
+  'menu',
+  'dropdown-button',
+  'command-palette',
+]);
+const INTERACTIVE_DATA_IDS = new Set([
+  'accordion',
+  'disclosure',
+  'tree',
+  'data-table',
+  'data-grid',
+  'calendar',
+  'rating',
+  'line-chart',
+  'bar-chart',
+  'donut-chart',
+]);
+const NON_TEXT_LAYOUT_IDS = new Set(['aspect-ratio', 'divider', 'responsive-show-hide', 'spacer']);
+
+function statesFor(
+  id: string,
+  category: KernCategory,
+  api: readonly KernApiRow[],
+): readonly string[] {
+  const apiNames = new Set(api.map((member) => member.name));
+  let states: string[] = [
+    ...(NON_TEXT_LAYOUT_IDS.has(id) ? NON_TEXT_VISUAL_STATES : VISUAL_STATES),
+  ];
+
+  if (category === 'Actions') {
+    states.push(...INTERACTION_STATES);
+  } else if (category === 'Forms' && !FORM_FOUNDATION_IDS.has(id)) {
+    states.push(...INTERACTION_STATES, 'filled', 'empty');
+  } else if (category === 'Navigation') {
+    states.push(...INTERACTION_STATES, 'current');
+  } else if (INTERACTIVE_DATA_IDS.has(id)) {
+    states.push(...INTERACTION_STATES);
+  } else if (category === 'Patterns') {
+    states.push('loading', 'empty', 'error', 'success');
+  }
+
+  if (OVERLAY_IDS.has(id)) states.push('closed', 'open', 'nested', 'dismissed');
+  if (apiNames.has('loading') || ['spinner', 'skeleton', 'loading-overlay'].includes(id)) {
+    states.push('loading');
+  }
+  if (apiNames.has('disabled')) states.push('disabled');
+  if (apiNames.has('readOnly') || apiNames.has('readonly')) states.push('readonly');
+  if (apiNames.has('required')) states.push('required');
+  if (apiNames.has('invalid')) states.push('invalid');
+  if (
+    apiNames.has('selected') ||
+    apiNames.has('selection') ||
+    ['checkbox', 'radio', 'switch', 'toggle-button', 'toggle-group'].includes(id)
+  ) {
+    states.push('selected', 'unselected');
+  }
+  if (apiNames.has('open') || apiNames.has('expanded')) states.push('closed', 'open');
+  if (apiNames.has('min') || apiNames.has('max')) states.push('minimum', 'maximum');
+
+  switch (id) {
+    case 'resizable-panels':
+      states.push(
+        'handle hover',
+        'handle focus-visible',
+        'minimum size',
+        'maximum size',
+        'collapsed',
+        'expanded',
+      );
+      break;
+    case 'data-grid':
+    case 'data-table':
+      states.push(
+        'loading',
+        'empty',
+        'error',
+        'sorted',
+        'filtered',
+        'selected rows',
+        'virtualized',
+        'pinned columns',
+      );
+      break;
+    case 'tree':
+    case 'tree-navigation':
+      states.push('loading branch', 'error branch', 'collapsed', 'expanded', 'selected');
+      break;
+    case 'select':
+    case 'multi-select':
+    case 'combobox':
+    case 'autocomplete':
+    case 'date-picker':
+    case 'date-range-picker':
+    case 'time-picker':
+    case 'color-picker':
+      states.push('closed', 'open', 'empty results', 'async loading');
+      break;
+    case 'progress-bar':
+    case 'circular-progress':
+    case 'meter':
+      states.push('minimum', 'partial', 'maximum');
+      break;
+    case 'empty-state':
+      states = [...VISUAL_STATES, 'with action', 'without action'];
+      break;
+    case 'error-state':
+      states = [...VISUAL_STATES, 'recoverable', 'terminal', 'with retry'];
+      break;
+    case 'success-state':
+      states = [...VISUAL_STATES, 'with next action', 'without action'];
+      break;
+  }
+
+  return [...new Set(states)];
+}
 
 const GROUPS: Readonly<Record<KernCategory, readonly string[]>> = {
   Layout: [
@@ -412,6 +536,32 @@ const COMPONENT_OVERRIDES: Readonly<Record<string, Partial<KernCatalogItem>>> = 
     do: 'Use it for precise scheduling when typing HH:mm is faster than scanning a long list.',
     dont: 'Do not render every hour and minute as scrolling columns.',
   },
+  'line-chart': {
+    keyboard: [
+      'Tab reaches the source-data toggle, then the single roving data mark in the plot',
+      'Arrow Left and Arrow Right move between data marks and reverse direction in RTL',
+      'Home and End move to the first and last data marks',
+      'Enter and Space disclose the focused datum through the chart status detail',
+      'Keyboard focus reveals the focused datum; Tab leaves the plot without trapping focus',
+    ],
+  },
+  'bar-chart': {
+    keyboard: [
+      'Tab reaches the source-data toggle, then the single roving data mark in the plot',
+      'Arrow Left and Arrow Right move between data marks and reverse direction in RTL',
+      'Home and End move to the first and last data marks',
+      'Enter and Space disclose the focused datum through the chart status detail',
+      'Keyboard focus reveals the focused datum; Tab leaves the plot without trapping focus',
+    ],
+  },
+  'donut-chart': {
+    keyboard: [
+      'Tab reaches the source-data toggle and every legend button in document order',
+      'Keyboard focus on a legend button reveals its matching segment and value',
+      'Enter and Space use native button activation for the focused legend item',
+      'SVG segment hit targets stay out of the Tab order so the legend is not duplicated',
+    ],
+  },
 };
 
 const BETA_COMPONENTS = new Set([
@@ -447,8 +597,8 @@ function statusFor(id: string, category: KernCategory): KernComponentStatus {
 
 function createItem(name: string, category: KernCategory): KernCatalogItem {
   const id = slugify(name);
-  const isInteractive = category === 'Actions' || category === 'Forms' || category === 'Navigation';
   const selector = id === 'tooltip' ? '[krnTooltip]' : `krn-${id}`;
+  const api = apiFor(selector);
 
   const item: KernCatalogItem = {
     id,
@@ -458,14 +608,14 @@ function createItem(name: string, category: KernCategory): KernCatalogItem {
     variantOf: VARIANT_OF[id],
     summary: summaryFor(name, category),
     status: statusFor(id, category),
-    states: isInteractive ? INTERACTIVE_STATES : COMMON_STATES,
+    states: statesFor(id, category, api),
     keyboard: keyboardFor(category),
     accessibility: [
       'Visible focus indicator with forced-colors support.',
       'Works at 200% text zoom and in narrow containers.',
       'State is communicated by text, shape, or icon in addition to color.',
     ],
-    api: apiFor(selector),
+    api,
     do: 'Use the smallest semantic primitive that communicates the intended relationship.',
     dont: 'Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.',
   };

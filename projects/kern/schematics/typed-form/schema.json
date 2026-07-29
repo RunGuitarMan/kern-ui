@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "KernTypedForm",
+  "title": "Generate a typed KERN reactive form",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Component name.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    },
+    "project": {
+      "type": "string",
+      "description": "Angular application that owns the generated component.",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "path": {
+      "type": "string",
+      "description": "Output parent directory. Defaults to <sourceRoot>/app."
+    },
+    "prefix": {
+      "type": "string",
+      "default": "app",
+      "description": "Component selector prefix."
+    },
+    "flat": {
+      "type": "boolean",
+      "default": false,
+      "description": "Write files directly into the output path."
+    },
+    "force": {
+      "type": "boolean",
+      "default": false,
+      "description": "Overwrite generated files if they already exist."
+    }
+  },
+  "required": ["name"]
+}

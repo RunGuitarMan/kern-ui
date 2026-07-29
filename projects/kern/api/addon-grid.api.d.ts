@@ -6,11 +6,12 @@
  */
 
 import * as _angular_core from '@angular/core';
-import { TemplateRef, AfterViewChecked } from '@angular/core';
+import { TemplateRef, AfterViewChecked, Signal } from '@angular/core';
 import { KrnDataGridTranslations } from '@kern-ui/angular/core';
 
 type KrnDataRowKey = string | number;
 type KrnDataSortDirection = 'asc' | 'desc';
+type KrnDataColumnPin = 'start' | 'end';
 interface KrnDataCellContext<T> {
   readonly $implicit: unknown;
   readonly value: unknown;
@@ -36,6 +37,13 @@ interface KrnDataColumnOptions<T, V = unknown> {
   readonly maxWidth?: number;
   readonly align?: 'start' | 'center' | 'end';
   readonly priority?: 'primary' | 'secondary' | 'tertiary';
+  /**
+   * Keeps the column at the logical start or end edge while the grid scrolls horizontally.
+   *
+   * Pinned columns are partitioned around unpinned columns without mutating the supplied array.
+   * Logical edges make the same configuration work in both LTR and RTL documents.
+   */
+  readonly pinned?: KrnDataColumnPin;
   readonly sortValue?: (row: T) => unknown;
   readonly filterValue?: (row: T) => unknown;
   readonly compare?: (left: unknown, right: unknown, leftRow: T, rightRow: T) => number;
@@ -108,6 +116,9 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
   private virtualRowResizeObserver;
   private observedVirtualRow;
   private readonly measuredVirtualRowHeight;
+  private columnResizeObserver;
+  private readonly observedColumnHeaders;
+  private readonly measuredColumnWidths;
   private readonly managedTabIndexes;
   private readonly effectiveMode;
   private readonly sourceRows;
@@ -183,6 +194,9 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
   protected readonly isControlled: _angular_core.Signal<boolean>;
   protected readonly usesPagination: _angular_core.Signal<boolean>;
   protected readonly visibleColumns: _angular_core.Signal<KrnDataColumn<T>[]>;
+  protected readonly hasPinnedStartColumns: _angular_core.Signal<boolean>;
+  private readonly pinnedBoundaryKeys;
+  private readonly pinnedColumnOffsets;
   protected readonly dataColumnOffset: _angular_core.Signal<number>;
   protected readonly gridColumnCount: _angular_core.Signal<number>;
   protected readonly processed: _angular_core.Signal<KrnDataRowOccurrence<T>[]>;
@@ -233,6 +247,11 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
   protected isColumnVisible(key: string): boolean;
   protected setColumnVisible(key: string, event: Event): void;
   protected columnWidth(column: KrnDataColumn<T>): number;
+  private pinnedColumnWidth;
+  protected utilityColumnOffset(index: number): string;
+  protected columnPinnedStart(column: KrnDataColumn<T>): string | null;
+  protected columnPinnedEnd(column: KrnDataColumn<T>): string | null;
+  protected columnPinBoundary(column: KrnDataColumn<T>): KrnDataColumnPin | null;
   protected startResize(event: PointerEvent, column: KrnDataColumn<T>): void;
   protected resize(event: PointerEvent, column: KrnDataColumn<T>): void;
   protected endResize(event: PointerEvent): void;
@@ -256,6 +275,8 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
   private setManagedTabIndex;
   private restoreManagedTabIndexes;
   private restoreTabIndex;
+  private syncPinnedColumnMeasurements;
+  private measurePinnedColumnHeaders;
   private syncVirtualRowMeasurement;
   private measureVirtualRow;
   private eventCell;
@@ -323,16 +344,66 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
   >;
 }
 
-export { KrnDataGrid, KrnDataGrid as KrnDataTable };
+interface KrnDataGridPage<T> {
+  readonly data: readonly T[];
+  readonly totalRows: number;
+}
+interface KrnDataGridLoadContext {
+  /** Aborted whenever a newer query starts or the source is disconnected. */
+  readonly signal: AbortSignal;
+}
+type KrnDataGridLoader<T> = (
+  query: Readonly<KrnDataGridQuery>,
+  context: KrnDataGridLoadContext,
+) => Promise<KrnDataGridPage<T>>;
+interface KrnDataGridDataSourceOptions<T> {
+  readonly initialPage?: KrnDataGridPage<T>;
+  readonly errorMessage?: (error: unknown) => string;
+}
+/**
+ * Latest-query-wins adapter for the Data Grid controlled mode.
+ *
+ * The adapter deliberately owns request state, not transport policy: consumers can use fetch,
+ * GraphQL, RPC, or a repository in the loader. Aborted requests never overwrite newer data.
+ */
+declare class KrnDataGridDataSource<T> {
+  private readonly loader;
+  private readonly dataState;
+  private readonly totalRowsState;
+  private readonly loadingState;
+  private readonly errorState;
+  private readonly queryState;
+  private readonly errorMessage;
+  private activeController;
+  private requestSequence;
+  readonly data: Signal<readonly T[]>;
+  readonly totalRows: Signal<number>;
+  readonly loading: Signal<boolean>;
+  readonly error: Signal<string | null>;
+  readonly query: Signal<Readonly<KrnDataGridQuery> | null>;
+  constructor(loader: KrnDataGridLoader<T>, options?: KrnDataGridDataSourceOptions<T>);
+  load(query: Readonly<KrnDataGridQuery>): Promise<KrnDataGridPage<T> | null>;
+  reload(): Promise<KrnDataGridPage<T> | null>;
+  reset(page?: KrnDataGridPage<T>): void;
+  disconnect(): void;
+  private assertPage;
+}
+
+export { KrnDataGrid, KrnDataGridDataSource, KrnDataGrid as KrnDataTable };
 export type {
   KrnDataCellContext,
   KrnDataColumn,
   KrnDataColumnOptions,
+  KrnDataColumnPin,
   KrnDataComputedColumn,
   KrnDataFilterPredicate,
   KrnDataGridClientMode,
   KrnDataGridControlledMode,
+  KrnDataGridDataSourceOptions,
+  KrnDataGridLoadContext,
+  KrnDataGridLoader,
   KrnDataGridMode,
+  KrnDataGridPage,
   KrnDataGridQuery,
   KrnDataGridVirtualMode,
   KrnDataHeaderContext,

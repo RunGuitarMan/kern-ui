@@ -39,6 +39,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Verify lifecycle, deprecations, and accessibility evidence
+        run: |
+          node tools/verify-kern-lifecycle.mjs
+          node tools/verify-kern-accessibility-evidence.mjs
+          node tools/verify-kern-package-policy.mjs
+          node --test tools/tests/kern-governance.test.mjs
+
       - name: Run release quality gate
         run: npm run verify
 

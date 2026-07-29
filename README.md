@@ -77,7 +77,8 @@ This import is required for the complete component presentation. It includes tok
 density, preferences, base rules, utilities, Angular CDK overlay styles, and shared structural
 styles for action and form controls. Importing `tokens.css` alone is not a component-ready setup.
 
-Register Kern's runtime contract:
+Kern works without a mandatory root provider. Register `provideKrn` when the application needs
+shared runtime preferences, translations, a custom overlay host, or explicit SSR-safe defaults:
 
 ```ts
 import { ApplicationConfig } from '@angular/core';
@@ -129,9 +130,11 @@ recompiling the library.
 
 `provideKrn` also supplies locale, direction, motion preference, overlay-host, persistence, and
 platform-adapter configuration. Locale defaults to Angular's `LOCALE_ID`; direction defaults to
-the document's `dir`. Kern ships typed English defaults for shared component UI copy; applications
-can supply partial `translations` overrides, while product copy and one-off labels remain explicit
-consumer inputs.
+the document's `dir`. Kern ships complete typed English and Russian locale packs for shared
+component UI copy. Applications can install a pack through `provideKrn` or supply partial
+`translations` overrides, while product copy and one-off labels remain explicit consumer inputs.
+Legacy `{token}` string overrides remain supported; optional typed `format…` fields provide
+plural-aware formatting without evaluating or recursively expanding translation text.
 
 Runtime ownership is explicit: `/cdk` contains infrastructure, `/core` configuration and
 foundations, `/kit` general components, `/addon-grid` and `/addon-charts` heavy capabilities, and
@@ -149,6 +152,31 @@ import { KrnButtonHarness, KrnDataGridHarness } from '@kern-ui/angular/testing';
 Use these harnesses instead of depending on internal component markup. Runtime components remain
 available from the root compatibility API and from the supported direct subpaths documented in
 the [package README](projects/kern/README.md).
+
+## Developer and agent discovery
+
+The package ships a compiler-derived component manifest, per-component Markdown/JSON, `llms.txt`,
+an import map, 131 standalone component examples, and 13 complete enterprise recipe sources.
+Every source is installed from the packed tarball and strict-AOT compiled in an isolated consumer.
+The repository's read-only MCP server searches and validates usage against the same contract:
+
+```bash
+node tools/kern-mcp/server.mjs
+```
+
+The documentation build also publishes `llms.txt`, `llms-full.txt`, `component-manifest.json`,
+and the complete browsable contract under `agent/` at its deployment root, all copied from that
+same generated source. Artifact URLs in the manifest are relative to the manifest itself, while
+component UI routes are relative to the documentation deployment mount; both root and `/agent/`
+discovery therefore remain valid under versioned base paths.
+
+Common enterprise starts can be generated without guessing imports or required state:
+
+```bash
+ng generate @kern-ui/angular:typed-form profile --project my-app
+ng generate @kern-ui/angular:data-grid accounts --project my-app --mode controlled
+ng generate @kern-ui/angular:crud customers --project my-app
+```
 
 ## Verification
 
@@ -182,22 +210,32 @@ http://localhost:4201/?component=data-grid&scenario=default&theme=dark&density=c
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for runtime boundaries, the accessibility
 contract, extension guidance, and known trade-offs. Browser and assistive-technology scope is
 defined separately in [`docs/BROWSER_SUPPORT.md`](docs/BROWSER_SUPPORT.md).
+Task-oriented guidance for selection, forms, server Grid data, date/time, trees, overlays, charts,
+locales, testing, and performance is collected in [`docs/COOKBOOK.md`](docs/COOKBOOK.md).
+The installed package also exposes its immutable agent contract through the read-only
+`npx --no-install kern-mcp` executable.
 
 ## Release
 
-The repository does not publish automatically. Validate `dist/kern`, inspect the dry-run
-tarball, then publish from `dist/kern` only as an explicit release action:
+The repository prepares one immutable release candidate and publishes its exact tarball through a
+protected GitHub environment and npm trusted publishing. It verifies checksums, dependency policy,
+provenance metadata, and a CycloneDX SBOM. Local validation remains available:
 
 ```bash
 npm run build:kern
 npm run package:dry-run
 ```
 
+Maintainers must follow the protected procedure in
+[`docs/RELEASING.md`](docs/RELEASING.md); do not rebuild or publish a different artifact under an
+approved version.
+
 ## Project policies
 
 - [Contributing](CONTRIBUTING.md)
 - [Versioning and compatibility](docs/VERSIONING.md)
 - [Browser and platform support](docs/BROWSER_SUPPORT.md)
+- [Enterprise cookbook](docs/COOKBOOK.md)
 - [Security policy](SECURITY.md)
 - [Support policy](SUPPORT.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)

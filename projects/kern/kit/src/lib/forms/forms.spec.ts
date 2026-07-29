@@ -25,7 +25,7 @@ import {
   KrnRadioGroup,
   KrnSegmentedControl,
 } from './selection-controls';
-import { KrnSearchInput, KrnTextarea, KrnTextInput } from './text-inputs';
+import { KrnNumberInput, KrnSearchInput, KrnTextarea, KrnTextInput } from './text-inputs';
 import { KrnFileUpload } from './upload-controls';
 import { KrnDialog } from '../feedback/modal-overlays';
 
@@ -373,6 +373,16 @@ describe('Kern form controls', () => {
     expect(fixture.componentInstance.control.value).toHaveLength(1);
   });
 
+  it('represents checkbox-group readonly state without prohibited fieldset ARIA', async () => {
+    const fixture = TestBed.createComponent(KrnCheckboxGroup);
+    fixture.componentRef.setInput('readonly', true);
+    await fixture.whenStable();
+
+    const fieldset = fixture.nativeElement.querySelector('fieldset') as HTMLFieldSetElement;
+    expect(fieldset.hasAttribute('aria-readonly')).toBe(false);
+    expect(fieldset.getAttribute('data-readonly')).toBe('true');
+  });
+
   it('keeps radio-group selection exclusive', async () => {
     @Component({
       imports: [KrnRadio, KrnRadioGroup, ReactiveFormsModule],
@@ -621,6 +631,34 @@ describe('Kern form controls', () => {
     await fixture.whenStable();
     expect(change).toHaveBeenCalledWith('beta');
     expect(fixture.componentInstance.open()).toBe(false);
+  });
+
+  it('keeps select loading, error, and empty results distinct', async () => {
+    const fixture = TestBed.createComponent(KrnSelect);
+    fixture.componentRef.setInput('options', [{ value: 'stale', label: 'Stale option' }]);
+    fixture.componentRef.setInput('optionsState', 'loading');
+    fixture.componentInstance.open.set(true);
+    await fixture.whenStable();
+
+    const state = (): HTMLElement =>
+      fixture.nativeElement.querySelector('[role="option"]') as HTMLElement;
+    const listbox = (): HTMLElement =>
+      fixture.nativeElement.querySelector('[role="listbox"]') as HTMLElement;
+    expect(listbox().getAttribute('aria-busy')).toBe('true');
+    expect(state().dataset['optionsState']).toBe('loading');
+    expect(fixture.nativeElement.textContent).not.toContain('Stale option');
+
+    fixture.componentRef.setInput('optionsState', 'error');
+    await fixture.whenStable();
+    expect(listbox().getAttribute('aria-invalid')).toBe('true');
+    expect(state().dataset['optionsState']).toBe('error');
+
+    fixture.componentRef.setInput('optionsState', 'ready');
+    fixture.componentRef.setInput('options', []);
+    await fixture.whenStable();
+    expect(listbox().getAttribute('aria-busy')).toBeNull();
+    expect(listbox().getAttribute('aria-invalid')).toBeNull();
+    expect(state().dataset['optionsState']).toBe('empty');
   });
 
   it('consumes Escape in nested form popups before the parent dialog handles it', async () => {
@@ -894,6 +932,104 @@ describe('Kern form controls', () => {
     autocomplete.componentRef.setInput('autocompleteMode', 'list');
     await autocomplete.whenStable();
     expect(autocompleteInput.getAttribute('aria-autocomplete')).toBe('list');
+  });
+
+  it('resolves late async combobox labels without overwriting an active query', async () => {
+    const fixture = TestBed.createComponent(KrnCombobox);
+    fixture.componentRef.setInput('options', []);
+    fixture.componentInstance.writeValue('eu-central');
+    await fixture.whenStable();
+
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    expect(input.value).toBe('eu-central');
+    expect(fixture.componentInstance.open()).toBe(false);
+
+    fixture.componentRef.setInput('options', [{ value: 'eu-central', label: 'Europe Central' }]);
+    await fixture.whenStable();
+    expect(input.value).toBe('Europe Central');
+
+    input.value = 'europe remote query';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await fixture.whenStable();
+    fixture.componentRef.setInput('options', [
+      { value: 'eu-central', label: 'EU Central (remote)' },
+      { value: 'eu-west', label: 'EU West (remote)' },
+    ]);
+    await fixture.whenStable();
+
+    expect(input.value).toBe('europe remote query');
+  });
+
+  it('supports controlled remote option loading without filtering server results twice', async () => {
+    const fixture = TestBed.createComponent(KrnCombobox);
+    fixture.componentRef.setInput('options', [{ value: 'server-alpha', label: 'Server Alpha' }]);
+    fixture.componentRef.setInput('filterLocally', false);
+    const queries: string[] = [];
+    fixture.componentInstance.queryChange.subscribe((query) => queries.push(query));
+    await fixture.whenStable();
+
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    input.value = 'different server query';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await fixture.whenStable();
+
+    expect(queries).toEqual(['different server query']);
+    expect(fixture.nativeElement.querySelector('[role="option"]')?.textContent).toContain(
+      'Server Alpha',
+    );
+
+    fixture.componentRef.setInput('optionsState', 'loading');
+    await fixture.whenStable();
+    const loadingListbox = fixture.nativeElement.querySelector('[role="listbox"]') as HTMLElement;
+    const loadingState = fixture.nativeElement.querySelector(
+      '[role="option"][data-options-state="loading"]',
+    ) as HTMLElement;
+    expect(loadingListbox.getAttribute('aria-busy')).toBe('true');
+    expect(loadingState.getAttribute('role')).toBe('option');
+    expect(loadingState.getAttribute('aria-disabled')).toBe('true');
+    expect(loadingState.textContent).toContain('Loading options');
+    expect(fixture.nativeElement.textContent).not.toContain('Server Alpha');
+
+    fixture.componentRef.setInput('optionsState', 'error');
+    await fixture.whenStable();
+    const errorListbox = fixture.nativeElement.querySelector('[role="listbox"]') as HTMLElement;
+    const errorState = fixture.nativeElement.querySelector(
+      '[role="option"][data-options-state="error"]',
+    ) as HTMLElement;
+    expect(errorListbox.getAttribute('aria-busy')).toBeNull();
+    expect(errorListbox.getAttribute('aria-invalid')).toBe('true');
+    expect(errorState.textContent).toContain('Could not load options');
+
+    fixture.componentRef.setInput('options', []);
+    fixture.componentRef.setInput('optionsState', 'ready');
+    await fixture.whenStable();
+    expect(
+      fixture.nativeElement.querySelector('[data-options-state="empty"]')?.textContent,
+    ).toContain('No matches');
+  });
+
+  it('uses a typed custom option filter when local filtering is enabled', async () => {
+    const fixture = TestBed.createComponent(KrnAutocomplete);
+    fixture.componentRef.setInput('options', [
+      { value: 'emea', label: 'Europe', description: 'Region' },
+      { value: 'amer', label: 'Americas', description: 'Region' },
+    ]);
+    fixture.componentRef.setInput(
+      'optionFilter',
+      (option: KrnSelectOption<string>, query: string) => option.value.startsWith(query),
+    );
+    await fixture.whenStable();
+
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    input.value = 'am';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await fixture.whenStable();
+
+    const options = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLElement>('[role="option"]'),
+    ];
+    expect(options).toHaveLength(1);
+    expect(options[0]?.textContent).toContain('Americas');
   });
 
   it('clamps slider changes to its public range', async () => {
@@ -1542,6 +1678,18 @@ describe('Kern form controls', () => {
     expect(control.valid).toBe(true);
   });
 
+  it('keeps readonly upload state on data attributes and the native file control', async () => {
+    const fixture = TestBed.createComponent(KrnFileUpload);
+    fixture.componentRef.setInput('readonly', true);
+    await fixture.whenStable();
+
+    const upload = fixture.nativeElement.querySelector('.krn-upload') as HTMLElement;
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    expect(upload.hasAttribute('aria-readonly')).toBe(false);
+    expect(upload.getAttribute('data-readonly')).toBe('true');
+    expect(input.disabled).toBe(true);
+  });
+
   it('supports paste distribution and completion in OTP input', async () => {
     const fixture = TestBed.createComponent(KrnOtpInput);
     fixture.componentRef.setInput('id', 'verification-code');
@@ -1561,6 +1709,28 @@ describe('Kern form controls', () => {
     await fixture.whenStable();
 
     expect(completed).toHaveBeenCalledWith('1234');
+  });
+
+  it('keeps readonly OTP semantics on each native input without prohibited fieldset ARIA', async () => {
+    const fixture = TestBed.createComponent(KrnOtpInput);
+    fixture.componentRef.setInput('readonly', true);
+    await fixture.whenStable();
+
+    const fieldset = fixture.nativeElement.querySelector('fieldset') as HTMLFieldSetElement;
+    const inputs = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLInputElement>('input'),
+    ];
+    expect(fieldset.hasAttribute('aria-readonly')).toBe(false);
+    expect(fieldset.getAttribute('data-readonly')).toBe('true');
+    expect(inputs.every((input) => input.readOnly)).toBe(true);
+  });
+
+  it('marks number controls with steppers for the 48px target-size layout', async () => {
+    const fixture = TestBed.createComponent(KrnNumberInput);
+    await fixture.whenStable();
+
+    const shell = fixture.nativeElement.querySelector('.krn-number-control') as HTMLElement;
+    expect(shell.querySelectorAll('.krn-stepper button')).toHaveLength(2);
   });
 
   it('keeps OTP slots editable while blocking non-numeric input', async () => {

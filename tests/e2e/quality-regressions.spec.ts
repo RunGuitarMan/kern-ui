@@ -784,7 +784,10 @@ test.describe('Quality regressions: data and feedback', () => {
 
     for (const id of ['line-chart', 'bar-chart', 'donut-chart'] as const) {
       const specimen = await openSpecimen(page, id);
-      const marks = specimen.locator('[role="graphics-symbol"]');
+      const marks =
+        id === 'donut-chart'
+          ? specimen.locator('.legend button')
+          : specimen.locator('[role="button"][data-chart-index]');
       await expect(marks).not.toHaveCount(0);
       await marks.nth(0).hover();
       let tooltip = specimen.locator('.chart-tooltip');
@@ -798,6 +801,8 @@ test.describe('Quality regressions: data and feedback', () => {
       await expect(tooltip).toContainText('Tue');
       await expect(tooltip).toContainText('56');
       await marks.nth(1).blur();
+      await expect(tooltip).toContainText('Mon');
+      await page.mouse.move(0, 0);
       await expect(tooltip).toHaveCount(0);
     }
 
@@ -900,7 +905,7 @@ test.describe('Cross-catalog focus geometry audit', () => {
             const before = control.getBoundingClientRect();
             const intentionallyExcluded = Boolean(
               control.closest(
-                'krn-skip-link, .skip-link, [role="graphics-symbol"], .krn-choice__native, .krn-upload__input',
+                'krn-skip-link, .skip-link, [role="button"][data-chart-index], .legend button, .krn-choice__native, .krn-upload__input',
               ),
             );
             const disabled =

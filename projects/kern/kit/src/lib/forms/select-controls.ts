@@ -4,6 +4,7 @@ import {
   Component,
   computed,
   Directive,
+  effect,
   inject,
   input,
   model,
@@ -20,8 +21,10 @@ import type {
   KrnAutocompleteMode,
   KrnIdentityMatcher,
   KrnOptionDisabledHandler,
+  KrnOptionFilter,
   KrnOptionStringifier,
   KrnOptionTrackBy,
+  KrnOptionsState,
   KrnSelectOption,
   KrnSelectOptionContext,
 } from './form-types';
@@ -31,7 +34,7 @@ import {
   requiredError,
   useKrnControlA11y,
 } from './value-accessor';
-import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { KRN_ENGLISH_TRANSLATIONS, KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 
 const optionalBooleanAttribute = (value: unknown): boolean | undefined =>
   value === undefined || value === null ? undefined : booleanAttribute(value);
@@ -208,6 +211,7 @@ export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
           class="krn-select-trigger"
           type="button"
           [attr.aria-describedby]="a11y.describedBy()"
+          [attr.aria-busy]="optionsState() === 'loading' ? 'true' : null"
           [attr.aria-invalid]="a11y.invalid()"
           [attr.aria-label]="ariaLabel() || null"
           [attr.aria-readonly]="a11y.readOnly()"
@@ -235,6 +239,16 @@ export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
           <span class="krn-select-chevron" aria-hidden="true"></span>
         </button>
       </span>
+      @if (open() && optionsState() !== 'ready') {
+        <span
+          class="krn-visually-hidden"
+          aria-atomic="true"
+          [attr.role]="optionsState() === 'error' ? 'alert' : 'status'"
+          [attr.data-options-state-announcement]="optionsState()"
+        >
+          {{ optionsState() === 'loading' ? loadingText() : errorText() }}
+        </span>
+      }
 
       <ng-template ngComboboxPopup popupType="listbox" [combobox]="combo">
         <ul
@@ -245,39 +259,61 @@ export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
           focusMode="activedescendant"
           selectionMode="explicit"
           [activeDescendant]="listbox.activeDescendant()"
+          [attr.aria-busy]="optionsState() === 'loading' ? 'true' : null"
+          [attr.aria-invalid]="optionsState() === 'error' ? 'true' : null"
           [disabled]="isDisabled()"
           [value]="selectedValues()"
           (valueChange)="selectValues($event)"
         >
-          @for (option of options(); track trackBy()(option, $index)) {
-            <li
-              ngOption
-              class="krn-option"
-              [disabled]="disabledHandler()(option)"
-              [label]="stringify()(option)"
-              [value]="option.value"
-            >
-              <span class="krn-option__copy">
-                @if (optionTemplate(); as template) {
-                  <ng-container
-                    [ngTemplateOutlet]="template"
-                    [ngTemplateOutletContext]="optionContext(option)"
-                  />
-                } @else {
-                  <span>{{ stringify()(option) }}</span>
-                  @if (option.description) {
-                    <span class="krn-option__description">
-                      {{ option.description }}
-                    </span>
+          @if (optionsState() === 'ready') {
+            @for (option of options(); track trackBy()(option, $index)) {
+              <li
+                ngOption
+                class="krn-option"
+                [disabled]="disabledHandler()(option)"
+                [label]="stringify()(option)"
+                [value]="option.value"
+              >
+                <span class="krn-option__copy">
+                  @if (optionTemplate(); as template) {
+                    <ng-container
+                      [ngTemplateOutlet]="template"
+                      [ngTemplateOutletContext]="optionContext(option)"
+                    />
+                  } @else {
+                    <span>{{ stringify()(option) }}</span>
+                    @if (option.description) {
+                      <span class="krn-option__description">
+                        {{ option.description }}
+                      </span>
+                    }
                   }
+                </span>
+                @if (isSelected(option)) {
+                  <span class="krn-option__check" aria-hidden="true">✓</span>
                 }
-              </span>
-              @if (isSelected(option)) {
-                <span class="krn-option__check" aria-hidden="true">✓</span>
-              }
+              </li>
+            } @empty {
+              <li
+                class="krn-option"
+                role="option"
+                aria-disabled="true"
+                aria-selected="false"
+                data-options-state="empty"
+              >
+                {{ emptyText() }}
+              </li>
+            }
+          } @else {
+            <li
+              class="krn-option"
+              role="option"
+              aria-disabled="true"
+              aria-selected="false"
+              [attr.data-options-state]="optionsState()"
+            >
+              {{ optionsState() === 'loading' ? loadingText() : errorText() }}
             </li>
-          } @empty {
-            <li class="krn-option" aria-disabled="true">{{ emptyText() }}</li>
           }
         </ul>
       </ng-template>
@@ -290,8 +326,18 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
   readonly id = input('');
   readonly placeholder = input(this.translations.forms.selectOption);
   readonly emptyText = input(this.translations.forms.noOptions);
+  readonly loadingText = input(
+    this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? '',
+  );
+  readonly errorText = input(
+    this.translations.forms.optionsLoadFailed ??
+      KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??
+      '',
+  );
   readonly ariaLabel = input('');
   readonly options = input.required<readonly KrnSelectOption<T>[]>();
+  /** Controls whether options are interactive or replaced by an announced loading/error state. */
+  readonly optionsState = input<KrnOptionsState>('ready');
   readonly identityMatcher = input<KrnIdentityMatcher<T>>(Object.is);
   readonly trackBy = input<KrnOptionTrackBy<T>>((option) => option.value);
   readonly stringify = input<KrnOptionStringifier<T>>((option) => option.label);
@@ -365,7 +411,7 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
   }
 
   protected selectValues(values: T[]): void {
-    if (this.a11y.readOnly()) {
+    if (this.a11y.readOnly() || this.optionsState() !== 'ready') {
       return;
     }
     const value = values.at(-1) ?? null;
@@ -419,6 +465,7 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
           class="krn-select-trigger krn-select-trigger--multiple"
           type="button"
           [attr.aria-describedby]="a11y.describedBy()"
+          [attr.aria-busy]="optionsState() === 'loading' ? 'true' : null"
           [attr.aria-invalid]="a11y.invalid()"
           [attr.aria-label]="ariaLabel() || null"
           [attr.aria-readonly]="a11y.readOnly()"
@@ -453,6 +500,16 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
           <span class="krn-select-chevron" aria-hidden="true"></span>
         </button>
       </span>
+      @if (open() && optionsState() !== 'ready') {
+        <span
+          class="krn-visually-hidden"
+          aria-atomic="true"
+          [attr.role]="optionsState() === 'error' ? 'alert' : 'status'"
+          [attr.data-options-state-announcement]="optionsState()"
+        >
+          {{ optionsState() === 'loading' ? loadingText() : errorText() }}
+        </span>
+      }
 
       <ng-template ngComboboxPopup popupType="listbox" [combobox]="combo">
         <ul
@@ -463,40 +520,62 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
           focusMode="activedescendant"
           selectionMode="explicit"
           [activeDescendant]="listbox.activeDescendant()"
+          [attr.aria-busy]="optionsState() === 'loading' ? 'true' : null"
+          [attr.aria-invalid]="optionsState() === 'error' ? 'true' : null"
           [disabled]="isDisabled()"
           [multi]="true"
           [value]="mutableValues()"
           (valueChange)="selectValues($event)"
         >
-          @for (option of options(); track trackBy()(option, $index)) {
-            <li
-              ngOption
-              class="krn-option"
-              [disabled]="disabledHandler()(option)"
-              [label]="stringify()(option)"
-              [value]="option.value"
-            >
-              <span class="krn-option__copy">
-                @if (optionTemplate(); as template) {
-                  <ng-container
-                    [ngTemplateOutlet]="template"
-                    [ngTemplateOutletContext]="optionContext(option)"
-                  />
-                } @else {
-                  <span>{{ stringify()(option) }}</span>
-                  @if (option.description) {
-                    <span class="krn-option__description">
-                      {{ option.description }}
-                    </span>
+          @if (optionsState() === 'ready') {
+            @for (option of options(); track trackBy()(option, $index)) {
+              <li
+                ngOption
+                class="krn-option"
+                [disabled]="disabledHandler()(option)"
+                [label]="stringify()(option)"
+                [value]="option.value"
+              >
+                <span class="krn-option__copy">
+                  @if (optionTemplate(); as template) {
+                    <ng-container
+                      [ngTemplateOutlet]="template"
+                      [ngTemplateOutletContext]="optionContext(option)"
+                    />
+                  } @else {
+                    <span>{{ stringify()(option) }}</span>
+                    @if (option.description) {
+                      <span class="krn-option__description">
+                        {{ option.description }}
+                      </span>
+                    }
                   }
+                </span>
+                @if (isSelected(option)) {
+                  <span class="krn-option__check" aria-hidden="true">✓</span>
                 }
-              </span>
-              @if (isSelected(option)) {
-                <span class="krn-option__check" aria-hidden="true">✓</span>
-              }
+              </li>
+            } @empty {
+              <li
+                class="krn-option"
+                role="option"
+                aria-disabled="true"
+                aria-selected="false"
+                data-options-state="empty"
+              >
+                {{ emptyText() }}
+              </li>
+            }
+          } @else {
+            <li
+              class="krn-option"
+              role="option"
+              aria-disabled="true"
+              aria-selected="false"
+              [attr.data-options-state]="optionsState()"
+            >
+              {{ optionsState() === 'loading' ? loadingText() : errorText() }}
             </li>
-          } @empty {
-            <li class="krn-option" aria-disabled="true">{{ emptyText() }}</li>
           }
         </ul>
       </ng-template>
@@ -509,8 +588,18 @@ export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
   readonly id = input('');
   readonly placeholder = input(this.translations.forms.selectOptions);
   readonly emptyText = input(this.translations.forms.noOptions);
+  readonly loadingText = input(
+    this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? '',
+  );
+  readonly errorText = input(
+    this.translations.forms.optionsLoadFailed ??
+      KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??
+      '',
+  );
   readonly ariaLabel = input('');
   readonly options = input.required<readonly KrnSelectOption<T>[]>();
+  /** Controls whether options are interactive or replaced by an announced loading/error state. */
+  readonly optionsState = input<KrnOptionsState>('ready');
   readonly identityMatcher = input<KrnIdentityMatcher<T>>(Object.is);
   readonly trackBy = input<KrnOptionTrackBy<T>>((option) => option.value);
   readonly stringify = input<KrnOptionStringifier<T>>((option) => option.label);
@@ -585,7 +674,7 @@ export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
   }
 
   protected selectValues(values: T[]): void {
-    if (this.a11y.readOnly()) {
+    if (this.a11y.readOnly() || this.optionsState() !== 'ready') {
       return;
     }
     const unique = values.filter(
@@ -622,6 +711,7 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   private readonly comboboxDirective = viewChild<Combobox>('combo');
   private readonly locale = inject(KRN_LOCALE);
   private readonly translations = inject(KRN_TRANSLATIONS);
+  private readonly queryEditing = signal(false);
   protected readonly defaultAutocompleteMode: KrnAutocompleteMode = 'list';
   protected readonly defaultAllowCustomValue: boolean = false;
   protected readonly autocompleteModeInput = input<KrnAutocompleteMode | undefined>(undefined, {
@@ -635,9 +725,23 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   readonly id = input('');
   readonly placeholder = input(this.translations.forms.startTyping);
   readonly emptyText = input(this.translations.forms.noMatches);
+  readonly loadingText = input(
+    this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? '',
+  );
+  readonly errorText = input(
+    this.translations.forms.optionsLoadFailed ??
+      KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??
+      '',
+  );
   readonly ariaLabel = input('');
   readonly toggleLabel = input(this.translations.forms.showOptions);
   readonly options = input.required<readonly KrnSelectOption<string>[]>();
+  /** Controls whether options are interactive or replaced by an announced loading/error state. */
+  readonly optionsState = input<KrnOptionsState>('ready');
+  /** Set to false when the consumer filters options remotely in response to queryChange. */
+  readonly filterLocally = input(true, { transform: booleanAttribute });
+  /** Overrides the default case-insensitive local option filter. */
+  readonly optionFilter = input<KrnOptionFilter<string> | null>(null);
   protected readonly autocompleteMode = computed(
     () => this.autocompleteModeInput() ?? this.defaultAutocompleteMode,
   );
@@ -653,6 +757,8 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly open = model(false);
   readonly valueChange = output<string>();
+  /** Emits every user query so remote option sources can load and replace options. */
+  readonly queryChange = output<string>();
   readonly optionSelected = output<KrnSelectOption<string>>();
   protected readonly query = signal('');
 
@@ -663,15 +769,23 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   });
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
   protected readonly filteredOptions = computed(() => {
-    const query = this.normalizeForSearch(this.query().trim());
-    if (!query) {
+    const rawQuery = this.query().trim();
+    if (!rawQuery || !this.filterLocally()) {
       return this.options();
     }
+    const optionFilter = this.optionFilter();
+    if (optionFilter) {
+      return this.options().filter((option) => optionFilter(option, rawQuery));
+    }
+    const query = this.normalizeForSearch(rawQuery);
     return this.options().filter((option) =>
       this.normalizeForSearch(`${option.label} ${option.description ?? ''}`).includes(query),
     );
   });
   protected readonly inlineSuggestion = computed(() => {
+    if (this.optionsState() !== 'ready') {
+      return undefined;
+    }
     const mode = this.autocompleteMode();
     if (mode !== 'inline' && mode !== 'both') {
       return undefined;
@@ -690,12 +804,20 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   protected constructor() {
     super('');
     this.watchValidationInputs(this.required, this.a11y.required);
+    effect(() => {
+      const value = this.controlValue();
+      const option = this.options().find((item) => item.value === value);
+      if ((!this.queryEditing() || !this.open()) && option && this.query() !== option.label) {
+        this.setQuery(option.label);
+      }
+    });
   }
 
   protected override normalizeIncomingValue(value: unknown): string {
     const normalized = typeof value === 'string' ? value : '';
     const option = this.options().find((item) => item.value === normalized);
-    this.query.set(option?.label ?? normalized);
+    this.queryEditing.set(false);
+    this.setQuery(option?.label ?? normalized);
     return normalized;
   }
 
@@ -704,10 +826,15 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   }
 
   protected updateQuery(query: string): void {
+    if (query === this.query()) {
+      return;
+    }
     if (this.a11y.readOnly()) {
       return;
     }
-    this.query.set(query);
+    this.queryEditing.set(true);
+    this.setQuery(query);
+    this.queryChange.emit(query);
     this.open.set(true);
     if (this.allowCustomValue()) {
       this.commitValue(query);
@@ -716,7 +843,7 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   }
 
   protected selectValues(values: string[]): void {
-    if (this.a11y.readOnly()) {
+    if (this.a11y.readOnly() || this.optionsState() !== 'ready') {
       return;
     }
     const value = values.at(-1);
@@ -724,7 +851,8 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     if (!option) {
       return;
     }
-    this.query.set(option.label);
+    this.queryEditing.set(false);
+    this.setQuery(option.label);
     this.commitValue(option.value);
     this.valueChange.emit(option.value);
     this.optionSelected.emit(option);
@@ -735,13 +863,18 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     if (this.a11y.readOnly()) {
       return;
     }
+    if (this.optionsState() !== 'ready') {
+      this.open.set(false);
+      return;
+    }
     const exact = this.filteredOptions().find(
       (option) =>
         this.normalizeForSearch(option.label) === this.normalizeForSearch(this.query().trim()),
     );
     if (exact) {
       if (this.controlValue() === exact.value) {
-        this.query.set(exact.label);
+        this.queryEditing.set(false);
+        this.setQuery(exact.label);
         this.open.set(false);
       } else {
         this.selectValues([exact.value]);
@@ -752,6 +885,7 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
         this.commitValue(query);
         this.valueChange.emit(query);
       }
+      this.queryEditing.set(false);
       this.open.set(false);
     } else {
       this.restoreCommittedQuery();
@@ -775,6 +909,8 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     const next = open && !this.isDisabled() && !this.a11y.readOnly();
     if (!next && !this.allowCustomValue()) {
       this.restoreCommittedQuery();
+    } else if (!next) {
+      this.queryEditing.set(false);
     }
     this.open.set(next);
   }
@@ -802,6 +938,11 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   private restoreCommittedQuery(): void {
     const option = this.options().find((item) => item.value === this.controlValue());
     const query = option?.label ?? (this.allowCustomValue() ? this.controlValue() : '');
+    this.queryEditing.set(false);
+    this.setQuery(query);
+  }
+
+  private setQuery(query: string): void {
     this.query.set(query);
     this.comboboxDirective()?.value.set(query);
   }

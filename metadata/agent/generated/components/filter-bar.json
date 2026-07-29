@@ -1,0 +1,195 @@
+{
+  "id": "filter-bar",
+  "name": "Filter Bar",
+  "category": "Patterns",
+  "kind": "component",
+  "selector": "krn-filter-bar",
+  "selectors": ["krn-filter-bar"],
+  "symbol": "KrnFilterBar",
+  "canonicalSymbol": "KrnFilterBar",
+  "canonicalId": "filter-bar",
+  "owner": "patterns",
+  "importPath": "@kern-ui/angular/patterns",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Filter Bar. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "loading",
+    "empty",
+    "error",
+    "success"
+  ],
+  "lifecycle": {
+    "status": "recipe",
+    "compatibility": "Adaptable composition whose primitive dependencies have their own lifecycle.",
+    "owner": "kern/patterns",
+    "evidenceProfile": "recipe-validation",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "responsive",
+      "automated-a11y",
+      "adaptation-guidance"
+    ],
+    "rationale": "Adaptable composition whose primitive dependencies have their own lifecycle.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.filters",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "allLabel",
+      "property": "allLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.all",
+      "description": "Human-readable copy for the all state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "activeLabel",
+      "property": "activeLabel",
+      "kind": "input",
+      "type": "(count: number) => string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.activeFilters",
+      "description": "Human-readable copy for the active state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "clearAllLabel",
+      "property": "clearAllLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.clearAll",
+      "description": "Human-readable copy for the clear all state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "filters",
+      "property": "filters",
+      "kind": "input",
+      "type": "ReadonlyArray<KrnFilterDefinition>",
+      "required": false,
+      "defaultValue": "[]",
+      "description": "Ordered domain values supplied to the filter collection.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "values",
+      "property": "values",
+      "kind": "model",
+      "type": "Readonly<Partial<Record<string, string>>>",
+      "required": false,
+      "defaultValue": "{}",
+      "description": "Controlled values state with a matching Angular model-change output.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "selector": "*",
+      "required": false,
+      "description": "Projects default component content."
+    }
+  ],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Controlled typed customer filters",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Controlled typed customer filters\n *\n * Provide typed filter definitions and own the selected value map.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnFilterBar, type KrnFilterDefinition } from '@kern-ui/angular/patterns';\n\n@Component({\n  selector: 'app-kern-filter-bar-agent-example',\n  standalone: true,\n  imports: [KrnFilterBar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-filter-bar ariaLabel=\"Customer filters\" [filters]=\"filters\" [(values)]=\"filterValues\" />\n  `,\n})\nexport class KernFilterBarAgentExample {\n  readonly filters: readonly KrnFilterDefinition[] = [\n    {\n      id: 'status',\n      label: 'Status',\n      options: [\n        { value: 'healthy', label: 'Healthy', count: 42 },\n        { value: 'risk', label: 'At risk', count: 3 },\n      ],\n    },\n    {\n      id: 'segment',\n      label: 'Segment',\n      options: [\n        { value: 'enterprise', label: 'Enterprise' },\n        { value: 'commercial', label: 'Commercial' },\n      ],\n    },\n  ];\n\n  filterValues: Readonly<Partial<Record<string, string>>> = { status: 'healthy' };\n}\n\nvoid bootstrapApplication(KernFilterBarAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/filter-bar.ts"
+    }
+  ],
+  "related": ["user-menu", "notification-center", "global-search", "page-header"],
+  "keywords": [
+    "filter-bar",
+    "Filter Bar",
+    "Patterns",
+    "krn-filter-bar",
+    "KrnFilterBar",
+    "ariaLabel",
+    "allLabel",
+    "activeLabel",
+    "clearAllLabel",
+    "filters",
+    "values"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/filter-bar",
+    "json": "components/filter-bar.json",
+    "markdown": "components/filter-bar.md"
+  }
+}

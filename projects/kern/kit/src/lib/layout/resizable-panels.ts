@@ -16,6 +16,7 @@ import {
 } from '@angular/core';
 
 import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
+import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnLayoutAxis } from './layout.types';
 
 interface ResizeSession {
@@ -479,6 +480,7 @@ export class KrnResizablePanel {
   `,
 })
 export class KrnResizeHandle {
+  private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly parent = inject(
     forwardRef(() => KrnResizablePanels),
     { optional: true },
@@ -487,7 +489,7 @@ export class KrnResizeHandle {
   protected readonly managedValue = signal(50);
   protected readonly managedDisabled = signal(false);
 
-  readonly ariaLabel = input('Resize adjacent panels');
+  readonly ariaLabel = input(this.translations.layout.resizeAdjacentPanels);
   readonly ariaValueText = input<string | null>(null);
 
   setManagedState(orientation: KrnLayoutAxis, value: number, disabled: boolean): void {

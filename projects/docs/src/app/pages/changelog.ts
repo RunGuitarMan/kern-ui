@@ -1,5 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KrnBadge, KrnPageHeader } from '@kern-ui/angular';
+import { KrnBadge } from '@kern-ui/angular/kit';
+import { KrnPageHeader } from '@kern-ui/angular/patterns';
+
+import {
+  KERN_DOCS_RELEASE_HEADING,
+  KERN_DOCS_RELEASE_STATE_LABEL,
+  KERN_DOCS_RELEASE_TITLE,
+  KERN_DOCS_VERSION,
+  KERN_DOCS_VERSION_LABEL,
+} from '../release-identity';
 
 @Component({
   selector: 'kdocs-changelog-page',
@@ -13,17 +22,17 @@ import { KrnBadge, KrnPageHeader } from '@kern-ui/angular';
         heading="Every release, clearly documented."
         description="Kern follows semantic versioning. Accessibility regressions and public API changes are documented as product changes, not hidden as implementation details."
       >
-        <krn-badge tone="brand">0.1.0 · unreleased</krn-badge>
+        <krn-badge tone="brand">{{ docsVersionLabel }}</krn-badge>
       </krn-page-header>
 
       <section class="release">
         <aside>
-          <strong>Unreleased</strong>
-          <span class="release-target">Target 0.1.0</span>
-          <krn-badge status tone="warning">Release candidate</krn-badge>
+          <strong>{{ docsReleaseHeading }}</strong>
+          <span class="release-target">Version {{ docsVersion }}</span>
+          <krn-badge status tone="brand">{{ docsReleaseStateLabel }}</krn-badge>
         </aside>
         <div>
-          <h2>Foundation candidate</h2>
+          <h2>{{ docsReleaseTitle }}</h2>
           @for (group of groups; track group.title) {
             <section>
               <h3>{{ group.title }}</h3>
@@ -125,6 +134,11 @@ import { KrnBadge, KrnPageHeader } from '@kern-ui/angular';
   `,
 })
 export class ChangelogPage {
+  protected readonly docsVersion = KERN_DOCS_VERSION;
+  protected readonly docsVersionLabel = KERN_DOCS_VERSION_LABEL;
+  protected readonly docsReleaseStateLabel = KERN_DOCS_RELEASE_STATE_LABEL;
+  protected readonly docsReleaseHeading = KERN_DOCS_RELEASE_HEADING;
+  protected readonly docsReleaseTitle = KERN_DOCS_RELEASE_TITLE;
   protected readonly groups = [
     {
       title: 'Foundations',

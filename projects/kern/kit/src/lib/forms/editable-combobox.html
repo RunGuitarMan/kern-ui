@@ -13,6 +13,8 @@
       type="text"
       role="combobox"
       [attr.aria-describedby]="a11y.describedBy()"
+      [attr.aria-busy]="optionsState() === 'loading' ? 'true' : null"
+      [attr.data-options-state]="optionsState()"
       [attr.aria-invalid]="a11y.invalid()"
       [attr.aria-label]="ariaLabel() || null"
       [attr.aria-readonly]="a11y.readOnly()"
@@ -44,6 +46,16 @@
       <span class="krn-select-chevron"></span>
     </button>
   </span>
+  @if (open() && optionsState() !== 'ready') {
+    <span
+      class="krn-visually-hidden"
+      aria-atomic="true"
+      [attr.role]="optionsState() === 'error' ? 'alert' : 'status'"
+      [attr.data-options-state-announcement]="optionsState()"
+    >
+      {{ optionsState() === 'loading' ? loadingText() : errorText() }}
+    </span>
+  }
 
   <ng-template ngComboboxPopup popupType="listbox" [combobox]="combo">
     <ul
@@ -54,32 +66,54 @@
       focusMode="activedescendant"
       selectionMode="explicit"
       [activeDescendant]="listbox.activeDescendant()"
+      [attr.aria-busy]="optionsState() === 'loading' ? 'true' : null"
+      [attr.aria-invalid]="optionsState() === 'error' ? 'true' : null"
       [disabled]="isDisabled()"
       [value]="selectedValues()"
       (valueChange)="selectValues($event)"
     >
-      @for (option of filteredOptions(); track option.value) {
-        <li
-          ngOption
-          class="krn-option"
-          [disabled]="option.disabled"
-          [label]="option.label"
-          [value]="option.value"
-        >
-          <span class="krn-option__copy">
-            <span>{{ option.label }}</span>
-            @if (option.description) {
-              <span class="krn-option__description">
-                {{ option.description }}
-              </span>
+      @if (optionsState() === 'ready') {
+        @for (option of filteredOptions(); track option.value) {
+          <li
+            ngOption
+            class="krn-option"
+            [disabled]="option.disabled"
+            [label]="option.label"
+            [value]="option.value"
+          >
+            <span class="krn-option__copy">
+              <span>{{ option.label }}</span>
+              @if (option.description) {
+                <span class="krn-option__description">
+                  {{ option.description }}
+                </span>
+              }
+            </span>
+            @if (controlValue() === option.value) {
+              <span class="krn-option__check" aria-hidden="true">✓</span>
             }
-          </span>
-          @if (controlValue() === option.value) {
-            <span class="krn-option__check" aria-hidden="true">✓</span>
-          }
+          </li>
+        } @empty {
+          <li
+            class="krn-option"
+            role="option"
+            aria-disabled="true"
+            aria-selected="false"
+            data-options-state="empty"
+          >
+            {{ emptyText() }}
+          </li>
+        }
+      } @else {
+        <li
+          class="krn-option"
+          role="option"
+          aria-disabled="true"
+          aria-selected="false"
+          [attr.data-options-state]="optionsState()"
+        >
+          {{ optionsState() === 'loading' ? loadingText() : errorText() }}
         </li>
-      } @empty {
-        <li class="krn-option" aria-disabled="true">{{ emptyText() }}</li>
       }
     </ul>
   </ng-template>

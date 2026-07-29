@@ -15,7 +15,9 @@
       "@kern-ui/angular/core": ["./dist/kern/core"],
       "@kern-ui/angular/kit": ["./dist/kern/kit"],
       "@kern-ui/angular/patterns": ["./dist/kern/patterns"],
-      "@kern-ui/showcase": ["./dist/showcase"]
+      "@kern-ui/showcase": ["./dist/showcase"],
+      "@kern-ui/showcase/specimen": ["./dist/showcase/specimen"],
+      "@kern-ui/showcase/examples": ["./dist/showcase/examples"]
     },
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,

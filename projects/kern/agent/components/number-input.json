@@ -1,0 +1,299 @@
+{
+  "id": "number-input",
+  "name": "Number Input",
+  "category": "Forms",
+  "kind": "component",
+  "selector": "krn-number-input",
+  "selectors": ["krn-number-input"],
+  "symbol": "KrnNumberInput",
+  "canonicalSymbol": "KrnNumberInput",
+  "canonicalId": "number-input",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Number Input. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled",
+    "filled",
+    "empty"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/forms",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "id",
+      "property": "id",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Stable identifier value used by the id contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "name",
+      "property": "name",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Required human-readable name for the represented person, item, or action.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "placeholder",
+      "property": "placeholder",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Short input hint shown only while no value is present.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "increaseLabel",
+      "property": "increaseLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.forms.increaseValue",
+      "description": "Human-readable copy for the increase state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "decreaseLabel",
+      "property": "decreaseLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.forms.decreaseValue",
+      "description": "Human-readable copy for the decrease state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "min",
+      "property": "min",
+      "kind": "input",
+      "type": "number | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Smallest accepted numeric or temporal value.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "max",
+      "property": "max",
+      "kind": "input",
+      "type": "number | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Largest accepted numeric or temporal value.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "step",
+      "property": "step",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "1",
+      "description": "Increment applied by keyboard and pointer value adjustments.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "showSteppers",
+      "property": "showSteppers",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Controls whether the component applies the show steppers behavior.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "disabled",
+      "property": "disabled",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Prevents user interaction and participates in the disabled-state contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "readonly",
+      "property": "readOnly",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Keeps the value perceivable while preventing user edits.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "required",
+      "property": "required",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Marks the value as required and participates in Angular Forms validation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "invalid",
+      "property": "invalid",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Exposes an externally controlled invalid presentation state.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "valueChange",
+      "property": "valueChange",
+      "kind": "output",
+      "type": "number | null",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the value change interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": true,
+    "validator": true,
+    "valueType": "number | null",
+    "reactiveForms": true,
+    "templateDrivenForms": true,
+    "stateInputs": ["disabled", "readonly", "required", "invalid"],
+    "notes": [
+      "Works with Angular Forms through ControlValueAccessor.",
+      "Angular validator state and explicit KERN state inputs are combined."
+    ]
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": [
+      "Tab focuses",
+      "Arrow keys operate grouped controls",
+      "Escape cancels transient UI"
+    ],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Nullable seat limit",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Nullable seat limit\n *\n * Represent an optional numeric value without coercing empty input to zero.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnNumberInput } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-number-input-agent-example',\n  standalone: true,\n  imports: [KrnNumberInput, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-number-input\n      id=\"seat-limit\"\n      ariaLabel=\"Seat limit\"\n      [min]=\"1\"\n      [max]=\"10000\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernNumberInputAgentExample {\n  readonly control = new FormControl<number | null>(250, { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernNumberInputAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/number-input.ts"
+    }
+  ],
+  "related": ["form-field", "label", "hint", "validation-message"],
+  "keywords": [
+    "number-input",
+    "Number Input",
+    "Forms",
+    "krn-number-input",
+    "KrnNumberInput",
+    "id",
+    "name",
+    "placeholder",
+    "ariaLabel",
+    "increaseLabel",
+    "decreaseLabel",
+    "min",
+    "max",
+    "step",
+    "showSteppers",
+    "disabled",
+    "readonly",
+    "required",
+    "invalid",
+    "valueChange"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Do not manually duplicate value and disabled state when Angular Forms owns the control."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify reactive-form value, touched, disabled, required and invalid state.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/number-input",
+    "json": "components/number-input.json",
+    "markdown": "components/number-input.md"
+  }
+}

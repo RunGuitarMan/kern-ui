@@ -9,9 +9,34 @@
       "hidden": true
     },
     "doctor": {
-      "description": "Checks an Angular workspace for a complete, non-duplicated KERN style setup.",
+      "description": "Checks KERN installation, imports, runtime setup, SSR, locale, and deprecated APIs.",
       "factory": "./doctor/index#default",
       "schema": "./doctor/schema.json"
+    },
+    "typed-form": {
+      "description": "Generates a strictly typed standalone KERN reactive form.",
+      "factory": "./typed-form/index#default",
+      "schema": "./typed-form/schema.json",
+      "aliases": ["form"]
+    },
+    "data-grid": {
+      "description": "Generates a typed standalone KERN data-grid wrapper.",
+      "factory": "./data-grid/index#default",
+      "schema": "./data-grid/schema.json",
+      "aliases": ["grid"]
+    },
+    "crud": {
+      "description": "Generates a KERN CRUD master-detail feature.",
+      "factory": "./crud/index#default",
+      "schema": "./crud/schema.json",
+      "aliases": ["master-detail"]
+    },
+    "ng-update": {
+      "description": "Migrates root imports and safe deprecated APIs to stable KERN contracts.",
+      "factory": "./ng-update/index#default",
+      "schema": "./ng-update/schema.json",
+      "aliases": ["migrate"],
+      "hidden": true
     }
   }
 }

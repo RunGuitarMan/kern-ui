@@ -16,6 +16,60 @@
       "type": "boolean",
       "default": false,
       "description": "Skip registration of KERN's global CSS bundle."
+    },
+    "runtime": {
+      "type": "boolean",
+      "default": false,
+      "description": "Register provideKrn() in the application providers. Any runtime preference also enables this."
+    },
+    "prepaint": {
+      "type": "boolean",
+      "default": false,
+      "description": "Call applyKrnPrepaintTheme() before bootstrapApplication(). Implies runtime configuration."
+    },
+    "locale": {
+      "type": "string",
+      "minLength": 1,
+      "description": "BCP 47 locale passed to provideKrn()."
+    },
+    "direction": {
+      "type": "string",
+      "enum": ["ltr", "rtl"],
+      "description": "Document and component direction."
+    },
+    "theme": {
+      "type": "string",
+      "enum": ["light", "dark", "system", "high-contrast"],
+      "description": "Initial KERN theme."
+    },
+    "density": {
+      "type": "string",
+      "enum": ["compact", "comfortable", "spacious"],
+      "description": "Initial KERN density."
+    },
+    "motion": {
+      "type": "string",
+      "enum": ["system", "reduce", "full"],
+      "description": "KERN motion preference."
+    },
+    "brandColor": {
+      "type": ["string", "null"],
+      "pattern": "^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$",
+      "description": "Validated hexadecimal KERN brand color, or null to use static tokens."
+    },
+    "persistPreferences": {
+      "type": "boolean",
+      "description": "Persist user theme, density, and brand preferences."
+    },
+    "preferenceStorageKey": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Storage key shared by provideKrn() and prepaint."
+    },
+    "overlayHost": {
+      "type": "string",
+      "minLength": 1,
+      "description": "CSS selector for the application-owned Angular CDK overlay host."
     }
   }
 }

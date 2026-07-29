@@ -1,0 +1,180 @@
+[
+  {
+    "id": "install-and-configure",
+    "title": "Install KERN in an Angular application",
+    "summary": "Register the required global stylesheet and optionally configure application-wide preferences.",
+    "components": [],
+    "steps": [
+      "Run ng add @kern-ui/angular --project <application>.",
+      "Keep @kern-ui/angular/styles/kern.css loaded exactly once.",
+      "Use provideKrn only when the application owns theme, locale, direction, translations or overlay-host configuration.",
+      "Run the KERN doctor in strict mode in CI."
+    ],
+    "source": "recipes/install-and-configure.ts"
+  },
+  {
+    "id": "choose-selection-control",
+    "title": "Choose Select, Combobox, Autocomplete or Tags Input",
+    "summary": "Select by value authority and cardinality before choosing visual treatment.",
+    "components": [
+      "select",
+      "native-select",
+      "multi-select",
+      "combobox",
+      "autocomplete",
+      "tags-input"
+    ],
+    "steps": [
+      "Use Select or Native Select for one value from a known set.",
+      "Use Multi Select for several values from a bounded known set.",
+      "Use Combobox when users search but must commit a known option.",
+      "Use Autocomplete when suggestions help but unmatched free text remains valid.",
+      "Use Tags Input for user-authored multiple values."
+    ],
+    "source": "recipes/choose-selection-control.ts"
+  },
+  {
+    "id": "typed-reactive-form",
+    "title": "Build a typed reactive form",
+    "summary": "Compose Form Field and KERN value accessors with Angular typed reactive forms.",
+    "components": ["form-field", "text-input", "select", "date-picker"],
+    "steps": [
+      "Import ReactiveFormsModule and the narrow KERN component symbols.",
+      "Keep visible labels and specific validation messages in Form Field.",
+      "Let Angular validators and the KERN value accessor share disabled, required and invalid state."
+    ],
+    "source": "recipes/typed-reactive-form.ts"
+  },
+  {
+    "id": "controlled-data-grid",
+    "title": "Use Data Grid with server-owned data",
+    "summary": "Keep query state controlled while preserving stable row and column identity.",
+    "components": ["data-grid", "pagination"],
+    "steps": [
+      "Use mode.kind controlled and pass the server totalRows.",
+      "Return an immutable domain key from rowIdentity.",
+      "Handle queryChange and request the next server slice.",
+      "Keep sort and filter state visible while loading."
+    ],
+    "source": "recipes/controlled-data-grid.ts"
+  },
+  {
+    "id": "nested-overlays",
+    "title": "Compose nested overlays safely",
+    "summary": "Preserve focus, Escape ordering and modal ownership when popups open inside a dialog.",
+    "components": ["dialog", "select", "popover", "tooltip"],
+    "steps": [
+      "Use KERN overlay components for built-in ownership registration.",
+      "Let the inner popup consume Escape before the containing modal.",
+      "Project only non-interactive label content into Popover, Hover Card, or Menu trigger slots; each component owns the outer button semantics.",
+      "When using a custom CDK primitive, register trigger-to-pane ownership with KrnOverlayCoordinator.",
+      "Keep the original trigger mounted for focus restoration."
+    ],
+    "source": "recipes/nested-overlays.ts"
+  },
+  {
+    "id": "ssr-and-hydration",
+    "title": "Use KERN with SSR and hydration",
+    "summary": "Keep server and client configuration, locale, dates, ids and overlay host deterministic.",
+    "components": ["app-shell", "calendar", "date-picker", "dialog"],
+    "steps": [
+      "Load the same CSS and provideKrn configuration on server and client.",
+      "Use stable domain keys for data-driven ids.",
+      "Provide deterministic today values to date surfaces when clocks may differ.",
+      "Render a dedicated overlay host consistently or rely on the body fallback.",
+      "Validate the consuming route; the documentation SSR build is integration evidence, not a universal guarantee."
+    ],
+    "source": "recipes/ssr-and-hydration.ts"
+  },
+  {
+    "id": "date-time-domain-model",
+    "title": "Model dates, time, instants and time zones",
+    "summary": "Keep date-only and time-of-day values separate from zoned instants until the application boundary.",
+    "components": ["calendar", "date-picker", "date-range-picker", "time-picker"],
+    "steps": [
+      "Use date-only values for Calendar and Date Picker, not midnight JavaScript Date instances.",
+      "Use Time Picker for a time of day and store the intended zone separately.",
+      "Convert to an instant only where the product has an explicit time-zone policy.",
+      "Provide deterministic today values during SSR, hydration and tests."
+    ],
+    "source": "recipes/date-time-domain-model.ts"
+  },
+  {
+    "id": "tree-identity-and-loading",
+    "title": "Keep Tree identity and asynchronous children deterministic",
+    "summary": "Treat node identifiers and expanded state as domain contracts while loading immutable child branches explicitly.",
+    "components": ["tree", "tree-navigation"],
+    "steps": [
+      "Use non-empty unique domain identifiers that survive immutable updates.",
+      "Control expanded identifiers when routing or persistence owns the state.",
+      "Represent loading, empty and failed child states explicitly.",
+      "Use Tree Navigation for destinations and Tree for hierarchical data interaction."
+    ],
+    "source": "recipes/tree-identity-and-loading.ts"
+  },
+  {
+    "id": "remote-combobox",
+    "title": "Load Combobox options from a remote source",
+    "summary": "Keep query and request state controlled while preventing stale or failed options from being selected.",
+    "components": ["combobox", "autocomplete"],
+    "steps": [
+      "Disable the built-in local filter for server-ranked results.",
+      "Handle queryChange with a cancellable latest-query-wins request.",
+      "Drive optionsState through ready, loading and error.",
+      "Keep committed values separate from the current search query."
+    ],
+    "source": "recipes/remote-combobox.ts"
+  },
+  {
+    "id": "accessible-analytics",
+    "title": "Build accessible analytics with Charts",
+    "summary": "Choose stable datum identity, bound interactive marks and keep the exact source-data table available.",
+    "components": ["line-chart", "bar-chart", "donut-chart"],
+    "steps": [
+      "Use finite values, non-empty labels and unique stable datum ids.",
+      "Choose clamp or reject as an explicit negative-value policy.",
+      "Aggregate large series before rendering interactive SVG marks.",
+      "Keep the source-data table and do not encode meaning by color alone."
+    ],
+    "source": "recipes/accessible-analytics.ts"
+  },
+  {
+    "id": "russian-locale",
+    "title": "Install the complete Russian locale pack",
+    "summary": "Configure locale, direction and shared component translations through one schema-checked pack.",
+    "components": [],
+    "steps": [
+      "Adapt KRN_RU_RU_LOCALE with krnLocaleConfig.",
+      "Pass the result to provideKrn at the application boundary.",
+      "Keep product copy in the application and use typed overrides only for shared component UI.",
+      "Use the same locale configuration during SSR and hydration."
+    ],
+    "source": "recipes/russian-locale.ts"
+  },
+  {
+    "id": "public-harness-testing",
+    "title": "Test through public component harnesses",
+    "summary": "Keep application tests independent of KERN's internal DOM and CSS classes.",
+    "components": ["select", "date-picker", "tree", "dialog", "data-grid"],
+    "steps": [
+      "Import harnesses only from @kern-ui/angular/testing.",
+      "Use filters to locate controls by stable user-facing labels.",
+      "Assert domain behavior in the application and interaction mechanics through harness methods.",
+      "Retain one browser integration path for focus, SSR/hydration and accessibility."
+    ],
+    "source": "recipes/public-harness-testing.ts"
+  },
+  {
+    "id": "generate-enterprise-feature",
+    "title": "Generate typed forms, grids and CRUD features",
+    "summary": "Start common enterprise screens from strict, canonical KERN imports and explicit state ownership.",
+    "components": ["form-field", "data-grid", "master-detail-layout"],
+    "steps": [
+      "Generate a typed-form, data-grid or crud feature for the owning Angular project.",
+      "Choose client, controlled or virtual Grid mode explicitly.",
+      "Adapt domain fields and transport while retaining stable identity.",
+      "Run doctor --strict --json after generation."
+    ],
+    "source": "recipes/generate-enterprise-feature.ts"
+  }
+]

@@ -4,22 +4,35 @@ import {
   DestroyRef,
   ElementRef,
   computed,
+  effect,
   inject,
   input,
   model,
+  signal,
 } from '@angular/core';
 import { KRN_PLATFORM, type KrnScheduledHandle } from '@kern-ui/angular/cdk';
-import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import {
+  KRN_ENGLISH_TRANSLATIONS,
+  KRN_LOCALE,
+  KRN_TRANSLATIONS,
+  krnFormatTranslation,
+} from '@kern-ui/angular/core';
 
 export interface KrnChartDatum {
+  /** Stable identity used to preserve keyboard focus across immutable updates. */
+  readonly id?: string | number;
   readonly label: string;
   readonly value: number;
   readonly description?: string;
 }
 
 export type KrnChartType = 'line' | 'bar' | 'donut';
+export type KrnChartDatumKey = string | number;
+export type KrnChartDatumIdentity = (datum: KrnChartDatum, index: number) => KrnChartDatumKey;
+export type KrnChartNegativeValuePolicy = 'clamp' | 'reject';
 
 export interface KrnChartLabels {
+  readonly empty?: string;
   readonly viewData: string;
   readonly hideData: string;
   readonly total: string;
@@ -28,21 +41,33 @@ export interface KrnChartLabels {
   readonly valueColumn: string;
   readonly shareColumn: string;
   readonly legend: string;
+  /** Backward-compatible template containing the `{value}` token. */
   readonly percentOfTotal: string;
+  readonly formatPercentOfTotal?: (value: string) => string;
+  readonly additionalItems?: (count: number) => string;
   readonly datumLabel: (label: string, value: string) => string;
   readonly datumShareLabel: (label: string, value: string, share: string) => string;
   readonly sourceDataCaption: (title: string, sourceData: string) => string;
   readonly summary: (title: string, items: readonly string[]) => string;
 }
 
+interface KrnResolvedChartLabels extends KrnChartLabels {
+  readonly empty: string;
+  readonly additionalItems: (count: number) => string;
+}
+
 export type KrnChartValueFormatter = (value: number) => string;
 
-interface KrnLinePoint extends KrnChartDatum {
+interface KrnNormalizedDatum extends KrnChartDatum {
+  readonly key: KrnChartDatumKey;
+}
+
+interface KrnLinePoint extends KrnNormalizedDatum {
   readonly x: number;
   readonly y: number;
 }
 
-interface KrnDonutSegment extends KrnChartDatum {
+interface KrnDonutSegment extends KrnNormalizedDatum {
   readonly percent: number;
   readonly dashPercent: number;
   readonly offset: number;
@@ -84,8 +109,10 @@ interface KrnTooltipPosition {
       </figcaption>
 
       <div class="plot" [class.has-active]="activeIndex() !== null">
-        @if (type() === 'line') {
-          <svg viewBox="0 0 640 280" role="img" [attr.aria-label]="accessibleSummary()">
+        @if (!validatedData().length) {
+          <p class="empty-chart" role="status">{{ resolvedLabels().empty }}</p>
+        } @else if (type() === 'line') {
+          <svg viewBox="0 0 640 280" role="group" [attr.aria-label]="accessibleSummary()">
             <g class="grid" aria-hidden="true">
               @for (line of gridLines; track line) {
                 <line x1="28" [attr.y1]="line" x2="620" [attr.y2]="line"></line>
@@ -93,18 +120,18 @@ interface KrnTooltipPosition {
             </g>
             <path class="area" [attr.d]="areaPath()" aria-hidden="true"></path>
             <path class="line" [attr.d]="linePath()" aria-hidden="true"></path>
-            @for (point of linePoints(); track $index; let index = $index) {
+            @for (point of linePoints(); track point.key; let index = $index) {
               <g
                 class="point"
                 [attr.tabindex]="markTabIndex(index)"
-                role="graphics-symbol"
+                role="button"
                 [attr.data-chart-index]="index"
                 [attr.data-active]="activeIndex() === index ? '' : null"
                 [attr.aria-label]="accessibleDatumLabel(point)"
-                (mouseenter)="setActive(index)"
-                (mouseleave)="clearActive(index)"
-                (focus)="setActive(index)"
-                (blur)="clearActive(index)"
+                (mouseenter)="setHovered(point.key)"
+                (mouseleave)="clearHovered(point.key)"
+                (focus)="setFocused(point.key)"
+                (blur)="clearFocused(point.key)"
                 (click)="setActive(index)"
                 (keydown)="onMarkKeydown($event, index)"
               >
@@ -127,25 +154,25 @@ interface KrnTooltipPosition {
             }
           </svg>
         } @else if (type() === 'bar') {
-          <svg viewBox="0 0 640 280" role="img" [attr.aria-label]="accessibleSummary()">
+          <svg viewBox="0 0 640 280" role="group" [attr.aria-label]="accessibleSummary()">
             <g class="grid" aria-hidden="true">
               @for (line of gridLines; track line) {
                 <line x1="28" [attr.y1]="line" x2="620" [attr.y2]="line"></line>
               }
             </g>
-            @for (bar of bars(); track $index; let index = $index) {
+            @for (bar of bars(); track bar.key; let index = $index) {
               <g
                 class="bar"
                 [attr.tabindex]="markTabIndex(index)"
-                role="graphics-symbol"
+                role="button"
                 [attr.data-chart-index]="index"
                 [attr.data-active]="activeIndex() === index ? '' : null"
                 [attr.aria-label]="accessibleDatumLabel(bar)"
                 [style.--_bar-opacity]="barOpacity(index)"
-                (mouseenter)="setActive(index)"
-                (mouseleave)="clearActive(index)"
-                (focus)="setActive(index)"
-                (blur)="clearActive(index)"
+                (mouseenter)="setHovered(bar.key)"
+                (mouseleave)="clearHovered(bar.key)"
+                (focus)="setFocused(bar.key)"
+                (blur)="clearFocused(bar.key)"
                 (click)="setActive(index)"
                 (keydown)="onMarkKeydown($event, index)"
               >
@@ -165,9 +192,9 @@ interface KrnTooltipPosition {
           </svg>
         } @else {
           <div class="donut-layout">
-            <svg viewBox="0 0 240 240" role="img" [attr.aria-label]="accessibleSummary()">
-              <circle class="donut-track" cx="120" cy="120" r="82"></circle>
-              @for (segment of donutSegments(); track $index; let index = $index) {
+            <svg viewBox="0 0 240 240" role="group" [attr.aria-label]="accessibleSummary()">
+              <circle class="donut-track" cx="120" cy="120" r="82" aria-hidden="true"></circle>
+              @for (segment of donutSegments(); track segment.key; let index = $index) {
                 <circle
                   class="donut-segment"
                   cx="120"
@@ -179,8 +206,8 @@ interface KrnTooltipPosition {
                   [attr.data-active]="activeIndex() === index ? '' : null"
                   [style.--_series-color]="color(index)"
                   aria-hidden="true"
-                  (mouseenter)="setActive(index)"
-                  (mouseleave)="clearActive(index)"
+                  (mouseenter)="setHovered(segment.key)"
+                  (mouseleave)="clearHovered(segment.key)"
                   (click)="setActive(index)"
                 ></circle>
                 <circle
@@ -188,14 +215,10 @@ interface KrnTooltipPosition {
                   [attr.cx]="segment.targetX"
                   [attr.cy]="segment.targetY"
                   r="16"
-                  tabindex="-1"
-                  role="graphics-symbol"
                   [attr.data-active]="activeIndex() === index ? '' : null"
-                  [attr.aria-label]="accessibleDatumShareLabel(segment)"
-                  (mouseenter)="setActive(index)"
-                  (mouseleave)="clearActive(index)"
-                  (focus)="setActive(index)"
-                  (blur)="clearActive(index)"
+                  aria-hidden="true"
+                  (mouseenter)="setHovered(segment.key)"
+                  (mouseleave)="clearHovered(segment.key)"
                   (click)="setActive(index)"
                 >
                   <title>
@@ -220,14 +243,15 @@ interface KrnTooltipPosition {
               }
             </svg>
             <ul class="legend" [attr.aria-label]="resolvedLabels().legend">
-              @for (segment of donutSegments(); track $index; let index = $index) {
+              @for (segment of donutSegments(); track segment.key; let index = $index) {
                 <li [attr.data-active]="activeIndex() === index ? '' : null">
                   <button
                     type="button"
-                    (mouseenter)="setActive(index)"
-                    (mouseleave)="clearActive(index)"
-                    (focus)="setActive(index)"
-                    (blur)="clearActive(index)"
+                    [attr.data-active]="activeIndex() === index ? '' : null"
+                    (mouseenter)="setHovered(segment.key)"
+                    (mouseleave)="clearHovered(segment.key)"
+                    (focus)="setFocused(segment.key)"
+                    (blur)="clearFocused(segment.key)"
                     (click)="setActive(index)"
                   >
                     <i [style.--_series-color]="color(index)" aria-hidden="true"></i>
@@ -276,7 +300,7 @@ interface KrnTooltipPosition {
               </tr>
             </thead>
             <tbody>
-              @for (datum of data(); track $index) {
+              @for (datum of validatedData(); track datum.key) {
                 <tr>
                   <th scope="row">{{ datum.label }}</th>
                   <td>{{ formattedValue(datum.value) }}</td>
@@ -356,6 +380,15 @@ interface KrnTooltipPosition {
       position: relative;
       min-inline-size: 0;
       isolation: isolate;
+    }
+    .empty-chart {
+      display: grid;
+      min-block-size: 12rem;
+      place-items: center;
+      margin: 0;
+      border: 1px dashed var(--krn-color-border, #cdd1d7);
+      border-radius: var(--krn-radius-md, 0.5rem);
+      color: var(--krn-color-text-muted, #626a76);
     }
     svg {
       display: block;
@@ -652,7 +685,8 @@ export class KrnChart {
   private readonly platform = inject(KRN_PLATFORM);
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
-  private hideTimer: KrnScheduledHandle | undefined;
+  private hideTimer:
+    { readonly handle: KrnScheduledHandle; readonly key: KrnChartDatumKey } | undefined;
 
   protected readonly Math = Math;
   protected readonly gridLines = [36, 105, 174, 244];
@@ -663,12 +697,25 @@ export class KrnChart {
   readonly eyebrow = input('');
   readonly description = input('');
   readonly data = input.required<readonly KrnChartDatum[]>();
+  /** Returns a stable unique key used to preserve DOM and active state across data reordering. */
+  readonly datumIdentity = input<KrnChartDatumIdentity>(
+    (datum, index) => datum.id ?? (datum.label || index),
+  );
+  /** Clamps negative values to zero by default or rejects them with a validation error. */
+  readonly negativeValuePolicy = input<KrnChartNegativeValuePolicy>('clamp');
+  /** Limits the accessible text summary while the full data table remains available. */
+  readonly summaryItemLimit = input(12);
   readonly locale = input<string | string[]>(inject(KRN_LOCALE));
   readonly labels = input<Partial<KrnChartLabels>>({});
   readonly valueFormatter = input<KrnChartValueFormatter | null>(null);
   readonly percentFormatter = input<KrnChartValueFormatter | null>(null);
   readonly tableVisible = model(false);
   readonly activeIndex = model<number | null>(null);
+  private readonly activeKey = signal<KrnChartDatumKey | null>(null);
+  private readonly hoveredKey = signal<KrnChartDatumKey | null>(null);
+  private readonly focusedKey = signal<KrnChartDatumKey | null>(null);
+  private previousValidatedData: readonly KrnNormalizedDatum[] | null = null;
+  private previousActiveIndex: number | null = null;
 
   readonly palette = input<readonly string[]>([
     'var(--krn-chart-1, #4f6feb)',
@@ -678,10 +725,28 @@ export class KrnChart {
     'var(--krn-chart-4, #b58633)',
   ]);
 
-  protected readonly resolvedLabels = computed<KrnChartLabels>(() => ({
-    ...this.translations.chart,
-    ...this.labels(),
-  }));
+  protected readonly resolvedLabels = computed<KrnResolvedChartLabels>(() => {
+    const overrides = this.labels();
+    return {
+      ...this.translations.chart,
+      ...overrides,
+      empty:
+        overrides.empty ??
+        this.translations.chart.empty ??
+        KRN_ENGLISH_TRANSLATIONS.chart.empty ??
+        'No chart data',
+      additionalItems:
+        overrides.additionalItems ??
+        this.translations.chart.additionalItems ??
+        KRN_ENGLISH_TRANSLATIONS.chart.additionalItems ??
+        ((count: number) => `${count} more data points`),
+      formatPercentOfTotal:
+        overrides.formatPercentOfTotal ??
+        (overrides.percentOfTotal !== undefined
+          ? undefined
+          : this.translations.chart.formatPercentOfTotal),
+    };
+  });
   private readonly numberFormatter = computed(
     () => new Intl.NumberFormat(this.locale(), { maximumFractionDigits: 2 }),
   );
@@ -692,14 +757,42 @@ export class KrnChart {
         maximumFractionDigits: 1,
       }),
   );
+  protected readonly validatedData = computed<readonly KrnNormalizedDatum[]>(() => {
+    const identities = new Map<KrnChartDatumKey, number>();
+    return this.data().map((datum, index) => {
+      if (!datum.label.trim()) {
+        throw new Error(`KrnChart datum at index ${index} must have a non-empty label.`);
+      }
+      if (!Number.isFinite(datum.value)) {
+        throw new RangeError(`KrnChart datum "${datum.label}" must have a finite numeric value.`);
+      }
+      if (datum.value < 0 && this.negativeValuePolicy() === 'reject') {
+        throw new RangeError(
+          `KrnChart datum "${datum.label}" is negative while negativeValuePolicy is "reject".`,
+        );
+      }
+      const key = this.datumIdentity()(datum, index);
+      if ((typeof key !== 'string' && typeof key !== 'number') || key === '') {
+        throw new TypeError(`KrnChart datum "${datum.label}" resolved to an invalid identity.`);
+      }
+      const previousIndex = identities.get(key);
+      if (previousIndex !== undefined) {
+        throw new Error(
+          `KrnChart datum identities must be unique; "${String(key)}" is used at indexes ${previousIndex} and ${index}.`,
+        );
+      }
+      identities.set(key, index);
+      return { ...datum, key, value: Math.max(0, datum.value) };
+    });
+  });
   protected readonly total = computed(() =>
-    this.data().reduce((sum, datum) => sum + Math.max(0, datum.value), 0),
+    this.validatedData().reduce((sum, datum) => sum + datum.value, 0),
   );
   private readonly maxValue = computed(() =>
-    Math.max(1, ...this.data().map((datum) => datum.value)),
+    Math.max(1, ...this.validatedData().map((datum) => datum.value)),
   );
   protected readonly linePoints = computed<readonly KrnLinePoint[]>(() => {
-    const data = this.data();
+    const data = this.validatedData();
     const range = 592;
     const step = data.length > 1 ? range / (data.length - 1) : 0;
     return data.map((datum, index) => ({
@@ -715,7 +808,7 @@ export class KrnChart {
     return `${this.linePath()} L ${points.at(-1)?.x ?? 28} 244 L ${points[0]?.x ?? 28} 244 Z`;
   });
   protected readonly bars = computed(() => {
-    const data = this.data();
+    const data = this.validatedData();
     const slot = 592 / Math.max(1, data.length);
     const width = Math.max(14, Math.min(54, slot * 0.54));
     return data.map((datum, index) => {
@@ -732,7 +825,7 @@ export class KrnChart {
   protected readonly donutSegments = computed<readonly KrnDonutSegment[]>(() => {
     const total = this.total() || 1;
     let offset = 0;
-    return this.data().map((datum) => {
+    return this.validatedData().map((datum) => {
       const percent = (Math.max(0, datum.value) / total) * 100;
       const gap = Math.min(1, percent * 0.16);
       const midpointAngle = ((offset + percent / 2) / 100) * Math.PI * 2 - Math.PI / 2;
@@ -750,7 +843,7 @@ export class KrnChart {
   });
   protected readonly activeDatum = computed(() => {
     const index = this.activeIndex();
-    return index === null ? null : (this.data()[index] ?? null);
+    return index === null ? null : (this.validatedData()[index] ?? null);
   });
   protected readonly tooltipPosition = computed<KrnTooltipPosition>(() => {
     const index = this.activeIndex();
@@ -772,14 +865,51 @@ export class KrnChart {
     }
     return { x: 74, y: 24 };
   });
-  protected readonly accessibleSummary = computed(() =>
-    this.resolvedLabels().summary(
-      this.title(),
-      this.data().map((datum) => this.accessibleDatumLabel(datum)),
-    ),
-  );
+  protected readonly accessibleSummary = computed(() => {
+    const data = this.validatedData();
+    const requestedLimit = this.summaryItemLimit();
+    const limit = Math.min(
+      50,
+      Math.max(1, Number.isFinite(requestedLimit) ? Math.trunc(requestedLimit) : 12),
+    );
+    const items = data.slice(0, limit).map((datum) => this.accessibleDatumLabel(datum));
+    const remaining = data.length - items.length;
+    if (remaining > 0) items.push(this.resolvedLabels().additionalItems(remaining));
+    return this.resolvedLabels().summary(this.title(), items);
+  });
 
   constructor() {
+    effect(() => {
+      const data = this.validatedData();
+      const index = this.activeIndex();
+      const dataChanged = data !== this.previousValidatedData;
+      const indexChanged = index !== this.previousActiveIndex;
+
+      if (dataChanged) {
+        this.clearMissingInteractionKeys(data);
+        const key = this.preferredInteractionKey() ?? this.activeKey();
+        if (key !== null) {
+          const nextIndex = data.findIndex((datum) => datum.key === key);
+          if (nextIndex < 0) {
+            this.activeKey.set(null);
+            this.activeIndex.set(null);
+          } else if (nextIndex !== index) {
+            this.activeIndex.set(nextIndex);
+          }
+        } else if (indexChanged) {
+          const datum = index === null ? null : data[index];
+          this.activeKey.set(datum?.key ?? null);
+          if (index !== null && !datum) this.activeIndex.set(null);
+        }
+      } else if (indexChanged) {
+        const datum = index === null ? null : data[index];
+        this.activeKey.set(datum?.key ?? null);
+        if (index !== null && !datum) this.activeIndex.set(null);
+      }
+
+      this.previousValidatedData = data;
+      this.previousActiveIndex = this.activeIndex();
+    });
     this.destroyRef.onDestroy(() => this.cancelHideTimer());
   }
 
@@ -794,21 +924,79 @@ export class KrnChart {
 
   protected setActive(index: number): void {
     this.cancelHideTimer();
-    this.activeIndex.set(index);
+    const key = this.validatedData()[index]?.key;
+    if (key !== undefined) this.activateKey(key);
   }
 
   protected clearActive(index: number): void {
-    if (this.activeIndex() !== index) return;
+    const key = this.validatedData()[index]?.key;
+    if (key === undefined || this.activeKey() !== key || this.preferredInteractionKey() !== null) {
+      return;
+    }
+    this.scheduleClear(key);
+  }
+
+  protected setHovered(key: KrnChartDatumKey): void {
+    this.cancelHideTimer();
+    this.hoveredKey.set(key);
+    this.activateKey(this.focusedKey() ?? key);
+  }
+
+  protected clearHovered(key: KrnChartDatumKey): void {
+    if (this.hoveredKey() !== key) return;
+    this.hoveredKey.set(null);
+    this.reconcileAfterInteraction(key);
+  }
+
+  protected setFocused(key: KrnChartDatumKey): void {
+    this.cancelHideTimer();
+    this.focusedKey.set(key);
+    this.activateKey(key);
+  }
+
+  protected clearFocused(key: KrnChartDatumKey): void {
+    if (this.focusedKey() !== key) return;
+    this.focusedKey.set(null);
+    this.reconcileAfterInteraction(key);
+  }
+
+  private activateKey(key: KrnChartDatumKey): void {
+    const index = this.validatedData().findIndex((datum) => datum.key === key);
+    if (index < 0) return;
+    this.activeKey.set(key);
+    this.activeIndex.set(index);
+  }
+
+  private reconcileAfterInteraction(key: KrnChartDatumKey): void {
+    const preferredKey = this.preferredInteractionKey();
+    if (preferredKey !== null) {
+      this.cancelHideTimer();
+      this.activateKey(preferredKey);
+      return;
+    }
+    if (this.activeKey() === key) this.scheduleClear(key);
+  }
+
+  private scheduleClear(key: KrnChartDatumKey): void {
     this.cancelHideTimer();
     const handle = this.platform.schedule(() => {
-      if (this.activeIndex() === index) this.activeIndex.set(null);
+      const preferredKey = this.preferredInteractionKey();
+      if (preferredKey !== null) {
+        this.activateKey(preferredKey);
+      } else if (this.activeKey() === key) {
+        this.activeKey.set(null);
+        this.activeIndex.set(null);
+      }
       this.hideTimer = undefined;
     }, 110);
     if (handle === null) {
-      this.activeIndex.set(null);
+      if (this.preferredInteractionKey() === null && this.activeKey() === key) {
+        this.activeKey.set(null);
+        this.activeIndex.set(null);
+      }
       return;
     }
-    this.hideTimer = handle;
+    this.hideTimer = { handle, key };
   }
 
   protected markTabIndex(index: number): 0 | -1 {
@@ -816,7 +1004,7 @@ export class KrnChart {
   }
 
   protected onMarkKeydown(event: KeyboardEvent, index: number): void {
-    const itemCount = this.data().length;
+    const itemCount = this.validatedData().length;
     if (!itemCount) return;
 
     const direction =
@@ -824,6 +1012,11 @@ export class KrnChart {
     let targetIndex: number | null = null;
 
     switch (event.key) {
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        this.setActive(index);
+        return;
       case 'ArrowRight':
         targetIndex = (index + direction + itemCount) % itemCount;
         break;
@@ -876,13 +1069,30 @@ export class KrnChart {
   }
 
   protected percentOfTotal(value: number): string {
-    return this.resolvedLabels().percentOfTotal.replace('{value}', this.formattedPercent(value));
+    const formatted = this.formattedPercent(value);
+    return krnFormatTranslation(
+      this.resolvedLabels().percentOfTotal,
+      { value: formatted },
+      this.resolvedLabels().formatPercentOfTotal,
+      formatted,
+    );
   }
 
   private cancelHideTimer(): void {
     if (this.hideTimer === undefined) return;
-    this.platform.cancelScheduled(this.hideTimer);
+    this.platform.cancelScheduled(this.hideTimer.handle);
     this.hideTimer = undefined;
+  }
+
+  private preferredInteractionKey(): KrnChartDatumKey | null {
+    return this.focusedKey() ?? this.hoveredKey();
+  }
+
+  private clearMissingInteractionKeys(data: readonly KrnNormalizedDatum[]): void {
+    const hasKey = (key: KrnChartDatumKey | null): boolean =>
+      key === null || data.some((datum) => datum.key === key);
+    if (!hasKey(this.focusedKey())) this.focusedKey.set(null);
+    if (!hasKey(this.hoveredKey())) this.hoveredKey.set(null);
   }
 }
 
@@ -902,6 +1112,9 @@ export class KrnChart {
       [labels]="labels()"
       [valueFormatter]="valueFormatter()"
       [percentFormatter]="percentFormatter()"
+      [datumIdentity]="datumIdentity()"
+      [negativeValuePolicy]="negativeValuePolicy()"
+      [summaryItemLimit]="summaryItemLimit()"
     />
   `,
 })
@@ -915,6 +1128,14 @@ export class KrnLineChart {
   readonly labels = input<Partial<KrnChartLabels>>({});
   readonly valueFormatter = input<KrnChartValueFormatter | null>(null);
   readonly percentFormatter = input<KrnChartValueFormatter | null>(null);
+  /** Returns a stable unique key used to preserve DOM and active state across data reordering. */
+  readonly datumIdentity = input<KrnChartDatumIdentity>(
+    (datum, index) => datum.id ?? (datum.label || index),
+  );
+  /** Clamps negative values to zero by default or rejects them with a validation error. */
+  readonly negativeValuePolicy = input<KrnChartNegativeValuePolicy>('clamp');
+  /** Limits the accessible text summary while the full data table remains available. */
+  readonly summaryItemLimit = input(12);
 }
 
 @Component({
@@ -933,6 +1154,9 @@ export class KrnLineChart {
       [labels]="labels()"
       [valueFormatter]="valueFormatter()"
       [percentFormatter]="percentFormatter()"
+      [datumIdentity]="datumIdentity()"
+      [negativeValuePolicy]="negativeValuePolicy()"
+      [summaryItemLimit]="summaryItemLimit()"
     />
   `,
 })
@@ -946,6 +1170,14 @@ export class KrnBarChart {
   readonly labels = input<Partial<KrnChartLabels>>({});
   readonly valueFormatter = input<KrnChartValueFormatter | null>(null);
   readonly percentFormatter = input<KrnChartValueFormatter | null>(null);
+  /** Returns a stable unique key used to preserve DOM and active state across data reordering. */
+  readonly datumIdentity = input<KrnChartDatumIdentity>(
+    (datum, index) => datum.id ?? (datum.label || index),
+  );
+  /** Clamps negative values to zero by default or rejects them with a validation error. */
+  readonly negativeValuePolicy = input<KrnChartNegativeValuePolicy>('clamp');
+  /** Limits the accessible text summary while the full data table remains available. */
+  readonly summaryItemLimit = input(12);
 }
 
 @Component({
@@ -964,6 +1196,9 @@ export class KrnBarChart {
       [labels]="labels()"
       [valueFormatter]="valueFormatter()"
       [percentFormatter]="percentFormatter()"
+      [datumIdentity]="datumIdentity()"
+      [negativeValuePolicy]="negativeValuePolicy()"
+      [summaryItemLimit]="summaryItemLimit()"
     />
   `,
 })
@@ -983,6 +1218,14 @@ export class KrnDonutChart {
   readonly labels = input<Partial<KrnChartLabels>>({});
   readonly valueFormatter = input<KrnChartValueFormatter | null>(null);
   readonly percentFormatter = input<KrnChartValueFormatter | null>(null);
+  /** Returns a stable unique key used to preserve DOM and active state across data reordering. */
+  readonly datumIdentity = input<KrnChartDatumIdentity>(
+    (datum, index) => datum.id ?? (datum.label || index),
+  );
+  /** Clamps negative values to zero by default or rejects them with a validation error. */
+  readonly negativeValuePolicy = input<KrnChartNegativeValuePolicy>('clamp');
+  /** Limits the accessible text summary while the full data table remains available. */
+  readonly summaryItemLimit = input(12);
 }
 
 function smoothLinePath(points: readonly KrnLinePoint[]): string {

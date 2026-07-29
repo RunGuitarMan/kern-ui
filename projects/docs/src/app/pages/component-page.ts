@@ -15,125 +15,16 @@ import {
   type KernCatalogItem,
   type KernComponentStatus,
 } from '@kern-ui/showcase';
+import { findKernAgentExample, type KernAgentExample } from '@kern-ui/showcase/examples';
+import { KernComponentSpecimen } from '@kern-ui/showcase/specimen';
 import {
   KrnBreadcrumbs,
   KrnCodeBlock,
   KrnCopyButton,
   type KrnBreadcrumbItem,
-} from '@kern-ui/angular';
+} from '@kern-ui/angular/kit';
 
 import { DocsPreferences } from '../preferences';
-import { ComponentSpecimen } from './component-specimen';
-
-const EXAMPLE_MARKUP: Readonly<Record<string, string>> = {
-  'app-shell':
-    '<krn-app-shell><krn-header>Header</krn-header><krn-sidebar>Navigation</krn-sidebar><main>Content</main></krn-app-shell>',
-  header: '<krn-header><span krnHeaderStart>Kern</span>Workspace</krn-header>',
-  sidebar: '<krn-sidebar ariaLabel="Workspace navigation">Navigation</krn-sidebar>',
-  'navigation-rail':
-    '<krn-navigation-rail ariaLabel="Primary navigation">Tools</krn-navigation-rail>',
-  container: '<krn-container size="lg">Content</krn-container>',
-  stack: '<krn-stack gap="4">Content</krn-stack>',
-  inline: '<krn-inline gap="3" wrap>Content</krn-inline>',
-  cluster: '<krn-cluster gap="2">Content</krn-cluster>',
-  grid: '<krn-grid [columns]="3" gap="4">Content</krn-grid>',
-  'split-layout':
-    '<krn-split-layout ratio="1:2"><div krnSplitPrimary>Primary</div><div krnSplitSecondary>Secondary</div></krn-split-layout>',
-  center: '<krn-center maxWidth="32rem">Content</krn-center>',
-  spacer: '<krn-spacer axis="horizontal" size="6" />',
-  divider: '<krn-divider label="Next section" />',
-  'aspect-ratio': '<krn-aspect-ratio ratio="16 / 9">Media</krn-aspect-ratio>',
-  'scroll-area': '<krn-scroll-area maxBlockSize="20rem">Content</krn-scroll-area>',
-  'responsive-show-hide':
-    '<krn-responsive-show-hide from="md">Desktop content</krn-responsive-show-hide>',
-  'resizable-panels':
-    '<krn-resizable-panels [sizes]="[40, 60]"><krn-resizable-panel>Navigation</krn-resizable-panel><krn-resize-handle /><krn-resizable-panel>Content</krn-resizable-panel></krn-resizable-panels>',
-  button: '<krn-button>Publish changes</krn-button>',
-  'icon-button': '<krn-icon-button ariaLabel="Add item">+</krn-icon-button>',
-  'button-group':
-    '<krn-button-group ariaLabel="Record actions"><krn-button>Save</krn-button><krn-button>Archive</krn-button></krn-button-group>',
-  'split-button':
-    '<krn-split-button><span krnLabel>Export</span><button krnMenu role="menuitem">CSV</button></krn-split-button>',
-  'floating-action-button':
-    '<krn-floating-action-button ariaLabel="Create item">Create</krn-floating-action-button>',
-  'toggle-button': '<krn-toggle-button value="list">List</krn-toggle-button>',
-  'toggle-group':
-    '<krn-toggle-group ariaLabel="View mode"><krn-toggle-button value="list">List</krn-toggle-button></krn-toggle-group>',
-  'copy-button': '<krn-copy-button value="Copied text">Copy</krn-copy-button>',
-  link: '<krn-link href="/dashboard">Dashboard</krn-link>',
-  'dropdown-button':
-    '<krn-dropdown-button><span krnLabel>Export</span><button krnMenu role="menuitem">CSV</button></krn-dropdown-button>',
-  'form-field': '<krn-form-field label="Workspace name"><krn-text-input /></krn-form-field>',
-  radio: '<krn-radio value="weekly">Weekly</krn-radio>',
-  select: '<krn-select ariaLabel="Plan" [options]="[]" />',
-  'native-select': '<krn-native-select ariaLabel="Plan" [options]="[]" />',
-  'multi-select': '<krn-multi-select ariaLabel="Teams" [options]="[]" />',
-  combobox:
-    '<krn-combobox ariaLabel="Workspace plan" placeholder="Filter plans…" [options]="plans" />',
-  autocomplete:
-    '<krn-autocomplete ariaLabel="Workspace alias" placeholder="Type an alias…" [options]="suggestions" />',
-  'segmented-control': '<krn-segmented-control [options]="[]" />',
-  'date-range-picker': '<krn-date-range-picker ariaLabel="Reporting period" />',
-  'file-upload': '<krn-file-upload label="Choose files" />',
-  'drag-drop-upload': '<krn-drag-drop-upload label="Browse files" />',
-  'verification-code': '<krn-verification-code label="Verification code" />',
-  breadcrumbs: '<krn-breadcrumbs [items]="items" />',
-  tabs: '<krn-tabs [items]="tabs">Panel</krn-tabs>',
-  'vertical-tabs': '<krn-vertical-tabs [items]="tabs">Panel</krn-vertical-tabs>',
-  stepper: '<krn-stepper [steps]="steps" />',
-  menu: '<krn-menu [items]="items" />',
-  'tree-navigation': '<krn-tree-navigation [items]="items" />',
-  'command-palette': '<krn-command-palette [items]="commands" [(open)]="open" />',
-  tooltip: '<button type="button" krnTooltip="Helpful detail">Help</button>',
-  dialog: '<krn-dialog title="Edit workspace" [(open)]="open">Content</krn-dialog>',
-  'alert-dialog':
-    '<krn-alert-dialog title="Delete workspace?" [(open)]="open">Content</krn-alert-dialog>',
-  drawer: '<krn-drawer title="Activity" [(open)]="open">Content</krn-drawer>',
-  'bottom-sheet': '<krn-bottom-sheet title="Actions" [(open)]="open">Content</krn-bottom-sheet>',
-  'progress-bar': '<krn-progress-bar [value]="68" />',
-  'circular-progress': '<krn-circular-progress [value]="68" [showValue]="true" />',
-  stat: '<krn-stat label="Active users" value="2,481" />',
-  disclosure: '<krn-disclosure heading="Advanced settings">Content</krn-disclosure>',
-  'description-list':
-    '<krn-description-list><krn-description-item term="Owner">Avery Cole</krn-description-item></krn-description-list>',
-  timeline:
-    '<krn-timeline><krn-timeline-item heading="Published">Version 2.4.0</krn-timeline-item></krn-timeline>',
-  'data-table': '<krn-data-table ariaLabel="Accounts" [data]="[]" [columns]="[]" />',
-  'data-grid': '<krn-data-grid ariaLabel="Accounts" [data]="[]" [columns]="[]" />',
-  'code-block': '<krn-code-block language="shell" code="npm install @kern-ui/angular" />',
-  'keyboard-shortcut': `<krn-keyboard-shortcut [keys]="['⌘', 'K']" />`,
-  meter: '<krn-meter label="Storage used" [value]="68" />',
-  'line-chart': '<krn-line-chart title="Weekly usage" [data]="[]" />',
-  'bar-chart': '<krn-bar-chart title="Weekly usage" [data]="[]" />',
-  'donut-chart': '<krn-donut-chart title="Plan mix" [data]="[]" />',
-  'user-menu': '<krn-user-menu name="Avery Cole" />',
-  'notification-center': '<krn-notification-center [notifications]="notifications" />',
-  'global-search': '<krn-global-search ariaLabel="Search" [results]="results" />',
-  'filter-bar': '<krn-filter-bar [filters]="filters" />',
-  'page-header': '<krn-page-header heading="Workspace health" />',
-  'settings-panel':
-    '<krn-settings-panel heading="Settings" [(open)]="open">Content</krn-settings-panel>',
-  'crud-toolbar':
-    '<krn-crud-toolbar><strong krnToolbarTitle>Workspaces</strong></krn-crud-toolbar>',
-  'bulk-actions': '<krn-bulk-actions [selectedCount]="3">Actions</krn-bulk-actions>',
-  'master-detail-layout':
-    '<krn-master-detail-layout><div krnMaster>List</div><div krnDetail>Detail</div></krn-master-detail-layout>',
-  'dashboard-widget': '<krn-dashboard-widget heading="Activation">Content</krn-dashboard-widget>',
-  'multi-step-form': '<krn-multi-step-form [steps]="steps">Content</krn-multi-step-form>',
-  'mobile-navigation': '<krn-mobile-navigation><a href="/">Home</a></krn-mobile-navigation>',
-  'responsive-application-shell':
-    '<krn-responsive-application-shell><header krnAppHeader>Header</header><main>Content</main></krn-responsive-application-shell>',
-};
-
-const COMPANION_EXAMPLE_SYMBOLS: Readonly<Record<string, readonly string[]>> = {
-  'app-shell': ['KrnHeader', 'KrnSidebar'],
-  'button-group': ['KrnButton'],
-  'toggle-group': ['KrnToggleButton'],
-  'form-field': ['KrnTextInput'],
-  'resizable-panels': ['KrnResizablePanel', 'KrnResizeHandle'],
-  'description-list': ['KrnDescriptionItem'],
-  timeline: ['KrnTimelineItem'],
-};
 
 const STATUS_DESCRIPTIONS: Readonly<Record<KernComponentStatus, string>> = {
   stable: 'Supported contract; the documented compatibility policy applies.',
@@ -146,7 +37,7 @@ const STATUS_DESCRIPTIONS: Readonly<Record<KernComponentStatus, string>> = {
 @Component({
   selector: 'kdocs-component-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, ComponentSpecimen, KrnBreadcrumbs, KrnCodeBlock, KrnCopyButton],
+  imports: [RouterLink, KernComponentSpecimen, KrnBreadcrumbs, KrnCodeBlock, KrnCopyButton],
   template: `
     @if (item(); as current) {
       <article class="page" [attr.data-component-page]="current.id">
@@ -245,7 +136,7 @@ const STATUS_DESCRIPTIONS: Readonly<Record<KernComponentStatus, string>> = {
             aria-label="Live component preview"
             [hidden]="workbenchTab() !== 'preview'"
           >
-            <kdocs-component-specimen [item]="current" />
+            <kshow-component-specimen [item]="current" />
           </div>
           <div
             id="code-panel"
@@ -255,8 +146,8 @@ const STATUS_DESCRIPTIONS: Readonly<Record<KernComponentStatus, string>> = {
           >
             <div class="code-intro">
               <div>
-                <span>Minimal Angular setup</span>
-                <strong>Copy, paste, then adapt.</strong>
+                <span>{{ agentExample()?.title }}</span>
+                <strong>Strict AOT verified against the packed npm artifact.</strong>
               </div>
               <krn-copy-button [value]="codeExample()">Copy example</krn-copy-button>
             </div>
@@ -423,6 +314,10 @@ export class ComponentPage {
     initialValue: this.route.snapshot.paramMap,
   });
   protected readonly item = computed(() => findKernComponent(this.params().get('id') ?? ''));
+  protected readonly agentExample = computed<KernAgentExample | null>(() => {
+    const current = this.item();
+    return current ? (findKernAgentExample(current.id) ?? null) : null;
+  });
   private readonly itemIndex = computed(() => {
     const current = this.item();
     return current ? KERN_CATALOG.findIndex((item) => item.id === current.id) : -1;
@@ -476,25 +371,10 @@ export class ComponentPage {
   protected codeExample(): string {
     const item = this.item();
     if (!item) return '';
-    const symbol = `Krn${item.name
-      .replace(/[^a-zA-Z0-9]+/g, ' ')
-      .split(' ')
-      .filter(Boolean)
-      .map((part) => part[0]?.toUpperCase() + part.slice(1))
-      .join('')}`;
-    const markup =
-      EXAMPLE_MARKUP[item.id] ??
-      (item.selector.startsWith('[')
-        ? `<button type="button" ${item.selector.slice(1, -1)}="Helpful detail">Help</button>`
-        : `<${item.selector}>Content</${item.selector}>`);
-    const symbols = [symbol, ...(COMPANION_EXAMPLE_SYMBOLS[item.id] ?? [])];
-    return `import { Component } from '@angular/core';
-import { ${symbols.join(', ')} } from '@kern-ui/angular';
-
-@Component({
-  imports: [${symbols.join(', ')}],
-  template: \`${markup}\`,
-})
-export class ProductView {}`;
+    const example = this.agentExample();
+    if (!example) {
+      throw new Error(`Missing compile-verified example for catalog component "${item.id}".`);
+    }
+    return example.code;
   }
 }

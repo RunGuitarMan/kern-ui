@@ -1,0 +1,516 @@
+{
+  "id": "data-table",
+  "name": "Data Table",
+  "category": "Data display",
+  "kind": "component",
+  "selector": "krn-data-table",
+  "selectors": ["krn-data-grid", "krn-data-table"],
+  "symbol": "KrnDataTable",
+  "canonicalSymbol": "KrnDataGrid",
+  "canonicalId": "data-grid",
+  "owner": "addon-grid",
+  "importPath": "@kern-ui/angular/addon-grid",
+  "aliases": {
+    "symbols": ["KrnDataGrid"],
+    "selectors": ["krn-data-grid"],
+    "componentIds": ["data-grid"]
+  },
+  "summary": "Data Table. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled",
+    "loading",
+    "empty",
+    "error",
+    "sorted",
+    "filtered",
+    "selected rows",
+    "virtualized",
+    "pinned columns"
+  ],
+  "lifecycle": {
+    "status": "beta",
+    "compatibility": "Available for controlled production evaluation; the contract may still be refined.",
+    "owner": "kern/data-display",
+    "evidenceProfile": "beta-promotion",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "hydration",
+      "keyboard",
+      "automated-a11y",
+      "manual-at",
+      "visual-regression",
+      "runtime-performance",
+      "consumer-harness"
+    ],
+    "rationale": "The alias follows the beta lifecycle and evidence requirements of the canonical Data Grid contract.",
+    "knownLimitations": [
+      "All Data Grid virtualization and grouping limitations also apply to Data Table.",
+      "The alias must not be treated as a separate native-table implementation."
+    ],
+    "promotionCriteria": [
+      "Public API, defaults, aliases and entrypoint ownership are reviewed.",
+      "SSR/hydration, keyboard, accessibility and visual evidence are linked.",
+      "Runtime scale limits and consumer testing contract are documented.",
+      "Migration impact is classified before lifecycle promotion."
+    ],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "data",
+      "property": "data",
+      "kind": "input",
+      "type": "ReadonlyArray<T>",
+      "required": true,
+      "defaultValue": "required",
+      "description": "Immutable data supplied by the consumer.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "columns",
+      "property": "columns",
+      "kind": "input",
+      "type": "ReadonlyArray<KrnDataColumn<T>>",
+      "required": true,
+      "defaultValue": "required",
+      "description": "Typed column definitions with stable keys.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "rowIdentity",
+      "property": "rowIdentity",
+      "kind": "input",
+      "type": "(row: T, index: number) => KrnDataRowKey",
+      "required": true,
+      "defaultValue": "required",
+      "description": "Returns a stable unique key for every source row occurrence.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "mode",
+      "property": "mode",
+      "kind": "input",
+      "type": "KrnDataGridMode | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Discriminated operating mode that selects the component data and interaction contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "labels",
+      "property": "labels",
+      "kind": "input",
+      "type": "Partial<KrnDataGridTranslations>",
+      "required": false,
+      "defaultValue": "{}",
+      "description": "Localized copy overrides for the component-owned interface text.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.dataGrid.ariaLabel",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "loading",
+      "property": "loading",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Prevents duplicate actions and exposes accessible busy state.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "error",
+      "property": "error",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Current failure message or error state exposed by asynchronous content.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "emptyLabel",
+      "property": "emptyLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.dataGrid.empty",
+      "description": "Accessible copy that explains the empty state.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "filterable",
+      "property": "filterable",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Enables the grid-owned text filtering interface.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "filterPlaceholder",
+      "property": "filterPlaceholder",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.dataGrid.filterPlaceholder",
+      "description": "Short hint displayed in the grid filter input before a query is entered.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "filterPredicate",
+      "property": "filterPredicate",
+      "kind": "input",
+      "type": "KrnDataFilterPredicate<T> | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Determines whether a row matches the current filter query.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "selectable",
+      "property": "selectable",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Enables row selection and the corresponding selected-key contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "expandable",
+      "property": "expandable",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controls whether the component applies the expandable behavior.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "expandedContent",
+      "property": "expandedContent",
+      "kind": "input",
+      "type": "(row: T) => string",
+      "required": false,
+      "defaultValue": "() => ''",
+      "description": "Template or projected content used to render expanded.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "expandedTemplate",
+      "property": "expandedTemplate",
+      "kind": "input",
+      "type": "TemplateRef<KrnDataRowContext<T>> | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Template or projected content used to render expanded.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "defaultCellTemplate",
+      "property": "defaultCellTemplate",
+      "kind": "input",
+      "type": "TemplateRef<KrnDataCellContext<T>> | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Template or projected content used to render default cell.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "defaultHeaderTemplate",
+      "property": "defaultHeaderTemplate",
+      "kind": "input",
+      "type": "TemplateRef<KrnDataHeaderContext<T>> | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Template or projected content used to render default header.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "resizable",
+      "property": "resizable",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Enables pointer and keyboard resizing for supported columns or panels.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "pagination",
+      "property": "pagination",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Enables client pagination or supplies the controlled paging configuration.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "compact",
+      "property": "compact",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Uses the reduced-density presentation intended for constrained data views.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "virtualize",
+      "property": "virtualize",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Enables fixed-height row virtualization for large data collections.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "viewportHeight",
+      "property": "viewportHeight",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "360",
+      "description": "Measured virtual viewport height used to determine visible rows.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "pageSize",
+      "property": "pageSize",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "10",
+      "description": "Maximum number of records requested or displayed on one page.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "columnChooser",
+      "property": "columnChooser",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Enables the grid-owned control for changing visible columns.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "filter",
+      "property": "filter",
+      "kind": "model",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Controlled filter state with a matching Angular model-change output.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "page",
+      "property": "page",
+      "kind": "model",
+      "type": "number",
+      "required": false,
+      "defaultValue": "1",
+      "description": "One-based controlled page index.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "selected",
+      "property": "selected",
+      "kind": "model",
+      "type": "ReadonlySet<KrnDataRowKey>",
+      "required": false,
+      "defaultValue": "new Set<KrnDataRowKey>()",
+      "description": "Controlled selected state, distinct from keyboard focus.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "expanded",
+      "property": "expanded",
+      "kind": "model",
+      "type": "ReadonlySet<KrnDataRowKey>",
+      "required": false,
+      "defaultValue": "new Set<KrnDataRowKey>()",
+      "description": "Controlled expanded state for a disclosure or hierarchical item.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "hiddenColumnKeys",
+      "property": "hiddenColumnKeys",
+      "kind": "model",
+      "type": "ReadonlySet<string>",
+      "required": false,
+      "defaultValue": "new Set<string>()",
+      "description": "Stable column keys excluded from the current grid presentation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "sortKey",
+      "property": "sortKey",
+      "kind": "model",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Stable column key that owns the current sort operation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "sortDirection",
+      "property": "sortDirection",
+      "kind": "model",
+      "type": "KrnDataSortDirection",
+      "required": false,
+      "defaultValue": "'asc'",
+      "description": "Current ascending, descending, or unsorted direction.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "queryChange",
+      "property": "queryChange",
+      "kind": "output",
+      "type": "KrnDataGridQuery",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the query change interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": [
+      "Arrow keys, Home, End, Page Up, and Page Down move the single roving grid focus.",
+      "Enter or F2 enters a cell action; Escape restores grid navigation.",
+      "Tab enters or leaves the table as one composite widget."
+    ],
+    "notes": [
+      "Data Table deliberately exposes grid semantics because it is an alias of Data Grid.",
+      "Stable row identity is mandatory across sorting, filtering, and paging.",
+      "Interactive cell content participates in managed action mode rather than the page tab sequence."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Typed controlled customer table",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Typed controlled customer table\n *\n * Provide typed rows, typed columns and stable domain identity.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDataTable, type KrnDataColumn, type KrnDataRowKey } from '@kern-ui/angular/addon-grid';\n\ninterface CustomerRow {\n  readonly id: string;\n  readonly name: string;\n  readonly owner: string;\n  readonly arr: number;\n}\n@Component({\n  selector: 'app-kern-data-table-agent-example',\n  standalone: true,\n  imports: [KrnDataTable],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-data-table\n      ariaLabel=\"Customer portfolio\"\n      [data]=\"rows\"\n      [columns]=\"columns\"\n      [rowIdentity]=\"rowIdentity\"\n      [(page)]=\"page\"\n      [(selected)]=\"selectedRows\"\n    />\n  `,\n})\nexport class KernDataTableAgentExample {\n  readonly rows: readonly CustomerRow[] = [\n    { id: 'cus-2048', name: 'Acme Europe', owner: 'Ada Lovelace', arr: 1800000 },\n    { id: 'cus-4096', name: 'Globex', owner: 'Grace Hopper', arr: 920000 },\n  ];\n\n  readonly columns: readonly KrnDataColumn<CustomerRow>[] = [\n    { key: 'name', label: 'Customer', sortable: true, priority: 'primary' },\n    { key: 'owner', label: 'Owner', sortable: true },\n    {\n      key: 'arr',\n      label: 'ARR',\n      align: 'end',\n      format: (value) =>\n        new Intl.NumberFormat('en-GB', {\n          style: 'currency',\n          currency: 'EUR',\n          maximumFractionDigits: 0,\n        }).format(value),\n    },\n  ];\n\n  readonly rowIdentity = (row: CustomerRow): KrnDataRowKey => row.id;\n\n  page = 1;\n\n  selectedRows: ReadonlySet<KrnDataRowKey> = new Set<KrnDataRowKey>();\n}\n\nvoid bootstrapApplication(KernDataTableAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/data-table.ts"
+    }
+  ],
+  "related": ["data-grid", "pagination", "badge", "status-badge", "chip", "tag"],
+  "keywords": [
+    "data-table",
+    "Data Table",
+    "Data display",
+    "krn-data-table",
+    "KrnDataTable",
+    "KrnDataGrid",
+    "table",
+    "data grid",
+    "tabular data",
+    "data",
+    "columns",
+    "rowIdentity",
+    "mode",
+    "labels",
+    "ariaLabel",
+    "loading",
+    "error",
+    "emptyLabel",
+    "filterable",
+    "filterPlaceholder",
+    "filterPredicate",
+    "selectable",
+    "expandable",
+    "expandedContent",
+    "expandedTemplate",
+    "defaultCellTemplate",
+    "defaultHeaderTemplate",
+    "resizable",
+    "pagination",
+    "compact",
+    "virtualize",
+    "viewportHeight",
+    "pageSize",
+    "columnChooser",
+    "filter",
+    "page",
+    "selected",
+    "expanded",
+    "hiddenColumnKeys",
+    "sortKey",
+    "sortDirection",
+    "queryChange"
+  ],
+  "guidance": {
+    "useWhen": "Use Data Table as the Data Grid alias when product language prefers table while retaining the same interactive contract.",
+    "avoidWhen": "Use a native table for read-only content that does not need grid navigation, selection, or virtualization."
+  },
+  "commonMistakes": [
+    "Do not omit required inputs: `data`, `columns`, `rowIdentity`.",
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Data Table is an alias of Data Grid; follow the same stable rowIdentity contract."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/data-table",
+    "json": "components/data-table.json",
+    "markdown": "components/data-table.md"
+  }
+}

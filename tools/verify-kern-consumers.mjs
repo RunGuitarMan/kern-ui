@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { cp, mkdir, mkdtemp, readFile, readdir, rm, stat } from 'node:fs/promises';
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import { gzipSync } from 'node:zlib';
 import { basename, join, relative, resolve, sep } from 'node:path';
 
@@ -28,6 +28,7 @@ function run(command, args, options = {}) {
       FORCE_COLOR: '0',
     },
     maxBuffer: 20 * 1024 * 1024,
+    input: options.input,
   });
 
   if (result.status !== 0) {
@@ -71,6 +72,29 @@ function exportedFiles(conditions) {
   return Object.values(conditions).flatMap((value) => exportedFiles(value));
 }
 
+async function packageFiles(directory, root = directory) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const nested = await Promise.all(
+    entries.map(async (entry) => {
+      const path = join(directory, entry.name);
+      if (entry.isDirectory()) return packageFiles(path, root);
+      return entry.isFile() ? [relative(root, path).split(sep).join('/')] : [];
+    }),
+  );
+  return nested.flat();
+}
+
+function exportTargetExists(files, target) {
+  const relativeTarget = target.slice(2);
+  if (!relativeTarget.includes('*')) return files.has(relativeTarget);
+  const expression = relativeTarget
+    .split('*')
+    .map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    .join('.+');
+  const matcher = new RegExp(`^${expression}$`);
+  return [...files].some((path) => matcher.test(path));
+}
+
 async function verifyInstalledPackage(consumerRoot, requiredSubpaths) {
   const installedRoot = join(consumerRoot, 'node_modules/@kern-ui/angular');
   const manifestPath = join(installedRoot, 'package.json');
@@ -79,6 +103,7 @@ async function verifyInstalledPackage(consumerRoot, requiredSubpaths) {
   }
 
   const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+  const installedFiles = new Set(await packageFiles(installedRoot));
   if (manifest.name !== '@kern-ui/angular') {
     fail(`Packed manifest has unexpected name "${manifest.name ?? '<missing>'}".`);
   }
@@ -106,8 +131,9 @@ async function verifyInstalledPackage(consumerRoot, requiredSubpaths) {
         fail(`Packed export "${subpath}" has non-relative target "${target}".`);
         continue;
       }
-      if (!existsSync(packagePath(installedRoot, target))) {
-        fail(`Packed export "${subpath}" references missing file "${target}".`);
+      packagePath(installedRoot, target.replaceAll('*', '__kern_export_pattern__'));
+      if (!exportTargetExists(installedFiles, target)) {
+        fail(`Packed export "${subpath}" matches no packaged file for "${target}".`);
       }
     }
   }
@@ -116,6 +142,29 @@ async function verifyInstalledPackage(consumerRoot, requiredSubpaths) {
     fail('Packed manifest does not declare its schematics collection.');
   } else if (!existsSync(packagePath(installedRoot, manifest.schematics))) {
     fail(`Packed schematics collection is missing: ${manifest.schematics}.`);
+  }
+
+  const mcpExecutable = manifest.bin?.['kern-mcp'];
+  if (typeof mcpExecutable !== 'string' || !existsSync(packagePath(installedRoot, mcpExecutable))) {
+    fail('Packed manifest must expose the self-contained kern-mcp executable.');
+  } else {
+    const output = run(process.execPath, [packagePath(installedRoot, mcpExecutable)], {
+      cwd: consumerRoot,
+      input: `${JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'initialize',
+        params: { protocolVersion: '2025-06-18' },
+      })}\n`,
+    });
+    const initialized = JSON.parse(output);
+    if (
+      initialized.id !== 1 ||
+      initialized.result?.serverInfo?.name !== 'kern-agent-contract' ||
+      initialized.result?.serverInfo?.version !== manifest.version
+    ) {
+      fail('Packed kern-mcp executable did not initialize against its bundled manifest.');
+    }
   }
 
   const styleExports = Object.keys(manifest.exports ?? {}).filter((subpath) =>
@@ -303,6 +352,67 @@ async function main() {
         throw new Error(`Consumer fixture tool is missing: ${relative(consumerRoot, toolPath)}.`);
       }
     }
+
+    for (const [schematic, name, options] of [
+      ['typed-form', 'schematic-form', []],
+      ['data-grid', 'schematic-grid', ['--mode', 'controlled']],
+      ['crud', 'schematic-crud', []],
+    ]) {
+      run(
+        process.execPath,
+        [
+          ngCliPath,
+          'generate',
+          `@kern-ui/angular:${schematic}`,
+          name,
+          '--project',
+          'button',
+          '--interactive=false',
+          ...options,
+        ],
+        { cwd: consumerRoot },
+      );
+    }
+    const generatedEntrypoint = join(consumerRoot, 'src/generated-schematics.ts');
+    await writeFile(
+      generatedEntrypoint,
+      `import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { SchematicCrudComponent } from './app/schematic-crud/schematic-crud.component';
+import { SchematicFormComponent } from './app/schematic-form/schematic-form.component';
+import { SchematicGridComponent } from './app/schematic-grid/schematic-grid.component';
+
+@Component({
+  selector: 'app-root',
+  imports: [SchematicCrudComponent, SchematicFormComponent, SchematicGridComponent],
+  template: \`
+    <app-schematic-form />
+    <app-schematic-grid />
+    <app-schematic-crud />
+  \`,
+})
+class GeneratedSchematicsConsumer {}
+
+void bootstrapApplication(GeneratedSchematicsConsumer);
+`,
+      'utf8',
+    );
+    run(
+      process.execPath,
+      [
+        ngCliPath,
+        'build',
+        'button',
+        '--configuration',
+        'production',
+        '--browser',
+        'src/generated-schematics.ts',
+        '--output-path',
+        'dist/generated-schematics',
+        '--progress=false',
+      ],
+      { cwd: consumerRoot },
+    );
 
     run(process.execPath, [tscCliPath, '-p', 'tsconfig.json', '--noEmit', '--pretty', 'false'], {
       cwd: consumerRoot,

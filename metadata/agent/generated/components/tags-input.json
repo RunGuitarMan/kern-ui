@@ -1,0 +1,299 @@
+{
+  "id": "tags-input",
+  "name": "Tags Input",
+  "category": "Forms",
+  "kind": "component",
+  "selector": "krn-tags-input",
+  "selectors": ["krn-tags-input"],
+  "symbol": "KrnTagsInput",
+  "canonicalSymbol": "KrnTagsInput",
+  "canonicalId": "tags-input",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Tags Input. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled",
+    "filled",
+    "empty"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/forms",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "id",
+      "property": "id",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Stable identifier value used by the id contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.forms.tags",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "inputLabel",
+      "property": "inputLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.forms.addTag",
+      "description": "Human-readable copy for the input state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "placeholder",
+      "property": "placeholder",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.forms.addTagPlaceholder",
+      "description": "Short input hint shown only while no value is present.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "separatorKeys",
+      "property": "separatorKeys",
+      "kind": "input",
+      "type": "ReadonlyArray<string>",
+      "required": false,
+      "defaultValue": "['Enter', ',']",
+      "description": "Stable identifier value used by the separator contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "maxTags",
+      "property": "maxTags",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "Number.POSITIVE_INFINITY",
+      "description": "Upper or lower bound applied to the tags value.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "allowDuplicates",
+      "property": "allowDuplicates",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controls whether the component applies the allow duplicates behavior.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "addOnBlur",
+      "property": "addOnBlur",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Commits a valid draft tag when the text input loses focus.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "disabled",
+      "property": "disabled",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Prevents user interaction and participates in the disabled-state contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "readonly",
+      "property": "readOnly",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Keeps the value perceivable while preventing user edits.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "required",
+      "property": "required",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Marks the value as required and participates in Angular Forms validation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "invalid",
+      "property": "invalid",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Exposes an externally controlled invalid presentation state.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "valueChange",
+      "property": "valueChange",
+      "kind": "output",
+      "type": "ReadonlyArray<string>",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the value change interaction completes.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "tagAdded",
+      "property": "tagAdded",
+      "kind": "output",
+      "type": "string",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the tag added interaction completes.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "tagRemoved",
+      "property": "tagRemoved",
+      "kind": "output",
+      "type": "string",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the tag removed interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": true,
+    "validator": true,
+    "valueType": "ReadonlyArray<string>",
+    "reactiveForms": true,
+    "templateDrivenForms": true,
+    "stateInputs": ["disabled", "readonly", "required", "invalid"],
+    "notes": [
+      "Works with Angular Forms through ControlValueAccessor.",
+      "Angular validator state and explicit KERN state inputs are combined."
+    ]
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": [
+      "Tab focuses",
+      "Arrow keys operate grouped controls",
+      "Escape cancels transient UI"
+    ],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Typed account tags",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Typed account tags\n *\n * Bind an immutable tag array and provide an explicit creation label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTagsInput } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-tags-input-agent-example',\n  standalone: true,\n  imports: [KrnTagsInput, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tags-input label=\"Account tags\" placeholder=\"Add a tag\" [formControl]=\"control\" />\n  `,\n})\nexport class KernTagsInputAgentExample {\n  readonly control = new FormControl<readonly string[]>(['enterprise', 'renewal-q3'], {\n    nonNullable: true,\n  });\n}\n\nvoid bootstrapApplication(KernTagsInputAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/tags-input.ts"
+    }
+  ],
+  "related": ["form-field", "label", "hint", "validation-message"],
+  "keywords": [
+    "tags-input",
+    "Tags Input",
+    "Forms",
+    "krn-tags-input",
+    "KrnTagsInput",
+    "id",
+    "ariaLabel",
+    "inputLabel",
+    "placeholder",
+    "separatorKeys",
+    "maxTags",
+    "allowDuplicates",
+    "addOnBlur",
+    "disabled",
+    "readonly",
+    "required",
+    "invalid",
+    "valueChange",
+    "tagAdded",
+    "tagRemoved"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Do not manually duplicate value and disabled state when Angular Forms owns the control."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify reactive-form value, touched, disabled, required and invalid state.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/tags-input",
+    "json": "components/tags-input.json",
+    "markdown": "components/tags-input.md"
+  }
+}

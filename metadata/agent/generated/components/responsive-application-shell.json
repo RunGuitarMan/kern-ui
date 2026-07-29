@@ -1,0 +1,169 @@
+{
+  "id": "responsive-application-shell",
+  "name": "Responsive Application Shell",
+  "category": "Patterns",
+  "kind": "component",
+  "selector": "krn-responsive-application-shell",
+  "selectors": ["krn-responsive-application-shell"],
+  "symbol": "KrnResponsiveApplicationShell",
+  "canonicalSymbol": "KrnResponsiveApplicationShell",
+  "canonicalId": "responsive-application-shell",
+  "owner": "patterns",
+  "importPath": "@kern-ui/angular/patterns",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Responsive Application Shell. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "loading",
+    "empty",
+    "error",
+    "success"
+  ],
+  "lifecycle": {
+    "status": "recipe",
+    "compatibility": "Adaptable composition whose primitive dependencies have their own lifecycle.",
+    "owner": "kern/patterns",
+    "evidenceProfile": "recipe-validation",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "responsive",
+      "automated-a11y",
+      "adaptation-guidance"
+    ],
+    "rationale": "Adaptable composition whose primitive dependencies have their own lifecycle.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "navigationOpen",
+      "property": "navigationOpen",
+      "kind": "model",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controlled navigation open state with a matching Angular model-change output.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "mainId",
+      "property": "mainId",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "'main-content'",
+      "description": "Stable identifier value used by the main contract.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [
+    {
+      "name": "krnAppHeader",
+      "selector": "[krnAppHeader]",
+      "required": false,
+      "description": "Projects content matching [krnAppHeader]."
+    },
+    {
+      "name": "krnAppNavigation",
+      "selector": "[krnAppNavigation]",
+      "required": false,
+      "description": "Projects content matching [krnAppNavigation]."
+    },
+    {
+      "name": "default-3",
+      "selector": "*",
+      "required": false,
+      "description": "Projects default component content."
+    },
+    {
+      "name": "krnAppMobileNavigation",
+      "selector": "[krnAppMobileNavigation]",
+      "required": false,
+      "description": "Projects content matching [krnAppMobileNavigation]."
+    }
+  ],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Controlled responsive product shell",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Controlled responsive product shell\n *\n * Compose header, navigation and mobile fallback with owned disclosure state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnResponsiveApplicationShell } from '@kern-ui/angular/patterns';\n\n@Component({\n  selector: 'app-kern-responsive-application-shell-agent-example',\n  standalone: true,\n  imports: [KrnResponsiveApplicationShell],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-responsive-application-shell mainId=\"main-content\" [(navigationOpen)]=\"navigationOpen\">\n      <header krnAppHeader>\n        <button type=\"button\" (click)=\"navigationOpen = true\">Open navigation</button>\n        KERN Console\n      </header>\n      <nav krnAppNavigation aria-label=\"Primary\">Customers · Reports · Settings</nav>\n      <main id=\"main-content\">\n        <h1>Customer portfolio</h1>\n      </main>\n      <nav krnAppMobileNavigation aria-label=\"Mobile primary navigation\">\n        Home · Tasks · Account\n      </nav>\n    </krn-responsive-application-shell>\n  `,\n})\nexport class KernResponsiveApplicationShellAgentExample {\n  navigationOpen = false;\n}\n\nvoid bootstrapApplication(KernResponsiveApplicationShellAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/responsive-application-shell.ts"
+    }
+  ],
+  "related": ["user-menu", "notification-center", "global-search", "filter-bar"],
+  "keywords": [
+    "responsive-application-shell",
+    "Responsive Application Shell",
+    "Patterns",
+    "krn-responsive-application-shell",
+    "KrnResponsiveApplicationShell",
+    "navigationOpen",
+    "mainId"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/responsive-application-shell",
+    "json": "components/responsive-application-shell.json",
+    "markdown": "components/responsive-application-shell.md"
+  }
+}

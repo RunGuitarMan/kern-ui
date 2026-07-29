@@ -3,10 +3,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   ViewEncapsulation,
 } from '@angular/core';
 
+import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnLayoutSpace, KrnResponsiveBreakpoint } from './layout.types';
 import { krnCssLength } from './layout.types';
 
@@ -307,11 +309,12 @@ export class KrnAspectRatio {
   `,
 })
 export class KrnScrollArea {
+  private readonly translations = inject(KRN_TRANSLATIONS);
   readonly axis = input<'vertical' | 'horizontal' | 'both'>('vertical');
   readonly maxBlockSize = input<KrnLayoutSpace>('100%');
   readonly maxInlineSize = input<KrnLayoutSpace>('100%');
   readonly keyboardAccessible = input(true, { transform: booleanAttribute });
-  readonly ariaLabel = input<string | null>('Scrollable content');
+  readonly ariaLabel = input<string | null>(this.translations.layout.scrollableContent);
   readonly scrollbar = input<'auto' | 'stable' | 'hidden'>('auto');
 
   protected readonly resolvedMaxBlockSize = computed(() =>

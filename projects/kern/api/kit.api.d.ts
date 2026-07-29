@@ -111,6 +111,7 @@ declare class KrnHeader {
   >;
 }
 declare class KrnSidebar {
+  private readonly translations;
   readonly collapsed: _angular_core.ModelSignal<boolean>;
   readonly collapsedMode: _angular_core.InputSignal<'hidden' | 'icons'>;
   readonly width: _angular_core.InputSignal<KrnLayoutSpace>;
@@ -141,6 +142,7 @@ declare class KrnSidebar {
   >;
 }
 declare class KrnNavigationRail {
+  private readonly translations;
   readonly expanded: _angular_core.ModelSignal<boolean>;
   readonly width: _angular_core.InputSignal<KrnLayoutSpace>;
   readonly expandedWidth: _angular_core.InputSignal<KrnLayoutSpace>;
@@ -385,6 +387,7 @@ declare class KrnAspectRatio {
   >;
 }
 declare class KrnScrollArea {
+  private readonly translations;
   readonly axis: _angular_core.InputSignal<'horizontal' | 'vertical' | 'both'>;
   readonly maxBlockSize: _angular_core.InputSignal<KrnLayoutSpace>;
   readonly maxInlineSize: _angular_core.InputSignal<KrnLayoutSpace>;
@@ -533,6 +536,7 @@ declare class KrnResizablePanel {
   >;
 }
 declare class KrnResizeHandle {
+  private readonly translations;
   private readonly parent;
   protected readonly managedOrientation: _angular_core.WritableSignal<KrnLayoutAxis>;
   protected readonly managedValue: _angular_core.WritableSignal<number>;
@@ -1149,6 +1153,15 @@ type KrnIdentityMatcher<T> = (left: T, right: T) => boolean;
 type KrnOptionStringifier<T> = (option: KrnSelectOption<T>) => string;
 type KrnOptionTrackBy<T> = (option: KrnSelectOption<T>, index: number) => unknown;
 type KrnOptionDisabledHandler<T> = (option: KrnSelectOption<T>) => boolean;
+/**
+ * Loading contract for option-backed controls.
+ *
+ * `ready` includes both populated and genuinely empty results. Consumers keep
+ * the previous options out of the interaction model while a request is loading
+ * or has failed, avoiding accidental selection of stale data.
+ */
+type KrnOptionsState = 'ready' | 'loading' | 'error';
+type KrnOptionFilter<T> = (option: KrnSelectOption<T>, query: string) => boolean;
 interface KrnSegmentOption<T = string> {
   readonly value: T;
   readonly label: string;
@@ -1856,8 +1869,12 @@ declare class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
   readonly id: _angular_core.InputSignal<string>;
   readonly placeholder: _angular_core.InputSignal<string>;
   readonly emptyText: _angular_core.InputSignal<string>;
+  readonly loadingText: _angular_core.InputSignal<string>;
+  readonly errorText: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly options: _angular_core.InputSignal<readonly KrnSelectOption<T>[]>;
+  /** Controls whether options are interactive or replaced by an announced loading/error state. */
+  readonly optionsState: _angular_core.InputSignal<KrnOptionsState>;
   readonly identityMatcher: _angular_core.InputSignal<KrnIdentityMatcher<T>>;
   readonly trackBy: _angular_core.InputSignal<KrnOptionTrackBy<T>>;
   readonly stringify: _angular_core.InputSignal<KrnOptionStringifier<T>>;
@@ -1896,8 +1913,11 @@ declare class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
       id: { alias: 'id'; required: false; isSignal: true };
       placeholder: { alias: 'placeholder'; required: false; isSignal: true };
       emptyText: { alias: 'emptyText'; required: false; isSignal: true };
+      loadingText: { alias: 'loadingText'; required: false; isSignal: true };
+      errorText: { alias: 'errorText'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
       options: { alias: 'options'; required: true; isSignal: true };
+      optionsState: { alias: 'optionsState'; required: false; isSignal: true };
       identityMatcher: { alias: 'identityMatcher'; required: false; isSignal: true };
       trackBy: { alias: 'trackBy'; required: false; isSignal: true };
       stringify: { alias: 'stringify'; required: false; isSignal: true };
@@ -1922,8 +1942,12 @@ declare class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> 
   readonly id: _angular_core.InputSignal<string>;
   readonly placeholder: _angular_core.InputSignal<string>;
   readonly emptyText: _angular_core.InputSignal<string>;
+  readonly loadingText: _angular_core.InputSignal<string>;
+  readonly errorText: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly options: _angular_core.InputSignal<readonly KrnSelectOption<T>[]>;
+  /** Controls whether options are interactive or replaced by an announced loading/error state. */
+  readonly optionsState: _angular_core.InputSignal<KrnOptionsState>;
   readonly identityMatcher: _angular_core.InputSignal<KrnIdentityMatcher<T>>;
   readonly trackBy: _angular_core.InputSignal<KrnOptionTrackBy<T>>;
   readonly stringify: _angular_core.InputSignal<KrnOptionStringifier<T>>;
@@ -1964,8 +1988,11 @@ declare class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> 
       id: { alias: 'id'; required: false; isSignal: true };
       placeholder: { alias: 'placeholder'; required: false; isSignal: true };
       emptyText: { alias: 'emptyText'; required: false; isSignal: true };
+      loadingText: { alias: 'loadingText'; required: false; isSignal: true };
+      errorText: { alias: 'errorText'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
       options: { alias: 'options'; required: true; isSignal: true };
+      optionsState: { alias: 'optionsState'; required: false; isSignal: true };
       identityMatcher: { alias: 'identityMatcher'; required: false; isSignal: true };
       trackBy: { alias: 'trackBy'; required: false; isSignal: true };
       stringify: { alias: 'stringify'; required: false; isSignal: true };
@@ -1996,6 +2023,7 @@ declare abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> 
   private readonly comboboxDirective;
   private readonly locale;
   private readonly translations;
+  private readonly queryEditing;
   protected readonly defaultAutocompleteMode: KrnAutocompleteMode;
   protected readonly defaultAllowCustomValue: boolean;
   protected readonly autocompleteModeInput: _angular_core.InputSignal<
@@ -2008,9 +2036,17 @@ declare abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> 
   readonly id: _angular_core.InputSignal<string>;
   readonly placeholder: _angular_core.InputSignal<string>;
   readonly emptyText: _angular_core.InputSignal<string>;
+  readonly loadingText: _angular_core.InputSignal<string>;
+  readonly errorText: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly toggleLabel: _angular_core.InputSignal<string>;
   readonly options: _angular_core.InputSignal<readonly KrnSelectOption<string>[]>;
+  /** Controls whether options are interactive or replaced by an announced loading/error state. */
+  readonly optionsState: _angular_core.InputSignal<KrnOptionsState>;
+  /** Set to false when the consumer filters options remotely in response to queryChange. */
+  readonly filterLocally: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Overrides the default case-insensitive local option filter. */
+  readonly optionFilter: _angular_core.InputSignal<KrnOptionFilter<string> | null>;
   protected readonly autocompleteMode: _angular_core.Signal<KrnAutocompleteMode>;
   protected readonly allowCustomValue: _angular_core.Signal<boolean>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -2019,6 +2055,8 @@ declare abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> 
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly open: _angular_core.ModelSignal<boolean>;
   readonly valueChange: _angular_core.OutputEmitterRef<string>;
+  /** Emits every user query so remote option sources can load and replace options. */
+  readonly queryChange: _angular_core.OutputEmitterRef<string>;
   readonly optionSelected: _angular_core.OutputEmitterRef<KrnSelectOption<string>>;
   protected readonly query: _angular_core.WritableSignal<string>;
   protected readonly a11y: KrnControlA11y;
@@ -2040,6 +2078,7 @@ declare abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> 
   protected onEscape(event: Event): void;
   protected toggleOptions(input: HTMLInputElement): void;
   private restoreCommittedQuery;
+  private setQuery;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnEditableComboboxBase, never>;
   static ɵdir: _angular_core.ɵɵDirectiveDeclaration<
     KrnEditableComboboxBase,
@@ -2051,16 +2090,26 @@ declare abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> 
       id: { alias: 'id'; required: false; isSignal: true };
       placeholder: { alias: 'placeholder'; required: false; isSignal: true };
       emptyText: { alias: 'emptyText'; required: false; isSignal: true };
+      loadingText: { alias: 'loadingText'; required: false; isSignal: true };
+      errorText: { alias: 'errorText'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
       toggleLabel: { alias: 'toggleLabel'; required: false; isSignal: true };
       options: { alias: 'options'; required: true; isSignal: true };
+      optionsState: { alias: 'optionsState'; required: false; isSignal: true };
+      filterLocally: { alias: 'filterLocally'; required: false; isSignal: true };
+      optionFilter: { alias: 'optionFilter'; required: false; isSignal: true };
       disabled: { alias: 'disabled'; required: false; isSignal: true };
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       required: { alias: 'required'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
       open: { alias: 'open'; required: false; isSignal: true };
     },
-    { open: 'openChange'; valueChange: 'valueChange'; optionSelected: 'optionSelected' },
+    {
+      open: 'openChange';
+      valueChange: 'valueChange';
+      queryChange: 'queryChange';
+      optionSelected: 'optionSelected';
+    },
     never,
     never,
     true,
@@ -2718,6 +2767,15 @@ declare class KrnDropUpload extends KrnUploadBase {
   >;
 }
 
+/**
+ * State of a branch whose children are supplied asynchronously.
+ *
+ * Omit the state for a leaf or a branch whose `children` are already the
+ * complete source of truth. Use `idle` before the first request, `loading`
+ * while a request is in flight, and `error` to expose a retryable failure.
+ */
+type KrnTreeChildrenState = 'idle' | 'loading' | 'error';
+
 type KrnNavigationOrientation = 'horizontal' | 'vertical';
 interface KrnBreadcrumbItem {
   readonly label: string;
@@ -2755,6 +2813,8 @@ interface KrnContextMenuItem extends KrnNavigationItem {
 }
 interface KrnTreeNavigationItem extends KrnNavigationItem {
   readonly children?: readonly KrnTreeNavigationItem[];
+  /** Describes an expandable navigation item whose children are loaded by the consumer. */
+  readonly childrenState?: KrnTreeChildrenState;
 }
 interface KrnCommandItem extends KrnNavigationItem {
   readonly group?: string;
@@ -2851,9 +2911,17 @@ declare class KrnPagination {
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly previousLabel: _angular_core.InputSignal<string>;
   readonly nextLabel: _angular_core.InputSignal<string>;
+  /** Backward-compatible `{page}` template. */
   readonly pageLabel: _angular_core.InputSignal<string>;
+  /** Typed alternative to `pageLabel` for locale-specific grammar. */
+  readonly pageLabelFormatter: _angular_core.InputSignal<((page: number) => string) | undefined>;
   readonly emptyLabel: _angular_core.InputSignal<string>;
+  /** Backward-compatible `{start}`, `{end}`, and `{total}` template. */
   readonly rangeLabel: _angular_core.InputSignal<string>;
+  /** Typed alternative to `rangeLabel` for locale-specific grammar. */
+  readonly rangeLabelFormatter: _angular_core.InputSignal<
+    ((start: number, end: number, total: number) => string) | undefined
+  >;
   protected readonly safePageSize: _angular_core.Signal<number>;
   protected readonly pageCount: _angular_core.Signal<number>;
   protected readonly currentPage: _angular_core.Signal<number>;
@@ -2877,8 +2945,10 @@ declare class KrnPagination {
       previousLabel: { alias: 'previousLabel'; required: false; isSignal: true };
       nextLabel: { alias: 'nextLabel'; required: false; isSignal: true };
       pageLabel: { alias: 'pageLabel'; required: false; isSignal: true };
+      pageLabelFormatter: { alias: 'pageLabelFormatter'; required: false; isSignal: true };
       emptyLabel: { alias: 'emptyLabel'; required: false; isSignal: true };
       rangeLabel: { alias: 'rangeLabel'; required: false; isSignal: true };
+      rangeLabelFormatter: { alias: 'rangeLabelFormatter'; required: false; isSignal: true };
     },
     { page: 'pageChange' },
     never,
@@ -3098,12 +3168,16 @@ declare class KrnTreeNavigation {
   readonly indent: _angular_core.InputSignal<string>;
   readonly showGuides: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly itemSelected: _angular_core.OutputEmitterRef<KrnTreeNavigationItem>;
+  /** Requests children when an unloaded item is expanded or its failed request is retried. */
+  readonly loadChildren: _angular_core.OutputEmitterRef<KrnTreeNavigationItem>;
   protected readonly treeItems: _angular_core.Signal<readonly KrnTreeNavigationItem[]>;
   private readonly visibleTreeItems;
   private readonly focusableTreeItems;
   private readonly tabStopId;
   constructor();
   protected isExpanded(id: string): boolean;
+  protected isExpandable(item: KrnTreeNavigationItem): boolean;
+  protected nodeStateLabel(item: KrnTreeNavigationItem): string | null;
   protected toggle(id: string): void;
   protected toggleFromPointer(id: string): void;
   protected treeGroupId(id: string): string;
@@ -3117,6 +3191,7 @@ declare class KrnTreeNavigation {
   private findParent;
   private containsId;
   private firstFocusableVisibleDescendant;
+  private requestChildren;
   private enabledParent;
   private focusItem;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnTreeNavigation, never>;
@@ -3136,6 +3211,7 @@ declare class KrnTreeNavigation {
       selectedId: 'selectedIdChange';
       expandedIds: 'expandedIdsChange';
       itemSelected: 'itemSelected';
+      loadChildren: 'loadChildren';
     },
     never,
     never,
@@ -3249,11 +3325,15 @@ declare class KrnSkipLink {
 
 interface KrnCommandPaletteLabels {
   readonly search: string;
+  /** Backward-compatible template containing the `{query}` token. */
   readonly noResults: string;
+  readonly formatNoResults?: (query: string) => string;
   readonly navigate: string;
   readonly select: string;
   readonly availableOne: string;
+  /** Backward-compatible template containing the `{count}` token. */
   readonly availableMany: string;
+  readonly formatAvailableMany?: (count: number) => string;
 }
 declare class KrnCommandPalette {
   private readonly platform;
@@ -4328,6 +4408,8 @@ interface KrnTreeNode {
   readonly id: string;
   readonly label: string;
   readonly children?: readonly KrnTreeNode[];
+  /** Describes an expandable node whose children are loaded by the consumer. */
+  readonly childrenState?: KrnTreeChildrenState;
   readonly disabled?: boolean;
 }
 declare class KrnTree {
@@ -4340,13 +4422,18 @@ declare class KrnTree {
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly selected: _angular_core.ModelSignal<string>;
   readonly expanded: _angular_core.ModelSignal<ReadonlySet<string>>;
+  /** Requests children when an unloaded node is expanded or its failed request is retried. */
+  readonly loadChildren: _angular_core.OutputEmitterRef<KrnTreeNode>;
   protected readonly validatedNodes: _angular_core.Signal<readonly KrnTreeNode[]>;
   private readonly visibleNodes;
   private readonly focusableNodes;
   protected activate(node: KrnTreeNode): void;
+  protected isExpandable(node: KrnTreeNode): boolean;
+  protected nodeStateLabel(node: KrnTreeNode): string | null;
   protected isTabStop(node: KrnTreeNode): boolean;
   protected onKeydown(event: KeyboardEvent, node: KrnTreeNode): void;
   private toggle;
+  private requestChildren;
   private firstFocusableVisibleDescendant;
   private enabledParent;
   private focusNode;
@@ -4362,7 +4449,7 @@ declare class KrnTree {
       selected: { alias: 'selected'; required: false; isSignal: true };
       expanded: { alias: 'expanded'; required: false; isSignal: true };
     },
-    { selected: 'selectedChange'; expanded: 'expandedChange' },
+    { selected: 'selectedChange'; expanded: 'expandedChange'; loadChildren: 'loadChildren' },
     never,
     never,
     true,
@@ -4675,8 +4762,10 @@ export type {
   KrnNavigationItem,
   KrnNavigationOrientation,
   KrnOptionDisabledHandler,
+  KrnOptionFilter,
   KrnOptionStringifier,
   KrnOptionTrackBy,
+  KrnOptionsState,
   KrnOrientation,
   KrnOverlayCloseReason,
   KrnOverlayPosition,
@@ -4699,6 +4788,7 @@ export type {
   KrnToastRecord,
   KrnTocItem,
   KrnTone,
+  KrnTreeChildrenState,
   KrnTreeNavigationItem,
   KrnTreeNode,
   KrnUploadRejection,

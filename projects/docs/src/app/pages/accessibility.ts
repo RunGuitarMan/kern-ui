@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KERN_COVERAGE } from '@kern-ui/showcase';
-import { KrnAlert, KrnBadge, KrnCodeBlock, KrnPageHeader } from '@kern-ui/angular';
+import { KrnAlert, KrnBadge, KrnCodeBlock } from '@kern-ui/angular/kit';
+import { KrnPageHeader } from '@kern-ui/angular/patterns';
 
 @Component({
   selector: 'kdocs-accessibility-page',

@@ -4,6 +4,10 @@ import { defineConfig, devices } from '@playwright/test';
 
 const docsUrl = 'http://localhost:4200';
 const labUrl = 'http://localhost:4201';
+const chromiumExecutablePath = process.env['PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH']?.trim();
+const chromiumLaunchOptions = chromiumExecutablePath
+  ? { launchOptions: { executablePath: chromiumExecutablePath } }
+  : {};
 
 export default defineConfig({
   testDir: './tests',
@@ -29,6 +33,7 @@ export default defineConfig({
     ...devices['Desktop Chrome'],
     baseURL: docsUrl,
     browserName: 'chromium',
+    ...chromiumLaunchOptions,
     colorScheme: 'light',
     locale: 'en-US',
     serviceWorkers: 'block',
@@ -70,6 +75,16 @@ export default defineConfig({
       },
     },
     {
+      name: 'performance',
+      testMatch: /performance\/.*\.spec\.ts/,
+      retries: 0,
+      workers: 1,
+      use: {
+        baseURL: labUrl,
+        viewport: { width: 1440, height: 1000 },
+      },
+    },
+    {
       name: 'cross-browser-chromium',
       testMatch: /cross-browser\/.*\.spec\.ts/,
       use: {
@@ -85,6 +100,7 @@ export default defineConfig({
         ...devices['Desktop Firefox'],
         baseURL: docsUrl,
         browserName: 'firefox',
+        launchOptions: {},
       },
     },
     {
@@ -94,6 +110,7 @@ export default defineConfig({
         ...devices['Desktop Safari'],
         baseURL: docsUrl,
         browserName: 'webkit',
+        launchOptions: {},
       },
     },
   ],

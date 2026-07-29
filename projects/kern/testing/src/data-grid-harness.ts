@@ -79,7 +79,7 @@ export class KrnDataGridRowHarness extends ComponentHarness {
   }
 
   private readonly cells = this.locatorForAll(
-    'td:not(.selection-cell):not(.expand-cell), [role="gridcell"]:not(.selection-cell)',
+    'td:not(.selection-cell):not(.expand-cell), [role="gridcell"]:not(.selection-cell):not(.expand-cell)',
   );
   private readonly selection = this.locatorForOptional('.selection-cell input[type="checkbox"]');
   private readonly expansion = this.locatorForOptional('.expand-cell button');

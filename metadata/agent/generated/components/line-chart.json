@@ -1,0 +1,276 @@
+{
+  "id": "line-chart",
+  "name": "Line Chart",
+  "category": "Data display",
+  "kind": "component",
+  "selector": "krn-line-chart",
+  "selectors": ["krn-line-chart"],
+  "symbol": "KrnLineChart",
+  "canonicalSymbol": "KrnLineChart",
+  "canonicalId": "line-chart",
+  "owner": "addon-charts",
+  "importPath": "@kern-ui/angular/addon-charts",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Line Chart. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled"
+  ],
+  "lifecycle": {
+    "status": "beta",
+    "compatibility": "Available for controlled production evaluation; the contract may still be refined.",
+    "owner": "kern/data-display",
+    "evidenceProfile": "beta-promotion",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "hydration",
+      "keyboard",
+      "automated-a11y",
+      "manual-at",
+      "visual-regression",
+      "runtime-performance",
+      "consumer-harness"
+    ],
+    "rationale": "The accessible trend primitive remains beta while scale, multi-series direction, and manual assistive-technology evidence mature.",
+    "knownLimitations": [
+      "The primitive does not yet provide multiple series, axes customization, zoom, or large-series virtualization.",
+      "Consumers must verify label density and value formatting with production data."
+    ],
+    "promotionCriteria": [
+      "Public API, defaults, aliases and entrypoint ownership are reviewed.",
+      "SSR/hydration, keyboard, accessibility and visual evidence are linked.",
+      "Runtime scale limits and consumer testing contract are documented.",
+      "Migration impact is classified before lifecycle promotion."
+    ],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "title",
+      "property": "title",
+      "kind": "input",
+      "type": "string",
+      "required": true,
+      "defaultValue": "required",
+      "description": "Visible title that also names the component surface or data view.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "eyebrow",
+      "property": "eyebrow",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Human-readable copy for the eyebrow state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "description",
+      "property": "description",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Visible supporting description for the component content.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "data",
+      "property": "data",
+      "kind": "input",
+      "type": "ReadonlyArray<KrnChartDatum>",
+      "required": true,
+      "defaultValue": "required",
+      "description": "Immutable data supplied by the consumer.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "palette",
+      "property": "palette",
+      "kind": "input",
+      "type": "ReadonlyArray<string>",
+      "required": false,
+      "defaultValue": "['var(--krn-chart-1, #4f6feb)']",
+      "description": "Ordered semantic color values available to the color control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "locale",
+      "property": "locale",
+      "kind": "input",
+      "type": "string | Array<string>",
+      "required": false,
+      "defaultValue": "inject(KRN_LOCALE)",
+      "description": "Locale identifier used for collation, formatting, and component-owned copy.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "labels",
+      "property": "labels",
+      "kind": "input",
+      "type": "Partial<KrnChartLabels>",
+      "required": false,
+      "defaultValue": "{}",
+      "description": "Localized copy overrides for the component-owned interface text.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "valueFormatter",
+      "property": "valueFormatter",
+      "kind": "input",
+      "type": "KrnChartValueFormatter | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Formats a domain value for visible and accessible presentation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "percentFormatter",
+      "property": "percentFormatter",
+      "kind": "input",
+      "type": "KrnChartValueFormatter | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Formats a normalized value for visible and accessible percentage copy.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "datumIdentity",
+      "property": "datumIdentity",
+      "kind": "input",
+      "type": "KrnChartDatumIdentity",
+      "required": false,
+      "defaultValue": "(datum, index) => datum.id ?? (datum.label || index)",
+      "description": "Returns a stable unique key used to preserve DOM and active state across data reordering.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "negativeValuePolicy",
+      "property": "negativeValuePolicy",
+      "kind": "input",
+      "type": "KrnChartNegativeValuePolicy",
+      "required": false,
+      "defaultValue": "'clamp'",
+      "description": "Clamps negative values to zero by default or rejects them with a validation error.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "summaryItemLimit",
+      "property": "summaryItemLimit",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "12",
+      "description": "Limits the accessible text summary while the full data table remains available.",
+      "descriptionSource": "source"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": [
+      "Tab reaches the source-data toggle, then the single roving data mark.",
+      "Arrow Left and Arrow Right move between marks and reverse in RTL.",
+      "Home and End move to the first and last mark; Enter or Space discloses its value."
+    ],
+    "notes": [
+      "The chart has a specific title and keyboard-operable data marks.",
+      "A semantic source-data table exposes the same ordered labels and values.",
+      "Focus treatment and value details supplement line geometry and color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Typed monthly revenue line chart",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Typed monthly revenue line chart\n *\n * Provide stable datum identity and explicit accessible chart context.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnLineChart, type KrnChartDatum } from '@kern-ui/angular/addon-charts';\n\n@Component({\n  selector: 'app-kern-line-chart-agent-example',\n  standalone: true,\n  imports: [KrnLineChart],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-line-chart\n      title=\"Monthly recurring revenue\"\n      description=\"Revenue for the current quarter\"\n      [data]=\"revenue\"\n    />\n  `,\n})\nexport class KernLineChartAgentExample {\n  readonly revenue: readonly KrnChartDatum[] = [\n    { id: 'jul', label: 'July', value: 1420000 },\n    { id: 'aug', label: 'August', value: 1570000 },\n    { id: 'sep', label: 'September', value: 1800000 },\n  ];\n}\n\nvoid bootstrapApplication(KernLineChartAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/line-chart.ts"
+    }
+  ],
+  "related": ["bar-chart", "donut-chart", "badge", "status-badge", "chip", "tag"],
+  "keywords": [
+    "line-chart",
+    "Line Chart",
+    "Data display",
+    "krn-line-chart",
+    "KrnLineChart",
+    "trend",
+    "time series",
+    "accessible data table",
+    "title",
+    "eyebrow",
+    "description",
+    "data",
+    "palette",
+    "locale",
+    "labels",
+    "valueFormatter",
+    "percentFormatter",
+    "datumIdentity",
+    "negativeValuePolicy",
+    "summaryItemLimit"
+  ],
+  "guidance": {
+    "useWhen": "Use Line Chart for an ordered trend where direction and change over adjacent values are the primary task.",
+    "avoidWhen": "Use Bar Chart for unordered category comparison and a table when exact values dominate."
+  },
+  "commonMistakes": [
+    "Do not omit required inputs: `title`, `data`.",
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Provide a specific title and meaningful labels; visual marks are not the only data representation."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/line-chart",
+    "json": "components/line-chart.json",
+    "markdown": "components/line-chart.md"
+  }
+}

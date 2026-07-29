@@ -1,0 +1,177 @@
+{
+  "id": "vertical-tabs",
+  "name": "Vertical Tabs",
+  "category": "Navigation",
+  "kind": "component",
+  "selector": "krn-vertical-tabs",
+  "selectors": ["krn-tabs", "krn-vertical-tabs"],
+  "symbol": "KrnVerticalTabs",
+  "canonicalSymbol": "KrnTabs",
+  "canonicalId": "tabs",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": ["KrnTabs"],
+    "selectors": ["krn-tabs"],
+    "componentIds": ["tabs"]
+  },
+  "summary": "Vertical Tabs. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled",
+    "current"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/navigation",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "items",
+      "property": "items",
+      "kind": "input",
+      "type": "ReadonlyArray<KrnTabItem>",
+      "required": false,
+      "defaultValue": "[]",
+      "description": "Ordered item collection rendered by the composite widget.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "value",
+      "property": "value",
+      "kind": "model",
+      "type": "string | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Controlled component value.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "orientation",
+      "property": "orientation",
+      "kind": "input",
+      "type": "KrnNavigationOrientation",
+      "required": false,
+      "defaultValue": "this.host.nativeElement.localName === 'krn-vertical-tabs' ? 'vertical' : 'horizontal'",
+      "description": "Defines the logical axis used by layout and keyboard navigation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.navigation.sections",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "selector": "*",
+      "required": false,
+      "description": "Projects default component content."
+    }
+  ],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["Arrow keys move within composites", "Home / End jump", "Enter activates"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+      "Uses the shared deterministic KERN id service."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Controlled settings tabs",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Controlled settings tabs\n *\n * Use vertical orientation for a stable settings subsection.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnVerticalTabs, type KrnTabItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-vertical-tabs-agent-example',\n  standalone: true,\n  imports: [KrnVerticalTabs],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-vertical-tabs ariaLabel=\"Settings sections\" [items]=\"items\" [(value)]=\"selectedTab\">\n      Selected settings section: {{ selectedTab }}\n    </krn-vertical-tabs>\n  `,\n})\nexport class KernVerticalTabsAgentExample {\n  readonly items: readonly KrnTabItem[] = [\n    { id: 'profile', label: 'Profile' },\n    { id: 'security', label: 'Security' },\n  ];\n\n  selectedTab: string | null = 'profile';\n}\n\nvoid bootstrapApplication(KernVerticalTabsAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/vertical-tabs.ts"
+    }
+  ],
+  "related": ["tabs", "breadcrumbs", "pagination", "stepper"],
+  "keywords": [
+    "vertical-tabs",
+    "Vertical Tabs",
+    "Navigation",
+    "krn-vertical-tabs",
+    "KrnVerticalTabs",
+    "KrnTabs",
+    "items",
+    "value",
+    "orientation",
+    "ariaLabel"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/vertical-tabs",
+    "json": "components/vertical-tabs.json",
+    "markdown": "components/vertical-tabs.md"
+  }
+}

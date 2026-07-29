@@ -1,4 +1,5 @@
 import type { TemplateRef } from '@angular/core';
+import type { KrnTreeChildrenState } from './tree.types';
 
 export type KrnNavigationOrientation = 'horizontal' | 'vertical';
 
@@ -43,6 +44,8 @@ export interface KrnContextMenuItem extends KrnNavigationItem {
 
 export interface KrnTreeNavigationItem extends KrnNavigationItem {
   readonly children?: readonly KrnTreeNavigationItem[];
+  /** Describes an expandable navigation item whose children are loaded by the consumer. */
+  readonly childrenState?: KrnTreeChildrenState;
 }
 
 export interface KrnCommandItem extends KrnNavigationItem {

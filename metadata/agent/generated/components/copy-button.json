@@ -1,0 +1,220 @@
+{
+  "id": "copy-button",
+  "name": "Copy Button",
+  "category": "Actions",
+  "kind": "component",
+  "selector": "krn-copy-button",
+  "selectors": ["krn-copy-button"],
+  "symbol": "KrnCopyButton",
+  "canonicalSymbol": "KrnCopyButton",
+  "canonicalId": "copy-button",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "Copy Button. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled"
+  ],
+  "lifecycle": {
+    "status": "stable",
+    "compatibility": "Supported contract; the documented compatibility policy applies.",
+    "owner": "kern/actions",
+    "evidenceProfile": "stable-release",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "keyboard",
+      "automated-a11y",
+      "visual-smoke"
+    ],
+    "rationale": "Supported contract; the documented compatibility policy applies.",
+    "knownLimitations": [],
+    "promotionCriteria": [],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "value",
+      "property": "value",
+      "kind": "input",
+      "type": "string",
+      "required": true,
+      "defaultValue": "required",
+      "description": "Controlled component value.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.actions.copyToClipboard",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "copiedLabel",
+      "property": "copiedLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.actions.copied",
+      "description": "Human-readable copy for the copied state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "errorLabel",
+      "property": "errorLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.actions.copyFailed",
+      "description": "Human-readable copy for the error state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "size",
+      "property": "size",
+      "kind": "input",
+      "type": "KrnSize",
+      "required": false,
+      "defaultValue": "'md'",
+      "description": "Named semantic size resolved through KERN density and sizing tokens.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "disabled",
+      "property": "disabled",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Prevents user interaction and participates in the disabled-state contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "copied",
+      "property": "copied",
+      "kind": "output",
+      "type": "string",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the copied interaction completes.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "copyError",
+      "property": "copyError",
+      "kind": "output",
+      "type": "unknown",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the copy error interaction completes.",
+      "descriptionSource": "inferred"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "selector": "*",
+      "required": false,
+      "description": "Projects default component content."
+    }
+  ],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": ["disabled"],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": ["Enter / Space activates", "Tab follows document order"],
+    "notes": [
+      "Visible focus indicator with forced-colors support.",
+      "Works at 200% text zoom and in narrow containers.",
+      "State is communicated by text, shape, or icon in addition to color."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+      "Browser capabilities are nullable or become available only after hydration."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Copy immutable record id",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Copy immutable record id\n *\n * Copy a visible domain identifier with explicit accessible feedback.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCopyButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-copy-button-agent-example',\n  standalone: true,\n  imports: [KrnCopyButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-copy-button value=\"CUS-2048\" ariaLabel=\"Copy customer id\"> CUS-2048 </krn-copy-button>\n  `,\n})\nexport class KernCopyButtonAgentExample {}\n\nvoid bootstrapApplication(KernCopyButtonAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/copy-button.ts"
+    }
+  ],
+  "related": ["button", "icon-button", "button-group", "split-button"],
+  "keywords": [
+    "copy-button",
+    "Copy Button",
+    "Actions",
+    "krn-copy-button",
+    "KrnCopyButton",
+    "value",
+    "ariaLabel",
+    "copiedLabel",
+    "errorLabel",
+    "size",
+    "disabled",
+    "copied",
+    "copyError"
+  ],
+  "guidance": {
+    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
+    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+  },
+  "commonMistakes": [
+    "Do not omit required inputs: `value`.",
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/copy-button",
+    "json": "components/copy-button.json",
+    "markdown": "components/copy-button.md"
+  }
+}

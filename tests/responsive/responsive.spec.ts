@@ -107,4 +107,49 @@ test.describe('Responsive, RTL, and text zoom contracts', () => {
     await expect(page.getByTestId('specimen-text-input')).toBeVisible();
     await expectNoPageOverflow(page);
   });
+
+  test('complex Lab content reflows at the 320 CSS-pixel equivalent of 400 percent zoom', async ({
+    page,
+  }) => {
+    // At a 1280px desktop baseline, 400% full-page zoom leaves a 320 CSS-pixel
+    // layout viewport. Keep this contract explicit because it also preserves
+    // native control and SVG scaling that a root font-size override cannot model.
+    await page.setViewportSize({ width: 320, height: 800 });
+    await page.goto(
+      labUrl({
+        component: 'data-grid',
+        scenario: 'states',
+        theme: 'high-contrast',
+        density: 'spacious',
+        direction: 'ltr',
+      }),
+    );
+    await settlePage(page);
+
+    const specimen = page.getByTestId('specimen-data-grid');
+    const internalScroller = specimen.locator('.table-scroll');
+    await expect(specimen).toBeVisible();
+    await expect(page.getByTestId('component-control')).toBeVisible();
+    await expect
+      .poll(() => internalScroller.evaluate((element) => element.scrollWidth > element.clientWidth))
+      .toBe(true);
+    await expectNoPageOverflow(page);
+
+    await page.goto(
+      labUrl({
+        component: 'bottom-sheet',
+        scenario: 'default',
+        theme: 'high-contrast',
+        density: 'spacious',
+        direction: 'ltr',
+      }),
+    );
+    await settlePage(page);
+    const trigger = page.getByRole('button', { name: 'Choose mobile action' });
+    await trigger.click();
+    const dialog = page.getByRole('dialog', { name: 'Workspace actions' });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByText('Duplicate', { exact: true })).toBeVisible();
+    await expectNoPageOverflow(page);
+  });
 });

@@ -8,7 +8,7 @@ import {
   model,
   numberAttribute,
 } from '@angular/core';
-import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { KRN_TRANSLATIONS, krnFormatTranslation } from '@kern-ui/angular/core';
 
 type PageToken = number | 'ellipsis';
 
@@ -161,9 +161,17 @@ export class KrnPagination {
   readonly ariaLabel = input(this.translations.navigation.pagination);
   readonly previousLabel = input(this.translations.navigation.previous);
   readonly nextLabel = input(this.translations.navigation.next);
+  /** Backward-compatible `{page}` template. */
   readonly pageLabel = input(this.translations.navigation.pageLabel);
+  /** Typed alternative to `pageLabel` for locale-specific grammar. */
+  readonly pageLabelFormatter = input<((page: number) => string) | undefined>(undefined);
   readonly emptyLabel = input(this.translations.navigation.noResults);
+  /** Backward-compatible `{start}`, `{end}`, and `{total}` template. */
   readonly rangeLabel = input(this.translations.navigation.resultRangeLabel);
+  /** Typed alternative to `rangeLabel` for locale-specific grammar. */
+  readonly rangeLabelFormatter = input<
+    ((start: number, end: number, total: number) => string) | undefined
+  >(undefined);
   protected readonly safePageSize = computed(() => Math.max(1, this.pageSize()));
   protected readonly pageCount = computed(() =>
     Math.max(1, Math.ceil(this.totalItems() / this.safePageSize())),
@@ -176,10 +184,17 @@ export class KrnPagination {
     if (total === 0) return this.emptyLabel();
     const start = (this.currentPage() - 1) * this.safePageSize() + 1;
     const end = Math.min(total, this.currentPage() * this.safePageSize());
-    return this.rangeLabel()
-      .replace('{start}', String(start))
-      .replace('{end}', String(end))
-      .replace('{total}', String(total));
+    return krnFormatTranslation(
+      this.rangeLabel(),
+      { start, end, total },
+      this.rangeLabelFormatter() ??
+        (this.rangeLabel() === this.translations.navigation.resultRangeLabel
+          ? this.translations.navigation.formatResultRangeLabel
+          : undefined),
+      start,
+      end,
+      total,
+    );
   });
   protected readonly pageTokens = computed<readonly PageToken[]>(() => {
     const total = this.pageCount();
@@ -253,6 +268,14 @@ export class KrnPagination {
   }
 
   protected pageAriaLabel(page: number): string {
-    return this.pageLabel().replace('{page}', String(page));
+    return krnFormatTranslation(
+      this.pageLabel(),
+      { page },
+      this.pageLabelFormatter() ??
+        (this.pageLabel() === this.translations.navigation.pageLabel
+          ? this.translations.navigation.formatPageLabel
+          : undefined),
+      page,
+    );
   }
 }

@@ -1,0 +1,170 @@
+# Multi Select
+
+- ID: `multi-select`
+- Selector: `krn-multi-select`
+- Import: `import { KrnMultiSelect } from '@kern-ui/angular/kit';`
+- Canonical symbol: `KrnMultiSelect`
+- Lifecycle: **beta**
+- Category: Forms
+
+Multi Select. Commits several predefined values while keeping the trigger width and selected tokens stable.
+
+## Use
+
+Use Multi Select when users choose several values from a bounded authoritative option set.
+
+Avoid: Use Tags Input for user-authored values and Checkbox Group when the complete short option set should stay visible.
+
+## Compile-verified standalone Angular example
+
+```ts
+/**
+ * Typed multi-owner selection
+ *
+ * Own a readonly selection array and controlled popup state.
+ *
+ * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.
+ */
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { KrnMultiSelect, type KrnSelectOption } from '@kern-ui/angular/kit';
+
+@Component({
+  selector: 'app-kern-multi-select-agent-example',
+  standalone: true,
+  imports: [KrnMultiSelect, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <krn-multi-select
+      ariaLabel="Reviewers"
+      [options]="reviewerOptions"
+      [formControl]="control"
+      [(open)]="open"
+    />
+  `,
+})
+export class KernMultiSelectAgentExample {
+  readonly control = new FormControl<readonly string[]>(['reviewer-security'], {
+    nonNullable: true,
+  });
+
+  readonly reviewerOptions: readonly KrnSelectOption<string>[] = [
+    { value: 'reviewer-security', label: 'Security team' },
+    { value: 'reviewer-legal', label: 'Legal team' },
+    { value: 'reviewer-finance', label: 'Finance team' },
+  ];
+
+  open = false;
+}
+
+void bootstrapApplication(KernMultiSelectAgentExample);
+```
+
+## API
+
+| Name          | Kind  | Type     | Required | Default                                                                                         | Description                                                       |
+| ------------- | ----- | -------- | -------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `id`          | input | `string` | no       | `''`                                                                                            | Stable identifier value used by the id contract.                  |
+| `placeholder` | input | `string` | no       | `this.translations.forms.selectOptions`                                                         | Short input hint shown only while no value is present.            |
+| `emptyText`   | input | `string` | no       | `this.translations.forms.noOptions`                                                             | Visible and announced copy when the data collection has no items. |
+| `loadingText` | input | `string` | no       | `this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? ''` | Visible and announced copy while asynchronous data is loading.    |
+| `errorText`   | input | `string` | no       | `this.translations.forms.optionsLoadFailed ??                                                   |
+
+      KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??
+      ''` | Visible and announced copy when loading the data collection fails. |
+
+| `ariaLabel` | input | `string` | no | `''` | Accessible name used when visible content is not sufficient. |
+| `options` | input | `ReadonlyArray<KrnSelectOption<T>>` | yes | `required` | Authoritative option collection presented by the selection control. |
+| `optionsState` | input | `KrnOptionsState` | no | `'ready'` | Controls whether options are interactive or replaced by an announced loading/error state. |
+| `identityMatcher` | input | `KrnIdentityMatcher<T>` | no | `Object.is` | Compares option values when object identity is not stable across refreshes. |
+| `trackBy` | input | `KrnOptionTrackBy<T>` | no | `(option) => option.value` | Returns the stable identity used to retain rendered items across updates. |
+| `stringify` | input | `KrnOptionStringifier<T>` | no | `(option) => option.label` | Converts a domain value into the human-readable label shown to users. |
+| `disabledHandler` | input | `KrnOptionDisabledHandler<T>` | no | `(option) => option.disabled ?? false` | Determines whether an individual option or item is unavailable. |
+| `optionTemplate` | input | `TemplateRef<KrnSelectOptionContext<T>> \| null` | no | `null` | Template used to render one option with its typed context. |
+| `selectedTemplate` | input | `TemplateRef<KrnSelectOptionContext<T>> \| null` | no | `null` | Template used to render the committed selection. |
+| `maxVisible` | input | `number` | no | `2` | Upper or lower bound applied to the visible value. |
+| `disabled` | input | `boolean` | no | `false` | Prevents user interaction and participates in the disabled-state contract. |
+| `readonly` | input | `boolean` | no | `false` | Keeps the value perceivable while preventing user edits. |
+| `required` | input | `boolean` | no | `false` | Marks the value as required and participates in Angular Forms validation. |
+| `invalid` | input | `boolean` | no | `false` | Exposes an externally controlled invalid presentation state. |
+| `open` | model | `boolean` | no | `false` | Controls whether the disclosure or overlay surface is visible. |
+| `valueChange` | output | `ReadonlyArray<T>` | no | `undefined` | Notifies the consumer after the value change interaction completes. |
+
+## Content slots
+
+_No projected content slots._
+
+## Angular Forms
+
+Angular Forms control with value type `ReadonlyArray<T>`.
+
+## Accessibility
+
+- Enter or Space opens the list; Arrow keys move the active option.
+- Enter toggles the active option without closing the list.
+- Escape closes the list and Backspace removes the last token only from an empty query.
+- The trigger exposes expansion, list ownership, and active descendant.
+- Selected values remain visible as named removable tokens.
+- Loading, empty, error, and selection-count changes are announced.
+
+Manual assistive-technology validation remains required in the consuming application.
+
+## SSR and hydration
+
+- KERN avoids ambient browser globals in reusable runtime infrastructure.
+- Validate the consuming SSR/hydration route, locale, ids and overlay host.
+
+Hydration evidence scope: `library-docs-route-smoke`; status:
+`consumer-validation-required`.
+
+## Acceptance states
+
+- default
+- overflow
+- long text
+- dark
+- high contrast
+- compact
+- RTL
+- mobile
+- hover
+- focus-visible
+- active
+- disabled
+- filled
+- empty
+- closed
+- open
+- empty results
+- async loading
+
+## Related
+
+- `select`
+- `combobox`
+- `tags-input`
+- `form-field`
+- `label`
+- `hint`
+- `validation-message`
+
+## Common mistakes
+
+- Do not omit required inputs: `options`.
+- Importing from an undeclared family path or a source implementation file.
+- Loading only tokens.css instead of the complete styles/kern.css component bundle.
+- Assuming the documentation SSR build replaces validation of the consuming application.
+- Use stable option values and identityMatcher for object values.
+- Use Tags Input instead when users may create an unbounded vocabulary.
+- Do not manually duplicate value and disabled state when Angular Forms owns the control.
+
+## Ship checklist
+
+- [ ] Import the symbol from its documented owner entrypoint; do not use a deep source import.
+- [ ] Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.
+- [ ] Provide every required input and keep collection identities stable across updates.
+- [ ] Verify reactive-form value, touched, disabled, required and invalid state.
+- [ ] Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.
+- [ ] Test the consuming SSR/hydration route when server rendering is enabled.
+- [ ] Use @kern-ui/angular/testing harnesses when a component-specific harness is available.

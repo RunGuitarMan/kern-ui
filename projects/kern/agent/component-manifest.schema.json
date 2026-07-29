@@ -1,0 +1,695 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kern-ui.dev/schemas/component-manifest.schema.json",
+  "title": "KERN agent component manifest",
+  "description": "Versioned, machine-readable public contract for @kern-ui/angular.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "library", "components", "symbols", "recipes", "migrations"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "1.1.0"
+    },
+    "library": {
+      "$ref": "#/$defs/library"
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/component"
+      }
+    },
+    "symbols": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/symbol"
+      }
+    },
+    "recipes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/recipe"
+      }
+    },
+    "migrations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/migration"
+      }
+    }
+  },
+  "$defs": {
+    "library": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package",
+        "version",
+        "framework",
+        "requiredStyles",
+        "configuration",
+        "entrypoints",
+        "sourceDigest"
+      ],
+      "properties": {
+        "package": {
+          "const": "@kern-ui/angular"
+        },
+        "version": {
+          "type": "string"
+        },
+        "framework": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "peerRange"],
+          "properties": {
+            "name": {
+              "const": "Angular"
+            },
+            "peerRange": {
+              "type": "string"
+            }
+          }
+        },
+        "requiredStyles": {
+          "type": "string"
+        },
+        "configuration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["provider", "required"],
+          "properties": {
+            "provider": {
+              "const": "provideKrn"
+            },
+            "required": {
+              "const": false
+            },
+            "notes": {
+              "type": "string"
+            }
+          }
+        },
+        "entrypoints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sourceDigest": {
+          "type": "string",
+          "pattern": "^sha256-[a-f0-9]{64}$"
+        }
+      }
+    },
+    "apiMember": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "property",
+        "kind",
+        "type",
+        "required",
+        "defaultValue",
+        "description",
+        "descriptionSource"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "property": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": ["input", "model", "output"]
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "defaultValue": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "descriptionSource": {
+          "enum": ["source", "curated", "inferred"]
+        }
+      }
+    },
+    "slot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "selector", "required", "description"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "selector": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "forms": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "controlValueAccessor",
+        "validator",
+        "valueType",
+        "reactiveForms",
+        "templateDrivenForms",
+        "stateInputs"
+      ],
+      "properties": {
+        "controlValueAccessor": {
+          "type": "boolean"
+        },
+        "validator": {
+          "type": "boolean"
+        },
+        "valueType": {
+          "type": ["string", "null"]
+        },
+        "reactiveForms": {
+          "type": "boolean"
+        },
+        "templateDrivenForms": {
+          "type": "boolean"
+        },
+        "stateInputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "a11y": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target", "keyboard", "notes", "manualValidationRequired"],
+      "properties": {
+        "target": {
+          "const": "WCAG 2.2 AA"
+        },
+        "keyboard": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "manualValidationRequired": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ssr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "hydration", "evidenceScope", "notes"],
+      "properties": {
+        "status": {
+          "enum": ["supported-with-consumer-validation", "browser-only"]
+        },
+        "hydration": {
+          "enum": ["consumer-validation-required", "browser-only"]
+        },
+        "evidenceScope": {
+          "enum": ["library-docs-route-smoke", "component-browser-evidence"]
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "compatibility",
+        "owner",
+        "evidenceProfile",
+        "requiredEvidence",
+        "rationale",
+        "knownLimitations",
+        "promotionCriteria"
+      ],
+      "properties": {
+        "status": {
+          "enum": ["stable", "beta", "experimental", "recipe", "deprecated"]
+        },
+        "compatibility": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceProfile": {
+          "enum": [
+            "stable-release",
+            "beta-promotion",
+            "experimental-incubation",
+            "recipe-validation"
+          ]
+        },
+        "requiredEvidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 20
+        },
+        "knownLimitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 20
+          }
+        },
+        "promotionCriteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "replacement": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "kind", "language", "code", "verification", "source"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": ["minimal", "recipe"]
+        },
+        "language": {
+          "enum": ["typescript", "html"]
+        },
+        "code": {
+          "type": "string"
+        },
+        "verification": {
+          "enum": ["contract-checked", "compiled", "manual"]
+        },
+        "source": {
+          "type": "string",
+          "description": "Artifact URL relative to component-manifest.json.",
+          "pattern": "^examples/[a-z0-9]+(?:-[a-z0-9]+)*\\.ts$"
+        }
+      }
+    },
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "category",
+        "kind",
+        "selector",
+        "selectors",
+        "symbol",
+        "canonicalSymbol",
+        "canonicalId",
+        "owner",
+        "importPath",
+        "aliases",
+        "summary",
+        "acceptanceStates",
+        "lifecycle",
+        "api",
+        "slots",
+        "forms",
+        "a11y",
+        "ssr",
+        "examples",
+        "related",
+        "keywords",
+        "guidance",
+        "commonMistakes",
+        "checklist",
+        "documentation"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": ["component", "directive"]
+        },
+        "selector": {
+          "type": "string"
+        },
+        "selectors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "symbol": {
+          "type": "string"
+        },
+        "canonicalSymbol": {
+          "type": "string"
+        },
+        "canonicalId": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "importPath": {
+          "type": "string",
+          "pattern": "^@kern-ui/angular(?:/.+)?$"
+        },
+        "aliases": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["symbols", "selectors", "componentIds"],
+          "properties": {
+            "symbols": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "selectors": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "componentIds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "summary": {
+          "type": "string"
+        },
+        "acceptanceStates": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "lifecycle": {
+          "$ref": "#/$defs/lifecycle"
+        },
+        "api": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/apiMember"
+          }
+        },
+        "slots": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slot"
+          }
+        },
+        "forms": {
+          "$ref": "#/$defs/forms"
+        },
+        "a11y": {
+          "$ref": "#/$defs/a11y"
+        },
+        "ssr": {
+          "$ref": "#/$defs/ssr"
+        },
+        "examples": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/example"
+          }
+        },
+        "related": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "guidance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["useWhen", "avoidWhen"],
+          "properties": {
+            "useWhen": {
+              "type": "string"
+            },
+            "avoidWhen": {
+              "type": "string"
+            }
+          }
+        },
+        "commonMistakes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "checklist": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "documentation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["route", "json", "markdown"],
+          "properties": {
+            "route": {
+              "type": "string",
+              "description": "Documentation UI route relative to the deployment mount, not to component-manifest.json.",
+              "pattern": "^components/[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
+            "json": {
+              "type": "string",
+              "description": "Artifact URL relative to component-manifest.json.",
+              "pattern": "^components/[a-z0-9]+(?:-[a-z0-9]+)*\\.json$"
+            },
+            "markdown": {
+              "type": "string",
+              "description": "Artifact URL relative to component-manifest.json.",
+              "pattern": "^components/[a-z0-9]+(?:-[a-z0-9]+)*\\.md$"
+            }
+          }
+        }
+      }
+    },
+    "symbol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "aliases",
+        "owner",
+        "importPath",
+        "kind",
+        "type",
+        "deprecated",
+        "description",
+        "source",
+        "componentIds"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "owner": {
+          "type": "string"
+        },
+        "importPath": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": ["class", "interface", "type", "function", "constant", "enum", "unknown"]
+        },
+        "type": {
+          "type": "string"
+        },
+        "deprecated": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "componentIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "recipe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "summary",
+        "components",
+        "steps",
+        "source",
+        "verification",
+        "sourceDigest",
+        "code"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source": {
+          "type": "string",
+          "description": "Artifact URL relative to component-manifest.json.",
+          "pattern": "^recipes/[a-z0-9]+(?:-[a-z0-9]+)*\\.ts$"
+        },
+        "verification": {
+          "const": "packed-package-aot"
+        },
+        "sourceDigest": {
+          "type": "string",
+          "pattern": "^sha256-[a-f0-9]{64}$"
+        },
+        "code": {
+          "type": "string"
+        }
+      }
+    },
+    "migration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "from", "to", "summary", "components", "before", "after", "automatic"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "before": {
+          "type": "string"
+        },
+        "after": {
+          "type": "string"
+        },
+        "automatic": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
