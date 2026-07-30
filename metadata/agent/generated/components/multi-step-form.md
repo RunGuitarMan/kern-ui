@@ -119,6 +119,53 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - error
 - success
 
+## Interactive playground
+
+Route: `preview/multi-step-form`
+
+Scenarios: `default`.
+Public API coverage: 4/12
+directly controlled; 8 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument              | Control | Default        | Test value   | Binding                                | Description                                            |
+| --------------------- | ------- | -------------- | ------------ | -------------------------------------- | ------------------------------------------------------ |
+| `current`             | number  | `0`            | `1`          | model `current`                        | Changes the current form step.                         |
+| `furthestStep`        | number  | `0`            | `1`          | model `furthestStep`                   | Changes the furthest completed or visited step.        |
+| `allowStepNavigation` | boolean | `true`         | `false`      | input `allowStepNavigation` (property) | Configures the component allowStepNavigation contract. |
+| `orientation`         | select  | `"horizontal"` | `"vertical"` | input `orientation` (property)         | Configures the component orientation contract.         |
+
+Exact API exclusions:
+
+| Public API         | Category           | Evidence                                                              | Reason                                                                                                                                                              |
+| ------------------ | ------------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
+| `backLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `completeLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `continueLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `emptyStepLabel`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `optionalLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `stepCounterLabel` | callback           | `component-example:agent/components/multi-step-form.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
+| `steps`            | complex-data       | `specimen-fixture:preview/multi-step-form?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `data/alternate` — overflow: The fixture data projection is changed for this acceptance state..
+- `long-text` — long text; scenario `default`; fixture effect `data/alternate` — long text: The fixture data projection is changed for this acceptance state..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `loading` — loading; scenario `default`; fixture effect `data/loading` — loading: The fixture is waiting for enterprise data..
+- `empty` — empty; scenario `default`; fixture effect `data/empty` — empty: The fixture data source returned no records..
+- `error` — error; scenario `default`; fixture effect `data/error` — error: The fixture data request failed and can be retried..
+- `success` — success; scenario `default`; fixture effect `data/success` — success: The fixture operation completed successfully..
+
 ## Related
 
 - `user-menu`

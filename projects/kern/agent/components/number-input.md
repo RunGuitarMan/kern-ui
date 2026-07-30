@@ -115,6 +115,67 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - disabled
 - filled
 - empty
+- readonly
+- required
+- invalid
+- minimum
+- maximum
+
+## Interactive playground
+
+Route: `preview/number-input`
+
+Scenarios: `default`.
+Public API coverage: 10/14
+directly controlled; 4 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument       | Control | Default | Test value          | Binding                         | Description                                       |
+| -------------- | ------- | ------- | ------------------- | ------------------------------- | ------------------------------------------------- |
+| `min`          | number  | `1`     | `2`                 | input `min` (property)          | Sets the lowest accepted value.                   |
+| `max`          | number  | `500`   | `501`               | input `max` (property)          | Sets the highest accepted value.                  |
+| `step`         | number  | `5`     | `6`                 | input `step` (property)         | Sets the keyboard and stepper increment.          |
+| `showSteppers` | boolean | `true`  | `false`             | input `showSteppers` (property) | Shows increment and decrement actions.            |
+| `disabled`     | boolean | `false` | `true`              | input `disabled` (property)     | Prevents user interaction.                        |
+| `readOnly`     | boolean | `false` | `true`              | input `readonly` (property)     | Keeps the value focusable while preventing edits. |
+| `required`     | boolean | `false` | `true`              | input `required` (property)     | Marks the control as required.                    |
+| `invalid`      | boolean | `false` | `true`              | input `invalid` (property)      | Exposes the invalid visual and ARIA state.        |
+| `id`           | text    | `""`    | `"Alternate value"` | input `id` (property)           | Configures the component id contract.             |
+| `placeholder`  | text    | `""`    | `"Alternate value"` | input `placeholder` (property)  | Configures the component placeholder contract.    |
+
+Exact API exclusions:
+
+| Public API      | Category           | Evidence                                                                 | Reason                                                                                                                                                              |
+| --------------- | ------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`     | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#number-input`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
+| `decreaseLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#number-input`                | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `increaseLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#number-input`                | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `name`          | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#number-input` | Form submission field names do not alter the rendered component and are covered by forms integration tests.                                                         |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — Disabled; scenario `default`; `disabled=true`.
+- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
+- `readonly` — Readonly; scenario `default`; `readOnly=true`.
+- `required` — Required; scenario `default`; `required=true`.
+- `invalid` — Invalid; scenario `default`; `invalid=true`.
+- `minimum` — minimum; scenario `default`; fixture effect `status/neutral` — minimum: The fixture exposes the minimum status without claiming a public component input..
+- `maximum` — maximum; scenario `default`; fixture effect `status/neutral` — maximum: The fixture exposes the maximum status without claiming a public component input..
 
 ## Related
 

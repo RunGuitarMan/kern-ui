@@ -164,5 +164,180 @@
     "route": "components/master-detail-layout",
     "json": "components/master-detail-layout.json",
     "markdown": "components/master-detail-layout.md"
+  },
+  "playground": {
+    "route": "preview/master-detail-layout",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "detailOpen",
+        "label": "Detail open",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Shows the detail pane on narrow layouts.",
+        "binding": {
+          "kind": "model",
+          "publicName": "detailOpen"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "overflow",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "long text",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "loading",
+        "label": "loading",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "loading",
+          "label": "loading",
+          "description": "The fixture is waiting for enterprise data."
+        }
+      },
+      {
+        "id": "empty",
+        "label": "empty",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "empty",
+          "label": "empty",
+          "description": "The fixture data source returned no records."
+        }
+      },
+      {
+        "id": "error",
+        "label": "error",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "error",
+          "label": "error",
+          "description": "The fixture data request failed and can be retried."
+        }
+      },
+      {
+        "id": "success",
+        "label": "success",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "success",
+          "label": "success",
+          "description": "The fixture operation completed successfully."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 3,
+      "controlled": 1,
+      "excluded": 2,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "master-detail-layout",
+        "publicName": "detailLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#master-detail-layout"
+        }
+      },
+      {
+        "componentId": "master-detail-layout",
+        "publicName": "masterLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#master-detail-layout"
+        }
+      }
+    ]
   }
 }

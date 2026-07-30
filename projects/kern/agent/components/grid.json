@@ -177,5 +177,204 @@
     "route": "components/grid",
     "json": "components/grid.json",
     "markdown": "components/grid.md"
+  },
+  "playground": {
+    "route": "preview/grid",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "responsive",
+        "label": "Responsive",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Enables responsive column collapsing.",
+        "binding": {
+          "kind": "input",
+          "publicName": "responsive",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "columns",
+        "label": "Columns",
+        "kind": "select",
+        "defaultValue": 3,
+        "testValue": "auto",
+        "description": "Sets a fixed or automatic column count.",
+        "binding": {
+          "kind": "input",
+          "publicName": "columns",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "auto",
+            "value": "auto"
+          },
+          {
+            "label": "1",
+            "value": 1
+          },
+          {
+            "label": "2",
+            "value": 2
+          },
+          {
+            "label": "3",
+            "value": 3
+          },
+          {
+            "label": "4",
+            "value": 4
+          }
+        ]
+      },
+      {
+        "key": "gap",
+        "label": "Gap",
+        "kind": "text",
+        "defaultValue": "3",
+        "testValue": "20rem",
+        "description": "Sets the grid gutter.",
+        "binding": {
+          "kind": "input",
+          "publicName": "gap",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "align",
+        "label": "Align",
+        "kind": "select",
+        "defaultValue": "stretch",
+        "testValue": "start",
+        "description": "Configures the component align contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "align",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "start",
+            "value": "start"
+          },
+          {
+            "label": "center",
+            "value": "center"
+          },
+          {
+            "label": "end",
+            "value": "end"
+          },
+          {
+            "label": "stretch",
+            "value": "stretch"
+          },
+          {
+            "label": "baseline",
+            "value": "baseline"
+          }
+        ]
+      },
+      {
+        "key": "minColumnWidth",
+        "label": "Min Column Width",
+        "kind": "text",
+        "defaultValue": "16rem",
+        "testValue": "20rem",
+        "description": "Configures the component minColumnWidth contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "minColumnWidth",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 5,
+      "controlled": 5,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

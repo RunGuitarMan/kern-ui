@@ -161,7 +161,7 @@ export class ChangelogPage {
       items: [
         'Zoneless Angular 22 workspace with strict TypeScript and standalone components.',
         'Vitest unit coverage plus Playwright accessibility, responsive, keyboard, and visual projects.',
-        'SSR documentation application and deterministic component laboratory.',
+        'SSR documentation application with an integrated deterministic component playground.',
         'Idempotent installation/doctor schematics and a public CDK component-harness entry point.',
         'Generated runtime API metadata with curated lifecycle status for every catalog entry.',
       ],

@@ -28,7 +28,9 @@
     "loading",
     "empty",
     "error",
-    "success"
+    "success",
+    "closed",
+    "open"
   ],
   "lifecycle": {
     "status": "recipe",
@@ -164,5 +166,203 @@
     "route": "components/settings-panel",
     "json": "components/settings-panel.json",
     "markdown": "components/settings-panel.md"
+  },
+  "playground": {
+    "route": "preview/settings-panel",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "open",
+        "label": "Open",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Opens the settings panel.",
+        "binding": {
+          "kind": "model",
+          "publicName": "open"
+        }
+      },
+      {
+        "key": "heading",
+        "label": "Heading",
+        "kind": "text",
+        "defaultValue": "Workspace settings",
+        "testValue": "Workspace settings · alternate",
+        "description": "Configures the component heading contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "heading",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "overflow",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "long text",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "loading",
+        "label": "loading",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "loading",
+          "label": "loading",
+          "description": "The fixture is waiting for enterprise data."
+        }
+      },
+      {
+        "id": "empty",
+        "label": "empty",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "empty",
+          "label": "empty",
+          "description": "The fixture data source returned no records."
+        }
+      },
+      {
+        "id": "error",
+        "label": "error",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "error",
+          "label": "error",
+          "description": "The fixture data request failed and can be retried."
+        }
+      },
+      {
+        "id": "success",
+        "label": "success",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "success",
+          "label": "success",
+          "description": "The fixture operation completed successfully."
+        }
+      },
+      {
+        "id": "closed",
+        "label": "closed",
+        "scenario": "default",
+        "args": {
+          "open": false
+        },
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "closed",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "open",
+        "label": "Open",
+        "scenario": "default",
+        "args": {
+          "open": true
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 3,
+      "controlled": 2,
+      "excluded": 1,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "settings-panel",
+        "publicName": "closeLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#settings-panel"
+        }
+      }
+    ]
   }
 }

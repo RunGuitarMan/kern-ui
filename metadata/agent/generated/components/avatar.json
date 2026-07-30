@@ -192,5 +192,213 @@
     "route": "components/avatar",
     "json": "components/avatar.json",
     "markdown": "components/avatar.md"
+  },
+  "playground": {
+    "route": "preview/avatar",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "imageFailed",
+        "label": "Image fallback",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Shows the deterministic initials fallback.",
+        "binding": {
+          "kind": "model",
+          "publicName": "imageFailed"
+        }
+      },
+      {
+        "key": "alt",
+        "label": "Alt",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component alt contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "alt",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "name",
+        "label": "Name",
+        "kind": "text",
+        "defaultValue": "Avery Cole",
+        "testValue": "Avery Cole · alternate",
+        "description": "Configures the component name contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "name",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "kind": "select",
+        "defaultValue": "lg",
+        "testValue": "md",
+        "description": "Semantic component size.",
+        "binding": {
+          "kind": "input",
+          "publicName": "size",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "lg",
+            "value": "lg"
+          },
+          {
+            "label": "md",
+            "value": "md"
+          },
+          {
+            "label": "sm",
+            "value": "sm"
+          }
+        ]
+      },
+      {
+        "key": "src",
+        "label": "Src",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "/favicon.ico",
+        "description": "Configures the component src contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "src",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "status",
+        "label": "Status",
+        "kind": "select",
+        "defaultValue": "online",
+        "testValue": "away",
+        "description": "Configures the component status contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "status",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "away",
+            "value": "away"
+          },
+          {
+            "label": "busy",
+            "value": "busy"
+          },
+          {
+            "label": "online",
+            "value": "online"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 7,
+      "controlled": 6,
+      "excluded": 1,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "avatar",
+        "publicName": "locale",
+        "kind": "input",
+        "type": "string",
+        "code": "locale-environment",
+        "reason": "Locale is owned by the playground environment selector so every locale-sensitive component changes consistently.",
+        "evidence": {
+          "category": "locale-preview",
+          "pointer": "preview/avatar?locale=ru-RU"
+        }
+      }
+    ]
   }
 }

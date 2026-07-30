@@ -154,5 +154,169 @@
     "route": "components/dashboard-widget",
     "json": "components/dashboard-widget.json",
     "markdown": "components/dashboard-widget.md"
+  },
+  "playground": {
+    "route": "preview/dashboard-widget",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "heading",
+        "label": "Heading",
+        "kind": "text",
+        "defaultValue": "Runs by environment",
+        "testValue": "Runs by environment · alternate",
+        "description": "Changes the widget heading.",
+        "binding": {
+          "kind": "input",
+          "publicName": "heading",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "eyebrow",
+        "label": "Eyebrow",
+        "kind": "text",
+        "defaultValue": "AUTOMATION",
+        "testValue": "AUTOMATION · alternate",
+        "description": "Configures the component eyebrow contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "eyebrow",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "overflow",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "long text",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "loading",
+        "label": "loading",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "loading",
+          "label": "loading",
+          "description": "The fixture is waiting for enterprise data."
+        }
+      },
+      {
+        "id": "empty",
+        "label": "empty",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "empty",
+          "label": "empty",
+          "description": "The fixture data source returned no records."
+        }
+      },
+      {
+        "id": "error",
+        "label": "error",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "error",
+          "label": "error",
+          "description": "The fixture data request failed and can be retried."
+        }
+      },
+      {
+        "id": "success",
+        "label": "success",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "success",
+          "label": "success",
+          "description": "The fixture operation completed successfully."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 2,
+      "controlled": 2,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

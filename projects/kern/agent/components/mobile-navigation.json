@@ -136,5 +136,183 @@
     "route": "components/mobile-navigation",
     "json": "components/mobile-navigation.json",
     "markdown": "components/mobile-navigation.md"
+  },
+  "playground": {
+    "route": "preview/mobile-navigation",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "selected",
+        "label": "Selected item",
+        "kind": "select",
+        "defaultValue": "overview",
+        "testValue": "activity",
+        "description": "Changes the selected projected navigation destination.",
+        "binding": {
+          "kind": "fixture",
+          "target": "interaction",
+          "description": "Selects the active projected navigation action in the mobile fixture."
+        },
+        "options": [
+          {
+            "label": "overview",
+            "value": "overview"
+          },
+          {
+            "label": "activity",
+            "value": "activity"
+          },
+          {
+            "label": "settings",
+            "value": "settings"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "overflow",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "long text",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "loading",
+        "label": "loading",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "loading",
+          "label": "loading",
+          "description": "The fixture is waiting for enterprise data."
+        }
+      },
+      {
+        "id": "empty",
+        "label": "empty",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "empty",
+          "label": "empty",
+          "description": "The fixture data source returned no records."
+        }
+      },
+      {
+        "id": "error",
+        "label": "error",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "error",
+          "label": "error",
+          "description": "The fixture data request failed and can be retried."
+        }
+      },
+      {
+        "id": "success",
+        "label": "success",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "success",
+          "label": "success",
+          "description": "The fixture operation completed successfully."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 1,
+      "controlled": 0,
+      "excluded": 1,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "mobile-navigation",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#mobile-navigation"
+        }
+      }
+    ]
   }
 }

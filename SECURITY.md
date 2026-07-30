@@ -63,7 +63,7 @@ Security releases may remove unsafe behavior without a normal deprecation period
 In scope:
 
 - code and published assets in `@kern-ui/angular`;
-- documentation or Lab behavior that can compromise a consumer;
+- documentation or preview behavior that can compromise a consumer;
 - repository build and release workflows;
 - vulnerable direct dependencies with a plausible Kern attack path.
 

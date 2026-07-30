@@ -3,7 +3,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { KrnFormField, KrnHint, KrnLabel, KrnTextInput } from '@kern-ui/angular/kit';
 
 @Component({
-  selector: 'klab-consumer-root',
+  selector: 'krn-consumer-root',
   imports: [KrnFormField, KrnHint, KrnLabel, KrnTextInput],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

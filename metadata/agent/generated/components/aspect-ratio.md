@@ -86,6 +86,37 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - RTL
 - mobile
 
+## Interactive playground
+
+Route: `preview/aspect-ratio`
+
+Scenarios: `default`.
+Public API coverage: 1/2
+directly controlled; 1 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument | Control | Default   | Test value | Binding                | Description                                     |
+| -------- | ------- | --------- | ---------- | ---------------------- | ----------------------------------------------- |
+| `fit`    | select  | `"cover"` | `"none"`   | input `fit` (property) | Changes how projected media fits the ratio box. |
+
+Exact API exclusions:
+
+| Public API | Category          | Evidence                                              | Reason                                                                                                          |
+| ---------- | ----------------- | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `ratio`    | polymorphic-value | `specimen-fixture:preview/aspect-ratio?state=default` | This polymorphic value cannot round-trip through one scalar control without changing its public type semantics. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+
 ## Related
 
 - `app-shell`

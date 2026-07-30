@@ -112,10 +112,73 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - disabled
 - filled
 - empty
+- readonly
+- required
+- invalid
+- minimum
+- maximum
 - closed
 - open
 - empty results
 - async loading
+
+## Interactive playground
+
+Route: `preview/date-picker`
+
+Scenarios: `default`.
+Public API coverage: 9/12
+directly controlled; 3 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument       | Control | Default        | Test value          | Binding                         | Description                                       |
+| -------------- | ------- | -------------- | ------------------- | ------------------------------- | ------------------------------------------------- |
+| `min`          | text    | `"2026-01-01"` | `"2026-02-01"`      | input `min` (property)          | Sets the first selectable ISO date.               |
+| `max`          | text    | `"2027-12-31"` | `"2026-11-30"`      | input `max` (property)          | Sets the last selectable ISO date.                |
+| `weekStartsOn` | number  | `1`            | `2`                 | input `weekStartsOn` (property) | Uses 0 for Sunday through 6 for Saturday.         |
+| `disabled`     | boolean | `false`        | `true`              | input `disabled` (property)     | Prevents user interaction.                        |
+| `readOnly`     | boolean | `false`        | `true`              | input `readonly` (property)     | Keeps the value focusable while preventing edits. |
+| `required`     | boolean | `false`        | `true`              | input `required` (property)     | Marks the control as required.                    |
+| `invalid`      | boolean | `false`        | `true`              | input `invalid` (property)      | Exposes the invalid visual and ARIA state.        |
+| `id`           | text    | `""`           | `"Alternate value"` | input `id` (property)           | Configures the component id contract.             |
+| `today`        | text    | `"2026-07-30"` | `"2026-08-15"`      | input `today` (property)        | Configures the component today contract.          |
+
+Exact API exclusions:
+
+| Public API  | Category           | Evidence                                                 | Reason                                                                                                                  |
+| ----------- | ------------------ | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#date-picker` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `labels`    | translation-object | `locale-preview:preview/date-picker?locale=ru-RU`        | Structured translation overrides are exercised through locale providers, not lossy scalar controls.                     |
+| `locale`    | locale-environment | `locale-preview:preview/date-picker?locale=ru-RU`        | Locale is owned by the playground environment selector so every locale-sensitive component changes consistently.        |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — Disabled; scenario `default`; `disabled=true`.
+- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
+- `readonly` — Readonly; scenario `default`; `readOnly=true`.
+- `required` — Required; scenario `default`; `required=true`.
+- `invalid` — Invalid; scenario `default`; `invalid=true`.
+- `minimum` — minimum; scenario `default`; fixture effect `status/neutral` — minimum: The fixture exposes the minimum status without claiming a public component input..
+- `maximum` — maximum; scenario `default`; fixture effect `status/neutral` — maximum: The fixture exposes the maximum status without claiming a public component input..
+- `closed` — closed; scenario `default`; fixture effect `status/neutral` — closed: The fixture exposes the closed status without claiming a public component input..
+- `open` — open; scenario `default`; fixture effect `status/info` — open: The fixture exposes the open status without claiming a public component input..
+- `empty-results` — empty results; scenario `default`; fixture effect `data/empty` — empty results: The fixture data source returned no records..
+- `async-loading` — async loading; scenario `default`; fixture effect `status/info` — async loading: The fixture exposes the async loading status without claiming a public component input..
 
 ## Related
 

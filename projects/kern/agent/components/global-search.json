@@ -28,7 +28,9 @@
     "loading",
     "empty",
     "error",
-    "success"
+    "success",
+    "closed",
+    "open"
   ],
   "lifecycle": {
     "status": "recipe",
@@ -251,5 +253,306 @@
     "route": "components/global-search",
     "json": "components/global-search.json",
     "markdown": "components/global-search.md"
+  },
+  "playground": {
+    "route": "preview/global-search",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "query",
+        "label": "Query",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Changes the active search query.",
+        "binding": {
+          "kind": "model",
+          "publicName": "query"
+        }
+      },
+      {
+        "key": "activeIndex",
+        "label": "Active result",
+        "kind": "number",
+        "defaultValue": 0,
+        "testValue": 1,
+        "description": "Changes the active result index.",
+        "binding": {
+          "kind": "model",
+          "publicName": "activeIndex"
+        },
+        "min": 0,
+        "max": 20,
+        "step": 1
+      },
+      {
+        "key": "open",
+        "label": "Open",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Opens the search result surface.",
+        "binding": {
+          "kind": "model",
+          "publicName": "open"
+        }
+      },
+      {
+        "key": "maxResults",
+        "label": "Max Results",
+        "kind": "number",
+        "defaultValue": 8,
+        "testValue": 9,
+        "description": "Configures the component maxResults contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "maxResults",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "placeholder",
+        "label": "Placeholder",
+        "kind": "text",
+        "defaultValue": "Search workspaces, projects, people…",
+        "testValue": "Search workspaces, projects, people… · alternate",
+        "description": "Configures the component placeholder contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "placeholder",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "overflow",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "long text",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "loading",
+        "label": "loading",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "loading",
+          "label": "loading",
+          "description": "The fixture is waiting for enterprise data."
+        }
+      },
+      {
+        "id": "empty",
+        "label": "empty",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "empty",
+          "label": "empty",
+          "description": "The fixture data source returned no records."
+        }
+      },
+      {
+        "id": "error",
+        "label": "error",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "error",
+          "label": "error",
+          "description": "The fixture data request failed and can be retried."
+        }
+      },
+      {
+        "id": "success",
+        "label": "success",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "success",
+          "label": "success",
+          "description": "The fixture operation completed successfully."
+        }
+      },
+      {
+        "id": "closed",
+        "label": "closed",
+        "scenario": "default",
+        "args": {
+          "open": false
+        },
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "closed",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "open",
+        "label": "Open",
+        "scenario": "default",
+        "args": {
+          "open": true
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 11,
+      "controlled": 5,
+      "excluded": 6,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "global-search",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#global-search"
+        }
+      },
+      {
+        "componentId": "global-search",
+        "publicName": "clearLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#global-search"
+        }
+      },
+      {
+        "componentId": "global-search",
+        "publicName": "emptyResultsLabel",
+        "kind": "input",
+        "type": "(query: string) => string",
+        "code": "callback",
+        "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/global-search.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "global-search",
+        "publicName": "results",
+        "kind": "input",
+        "type": "ReadonlyArray<KrnSearchResult>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/global-search?state=default"
+        }
+      },
+      {
+        "componentId": "global-search",
+        "publicName": "resultsId",
+        "kind": "input",
+        "type": "string",
+        "code": "dom-wiring",
+        "reason": "DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#global-search"
+        }
+      },
+      {
+        "componentId": "global-search",
+        "publicName": "resultsLabel",
+        "kind": "input",
+        "type": "(label: string) => string",
+        "code": "callback",
+        "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/global-search.json#/examples/0"
+        }
+      }
+    ]
   }
 }

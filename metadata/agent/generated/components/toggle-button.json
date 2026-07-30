@@ -173,5 +173,211 @@
     "route": "components/toggle-button",
     "json": "components/toggle-button.json",
     "markdown": "components/toggle-button.md"
+  },
+  "playground": {
+    "route": "preview/toggle-button",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Prevents user interaction.",
+        "binding": {
+          "kind": "input",
+          "publicName": "disabled",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "selected",
+        "label": "Selected",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Selects the action.",
+        "binding": {
+          "kind": "model",
+          "publicName": "pressed"
+        }
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "kind": "select",
+        "defaultValue": "md",
+        "testValue": "sm",
+        "description": "Semantic component size.",
+        "binding": {
+          "kind": "input",
+          "publicName": "size",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "sm",
+            "value": "sm"
+          },
+          {
+            "label": "md",
+            "value": "md"
+          },
+          {
+            "label": "lg",
+            "value": "lg"
+          }
+        ]
+      },
+      {
+        "key": "value",
+        "label": "Value",
+        "kind": "text",
+        "defaultValue": "watch",
+        "testValue": "watch · alternate",
+        "description": "Controlled component value.",
+        "binding": {
+          "kind": "input",
+          "publicName": "value",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "Disabled",
+        "scenario": "default",
+        "args": {
+          "disabled": true
+        }
+      },
+      {
+        "id": "selected",
+        "label": "Selected",
+        "scenario": "default",
+        "args": {
+          "selected": true
+        }
+      },
+      {
+        "id": "unselected",
+        "label": "unselected",
+        "scenario": "default",
+        "args": {
+          "selected": false
+        },
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "unselected",
+          "description": "The fixture exposes the unselected status without claiming a public component input."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 4,
+      "controlled": 4,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

@@ -31,6 +31,9 @@
     "disabled",
     "filled",
     "empty",
+    "readonly",
+    "required",
+    "invalid",
     "closed",
     "open",
     "empty results",
@@ -368,5 +371,446 @@
     "route": "components/autocomplete",
     "json": "components/autocomplete.json",
     "markdown": "components/autocomplete.md"
+  },
+  "playground": {
+    "route": "preview/autocomplete",
+    "scenarios": ["default", "stress"],
+    "controls": [
+      {
+        "key": "placeholder",
+        "label": "Placeholder",
+        "kind": "text",
+        "defaultValue": "Type a workspace alias…",
+        "testValue": "Type a workspace alias… · alternate",
+        "description": "Sets the empty input prompt.",
+        "binding": {
+          "kind": "input",
+          "publicName": "placeholder",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "optionsState",
+        "label": "Options state",
+        "kind": "select",
+        "defaultValue": "ready",
+        "testValue": "loading",
+        "description": "Shows ready, loading, or error suggestions.",
+        "binding": {
+          "kind": "input",
+          "publicName": "optionsState",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "ready",
+            "value": "ready"
+          },
+          {
+            "label": "loading",
+            "value": "loading"
+          },
+          {
+            "label": "error",
+            "value": "error"
+          }
+        ]
+      },
+      {
+        "key": "emptyText",
+        "label": "Empty text",
+        "kind": "text",
+        "defaultValue": "No options",
+        "testValue": "No options · alternate",
+        "description": "Uses locale-aware empty-options copy until explicitly changed.",
+        "binding": {
+          "kind": "input",
+          "publicName": "emptyText",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "errorText",
+        "label": "Error text",
+        "kind": "text",
+        "defaultValue": "Could not load options",
+        "testValue": "Could not load options · alternate",
+        "description": "Uses locale-aware option-load failure copy until explicitly changed.",
+        "binding": {
+          "kind": "input",
+          "publicName": "errorText",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "loadingText",
+        "label": "Loading text",
+        "kind": "text",
+        "defaultValue": "Loading options…",
+        "testValue": "Loading options… · alternate",
+        "description": "Uses locale-aware loading copy until explicitly changed.",
+        "binding": {
+          "kind": "input",
+          "publicName": "loadingText",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "open",
+        "label": "Open",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Opens the suggestions listbox.",
+        "binding": {
+          "kind": "model",
+          "publicName": "open"
+        }
+      },
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Prevents user interaction.",
+        "binding": {
+          "kind": "input",
+          "publicName": "disabled",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "readOnly",
+        "label": "Read only",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Keeps the value focusable while preventing edits.",
+        "binding": {
+          "kind": "input",
+          "publicName": "readonly",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "required",
+        "label": "Required",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Marks the control as required.",
+        "binding": {
+          "kind": "input",
+          "publicName": "required",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "invalid",
+        "label": "Invalid",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Exposes the invalid visual and ARIA state.",
+        "binding": {
+          "kind": "input",
+          "publicName": "invalid",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "filterLocally",
+        "label": "Filter Locally",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Configures the component filterLocally contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "filterLocally",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "id",
+        "label": "Id",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component id contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "id",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "stress",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "stress",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "Disabled",
+        "scenario": "default",
+        "args": {
+          "disabled": true
+        }
+      },
+      {
+        "id": "filled",
+        "label": "filled",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "filled",
+          "label": "filled",
+          "description": "The component is composed with a representative populated value."
+        }
+      },
+      {
+        "id": "empty",
+        "label": "empty",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "empty",
+          "label": "empty",
+          "description": "The component is composed with intentionally empty content."
+        }
+      },
+      {
+        "id": "readonly",
+        "label": "Readonly",
+        "scenario": "default",
+        "args": {
+          "readOnly": true
+        }
+      },
+      {
+        "id": "required",
+        "label": "Required",
+        "scenario": "default",
+        "args": {
+          "required": true
+        }
+      },
+      {
+        "id": "invalid",
+        "label": "Invalid",
+        "scenario": "default",
+        "args": {
+          "invalid": true
+        }
+      },
+      {
+        "id": "closed",
+        "label": "closed",
+        "scenario": "default",
+        "args": {
+          "open": false
+        },
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "closed",
+          "description": "The fixture exposes the closed status without claiming a public component input."
+        }
+      },
+      {
+        "id": "open",
+        "label": "Open",
+        "scenario": "default",
+        "args": {
+          "open": true
+        }
+      },
+      {
+        "id": "empty-results",
+        "label": "empty results",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "empty",
+          "label": "empty results",
+          "description": "The fixture data source returned no records."
+        }
+      },
+      {
+        "id": "async-loading",
+        "label": "Async loading",
+        "scenario": "default",
+        "args": {
+          "optionsState": "loading"
+        }
+      },
+      {
+        "id": "error",
+        "label": "Error",
+        "scenario": "default",
+        "args": {
+          "optionsState": "error"
+        }
+      },
+      {
+        "id": "stress",
+        "label": "Stress data",
+        "scenario": "stress",
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 16,
+      "controlled": 12,
+      "excluded": 4,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "autocomplete",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#autocomplete"
+        }
+      },
+      {
+        "componentId": "autocomplete",
+        "publicName": "optionFilter",
+        "kind": "input",
+        "type": "KrnOptionFilter<string> | null",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/autocomplete?state=default"
+        }
+      },
+      {
+        "componentId": "autocomplete",
+        "publicName": "options",
+        "kind": "input",
+        "type": "ReadonlyArray<KrnSelectOption<string>>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/autocomplete?state=default"
+        }
+      },
+      {
+        "componentId": "autocomplete",
+        "publicName": "toggleLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#autocomplete"
+        }
+      }
+    ]
   }
 }

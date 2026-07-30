@@ -33,7 +33,9 @@
     "closed",
     "open",
     "nested",
-    "dismissed"
+    "dismissed",
+    "selected",
+    "unselected"
   ],
   "lifecycle": {
     "status": "beta",
@@ -273,5 +275,337 @@
     "route": "components/command-palette",
     "json": "components/command-palette.json",
     "markdown": "components/command-palette.md"
+  },
+  "playground": {
+    "route": "preview/command-palette",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "open",
+        "label": "Open",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Opens the command palette.",
+        "binding": {
+          "kind": "model",
+          "publicName": "open"
+        }
+      },
+      {
+        "key": "query",
+        "label": "Query",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Changes the active command query.",
+        "binding": {
+          "kind": "model",
+          "publicName": "query"
+        }
+      },
+      {
+        "key": "placeholder",
+        "label": "Placeholder",
+        "kind": "text",
+        "defaultValue": "Search commands…",
+        "testValue": "Search commands… · alternate",
+        "description": "Uses locale-aware command search copy until explicitly changed.",
+        "binding": {
+          "kind": "input",
+          "publicName": "placeholder",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "closeShortcut",
+        "label": "Close shortcut",
+        "kind": "text",
+        "defaultValue": "Esc",
+        "testValue": "Esc · alternate",
+        "description": "Uses the locale-aware close shortcut until explicitly changed.",
+        "binding": {
+          "kind": "input",
+          "publicName": "closeShortcut",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "description",
+        "label": "Description",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component description contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "description",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "title",
+        "label": "Title",
+        "kind": "text",
+        "defaultValue": "Jump to…",
+        "testValue": "Jump to… · alternate",
+        "description": "Configures the component title contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "title",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "disabled",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "disabled",
+          "description": "The fixture exposes the disabled status without claiming a public component input."
+        }
+      },
+      {
+        "id": "current",
+        "label": "current",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "current",
+          "description": "The fixture exposes the current status without claiming a public component input."
+        }
+      },
+      {
+        "id": "closed",
+        "label": "closed",
+        "scenario": "default",
+        "args": {
+          "open": false
+        },
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "closed",
+          "description": "The fixture exposes the closed status without claiming a public component input."
+        }
+      },
+      {
+        "id": "open",
+        "label": "Open",
+        "scenario": "default",
+        "args": {
+          "open": true
+        }
+      },
+      {
+        "id": "nested",
+        "label": "nested",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "nested",
+          "description": "The fixture exposes the nested status without claiming a public component input."
+        }
+      },
+      {
+        "id": "dismissed",
+        "label": "dismissed",
+        "scenario": "default",
+        "args": {
+          "open": false
+        },
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "dismissed",
+          "description": "The fixture exposes the dismissed status without claiming a public component input."
+        }
+      },
+      {
+        "id": "selected",
+        "label": "selected",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "selected",
+          "description": "The fixture exposes the selected status without claiming a public component input."
+        }
+      },
+      {
+        "id": "unselected",
+        "label": "unselected",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "unselected",
+          "description": "The fixture exposes the unselected status without claiming a public component input."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 10,
+      "controlled": 6,
+      "excluded": 4,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "command-palette",
+        "publicName": "items",
+        "kind": "input",
+        "type": "ReadonlyArray<KrnCommandItem>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/command-palette?state=default"
+        }
+      },
+      {
+        "componentId": "command-palette",
+        "publicName": "labels",
+        "kind": "input",
+        "type": "Partial<KrnCommandPaletteLabels>",
+        "code": "translation-object",
+        "reason": "Structured translation overrides are exercised through locale providers, not lossy scalar controls.",
+        "evidence": {
+          "category": "locale-preview",
+          "pointer": "preview/command-palette?locale=ru-RU"
+        }
+      },
+      {
+        "componentId": "command-palette",
+        "publicName": "locale",
+        "kind": "input",
+        "type": "string | Array<string>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/command-palette?state=default"
+        }
+      },
+      {
+        "componentId": "command-palette",
+        "publicName": "resultsLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#command-palette"
+        }
+      }
+    ]
   }
 }

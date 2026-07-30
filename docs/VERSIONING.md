@@ -28,7 +28,7 @@ The compatibility contract includes:
 - documented keyboard interaction, focus behavior, accessible names, and form contracts.
 
 Deep source imports, undeclared family subpaths such as `/forms`, undocumented DOM structure,
-generated class names, private/protected members, test fixtures, Lab internals, and
+generated class names, private/protected members, test fixtures, preview internals, and
 documentation-application code are not public API.
 
 The component catalog generates API names, kinds, types, required flags, and defaults from runtime

@@ -105,6 +105,48 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - selected
 - unselected
 
+## Interactive playground
+
+Route: `preview/toggle-group`
+
+Scenarios: `default`.
+Public API coverage: 3/5
+directly controlled; 2 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument      | Control | Default        | Test value   | Binding                        | Description                                                               |
+| ------------- | ------- | -------------- | ------------ | ------------------------------ | ------------------------------------------------------------------------- |
+| `multiple`    | boolean | `false`        | `true`       | input `multiple` (property)    | Allows more than one toggle to be selected.                               |
+| `disabled`    | boolean | `false`        | `true`       | input `disabled` (property)    | Prevents interaction and participates in the component disabled contract. |
+| `orientation` | select  | `"horizontal"` | `"vertical"` | input `orientation` (property) | Configures the component orientation contract.                            |
+
+Exact API exclusions:
+
+| Public API  | Category           | Evidence                                                  | Reason                                                                                                                  |
+| ----------- | ------------------ | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#toggle-group` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `values`    | complex-data       | `specimen-fixture:preview/toggle-group?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — Disabled; scenario `default`; `disabled=true`.
+- `selected` — selected; scenario `default`; fixture effect `status/neutral` — selected: The fixture exposes the selected status without claiming a public component input..
+- `unselected` — unselected; scenario `default`; fixture effect `status/neutral` — unselected: The fixture exposes the unselected status without claiming a public component input..
+
 ## Related
 
 - `button`

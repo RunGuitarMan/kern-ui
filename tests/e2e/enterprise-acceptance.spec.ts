@@ -1,47 +1,53 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
 import { KERN_CATALOG } from '../../projects/showcase/src/lib/catalog';
-import { expectNoPageOverflow, labUrl, settlePage, watchRuntimeErrors } from '../support/browser';
+import {
+  expectNoPageOverflow,
+  previewUrl,
+  settlePage,
+  watchRuntimeErrors,
+} from '../support/browser';
 
-async function openLabSpecimen(
+async function openPreviewSpecimen(
   page: Page,
   component: string,
   scenario: 'default' | 'states' | 'stress' | 'virtual' = 'default',
   locale: 'en-US' | 'ru-RU' = 'en-US',
+  state?: string,
 ): Promise<Locator> {
   await page.goto(
-    labUrl({
+    previewUrl({
       component,
       scenario,
       locale,
+      state,
       theme: 'light',
       density: 'comfortable',
       direction: 'ltr',
     }),
   );
   await settlePage(page);
-  const specimen = page.getByTestId(`specimen-${component}`);
+  const specimen = page.getByTestId(`component-specimen-${component}`);
   await expect(specimen).toBeVisible();
-  await expect(specimen.getByTestId(`component-specimen-${component}`)).toBeVisible();
   return specimen;
 }
 
 test.describe('Enterprise browser acceptance contracts', () => {
-  test('the shared Lab renderer activates every catalog specimen without a fallback', async ({
+  test('the shared Docs preview renderer activates every catalog specimen without a fallback', async ({
     page,
   }) => {
     test.setTimeout(180_000);
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
 
-    await page.goto(labUrl());
-    await settlePage(page);
     expect(KERN_CATALOG).toHaveLength(131);
 
-    const control = page.getByTestId('component-control');
     for (const item of KERN_CATALOG) {
-      await control.selectOption(item.id);
+      await page.goto(previewUrl({ component: item.id }), { waitUntil: 'domcontentloaded' });
       const specimen = page.getByTestId(`component-specimen-${item.id}`);
-      await expect(specimen, `${item.id}: shared specimen is rendered in Lab`).toBeVisible();
+      await expect(
+        specimen,
+        `${item.id}: shared specimen is rendered in Docs preview`,
+      ).toBeVisible();
       await expect(specimen, `${item.id}: exact catalog identity`).toHaveAttribute(
         'data-specimen',
         item.id,
@@ -58,7 +64,7 @@ test.describe('Enterprise browser acceptance contracts', () => {
   test('async selection states remain explicit, operable, and semantic', async ({ page }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
 
-    let specimen = await openLabSpecimen(page, 'select', 'states');
+    let specimen = await openPreviewSpecimen(page, 'select', 'default', 'en-US', 'async-loading');
     const select = specimen.getByRole('combobox', { name: 'Workspace plan' });
     await expect(select).toHaveAttribute('aria-busy', 'true');
     await select.click();
@@ -69,7 +75,7 @@ test.describe('Enterprise browser acceptance contracts', () => {
     await page.keyboard.press('Escape');
     await expect(select).toBeFocused();
 
-    specimen = await openLabSpecimen(page, 'multi-select', 'states');
+    specimen = await openPreviewSpecimen(page, 'multi-select', 'default', 'en-US', 'error');
     const multiSelect = specimen.getByRole('combobox', { name: 'Owners' });
     await multiSelect.click();
     await expect(specimen.getByRole('listbox')).toHaveAttribute('aria-invalid', 'true');
@@ -86,7 +92,7 @@ test.describe('Enterprise browser acceptance contracts', () => {
   }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
 
-    let specimen = await openLabSpecimen(page, 'tree', 'states');
+    let specimen = await openPreviewSpecimen(page, 'tree', 'states');
     const loadingNode = specimen.getByRole('treeitem', {
       name: 'Loading children for Loading projects',
     });
@@ -101,7 +107,7 @@ test.describe('Enterprise browser acceptance contracts', () => {
     await failedNode.press('ArrowRight');
     await expect(failedNode).toHaveAttribute('aria-expanded', 'true');
 
-    specimen = await openLabSpecimen(page, 'tree-navigation', 'states');
+    specimen = await openPreviewSpecimen(page, 'tree-navigation', 'states');
     await expect(
       specimen.getByRole('treeitem', { name: 'Loading children for Loading workspace' }),
     ).toHaveAttribute('aria-busy', 'true');
@@ -121,7 +127,7 @@ test.describe('Enterprise browser acceptance contracts', () => {
     for (const scenario of ['states', 'virtual'] as const) {
       for (const direction of ['ltr', 'rtl'] as const) {
         await page.goto(
-          labUrl({
+          previewUrl({
             component: 'data-grid',
             scenario,
             direction,
@@ -131,7 +137,7 @@ test.describe('Enterprise browser acceptance contracts', () => {
         );
         await settlePage(page);
 
-        const specimen = page.getByTestId('specimen-data-grid');
+        const specimen = page.getByTestId('component-specimen-data-grid');
         const scroll = specimen.locator(scenario === 'virtual' ? '.virtual-grid' : '.table-scroll');
         const start = specimen.locator(
           '[role="columnheader"][data-column-key="workspace"][data-pinned="start"]',
@@ -172,7 +178,7 @@ test.describe('Enterprise browser acceptance contracts', () => {
   test('Chart identity survives reordering and long summaries stay bounded', async ({ page }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
 
-    let specimen = await openLabSpecimen(page, 'line-chart', 'states');
+    let specimen = await openPreviewSpecimen(page, 'line-chart', 'states');
     const wed = specimen.locator('[role="button"][aria-label="Wed: 49"]');
     await wed.focus();
     await expect(wed).toBeFocused();
@@ -197,7 +203,7 @@ test.describe('Enterprise browser acceptance contracts', () => {
       .toBe('wed');
     await expect(specimen.getByRole('status')).toContainText('Wed');
 
-    specimen = await openLabSpecimen(page, 'line-chart', 'stress');
+    specimen = await openPreviewSpecimen(page, 'line-chart', 'stress');
     const chart = specimen.locator('svg[role="group"][aria-label*="Weekly active users"]');
     const summary = await chart.getAttribute('aria-label');
     expect(summary).toContain('P001: 40');
@@ -213,22 +219,18 @@ test.describe('Enterprise browser acceptance contracts', () => {
   }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
 
-    await page.goto(labUrl({ component: 'select', scenario: 'states' }));
-    await settlePage(page);
-    await Promise.all([
-      page.waitForURL(/locale=ru-RU/),
-      page.getByTestId('locale-control').selectOption('ru-RU'),
-    ]);
+    await page.goto(previewUrl({ component: 'select', state: 'async-loading', locale: 'ru-RU' }));
     await settlePage(page);
 
-    let specimen = page.getByTestId('specimen-select');
-    await expect(specimen.getByTestId('component-specimen-select')).toBeVisible();
-    await expect(page.locator('html')).toHaveAttribute('lang', 'ru-RU');
+    let specimen = page.getByTestId('component-specimen-select');
+    await expect(specimen).toBeVisible();
+    await expect(page.getByTestId('specimen-stage')).toHaveAttribute('lang', 'ru-RU');
+    await expect(page.locator('html')).not.toHaveAttribute('lang', 'ru-RU');
     const select = specimen.getByRole('combobox', { name: 'Workspace plan' });
     await select.click();
     await expect(specimen.getByRole('status')).toHaveText('Загрузка вариантов…');
 
-    specimen = await openLabSpecimen(page, 'tree', 'states', 'ru-RU');
+    specimen = await openPreviewSpecimen(page, 'tree', 'states', 'ru-RU');
     await expect(
       specimen.getByRole('treeitem', {
         name: 'Загрузка дочерних элементов для «Loading projects»',
@@ -240,11 +242,11 @@ test.describe('Enterprise browser acceptance contracts', () => {
       }),
     ).toHaveAttribute('aria-invalid', 'true');
 
-    specimen = await openLabSpecimen(page, 'data-grid', 'default', 'ru-RU');
+    specimen = await openPreviewSpecimen(page, 'data-grid', 'default', 'ru-RU');
     await expect(specimen.getByPlaceholder('Фильтр строк…')).toBeVisible();
     await expect(specimen.getByText('4 строки', { exact: true })).toBeVisible();
 
-    specimen = await openLabSpecimen(page, 'line-chart', 'stress', 'ru-RU');
+    specimen = await openPreviewSpecimen(page, 'line-chart', 'stress', 'ru-RU');
     await expect(specimen.getByRole('button', { name: 'Показать данные' })).toBeVisible();
     const summary = await specimen.locator('svg[role="group"]').getAttribute('aria-label');
     expect(summary).toContain('Ещё 108 точек данных');
@@ -269,12 +271,17 @@ test.describe('Enterprise browser acceptance contracts', () => {
         name: 'Workspace actions',
       },
     ] as const) {
-      const specimen = await openLabSpecimen(page, overlay.component);
+      const specimen = await openPreviewSpecimen(page, overlay.component);
       const trigger = specimen.getByRole('button', { name: overlay.trigger });
       await trigger.click();
       const dialog = page.getByRole('dialog', { name: overlay.name });
       await expect(dialog).toBeVisible();
       await expect(dialog).toHaveAttribute('aria-modal', 'true');
+      await expect
+        .poll(() =>
+          dialog.evaluate((element) => element.closest('[data-testid="specimen-stage"]') !== null),
+        )
+        .toBe(true);
       await expect
         .poll(() =>
           dialog.evaluate((element) => element.contains(element.ownerDocument.activeElement)),
@@ -285,11 +292,18 @@ test.describe('Enterprise browser acceptance contracts', () => {
       await expect(trigger).toBeFocused();
     }
 
-    const specimen = await openLabSpecimen(page, 'alert-dialog');
+    const specimen = await openPreviewSpecimen(page, 'alert-dialog');
     const trigger = specimen.getByRole('button', { name: 'Delete workspace' });
     await trigger.click();
     const alertDialog = page.getByRole('alertdialog', { name: 'Delete Northstar?' });
     await expect(alertDialog).toBeVisible();
+    await expect
+      .poll(() =>
+        alertDialog.evaluate(
+          (element) => element.closest('[data-testid="specimen-stage"]') !== null,
+        ),
+      )
+      .toBe(true);
     await page.mouse.click(4, 4);
     await expect(alertDialog).toBeVisible();
     await page.keyboard.press('Escape');

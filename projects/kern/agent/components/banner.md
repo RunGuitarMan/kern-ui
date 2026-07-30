@@ -93,6 +93,43 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - RTL
 - mobile
 
+## Interactive playground
+
+Route: `preview/banner`
+
+Scenarios: `default`.
+Public API coverage: 4/5
+directly controlled; 1 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument      | Control | Default                   | Test value                            | Binding                        | Description                                               |
+| ------------- | ------- | ------------------------- | ------------------------------------- | ------------------------------ | --------------------------------------------------------- |
+| `dismissible` | boolean | `false`                   | `true`                                | input `dismissible` (property) | Shows the dismiss action.                                 |
+| `icon`        | text    | `""`                      | `"Alternate value"`                   | input `icon` (property)        | Configures the component icon contract.                   |
+| `title`       | text    | `"Scheduled maintenance"` | `"Scheduled maintenance · alternate"` | input `title` (property)       | Configures the component title contract.                  |
+| `tone`        | select  | `"info"`                  | `"neutral"`                           | input `tone` (property)        | Semantic intent; color is never the only state indicator. |
+
+Exact API exclusions:
+
+| Public API     | Category           | Evidence                                            | Reason                                                                                                                                                              |
+| -------------- | ------------------ | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dismissLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#banner` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `dismissible` — Dismissible; scenario `default`; `dismissible=true`.
+
 ## Related
 
 - `alert`

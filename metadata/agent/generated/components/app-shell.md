@@ -108,6 +108,48 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - RTL
 - mobile
 
+## Interactive playground
+
+Route: `preview/app-shell`
+
+Scenarios: `default`.
+Public API coverage: 6/11
+directly controlled; 5 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument               | Control | Default    | Test value | Binding                             | Description                                               |
+| ---------------------- | ------- | ---------- | ---------- | ----------------------------------- | --------------------------------------------------------- |
+| `mobileNavigationOpen` | boolean | `false`    | `true`     | model `mobileNavigationOpen`        | Opens the shell navigation surface at mobile breakpoints. |
+| `mainMaxWidth`         | text    | `"48rem"`  | `"20rem"`  | input `mainMaxWidth` (property)     | Constrains the primary content measure.                   |
+| `sidebarWidth`         | text    | `"10rem"`  | `"20rem"`  | input `sidebarWidth` (property)     | Sets the shell sidebar width.                             |
+| `mobileNavigation`     | select  | `"auto"`   | `"hidden"` | input `mobileNavigation` (property) | Configures the component mobileNavigation contract.       |
+| `railWidth`            | text    | `"3.5rem"` | `"20rem"`  | input `railWidth` (property)        | Configures the component railWidth contract.              |
+| `sidebarPosition`      | select  | `"start"`  | `"end"`    | input `sidebarPosition` (property)  | Configures the component sidebarPosition contract.        |
+
+Exact API exclusions:
+
+| Public API              | Category           | Evidence                                               | Reason                                                                                                                                                              |
+| ----------------------- | ------------------ | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `closeNavigationLabel`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `mainId`                | dom-wiring         | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.                                                       |
+| `mobileNavigationId`    | dom-wiring         | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.                                                       |
+| `mobileNavigationLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `openNavigationLabel`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+
 ## Related
 
 - `header`

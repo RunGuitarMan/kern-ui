@@ -25,6 +25,7 @@
     "compact",
     "RTL",
     "mobile",
+    "disabled",
     "handle hover",
     "handle focus-visible",
     "minimum size",
@@ -188,5 +189,240 @@
     "route": "components/resizable-panels",
     "json": "components/resizable-panels.json",
     "markdown": "components/resizable-panels.md"
+  },
+  "playground": {
+    "route": "preview/resizable-panels",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Disables pointer and keyboard resizing.",
+        "binding": {
+          "kind": "input",
+          "publicName": "disabled",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "step",
+        "label": "Step",
+        "kind": "number",
+        "defaultValue": 5,
+        "testValue": 6,
+        "description": "Sets the keyboard resize increment.",
+        "binding": {
+          "kind": "input",
+          "publicName": "step",
+          "syntax": "property"
+        },
+        "min": 1,
+        "max": 25,
+        "step": 1
+      },
+      {
+        "key": "orientation",
+        "label": "Orientation",
+        "kind": "select",
+        "defaultValue": "horizontal",
+        "testValue": "vertical",
+        "description": "Configures the component orientation contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "orientation",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "horizontal",
+            "value": "horizontal"
+          },
+          {
+            "label": "vertical",
+            "value": "vertical"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "Disabled",
+        "scenario": "default",
+        "args": {
+          "disabled": true
+        }
+      },
+      {
+        "id": "handle-hover",
+        "label": "handle hover",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "constrained",
+          "label": "handle hover",
+          "description": "The fixture uses an alternate deterministic boundary to expose layout behavior."
+        }
+      },
+      {
+        "id": "handle-focus-visible",
+        "label": "handle focus-visible",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "constrained",
+          "label": "handle focus-visible",
+          "description": "The fixture uses an alternate deterministic boundary to expose layout behavior."
+        }
+      },
+      {
+        "id": "minimum-size",
+        "label": "minimum size",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "constrained",
+          "label": "minimum size",
+          "description": "The fixture uses an alternate deterministic boundary to expose layout behavior."
+        }
+      },
+      {
+        "id": "maximum-size",
+        "label": "maximum size",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "expanded",
+          "label": "maximum size",
+          "description": "The fixture uses an alternate deterministic boundary to expose layout behavior."
+        }
+      },
+      {
+        "id": "collapsed",
+        "label": "collapsed",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "constrained",
+          "label": "collapsed",
+          "description": "The fixture uses an alternate deterministic boundary to expose layout behavior."
+        }
+      },
+      {
+        "id": "expanded",
+        "label": "expanded",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "expanded",
+          "label": "expanded",
+          "description": "The fixture uses an alternate deterministic boundary to expose layout behavior."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 4,
+      "controlled": 3,
+      "excluded": 1,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "resizable-panels",
+        "publicName": "sizes",
+        "kind": "model",
+        "type": "ReadonlyArray<number>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/resizable-panels?state=default"
+        }
+      }
+    ]
   }
 }

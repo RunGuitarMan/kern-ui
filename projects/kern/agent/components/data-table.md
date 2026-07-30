@@ -163,6 +163,10 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - active
 - disabled
 - loading
+- selected
+- unselected
+- closed
+- open
 - empty
 - error
 - sorted
@@ -170,6 +174,88 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - selected rows
 - virtualized
 - pinned columns
+
+## Interactive playground
+
+Route: `preview/data-table`
+
+Scenarios: `default`, `states`, `stress`.
+Public API coverage: 17/32
+directly controlled; 15 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument            | Control | Default          | Test value                   | Binding                              | Description                                                      |
+| ------------------- | ------- | ---------------- | ---------------------------- | ------------------------------------ | ---------------------------------------------------------------- |
+| `dataState`         | select  | `"ready"`        | `"empty"`                    | fixture data                         | Shows ready, empty, or large datasets.                           |
+| `resizable`         | boolean | `false`          | `true`                       | input `resizable` (property)         | Allows pointer and keyboard column resizing.                     |
+| `pagination`        | boolean | `false`          | `true`                       | input `pagination` (property)        | Paginates the table rows.                                        |
+| `compact`           | boolean | `false`          | `true`                       | input `compact` (property)           | Uses the compact row treatment.                                  |
+| `pageSize`          | number  | `4`              | `5`                          | input `pageSize` (property)          | Sets rows per page.                                              |
+| `filter`            | text    | `""`             | `"Alternate value"`          | model `filter`                       | Changes the active row filter.                                   |
+| `page`              | number  | `1`              | `2`                          | model `page`                         | Changes the active page.                                         |
+| `sortDirection`     | select  | `"asc"`          | `"desc"`                     | model `sortDirection`                | Changes the active sort direction.                               |
+| `sortKey`           | text    | `""`             | `"usage"`                    | model `sortKey`                      | Changes the active sort column.                                  |
+| `filterPlaceholder` | text    | `"Filter rows…"` | `"Filter rows… · alternate"` | input `filterPlaceholder` (property) | Uses locale-aware filter copy until explicitly changed.          |
+| `columnChooser`     | boolean | `false`          | `true`                       | input `columnChooser` (property)     | Configures the component columnChooser contract.                 |
+| `error`             | text    | `""`             | `"Alternate value"`          | input `error` (property)             | Configures the component error contract.                         |
+| `expandable`        | boolean | `false`          | `true`                       | input `expandable` (property)        | Configures the component expandable contract.                    |
+| `filterable`        | boolean | `true`           | `false`                      | input `filterable` (property)        | Configures the component filterable contract.                    |
+| `loading`           | boolean | `false`          | `true`                       | input `loading` (property)           | Prevents duplicate actions and exposes an accessible busy state. |
+| `selectable`        | boolean | `false`          | `true`                       | input `selectable` (property)        | Configures the component selectable contract.                    |
+| `viewportHeight`    | number  | `360`            | `361`                        | input `viewportHeight` (property)    | Configures the component viewportHeight contract.                |
+| `virtualize`        | boolean | `false`          | `true`                       | input `virtualize` (property)        | Configures the component virtualize contract.                    |
+
+Exact API exclusions:
+
+| Public API              | Category           | Evidence                                                         | Reason                                                                                                                                                              |
+| ----------------------- | ------------------ | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`             | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#data-table`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
+| `columns`               | complex-data       | `specimen-fixture:preview/data-table?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+| `data`                  | complex-data       | `specimen-fixture:preview/data-table?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+| `defaultCellTemplate`   | template           | `component-example:agent/components/data-table.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.                                                          |
+| `defaultHeaderTemplate` | template           | `component-example:agent/components/data-table.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.                                                          |
+| `emptyLabel`            | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#data-table`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `expanded`              | complex-data       | `specimen-fixture:preview/data-table?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+| `expandedContent`       | callback           | `component-example:agent/components/data-table.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
+| `expandedTemplate`      | template           | `component-example:agent/components/data-table.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.                                                          |
+| `filterPredicate`       | callback           | `component-example:agent/components/data-table.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
+| `hiddenColumnKeys`      | complex-data       | `specimen-fixture:preview/data-table?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+| `labels`                | translation-object | `locale-preview:preview/data-table?locale=ru-RU`                 | Structured translation overrides are exercised through locale providers, not lossy scalar controls.                                                                 |
+| `mode`                  | complex-data       | `specimen-fixture:preview/data-table?state=default`              | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                    |
+| `rowIdentity`           | callback           | `component-example:agent/components/data-table.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
+| `selected`              | complex-data       | `specimen-fixture:preview/data-table?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `stress`; fixture effect `data/alternate` — overflow: The fixture data projection is changed for this acceptance state..
+- `long-text` — long text; scenario `stress`; fixture effect `data/alternate` — long text: The fixture data projection is changed for this acceptance state..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — disabled; scenario `default`; fixture effect `data/alternate` — disabled: The fixture data projection is changed for this acceptance state..
+- `loading` — Loading; scenario `default`; `loading=true`.
+- `selected` — selected; scenario `default`; fixture effect `data/selected` — selected: The fixture data projection is changed for this acceptance state..
+- `unselected` — unselected; scenario `default`; fixture effect `data/selected` — unselected: The fixture data projection is changed for this acceptance state..
+- `closed` — closed; scenario `default`; fixture effect `data/alternate` — closed: The fixture data projection is changed for this acceptance state..
+- `open` — open; scenario `default`; fixture effect `data/alternate` — open: The fixture data projection is changed for this acceptance state..
+- `empty` — Empty; scenario `default`; `dataState="empty"`.
+- `error` — error; scenario `default`; fixture effect `data/error` — error: The fixture data request failed and can be retried..
+- `sorted` — sorted; scenario `default`; fixture effect `data/sorted` — sorted: The fixture data projection is changed for this acceptance state..
+- `filtered` — filtered; scenario `default`; fixture effect `data/filtered` — filtered: The fixture data projection is changed for this acceptance state..
+- `selected-rows` — selected rows; scenario `default`; fixture effect `data/selected` — selected rows: The fixture data projection is changed for this acceptance state..
+- `virtualized` — virtualized; scenario `default`; fixture effect `data/virtualized` — virtualized: The fixture data projection is changed for this acceptance state..
+- `pinned-columns` — Pinned columns; scenario `states`.
+- `compact-rows` — Compact Rows; scenario `default`; `compact=true`.
+- `stress` — Stress; scenario `stress`; `dataState="stress"`.
 
 ## Related
 

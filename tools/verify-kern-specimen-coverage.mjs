@@ -27,7 +27,7 @@ if (manifest.components.length !== 131) {
 }
 if (missing.length) {
   throw new Error(
-    `The shared Docs/Lab specimen is missing focused renderers for: ${missing.join(', ')}.`,
+    `The shared Docs preview specimen is missing focused renderers for: ${missing.join(', ')}.`,
   );
 }
 if (!specimenSource.includes('@default')) {

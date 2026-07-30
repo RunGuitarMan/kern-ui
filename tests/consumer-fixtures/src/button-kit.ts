@@ -3,7 +3,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { KrnButton } from '@kern-ui/angular/kit';
 
 @Component({
-  selector: 'klab-consumer-root',
+  selector: 'krn-consumer-root',
   imports: [KrnButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<krn-button>Save</krn-button>`,

@@ -1,0 +1,166 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "docs",
+  "projectType": "application",
+  "generators": {},
+  "sourceRoot": "projects/docs/src",
+  "prefix": "kdocs",
+  "implicitDependencies": ["kern", "showcase"],
+  "tags": ["scope:docs", "type:application", "publishable:false"],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "options": {
+        "browser": "projects/docs/src/main.ts",
+        "tsConfig": "projects/docs/tsconfig.app.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "projects/docs/public"
+          },
+          {
+            "glob": "**/*",
+            "input": "projects/kern/agent",
+            "ignore": ["**/tsconfig.json"],
+            "output": "agent"
+          },
+          {
+            "glob": "**/*",
+            "input": "projects/kern/agent",
+            "ignore": ["**/tsconfig.json"]
+          }
+        ],
+        "styles": ["projects/docs/src/styles.css"],
+        "server": "projects/docs/src/main.server.ts",
+        "outputMode": "server",
+        "security": {
+          "allowedHosts": ["localhost", "127.0.0.1"]
+        },
+        "ssr": {
+          "entry": "projects/docs/src/server.ts"
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "1.32MB",
+              "maximumError": "1.36MB"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "22kB",
+              "maximumError": "24kB"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production",
+      "outputs": ["{workspaceRoot}/dist/docs"]
+    },
+    "serve": {
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "docs:build:production"
+        },
+        "development": {
+          "buildTarget": "docs:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "continuous": true,
+      "dependsOn": [
+        {
+          "projects": ["kern", "showcase"],
+          "target": "build",
+          "params": "ignore"
+        }
+      ],
+      "options": {
+        "parallel": true,
+        "commands": [
+          {
+            "command": "nx watch --projects=kern,showcase -- nx build showcase --configuration development",
+            "forwardAllArgs": false
+          },
+          {
+            "command": "nx serve docs --configuration development --excludeTaskDependencies",
+            "forwardAllArgs": true
+          }
+        ]
+      }
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "tsConfig": "projects/docs/tsconfig.spec.json"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint projects/docs"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -b projects/docs/tsconfig.app.json projects/docs/tsconfig.spec.json --pretty false"
+      }
+    },
+    "e2e": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "command": "playwright test"
+      }
+    },
+    "a11y": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "command": "playwright test --project=a11y"
+      }
+    },
+    "visual": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "command": "playwright test --project=visual"
+      }
+    },
+    "responsive": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "command": "playwright test --project=responsive"
+      }
+    },
+    "performance": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "command": "playwright test --project=performance"
+      }
+    },
+    "browsers": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "command": "playwright test --project=cross-browser-chromium --project=cross-browser-firefox --project=cross-browser-webkit"
+      }
+    }
+  }
+}

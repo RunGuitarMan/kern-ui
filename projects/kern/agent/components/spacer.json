@@ -120,5 +120,107 @@
     "route": "components/spacer",
     "json": "components/spacer.json",
     "markdown": "components/spacer.md"
+  },
+  "playground": {
+    "route": "preview/spacer",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "axis",
+        "label": "Axis",
+        "kind": "select",
+        "defaultValue": "horizontal",
+        "testValue": "vertical",
+        "description": "Chooses the axis that receives spacing.",
+        "binding": {
+          "kind": "input",
+          "publicName": "axis",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "horizontal",
+            "value": "horizontal"
+          },
+          {
+            "label": "vertical",
+            "value": "vertical"
+          }
+        ]
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "kind": "text",
+        "defaultValue": "12",
+        "testValue": "20rem",
+        "description": "Sets the spacer length.",
+        "binding": {
+          "kind": "input",
+          "publicName": "size",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 2,
+      "controlled": 2,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

@@ -5,6 +5,7 @@
 /tmp
 /out-tsc
 /bazel-out
+*.tsbuildinfo
 
 # Node
 /node_modules
@@ -30,7 +31,7 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
-/.angular/cache
+/.angular
 .sass-cache/
 /connect.lock
 /coverage
@@ -42,3 +43,11 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Nx and local architecture references
+.nx/cache
+.nx/workspace-data
+.nx/migrate-runs
+/.research/
+/.pnpm-store/
+/test-results/

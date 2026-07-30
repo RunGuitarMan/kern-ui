@@ -150,5 +150,180 @@
     "route": "components/empty-state",
     "json": "components/empty-state.json",
     "markdown": "components/empty-state.md"
+  },
+  "playground": {
+    "route": "preview/empty-state",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "tone",
+        "label": "Tone",
+        "kind": "select",
+        "defaultValue": "neutral",
+        "testValue": "info",
+        "description": "Changes the state illustration tone.",
+        "binding": {
+          "kind": "input",
+          "publicName": "tone",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "neutral",
+            "value": "neutral"
+          },
+          {
+            "label": "info",
+            "value": "info"
+          },
+          {
+            "label": "success",
+            "value": "success"
+          },
+          {
+            "label": "warning",
+            "value": "warning"
+          },
+          {
+            "label": "danger",
+            "value": "danger"
+          }
+        ]
+      },
+      {
+        "key": "description",
+        "label": "Description",
+        "kind": "text",
+        "defaultValue": "Create an automation to connect events with repeatable actions.",
+        "testValue": "Create an automation to connect events with repeatable actions. · alternate",
+        "description": "Configures the component description contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "description",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "title",
+        "label": "Title",
+        "kind": "text",
+        "defaultValue": "No automations yet",
+        "testValue": "No automations yet · alternate",
+        "description": "Configures the component title contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "title",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "with-action",
+        "label": "with action",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "with-action",
+          "label": "with action",
+          "description": "The projected content composition is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "without-action",
+        "label": "without action",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "without-action",
+          "label": "without action",
+          "description": "The projected content composition is changed for this acceptance state."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 3,
+      "controlled": 3,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

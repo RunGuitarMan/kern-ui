@@ -127,6 +127,56 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - empty
 - error
 - success
+- closed
+- open
+
+## Interactive playground
+
+Route: `preview/global-search`
+
+Scenarios: `default`.
+Public API coverage: 5/11
+directly controlled; 6 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument      | Control | Default                                  | Test value                                           | Binding                        | Description                                    |
+| ------------- | ------- | ---------------------------------------- | ---------------------------------------------------- | ------------------------------ | ---------------------------------------------- |
+| `query`       | text    | `""`                                     | `"Alternate value"`                                  | model `query`                  | Changes the active search query.               |
+| `activeIndex` | number  | `0`                                      | `1`                                                  | model `activeIndex`            | Changes the active result index.               |
+| `open`        | boolean | `false`                                  | `true`                                               | model `open`                   | Opens the search result surface.               |
+| `maxResults`  | number  | `8`                                      | `9`                                                  | input `maxResults` (property)  | Configures the component maxResults contract.  |
+| `placeholder` | text    | `"Search workspaces, projects, people…"` | `"Search workspaces, projects, people… · alternate"` | input `placeholder` (property) | Configures the component placeholder contract. |
+
+Exact API exclusions:
+
+| Public API          | Category           | Evidence                                                            | Reason                                                                                                                                                              |
+| ------------------- | ------------------ | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`         | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#global-search`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
+| `clearLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#global-search`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `emptyResultsLabel` | callback           | `component-example:agent/components/global-search.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
+| `results`           | complex-data       | `specimen-fixture:preview/global-search?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+| `resultsId`         | dom-wiring         | `a11y-test:tests/a11y/accessibility.spec.ts#global-search`          | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.                                                       |
+| `resultsLabel`      | callback           | `component-example:agent/components/global-search.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `data/alternate` — overflow: The fixture data projection is changed for this acceptance state..
+- `long-text` — long text; scenario `default`; fixture effect `data/alternate` — long text: The fixture data projection is changed for this acceptance state..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `loading` — loading; scenario `default`; fixture effect `data/loading` — loading: The fixture is waiting for enterprise data..
+- `empty` — empty; scenario `default`; fixture effect `data/empty` — empty: The fixture data source returned no records..
+- `error` — error; scenario `default`; fixture effect `data/error` — error: The fixture data request failed and can be retried..
+- `success` — success; scenario `default`; fixture effect `data/success` — success: The fixture operation completed successfully..
+- `closed` — closed; scenario `default`; `open=false`; fixture effect `data/alternate` — closed: The fixture data projection is changed for this acceptance state..
+- `open` — Open; scenario `default`; `open=true`.
 
 ## Related
 

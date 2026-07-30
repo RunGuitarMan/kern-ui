@@ -48,12 +48,6 @@
       "path": "./projects/docs/tsconfig.spec.json"
     },
     {
-      "path": "./projects/lab/tsconfig.app.json"
-    },
-    {
-      "path": "./projects/lab/tsconfig.spec.json"
-    },
-    {
       "path": "./projects/showcase/tsconfig.lib.json"
     },
     {

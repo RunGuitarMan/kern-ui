@@ -12,8 +12,7 @@ control flow, typed reactive forms, SSR/hydration, and Angular's zoneless runtim
 | Project             | Purpose                                                          | Publishable                |
 | ------------------- | ---------------------------------------------------------------- | -------------------------- |
 | `projects/kern`     | Components, composition patterns, tokens, themes, and public API | Yes, as `@kern-ui/angular` |
-| `projects/docs`     | SSR documentation and interactive component reference            | No                         |
-| `projects/lab`      | Deterministic visual, responsive, RTL, and state-matrix harness  | No                         |
+| `projects/docs`     | SSR docs, interactive playground, and deterministic preview host | No                         |
 | `projects/showcase` | Typed documentation catalog and coverage metadata                | Private support library    |
 
 Kern contains 131 catalog entries across Layout, Actions, Forms, Navigation, Feedback,
@@ -36,12 +35,44 @@ npm install
 npm start
 ```
 
-Documentation runs at `http://localhost:4200`. The isolated Lab runs at
-`http://localhost:4201`:
+Documentation and deterministic component previews run together at `http://localhost:4200`.
+`npm start` first establishes the Nx dependency graph, then keeps `kern`, `showcase`, and `docs`
+under watch so library edits are reflected without a manual rebuild. Use `npm run serve:docs` only
+when the two libraries are already built and a Docs-only server is intentional. The library watcher
+rebuilds the ordered `kern → showcase` graph after a source change, avoiding concurrent writes to
+package output.
+Every component page includes the same shareable playground used by `/preview/:component`: theme
+(system/light/dark/high contrast), density (compact/comfortable/spacious), direction, locale,
+scoped motion tokens, brand color, canvas width, scenarios, named acceptance states, and typed
+component controls. Public input/model controls are identified separately from documentation-only
+fixture controls so developers and code agents do not mistake preview composition for package API.
+
+### Nx workflow
+
+Nx owns the project graph and all application/library targets. `docs` may depend on `showcase` and
+`kern`, while `showcase` may depend on `kern`; ESLint enforces those tagged module boundaries. Use
+the root npm scripts for stable contributor and CI entry points, or Nx directly for focused and
+affected work:
 
 ```bash
-npm run start:lab
+npm run nx:projects
+npm run nx:graph
+npx nx show project docs
+npx nx run docs:build:production
+npm run affected:lint
+npm run affected:test
+npm run affected:build
 ```
+
+`nx.json` uses `main` as the default comparison branch. Supply `--base` and `--head` to an
+affected command when CI does not expose the expected Git refs.
+
+The committed `.env` sets `NG_BUILD_MAX_WORKERS=1`. Nx loads this workspace environment before
+running targets, making Angular and Sass worker shutdown deterministic on the supported Node 24
+toolchain. This limits compiler workers inside a target; it does not disable Nx task parallelism.
+Nx is the only persistent task-cache owner; the nested Angular cache is disabled per project to
+avoid duplicate and stale compiler state. Keep these settings in local and CI builds unless a
+toolchain upgrade is validated with the complete gate.
 
 ## Consume the library
 
@@ -184,6 +215,7 @@ ng generate @kern-ui/angular:crud customers --project my-app
 npm run lint
 npm run typecheck
 npm test
+npm run test:showcase:specimens
 npm run build
 npm run test:e2e
 npm run test:browsers
@@ -201,10 +233,10 @@ consumer bundle budgets, testing-entrypoint checks, and the package dry-run. Bro
 remain a separate release gate; `test:e2e` runs the complete Playwright matrix. See
 [`docs/CONSUMER_QUALITY_GATES.md`](docs/CONSUMER_QUALITY_GATES.md) for baseline and bundle update
 rules.
-Visual baselines are deterministic Lab scenarios selected with query parameters such as:
+Visual baselines use deterministic Docs preview scenarios selected with path and query state:
 
 ```text
-http://localhost:4201/?component=data-grid&scenario=default&theme=dark&density=compact&direction=rtl
+http://localhost:4200/preview/data-grid?scenario=default&theme=dark&density=compact&direction=rtl&locale=en-US
 ```
 
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for runtime boundaries, the accessibility

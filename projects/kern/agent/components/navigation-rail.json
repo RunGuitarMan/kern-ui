@@ -24,7 +24,9 @@
     "high contrast",
     "compact",
     "RTL",
-    "mobile"
+    "mobile",
+    "closed",
+    "open"
   ],
   "lifecycle": {
     "status": "stable",
@@ -189,5 +191,193 @@
     "route": "components/navigation-rail",
     "json": "components/navigation-rail.json",
     "markdown": "components/navigation-rail.md"
+  },
+  "playground": {
+    "route": "preview/navigation-rail",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "expanded",
+        "label": "Expanded",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Expands the rail to show persistent labels.",
+        "binding": {
+          "kind": "model",
+          "publicName": "expanded"
+        }
+      },
+      {
+        "key": "expandedWidth",
+        "label": "Expanded Width",
+        "kind": "text",
+        "defaultValue": "14rem",
+        "testValue": "20rem",
+        "description": "Configures the component expandedWidth contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "expandedWidth",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "side",
+        "label": "Side",
+        "kind": "select",
+        "defaultValue": "start",
+        "testValue": "end",
+        "description": "Configures the component side contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "side",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "end",
+            "value": "end"
+          },
+          {
+            "label": "start",
+            "value": "start"
+          }
+        ]
+      },
+      {
+        "key": "width",
+        "label": "Width",
+        "kind": "text",
+        "defaultValue": "var(--krn-shell-rail-width, 3.5rem)",
+        "testValue": "20rem",
+        "description": "Configures the component width contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "width",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "closed",
+        "label": "closed",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "closed",
+          "description": "The fixture exposes the closed status without claiming a public component input."
+        }
+      },
+      {
+        "id": "open",
+        "label": "open",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "info",
+          "label": "open",
+          "description": "The fixture exposes the open status without claiming a public component input."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 5,
+      "controlled": 4,
+      "excluded": 1,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "navigation-rail",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#navigation-rail"
+        }
+      }
+    ]
   }
 }

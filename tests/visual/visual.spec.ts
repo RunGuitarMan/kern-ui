@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { KERN_CATALOG } from '../../projects/showcase/src/lib/catalog';
-import { DOCS_URL, labUrl, settlePage } from '../support/browser';
+import { DOCS_URL, previewUrl, settlePage } from '../support/browser';
 
 test.describe('Deterministic visual baselines', () => {
   test('Docs calibration bench', async ({ page }) => {
@@ -20,11 +20,11 @@ test.describe('Deterministic visual baselines', () => {
     await expect(page.locator('.workbench')).toHaveScreenshot('docs-button-specimen.png');
   });
 
-  test('Lab action specimen and controls', async ({ page }) => {
+  test('Docs preview loading action specimen and controls', async ({ page }) => {
     await page.goto(
-      labUrl({
+      previewUrl({
         component: 'button',
-        scenario: 'states',
+        state: 'loading',
         theme: 'light',
         density: 'comfortable',
         direction: 'ltr',
@@ -32,13 +32,13 @@ test.describe('Deterministic visual baselines', () => {
     );
     await settlePage(page);
 
-    await expect(page.getByTestId('lab-controls')).toHaveScreenshot('lab-controls.png');
-    await expect(page.getByTestId('specimen-stage')).toHaveScreenshot('lab-button-states.png');
+    await expect(page.getByTestId('preview-controls')).toHaveScreenshot('preview-controls.png');
+    await expect(page.getByTestId('specimen-stage')).toHaveScreenshot('preview-button-loading.png');
   });
 
-  test('Lab compact dark RTL data grid specimen', async ({ page }) => {
+  test('Docs preview compact dark RTL data grid specimen', async ({ page }) => {
     await page.goto(
-      labUrl({
+      previewUrl({
         component: 'data-grid',
         scenario: 'stress',
         theme: 'dark',
@@ -48,13 +48,15 @@ test.describe('Deterministic visual baselines', () => {
     );
     await settlePage(page);
 
-    await expect(page.getByTestId('specimen-stage')).toHaveScreenshot('lab-data-grid-dark-rtl.png');
+    await expect(page.getByTestId('specimen-stage')).toHaveScreenshot(
+      'preview-data-grid-dark-rtl.png',
+    );
   });
 
   for (const item of KERN_CATALOG) {
     test(`${item.name} default specimen matches its visual baseline`, async ({ page }) => {
       await page.goto(
-        labUrl({
+        previewUrl({
           component: item.id,
           scenario: 'default',
           theme: 'light',
@@ -65,7 +67,7 @@ test.describe('Deterministic visual baselines', () => {
       await settlePage(page);
 
       const stage = page.getByTestId('specimen-stage');
-      await expect(stage.getByTestId(`specimen-${item.id}`)).toBeVisible();
+      await expect(stage.getByTestId(`component-specimen-${item.id}`)).toBeVisible();
       await expect(stage).toHaveScreenshot(`component-${item.id}.png`);
     });
   }

@@ -55,9 +55,75 @@ function applicationProject(styles = ['src/styles.css']) {
   };
 }
 
+function nxApplicationProject(root = 'projects/app', styles = [`${root}/src/styles.css`]) {
+  return {
+    $schema: '../../node_modules/nx/schemas/project-schema.json',
+    projectType: 'application',
+    root,
+    sourceRoot: `${root}/src`,
+    prefix: 'app',
+    tags: ['scope:application', 'type:application'],
+    cli: {
+      cache: {
+        enabled: false,
+      },
+    },
+    targets: {
+      build: {
+        executor: '@angular/build:application',
+        options: {
+          browser: `${root}/src/main.ts`,
+          styles,
+        },
+        configurations: {
+          production: {
+            optimization: true,
+          },
+        },
+      },
+    },
+  };
+}
+
+function nxWorkspace(projects = { app: nxApplicationProject() }) {
+  const tree = new HostTree();
+  tree.create(
+    '/nx.json',
+    JSON.stringify(
+      {
+        $schema: './node_modules/nx/schemas/nx-schema.json',
+        targetDefaults: {
+          build: {
+            cache: true,
+            dependsOn: ['^build'],
+          },
+        },
+      },
+      null,
+      2,
+    ),
+  );
+  for (const [name, project] of Object.entries(projects)) {
+    const config = { name, ...project };
+    tree.create(`/${config.root}/project.json`, JSON.stringify(config, null, 2));
+  }
+  return tree;
+}
+
 function stylesFrom(tree, projectName = 'app') {
   return JSON.parse(tree.readText('/angular.json')).projects[projectName].architect.build.options
     .styles;
+}
+
+function nxProjectFrom(tree, projectName = 'app', root = `projects/${projectName}`) {
+  const source = tree.readText(`/${root}/project.json`).replace(/^\s*\/\/.*$/gm, '');
+  const project = JSON.parse(source);
+  assert.equal(project.name, projectName);
+  return project;
+}
+
+function nxStylesFrom(tree, projectName = 'app', root = `projects/${projectName}`) {
+  return nxProjectFrom(tree, projectName, root).targets.build.options.styles;
 }
 
 function addCompatiblePackage(tree) {
@@ -77,9 +143,10 @@ function addCompatiblePackage(tree) {
   return tree;
 }
 
-function addStandaloneApplication(tree) {
+function addStandaloneApplication(tree, sourceRoot = 'src') {
+  const root = `/${sourceRoot.replace(/^\/+|\/+$/g, '')}`;
   tree.create(
-    '/src/main.ts',
+    `${root}/main.ts`,
     `import { bootstrapApplication } from '@angular/platform-browser';
 import { App } from './app/app';
 import { appConfig } from './app/app.config';
@@ -88,7 +155,7 @@ bootstrapApplication(App, appConfig).catch(console.error);
 `,
   );
   tree.create(
-    '/src/app/app.config.ts',
+    `${root}/app/app.config.ts`,
     `import { ApplicationConfig } from '@angular/core';
 
 export const appConfig: ApplicationConfig = {
@@ -97,7 +164,7 @@ export const appConfig: ApplicationConfig = {
 `,
   );
   tree.create(
-    '/src/app/app.ts',
+    `${root}/app/app.ts`,
     `import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
@@ -108,8 +175,8 @@ export const appConfig: ApplicationConfig = {
 export class App {}
 `,
   );
-  tree.create('/src/app/app.html', '<main>Application</main>\n');
-  tree.create('/src/styles.css', '');
+  tree.create(`${root}/app/app.html`, '<main>Application</main>\n');
+  tree.create(`${root}/styles.css`, '');
   return tree;
 }
 
@@ -227,6 +294,39 @@ describe('KERN schematics', () => {
     assert.deepEqual(stylesFrom(second), [kernStyle, 'src/styles.css']);
   });
 
+  it('configures an Nx project.json idempotently without discarding JSONC or Nx metadata', async () => {
+    const runner = new SchematicTestRunner('@kern-ui/angular', collectionPath);
+    const tree = addStandaloneApplication(nxWorkspace(), 'projects/app/src');
+    const projectPath = '/projects/app/project.json';
+    tree.overwrite(
+      projectPath,
+      tree
+        .readText(projectPath)
+        .replace('  "root": "projects/app",\n', '')
+        .replace(
+          '  "projectType": "application",',
+          '  // This comment and the Nx-only fields must survive schematic writes.\n  "projectType": "application",',
+        ),
+    );
+
+    const first = await runner.runSchematic('ng-add', { project: 'app', runtime: true }, tree);
+    const second = await runner.runSchematic('ng-add', { project: 'app', runtime: true }, first);
+    const projectSource = second.readText(projectPath);
+    const project = nxProjectFrom(second);
+    const appConfig = second.readText('/projects/app/src/app/app.config.ts');
+
+    assert.match(projectSource, /This comment and the Nx-only fields must survive/);
+    assert.deepEqual(project.tags, ['scope:application', 'type:application']);
+    assert.deepEqual(project.cli, { cache: { enabled: false } });
+    assert.ok(!('root' in project), 'the inferred Nx project root must remain implicit');
+    assert.equal(project.targets.build.executor, '@angular/build:application');
+    assert.deepEqual(project.targets.build.configurations, {
+      production: { optimization: true },
+    });
+    assert.deepEqual(nxStylesFrom(second), [kernStyle, 'projects/app/src/styles.css']);
+    assert.equal(count(appConfig, /provideKrn\(/g), 1);
+  });
+
   it('recognizes an existing package import instead of adding duplicate CSS', async () => {
     const runner = new SchematicTestRunner('@kern-ui/angular', collectionPath);
     const tree = workspace();
@@ -277,6 +377,29 @@ describe('KERN schematics', () => {
 
     assert.equal(stylesFrom(result, 'admin')[0], kernStyle);
     assert.deepEqual(stylesFrom(result, 'portal'), [kernStyle, 'portal.css']);
+  });
+
+  it('doctor discovers and safely fixes every Nx project.json application', async () => {
+    const runner = new SchematicTestRunner('@kern-ui/angular', collectionPath);
+    const tree = addCompatiblePackage(
+      nxWorkspace({
+        admin: nxApplicationProject('apps/admin'),
+        portal: nxApplicationProject('apps/portal', [kernStyle, 'apps/portal/src/styles.css']),
+      }),
+    );
+
+    const result = await runner.runSchematic('doctor', { fix: true }, tree);
+
+    assert.deepEqual(nxStylesFrom(result, 'admin', 'apps/admin'), [
+      kernStyle,
+      'apps/admin/src/styles.css',
+    ]);
+    assert.deepEqual(nxStylesFrom(result, 'portal', 'apps/portal'), [
+      kernStyle,
+      'apps/portal/src/styles.css',
+    ]);
+    assert.equal(nxProjectFrom(result, 'admin', 'apps/admin').root, 'apps/admin');
+    assert.equal(nxProjectFrom(result, 'portal', 'apps/portal').root, 'apps/portal');
   });
 
   it('doctor strict mode fails on missing styles without modifying the tree', async () => {
@@ -761,6 +884,24 @@ export const appConfig: ApplicationConfig = {
     assertTypeScriptSyntax(source, file);
   });
 
+  it('runs every enterprise generator against an Nx project source root', async () => {
+    const runner = new SchematicTestRunner('@kern-ui/angular', collectionPath);
+    let tree = nxWorkspace();
+    for (const [schematic, name] of [
+      ['typed-form', 'profile'],
+      ['data-grid', 'accounts'],
+      ['crud', 'customers'],
+    ]) {
+      tree = await runner.runSchematic(schematic, { project: 'app', name }, tree);
+    }
+
+    for (const feature of ['profile', 'accounts', 'customers']) {
+      const file = `/projects/app/src/app/${feature}/${feature}.component.ts`;
+      assert.ok(tree.exists(file), `${feature} must be generated inside the Nx application`);
+      assertTypeScriptSyntax(tree.readText(file), file);
+    }
+  });
+
   it('generates explicit client, controlled, and virtual data-grid modes', async () => {
     const runner = new SchematicTestRunner('@kern-ui/angular', collectionPath);
     let tree = workspace();
@@ -837,6 +978,31 @@ export const appConfig: ApplicationConfig = {
       first,
     );
     assert.ok(forced.exists('/src/app/profile/profile.component.ts'));
+  });
+
+  it('runs the 1.0 migration against compiler-visible files in an Nx application', async () => {
+    const runner = new SchematicTestRunner('@kern-ui/angular', collectionPath);
+    const tree = addStandaloneApplication(nxWorkspace(), 'projects/app/src');
+    tree.overwrite(
+      '/projects/app/src/app/app.ts',
+      `import { KrnButton, KrnDataGrid } from '@kern-ui/angular';
+
+export const imports = [KrnButton, KrnDataGrid];
+`,
+    );
+    tree.overwrite('/projects/app/src/app/app.html', '<krn-data-grid [pagination]="false" />\n');
+
+    const first = await runner.runSchematic('ng-update', { project: 'app' }, tree);
+    const second = await runner.runSchematic('ng-update', { project: 'app' }, first);
+    const source = first.readText('/projects/app/src/app/app.ts');
+    const template = first.readText('/projects/app/src/app/app.html');
+
+    assert.match(source, /from '@kern-ui\/angular\/addon-grid'/);
+    assert.match(source, /from '@kern-ui\/angular\/kit'/);
+    assert.doesNotMatch(source, /from '@kern-ui\/angular';/);
+    assert.match(template, /\[mode\]="\{ kind: 'client', pagination: false \}"/);
+    assert.equal(second.readText('/projects/app/src/app/app.ts'), source);
+    assert.equal(second.readText('/projects/app/src/app/app.html'), template);
   });
 
   it('migrates canonical imports and safe deprecated grid inputs idempotently', async () => {

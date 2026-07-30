@@ -98,6 +98,44 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - error
 - success
 
+## Interactive playground
+
+Route: `preview/bulk-actions`
+
+Scenarios: `default`.
+Public API coverage: 1/3
+directly controlled; 2 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument        | Control | Default | Test value | Binding                          | Description                          |
+| --------------- | ------- | ------- | ---------- | -------------------------------- | ------------------------------------ |
+| `selectedCount` | number  | `3`     | `4`        | input `selectedCount` (property) | Changes the selected-record summary. |
+
+Exact API exclusions:
+
+| Public API      | Category           | Evidence                                                           | Reason                                                                                                                  |
+| --------------- | ------------------ | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`     | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#bulk-actions`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `selectedLabel` | callback           | `component-example:agent/components/bulk-actions.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                      |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `data/alternate` — overflow: The fixture data projection is changed for this acceptance state..
+- `long-text` — long text; scenario `default`; fixture effect `data/alternate` — long text: The fixture data projection is changed for this acceptance state..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `loading` — loading; scenario `default`; fixture effect `data/loading` — loading: The fixture is waiting for enterprise data..
+- `empty` — empty; scenario `default`; fixture effect `data/empty` — empty: The fixture data source returned no records..
+- `error` — error; scenario `default`; fixture effect `data/error` — error: The fixture data request failed and can be retried..
+- `success` — success; scenario `default`; fixture effect `data/success` — success: The fixture operation completed successfully..
+
 ## Related
 
 - `crud-toolbar`

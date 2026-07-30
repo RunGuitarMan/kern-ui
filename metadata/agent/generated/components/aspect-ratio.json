@@ -135,5 +135,115 @@
     "route": "components/aspect-ratio",
     "json": "components/aspect-ratio.json",
     "markdown": "components/aspect-ratio.md"
+  },
+  "playground": {
+    "route": "preview/aspect-ratio",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "fit",
+        "label": "Object fit",
+        "kind": "select",
+        "defaultValue": "cover",
+        "testValue": "none",
+        "description": "Changes how projected media fits the ratio box.",
+        "binding": {
+          "kind": "input",
+          "publicName": "fit",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "none",
+            "value": "none"
+          },
+          {
+            "label": "fill",
+            "value": "fill"
+          },
+          {
+            "label": "cover",
+            "value": "cover"
+          },
+          {
+            "label": "contain",
+            "value": "contain"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 2,
+      "controlled": 1,
+      "excluded": 1,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "aspect-ratio",
+        "publicName": "ratio",
+        "kind": "input",
+        "type": "number | string",
+        "code": "polymorphic-value",
+        "reason": "This polymorphic value cannot round-trip through one scalar control without changing its public type semantics.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/aspect-ratio?state=default"
+        }
+      }
+    ]
   }
 }

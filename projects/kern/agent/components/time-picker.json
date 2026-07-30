@@ -31,6 +31,11 @@
     "disabled",
     "filled",
     "empty",
+    "readonly",
+    "required",
+    "invalid",
+    "minimum",
+    "maximum",
     "closed",
     "open",
     "empty results",
@@ -278,5 +283,376 @@
     "route": "components/time-picker",
     "json": "components/time-picker.json",
     "markdown": "components/time-picker.md"
+  },
+  "playground": {
+    "route": "preview/time-picker",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "min",
+        "label": "Minimum time",
+        "kind": "text",
+        "defaultValue": "08:00",
+        "testValue": "09:00",
+        "description": "Sets the first selectable time.",
+        "binding": {
+          "kind": "input",
+          "publicName": "min",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "max",
+        "label": "Maximum time",
+        "kind": "text",
+        "defaultValue": "20:00",
+        "testValue": "18:00",
+        "description": "Sets the last selectable time.",
+        "binding": {
+          "kind": "input",
+          "publicName": "max",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "step",
+        "label": "Step (seconds)",
+        "kind": "number",
+        "defaultValue": 900,
+        "testValue": 960,
+        "description": "Sets the list interval in seconds.",
+        "binding": {
+          "kind": "input",
+          "publicName": "step",
+          "syntax": "property"
+        },
+        "min": 60,
+        "max": 3600,
+        "step": 60
+      },
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Prevents user interaction.",
+        "binding": {
+          "kind": "input",
+          "publicName": "disabled",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "readOnly",
+        "label": "Read only",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Keeps the value focusable while preventing edits.",
+        "binding": {
+          "kind": "input",
+          "publicName": "readonly",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "required",
+        "label": "Required",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Marks the control as required.",
+        "binding": {
+          "kind": "input",
+          "publicName": "required",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "invalid",
+        "label": "Invalid",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Exposes the invalid visual and ARIA state.",
+        "binding": {
+          "kind": "input",
+          "publicName": "invalid",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "id",
+        "label": "Id",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component id contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "id",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "Disabled",
+        "scenario": "default",
+        "args": {
+          "disabled": true
+        }
+      },
+      {
+        "id": "filled",
+        "label": "filled",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "filled",
+          "label": "filled",
+          "description": "The component is composed with a representative populated value."
+        }
+      },
+      {
+        "id": "empty",
+        "label": "empty",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "empty",
+          "label": "empty",
+          "description": "The component is composed with intentionally empty content."
+        }
+      },
+      {
+        "id": "readonly",
+        "label": "Readonly",
+        "scenario": "default",
+        "args": {
+          "readOnly": true
+        }
+      },
+      {
+        "id": "required",
+        "label": "Required",
+        "scenario": "default",
+        "args": {
+          "required": true
+        }
+      },
+      {
+        "id": "invalid",
+        "label": "Invalid",
+        "scenario": "default",
+        "args": {
+          "invalid": true
+        }
+      },
+      {
+        "id": "minimum",
+        "label": "minimum",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "minimum",
+          "description": "The fixture exposes the minimum status without claiming a public component input."
+        }
+      },
+      {
+        "id": "maximum",
+        "label": "maximum",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "maximum",
+          "description": "The fixture exposes the maximum status without claiming a public component input."
+        }
+      },
+      {
+        "id": "closed",
+        "label": "closed",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "closed",
+          "description": "The fixture exposes the closed status without claiming a public component input."
+        }
+      },
+      {
+        "id": "open",
+        "label": "open",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "info",
+          "label": "open",
+          "description": "The fixture exposes the open status without claiming a public component input."
+        }
+      },
+      {
+        "id": "empty-results",
+        "label": "empty results",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "empty",
+          "label": "empty results",
+          "description": "The fixture data source returned no records."
+        }
+      },
+      {
+        "id": "async-loading",
+        "label": "async loading",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "info",
+          "label": "async loading",
+          "description": "The fixture exposes the async loading status without claiming a public component input."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 10,
+      "controlled": 8,
+      "excluded": 2,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "time-picker",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#time-picker"
+        }
+      },
+      {
+        "componentId": "time-picker",
+        "publicName": "labels",
+        "kind": "input",
+        "type": "Partial<KrnTimePickerTranslations>",
+        "code": "translation-object",
+        "reason": "Structured translation overrides are exercised through locale providers, not lossy scalar controls.",
+        "evidence": {
+          "category": "locale-preview",
+          "pointer": "preview/time-picker?locale=ru-RU"
+        }
+      }
+    ]
   }
 }

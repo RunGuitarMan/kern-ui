@@ -167,5 +167,134 @@
     "route": "components/header",
     "json": "components/header.json",
     "markdown": "components/header.md"
+  },
+  "playground": {
+    "route": "preview/header",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "elevated",
+        "label": "Elevated",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Adds the elevated header treatment.",
+        "binding": {
+          "kind": "input",
+          "publicName": "elevated",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "height",
+        "label": "Height",
+        "kind": "text",
+        "defaultValue": "4rem",
+        "testValue": "20rem",
+        "description": "Configures the component height contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "height",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "sticky",
+        "label": "Sticky",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Configures the component sticky contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "sticky",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 3,
+      "controlled": 3,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

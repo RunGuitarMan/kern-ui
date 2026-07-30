@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-import { expect, test, type Page } from '@playwright/test';
-import { labUrl, settlePage, watchRuntimeErrors } from '../support/browser';
+import { expect, test, type Locator, type Page } from '@playwright/test';
+import { previewUrl, settlePage, watchRuntimeErrors } from '../support/browser';
 
 interface RuntimeBudgets {
   readonly coldRouteMs: number;
@@ -27,17 +27,41 @@ function percentile95(samples: readonly number[]): number {
 async function chromiumRuntimeSnapshot(page: Page): Promise<{
   readonly heapBytes: number;
   readonly nodes: number;
+  readonly documents: number;
+  readonly eventListeners: number;
+  readonly liveNodes: number;
 }> {
-  await page.requestGC();
   const session = await page.context().newCDPSession(page);
-  await session.send('Performance.enable');
-  const response = await session.send('Performance.getMetrics');
-  await session.detach();
-  const values = new Map(response.metrics.map((metric) => [metric.name, metric.value]));
-  return {
-    heapBytes: values.get('JSHeapUsedSize') ?? 0,
-    nodes: values.get('Nodes') ?? 0,
-  };
+  try {
+    await session.send('Performance.enable');
+    await session.send('HeapProfiler.enable');
+    await session.send('HeapProfiler.collectGarbage');
+    await page.evaluate(
+      () =>
+        new Promise<void>((resolve) => {
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+        }),
+    );
+    const liveNodes = await page.evaluate(
+      () => document.documentElement.getElementsByTagName('*').length + 1,
+    );
+    await session.send('HeapProfiler.collectGarbage');
+
+    const [performanceMetrics, domCounters] = await Promise.all([
+      session.send('Performance.getMetrics'),
+      session.send('Memory.getDOMCounters'),
+    ]);
+    const values = new Map(performanceMetrics.metrics.map((metric) => [metric.name, metric.value]));
+    return {
+      heapBytes: values.get('JSHeapUsedSize') ?? 0,
+      nodes: domCounters.nodes,
+      documents: domCounters.documents,
+      eventListeners: domCounters.jsEventListeners,
+      liveNodes,
+    };
+  } finally {
+    await session.detach();
+  }
 }
 
 async function openFixture(
@@ -46,10 +70,39 @@ async function openFixture(
   scenario: 'default' | 'stress' | 'virtual',
 ): Promise<number> {
   const started = Date.now();
-  await page.goto(labUrl({ component, scenario }), { waitUntil: 'domcontentloaded' });
+  await page.goto(previewUrl({ component, scenario }), { waitUntil: 'domcontentloaded' });
   await page.getByTestId(`component-specimen-${component}`).waitFor();
   await settlePage(page);
   return Date.now() - started;
+}
+
+async function exerciseDialog(fixture: Locator, cycles: number): Promise<number> {
+  return fixture.evaluate(async (root, cycleCount) => {
+    const trigger = root.querySelector<HTMLButtonElement>('.feedback-trigger button');
+    if (!trigger) throw new Error('Dialog fixture trigger is missing.');
+
+    const waitForDialogState = async (open: boolean): Promise<void> => {
+      for (let frame = 0; frame < 30; frame += 1) {
+        const dialog = root.querySelector('krn-dialog [aria-modal="true"]');
+        if (Boolean(dialog) === open) return;
+        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      }
+      throw new Error(`Dialog fixture did not become ${open ? 'open' : 'closed'}.`);
+    };
+
+    const started = performance.now();
+    for (let index = 0; index < cycleCount; index += 1) {
+      trigger.click();
+      await waitForDialogState(true);
+      const save = [...root.querySelectorAll<HTMLButtonElement>('krn-dialog footer button')].find(
+        (button) => button.textContent?.trim() === 'Save',
+      );
+      if (!save) throw new Error('Dialog fixture Save action is missing.');
+      save.click();
+      await waitForDialogState(false);
+    }
+    return performance.now() - started;
+  }, cycles);
 }
 
 test.describe('enterprise runtime budgets', () => {
@@ -181,22 +234,19 @@ test.describe('enterprise runtime budgets', () => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
     await openFixture(page, 'dialog', 'default');
     const fixture = page.getByTestId('component-specimen-dialog');
+    await exerciseDialog(fixture, 1);
     const before = await chromiumRuntimeSnapshot(page);
-    const started = Date.now();
-
-    for (let index = 0; index < 12; index += 1) {
-      await fixture.getByRole('button', { name: 'Edit workspace' }).click();
-      const dialog = page.getByRole('dialog', { name: /Edit workspace/ });
-      await expect(dialog).toBeVisible();
-      await dialog.getByRole('button', { name: 'Save' }).click();
-      await expect(dialog).toBeHidden();
-    }
-
+    const durationMs = await exerciseDialog(fixture, 12);
     const after = await chromiumRuntimeSnapshot(page);
     const result = {
-      durationMs: Date.now() - started,
+      durationMs,
       retainedHeapBytes: Math.max(0, after.heapBytes - before.heapBytes),
       retainedNodes: Math.max(0, after.nodes - before.nodes),
+      retainedDocuments: Math.max(0, after.documents - before.documents),
+      retainedEventListeners: Math.max(0, after.eventListeners - before.eventListeners),
+      retainedLiveNodes: Math.max(0, after.liveNodes - before.liveNodes),
+      before,
+      after,
     };
     await testInfo.attach('dialog-retention-metrics.json', {
       body: Buffer.from(JSON.stringify(result, null, 2)),
@@ -205,8 +255,19 @@ test.describe('enterprise runtime budgets', () => {
 
     expect(result.durationMs).toBeLessThan(budgets.interactionMs * 4);
     expect(await page.locator('[aria-modal="true"]:visible').count()).toBe(0);
+    await expect(fixture.locator('krn-dialog .backdrop[data-state="closed"]')).toHaveAttribute(
+      'hidden',
+      '',
+    );
+    await expect(fixture.locator('krn-dialog .surface')).not.toHaveAttribute('aria-modal', 'true');
     expect(result.retainedHeapBytes).toBeLessThan(budgets.retainedHeapBytes);
-    expect(result.retainedNodes).toBeLessThan(200);
+    expect(result.retainedDocuments).toBe(0);
+    expect(result.retainedEventListeners).toBe(0);
+    expect(result.retainedLiveNodes).toBe(0);
+    expect(
+      result.retainedNodes,
+      `Dialog retention metrics:\n${JSON.stringify(result, null, 2)}`,
+    ).toBeLessThan(200);
     assertNoRuntimeErrors();
   });
 });

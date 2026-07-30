@@ -153,5 +153,192 @@
     "route": "components/menubar",
     "json": "components/menubar.json",
     "markdown": "components/menubar.md"
+  },
+  "playground": {
+    "route": "preview/menubar",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "itemState",
+        "label": "Item state",
+        "kind": "select",
+        "defaultValue": "default",
+        "testValue": "current",
+        "description": "Changes the deterministic menubar item fixture.",
+        "binding": {
+          "kind": "fixture",
+          "target": "data",
+          "description": "Selects current and disabled item records in the menubar fixture."
+        },
+        "options": [
+          {
+            "label": "default",
+            "value": "default"
+          },
+          {
+            "label": "current",
+            "value": "current"
+          },
+          {
+            "label": "disabled",
+            "value": "disabled"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "disabled",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "disabled",
+          "description": "The fixture exposes the disabled status without claiming a public component input."
+        }
+      },
+      {
+        "id": "current",
+        "label": "current",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "current",
+          "description": "The fixture exposes the current status without claiming a public component input."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 2,
+      "controlled": 0,
+      "excluded": 2,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "menubar",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#menubar"
+        }
+      },
+      {
+        "componentId": "menubar",
+        "publicName": "items",
+        "kind": "input",
+        "type": "ReadonlyArray<KrnNavigationItem>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/menubar?state=default"
+        }
+      }
+    ]
   }
 }

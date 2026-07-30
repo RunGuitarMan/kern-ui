@@ -130,5 +130,121 @@
     "route": "components/hint",
     "json": "components/hint.json",
     "markdown": "components/hint.md"
+  },
+  "playground": {
+    "route": "preview/hint",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "content",
+        "label": "Hint content",
+        "kind": "text",
+        "defaultValue": "Use at least 12 characters.",
+        "testValue": "Use at least 12 characters. · alternate",
+        "description": "Changes the projected hint content.",
+        "binding": {
+          "kind": "fixture",
+          "target": "content",
+          "description": "Provides the projected text rendered by the hint specimen."
+        }
+      },
+      {
+        "key": "id",
+        "label": "Id",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component id contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "id",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 1,
+      "controlled": 1,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

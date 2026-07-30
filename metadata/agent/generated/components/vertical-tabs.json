@@ -173,5 +173,214 @@
     "route": "components/vertical-tabs",
     "json": "components/vertical-tabs.json",
     "markdown": "components/vertical-tabs.md"
+  },
+  "playground": {
+    "route": "preview/vertical-tabs",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "selected",
+        "label": "Selected tab",
+        "kind": "select",
+        "defaultValue": "overview",
+        "testValue": "activity",
+        "description": "Chooses the active tab panel.",
+        "binding": {
+          "kind": "model",
+          "publicName": "value"
+        },
+        "options": [
+          {
+            "label": "overview",
+            "value": "overview"
+          },
+          {
+            "label": "activity",
+            "value": "activity"
+          },
+          {
+            "label": "settings",
+            "value": "settings"
+          }
+        ]
+      },
+      {
+        "key": "orientation",
+        "label": "Orientation",
+        "kind": "select",
+        "defaultValue": "vertical",
+        "testValue": "horizontal",
+        "description": "Configures the component orientation contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "orientation",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "horizontal",
+            "value": "horizontal"
+          },
+          {
+            "label": "vertical",
+            "value": "vertical"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "disabled",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "disabled",
+          "description": "The fixture exposes the disabled status without claiming a public component input."
+        }
+      },
+      {
+        "id": "current",
+        "label": "current",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "current",
+          "description": "The fixture exposes the current status without claiming a public component input."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 4,
+      "controlled": 2,
+      "excluded": 2,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "vertical-tabs",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#vertical-tabs"
+        }
+      },
+      {
+        "componentId": "vertical-tabs",
+        "publicName": "items",
+        "kind": "input",
+        "type": "ReadonlyArray<KrnTabItem>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/vertical-tabs?state=default"
+        }
+      }
+    ]
   }
 }

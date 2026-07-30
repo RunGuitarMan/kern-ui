@@ -1,0 +1,47 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "showcase",
+  "projectType": "library",
+  "sourceRoot": "projects/showcase/src",
+  "prefix": "kshow",
+  "tags": ["scope:showcase", "type:library", "publishable:false"],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:ng-packagr",
+      "outputs": ["{workspaceRoot}/dist/showcase"],
+      "configurations": {
+        "production": {
+          "tsConfig": "projects/showcase/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "projects/showcase/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "tsConfig": "projects/showcase/tsconfig.spec.json"
+      }
+    },
+    "test-specimens": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run projects/showcase/specimen/tests/playground.spec.ts --config projects/showcase/specimen/tests/vitest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint projects/showcase"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -b projects/showcase/tsconfig.lib.json projects/showcase/tsconfig.spec.json --pretty false"
+      }
+    }
+  }
+}

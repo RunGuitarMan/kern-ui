@@ -100,6 +100,50 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - focus-visible
 - active
 - disabled
+- loading
+
+## Interactive playground
+
+Route: `preview/floating-action-button`
+
+Scenarios: `default`.
+Public API coverage: 6/7
+directly controlled; 1 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument   | Control | Default   | Test value  | Binding                     | Description                                                          |
+| ---------- | ------- | --------- | ----------- | --------------------------- | -------------------------------------------------------------------- |
+| `variant`  | select  | `"solid"` | `"soft"`    | input `variant` (property)  | Changes action emphasis without changing its semantics.              |
+| `tone`     | select  | `"brand"` | `"neutral"` | input `tone` (property)     | Communicates neutral, branded, informational, or destructive intent. |
+| `size`     | select  | `"lg"`    | `"sm"`      | input `size` (property)     | Changes the action target and label size.                            |
+| `extended` | boolean | `true`    | `false`     | input `extended` (property) | Shows or hides the text label.                                       |
+| `loading`  | boolean | `false`   | `true`      | input `loading` (property)  | Shows progress and disables activation.                              |
+| `disabled` | boolean | `false`   | `true`      | input `disabled` (property) | Prevents user interaction.                                           |
+
+Exact API exclusions:
+
+| Public API  | Category           | Evidence                                                            | Reason                                                                                                                  |
+| ----------- | ------------------ | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#floating-action-button` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — Disabled; scenario `default`; `disabled=true`.
+- `loading` — Loading; scenario `default`; `loading=true`.
 
 ## Related
 

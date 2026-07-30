@@ -492,13 +492,13 @@ test.describe('Quality regressions: form controls', () => {
     await expect(dialog).toBeVisible();
     await expect(dialog.getByRole('grid')).toHaveCount(1);
     await expect(dialog.getByRole('columnheader')).toHaveText([
-      'Sun',
       'Mon',
       'Tue',
       'Wed',
       'Thu',
       'Fri',
       'Sat',
+      'Sun',
     ]);
     expectStyledOverlay(await overlayStyle(dialog), 'date picker');
     await dialog

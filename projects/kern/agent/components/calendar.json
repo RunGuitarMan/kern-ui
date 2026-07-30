@@ -28,7 +28,9 @@
     "hover",
     "focus-visible",
     "active",
-    "disabled"
+    "disabled",
+    "minimum",
+    "maximum"
   ],
   "lifecycle": {
     "status": "stable",
@@ -256,5 +258,300 @@
     "route": "components/calendar",
     "json": "components/calendar.json",
     "markdown": "components/calendar.md"
+  },
+  "playground": {
+    "route": "preview/calendar",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "activeMonth",
+        "label": "Active month",
+        "kind": "text",
+        "defaultValue": "2026-07",
+        "testValue": "2026-08",
+        "description": "Changes the visible ISO calendar month.",
+        "binding": {
+          "kind": "model",
+          "publicName": "activeMonth"
+        }
+      },
+      {
+        "key": "focusedDate",
+        "label": "Focused date",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "2026-08-15",
+        "description": "Changes the roving-focus ISO date.",
+        "binding": {
+          "kind": "model",
+          "publicName": "focusedDate"
+        }
+      },
+      {
+        "key": "value",
+        "label": "Value",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Changes the selected ISO date.",
+        "binding": {
+          "kind": "model",
+          "publicName": "value"
+        }
+      },
+      {
+        "key": "max",
+        "label": "Max",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "2026-11-30",
+        "description": "Configures the component max contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "max",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "min",
+        "label": "Min",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "2026-02-01",
+        "description": "Configures the component min contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "min",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "showTodayAction",
+        "label": "Show Today Action",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Configures the component showTodayAction contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "showTodayAction",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "today",
+        "label": "Today",
+        "kind": "text",
+        "defaultValue": "2026-07-26",
+        "testValue": "2026-08-15",
+        "description": "Configures the component today contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "today",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "weekStartsOn",
+        "label": "Week Starts On",
+        "kind": "select",
+        "defaultValue": 1,
+        "testValue": 0,
+        "description": "Configures the component weekStartsOn contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "weekStartsOn",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "0",
+            "value": 0
+          },
+          {
+            "label": "1",
+            "value": 1
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "disabled",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "disabled",
+          "description": "The fixture exposes the disabled status without claiming a public component input."
+        }
+      },
+      {
+        "id": "minimum",
+        "label": "minimum",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "minimum",
+          "description": "The fixture exposes the minimum status without claiming a public component input."
+        }
+      },
+      {
+        "id": "maximum",
+        "label": "maximum",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "maximum",
+          "description": "The fixture exposes the maximum status without claiming a public component input."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 11,
+      "controlled": 8,
+      "excluded": 3,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "calendar",
+        "publicName": "disabledDates",
+        "kind": "input",
+        "type": "ReadonlySet<string>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/calendar?state=default"
+        }
+      },
+      {
+        "componentId": "calendar",
+        "publicName": "labels",
+        "kind": "input",
+        "type": "Partial<KrnCalendarTranslations>",
+        "code": "translation-object",
+        "reason": "Structured translation overrides are exercised through locale providers, not lossy scalar controls.",
+        "evidence": {
+          "category": "locale-preview",
+          "pointer": "preview/calendar?locale=ru-RU"
+        }
+      },
+      {
+        "componentId": "calendar",
+        "publicName": "locale",
+        "kind": "input",
+        "type": "string",
+        "code": "locale-environment",
+        "reason": "Locale is owned by the playground environment selector so every locale-sensitive component changes consistently.",
+        "evidence": {
+          "category": "locale-preview",
+          "pointer": "preview/calendar?locale=ru-RU"
+        }
+      }
+    ]
   }
 }

@@ -113,6 +113,53 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - nested
 - dismissed
 
+## Interactive playground
+
+Route: `preview/alert-dialog`
+
+Scenarios: `default`.
+Public API coverage: 7/12
+directly controlled; 5 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument         | Control | Default                           | Test value                                    | Binding                           | Description                                                                                      |
+| ---------------- | ------- | --------------------------------- | --------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `open`           | boolean | `false`                           | `true`                                        | model `open`                      | Opens the destructive confirmation.                                                              |
+| `closeOnOutside` | select  | `null`                            | `true`                                        | input `closeOnOutside` (property) | Inherits the surface policy by default, or explicitly enables or disables outside-click closing. |
+| `closeOnEscape`  | boolean | `true`                            | `false`                                       | input `closeOnEscape` (property)  | Configures the component closeOnEscape contract.                                                 |
+| `description`    | text    | `"This action cannot be undone."` | `"This action cannot be undone. · alternate"` | input `description` (property)    | Configures the component description contract.                                                   |
+| `eyebrow`        | text    | `""`                              | `"Alternate value"`                           | input `eyebrow` (property)        | Configures the component eyebrow contract.                                                       |
+| `showClose`      | boolean | `true`                            | `false`                                       | input `showClose` (property)      | Configures the component showClose contract.                                                     |
+| `title`          | text    | `"Delete Northstar?"`             | `"Delete Northstar? · alternate"`             | input `title` (property)          | Configures the component title contract.                                                         |
+
+Exact API exclusions:
+
+| Public API        | Category           | Evidence                                                           | Reason                                                                                                                                                              |
+| ----------------- | ------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `actionsTemplate` | template           | `component-example:agent/components/alert-dialog.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.                                                          |
+| `ariaLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#alert-dialog`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
+| `closeLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#alert-dialog`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `contentTemplate` | template           | `component-example:agent/components/alert-dialog.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.                                                          |
+| `initialFocus`    | dom-wiring         | `a11y-test:tests/a11y/accessibility.spec.ts#alert-dialog`          | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.                                                       |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `closed` — closed; scenario `default`; `open=false`; fixture effect `status/neutral` — closed: The fixture exposes the closed status without claiming a public component input..
+- `open` — Open; scenario `default`; `open=true`.
+- `nested` — nested; scenario `default`; fixture effect `status/neutral` — nested: The fixture exposes the nested status without claiming a public component input..
+- `dismissed` — dismissed; scenario `default`; `open=false`; fixture effect `status/neutral` — dismissed: The fixture exposes the dismissed status without claiming a public component input..
+
 ## Related
 
 - `dialog`

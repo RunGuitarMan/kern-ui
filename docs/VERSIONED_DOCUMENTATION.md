@@ -33,7 +33,7 @@ metadata is normalized, so packaging the same build and identity twice produces 
 The release workflow performs the equivalent of:
 
 ```bash
-npx ng build docs \
+npx nx build docs \
   --configuration production \
   --base-href /versions/X/ \
   --output-path dist/versioned-docs

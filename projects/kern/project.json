@@ -1,0 +1,41 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "kern",
+  "projectType": "library",
+  "sourceRoot": "projects/kern",
+  "prefix": "krn",
+  "tags": ["scope:kern", "type:library", "publishable:true"],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:ng-packagr",
+      "outputs": ["{workspaceRoot}/dist/kern"],
+      "configurations": {
+        "production": {
+          "tsConfig": "projects/kern/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "projects/kern/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "tsConfig": "projects/kern/tsconfig.spec.json"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint projects/kern"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -b projects/kern/tsconfig.lib.json projects/kern/tsconfig.spec.json --pretty false"
+      }
+    }
+  }
+}

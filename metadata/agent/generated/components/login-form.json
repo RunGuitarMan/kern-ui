@@ -262,5 +262,291 @@
     "route": "components/login-form",
     "json": "components/login-form.json",
     "markdown": "components/login-form.md"
+  },
+  "playground": {
+    "route": "preview/login-form",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "loading",
+        "label": "Loading",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Shows progress and disables activation.",
+        "binding": {
+          "kind": "input",
+          "publicName": "loading",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "errorMessage",
+        "label": "Error Message",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component errorMessage contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "errorMessage",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "minimumPasswordLength",
+        "label": "Minimum Password Length",
+        "kind": "number",
+        "defaultValue": 8,
+        "testValue": 9,
+        "description": "Configures the component minimumPasswordLength contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "minimumPasswordLength",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "recoveryHref",
+        "label": "Recovery Href",
+        "kind": "text",
+        "defaultValue": "#specimen",
+        "testValue": "#specimen-overview",
+        "description": "Configures the component recoveryHref contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "recoveryHref",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "overflow",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "long text",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "loading",
+        "label": "Loading",
+        "scenario": "default",
+        "args": {
+          "loading": true
+        }
+      },
+      {
+        "id": "empty",
+        "label": "empty",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "empty",
+          "label": "empty",
+          "description": "The fixture data source returned no records."
+        }
+      },
+      {
+        "id": "error",
+        "label": "error",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "error",
+          "label": "error",
+          "description": "The fixture data request failed and can be retried."
+        }
+      },
+      {
+        "id": "success",
+        "label": "success",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "success",
+          "label": "success",
+          "description": "The fixture operation completed successfully."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 12,
+      "controlled": 4,
+      "excluded": 8,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "login-form",
+        "publicName": "emailErrorLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#login-form"
+        }
+      },
+      {
+        "componentId": "login-form",
+        "publicName": "emailLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#login-form"
+        }
+      },
+      {
+        "componentId": "login-form",
+        "publicName": "loadingLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#login-form"
+        }
+      },
+      {
+        "componentId": "login-form",
+        "publicName": "passwordErrorLabel",
+        "kind": "input",
+        "type": "(minimumLength: number) => string",
+        "code": "callback",
+        "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/login-form.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "login-form",
+        "publicName": "passwordLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#login-form"
+        }
+      },
+      {
+        "componentId": "login-form",
+        "publicName": "recoveryLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#login-form"
+        }
+      },
+      {
+        "componentId": "login-form",
+        "publicName": "rememberLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#login-form"
+        }
+      },
+      {
+        "componentId": "login-form",
+        "publicName": "submitLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#login-form"
+        }
+      }
+    ]
   }
 }

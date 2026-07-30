@@ -105,6 +105,54 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - disabled
 - current
 
+## Interactive playground
+
+Route: `preview/pagination`
+
+Scenarios: `default`.
+Public API coverage: 4/12
+directly controlled; 8 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument       | Control | Default | Test value | Binding                         | Description                               |
+| -------------- | ------- | ------- | ---------- | ------------------------------- | ----------------------------------------- |
+| `totalItems`   | number  | `248`   | `249`      | input `totalItems` (property)   | Sets the result count.                    |
+| `pageSize`     | number  | `20`    | `21`       | input `pageSize` (property)     | Sets results per page.                    |
+| `siblingCount` | number  | `1`     | `2`        | input `siblingCount` (property) | Sets pages shown beside the current page. |
+| `page`         | number  | `1`     | `2`        | model `page`                    | Controls the active page.                 |
+
+Exact API exclusions:
+
+| Public API            | Category           | Evidence                                                         | Reason                                                                                                                                                              |
+| --------------------- | ------------------ | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`           | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
+| `emptyLabel`          | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `nextLabel`           | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `pageLabel`           | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `pageLabelFormatter`  | callback           | `component-example:agent/components/pagination.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
+| `previousLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `rangeLabel`          | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `rangeLabelFormatter` | callback           | `component-example:agent/components/pagination.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — disabled; scenario `default`; fixture effect `status/neutral` — disabled: The fixture exposes the disabled status without claiming a public component input..
+- `current` — current; scenario `default`; fixture effect `status/neutral` — current: The fixture exposes the current status without claiming a public component input..
+
 ## Related
 
 - `breadcrumbs`

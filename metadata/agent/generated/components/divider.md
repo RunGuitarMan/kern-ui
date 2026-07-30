@@ -83,6 +83,37 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - RTL
 - mobile
 
+## Interactive playground
+
+Route: `preview/divider`
+
+Scenarios: `default`.
+Public API coverage: 3/3
+directly controlled; 0 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument      | Control | Default           | Test value                    | Binding                        | Description                                             |
+| ------------- | ------- | ----------------- | ----------------------------- | ------------------------------ | ------------------------------------------------------- |
+| `orientation` | select  | `"horizontal"`    | `"vertical"`                  | input `orientation` (property) | Changes the separator axis and accessibility semantics. |
+| `label`       | text    | `"Access policy"` | `"Access policy · alternate"` | input `label` (property)       | Adds an accessible separator label.                     |
+| `inset`       | text    | `"0"`             | `"20rem"`                     | input `inset` (property)       | Configures the component inset contract.                |
+
+Exact API exclusions:
+
+_No excluded public API members._
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+
 ## Related
 
 - `app-shell`

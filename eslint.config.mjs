@@ -1,6 +1,7 @@
 import angular from '@angular-eslint/eslint-plugin';
 import angularTemplate from '@angular-eslint/eslint-plugin-template';
 import angularTemplateParser from '@angular-eslint/template-parser';
+import nx from '@nx/eslint-plugin';
 import tseslint from 'typescript-eslint';
 
 export default [
@@ -15,6 +16,35 @@ export default [
       'projects/kern/api/**/*.d.ts',
       'test-results/**',
     ],
+  },
+  {
+    files: ['projects/**/*.{ts,js,mjs,cjs}'],
+    plugins: {
+      '@nx': nx,
+    },
+    rules: {
+      '@nx/enforce-module-boundaries': [
+        'error',
+        {
+          allow: [],
+          depConstraints: [
+            {
+              sourceTag: 'scope:kern',
+              onlyDependOnLibsWithTags: ['scope:kern'],
+            },
+            {
+              sourceTag: 'scope:showcase',
+              onlyDependOnLibsWithTags: ['scope:kern', 'scope:showcase'],
+            },
+            {
+              sourceTag: 'scope:docs',
+              onlyDependOnLibsWithTags: ['scope:kern', 'scope:showcase', 'scope:docs'],
+            },
+          ],
+          enforceBuildableLibDependency: true,
+        },
+      ],
+    },
   },
   {
     files: ['projects/**/*.ts', 'tests/**/*.ts'],
@@ -33,7 +63,7 @@ export default [
       '@angular-eslint/component-class-suffix': 'off',
       '@angular-eslint/component-selector': [
         'error',
-        { type: 'element', prefix: ['krn', 'kdocs', 'klab', 'kshow'], style: 'kebab-case' },
+        { type: 'element', prefix: ['krn', 'kdocs', 'kshow'], style: 'kebab-case' },
       ],
       '@angular-eslint/directive-selector': [
         'error',
@@ -69,6 +99,24 @@ export default [
       ],
     },
   },
+  // Package-style aliases intentionally resolve through dist, so keep the publishable-to-private
+  // back-edge explicit in addition to Nx's tagged relative/absolute import checks.
+  {
+    files: ['projects/kern/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@kern-ui/showcase', '@kern-ui/showcase/**'],
+              message: 'The publishable Kern package must not depend on the private showcase.',
+            },
+          ],
+        },
+      ],
+    },
+  },
   {
     files: ['projects/kern/cdk/src/**/*.ts'],
     rules: {
@@ -91,6 +139,10 @@ export default [
                 '@kern-ui/angular/patterns',
               ],
               message: 'Kern CDK must not depend on higher-level library layers.',
+            },
+            {
+              group: ['@kern-ui/showcase', '@kern-ui/showcase/**'],
+              message: 'The publishable Kern package must not depend on the private showcase.',
             },
           ],
         },
@@ -121,6 +173,10 @@ export default [
               ],
               message: 'Kern foundations must not depend on component or product layers.',
             },
+            {
+              group: ['@kern-ui/showcase', '@kern-ui/showcase/**'],
+              message: 'The publishable Kern package must not depend on the private showcase.',
+            },
           ],
         },
       ],
@@ -147,6 +203,10 @@ export default [
                 '@kern-ui/angular/patterns',
               ],
               message: 'Kern core may depend only on Angular, CDK, and foundations.',
+            },
+            {
+              group: ['@kern-ui/showcase', '@kern-ui/showcase/**'],
+              message: 'The publishable Kern package must not depend on the private showcase.',
             },
           ],
         },

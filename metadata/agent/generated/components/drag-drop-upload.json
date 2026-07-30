@@ -30,7 +30,10 @@
     "active",
     "disabled",
     "filled",
-    "empty"
+    "empty",
+    "readonly",
+    "required",
+    "invalid"
   ],
   "lifecycle": {
     "status": "stable",
@@ -296,5 +299,350 @@
     "route": "components/drag-drop-upload",
     "json": "components/drag-drop-upload.json",
     "markdown": "components/drag-drop-upload.md"
+  },
+  "playground": {
+    "route": "preview/drag-drop-upload",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "multiple",
+        "label": "Multiple files",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Allows more than one dropped file.",
+        "binding": {
+          "kind": "input",
+          "publicName": "multiple",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "accept",
+        "label": "Accept",
+        "kind": "text",
+        "defaultValue": ".svg,.png,.jpg,.jpeg",
+        "testValue": ".png,.jpg",
+        "description": "Configures the component accept contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "accept",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "description",
+        "label": "Description",
+        "kind": "text",
+        "defaultValue": "SVG, PNG, or JPG · 5 MB each",
+        "testValue": "SVG, PNG, or JPG · 5 MB each · alternate",
+        "description": "Configures the component description contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "description",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Prevents interaction and participates in the component disabled contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "disabled",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "id",
+        "label": "Id",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component id contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "id",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "invalid",
+        "label": "Invalid",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Exposes an externally controlled invalid presentation state.",
+        "binding": {
+          "kind": "input",
+          "publicName": "invalid",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "kind": "text",
+        "defaultValue": "Browse files",
+        "testValue": "Browse files · alternate",
+        "description": "Configures the component label contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "label",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "maxFiles",
+        "label": "Max Files",
+        "kind": "number",
+        "defaultValue": 5,
+        "testValue": 6,
+        "description": "Configures the component maxFiles contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "maxFiles",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "maxSize",
+        "label": "Max Size",
+        "kind": "number",
+        "defaultValue": 5000000,
+        "testValue": 5000001,
+        "description": "Configures the component maxSize contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "maxSize",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 10000000,
+        "step": 1
+      },
+      {
+        "key": "readonly",
+        "label": "Readonly",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Configures the component readonly contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "readonly",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "required",
+        "label": "Required",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Marks the value as required and participates in Angular Forms validation.",
+        "binding": {
+          "kind": "input",
+          "publicName": "required",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "Disabled",
+        "scenario": "default",
+        "args": {
+          "disabled": true
+        }
+      },
+      {
+        "id": "filled",
+        "label": "filled",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "filled",
+          "label": "filled",
+          "description": "The component is composed with a representative populated value."
+        }
+      },
+      {
+        "id": "empty",
+        "label": "empty",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "empty",
+          "label": "empty",
+          "description": "The component is composed with intentionally empty content."
+        }
+      },
+      {
+        "id": "readonly",
+        "label": "readonly",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "readonly",
+          "description": "The fixture exposes the readonly status without claiming a public component input."
+        }
+      },
+      {
+        "id": "required",
+        "label": "Required",
+        "scenario": "default",
+        "args": {
+          "required": true
+        }
+      },
+      {
+        "id": "invalid",
+        "label": "Invalid",
+        "scenario": "default",
+        "args": {
+          "invalid": true
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 13,
+      "controlled": 11,
+      "excluded": 2,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "drag-drop-upload",
+        "publicName": "dropLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#drag-drop-upload"
+        }
+      },
+      {
+        "componentId": "drag-drop-upload",
+        "publicName": "locale",
+        "kind": "input",
+        "type": "string",
+        "code": "locale-environment",
+        "reason": "Locale is owned by the playground environment selector so every locale-sensitive component changes consistently.",
+        "evidence": {
+          "category": "locale-preview",
+          "pointer": "preview/drag-drop-upload?locale=ru-RU"
+        }
+      }
+    ]
   }
 }

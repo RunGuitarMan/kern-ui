@@ -3,7 +3,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const docsUrl = 'http://localhost:4200';
-const labUrl = 'http://localhost:4201';
+const reuseExistingServer = process.env['KERN_E2E_REUSE_SERVER'] === 'true';
 const chromiumExecutablePath = process.env['PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH']?.trim();
 const chromiumLaunchOptions = chromiumExecutablePath
   ? { launchOptions: { executablePath: chromiumExecutablePath } }
@@ -46,7 +46,7 @@ export default defineConfig({
     command: 'node tests/support/serve-workspace.mjs',
     url: 'http://127.0.0.1:4199/ready',
     timeout: 180_000,
-    reuseExistingServer: !process.env['CI'],
+    reuseExistingServer,
     stdout: 'pipe',
     stderr: 'pipe',
   },
@@ -70,7 +70,7 @@ export default defineConfig({
       name: 'visual',
       testMatch: /visual\/.*\.spec\.ts/,
       use: {
-        baseURL: labUrl,
+        baseURL: docsUrl,
         viewport: { width: 1440, height: 1000 },
       },
     },
@@ -80,8 +80,10 @@ export default defineConfig({
       retries: 0,
       workers: 1,
       use: {
-        baseURL: labUrl,
+        baseURL: docsUrl,
         viewport: { width: 1440, height: 1000 },
+        trace: 'off',
+        video: 'off',
       },
     },
     {

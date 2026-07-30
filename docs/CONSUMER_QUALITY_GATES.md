@@ -87,13 +87,12 @@ The current complex-entrypoint limits were calibrated after the enterprise API p
 Root and direct-subpath fixtures must still stay within 1 KiB raw and 512 B gzip of one another.
 Any future increase must update this evidence table with fresh production measurements.
 
-The documentation and QA applications have separate initial-shell budgets because they deliberately
-ship repository tooling rather than represent consumer bundles:
+The documentation application has its own initial-shell budget because it deliberately ships
+repository tooling rather than representing a consumer bundle:
 
-| Application | Measured initial | Warning / error | Included shell contract                                               |
-| ----------- | ---------------: | --------------: | --------------------------------------------------------------------- |
-| Docs        |          1.31 MB |  1.32 / 1.36 MB | complete catalog navigation, runtime search, SSR, and agent discovery |
-| Lab         |        725.52 kB |    730 / 780 kB | deterministic controls and the shared 131-component specimen host     |
+| Application | Measured initial | Warning / error | Included shell contract                                                          |
+| ----------- | ---------------: | --------------: | -------------------------------------------------------------------------------- |
+| Docs        |          1.31 MB |  1.32 / 1.36 MB | catalog navigation, SSR, agent discovery, playground, and deterministic previews |
 
 These thresholds leave only a small reviewed regression allowance. Consumer-facing tree-shaking
 continues to be governed by the substantially tighter isolated fixture budgets above.
@@ -129,9 +128,9 @@ node tools/verify-kern-agent-dx.mjs
 
 CI and the release workflow also run the governance checks early, before package publication.
 They require complete catalog and public-symbol registration, exact deprecation inventory, honest
-manual-a11y records, 131 explicit Docs/Lab renderers, and 131 examples AOT-compiled against the
-packed npm artifact. A pending manual record remains non-certifying evidence rather than being
-inferred from automated browser tests.
+manual-a11y records, 131 explicit Docs preview renderers, and 131 examples AOT-compiled against
+the packed npm artifact. A pending manual record remains non-certifying evidence rather than
+being inferred from automated browser tests.
 
 The release workflow additionally packs the npm library and versioned SSR documentation, generates
 an npm CycloneDX SBOM, audits the resolved production graph, enforces package and license policy,

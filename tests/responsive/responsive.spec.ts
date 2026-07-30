@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { DOCS_URL, expectNoPageOverflow, labUrl, settlePage } from '../support/browser';
+import { DOCS_URL, expectNoPageOverflow, previewUrl, settlePage } from '../support/browser';
 
 test.describe('Responsive, RTL, and text zoom contracts', () => {
   test('Docs reflows at a narrow mobile viewport without page overflow', async ({ page }) => {
@@ -39,12 +39,12 @@ test.describe('Responsive, RTL, and text zoom contracts', () => {
     await expectNoPageOverflow(page);
   });
 
-  test('Lab stress content remains contained at the 320px minimum', async ({ page }) => {
+  test('Docs preview stress content remains contained at the 320px minimum', async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 800 });
     await page.goto(
-      labUrl({
+      previewUrl({
         component: 'button',
-        scenario: 'stress',
+        state: 'long-text',
         theme: 'light',
         density: 'comfortable',
         direction: 'ltr',
@@ -52,14 +52,14 @@ test.describe('Responsive, RTL, and text zoom contracts', () => {
     );
     await settlePage(page);
 
-    await expect(page.getByTestId('specimen-button')).toBeVisible();
+    await expect(page.getByTestId('component-specimen-button')).toBeVisible();
     await expectNoPageOverflow(page);
   });
 
   test('RTL uses logical layout at tablet width without overflow', async ({ page }) => {
     await page.setViewportSize({ width: 768, height: 1024 });
     await page.goto(
-      labUrl({
+      previewUrl({
         component: 'data-grid',
         scenario: 'states',
         theme: 'dark',
@@ -69,8 +69,9 @@ test.describe('Responsive, RTL, and text zoom contracts', () => {
     );
     await settlePage(page);
 
-    await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
-    await expect(page.getByTestId('specimen-data-grid')).toBeVisible();
+    await expect(page.getByTestId('specimen-stage')).toHaveAttribute('dir', 'rtl');
+    await expect(page.locator('html')).not.toHaveAttribute('dir', 'rtl');
+    await expect(page.getByTestId('component-specimen-data-grid')).toBeVisible();
     await expectNoPageOverflow(page);
   });
 
@@ -89,12 +90,14 @@ test.describe('Responsive, RTL, and text zoom contracts', () => {
     await expectNoPageOverflow(page);
   });
 
-  test('Lab controls remain usable with text enlarged to 200 percent', async ({ page }) => {
+  test('Docs preview controls remain usable with text enlarged to 200 percent', async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(
-      labUrl({
+      previewUrl({
         component: 'text-input',
-        scenario: 'states',
+        state: 'invalid',
         theme: 'high-contrast',
         density: 'spacious',
         direction: 'rtl',
@@ -103,12 +106,12 @@ test.describe('Responsive, RTL, and text zoom contracts', () => {
     await page.addStyleTag({ content: 'html { font-size: 200% !important; }' });
     await settlePage(page);
 
-    await expect(page.getByTestId('component-control')).toBeVisible();
-    await expect(page.getByTestId('specimen-text-input')).toBeVisible();
+    await expect(page.getByTestId('preview-controls')).toBeVisible();
+    await expect(page.getByTestId('component-specimen-text-input')).toBeVisible();
     await expectNoPageOverflow(page);
   });
 
-  test('complex Lab content reflows at the 320 CSS-pixel equivalent of 400 percent zoom', async ({
+  test('complex Docs preview content reflows at the 320 CSS-pixel equivalent of 400 percent zoom', async ({
     page,
   }) => {
     // At a 1280px desktop baseline, 400% full-page zoom leaves a 320 CSS-pixel
@@ -116,7 +119,7 @@ test.describe('Responsive, RTL, and text zoom contracts', () => {
     // native control and SVG scaling that a root font-size override cannot model.
     await page.setViewportSize({ width: 320, height: 800 });
     await page.goto(
-      labUrl({
+      previewUrl({
         component: 'data-grid',
         scenario: 'states',
         theme: 'high-contrast',
@@ -126,17 +129,17 @@ test.describe('Responsive, RTL, and text zoom contracts', () => {
     );
     await settlePage(page);
 
-    const specimen = page.getByTestId('specimen-data-grid');
+    const specimen = page.getByTestId('component-specimen-data-grid');
     const internalScroller = specimen.locator('.table-scroll');
     await expect(specimen).toBeVisible();
-    await expect(page.getByTestId('component-control')).toBeVisible();
+    await expect(page.getByTestId('preview-controls')).toBeVisible();
     await expect
       .poll(() => internalScroller.evaluate((element) => element.scrollWidth > element.clientWidth))
       .toBe(true);
     await expectNoPageOverflow(page);
 
     await page.goto(
-      labUrl({
+      previewUrl({
         component: 'bottom-sheet',
         scenario: 'default',
         theme: 'high-contrast',

@@ -94,6 +94,42 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - error
 - success
 
+## Interactive playground
+
+Route: `preview/dashboard-widget`
+
+Scenarios: `default`.
+Public API coverage: 2/2
+directly controlled; 0 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument  | Control | Default                 | Test value                          | Binding                    | Description                                |
+| --------- | ------- | ----------------------- | ----------------------------------- | -------------------------- | ------------------------------------------ |
+| `heading` | text    | `"Runs by environment"` | `"Runs by environment · alternate"` | input `heading` (property) | Changes the widget heading.                |
+| `eyebrow` | text    | `"AUTOMATION"`          | `"AUTOMATION · alternate"`          | input `eyebrow` (property) | Configures the component eyebrow contract. |
+
+Exact API exclusions:
+
+_No excluded public API members._
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `data/alternate` — overflow: The fixture data projection is changed for this acceptance state..
+- `long-text` — long text; scenario `default`; fixture effect `data/alternate` — long text: The fixture data projection is changed for this acceptance state..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `loading` — loading; scenario `default`; fixture effect `data/loading` — loading: The fixture is waiting for enterprise data..
+- `empty` — empty; scenario `default`; fixture effect `data/empty` — empty: The fixture data source returned no records..
+- `error` — error; scenario `default`; fixture effect `data/error` — error: The fixture data request failed and can be retried..
+- `success` — success; scenario `default`; fixture effect `data/success` — success: The fixture operation completed successfully..
+
 ## Related
 
 - `user-menu`

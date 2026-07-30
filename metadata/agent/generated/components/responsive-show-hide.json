@@ -147,5 +147,176 @@
     "route": "components/responsive-show-hide",
     "json": "components/responsive-show-hide.json",
     "markdown": "components/responsive-show-hide.md"
+  },
+  "playground": {
+    "route": "preview/responsive-show-hide",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "display",
+        "label": "Display",
+        "kind": "select",
+        "defaultValue": "block",
+        "testValue": "inline",
+        "description": "Chooses the display mode used while the responsive content is visible.",
+        "binding": {
+          "kind": "input",
+          "publicName": "display",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "block",
+            "value": "block"
+          },
+          {
+            "label": "inline",
+            "value": "inline"
+          },
+          {
+            "label": "contents",
+            "value": "contents"
+          },
+          {
+            "label": "flex",
+            "value": "flex"
+          },
+          {
+            "label": "grid",
+            "value": "grid"
+          }
+        ]
+      },
+      {
+        "key": "from",
+        "label": "Visible from",
+        "kind": "select",
+        "defaultValue": "md",
+        "testValue": "none",
+        "description": "Shows the desktop specimen from the selected breakpoint.",
+        "binding": {
+          "kind": "input",
+          "publicName": "from",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "none",
+            "value": "none"
+          },
+          {
+            "label": "sm",
+            "value": "sm"
+          },
+          {
+            "label": "md",
+            "value": "md"
+          },
+          {
+            "label": "lg",
+            "value": "lg"
+          },
+          {
+            "label": "xl",
+            "value": "xl"
+          }
+        ]
+      },
+      {
+        "key": "until",
+        "label": "Visible until",
+        "kind": "select",
+        "defaultValue": "none",
+        "testValue": "sm",
+        "description": "Optionally hides the desktop specimen at the selected breakpoint.",
+        "binding": {
+          "kind": "input",
+          "publicName": "until",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "none",
+            "value": "none"
+          },
+          {
+            "label": "sm",
+            "value": "sm"
+          },
+          {
+            "label": "md",
+            "value": "md"
+          },
+          {
+            "label": "lg",
+            "value": "lg"
+          },
+          {
+            "label": "xl",
+            "value": "xl"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 3,
+      "controlled": 3,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

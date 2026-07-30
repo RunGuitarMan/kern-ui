@@ -170,5 +170,188 @@
     "route": "components/hover-card",
     "json": "components/hover-card.json",
     "markdown": "components/hover-card.md"
+  },
+  "playground": {
+    "route": "preview/hover-card",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "openDelay",
+        "label": "Open delay",
+        "kind": "number",
+        "defaultValue": 350,
+        "testValue": 400,
+        "description": "Sets the pointer/focus opening delay.",
+        "binding": {
+          "kind": "input",
+          "publicName": "openDelay",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 2000,
+        "step": 50
+      },
+      {
+        "key": "closeDelay",
+        "label": "Close delay",
+        "kind": "number",
+        "defaultValue": 120,
+        "testValue": 140,
+        "description": "Sets the pointer/focus closing delay.",
+        "binding": {
+          "kind": "input",
+          "publicName": "closeDelay",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 1000,
+        "step": 20
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "closed",
+        "label": "closed",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "closed",
+          "description": "The fixture exposes the closed status without claiming a public component input."
+        }
+      },
+      {
+        "id": "open",
+        "label": "open",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "info",
+          "label": "open",
+          "description": "The fixture exposes the open status without claiming a public component input."
+        }
+      },
+      {
+        "id": "nested",
+        "label": "nested",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "nested",
+          "description": "The fixture exposes the nested status without claiming a public component input."
+        }
+      },
+      {
+        "id": "dismissed",
+        "label": "dismissed",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "dismissed",
+          "description": "The fixture exposes the dismissed status without claiming a public component input."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 3,
+      "controlled": 2,
+      "excluded": 1,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "hover-card",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#hover-card"
+        }
+      }
+    ]
   }
 }

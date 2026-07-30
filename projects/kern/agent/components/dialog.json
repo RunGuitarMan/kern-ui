@@ -293,5 +293,308 @@
     "route": "components/dialog",
     "json": "components/dialog.json",
     "markdown": "components/dialog.md"
+  },
+  "playground": {
+    "route": "preview/dialog",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "title",
+        "label": "Title",
+        "kind": "text",
+        "defaultValue": "Edit workspace",
+        "testValue": "Edit workspace · alternate",
+        "description": "Sets the dialog heading.",
+        "binding": {
+          "kind": "input",
+          "publicName": "title",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "description",
+        "label": "Description",
+        "kind": "text",
+        "defaultValue": "Changes apply to every member.",
+        "testValue": "Changes apply to every member. · alternate",
+        "description": "Sets the dialog description.",
+        "binding": {
+          "kind": "input",
+          "publicName": "description",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "open",
+        "label": "Open",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Opens the modal surface.",
+        "binding": {
+          "kind": "model",
+          "publicName": "open"
+        }
+      },
+      {
+        "key": "showClose",
+        "label": "Show close",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Shows the close icon action.",
+        "binding": {
+          "kind": "input",
+          "publicName": "showClose",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "closeOnEscape",
+        "label": "Close on Escape",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Allows Escape to dismiss the dialog.",
+        "binding": {
+          "kind": "input",
+          "publicName": "closeOnEscape",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "closeOnOutside",
+        "label": "Outside click",
+        "kind": "select",
+        "defaultValue": null,
+        "testValue": true,
+        "description": "Inherits the surface policy by default, or explicitly enables or disables outside-click closing.",
+        "binding": {
+          "kind": "input",
+          "publicName": "closeOnOutside",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "Inherit",
+            "value": null
+          },
+          {
+            "label": "Enabled",
+            "value": true
+          },
+          {
+            "label": "Disabled",
+            "value": false
+          }
+        ]
+      },
+      {
+        "key": "eyebrow",
+        "label": "Eyebrow",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component eyebrow contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "eyebrow",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "closed",
+        "label": "closed",
+        "scenario": "default",
+        "args": {
+          "open": false
+        },
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "closed",
+          "description": "The fixture exposes the closed status without claiming a public component input."
+        }
+      },
+      {
+        "id": "open",
+        "label": "Open",
+        "scenario": "default",
+        "args": {
+          "open": true
+        }
+      },
+      {
+        "id": "nested",
+        "label": "nested",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "nested",
+          "description": "The fixture exposes the nested status without claiming a public component input."
+        }
+      },
+      {
+        "id": "dismissed",
+        "label": "dismissed",
+        "scenario": "default",
+        "args": {
+          "open": false
+        },
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "dismissed",
+          "description": "The fixture exposes the dismissed status without claiming a public component input."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 12,
+      "controlled": 7,
+      "excluded": 5,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "dialog",
+        "publicName": "actionsTemplate",
+        "kind": "input",
+        "type": "TemplateRef<unknown> | null",
+        "code": "template",
+        "reason": "Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/dialog.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "dialog",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#dialog"
+        }
+      },
+      {
+        "componentId": "dialog",
+        "publicName": "closeLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#dialog"
+        }
+      },
+      {
+        "componentId": "dialog",
+        "publicName": "contentTemplate",
+        "kind": "input",
+        "type": "TemplateRef<unknown> | null",
+        "code": "template",
+        "reason": "Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/dialog.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "dialog",
+        "publicName": "initialFocus",
+        "kind": "input",
+        "type": "string",
+        "code": "dom-wiring",
+        "reason": "DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#dialog"
+        }
+      }
+    ]
   }
 }

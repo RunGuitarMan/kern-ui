@@ -116,6 +116,56 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - focus-visible
 - active
 - disabled
+- minimum
+- maximum
+
+## Interactive playground
+
+Route: `preview/calendar`
+
+Scenarios: `default`.
+Public API coverage: 8/11
+directly controlled; 3 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument          | Control | Default        | Test value          | Binding                            | Description                                        |
+| ----------------- | ------- | -------------- | ------------------- | ---------------------------------- | -------------------------------------------------- |
+| `activeMonth`     | text    | `"2026-07"`    | `"2026-08"`         | model `activeMonth`                | Changes the visible ISO calendar month.            |
+| `focusedDate`     | text    | `""`           | `"2026-08-15"`      | model `focusedDate`                | Changes the roving-focus ISO date.                 |
+| `value`           | text    | `""`           | `"Alternate value"` | model `value`                      | Changes the selected ISO date.                     |
+| `max`             | text    | `""`           | `"2026-11-30"`      | input `max` (property)             | Configures the component max contract.             |
+| `min`             | text    | `""`           | `"2026-02-01"`      | input `min` (property)             | Configures the component min contract.             |
+| `showTodayAction` | boolean | `true`         | `false`             | input `showTodayAction` (property) | Configures the component showTodayAction contract. |
+| `today`           | text    | `"2026-07-26"` | `"2026-08-15"`      | input `today` (property)           | Configures the component today contract.           |
+| `weekStartsOn`    | select  | `1`            | `0`                 | input `weekStartsOn` (property)    | Configures the component weekStartsOn contract.    |
+
+Exact API exclusions:
+
+| Public API      | Category           | Evidence                                          | Reason                                                                                                                  |
+| --------------- | ------------------ | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `disabledDates` | complex-data       | `specimen-fixture:preview/calendar?state=default` | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
+| `labels`        | translation-object | `locale-preview:preview/calendar?locale=ru-RU`    | Structured translation overrides are exercised through locale providers, not lossy scalar controls.                     |
+| `locale`        | locale-environment | `locale-preview:preview/calendar?locale=ru-RU`    | Locale is owned by the playground environment selector so every locale-sensitive component changes consistently.        |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — disabled; scenario `default`; fixture effect `status/neutral` — disabled: The fixture exposes the disabled status without claiming a public component input..
+- `minimum` — minimum; scenario `default`; fixture effect `status/neutral` — minimum: The fixture exposes the minimum status without claiming a public component input..
+- `maximum` — maximum; scenario `default`; fixture effect `status/neutral` — maximum: The fixture exposes the maximum status without claiming a public component input..
 
 ## Related
 

@@ -168,5 +168,219 @@
     "route": "components/tooltip",
     "json": "components/tooltip.json",
     "markdown": "components/tooltip.md"
+  },
+  "playground": {
+    "route": "preview/tooltip",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "text",
+        "label": "Text",
+        "kind": "text",
+        "defaultValue": "Copy public link",
+        "testValue": "Copy public link · alternate",
+        "description": "Sets the concise tooltip content.",
+        "binding": {
+          "kind": "input",
+          "publicName": "krnTooltip",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "position",
+        "label": "Position",
+        "kind": "select",
+        "defaultValue": "above",
+        "testValue": "below",
+        "description": "Chooses the preferred placement around the trigger.",
+        "binding": {
+          "kind": "input",
+          "publicName": "krnTooltipPosition",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "above",
+            "value": "above"
+          },
+          {
+            "label": "below",
+            "value": "below"
+          },
+          {
+            "label": "before",
+            "value": "before"
+          },
+          {
+            "label": "after",
+            "value": "after"
+          }
+        ]
+      },
+      {
+        "key": "showDelay",
+        "label": "Show delay",
+        "kind": "number",
+        "defaultValue": 400,
+        "testValue": 450,
+        "description": "Delays opening in milliseconds.",
+        "binding": {
+          "kind": "input",
+          "publicName": "krnTooltipShowDelay",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 2000,
+        "step": 50
+      },
+      {
+        "key": "hideDelay",
+        "label": "Hide delay",
+        "kind": "number",
+        "defaultValue": 80,
+        "testValue": 100,
+        "description": "Delays closing in milliseconds.",
+        "binding": {
+          "kind": "input",
+          "publicName": "krnTooltipHideDelay",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 1000,
+        "step": 20
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "closed",
+        "label": "closed",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "closed",
+          "description": "The fixture exposes the closed status without claiming a public component input."
+        }
+      },
+      {
+        "id": "open",
+        "label": "open",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "info",
+          "label": "open",
+          "description": "The fixture exposes the open status without claiming a public component input."
+        }
+      },
+      {
+        "id": "nested",
+        "label": "nested",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "nested",
+          "description": "The fixture exposes the nested status without claiming a public component input."
+        }
+      },
+      {
+        "id": "dismissed",
+        "label": "dismissed",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "dismissed",
+          "description": "The fixture exposes the dismissed status without claiming a public component input."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 4,
+      "controlled": 4,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

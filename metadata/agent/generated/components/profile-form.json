@@ -262,5 +262,294 @@
     "route": "components/profile-form",
     "json": "components/profile-form.json",
     "markdown": "components/profile-form.md"
+  },
+  "playground": {
+    "route": "preview/profile-form",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "saving",
+        "label": "Saving",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Shows the saving state.",
+        "binding": {
+          "kind": "input",
+          "publicName": "saving",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "dirtyMessage",
+        "label": "Dirty message",
+        "kind": "text",
+        "defaultValue": "Unsaved changes",
+        "testValue": "Unsaved changes · alternate",
+        "description": "Uses locale-aware unsaved-changes copy until explicitly changed.",
+        "binding": {
+          "kind": "input",
+          "publicName": "dirtyMessage",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "bioMaxLength",
+        "label": "Bio Max Length",
+        "kind": "number",
+        "defaultValue": 280,
+        "testValue": 281,
+        "description": "Configures the component bioMaxLength contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "bioMaxLength",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 1000,
+        "step": 1
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "overflow",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "long text",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "loading",
+        "label": "loading",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "loading",
+          "label": "loading",
+          "description": "The fixture is waiting for enterprise data."
+        }
+      },
+      {
+        "id": "empty",
+        "label": "empty",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "empty",
+          "label": "empty",
+          "description": "The fixture data source returned no records."
+        }
+      },
+      {
+        "id": "error",
+        "label": "error",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "error",
+          "label": "error",
+          "description": "The fixture data request failed and can be retried."
+        }
+      },
+      {
+        "id": "success",
+        "label": "success",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "success",
+          "label": "success",
+          "description": "The fixture operation completed successfully."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 12,
+      "controlled": 3,
+      "excluded": 9,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "profile-form",
+        "publicName": "bioLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#profile-form"
+        }
+      },
+      {
+        "componentId": "profile-form",
+        "publicName": "nameErrorLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#profile-form"
+        }
+      },
+      {
+        "componentId": "profile-form",
+        "publicName": "nameLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#profile-form"
+        }
+      },
+      {
+        "componentId": "profile-form",
+        "publicName": "roleLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#profile-form"
+        }
+      },
+      {
+        "componentId": "profile-form",
+        "publicName": "saveLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#profile-form"
+        }
+      },
+      {
+        "componentId": "profile-form",
+        "publicName": "savingLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#profile-form"
+        }
+      },
+      {
+        "componentId": "profile-form",
+        "publicName": "timezoneLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#profile-form"
+        }
+      },
+      {
+        "componentId": "profile-form",
+        "publicName": "timezones",
+        "kind": "input",
+        "type": "ReadonlyArray<{ readonly value: string; readonly label: string; }>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/profile-form?state=default"
+        }
+      },
+      {
+        "componentId": "profile-form",
+        "publicName": "value",
+        "kind": "input",
+        "type": "KrnProfileValue",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/profile-form?state=default"
+        }
+      }
+    ]
   }
 }

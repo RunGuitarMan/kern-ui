@@ -10,6 +10,7 @@ import {
   makeEnvironmentProviders,
   provideEnvironmentInitializer,
   Renderer2,
+  RendererStyleFlags2,
   signal,
   computed,
   Injectable,
@@ -391,13 +392,22 @@ export class KrnThemeDirective {
       const color = this.brandColor();
       const palette = color === undefined ? null : color ? generateKrnBrandPalette(color) : null;
       for (const property of this.managedBrandProperties) {
-        this.renderer.removeStyle(this.element.nativeElement, property);
+        this.renderer.removeStyle(
+          this.element.nativeElement,
+          property,
+          RendererStyleFlags2.DashCase,
+        );
       }
       this.managedBrandProperties.clear();
 
       if (palette) {
         for (const [property, value] of Object.entries(krnBrandPaletteVariables(palette))) {
-          this.renderer.setStyle(this.element.nativeElement, property, value);
+          this.renderer.setStyle(
+            this.element.nativeElement,
+            property,
+            value,
+            RendererStyleFlags2.DashCase,
+          );
           this.managedBrandProperties.add(property);
         }
       }

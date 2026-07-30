@@ -191,5 +191,243 @@
     "route": "components/filter-bar",
     "json": "components/filter-bar.json",
     "markdown": "components/filter-bar.md"
+  },
+  "playground": {
+    "route": "preview/filter-bar",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "activeFilter",
+        "label": "Active filter",
+        "kind": "select",
+        "defaultValue": "none",
+        "testValue": "healthy",
+        "description": "Changes the deterministic filter-value fixture.",
+        "binding": {
+          "kind": "fixture",
+          "target": "interaction",
+          "description": "Seeds the public values model with a deterministic filter selection."
+        },
+        "options": [
+          {
+            "label": "none",
+            "value": "none"
+          },
+          {
+            "label": "healthy",
+            "value": "healthy"
+          },
+          {
+            "label": "attention",
+            "value": "attention"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "overflow",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "long text",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "loading",
+        "label": "loading",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "loading",
+          "label": "loading",
+          "description": "The fixture is waiting for enterprise data."
+        }
+      },
+      {
+        "id": "empty",
+        "label": "empty",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "empty",
+          "label": "empty",
+          "description": "The fixture data source returned no records."
+        }
+      },
+      {
+        "id": "error",
+        "label": "error",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "error",
+          "label": "error",
+          "description": "The fixture data request failed and can be retried."
+        }
+      },
+      {
+        "id": "success",
+        "label": "success",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "success",
+          "label": "success",
+          "description": "The fixture operation completed successfully."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 6,
+      "controlled": 0,
+      "excluded": 6,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "filter-bar",
+        "publicName": "activeLabel",
+        "kind": "input",
+        "type": "(count: number) => string",
+        "code": "callback",
+        "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/filter-bar.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "filter-bar",
+        "publicName": "allLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#filter-bar"
+        }
+      },
+      {
+        "componentId": "filter-bar",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#filter-bar"
+        }
+      },
+      {
+        "componentId": "filter-bar",
+        "publicName": "clearAllLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#filter-bar"
+        }
+      },
+      {
+        "componentId": "filter-bar",
+        "publicName": "filters",
+        "kind": "input",
+        "type": "ReadonlyArray<KrnFilterDefinition>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/filter-bar?state=default"
+        }
+      },
+      {
+        "componentId": "filter-bar",
+        "publicName": "values",
+        "kind": "model",
+        "type": "Readonly<Partial<Record<string, string>>>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/filter-bar?state=default"
+        }
+      }
+    ]
   }
 }

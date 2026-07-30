@@ -30,7 +30,10 @@
     "active",
     "disabled",
     "filled",
-    "empty"
+    "empty",
+    "readonly",
+    "required",
+    "invalid"
   ],
   "lifecycle": {
     "status": "stable",
@@ -242,5 +245,283 @@
     "route": "components/verification-code",
     "json": "components/verification-code.json",
     "markdown": "components/verification-code.md"
+  },
+  "playground": {
+    "route": "preview/verification-code",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "length",
+        "label": "Length",
+        "kind": "number",
+        "defaultValue": 6,
+        "testValue": 7,
+        "description": "Changes the number of verification cells.",
+        "binding": {
+          "kind": "input",
+          "publicName": "length",
+          "syntax": "property"
+        },
+        "min": 4,
+        "max": 12,
+        "step": 1
+      },
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Prevents interaction and participates in the component disabled contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "disabled",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "id",
+        "label": "Id",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component id contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "id",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "invalid",
+        "label": "Invalid",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Exposes an externally controlled invalid presentation state.",
+        "binding": {
+          "kind": "input",
+          "publicName": "invalid",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "kind": "text",
+        "defaultValue": "Enter the 6-digit verification code",
+        "testValue": "Enter the 6-digit verification code · alternate",
+        "description": "Configures the component label contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "label",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "numericOnly",
+        "label": "Numeric Only",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Configures the component numericOnly contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "numericOnly",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "readonly",
+        "label": "Readonly",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Configures the component readonly contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "readonly",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "required",
+        "label": "Required",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Marks the value as required and participates in Angular Forms validation.",
+        "binding": {
+          "kind": "input",
+          "publicName": "required",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "Disabled",
+        "scenario": "default",
+        "args": {
+          "disabled": true
+        }
+      },
+      {
+        "id": "filled",
+        "label": "filled",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "filled",
+          "label": "filled",
+          "description": "The component is composed with a representative populated value."
+        }
+      },
+      {
+        "id": "empty",
+        "label": "empty",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "empty",
+          "label": "empty",
+          "description": "The component is composed with intentionally empty content."
+        }
+      },
+      {
+        "id": "readonly",
+        "label": "readonly",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "readonly",
+          "description": "The fixture exposes the readonly status without claiming a public component input."
+        }
+      },
+      {
+        "id": "required",
+        "label": "Required",
+        "scenario": "default",
+        "args": {
+          "required": true
+        }
+      },
+      {
+        "id": "invalid",
+        "label": "Invalid",
+        "scenario": "default",
+        "args": {
+          "invalid": true
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 8,
+      "controlled": 8,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

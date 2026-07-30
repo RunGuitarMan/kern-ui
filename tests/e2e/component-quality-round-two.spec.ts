@@ -114,14 +114,11 @@ test.describe('Round two: documentation and preview contracts', () => {
     const light = await themeSnapshot();
 
     await page.getByRole('button', { name: 'Dark', exact: true }).click();
-    await expect(page.locator('html')).toHaveAttribute('data-krn-theme', 'dark');
+    await expect(page.locator('#code-panel')).toHaveAttribute('data-krn-theme', 'dark');
     const dark = await themeSnapshot();
 
-    await page.evaluate(() => {
-      document.documentElement.setAttribute('data-krn-theme', 'high-contrast');
-      document.documentElement.setAttribute('data-krn-theme-mode', 'high-contrast');
-      document.documentElement.style.colorScheme = 'light dark';
-    });
+    await page.getByTestId('theme-control').selectOption('high-contrast');
+    await expect(page.locator('#code-panel')).toHaveAttribute('data-krn-theme', 'high-contrast');
     const highContrast = await themeSnapshot();
 
     expect(light.background).not.toBe(dark.background);
@@ -137,30 +134,32 @@ test.describe('Round two: documentation and preview contracts', () => {
 
   test('calendar hover, range, and endpoint colors keep a distinct hierarchy', async ({ page }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
-    const specimen = await openSpecimen(page, 'date-range-picker');
-    const trigger = specimen.getByRole('button', { name: 'Reporting period' });
-    await trigger.click();
-
-    const dialog = specimen.getByRole('dialog', { name: 'Reporting period' });
-    const currentMonthDays = dialog.locator(
-      '.krn-calendar__day:not([data-outside="true"]):not(:disabled)',
-    );
-    await currentMonthDays.nth(8).click();
-    await currentMonthDays.nth(12).click();
-
-    const endpoint = dialog.locator('.krn-calendar__day[data-selected="true"]').first();
-    const rangeDay = dialog.locator('.krn-calendar__day[data-in-range="true"]').first();
-    const hoverDay = dialog
-      .locator(
-        '.krn-calendar__day:not([data-outside="true"]):not([data-selected="true"]):not([data-in-range="true"]):not(:disabled)',
-      )
-      .last();
-
-    const snapshot = async (): Promise<{
+    const snapshot = async (
+      theme: 'dark' | 'light',
+    ): Promise<{
       readonly endpoint: string;
       readonly hover: string;
       readonly range: string;
     }> => {
+      const specimen = await openSpecimen(page, 'date-range-picker');
+      await page.getByTestId('theme-control').selectOption(theme);
+      await expect(page.getByTestId('specimen-stage')).toHaveAttribute('data-krn-theme', theme);
+
+      await specimen.getByRole('button', { name: 'Reporting period' }).click();
+      const dialog = specimen.getByRole('dialog', { name: 'Reporting period' });
+      const currentMonthDays = dialog.locator(
+        '.krn-calendar__day:not([data-outside="true"]):not(:disabled)',
+      );
+      await currentMonthDays.nth(8).click();
+      await currentMonthDays.nth(12).click();
+
+      const endpoint = dialog.locator('.krn-calendar__day[data-selected="true"]').first();
+      const rangeDay = dialog.locator('.krn-calendar__day[data-in-range="true"]').first();
+      const hoverDay = dialog
+        .locator(
+          '.krn-calendar__day:not([data-outside="true"]):not([data-selected="true"]):not([data-in-range="true"]):not(:disabled)',
+        )
+        .last();
       await hoverDay.hover();
       return {
         endpoint: await endpoint.evaluate((element) => getComputedStyle(element).backgroundColor),
@@ -169,13 +168,8 @@ test.describe('Round two: documentation and preview contracts', () => {
       };
     };
 
-    const light = await snapshot();
-    await page.evaluate(() => {
-      document.documentElement.setAttribute('data-krn-theme', 'dark');
-      document.documentElement.setAttribute('data-krn-theme-mode', 'dark');
-      document.documentElement.style.colorScheme = 'dark';
-    });
-    const dark = await snapshot();
+    const light = await snapshot('light');
+    const dark = await snapshot('dark');
 
     for (const [theme, colors] of Object.entries({ dark, light })) {
       expect(colors.hover, `${theme}: hover is visible`).not.toBe('rgba(0, 0, 0, 0)');

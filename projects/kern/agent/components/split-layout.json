@@ -183,5 +183,218 @@
     "route": "components/split-layout",
     "json": "components/split-layout.json",
     "markdown": "components/split-layout.md"
+  },
+  "playground": {
+    "route": "preview/split-layout",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "reverseCollapsed",
+        "label": "Reverse when collapsed",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Reverses pane order after the layout collapses.",
+        "binding": {
+          "kind": "input",
+          "publicName": "reverseCollapsed",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "ratio",
+        "label": "Ratio",
+        "kind": "select",
+        "defaultValue": "1:2",
+        "testValue": "1:1",
+        "description": "Changes the primary-to-secondary pane ratio.",
+        "binding": {
+          "kind": "input",
+          "publicName": "ratio",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "1:1",
+            "value": "1:1"
+          },
+          {
+            "label": "1:2",
+            "value": "1:2"
+          },
+          {
+            "label": "2:1",
+            "value": "2:1"
+          },
+          {
+            "label": "golden",
+            "value": "golden"
+          }
+        ]
+      },
+      {
+        "key": "gap",
+        "label": "Gap",
+        "kind": "text",
+        "defaultValue": "4",
+        "testValue": "20rem",
+        "description": "Sets the separation between panes.",
+        "binding": {
+          "kind": "input",
+          "publicName": "gap",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "align",
+        "label": "Align",
+        "kind": "select",
+        "defaultValue": "start",
+        "testValue": "center",
+        "description": "Configures the component align contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "align",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "center",
+            "value": "center"
+          },
+          {
+            "label": "end",
+            "value": "end"
+          },
+          {
+            "label": "start",
+            "value": "start"
+          },
+          {
+            "label": "stretch",
+            "value": "stretch"
+          }
+        ]
+      },
+      {
+        "key": "collapseAt",
+        "label": "Collapse At",
+        "kind": "select",
+        "defaultValue": "md",
+        "testValue": "none",
+        "description": "Configures the component collapseAt contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "collapseAt",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "none",
+            "value": "none"
+          },
+          {
+            "label": "sm",
+            "value": "sm"
+          },
+          {
+            "label": "md",
+            "value": "md"
+          },
+          {
+            "label": "lg",
+            "value": "lg"
+          },
+          {
+            "label": "xl",
+            "value": "xl"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 5,
+      "controlled": 5,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

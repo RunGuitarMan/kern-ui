@@ -26,7 +26,29 @@ The Code tab does not use handwritten snippets. It reads the generated showcase 
 from `metadata/agent/examples`: one explicit standalone application for every catalog entry.
 Those same sources are mirrored into the npm package, installed into an isolated consumer, and
 strict-AOT compiled against the packed artifact. The shared specimen secondary entrypoint powers
-both Docs and Lab, and its coverage gate requires a focused render branch for all 131 entries.
+Docs component pages and deterministic preview routes, and its coverage gate requires a focused
+render branch for all 131 entries.
+
+For the live Code tab, Docs materializes every serializable public playground value as an Angular
+property binding on that verified scaffold. Documentation-only fixture effects and environment
+settings remain explicit comments. The UI distinguishes the AOT-verified base scaffold from the
+configured snapshot instead of claiming that dynamically generated source was compiled.
+
+## Interactive playground contract
+
+Every catalog component has one typed playground definition shared by its component page,
+`/preview/:component` route, browser tests, and generated agent metadata. It declares:
+
+- supported render scenarios and stable acceptance-state presets;
+- serializable controls with defaults, bounds/options, descriptions, and explicit public
+  input/model or documentation-fixture provenance;
+- deterministic theme, density, direction, locale, scoped motion-token, brand-color, and canvas
+  width settings;
+- canonical query parameters so a configured state can be copied, reloaded, and replayed.
+
+All catalog acceptance states must resolve to an executable preset. A state that cannot be
+represented honestly through public component API uses a typed `fixtureEffect`; generated docs
+mark that effect as documentation-only and never present it as an input or model.
 
 ## Lifecycle manifest
 
@@ -65,7 +87,7 @@ Repository evidence is intentionally split by purpose:
 3. the Chromium E2E suite renders every catalog route and exercises representative workflows;
 4. responsive tests cover narrow layout, RTL, and 200% text sizing on representative surfaces;
 5. Chromium, Firefox, and WebKit run focused hydration, semantics, keyboard/focus, and axe smoke;
-6. deterministic Chromium screenshots cover selected high-value Lab scenarios.
+6. deterministic Chromium screenshots cover selected high-value Docs preview scenarios.
 
 Automated evidence is release-blocking where configured, but it complements rather than replaces
 manual review in the consuming application's browser, operating-system, assistive-technology,

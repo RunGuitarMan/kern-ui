@@ -160,5 +160,161 @@
     "route": "components/stat",
     "json": "components/stat.json",
     "markdown": "components/stat.md"
+  },
+  "playground": {
+    "route": "preview/stat",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "trend",
+        "label": "Trend",
+        "kind": "select",
+        "defaultValue": "up",
+        "testValue": "flat",
+        "description": "Changes the trend indicator.",
+        "binding": {
+          "kind": "input",
+          "publicName": "trend",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "flat",
+            "value": "flat"
+          },
+          {
+            "label": "up",
+            "value": "up"
+          },
+          {
+            "label": "down",
+            "value": "down"
+          }
+        ]
+      },
+      {
+        "key": "detail",
+        "label": "Detail",
+        "kind": "text",
+        "defaultValue": "+12.4% this quarter",
+        "testValue": "20rem",
+        "description": "Adds context for the statistic.",
+        "binding": {
+          "kind": "input",
+          "publicName": "detail",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "kind": "text",
+        "defaultValue": "Active workspaces",
+        "testValue": "Active workspaces · alternate",
+        "description": "Names the statistic.",
+        "binding": {
+          "kind": "input",
+          "publicName": "label",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "value",
+        "label": "Value",
+        "kind": "text",
+        "defaultValue": "2,481",
+        "testValue": "2,481 · alternate",
+        "description": "Sets the displayed statistic value.",
+        "binding": {
+          "kind": "input",
+          "publicName": "value",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 4,
+      "controlled": 4,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

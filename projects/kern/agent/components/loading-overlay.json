@@ -156,5 +156,154 @@
     "route": "components/loading-overlay",
     "json": "components/loading-overlay.json",
     "markdown": "components/loading-overlay.md"
+  },
+  "playground": {
+    "route": "preview/loading-overlay",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "active",
+        "label": "Active",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Shows or hides the blocking loading layer.",
+        "binding": {
+          "kind": "input",
+          "publicName": "active",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "kind": "text",
+        "defaultValue": "Importing customer records…",
+        "testValue": "Importing customer records… · alternate",
+        "description": "Names the loading operation for assistive technology.",
+        "binding": {
+          "kind": "input",
+          "publicName": "label",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "blocking",
+        "label": "Blocking",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Configures the component blocking contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "blocking",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "loading",
+        "label": "loading",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "info",
+          "label": "loading",
+          "description": "The fixture exposes the loading status without claiming a public component input."
+        }
+      },
+      {
+        "id": "inactive-overlay",
+        "label": "Inactive Overlay",
+        "scenario": "default",
+        "args": {
+          "active": false
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 3,
+      "controlled": 3,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

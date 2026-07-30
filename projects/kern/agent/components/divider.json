@@ -139,5 +139,120 @@
     "route": "components/divider",
     "json": "components/divider.json",
     "markdown": "components/divider.md"
+  },
+  "playground": {
+    "route": "preview/divider",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "orientation",
+        "label": "Orientation",
+        "kind": "select",
+        "defaultValue": "horizontal",
+        "testValue": "vertical",
+        "description": "Changes the separator axis and accessibility semantics.",
+        "binding": {
+          "kind": "input",
+          "publicName": "orientation",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "horizontal",
+            "value": "horizontal"
+          },
+          {
+            "label": "vertical",
+            "value": "vertical"
+          }
+        ]
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "kind": "text",
+        "defaultValue": "Access policy",
+        "testValue": "Access policy · alternate",
+        "description": "Adds an accessible separator label.",
+        "binding": {
+          "kind": "input",
+          "publicName": "label",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "inset",
+        "label": "Inset",
+        "kind": "text",
+        "defaultValue": "0",
+        "testValue": "20rem",
+        "description": "Configures the component inset contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "inset",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 3,
+      "controlled": 3,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

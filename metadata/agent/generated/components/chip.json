@@ -24,7 +24,10 @@
     "high contrast",
     "compact",
     "RTL",
-    "mobile"
+    "mobile",
+    "disabled",
+    "selected",
+    "unselected"
   ],
   "lifecycle": {
     "status": "stable",
@@ -189,5 +192,226 @@
     "route": "components/chip",
     "json": "components/chip.json",
     "markdown": "components/chip.md"
+  },
+  "playground": {
+    "route": "preview/chip",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "interactive",
+        "label": "Interactive",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Renders the label as a toggle action.",
+        "binding": {
+          "kind": "input",
+          "publicName": "interactive",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "selected",
+        "label": "Selected",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Shows the selected treatment.",
+        "binding": {
+          "kind": "model",
+          "publicName": "selected"
+        }
+      },
+      {
+        "key": "removable",
+        "label": "Removable",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Shows a remove action.",
+        "binding": {
+          "kind": "input",
+          "publicName": "removable",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Prevents user interaction.",
+        "binding": {
+          "kind": "input",
+          "publicName": "disabled",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "Disabled",
+        "scenario": "default",
+        "args": {
+          "disabled": true
+        }
+      },
+      {
+        "id": "selected",
+        "label": "selected",
+        "scenario": "default",
+        "args": {
+          "selected": true
+        },
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "selected",
+          "description": "The fixture exposes the selected status without claiming a public component input."
+        }
+      },
+      {
+        "id": "unselected",
+        "label": "Unselected",
+        "scenario": "default",
+        "args": {
+          "selected": false
+        }
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "static",
+        "label": "Static",
+        "scenario": "default",
+        "args": {
+          "interactive": false
+        }
+      },
+      {
+        "id": "removable",
+        "label": "Removable",
+        "scenario": "default",
+        "args": {
+          "removable": true
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 5,
+      "controlled": 4,
+      "excluded": 1,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "chip",
+        "publicName": "accessibleLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#chip"
+        }
+      }
+    ]
   }
 }

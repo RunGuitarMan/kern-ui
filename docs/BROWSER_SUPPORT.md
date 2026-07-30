@@ -28,7 +28,7 @@ The Playwright projects cover:
 | `e2e`                                     | Chromium user flows, component behavior, keyboard contracts    |
 | `a11y`                                    | Full Chromium automated accessibility suite                    |
 | `responsive`                              | Chromium viewport, zoom, reflow, and responsive behavior       |
-| `visual`                                  | Deterministic Chromium Lab screenshots                         |
+| `visual`                                  | Deterministic Chromium Docs preview screenshots                |
 | `performance`                             | Large-data DOM, frame latency, form, heap, and cleanup budgets |
 | `cross-browser-{chromium,firefox,webkit}` | Tier 1 hydration, semantics, keyboard/focus, and axe smoke     |
 

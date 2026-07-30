@@ -26,8 +26,8 @@
     "RTL",
     "mobile",
     "minimum",
-    "partial",
-    "maximum"
+    "maximum",
+    "partial"
   ],
   "lifecycle": {
     "status": "stable",
@@ -184,5 +184,218 @@
     "route": "components/circular-progress",
     "json": "components/circular-progress.json",
     "markdown": "components/circular-progress.md"
+  },
+  "playground": {
+    "route": "preview/circular-progress",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "value",
+        "label": "Value",
+        "kind": "range",
+        "defaultValue": 68,
+        "testValue": 69,
+        "description": "Sets determinate completion.",
+        "binding": {
+          "kind": "input",
+          "publicName": "value",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "max",
+        "label": "Maximum",
+        "kind": "number",
+        "defaultValue": 100,
+        "testValue": 101,
+        "description": "Sets the completion scale maximum.",
+        "binding": {
+          "kind": "input",
+          "publicName": "max",
+          "syntax": "property"
+        },
+        "min": 1,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "indeterminate",
+        "label": "Indeterminate",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Shows progress without a known value.",
+        "binding": {
+          "kind": "input",
+          "publicName": "indeterminate",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "showValue",
+        "label": "Show value",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Shows the formatted percentage.",
+        "binding": {
+          "kind": "input",
+          "publicName": "showValue",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "minimum",
+        "label": "Minimum",
+        "scenario": "default",
+        "args": {
+          "value": 0
+        }
+      },
+      {
+        "id": "maximum",
+        "label": "Maximum",
+        "scenario": "default",
+        "args": {
+          "value": 100
+        }
+      },
+      {
+        "id": "partial",
+        "label": "Partial",
+        "scenario": "default",
+        "args": {
+          "value": 50
+        }
+      },
+      {
+        "id": "indeterminate",
+        "label": "Indeterminate",
+        "scenario": "default",
+        "args": {
+          "indeterminate": true
+        }
+      },
+      {
+        "id": "value-hidden",
+        "label": "Value Hidden",
+        "scenario": "default",
+        "args": {
+          "showValue": false
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 6,
+      "controlled": 4,
+      "excluded": 2,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "circular-progress",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#circular-progress"
+        }
+      },
+      {
+        "componentId": "circular-progress",
+        "publicName": "locale",
+        "kind": "input",
+        "type": "string | Array<string>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/circular-progress?state=default"
+        }
+      }
+    ]
   }
 }

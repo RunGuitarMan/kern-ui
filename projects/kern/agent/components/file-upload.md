@@ -114,6 +114,61 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - disabled
 - filled
 - empty
+- readonly
+- required
+- invalid
+
+## Interactive playground
+
+Route: `preview/file-upload`
+
+Scenarios: `default`.
+Public API coverage: 11/12
+directly controlled; 1 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument      | Control | Default               | Test value                        | Binding                        | Description                                                               |
+| ------------- | ------- | --------------------- | --------------------------------- | ------------------------------ | ------------------------------------------------------------------------- |
+| `multiple`    | boolean | `false`               | `true`                            | input `multiple` (property)    | Allows more than one file to be selected.                                 |
+| `accept`      | text    | `".csv,text/csv"`     | `".png,.jpg"`                     | input `accept` (property)      | Configures the component accept contract.                                 |
+| `description` | text    | `"CSV, up to 10 MB."` | `"CSV, up to 10 MB. · alternate"` | input `description` (property) | Configures the component description contract.                            |
+| `disabled`    | boolean | `false`               | `true`                            | input `disabled` (property)    | Prevents interaction and participates in the component disabled contract. |
+| `id`          | text    | `""`                  | `"Alternate value"`               | input `id` (property)          | Configures the component id contract.                                     |
+| `invalid`     | boolean | `false`               | `true`                            | input `invalid` (property)     | Exposes an externally controlled invalid presentation state.              |
+| `label`       | text    | `"Choose a CSV file"` | `"Choose a CSV file · alternate"` | input `label` (property)       | Configures the component label contract.                                  |
+| `maxFiles`    | number  | `5`                   | `6`                               | input `maxFiles` (property)    | Configures the component maxFiles contract.                               |
+| `maxSize`     | number  | `10485760`            | `10485759`                        | input `maxSize` (property)     | Configures the component maxSize contract.                                |
+| `readonly`    | boolean | `false`               | `true`                            | input `readonly` (property)    | Configures the component readonly contract.                               |
+| `required`    | boolean | `false`               | `true`                            | input `required` (property)    | Marks the value as required and participates in Angular Forms validation. |
+
+Exact API exclusions:
+
+| Public API | Category           | Evidence                                          | Reason                                                                                                           |
+| ---------- | ------------------ | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `locale`   | locale-environment | `locale-preview:preview/file-upload?locale=ru-RU` | Locale is owned by the playground environment selector so every locale-sensitive component changes consistently. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — Disabled; scenario `default`; `disabled=true`.
+- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
+- `readonly` — readonly; scenario `default`; fixture effect `status/neutral` — readonly: The fixture exposes the readonly status without claiming a public component input..
+- `required` — Required; scenario `default`; `required=true`.
+- `invalid` — Invalid; scenario `default`; `invalid=true`.
 
 ## Related
 

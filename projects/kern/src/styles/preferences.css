@@ -3,7 +3,23 @@
    * Motion is controlled through semantic duration tokens. This preserves
    * component state transitions without relying on a destructive global
    * `animation: none` override.
-   */
+  */
+  [data-krn-motion='full'] {
+    --krn-motion-duration-fast: var(--_krn-motion-duration-fast-full);
+    --krn-motion-duration-normal: var(--_krn-motion-duration-normal-full);
+    --krn-motion-duration-slow: var(--_krn-motion-duration-slow-full);
+    --krn-motion-duration-deliberate: var(--_krn-motion-duration-deliberate-full);
+    --krn-motion-duration-feedback: var(--_krn-motion-duration-feedback-full);
+    --krn-motion-duration-spinner: var(--_krn-motion-duration-spinner-full);
+    --krn-motion-duration-progress: var(--_krn-motion-duration-progress-full);
+    --krn-motion-duration-skeleton: var(--_krn-motion-duration-skeleton-full);
+    --krn-motion-iteration-continuous: infinite;
+    --krn-motion-ease-standard: var(--_krn-motion-ease-standard-full);
+    --krn-motion-ease-enter: var(--_krn-motion-ease-enter-full);
+    --krn-motion-ease-exit: var(--_krn-motion-ease-exit-full);
+    --krn-motion-ease-spring: var(--_krn-motion-ease-spring-full);
+  }
+
   [data-krn-motion='reduce'] {
     --krn-motion-duration-fast: 0.01ms;
     --krn-motion-duration-normal: 0.01ms;

@@ -35,6 +35,77 @@ describe('KERN agent component contract', () => {
       'Documentation artifacts must be manifest-relative.',
     );
 
+    const invalidPlaygroundRoute = structuredClone(manifest);
+    invalidPlaygroundRoute.components[0].playground.route = '/preview/app-shell';
+    assert.equal(
+      validate(invalidPlaygroundRoute),
+      false,
+      'Playground routes must be mount-relative.',
+    );
+
+    const validFixtureEffects = [
+      {
+        kind: 'layout',
+        mode: 'overflow',
+        label: 'Overflow',
+        description: 'Constrains the documentation fixture.',
+      },
+      {
+        kind: 'content',
+        mode: 'long-text',
+        label: 'Long text',
+        description: 'Uses deterministic long fixture content.',
+      },
+      {
+        kind: 'data',
+        mode: 'loading',
+        label: 'Loading',
+        description: 'Uses deterministic loading data.',
+      },
+      {
+        kind: 'status',
+        mode: 'warning',
+        label: 'Warning',
+        description: 'Uses the warning fixture state.',
+      },
+    ];
+    for (const fixtureEffect of validFixtureEffects) {
+      const validFixtureManifest = structuredClone(manifest);
+      validFixtureManifest.components[0].playground.presets[0].fixtureEffect = fixtureEffect;
+      assert.equal(
+        validate(validFixtureManifest),
+        true,
+        `${fixtureEffect.kind}/${fixtureEffect.mode}: ${JSON.stringify(validate.errors, null, 2)}`,
+      );
+    }
+
+    const invalidFixtureMode = structuredClone(manifest);
+    invalidFixtureMode.components[0].playground.presets[0].fixtureEffect = {
+      kind: 'layout',
+      mode: 'loading',
+      label: 'Loading',
+      description: 'A data mode must not validate as a layout effect.',
+    };
+    assert.equal(
+      validate(invalidFixtureMode),
+      false,
+      'Fixture effect modes must be discriminated by kind.',
+    );
+
+    const fixtureWithUndeclaredField = structuredClone(manifest);
+    fixtureWithUndeclaredField.components[0].playground.presets[0].fixtureEffect = {
+      kind: 'status',
+      mode: 'warning',
+      label: 'Warning',
+      description: 'Uses the warning fixture state.',
+      publicInput: 'tone',
+    };
+    assert.equal(
+      validate(fixtureWithUndeclaredField),
+      false,
+      'Fixture effects must reject undeclared public-binding metadata.',
+    );
+
     const invalidExampleAsset = structuredClone(manifest);
     invalidExampleAsset.components[0].examples[0].source = 'agent/examples/app-shell.ts';
     assert.equal(
@@ -53,7 +124,12 @@ describe('KERN agent component contract', () => {
   });
 
   it('covers every catalog entry with complete public ownership and agent fields', () => {
-    assert.equal(manifest.schemaVersion, '1.1.0');
+    assert.equal(manifest.schemaVersion, '1.2.0');
+    assert.deepEqual(
+      manifest.library.playground.environment.map(({ key }) => key),
+      ['theme', 'density', 'direction', 'locale', 'motion', 'viewport'],
+    );
+    assert.equal(manifest.library.playground.brandColor.parameter, 'brandColor');
     assert.equal(manifest.components.length, 131);
     assert.ok(manifest.symbols.length > 300);
     assert.equal(new Set(manifest.components.map((component) => component.id)).size, 131);
@@ -79,6 +155,15 @@ describe('KERN agent component contract', () => {
       assert.match(component.examples[0]?.code ?? '', /standalone:\s*true/);
       assert.match(component.examples[0]?.code ?? '', /void bootstrapApplication\(/);
       assert.ok(component.documentation.json.endsWith(`${component.id}.json`));
+      assert.equal(component.playground.route, `preview/${component.id}`);
+      assert.ok(component.playground.scenarios.includes('default'));
+      assert.ok(component.playground.controls.length > 0);
+      assert.ok(component.playground.presets.length > 0);
+      assert.ok(
+        component.playground.controls.every(
+          (control) => control.description && control.binding?.kind,
+        ),
+      );
       assert.ok(component.commonMistakes.length > 0);
       assert.ok(component.checklist.length > 0);
     }

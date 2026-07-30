@@ -30,6 +30,10 @@
     "active",
     "disabled",
     "loading",
+    "selected",
+    "unselected",
+    "closed",
+    "open",
     "empty",
     "error",
     "sorted",
@@ -512,5 +516,718 @@
     "route": "components/data-table",
     "json": "components/data-table.json",
     "markdown": "components/data-table.md"
+  },
+  "playground": {
+    "route": "preview/data-table",
+    "scenarios": ["default", "states", "stress"],
+    "controls": [
+      {
+        "key": "dataState",
+        "label": "Data state",
+        "kind": "select",
+        "defaultValue": "ready",
+        "testValue": "empty",
+        "description": "Shows ready, empty, or large datasets.",
+        "binding": {
+          "kind": "fixture",
+          "target": "data",
+          "description": "Selects the table row fixture; it is not a KrnDataGrid input."
+        },
+        "options": [
+          {
+            "label": "ready",
+            "value": "ready"
+          },
+          {
+            "label": "empty",
+            "value": "empty"
+          },
+          {
+            "label": "stress",
+            "value": "stress"
+          }
+        ]
+      },
+      {
+        "key": "resizable",
+        "label": "Resizable",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Allows pointer and keyboard column resizing.",
+        "binding": {
+          "kind": "input",
+          "publicName": "resizable",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "pagination",
+        "label": "Pagination",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Paginates the table rows.",
+        "binding": {
+          "kind": "input",
+          "publicName": "pagination",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "compact",
+        "label": "Compact",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Uses the compact row treatment.",
+        "binding": {
+          "kind": "input",
+          "publicName": "compact",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "pageSize",
+        "label": "Page size",
+        "kind": "number",
+        "defaultValue": 4,
+        "testValue": 5,
+        "description": "Sets rows per page.",
+        "binding": {
+          "kind": "input",
+          "publicName": "pageSize",
+          "syntax": "property"
+        },
+        "min": 1,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "filter",
+        "label": "Filter",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Changes the active row filter.",
+        "binding": {
+          "kind": "model",
+          "publicName": "filter"
+        }
+      },
+      {
+        "key": "page",
+        "label": "Page",
+        "kind": "number",
+        "defaultValue": 1,
+        "testValue": 2,
+        "description": "Changes the active page.",
+        "binding": {
+          "kind": "model",
+          "publicName": "page"
+        },
+        "min": 1,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "sortDirection",
+        "label": "Sort direction",
+        "kind": "select",
+        "defaultValue": "asc",
+        "testValue": "desc",
+        "description": "Changes the active sort direction.",
+        "binding": {
+          "kind": "model",
+          "publicName": "sortDirection"
+        },
+        "options": [
+          {
+            "label": "asc",
+            "value": "asc"
+          },
+          {
+            "label": "desc",
+            "value": "desc"
+          }
+        ]
+      },
+      {
+        "key": "sortKey",
+        "label": "Sort key",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "usage",
+        "description": "Changes the active sort column.",
+        "binding": {
+          "kind": "model",
+          "publicName": "sortKey"
+        }
+      },
+      {
+        "key": "filterPlaceholder",
+        "label": "Filter placeholder",
+        "kind": "text",
+        "defaultValue": "Filter rows…",
+        "testValue": "Filter rows… · alternate",
+        "description": "Uses locale-aware filter copy until explicitly changed.",
+        "binding": {
+          "kind": "input",
+          "publicName": "filterPlaceholder",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "columnChooser",
+        "label": "Column Chooser",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Configures the component columnChooser contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "columnChooser",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "error",
+        "label": "Error",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component error contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "error",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "expandable",
+        "label": "Expandable",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Configures the component expandable contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "expandable",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "filterable",
+        "label": "Filterable",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Configures the component filterable contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "filterable",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "loading",
+        "label": "Loading",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Prevents duplicate actions and exposes an accessible busy state.",
+        "binding": {
+          "kind": "input",
+          "publicName": "loading",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "selectable",
+        "label": "Selectable",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Configures the component selectable contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "selectable",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "viewportHeight",
+        "label": "Viewport Height",
+        "kind": "number",
+        "defaultValue": 360,
+        "testValue": 361,
+        "description": "Configures the component viewportHeight contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "viewportHeight",
+          "syntax": "property"
+        },
+        "min": -1000,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "virtualize",
+        "label": "Virtualize",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Configures the component virtualize contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "virtualize",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "stress",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "overflow",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "stress",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "long text",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "disabled",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "disabled",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "loading",
+        "label": "Loading",
+        "scenario": "default",
+        "args": {
+          "loading": true
+        }
+      },
+      {
+        "id": "selected",
+        "label": "selected",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "selected",
+          "label": "selected",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "unselected",
+        "label": "unselected",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "selected",
+          "label": "unselected",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "closed",
+        "label": "closed",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "closed",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "open",
+        "label": "open",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "open",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "empty",
+        "label": "Empty",
+        "scenario": "default",
+        "args": {
+          "dataState": "empty"
+        }
+      },
+      {
+        "id": "error",
+        "label": "error",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "error",
+          "label": "error",
+          "description": "The fixture data request failed and can be retried."
+        }
+      },
+      {
+        "id": "sorted",
+        "label": "sorted",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "sorted",
+          "label": "sorted",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "filtered",
+        "label": "filtered",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "filtered",
+          "label": "filtered",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "selected-rows",
+        "label": "selected rows",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "selected",
+          "label": "selected rows",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "virtualized",
+        "label": "virtualized",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "virtualized",
+          "label": "virtualized",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "pinned-columns",
+        "label": "Pinned columns",
+        "scenario": "states",
+        "args": {}
+      },
+      {
+        "id": "compact-rows",
+        "label": "Compact Rows",
+        "scenario": "default",
+        "args": {
+          "compact": true
+        }
+      },
+      {
+        "id": "stress",
+        "label": "Stress",
+        "scenario": "stress",
+        "args": {
+          "dataState": "stress"
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 32,
+      "controlled": 17,
+      "excluded": 15,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "data-table",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#data-table"
+        }
+      },
+      {
+        "componentId": "data-table",
+        "publicName": "columns",
+        "kind": "input",
+        "type": "ReadonlyArray<KrnDataColumn<T>>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/data-table?state=default"
+        }
+      },
+      {
+        "componentId": "data-table",
+        "publicName": "data",
+        "kind": "input",
+        "type": "ReadonlyArray<T>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/data-table?state=default"
+        }
+      },
+      {
+        "componentId": "data-table",
+        "publicName": "defaultCellTemplate",
+        "kind": "input",
+        "type": "TemplateRef<KrnDataCellContext<T>> | null",
+        "code": "template",
+        "reason": "Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/data-table.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "data-table",
+        "publicName": "defaultHeaderTemplate",
+        "kind": "input",
+        "type": "TemplateRef<KrnDataHeaderContext<T>> | null",
+        "code": "template",
+        "reason": "Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/data-table.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "data-table",
+        "publicName": "emptyLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#data-table"
+        }
+      },
+      {
+        "componentId": "data-table",
+        "publicName": "expanded",
+        "kind": "model",
+        "type": "ReadonlySet<KrnDataRowKey>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/data-table?state=default"
+        }
+      },
+      {
+        "componentId": "data-table",
+        "publicName": "expandedContent",
+        "kind": "input",
+        "type": "(row: T) => string",
+        "code": "callback",
+        "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/data-table.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "data-table",
+        "publicName": "expandedTemplate",
+        "kind": "input",
+        "type": "TemplateRef<KrnDataRowContext<T>> | null",
+        "code": "template",
+        "reason": "Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/data-table.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "data-table",
+        "publicName": "filterPredicate",
+        "kind": "input",
+        "type": "KrnDataFilterPredicate<T> | null",
+        "code": "callback",
+        "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/data-table.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "data-table",
+        "publicName": "hiddenColumnKeys",
+        "kind": "model",
+        "type": "ReadonlySet<string>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/data-table?state=default"
+        }
+      },
+      {
+        "componentId": "data-table",
+        "publicName": "labels",
+        "kind": "input",
+        "type": "Partial<KrnDataGridTranslations>",
+        "code": "translation-object",
+        "reason": "Structured translation overrides are exercised through locale providers, not lossy scalar controls.",
+        "evidence": {
+          "category": "locale-preview",
+          "pointer": "preview/data-table?locale=ru-RU"
+        }
+      },
+      {
+        "componentId": "data-table",
+        "publicName": "mode",
+        "kind": "input",
+        "type": "KrnDataGridMode | null",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/data-table?state=default"
+        }
+      },
+      {
+        "componentId": "data-table",
+        "publicName": "rowIdentity",
+        "kind": "input",
+        "type": "(row: T, index: number) => KrnDataRowKey",
+        "code": "callback",
+        "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/data-table.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "data-table",
+        "publicName": "selected",
+        "kind": "model",
+        "type": "ReadonlySet<KrnDataRowKey>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/data-table?state=default"
+        }
+      }
+    ]
   }
 }

@@ -24,7 +24,10 @@
     "high contrast",
     "compact",
     "RTL",
-    "mobile"
+    "mobile",
+    "disabled",
+    "readonly",
+    "required"
   ],
   "lifecycle": {
     "status": "stable",
@@ -237,5 +240,278 @@
     "route": "components/form-field",
     "json": "components/form-field.json",
     "markdown": "components/form-field.md"
+  },
+  "playground": {
+    "route": "preview/form-field",
+    "scenarios": ["default", "stress"],
+    "controls": [
+      {
+        "key": "state",
+        "label": "State",
+        "kind": "select",
+        "defaultValue": "default",
+        "testValue": "valid",
+        "description": "Shows default, valid, pending, or invalid field feedback.",
+        "binding": {
+          "kind": "input",
+          "publicName": "state",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "default",
+            "value": "default"
+          },
+          {
+            "label": "valid",
+            "value": "valid"
+          },
+          {
+            "label": "pending",
+            "value": "pending"
+          },
+          {
+            "label": "invalid",
+            "value": "invalid"
+          }
+        ]
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Changes the visible field label.",
+        "binding": {
+          "kind": "input",
+          "publicName": "label",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Prevents interaction and participates in the component disabled contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "disabled",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "error",
+        "label": "Error",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component error contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "error",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "hint",
+        "label": "Hint",
+        "kind": "text",
+        "defaultValue": "Required enterprise value.",
+        "testValue": "Required enterprise value. · alternate",
+        "description": "Configures the component hint contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "hint",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "id",
+        "label": "Id",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component id contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "id",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "optionalText",
+        "label": "Optional Text",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component optionalText contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "optionalText",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "readonly",
+        "label": "Readonly",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Configures the component readonly contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "readonly",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "required",
+        "label": "Required",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Marks the value as required and participates in Angular Forms validation.",
+        "binding": {
+          "kind": "input",
+          "publicName": "required",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "stress",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "stress",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "Disabled",
+        "scenario": "default",
+        "args": {
+          "disabled": true
+        }
+      },
+      {
+        "id": "readonly",
+        "label": "readonly",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "readonly",
+          "description": "The fixture exposes the readonly status without claiming a public component input."
+        }
+      },
+      {
+        "id": "required",
+        "label": "required",
+        "scenario": "default",
+        "args": {
+          "required": true
+        },
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "required",
+          "description": "The fixture exposes the required status without claiming a public component input."
+        }
+      },
+      {
+        "id": "optional",
+        "label": "Optional",
+        "scenario": "default",
+        "args": {
+          "required": false
+        }
+      },
+      {
+        "id": "stress",
+        "label": "Stress data",
+        "scenario": "stress",
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 9,
+      "controlled": 9,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

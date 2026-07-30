@@ -30,7 +30,10 @@
     "active",
     "disabled",
     "filled",
-    "empty"
+    "empty",
+    "readonly",
+    "required",
+    "invalid"
   ],
   "lifecycle": {
     "status": "stable",
@@ -263,5 +266,310 @@
     "route": "components/segmented-control",
     "json": "components/segmented-control.json",
     "markdown": "components/segmented-control.md"
+  },
+  "playground": {
+    "route": "preview/segmented-control",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Prevents user interaction.",
+        "binding": {
+          "kind": "input",
+          "publicName": "disabled",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "readOnly",
+        "label": "Read only",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Keeps the value focusable while preventing edits.",
+        "binding": {
+          "kind": "input",
+          "publicName": "readonly",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "required",
+        "label": "Required",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Marks the control as required.",
+        "binding": {
+          "kind": "input",
+          "publicName": "required",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "invalid",
+        "label": "Invalid",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Exposes the invalid visual and ARIA state.",
+        "binding": {
+          "kind": "input",
+          "publicName": "invalid",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "id",
+        "label": "Id",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component id contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "id",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "Disabled",
+        "scenario": "default",
+        "args": {
+          "disabled": true
+        }
+      },
+      {
+        "id": "filled",
+        "label": "filled",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "filled",
+          "label": "filled",
+          "description": "The component is composed with a representative populated value."
+        }
+      },
+      {
+        "id": "empty",
+        "label": "empty",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "empty",
+          "label": "empty",
+          "description": "The component is composed with intentionally empty content."
+        }
+      },
+      {
+        "id": "readonly",
+        "label": "Readonly",
+        "scenario": "default",
+        "args": {
+          "readOnly": true
+        }
+      },
+      {
+        "id": "required",
+        "label": "Required",
+        "scenario": "default",
+        "args": {
+          "required": true
+        }
+      },
+      {
+        "id": "invalid",
+        "label": "Invalid",
+        "scenario": "default",
+        "args": {
+          "invalid": true
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 11,
+      "controlled": 5,
+      "excluded": 6,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "segmented-control",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#segmented-control"
+        }
+      },
+      {
+        "componentId": "segmented-control",
+        "publicName": "disabledHandler",
+        "kind": "input",
+        "type": "KrnSegmentDisabledHandler<T>",
+        "code": "callback",
+        "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/segmented-control.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "segmented-control",
+        "publicName": "identityMatcher",
+        "kind": "input",
+        "type": "KrnIdentityMatcher<T>",
+        "code": "callback",
+        "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/segmented-control.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "segmented-control",
+        "publicName": "options",
+        "kind": "input",
+        "type": "ReadonlyArray<KrnSegmentOption<T>>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/segmented-control?state=default"
+        }
+      },
+      {
+        "componentId": "segmented-control",
+        "publicName": "optionTemplate",
+        "kind": "input",
+        "type": "TemplateRef<KrnSegmentOptionContext<T>> | null",
+        "code": "template",
+        "reason": "Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/segmented-control.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "segmented-control",
+        "publicName": "trackBy",
+        "kind": "input",
+        "type": "KrnSegmentTrackBy<T>",
+        "code": "callback",
+        "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/segmented-control.json#/examples/0"
+        }
+      }
+    ]
   }
 }

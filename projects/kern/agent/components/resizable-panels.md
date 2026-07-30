@@ -100,12 +100,55 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - compact
 - RTL
 - mobile
+- disabled
 - handle hover
 - handle focus-visible
 - minimum size
 - maximum size
 - collapsed
 - expanded
+
+## Interactive playground
+
+Route: `preview/resizable-panels`
+
+Scenarios: `default`.
+Public API coverage: 3/4
+directly controlled; 1 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument      | Control | Default        | Test value   | Binding                        | Description                                    |
+| ------------- | ------- | -------------- | ------------ | ------------------------------ | ---------------------------------------------- |
+| `disabled`    | boolean | `false`        | `true`       | input `disabled` (property)    | Disables pointer and keyboard resizing.        |
+| `step`        | number  | `5`            | `6`          | input `step` (property)        | Sets the keyboard resize increment.            |
+| `orientation` | select  | `"horizontal"` | `"vertical"` | input `orientation` (property) | Configures the component orientation contract. |
+
+Exact API exclusions:
+
+| Public API | Category     | Evidence                                                  | Reason                                                                                                                  |
+| ---------- | ------------ | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `sizes`    | complex-data | `specimen-fixture:preview/resizable-panels?state=default` | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `disabled` — Disabled; scenario `default`; `disabled=true`.
+- `handle-hover` — handle hover; scenario `default`; fixture effect `layout/constrained` — handle hover: The fixture uses an alternate deterministic boundary to expose layout behavior..
+- `handle-focus-visible` — handle focus-visible; scenario `default`; fixture effect `layout/constrained` — handle focus-visible: The fixture uses an alternate deterministic boundary to expose layout behavior..
+- `minimum-size` — minimum size; scenario `default`; fixture effect `layout/constrained` — minimum size: The fixture uses an alternate deterministic boundary to expose layout behavior..
+- `maximum-size` — maximum size; scenario `default`; fixture effect `layout/expanded` — maximum size: The fixture uses an alternate deterministic boundary to expose layout behavior..
+- `collapsed` — collapsed; scenario `default`; fixture effect `layout/constrained` — collapsed: The fixture uses an alternate deterministic boundary to expose layout behavior..
+- `expanded` — expanded; scenario `default`; fixture effect `layout/expanded` — expanded: The fixture uses an alternate deterministic boundary to expose layout behavior..
 
 ## Related
 

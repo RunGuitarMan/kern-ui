@@ -181,5 +181,190 @@
     "route": "components/banner",
     "json": "components/banner.json",
     "markdown": "components/banner.md"
+  },
+  "playground": {
+    "route": "preview/banner",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "dismissible",
+        "label": "Dismissible",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Shows the dismiss action.",
+        "binding": {
+          "kind": "input",
+          "publicName": "dismissible",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "icon",
+        "label": "Icon",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component icon contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "icon",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "title",
+        "label": "Title",
+        "kind": "text",
+        "defaultValue": "Scheduled maintenance",
+        "testValue": "Scheduled maintenance · alternate",
+        "description": "Configures the component title contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "title",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "tone",
+        "label": "Tone",
+        "kind": "select",
+        "defaultValue": "info",
+        "testValue": "neutral",
+        "description": "Semantic intent; color is never the only state indicator.",
+        "binding": {
+          "kind": "input",
+          "publicName": "tone",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "neutral",
+            "value": "neutral"
+          },
+          {
+            "label": "info",
+            "value": "info"
+          },
+          {
+            "label": "success",
+            "value": "success"
+          },
+          {
+            "label": "warning",
+            "value": "warning"
+          },
+          {
+            "label": "danger",
+            "value": "danger"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "dismissible",
+        "label": "Dismissible",
+        "scenario": "default",
+        "args": {
+          "dismissible": true
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 5,
+      "controlled": 4,
+      "excluded": 1,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "banner",
+        "publicName": "dismissLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#banner"
+        }
+      }
+    ]
   }
 }

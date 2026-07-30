@@ -102,10 +102,62 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - disabled
 - filled
 - empty
+- readonly
+- invalid
 - closed
 - open
 - empty results
 - async loading
+
+## Interactive playground
+
+Route: `preview/color-picker`
+
+Scenarios: `default`.
+Public API coverage: 4/7
+directly controlled; 3 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument   | Control | Default | Test value          | Binding                     | Description                                                               |
+| ---------- | ------- | ------- | ------------------- | --------------------------- | ------------------------------------------------------------------------- |
+| `invalid`  | boolean | `false` | `true`              | input `invalid` (property)  | Exposes the invalid visual and ARIA state.                                |
+| `disabled` | boolean | `false` | `true`              | input `disabled` (property) | Prevents interaction and participates in the component disabled contract. |
+| `id`       | text    | `""`    | `"Alternate value"` | input `id` (property)       | Configures the component id contract.                                     |
+| `readonly` | boolean | `false` | `true`              | input `readonly` (property) | Configures the component readonly contract.                               |
+
+Exact API exclusions:
+
+| Public API    | Category           | Evidence                                                  | Reason                                                                                                                                                              |
+| ------------- | ------------------ | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `labels`      | translation-object | `locale-preview:preview/color-picker?locale=ru-RU`        | Structured translation overrides are exercised through locale providers, not lossy scalar controls.                                                                 |
+| `pickerLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#color-picker` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `textLabel`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#color-picker` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — Disabled; scenario `default`; `disabled=true`.
+- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
+- `readonly` — readonly; scenario `default`; fixture effect `status/neutral` — readonly: The fixture exposes the readonly status without claiming a public component input..
+- `invalid` — Invalid; scenario `default`; `invalid=true`.
+- `closed` — closed; scenario `default`; fixture effect `status/neutral` — closed: The fixture exposes the closed status without claiming a public component input..
+- `open` — open; scenario `default`; fixture effect `status/info` — open: The fixture exposes the open status without claiming a public component input..
+- `empty-results` — empty results; scenario `default`; fixture effect `data/empty` — empty results: The fixture data source returned no records..
+- `async-loading` — async loading; scenario `default`; fixture effect `status/info` — async loading: The fixture exposes the async loading status without claiming a public component input..
 
 ## Related
 

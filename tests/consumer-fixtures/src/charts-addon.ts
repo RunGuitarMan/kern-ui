@@ -3,7 +3,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { KrnBarChart, type KrnChartDatum } from '@kern-ui/angular/addon-charts';
 
 @Component({
-  selector: 'klab-consumer-root',
+  selector: 'krn-consumer-root',
   imports: [KrnBarChart],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<krn-bar-chart title="Usage" [data]="data" />`,

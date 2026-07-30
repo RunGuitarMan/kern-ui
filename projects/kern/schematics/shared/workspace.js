@@ -1,7 +1,252 @@
 'use strict';
 
+const { createRequire } = require('node:module');
+const { posix } = require('node:path');
+const { isDeepStrictEqual } = require('node:util');
 const { SchematicsException } = require('@angular-devkit/schematics');
-const { getWorkspace, writeWorkspace } = require('@schematics/angular/utility/workspace');
+const {
+  getWorkspace: getAngularWorkspace,
+  writeWorkspace: writeAngularWorkspace,
+} = require('@schematics/angular/utility/workspace');
+
+const requireFromAngularSchematics = createRequire(
+  require.resolve('@schematics/angular/package.json'),
+);
+const requireFromAngularDevkit = createRequire(
+  requireFromAngularSchematics.resolve('@angular-devkit/core/package.json'),
+);
+const { applyEdits, modify, parse, printParseErrorCode } = requireFromAngularDevkit('jsonc-parser');
+
+const nxWorkspaceMetadata = new WeakMap();
+
+function jsonObject(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function parseJsonObject(tree, path, label) {
+  const source = tree.readText(path);
+  const errors = [];
+  const value = parse(source, errors, {
+    allowTrailingComma: true,
+    disallowComments: false,
+  });
+  if (errors.length > 0 || !jsonObject(value)) {
+    const details = errors
+      .map((error) => `${printParseErrorCode(error.error)} at offset ${error.offset}`)
+      .join(', ');
+    throw new SchematicsException(
+      `Could not read ${label} at "${path}"${details ? ` (${details})` : ': expected a JSON object'}.`,
+    );
+  }
+  return { source, value };
+}
+
+function clone(value) {
+  return value === undefined ? undefined : structuredClone(value);
+}
+
+function nxProjectPaths(tree) {
+  const paths = [];
+  tree.visit((path) => {
+    if (
+      (path === '/project.json' || path.endsWith('/project.json')) &&
+      !path.includes('/node_modules/')
+    ) {
+      paths.push(path);
+    }
+  });
+  return paths.sort();
+}
+
+function nxProjectType(rawProject, targets) {
+  if (rawProject.projectType === 'application' || rawProject.projectType === 'library') {
+    return rawProject.projectType;
+  }
+  const buildExecutor = targets.build?.executor ?? targets.build?.builder;
+  return typeof buildExecutor === 'string' &&
+    /(?::|\/)(?:application|browser|dev-server)$/.test(buildExecutor)
+    ? 'application'
+    : 'library';
+}
+
+function nxProjectDefinition(name, path, rawProject) {
+  const inferredRoot = posix.dirname(path).replace(/^\/+/, '').replace(/^\.$/, '');
+  const inferredSourceRoot = `${inferredRoot ? `${inferredRoot}/` : ''}src`;
+  const targetKey = jsonObject(rawProject.targets)
+    ? 'targets'
+    : jsonObject(rawProject.architect)
+      ? 'architect'
+      : 'targets';
+  const rawTargets = rawProject[targetKey] ?? {};
+  const inferredProjectType = nxProjectType(rawProject, rawTargets);
+  const extensions = {};
+
+  for (const [key, value] of Object.entries(rawProject)) {
+    if (
+      !['$schema', 'name', 'root', 'sourceRoot', 'prefix', 'targets', 'architect'].includes(key)
+    ) {
+      extensions[key] = clone(value);
+    }
+  }
+  extensions.projectType = inferredProjectType;
+
+  return {
+    definition: {
+      root: typeof rawProject.root === 'string' ? rawProject.root : inferredRoot,
+      sourceRoot:
+        typeof rawProject.sourceRoot === 'string' ? rawProject.sourceRoot : inferredSourceRoot,
+      prefix: typeof rawProject.prefix === 'string' ? rawProject.prefix : undefined,
+      targets: new Map(Object.entries(clone(rawTargets))),
+      extensions,
+    },
+    metadata: {
+      inferredProjectType,
+      inferredRoot,
+      inferredSourceRoot,
+      name,
+      path,
+      rawProject: clone(rawProject),
+      targetKey,
+    },
+  };
+}
+
+function nxProjectName(path, rawProject) {
+  if (typeof rawProject.name === 'string' && rawProject.name.trim()) {
+    return rawProject.name.trim();
+  }
+  const root = posix.dirname(path);
+  const name = posix.basename(root);
+  if (!name || name === '.' || name === '/') {
+    throw new SchematicsException(
+      `Nx project "${path}" must declare a non-empty "name" because it is located at the workspace root.`,
+    );
+  }
+  return name;
+}
+
+function readNxWorkspace(tree) {
+  if (!tree.exists('/nx.json')) {
+    throw new SchematicsException(
+      'No Angular workspace was found. Expected "/angular.json" or an Nx workspace with "/nx.json" and project.json files.',
+    );
+  }
+  parseJsonObject(tree, '/nx.json', 'Nx workspace configuration');
+  const projectPaths = nxProjectPaths(tree);
+  if (projectPaths.length === 0) {
+    throw new SchematicsException(
+      'Nx workspace "/nx.json" does not contain any discoverable project.json files.',
+    );
+  }
+
+  const definitions = Object.create(null);
+  const metadata = new Map();
+  for (const path of projectPaths) {
+    const { value } = parseJsonObject(tree, path, 'Nx project configuration');
+    const name = nxProjectName(path, value);
+    if (definitions[name]) {
+      throw new SchematicsException(
+        `Nx project name "${name}" is declared by more than one project.json file.`,
+      );
+    }
+    const project = nxProjectDefinition(name, path, value);
+    definitions[name] = project.definition;
+    metadata.set(name, project.metadata);
+  }
+
+  const workspace = {
+    projects: new Map(Object.entries(definitions)),
+    extensions: {},
+  };
+  nxWorkspaceMetadata.set(workspace, metadata);
+  return workspace;
+}
+
+function formattingOptions(source) {
+  const indentation = source.match(/\r?\n([ \t]+)[^\s]/)?.[1] ?? '  ';
+  return {
+    insertSpaces: !indentation.includes('\t'),
+    tabSize: indentation.includes('\t') ? 2 : Math.max(1, indentation.length),
+    eol: source.includes('\r\n') ? '\r\n' : '\n',
+  };
+}
+
+function patchJsonValue(source, before, after, path, formatting) {
+  if (isDeepStrictEqual(before, after)) {
+    return source;
+  }
+  if (jsonObject(before) && jsonObject(after)) {
+    const keys = new Set([...Object.keys(before), ...Object.keys(after)]);
+    let next = source;
+    for (const key of keys) {
+      next = patchJsonValue(next, before[key], after[key], [...path, key], formatting);
+    }
+    return next;
+  }
+  return applyEdits(source, modify(source, path, after, { formattingOptions: formatting }));
+}
+
+function serializedNxProject(project, metadata) {
+  const next = clone(metadata.rawProject);
+  if ('root' in next || project.root !== metadata.inferredRoot) {
+    next.root = project.root;
+  }
+  if ('sourceRoot' in next || project.sourceRoot !== metadata.inferredSourceRoot) {
+    next.sourceRoot = project.sourceRoot;
+  }
+  if ('prefix' in next || project.prefix !== undefined) {
+    next.prefix = project.prefix;
+  }
+
+  for (const [key, value] of Object.entries(project.extensions)) {
+    if (
+      key === 'projectType' &&
+      !('projectType' in metadata.rawProject) &&
+      value === metadata.inferredProjectType
+    ) {
+      continue;
+    }
+    next[key] = clone(value);
+  }
+  next[metadata.targetKey] = Object.fromEntries(project.targets);
+  return next;
+}
+
+async function writeNxWorkspace(tree, workspace, metadata) {
+  for (const [name, project] of workspace.projects) {
+    const projectMetadata = metadata.get(name);
+    if (!projectMetadata) {
+      throw new SchematicsException(
+        `Adding or renaming Nx projects is outside the KERN workspace adapter contract ("${name}").`,
+      );
+    }
+    const source = tree.readText(projectMetadata.path);
+    const nextProject = serializedNxProject(project, projectMetadata);
+    const nextSource = patchJsonValue(
+      source,
+      projectMetadata.rawProject,
+      nextProject,
+      [],
+      formattingOptions(source),
+    );
+    if (nextSource !== source) {
+      tree.overwrite(projectMetadata.path, nextSource);
+    }
+  }
+}
+
+async function getWorkspace(tree) {
+  return tree.exists('/angular.json') || tree.exists('/.angular.json')
+    ? getAngularWorkspace(tree, tree.exists('/angular.json') ? '/angular.json' : '/.angular.json')
+    : readNxWorkspace(tree);
+}
+
+async function writeWorkspace(tree, workspace) {
+  const metadata = nxWorkspaceMetadata.get(workspace);
+  return metadata
+    ? writeNxWorkspace(tree, workspace, metadata)
+    : writeAngularWorkspace(tree, workspace);
+}
 
 const KERN_STYLE = 'node_modules/@kern-ui/angular/styles/kern.css';
 const KERN_STYLE_SPECIFIER = '@kern-ui/angular/styles/kern.css';

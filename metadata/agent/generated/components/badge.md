@@ -85,6 +85,39 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - RTL
 - mobile
 
+## Interactive playground
+
+Route: `preview/badge`
+
+Scenarios: `default`.
+Public API coverage: 2/2
+directly controlled; 0 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument | Control | Default     | Test value | Binding                   | Description                           |
+| -------- | ------- | ----------- | ---------- | ------------------------- | ------------------------------------- |
+| `tone`   | select  | `"neutral"` | `"brand"`  | input `tone` (property)   | Changes the semantic color treatment. |
+| `status` | boolean | `false`     | `true`     | input `status` (property) | Shows a status dot.                   |
+
+Exact API exclusions:
+
+_No excluded public API members._
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `status-marker` — Status Marker; scenario `default`; `status=true`.
+
 ## Related
 
 - `status-badge`

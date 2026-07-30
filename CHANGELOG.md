@@ -39,6 +39,11 @@ contract or upgrade decision.
 
 ### Changed
 
+- Migrated contributor orchestration from the Angular CLI workspace to Nx while preserving the
+  published package entrypoints and consumer setup; consolidated component exploration in Docs
+  and removed the legacy Lab application.
+- Rebuilt Docs previews around a shareable component workbench with complete theme, contrast,
+  density, direction, locale, motion, brand, canvas, state, preset, and public-API controls.
 - Consolidated repeated action and form structure into the required global `styles/kern.css`
   composition, reducing duplicated runtime CSS.
 - Strengthened form-field projection, typed selection controls, date/calendar keyboard behavior,

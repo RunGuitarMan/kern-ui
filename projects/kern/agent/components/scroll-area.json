@@ -188,5 +188,201 @@
     "route": "components/scroll-area",
     "json": "components/scroll-area.json",
     "markdown": "components/scroll-area.md"
+  },
+  "playground": {
+    "route": "preview/scroll-area",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "axis",
+        "label": "Scroll axis",
+        "kind": "select",
+        "defaultValue": "vertical",
+        "testValue": "horizontal",
+        "description": "Chooses the axes that can scroll.",
+        "binding": {
+          "kind": "input",
+          "publicName": "axis",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "horizontal",
+            "value": "horizontal"
+          },
+          {
+            "label": "vertical",
+            "value": "vertical"
+          },
+          {
+            "label": "both",
+            "value": "both"
+          }
+        ]
+      },
+      {
+        "key": "maxBlockSize",
+        "label": "Maximum block size",
+        "kind": "text",
+        "defaultValue": "16rem",
+        "testValue": "20rem",
+        "description": "Constrains the scrolling viewport.",
+        "binding": {
+          "kind": "input",
+          "publicName": "maxBlockSize",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "keyboardAccessible",
+        "label": "Keyboard Accessible",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Configures the component keyboardAccessible contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "keyboardAccessible",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "maxInlineSize",
+        "label": "Max Inline Size",
+        "kind": "text",
+        "defaultValue": "100%",
+        "testValue": "20rem",
+        "description": "Configures the component maxInlineSize contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "maxInlineSize",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "scrollbar",
+        "label": "Scrollbar",
+        "kind": "select",
+        "defaultValue": "auto",
+        "testValue": "hidden",
+        "description": "Configures the component scrollbar contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "scrollbar",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "auto",
+            "value": "auto"
+          },
+          {
+            "label": "hidden",
+            "value": "hidden"
+          },
+          {
+            "label": "stable",
+            "value": "stable"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 6,
+      "controlled": 5,
+      "excluded": 1,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "scroll-area",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#scroll-area"
+        }
+      }
+    ]
   }
 }

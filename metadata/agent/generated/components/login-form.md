@@ -115,6 +115,53 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - error
 - success
 
+## Interactive playground
+
+Route: `preview/login-form`
+
+Scenarios: `default`.
+Public API coverage: 4/12
+directly controlled; 8 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument                | Control | Default       | Test value             | Binding                                  | Description                                              |
+| ----------------------- | ------- | ------------- | ---------------------- | ---------------------------------------- | -------------------------------------------------------- |
+| `loading`               | boolean | `false`       | `true`                 | input `loading` (property)               | Shows progress and disables activation.                  |
+| `errorMessage`          | text    | `""`          | `"Alternate value"`    | input `errorMessage` (property)          | Configures the component errorMessage contract.          |
+| `minimumPasswordLength` | number  | `8`           | `9`                    | input `minimumPasswordLength` (property) | Configures the component minimumPasswordLength contract. |
+| `recoveryHref`          | text    | `"#specimen"` | `"#specimen-overview"` | input `recoveryHref` (property)          | Configures the component recoveryHref contract.          |
+
+Exact API exclusions:
+
+| Public API           | Category           | Evidence                                                         | Reason                                                                                                                                                              |
+| -------------------- | ------------------ | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `emailErrorLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `emailLabel`         | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `loadingLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `passwordErrorLabel` | callback           | `component-example:agent/components/login-form.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
+| `passwordLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `recoveryLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `rememberLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `submitLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `data/alternate` — overflow: The fixture data projection is changed for this acceptance state..
+- `long-text` — long text; scenario `default`; fixture effect `data/alternate` — long text: The fixture data projection is changed for this acceptance state..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `loading` — Loading; scenario `default`; `loading=true`.
+- `empty` — empty; scenario `default`; fixture effect `data/empty` — empty: The fixture data source returned no records..
+- `error` — error; scenario `default`; fixture effect `data/error` — error: The fixture data request failed and can be retried..
+- `success` — success; scenario `default`; fixture effect `data/success` — success: The fixture operation completed successfully..
+
 ## Related
 
 - `user-menu`

@@ -95,6 +95,41 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - with action
 - without action
 
+## Interactive playground
+
+Route: `preview/empty-state`
+
+Scenarios: `default`.
+Public API coverage: 3/3
+directly controlled; 0 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument      | Control | Default                                                             | Test value                                                                      | Binding                        | Description                                    |
+| ------------- | ------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------ | ---------------------------------------------- |
+| `tone`        | select  | `"neutral"`                                                         | `"info"`                                                                        | input `tone` (property)        | Changes the state illustration tone.           |
+| `description` | text    | `"Create an automation to connect events with repeatable actions."` | `"Create an automation to connect events with repeatable actions. · alternate"` | input `description` (property) | Configures the component description contract. |
+| `title`       | text    | `"No automations yet"`                                              | `"No automations yet · alternate"`                                              | input `title` (property)       | Configures the component title contract.       |
+
+Exact API exclusions:
+
+_No excluded public API members._
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `with-action` — with action; scenario `default`; fixture effect `content/with-action` — with action: The projected content composition is changed for this acceptance state..
+- `without-action` — without action; scenario `default`; fixture effect `content/without-action` — without action: The projected content composition is changed for this acceptance state..
+
 ## Related
 
 - `alert`

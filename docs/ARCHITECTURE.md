@@ -32,18 +32,21 @@ brand, and preference persistence are needed.
 
 ## Boundaries
 
+Nx owns the workspace project graph and target orchestration. The allowed dependency direction is
+`docs → showcase → kern` (with Docs also consuming Kern directly); project tags and ESLint module
+boundaries reject reverse dependencies. Nx is the sole persistent task-cache owner.
+
 - `kern` is the only publishable package. `/cdk`, `/core`, `/kit`, `/addon-grid`,
   `/addon-charts`, `/patterns`, and `/testing` are its supported physical entrypoints.
 - The package root is a compatibility-only aggregator. It declares no runtime implementation and
   preserves strict object identity with every direct entrypoint.
 - `@kern-ui/angular/testing` contains CDK harnesses but no Kern runtime imports, services, or
   injection tokens.
-- `showcase` is private metadata. Documentation pages and Lab scenarios can evolve without
+- `showcase` is private metadata. Documentation pages and preview scenarios can evolve without
   expanding the public package.
 - `docs` consumes the built public package, uses SSR plus hydration, and lazy-loads its page
-  families.
-- `lab` consumes the same public package and exposes stable query-driven specimens for browser
-  automation.
+  families. Its `/preview/:component` route exposes stable query-driven specimens for browser
+  automation without a second application runtime.
 - `metadata/agent` is a compiler-derived, closed 131-component contract. Its examples are mirrored
   into the package, strict-AOT compiled against the tarball, exposed through the read-only MCP
   adapter, and used by the Docs Code tab.
@@ -150,7 +153,8 @@ checks, and a focused cross-engine matrix. See [COMPONENTS.md](COMPONENTS.md) an
 3. Use a typed union for mutually exclusive variants instead of boolean combinations.
 4. Add behavioral unit tests, including keyboard/forms/overlay behavior where applicable.
 5. Export through the family barrel and `public-api.ts`.
-6. Assign a lifecycle status, add one catalog record, and add a deterministic Lab specimen.
+6. Assign a lifecycle status, add one catalog record, and add a deterministic Docs preview
+   specimen.
 7. Add or update a public CDK harness when consumers would otherwise depend on internal markup.
 8. Run static checks, production package build, browser accessibility, responsive, and visual
    projects.

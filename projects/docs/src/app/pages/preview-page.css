@@ -1,0 +1,90 @@
+:host {
+  display: block;
+}
+
+.preview-page {
+  min-block-size: 100dvb;
+  color: var(--krn-color-text);
+  background: var(--krn-color-canvas);
+}
+
+.preview-header {
+  position: sticky;
+  z-index: 30;
+  inset-block-start: 0;
+  display: grid;
+  min-block-size: 3.5rem;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding-inline: clamp(1rem, 3vw, 2.5rem);
+  border-block-end: 1px solid var(--krn-color-border-subtle);
+  background: color-mix(in srgb, var(--krn-color-surface) 94%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.preview-header > a {
+  display: grid;
+  inline-size: 2rem;
+  block-size: 2rem;
+  place-items: center;
+  border: 1px solid var(--krn-color-border-strong);
+  border-radius: var(--krn-radius-sm);
+  color: var(--krn-color-text);
+  font: 700 0.6875rem/1 var(--krn-font-family-mono);
+  text-decoration: none;
+}
+
+.preview-header > div {
+  display: grid;
+  min-inline-size: 0;
+  gap: 0.1rem;
+}
+
+.preview-header span,
+.preview-header code {
+  overflow: hidden;
+  color: var(--krn-color-text-subtle);
+  font: 500 0.625rem/1 var(--krn-font-family-mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-header strong {
+  font-size: 0.8125rem;
+}
+
+.preview-header code {
+  color: var(--krn-color-brand-text);
+}
+
+.preview-not-found {
+  display: grid;
+  min-block-size: 100dvb;
+  place-content: center;
+  justify-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.preview-not-found span {
+  color: var(--krn-color-brand-text);
+  font: 600 0.75rem/1 var(--krn-font-family-mono);
+}
+
+.preview-not-found h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 4rem);
+  letter-spacing: -0.05em;
+}
+
+.preview-not-found a {
+  color: var(--krn-color-link);
+}
+
+@media (max-width: 34rem) {
+  .preview-header code {
+    display: none;
+  }
+}

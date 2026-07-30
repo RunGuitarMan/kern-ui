@@ -28,7 +28,8 @@
     "hover",
     "focus-visible",
     "active",
-    "disabled"
+    "disabled",
+    "loading"
   ],
   "lifecycle": {
     "status": "stable",
@@ -226,5 +227,316 @@
     "route": "components/icon-button",
     "json": "components/icon-button.json",
     "markdown": "components/icon-button.md"
+  },
+  "playground": {
+    "route": "preview/icon-button",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "variant",
+        "label": "Variant",
+        "kind": "select",
+        "defaultValue": "ghost",
+        "testValue": "solid",
+        "description": "Changes icon-action emphasis.",
+        "binding": {
+          "kind": "input",
+          "publicName": "variant",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "solid",
+            "value": "solid"
+          },
+          {
+            "label": "soft",
+            "value": "soft"
+          },
+          {
+            "label": "outline",
+            "value": "outline"
+          },
+          {
+            "label": "ghost",
+            "value": "ghost"
+          }
+        ]
+      },
+      {
+        "key": "tone",
+        "label": "Tone",
+        "kind": "select",
+        "defaultValue": "neutral",
+        "testValue": "brand",
+        "description": "Changes the semantic action tone.",
+        "binding": {
+          "kind": "input",
+          "publicName": "tone",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "neutral",
+            "value": "neutral"
+          },
+          {
+            "label": "brand",
+            "value": "brand"
+          },
+          {
+            "label": "info",
+            "value": "info"
+          },
+          {
+            "label": "success",
+            "value": "success"
+          },
+          {
+            "label": "warning",
+            "value": "warning"
+          },
+          {
+            "label": "danger",
+            "value": "danger"
+          }
+        ]
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "kind": "select",
+        "defaultValue": "md",
+        "testValue": "sm",
+        "description": "Changes the action target and label size.",
+        "binding": {
+          "kind": "input",
+          "publicName": "size",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "sm",
+            "value": "sm"
+          },
+          {
+            "label": "md",
+            "value": "md"
+          },
+          {
+            "label": "lg",
+            "value": "lg"
+          }
+        ]
+      },
+      {
+        "key": "loading",
+        "label": "Loading",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Shows progress and disables activation.",
+        "binding": {
+          "kind": "input",
+          "publicName": "loading",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Prevents user interaction.",
+        "binding": {
+          "kind": "input",
+          "publicName": "disabled",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "pressed",
+        "label": "Pressed",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Exposes the pressed state to assistive technology.",
+        "binding": {
+          "kind": "input",
+          "publicName": "pressed",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "type",
+        "label": "Type",
+        "kind": "select",
+        "defaultValue": "button",
+        "testValue": "submit",
+        "description": "Configures the component type contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "type",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "button",
+            "value": "button"
+          },
+          {
+            "label": "submit",
+            "value": "submit"
+          },
+          {
+            "label": "reset",
+            "value": "reset"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "Disabled",
+        "scenario": "default",
+        "args": {
+          "disabled": true
+        }
+      },
+      {
+        "id": "loading",
+        "label": "Loading",
+        "scenario": "default",
+        "args": {
+          "loading": true
+        }
+      },
+      {
+        "id": "pressed",
+        "label": "Pressed",
+        "scenario": "default",
+        "args": {
+          "pressed": true
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 8,
+      "controlled": 7,
+      "excluded": 1,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "icon-button",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#icon-button"
+        }
+      }
+    ]
   }
 }

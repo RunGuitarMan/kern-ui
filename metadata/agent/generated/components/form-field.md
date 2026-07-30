@@ -103,6 +103,53 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - compact
 - RTL
 - mobile
+- disabled
+- readonly
+- required
+
+## Interactive playground
+
+Route: `preview/form-field`
+
+Scenarios: `default`, `stress`.
+Public API coverage: 9/9
+directly controlled; 0 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument       | Control | Default                        | Test value                                 | Binding                         | Description                                                               |
+| -------------- | ------- | ------------------------------ | ------------------------------------------ | ------------------------------- | ------------------------------------------------------------------------- |
+| `state`        | select  | `"default"`                    | `"valid"`                                  | input `state` (property)        | Shows default, valid, pending, or invalid field feedback.                 |
+| `label`        | text    | `""`                           | `"Alternate value"`                        | input `label` (property)        | Changes the visible field label.                                          |
+| `disabled`     | boolean | `false`                        | `true`                                     | input `disabled` (property)     | Prevents interaction and participates in the component disabled contract. |
+| `error`        | text    | `""`                           | `"Alternate value"`                        | input `error` (property)        | Configures the component error contract.                                  |
+| `hint`         | text    | `"Required enterprise value."` | `"Required enterprise value. · alternate"` | input `hint` (property)         | Configures the component hint contract.                                   |
+| `id`           | text    | `""`                           | `"Alternate value"`                        | input `id` (property)           | Configures the component id contract.                                     |
+| `optionalText` | text    | `""`                           | `"Alternate value"`                        | input `optionalText` (property) | Configures the component optionalText contract.                           |
+| `readonly`     | boolean | `false`                        | `true`                                     | input `readonly` (property)     | Configures the component readonly contract.                               |
+| `required`     | boolean | `true`                         | `false`                                    | input `required` (property)     | Marks the value as required and participates in Angular Forms validation. |
+
+Exact API exclusions:
+
+_No excluded public API members._
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `stress`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `stress`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `disabled` — Disabled; scenario `default`; `disabled=true`.
+- `readonly` — readonly; scenario `default`; fixture effect `status/neutral` — readonly: The fixture exposes the readonly status without claiming a public component input..
+- `required` — required; scenario `default`; `required=true`; fixture effect `status/neutral` — required: The fixture exposes the required status without claiming a public component input..
+- `optional` — Optional; scenario `default`; `required=false`.
+- `stress` — Stress data; scenario `stress`.
 
 ## Related
 

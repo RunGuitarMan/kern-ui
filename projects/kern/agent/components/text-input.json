@@ -30,7 +30,10 @@
     "active",
     "disabled",
     "filled",
-    "empty"
+    "empty",
+    "readonly",
+    "required",
+    "invalid"
   ],
   "lifecycle": {
     "status": "stable",
@@ -308,5 +311,407 @@
     "route": "components/text-input",
     "json": "components/text-input.json",
     "markdown": "components/text-input.md"
+  },
+  "playground": {
+    "route": "preview/text-input",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "placeholder",
+        "label": "Placeholder",
+        "kind": "text",
+        "defaultValue": "Northstar",
+        "testValue": "Northstar · alternate",
+        "description": "Sets the empty-value prompt.",
+        "binding": {
+          "kind": "input",
+          "publicName": "placeholder",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "kind": "select",
+        "defaultValue": "md",
+        "testValue": "sm",
+        "description": "Changes the control height and inline padding.",
+        "binding": {
+          "kind": "input",
+          "publicName": "size",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "sm",
+            "value": "sm"
+          },
+          {
+            "label": "md",
+            "value": "md"
+          },
+          {
+            "label": "lg",
+            "value": "lg"
+          }
+        ]
+      },
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Prevents user interaction.",
+        "binding": {
+          "kind": "input",
+          "publicName": "disabled",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "readOnly",
+        "label": "Read only",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Keeps the value focusable while preventing edits.",
+        "binding": {
+          "kind": "input",
+          "publicName": "readonly",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "required",
+        "label": "Required",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Marks the control as required.",
+        "binding": {
+          "kind": "input",
+          "publicName": "required",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "invalid",
+        "label": "Invalid",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Exposes the invalid visual and ARIA state.",
+        "binding": {
+          "kind": "input",
+          "publicName": "invalid",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "autocomplete",
+        "label": "Autocomplete",
+        "kind": "text",
+        "defaultValue": "organization",
+        "testValue": "organization · alternate",
+        "description": "Configures the component autocomplete contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "autocomplete",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "id",
+        "label": "Id",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component id contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "id",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "inputMode",
+        "label": "Input Mode",
+        "kind": "select",
+        "defaultValue": "text",
+        "testValue": "none",
+        "description": "Configures the component inputMode contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "inputMode",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "none",
+            "value": "none"
+          },
+          {
+            "label": "text",
+            "value": "text"
+          },
+          {
+            "label": "tel",
+            "value": "tel"
+          },
+          {
+            "label": "url",
+            "value": "url"
+          },
+          {
+            "label": "email",
+            "value": "email"
+          },
+          {
+            "label": "numeric",
+            "value": "numeric"
+          },
+          {
+            "label": "decimal",
+            "value": "decimal"
+          },
+          {
+            "label": "search",
+            "value": "search"
+          }
+        ]
+      },
+      {
+        "key": "maxLength",
+        "label": "Max Length",
+        "kind": "number",
+        "defaultValue": 100,
+        "testValue": 101,
+        "description": "Configures the component maxLength contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "maxLength",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "minLength",
+        "label": "Min Length",
+        "kind": "number",
+        "defaultValue": 0,
+        "testValue": 1,
+        "description": "Configures the component minLength contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "minLength",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "spellcheck",
+        "label": "Spellcheck",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Configures the component spellcheck contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "spellcheck",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "Disabled",
+        "scenario": "default",
+        "args": {
+          "disabled": true
+        }
+      },
+      {
+        "id": "filled",
+        "label": "filled",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "filled",
+          "label": "filled",
+          "description": "The component is composed with a representative populated value."
+        }
+      },
+      {
+        "id": "empty",
+        "label": "empty",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "empty",
+          "label": "empty",
+          "description": "The component is composed with intentionally empty content."
+        }
+      },
+      {
+        "id": "readonly",
+        "label": "Readonly",
+        "scenario": "default",
+        "args": {
+          "readOnly": true
+        }
+      },
+      {
+        "id": "required",
+        "label": "Required",
+        "scenario": "default",
+        "args": {
+          "required": true
+        }
+      },
+      {
+        "id": "invalid",
+        "label": "Invalid",
+        "scenario": "default",
+        "args": {
+          "invalid": true
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 14,
+      "controlled": 12,
+      "excluded": 2,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "text-input",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#text-input"
+        }
+      },
+      {
+        "componentId": "text-input",
+        "publicName": "name",
+        "kind": "input",
+        "type": "string",
+        "code": "form-serialization",
+        "reason": "Form submission field names do not alter the rendered component and are covered by forms integration tests.",
+        "evidence": {
+          "category": "forms-integration",
+          "pointer": "tests/e2e/enterprise-acceptance.spec.ts#text-input"
+        }
+      }
+    ]
   }
 }

@@ -98,6 +98,44 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - nested
 - dismissed
 
+## Interactive playground
+
+Route: `preview/hover-card`
+
+Scenarios: `default`.
+Public API coverage: 2/3
+directly controlled; 1 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument     | Control | Default | Test value | Binding                       | Description                           |
+| ------------ | ------- | ------- | ---------- | ----------------------------- | ------------------------------------- |
+| `openDelay`  | number  | `350`   | `400`      | input `openDelay` (property)  | Sets the pointer/focus opening delay. |
+| `closeDelay` | number  | `120`   | `140`      | input `closeDelay` (property) | Sets the pointer/focus closing delay. |
+
+Exact API exclusions:
+
+| Public API  | Category           | Evidence                                                | Reason                                                                                                                  |
+| ----------- | ------------------ | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#hover-card` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `closed` — closed; scenario `default`; fixture effect `status/neutral` — closed: The fixture exposes the closed status without claiming a public component input..
+- `open` — open; scenario `default`; fixture effect `status/info` — open: The fixture exposes the open status without claiming a public component input..
+- `nested` — nested; scenario `default`; fixture effect `status/neutral` — nested: The fixture exposes the nested status without claiming a public component input..
+- `dismissed` — dismissed; scenario `default`; fixture effect `status/neutral` — dismissed: The fixture exposes the dismissed status without claiming a public component input..
+
 ## Related
 
 - `popover`

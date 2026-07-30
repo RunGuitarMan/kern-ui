@@ -18,7 +18,12 @@ const outputPath = resolve(
   workspaceRoot,
   'projects/showcase/src/lib/generated-component-contract.ts',
 );
+const tsconfigPath = resolve(workspaceRoot, 'projects/kern/tsconfig.lib.json');
 const writeMode = process.argv.includes('--write');
+const typeFormatFlags =
+  ts.TypeFormatFlags.NoTruncation |
+  ts.TypeFormatFlags.UseAliasDefinedOutsideCurrentScope |
+  ts.TypeFormatFlags.WriteArrayAsGenericType;
 
 async function collectSourceFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -74,20 +79,23 @@ function callKind(initializer) {
   return undefined;
 }
 
-function inferType(call, sourceFile) {
-  const explicit = call.typeArguments?.[0];
-  if (explicit) return explicit.getText(sourceFile);
-
-  const value = call.arguments[0];
-  if (!value) return 'unknown';
-  if (ts.isStringLiteralLike(value) || ts.isNoSubstitutionTemplateLiteral(value)) return 'string';
-  if (value.kind === ts.SyntaxKind.TrueKeyword || value.kind === ts.SyntaxKind.FalseKeyword) {
-    return 'boolean';
+function signalValueType(checker, call, location) {
+  const signalType = checker.getTypeAtLocation(call);
+  let typeArguments = [];
+  if (signalType.aliasTypeArguments?.length) {
+    typeArguments = signalType.aliasTypeArguments;
+  } else if (signalType.objectFlags & ts.ObjectFlags.Reference) {
+    typeArguments = checker.getTypeArguments(signalType);
   }
-  if (ts.isNumericLiteral(value)) return 'number';
-  if (ts.isArrayLiteralExpression(value)) return 'readonly unknown[]';
-  if (value.kind === ts.SyntaxKind.NullKeyword) return 'null';
-  return 'unknown';
+  const valueType = typeArguments[0];
+  if (valueType) {
+    return checker.typeToString(valueType, location, typeFormatFlags);
+  }
+  const rendered = checker.typeToString(signalType, location, typeFormatFlags);
+  const match = rendered.match(
+    /^(?:InputSignal(?:WithTransform)?|ModelSignal|OutputEmitterRef)<(.+?)(?:, .+)?>$/,
+  );
+  return match?.[1] ?? rendered;
 }
 
 function defaultValue(call, required, sourceFile) {
@@ -96,8 +104,18 @@ function defaultValue(call, required, sourceFile) {
   return value ? value.getText(sourceFile) : 'undefined';
 }
 
-function signalContract(member, sourceFile) {
+function signalContract(checker, member, sourceFile) {
   if (!ts.isPropertyDeclaration(member) || !member.initializer || !member.name) return undefined;
+  const modifiers = ts.canHaveModifiers(member) ? (ts.getModifiers(member) ?? []) : [];
+  if (
+    modifiers.some(
+      (modifier) =>
+        modifier.kind === ts.SyntaxKind.ProtectedKeyword ||
+        modifier.kind === ts.SyntaxKind.PrivateKeyword,
+    )
+  ) {
+    return undefined;
+  }
   const match = callKind(member.initializer);
   if (!match) return undefined;
 
@@ -109,7 +127,7 @@ function signalContract(member, sourceFile) {
     name: publicAlias(options, sourceFile) ?? memberName,
     property: memberName,
     kind: match.kind,
-    type: inferType(call, sourceFile),
+    type: signalValueType(checker, call, member),
     required: match.required,
     defaultValue: defaultValue(call, match.required, sourceFile),
   };
@@ -150,23 +168,47 @@ async function extractContracts() {
   const files = (await Promise.all(sourceRoots.map((sourceRoot) => collectSourceFiles(sourceRoot))))
     .flat()
     .sort();
+  const loaded = ts.readConfigFile(tsconfigPath, ts.sys.readFile);
+  if (loaded.error) {
+    throw new Error(ts.flattenDiagnosticMessageText(loaded.error.messageText, '\n'));
+  }
+  const parsed = ts.parseJsonConfigFileContent(loaded.config, ts.sys, dirname(tsconfigPath), {
+    noEmit: true,
+    skipLibCheck: true,
+  });
+  const program = ts.createProgram({
+    rootNames: files,
+    options: parsed.options,
+  });
+  const diagnostics = ts
+    .getPreEmitDiagnostics(program)
+    .filter((diagnostic) => diagnostic.category === ts.DiagnosticCategory.Error);
+  if (diagnostics.length > 0) {
+    throw new Error(
+      `Cannot generate the runtime component contract from an invalid program:\n${ts.formatDiagnosticsWithColorAndContext(
+        diagnostics.slice(0, 20),
+        {
+          getCurrentDirectory: () => workspaceRoot,
+          getCanonicalFileName: (path) => path,
+          getNewLine: () => '\n',
+        },
+      )}`,
+    );
+  }
+  const checker = program.getTypeChecker();
   const classes = [];
 
   for (const path of files) {
-    const sourceText = await readFile(path, 'utf8');
-    const sourceFile = ts.createSourceFile(
-      path,
-      sourceText,
-      ts.ScriptTarget.Latest,
-      true,
-      ts.ScriptKind.TS,
-    );
+    const sourceFile = program.getSourceFile(path);
+    if (!sourceFile) {
+      throw new Error(`TypeScript program omitted ${relative(workspaceRoot, path)}.`);
+    }
 
     for (const statement of sourceFile.statements) {
       if (!ts.isClassDeclaration(statement) || !statement.name) continue;
       const decorated = decoratorMetadata(statement);
       const ownApi = statement.members
-        .map((member) => signalContract(member, sourceFile))
+        .map((member) => signalContract(checker, member, sourceFile))
         .filter(Boolean);
       const extendsClause = statement.heritageClauses?.find(
         (clause) => clause.token === ts.SyntaxKind.ExtendsKeyword,

@@ -125,6 +125,54 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - expanded
 - selected
 
+## Interactive playground
+
+Route: `preview/tree-navigation`
+
+Scenarios: `default`, `states`.
+Public API coverage: 3/6
+directly controlled; 3 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument     | Control | Default         | Test value   | Binding                       | Description                                   |
+| ------------ | ------- | --------------- | ------------ | ----------------------------- | --------------------------------------------- |
+| `selected`   | select  | `"automations"` | `"overview"` | model `selectedId`            | Changes the selected navigation node.         |
+| `indent`     | text    | `"1rem"`        | `"20rem"`    | input `indent` (property)     | Configures the component indent contract.     |
+| `showGuides` | boolean | `true`          | `false`      | input `showGuides` (property) | Configures the component showGuides contract. |
+
+Exact API exclusions:
+
+| Public API    | Category           | Evidence                                                     | Reason                                                                                                                  |
+| ------------- | ------------------ | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#tree-navigation` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `expandedIds` | complex-data       | `specimen-fixture:preview/tree-navigation?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
+| `items`       | complex-data       | `specimen-fixture:preview/tree-navigation?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `data/alternate` — overflow: The fixture data projection is changed for this acceptance state..
+- `long-text` — long text; scenario `default`; fixture effect `data/alternate` — long text: The fixture data projection is changed for this acceptance state..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — disabled; scenario `default`; fixture effect `data/alternate` — disabled: The fixture data projection is changed for this acceptance state..
+- `current` — current; scenario `default`; fixture effect `data/alternate` — current: The fixture data projection is changed for this acceptance state..
+- `loading-branch` — loading branch; scenario `default`; fixture effect `data/loading` — loading branch: The fixture is waiting for enterprise data..
+- `error-branch` — error branch; scenario `default`; fixture effect `data/error` — error branch: The fixture data request failed and can be retried..
+- `collapsed` — collapsed; scenario `default`; fixture effect `data/alternate` — collapsed: The fixture data projection is changed for this acceptance state..
+- `expanded` — expanded; scenario `default`; fixture effect `data/alternate` — expanded: The fixture data projection is changed for this acceptance state..
+- `selected` — selected; scenario `default`; fixture effect `data/selected` — selected: The fixture data projection is changed for this acceptance state..
+- `async-branches` — Async branches; scenario `states`.
+
 ## Related
 
 - `tree`

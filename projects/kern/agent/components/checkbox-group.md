@@ -106,6 +106,57 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - disabled
 - filled
 - empty
+- readonly
+- required
+- invalid
+
+## Interactive playground
+
+Route: `preview/checkbox-group`
+
+Scenarios: `default`.
+Public API coverage: 7/8
+directly controlled; 1 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument      | Control | Default             | Test value                      | Binding                        | Description                                                               |
+| ------------- | ------- | ------------------- | ------------------------------- | ------------------------------ | ------------------------------------------------------------------------- |
+| `disabled`    | boolean | `false`             | `true`                          | input `disabled` (property)    | Prevents user interaction.                                                |
+| `label`       | text    | `"Included events"` | `"Included events · alternate"` | input `label` (property)       | Names the checkbox group.                                                 |
+| `id`          | text    | `""`                | `"Alternate value"`             | input `id` (property)          | Configures the component id contract.                                     |
+| `invalid`     | boolean | `false`             | `true`                          | input `invalid` (property)     | Exposes an externally controlled invalid presentation state.              |
+| `orientation` | select  | `"vertical"`        | `"horizontal"`                  | input `orientation` (property) | Configures the component orientation contract.                            |
+| `readonly`    | boolean | `false`             | `true`                          | input `readonly` (property)    | Configures the component readonly contract.                               |
+| `required`    | boolean | `false`             | `true`                          | input `required` (property)    | Marks the value as required and participates in Angular Forms validation. |
+
+Exact API exclusions:
+
+| Public API    | Category   | Evidence                                                    | Reason                                                                                                        |
+| ------------- | ---------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `describedBy` | dom-wiring | `a11y-test:tests/a11y/accessibility.spec.ts#checkbox-group` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — Disabled; scenario `default`; `disabled=true`.
+- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
+- `readonly` — readonly; scenario `default`; fixture effect `status/neutral` — readonly: The fixture exposes the readonly status without claiming a public component input..
+- `required` — Required; scenario `default`; `required=true`.
+- `invalid` — Invalid; scenario `default`; `invalid=true`.
 
 ## Related
 

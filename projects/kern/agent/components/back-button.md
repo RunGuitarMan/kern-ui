@@ -92,6 +92,43 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - disabled
 - current
 
+## Interactive playground
+
+Route: `preview/back-button`
+
+Scenarios: `default`.
+Public API coverage: 2/2
+directly controlled; 0 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument | Control | Default             | Test value                      | Binding                  | Description                             |
+| -------- | ------- | ------------------- | ------------------------------- | ------------------------ | --------------------------------------- |
+| `label`  | text    | `"Back to catalog"` | `"Back to catalog · alternate"` | input `label` (property) | Changes the back-button label.          |
+| `href`   | text    | `"/"`               | `"#specimen-overview"`          | input `href` (property)  | Configures the component href contract. |
+
+Exact API exclusions:
+
+_No excluded public API members._
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — disabled; scenario `default`; fixture effect `status/neutral` — disabled: The fixture exposes the disabled status without claiming a public component input..
+- `current` — current; scenario `default`; fixture effect `status/neutral` — current: The fixture exposes the current status without claiming a public component input..
+
 ## Related
 
 - `breadcrumbs`

@@ -128,6 +128,60 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - open
 - nested
 - dismissed
+- selected
+- unselected
+
+## Interactive playground
+
+Route: `preview/command-palette`
+
+Scenarios: `default`.
+Public API coverage: 6/10
+directly controlled; 4 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument        | Control | Default              | Test value                       | Binding                          | Description                                                     |
+| --------------- | ------- | -------------------- | -------------------------------- | -------------------------------- | --------------------------------------------------------------- |
+| `open`          | boolean | `false`              | `true`                           | model `open`                     | Opens the command palette.                                      |
+| `query`         | text    | `""`                 | `"Alternate value"`              | model `query`                    | Changes the active command query.                               |
+| `placeholder`   | text    | `"Search commands…"` | `"Search commands… · alternate"` | input `placeholder` (property)   | Uses locale-aware command search copy until explicitly changed. |
+| `closeShortcut` | text    | `"Esc"`              | `"Esc · alternate"`              | input `closeShortcut` (property) | Uses the locale-aware close shortcut until explicitly changed.  |
+| `description`   | text    | `""`                 | `"Alternate value"`              | input `description` (property)   | Configures the component description contract.                  |
+| `title`         | text    | `"Jump to…"`         | `"Jump to… · alternate"`         | input `title` (property)         | Configures the component title contract.                        |
+
+Exact API exclusions:
+
+| Public API     | Category           | Evidence                                                     | Reason                                                                                                                                                              |
+| -------------- | ------------------ | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `items`        | complex-data       | `specimen-fixture:preview/command-palette?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+| `labels`       | translation-object | `locale-preview:preview/command-palette?locale=ru-RU`        | Structured translation overrides are exercised through locale providers, not lossy scalar controls.                                                                 |
+| `locale`       | complex-data       | `specimen-fixture:preview/command-palette?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+| `resultsLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#command-palette` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — disabled; scenario `default`; fixture effect `status/neutral` — disabled: The fixture exposes the disabled status without claiming a public component input..
+- `current` — current; scenario `default`; fixture effect `status/neutral` — current: The fixture exposes the current status without claiming a public component input..
+- `closed` — closed; scenario `default`; `open=false`; fixture effect `status/neutral` — closed: The fixture exposes the closed status without claiming a public component input..
+- `open` — Open; scenario `default`; `open=true`.
+- `nested` — nested; scenario `default`; fixture effect `status/neutral` — nested: The fixture exposes the nested status without claiming a public component input..
+- `dismissed` — dismissed; scenario `default`; `open=false`; fixture effect `status/neutral` — dismissed: The fixture exposes the dismissed status without claiming a public component input..
+- `selected` — selected; scenario `default`; fixture effect `status/neutral` — selected: The fixture exposes the selected status without claiming a public component input..
+- `unselected` — unselected; scenario `default`; fixture effect `status/neutral` — unselected: The fixture exposes the unselected status without claiming a public component input..
 
 ## Related
 

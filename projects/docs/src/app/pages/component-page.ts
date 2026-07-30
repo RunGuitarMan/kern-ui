@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -16,15 +9,9 @@ import {
   type KernComponentStatus,
 } from '@kern-ui/showcase';
 import { findKernAgentExample, type KernAgentExample } from '@kern-ui/showcase/examples';
-import { KernComponentSpecimen } from '@kern-ui/showcase/specimen';
-import {
-  KrnBreadcrumbs,
-  KrnCodeBlock,
-  KrnCopyButton,
-  type KrnBreadcrumbItem,
-} from '@kern-ui/angular/kit';
+import { KrnBreadcrumbs, KrnCopyButton, type KrnBreadcrumbItem } from '@kern-ui/angular/kit';
 
-import { DocsPreferences } from '../preferences';
+import { ComponentPlayground } from '../playground/component-playground';
 
 const STATUS_DESCRIPTIONS: Readonly<Record<KernComponentStatus, string>> = {
   stable: 'Supported contract; the documented compatibility policy applies.',
@@ -37,7 +24,7 @@ const STATUS_DESCRIPTIONS: Readonly<Record<KernComponentStatus, string>> = {
 @Component({
   selector: 'kdocs-component-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, KernComponentSpecimen, KrnBreadcrumbs, KrnCodeBlock, KrnCopyButton],
+  imports: [RouterLink, ComponentPlayground, KrnBreadcrumbs, KrnCopyButton],
   template: `
     @if (item(); as current) {
       <article class="page" [attr.data-component-page]="current.id">
@@ -84,76 +71,11 @@ const STATUS_DESCRIPTIONS: Readonly<Record<KernComponentStatus, string>> = {
           <a [routerLink]="['/components', current.id]" fragment="specimen-guidance">Guidance</a>
         </nav>
 
-        <section class="workbench" id="specimen-overview" aria-labelledby="example-heading">
-          <header class="workbench-toolbar">
-            <div>
-              <p>Working example</p>
-              <h2 id="example-heading">Try {{ current.name }}.</h2>
-            </div>
-            <div class="toolbar-actions">
-              <div class="view-tabs" role="group" aria-label="Example view">
-                <button
-                  type="button"
-                  [attr.aria-pressed]="workbenchTab() === 'preview'"
-                  aria-controls="preview-panel"
-                  (click)="workbenchTab.set('preview')"
-                >
-                  Preview
-                </button>
-                <button
-                  type="button"
-                  [attr.aria-pressed]="workbenchTab() === 'code'"
-                  aria-controls="code-panel"
-                  (click)="workbenchTab.set('code')"
-                >
-                  Code
-                </button>
-              </div>
-              <div class="preview-controls" aria-label="Preview settings">
-                <button
-                  type="button"
-                  (click)="prefs.theme.set(prefs.theme() === 'dark' ? 'light' : 'dark')"
-                >
-                  {{ prefs.theme() === 'dark' ? 'Light' : 'Dark' }}
-                </button>
-                <button
-                  type="button"
-                  (click)="
-                    prefs.density.set(prefs.density() === 'compact' ? 'comfortable' : 'compact')
-                  "
-                >
-                  {{ prefs.density() }}
-                </button>
-                <button type="button" (click)="prefs.direction.update(toggleDirection)">
-                  {{ prefs.direction().toUpperCase() }}
-                </button>
-              </div>
-            </div>
-          </header>
-
-          <div
-            id="preview-panel"
-            aria-label="Live component preview"
-            [hidden]="workbenchTab() !== 'preview'"
-          >
-            <kshow-component-specimen [item]="current" />
-          </div>
-          <div
-            id="code-panel"
-            class="code-panel"
-            aria-label="Angular code example"
-            [hidden]="workbenchTab() !== 'code'"
-          >
-            <div class="code-intro">
-              <div>
-                <span>{{ agentExample()?.title }}</span>
-                <strong>Strict AOT verified against the packed npm artifact.</strong>
-              </div>
-              <krn-copy-button [value]="codeExample()">Copy example</krn-copy-button>
-            </div>
-            <krn-code-block language="typescript" [code]="codeExample()" />
-          </div>
-        </section>
+        <kdocs-component-playground
+          id="specimen-overview"
+          [item]="current"
+          [code]="codeExample()"
+        />
 
         <section class="reference" aria-labelledby="reference-heading">
           <header class="reference-heading">
@@ -308,8 +230,6 @@ const STATUS_DESCRIPTIONS: Readonly<Record<KernComponentStatus, string>> = {
 export class ComponentPage {
   private readonly route = inject(ActivatedRoute);
   private readonly title = inject(Title);
-  protected readonly prefs = inject(DocsPreferences);
-  protected readonly workbenchTab = signal<'preview' | 'code'>('preview');
   private readonly params = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
   });
@@ -328,14 +248,10 @@ export class ComponentPage {
     const index = this.itemIndex();
     return index < 0 ? '' : `${index + 1} / ${KERN_CATALOG.length}`;
   });
-  protected readonly toggleDirection = (value: 'ltr' | 'rtl'): 'ltr' | 'rtl' =>
-    value === 'ltr' ? 'rtl' : 'ltr';
-
   constructor() {
     effect(() => {
       const item = this.item();
       this.title.setTitle(item ? `${item.name} · Kern` : 'Component not found · Kern');
-      this.workbenchTab.set('preview');
     });
   }
 

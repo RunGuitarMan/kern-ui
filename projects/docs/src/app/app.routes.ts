@@ -16,6 +16,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/component-page').then((module) => module.ComponentPage),
   },
   {
+    path: 'preview/:id',
+    loadComponent: () => import('./pages/preview-page').then((module) => module.PreviewPage),
+  },
+  {
     path: 'patterns',
     title: 'Patterns · Kern',
     loadComponent: () => import('./pages/patterns').then((module) => module.PatternsPage),

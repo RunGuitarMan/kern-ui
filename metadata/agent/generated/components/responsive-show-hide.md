@@ -87,6 +87,37 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - RTL
 - mobile
 
+## Interactive playground
+
+Route: `preview/responsive-show-hide`
+
+Scenarios: `default`.
+Public API coverage: 3/3
+directly controlled; 0 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument  | Control | Default   | Test value | Binding                    | Description                                                            |
+| --------- | ------- | --------- | ---------- | -------------------------- | ---------------------------------------------------------------------- |
+| `display` | select  | `"block"` | `"inline"` | input `display` (property) | Chooses the display mode used while the responsive content is visible. |
+| `from`    | select  | `"md"`    | `"none"`   | input `from` (property)    | Shows the desktop specimen from the selected breakpoint.               |
+| `until`   | select  | `"none"`  | `"sm"`     | input `until` (property)   | Optionally hides the desktop specimen at the selected breakpoint.      |
+
+Exact API exclusions:
+
+_No excluded public API members._
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+
 ## Related
 
 - `app-shell`

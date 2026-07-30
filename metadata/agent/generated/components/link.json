@@ -204,5 +204,220 @@
     "route": "components/link",
     "json": "components/link.json",
     "markdown": "components/link.md"
+  },
+  "playground": {
+    "route": "preview/link",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Prevents user interaction.",
+        "binding": {
+          "kind": "input",
+          "publicName": "disabled",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "download",
+        "label": "Download",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component download contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "download",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "href",
+        "label": "Href",
+        "kind": "text",
+        "defaultValue": "/foundations",
+        "testValue": "#specimen-overview",
+        "description": "Configures the component href contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "href",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "rel",
+        "label": "Rel",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component rel contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "rel",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "target",
+        "label": "Target",
+        "kind": "select",
+        "defaultValue": "_self",
+        "testValue": "_blank",
+        "description": "Configures the component target contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "target",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "_self",
+            "value": "_self"
+          },
+          {
+            "label": "_blank",
+            "value": "_blank"
+          },
+          {
+            "label": "_parent",
+            "value": "_parent"
+          },
+          {
+            "label": "_top",
+            "value": "_top"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "Disabled",
+        "scenario": "default",
+        "args": {
+          "disabled": true
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 6,
+      "controlled": 5,
+      "excluded": 1,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "link",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#link"
+        }
+      }
+    ]
   }
 }

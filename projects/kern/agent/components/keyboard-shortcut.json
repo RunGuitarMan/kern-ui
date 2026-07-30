@@ -127,5 +127,131 @@
     "route": "components/keyboard-shortcut",
     "json": "components/keyboard-shortcut.json",
     "markdown": "components/keyboard-shortcut.md"
+  },
+  "playground": {
+    "route": "preview/keyboard-shortcut",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "platform",
+        "label": "Platform",
+        "kind": "select",
+        "defaultValue": "macOS",
+        "testValue": "Windows",
+        "description": "Changes the projected shortcut-key fixture.",
+        "binding": {
+          "kind": "fixture",
+          "target": "content",
+          "description": "Selects the documented key sequence rendered by the specimen."
+        },
+        "options": [
+          {
+            "label": "macOS",
+            "value": "macOS"
+          },
+          {
+            "label": "Windows",
+            "value": "Windows"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 1,
+      "controlled": 0,
+      "excluded": 1,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "keyboard-shortcut",
+        "publicName": "keys",
+        "kind": "input",
+        "type": "ReadonlyArray<string>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/keyboard-shortcut?state=default"
+        }
+      }
+    ]
   }
 }

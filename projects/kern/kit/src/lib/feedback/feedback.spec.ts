@@ -310,6 +310,33 @@ describe('Kern feedback', () => {
     expect(fixture.componentInstance.open()).toBe(false);
   });
 
+  it('reuses one inert dialog surface across repeated open and close cycles', async () => {
+    const fixture = await create(KrnDialog, { open: true, title: 'Edit profile' });
+    const initialBackdrop = fixture.nativeElement.querySelector('.backdrop') as HTMLElement;
+
+    (fixture.nativeElement.querySelector('.close') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    const closedBackdrop = fixture.nativeElement.querySelector('.backdrop') as HTMLElement;
+    const closedSurface = closedBackdrop.querySelector('.surface') as HTMLElement;
+    expect(closedBackdrop).toBe(initialBackdrop);
+    expect(closedBackdrop.dataset['state']).toBe('closed');
+    expect(closedBackdrop.hasAttribute('hidden')).toBe(true);
+    expect(closedBackdrop.hasAttribute('inert')).toBe(true);
+    expect(closedBackdrop.getAttribute('aria-hidden')).toBe('true');
+    expect(closedSurface.hasAttribute('aria-modal')).toBe(false);
+
+    fixture.componentInstance.open.set(true);
+    fixture.detectChanges();
+
+    const reopenedBackdrop = fixture.nativeElement.querySelector('.backdrop') as HTMLElement;
+    expect(reopenedBackdrop).toBe(initialBackdrop);
+    expect(reopenedBackdrop.dataset['state']).toBe('open');
+    expect(reopenedBackdrop.hasAttribute('hidden')).toBe(false);
+    expect(reopenedBackdrop.hasAttribute('inert')).toBe(false);
+    expect(reopenedBackdrop.hasAttribute('aria-hidden')).toBe(false);
+  });
+
   it('keeps only a nested Kern CDK overlay interactive inside a modal', async () => {
     @Component({
       imports: [KrnDialog, KrnDropdownButton],

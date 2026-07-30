@@ -87,6 +87,42 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - compact
 - RTL
 - mobile
+- required
+
+## Interactive playground
+
+Route: `preview/label`
+
+Scenarios: `default`.
+Public API coverage: 1/2
+directly controlled; 1 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument   | Control | Default | Test value | Binding                     | Description                    |
+| ---------- | ------- | ------- | ---------- | --------------------------- | ------------------------------ |
+| `required` | boolean | `true`  | `false`    | input `required` (property) | Marks the control as required. |
+
+Exact API exclusions:
+
+| Public API | Category   | Evidence                                           | Reason                                                                                                        |
+| ---------- | ---------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `for`      | dom-wiring | `a11y-test:tests/a11y/accessibility.spec.ts#label` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `required` — required; scenario `default`; `required=true`; fixture effect `status/neutral` — required: The fixture exposes the required status without claiming a public component input..
+- `optional` — Optional; scenario `default`; `required=false`.
 
 ## Related
 

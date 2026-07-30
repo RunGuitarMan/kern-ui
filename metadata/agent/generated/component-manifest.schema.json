@@ -11,7 +11,7 @@
       "type": "string"
     },
     "schemaVersion": {
-      "const": "1.1.0"
+      "const": "1.2.0"
     },
     "library": {
       "$ref": "#/$defs/library"
@@ -53,6 +53,7 @@
         "framework",
         "requiredStyles",
         "configuration",
+        "playground",
         "entrypoints",
         "sourceDigest"
       ],
@@ -95,6 +96,9 @@
             }
           }
         },
+        "playground": {
+          "$ref": "#/$defs/playgroundQuery"
+        },
         "entrypoints": {
           "type": "array",
           "items": {
@@ -104,6 +108,499 @@
         "sourceDigest": {
           "type": "string",
           "pattern": "^sha256-[a-f0-9]{64}$"
+        }
+      }
+    },
+    "playgroundValue": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "playgroundEnvironmentQuery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "parameter", "defaultValue", "values"],
+      "properties": {
+        "key": {
+          "enum": ["theme", "density", "direction", "locale", "motion", "viewport"]
+        },
+        "parameter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "defaultValue": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "playgroundQuery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "routePattern",
+        "argumentsPrefix",
+        "scenarioParameter",
+        "presetParameter",
+        "environment",
+        "brandColor"
+      ],
+      "properties": {
+        "routePattern": {
+          "const": "preview/{componentId}"
+        },
+        "argumentsPrefix": {
+          "const": "arg."
+        },
+        "scenarioParameter": {
+          "const": "scenario"
+        },
+        "presetParameter": {
+          "const": "state"
+        },
+        "environment": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": {
+            "$ref": "#/$defs/playgroundEnvironmentQuery"
+          }
+        },
+        "brandColor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["parameter", "defaultValue", "pattern"],
+          "properties": {
+            "parameter": {
+              "const": "brandColor"
+            },
+            "defaultValue": {
+              "const": "#4666da"
+            },
+            "pattern": {
+              "const": "^#[0-9a-fA-F]{6}$"
+            }
+          }
+        }
+      }
+    },
+    "playgroundBinding": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "publicName"],
+          "properties": {
+            "kind": {
+              "const": "input"
+            },
+            "publicName": {
+              "type": "string",
+              "minLength": 1
+            },
+            "syntax": {
+              "enum": ["attribute", "property"]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "publicName"],
+          "properties": {
+            "kind": {
+              "const": "model"
+            },
+            "publicName": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "target", "description"],
+          "properties": {
+            "kind": {
+              "const": "fixture"
+            },
+            "target": {
+              "enum": ["content", "data", "interaction", "overlay"]
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "target", "attribute"],
+          "properties": {
+            "kind": {
+              "const": "composition"
+            },
+            "target": {
+              "const": "canvas"
+            },
+            "attribute": {
+              "const": "data-composition"
+            }
+          }
+        }
+      ]
+    },
+    "playgroundOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "value"],
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/playgroundValue"
+        }
+      }
+    },
+    "playgroundControl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "label", "kind", "defaultValue", "testValue", "description", "binding"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9]*$"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": ["boolean", "number", "range", "select", "text"]
+        },
+        "defaultValue": {
+          "$ref": "#/$defs/playgroundValue"
+        },
+        "testValue": {
+          "$ref": "#/$defs/playgroundValue"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "binding": {
+          "$ref": "#/$defs/playgroundBinding"
+        },
+        "options": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/playgroundOption"
+          }
+        },
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
+        "step": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "playgroundApiExclusion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["componentId", "publicName", "kind", "type", "code", "reason", "evidence"],
+      "properties": {
+        "componentId": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "publicName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": ["input", "model"]
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "code": {
+          "enum": [
+            "accessibility-copy",
+            "callback",
+            "complex-data",
+            "dom-wiring",
+            "form-serialization",
+            "locale-environment",
+            "polymorphic-value",
+            "template",
+            "translation-object"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["category", "pointer"],
+          "properties": {
+            "category": {
+              "enum": [
+                "a11y-test",
+                "component-example",
+                "forms-integration",
+                "locale-preview",
+                "specimen-fixture"
+              ]
+            },
+            "pointer": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "playgroundApiCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["publicInputsAndModels", "controlled", "excluded", "unclassified"],
+      "properties": {
+        "publicInputsAndModels": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "controlled": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "excluded": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unclassified": {
+          "const": 0
+        }
+      }
+    },
+    "playgroundEnvironment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "theme": {
+          "enum": ["system", "light", "dark", "high-contrast"]
+        },
+        "density": {
+          "enum": ["compact", "comfortable", "spacious"]
+        },
+        "direction": {
+          "enum": ["ltr", "rtl"]
+        },
+        "viewport": {
+          "enum": ["responsive", "phone", "tablet"]
+        }
+      }
+    },
+    "playgroundFixtureEffect": {
+      "description": "Deterministic documentation-fixture behavior for a state that is not represented by public component bindings.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "mode", "label", "description"],
+          "properties": {
+            "kind": {
+              "const": "layout"
+            },
+            "mode": {
+              "enum": ["alternate", "constrained", "expanded", "overflow"]
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "mode", "label", "description"],
+          "properties": {
+            "kind": {
+              "const": "content"
+            },
+            "mode": {
+              "enum": ["alternate", "empty", "filled", "long-text", "with-action", "without-action"]
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "mode", "label", "description"],
+          "properties": {
+            "kind": {
+              "const": "data"
+            },
+            "mode": {
+              "enum": [
+                "alternate",
+                "empty",
+                "error",
+                "filtered",
+                "loading",
+                "selected",
+                "sorted",
+                "success",
+                "virtualized"
+              ]
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "mode", "label", "description"],
+          "properties": {
+            "kind": {
+              "const": "status"
+            },
+            "mode": {
+              "enum": ["danger", "info", "neutral", "success", "warning"]
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "playgroundPreset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "scenario", "args"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scenario": {
+          "enum": ["default", "states", "stress", "virtual"]
+        },
+        "args": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/playgroundValue"
+          }
+        },
+        "environment": {
+          "$ref": "#/$defs/playgroundEnvironment"
+        },
+        "visualPseudoState": {
+          "enum": ["active", "focus-visible", "hover"]
+        },
+        "fixtureEffect": {
+          "$ref": "#/$defs/playgroundFixtureEffect"
+        }
+      }
+    },
+    "playground": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["route", "scenarios", "controls", "presets", "apiCoverage", "exclusions"],
+      "properties": {
+        "route": {
+          "type": "string",
+          "pattern": "^preview/[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "scenarios": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["default", "states", "stress", "virtual"]
+          }
+        },
+        "controls": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/playgroundControl"
+          }
+        },
+        "presets": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/playgroundPreset"
+          }
+        },
+        "apiCoverage": {
+          "$ref": "#/$defs/playgroundApiCoverage"
+        },
+        "exclusions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/playgroundApiExclusion"
+          }
         }
       }
     },
@@ -380,7 +877,8 @@
         "guidance",
         "commonMistakes",
         "checklist",
-        "documentation"
+        "documentation",
+        "playground"
       ],
       "properties": {
         "id": {
@@ -547,6 +1045,9 @@
               "pattern": "^components/[a-z0-9]+(?:-[a-z0-9]+)*\\.md$"
             }
           }
+        },
+        "playground": {
+          "$ref": "#/$defs/playground"
         }
       }
     },

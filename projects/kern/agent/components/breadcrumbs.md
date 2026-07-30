@@ -101,6 +101,48 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - disabled
 - current
 
+## Interactive playground
+
+Route: `preview/breadcrumbs`
+
+Scenarios: `default`.
+Public API coverage: 2/6
+directly controlled; 4 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument    | Control | Default | Test value        | Binding                      | Description                                  |
+| ----------- | ------- | ------- | ----------------- | ---------------------------- | -------------------------------------------- |
+| `maxItems`  | number  | `5`     | `6`               | input `maxItems` (property)  | Controls when middle breadcrumbs collapse.   |
+| `separator` | text    | `"›"`   | `"› · alternate"` | input `separator` (property) | Configures the component separator contract. |
+
+Exact API exclusions:
+
+| Public API     | Category           | Evidence                                                 | Reason                                                                                                                                                              |
+| -------------- | ------------------ | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#breadcrumbs` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
+| `items`        | complex-data       | `specimen-fixture:preview/breadcrumbs?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+| `moreLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#breadcrumbs` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `showAllLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#breadcrumbs` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — disabled; scenario `default`; fixture effect `status/neutral` — disabled: The fixture exposes the disabled status without claiming a public component input..
+- `current` — current; scenario `default`; fixture effect `status/neutral` — current: The fixture exposes the current status without claiming a public component input..
+
 ## Related
 
 - `tabs`

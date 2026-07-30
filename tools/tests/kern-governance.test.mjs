@@ -141,8 +141,10 @@ test('package policy rejects a TypeScript MCP peer wider than Angular supports',
 });
 
 test('documentation publishes the canonical agent contract for web discovery', async () => {
-  const workspace = JSON.parse(await readFile(resolve(workspaceRoot, 'angular.json'), 'utf8'));
-  const assets = workspace.projects.docs.architect.build.options.assets;
+  const project = JSON.parse(
+    await readFile(resolve(workspaceRoot, 'projects/docs/project.json'), 'utf8'),
+  );
+  const assets = project.targets.build.options.assets;
   const agentAssets = assets.filter((asset) => asset.input === 'projects/kern/agent');
 
   assert.deepEqual(agentAssets, [

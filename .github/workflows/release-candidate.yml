@@ -117,7 +117,7 @@ jobs:
 
       - name: Build immutable versioned SSR documentation
         run: |
-          npx ng build docs \
+          npx nx build docs \
             --configuration production \
             "--base-href=/versions/${RELEASE_VERSION}/" \
             --output-path dist/versioned-docs

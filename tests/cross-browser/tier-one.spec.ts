@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import type { Result } from 'axe-core';
 
-import { DOCS_URL, settlePage, watchRuntimeErrors } from '../support/browser';
+import { DOCS_URL, previewUrl, settlePage, watchRuntimeErrors } from '../support/browser';
 
 async function openSpecimen(page: Page, id: string): Promise<Locator> {
   await page.goto(`${DOCS_URL}/components/${id}`);
@@ -49,6 +49,60 @@ test.describe('Tier 1 browser contract', () => {
     await expect(grid).toHaveAttribute('aria-rowcount', /^[1-9]\d*$/);
     await expect(grid).toHaveAttribute('aria-colcount', /^[1-9]\d*$/);
     await expect(gridRegion.getByRole('columnheader', { name: /Workspace/ })).toBeVisible();
+
+    assertNoRuntimeErrors();
+  });
+
+  test('preserves the full playground contract across a hard reload', async ({ page }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    await page.goto(
+      previewUrl({
+        component: 'button',
+        theme: 'high-contrast',
+        density: 'spacious',
+        direction: 'rtl',
+        locale: 'ru-RU',
+        motion: 'reduce',
+        brandColor: '#d95831',
+        viewport: 'phone',
+        state: 'loading',
+        args: { variant: 'soft' },
+      }),
+    );
+    await settlePage(page);
+    await expect(page).toHaveURL(/state=loading/);
+    await expect(page).toHaveURL(/arg\.variant=soft/);
+    const sharedUrl = page.url();
+
+    const stage = page.getByTestId('specimen-stage');
+    const primaryAction = page
+      .getByTestId('component-specimen-button')
+      .getByRole('button', { name: 'Publish changes' });
+    const assertPlaygroundState = async (): Promise<void> => {
+      await expect(page.getByTestId('theme-control')).toHaveValue('high-contrast');
+      await expect(page.getByTestId('density-control')).toHaveValue('spacious');
+      await expect(page.getByTestId('direction-control')).toHaveValue('rtl');
+      await expect(page.getByTestId('locale-control')).toHaveValue('ru-RU');
+      await expect(page.getByTestId('motion-control')).toHaveValue('reduce');
+      await expect(page.getByTestId('brand-color-control')).toHaveValue('#d95831');
+      await expect(page.getByTestId('viewport-control')).toHaveValue('phone');
+      await expect(page.getByRole('combobox', { name: 'Variant' })).toHaveValue('soft');
+      await expect(page.getByRole('checkbox', { name: 'Loading' })).toBeChecked();
+      await expect(stage).toHaveAttribute('data-krn-theme-mode', 'high-contrast');
+      await expect(stage).toHaveAttribute('data-krn-density', 'spacious');
+      await expect(stage).toHaveAttribute('dir', 'rtl');
+      await expect(stage).toHaveAttribute('data-krn-motion', 'reduce');
+      await expect(stage).toHaveAttribute('data-state', 'loading');
+      await expect(primaryAction).toHaveAttribute('data-variant', 'soft');
+      await expect(primaryAction).toHaveAttribute('aria-busy', 'true');
+    };
+
+    await assertPlaygroundState();
+    await page.reload();
+    await settlePage(page);
+    await expect(page).toHaveURL(sharedUrl);
+    await assertPlaygroundState();
 
     assertNoRuntimeErrors();
   });

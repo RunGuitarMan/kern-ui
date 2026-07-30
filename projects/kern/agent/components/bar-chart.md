@@ -112,6 +112,55 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - active
 - disabled
 
+## Interactive playground
+
+Route: `preview/bar-chart`
+
+Scenarios: `default`, `states`, `stress`.
+Public API coverage: 5/12
+directly controlled; 7 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument              | Control | Default                 | Test value                          | Binding                                | Description                                            |
+| --------------------- | ------- | ----------------------- | ----------------------------------- | -------------------------------------- | ------------------------------------------------------ |
+| `title`               | text    | `"Runs by environment"` | `"Runs by environment · alternate"` | input `title` (property)               | Sets the visible chart title.                          |
+| `description`         | text    | `"Successful runs"`     | `"Successful runs · alternate"`     | input `description` (property)         | Adds concise dataset context.                          |
+| `summaryItemLimit`    | number  | `12`                    | `13`                                | input `summaryItemLimit` (property)    | Limits items in the accessible data summary.           |
+| `eyebrow`             | text    | `"AUTOMATION"`          | `"AUTOMATION · alternate"`          | input `eyebrow` (property)             | Configures the component eyebrow contract.             |
+| `negativeValuePolicy` | select  | `"clamp"`               | `"reject"`                          | input `negativeValuePolicy` (property) | Configures the component negativeValuePolicy contract. |
+
+Exact API exclusions:
+
+| Public API         | Category           | Evidence                                                        | Reason                                                                                                                  |
+| ------------------ | ------------------ | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `data`             | complex-data       | `specimen-fixture:preview/bar-chart?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
+| `datumIdentity`    | callback           | `component-example:agent/components/bar-chart.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                      |
+| `labels`           | translation-object | `locale-preview:preview/bar-chart?locale=ru-RU`                 | Structured translation overrides are exercised through locale providers, not lossy scalar controls.                     |
+| `locale`           | complex-data       | `specimen-fixture:preview/bar-chart?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
+| `palette`          | complex-data       | `specimen-fixture:preview/bar-chart?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
+| `percentFormatter` | callback           | `component-example:agent/components/bar-chart.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                      |
+| `valueFormatter`   | callback           | `component-example:agent/components/bar-chart.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                      |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `stress`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `stress`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — hover; scenario `default`; fixture effect `status/neutral` — hover: The fixture exposes the hover status without claiming a public component input..
+- `focus-visible` — focus-visible; scenario `default`; fixture effect `status/neutral` — focus-visible: The fixture exposes the focus visible status without claiming a public component input..
+- `active` — active; scenario `default`; fixture effect `status/neutral` — active: The fixture exposes the active status without claiming a public component input..
+- `disabled` — disabled; scenario `default`; fixture effect `status/neutral` — disabled: The fixture exposes the disabled status without claiming a public component input..
+- `stress` — Stress data; scenario `stress`.
+- `interactive-order` — Interactive order; scenario `states`.
+
 ## Related
 
 - `line-chart`

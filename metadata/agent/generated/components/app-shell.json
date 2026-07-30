@@ -262,5 +262,261 @@
     "route": "components/app-shell",
     "json": "components/app-shell.json",
     "markdown": "components/app-shell.md"
+  },
+  "playground": {
+    "route": "preview/app-shell",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "mobileNavigationOpen",
+        "label": "Mobile navigation open",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Opens the shell navigation surface at mobile breakpoints.",
+        "binding": {
+          "kind": "model",
+          "publicName": "mobileNavigationOpen"
+        }
+      },
+      {
+        "key": "mainMaxWidth",
+        "label": "Main max width",
+        "kind": "text",
+        "defaultValue": "48rem",
+        "testValue": "20rem",
+        "description": "Constrains the primary content measure.",
+        "binding": {
+          "kind": "input",
+          "publicName": "mainMaxWidth",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "sidebarWidth",
+        "label": "Sidebar width",
+        "kind": "text",
+        "defaultValue": "10rem",
+        "testValue": "20rem",
+        "description": "Sets the shell sidebar width.",
+        "binding": {
+          "kind": "input",
+          "publicName": "sidebarWidth",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "mobileNavigation",
+        "label": "Mobile Navigation",
+        "kind": "select",
+        "defaultValue": "auto",
+        "testValue": "hidden",
+        "description": "Configures the component mobileNavigation contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "mobileNavigation",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "auto",
+            "value": "auto"
+          },
+          {
+            "label": "hidden",
+            "value": "hidden"
+          },
+          {
+            "label": "rail",
+            "value": "rail"
+          },
+          {
+            "label": "sidebar",
+            "value": "sidebar"
+          }
+        ]
+      },
+      {
+        "key": "railWidth",
+        "label": "Rail Width",
+        "kind": "text",
+        "defaultValue": "3.5rem",
+        "testValue": "20rem",
+        "description": "Configures the component railWidth contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "railWidth",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "sidebarPosition",
+        "label": "Sidebar Position",
+        "kind": "select",
+        "defaultValue": "start",
+        "testValue": "end",
+        "description": "Configures the component sidebarPosition contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "sidebarPosition",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "end",
+            "value": "end"
+          },
+          {
+            "label": "start",
+            "value": "start"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 11,
+      "controlled": 6,
+      "excluded": 5,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "app-shell",
+        "publicName": "closeNavigationLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#app-shell"
+        }
+      },
+      {
+        "componentId": "app-shell",
+        "publicName": "mainId",
+        "kind": "input",
+        "type": "string",
+        "code": "dom-wiring",
+        "reason": "DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#app-shell"
+        }
+      },
+      {
+        "componentId": "app-shell",
+        "publicName": "mobileNavigationId",
+        "kind": "input",
+        "type": "string",
+        "code": "dom-wiring",
+        "reason": "DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#app-shell"
+        }
+      },
+      {
+        "componentId": "app-shell",
+        "publicName": "mobileNavigationLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#app-shell"
+        }
+      },
+      {
+        "componentId": "app-shell",
+        "publicName": "openNavigationLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#app-shell"
+        }
+      }
+    ]
   }
 }

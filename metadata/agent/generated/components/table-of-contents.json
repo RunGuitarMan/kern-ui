@@ -186,5 +186,217 @@
     "route": "components/table-of-contents",
     "json": "components/table-of-contents.json",
     "markdown": "components/table-of-contents.md"
+  },
+  "playground": {
+    "route": "preview/table-of-contents",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "active",
+        "label": "Active section",
+        "kind": "select",
+        "defaultValue": "specimen-overview",
+        "testValue": "specimen-api",
+        "description": "Changes the active table-of-contents entry.",
+        "binding": {
+          "kind": "model",
+          "publicName": "activeId"
+        },
+        "options": [
+          {
+            "label": "specimen-overview",
+            "value": "specimen-overview"
+          },
+          {
+            "label": "specimen-api",
+            "value": "specimen-api"
+          },
+          {
+            "label": "specimen-a11y",
+            "value": "specimen-a11y"
+          }
+        ]
+      },
+      {
+        "key": "observe",
+        "label": "Observe",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Configures the component observe contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "observe",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "title",
+        "label": "Title",
+        "kind": "text",
+        "defaultValue": "On this page",
+        "testValue": "On this page · alternate",
+        "description": "Configures the component title contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "title",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "disabled",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "disabled",
+          "description": "The fixture exposes the disabled status without claiming a public component input."
+        }
+      },
+      {
+        "id": "current",
+        "label": "current",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "current",
+          "description": "The fixture exposes the current status without claiming a public component input."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 5,
+      "controlled": 3,
+      "excluded": 2,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "table-of-contents",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#table-of-contents"
+        }
+      },
+      {
+        "componentId": "table-of-contents",
+        "publicName": "items",
+        "kind": "input",
+        "type": "ReadonlyArray<KrnTocItem>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/table-of-contents?state=default"
+        }
+      }
+    ]
   }
 }

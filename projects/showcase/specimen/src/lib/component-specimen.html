@@ -1,8 +1,16 @@
 <section
   class="specimen-frame"
+  [attr.dir]="effectiveEnvironment().direction"
   [attr.data-category]="item().category"
+  [attr.data-composition]="composition()"
+  [attr.data-environment-viewport]="effectiveEnvironment().viewport"
+  [attr.data-fixture-effect-kind]="effectiveFixtureEffect()?.kind"
+  [attr.data-fixture-effect-mode]="effectiveFixtureEffect()?.mode"
+  [attr.data-renderer-controls]="rendererControls().join(' ')"
   [attr.data-specimen]="item().id"
-  [attr.data-scenario]="scenario()"
+  [attr.data-scenario]="effectiveScenario()"
+  [attr.data-state]="state()"
+  [attr.data-visual-pseudo-state]="effectiveVisualPseudoState()"
   [attr.data-testid]="'component-specimen-' + item().id"
 >
   <header class="specimen-ident">
@@ -15,6 +23,29 @@
 
   <div class="specimen-canvas" id="specimen">
     <span class="live-indicator"><i></i> Interactive</span>
+    @if (appliedArguments().length) {
+      <div class="applied-arguments" data-testid="applied-playground-arguments">
+        <span>Applied parameters</span>
+        @for (argument of appliedArguments(); track argument.key) {
+          <code [attr.data-applied-control]="argument.key">
+            {{ argument.label }} = {{ argument.value }}
+          </code>
+        }
+      </div>
+    }
+    @if (effectiveFixtureEffect(); as fixtureEffect) {
+      <aside
+        class="fixture-effect-probe"
+        [attr.data-effect-kind]="fixtureEffect.kind"
+        [attr.data-effect-mode]="fixtureEffect.mode"
+        [attr.role]="
+          fixtureEffect.kind === 'data' || fixtureEffect.kind === 'status' ? 'status' : null
+        "
+      >
+        <strong>{{ fixtureEffect.label }}</strong>
+        <span>{{ fixtureEffect.description }}</span>
+      </aside>
+    }
 
     @switch (item().category) {
       <!-- Layout -->
@@ -23,7 +54,14 @@
           @switch (item().id) {
             @case ('app-shell') {
               <div class="mini-app-shell">
-                <krn-app-shell sidebarWidth="10rem" mainMaxWidth="48rem">
+                <krn-app-shell
+                  [(mobileNavigationOpen)]="appShellNavigationOpen"
+                  [mainMaxWidth]="stringArgument('mainMaxWidth', '48rem')"
+                  [sidebarWidth]="stringArgument('sidebarWidth', '10rem')"
+                  [mobileNavigation]="stringArgument('mobileNavigation', 'auto')"
+                  [railWidth]="stringArgument('railWidth', '3.5rem')"
+                  [sidebarPosition]="stringArgument('sidebarPosition', 'start')"
+                >
                   <krn-header>
                     <strong krnHeaderStart>NORTH / OPS</strong>
                     <span>Workspace health</span>
@@ -53,7 +91,11 @@
             }
             @case ('header') {
               <div class="bounded-surface">
-                <krn-header elevated>
+                <krn-header
+                  [elevated]="booleanArgument('elevated', true)"
+                  [height]="stringArgument('height', '4rem')"
+                  [sticky]="booleanArgument('sticky', true)"
+                >
                   <strong krnHeaderStart>KERN / OPS</strong>
                   <nav class="header-links">
                     <a [routerLink]="['/components', item().id]" fragment="specimen">Overview</a
@@ -68,7 +110,14 @@
             }
             @case ('sidebar') {
               <div class="sidebar-stage">
-                <krn-sidebar width="15rem" ariaLabel="Project navigation">
+                <krn-sidebar
+                  ariaLabel="Project navigation"
+                  [(collapsed)]="sidebarCollapsed"
+                  [width]="stringArgument('width', '15rem')"
+                  [collapsedMode]="stringArgument('collapsedMode', 'icons')"
+                  [collapsedWidth]="stringArgument('collapsedWidth', '4rem')"
+                  [side]="stringArgument('side', 'start')"
+                >
                   <strong krnSidebarHeader>NORTHSTAR</strong>
                   <nav class="demo-nav">
                     <a
@@ -92,7 +141,13 @@
             }
             @case ('navigation-rail') {
               <div class="rail-stage">
-                <krn-navigation-rail ariaLabel="Primary tools">
+                <krn-navigation-rail
+                  ariaLabel="Primary tools"
+                  [(expanded)]="navigationRailExpanded"
+                  [expandedWidth]="stringArgument('expandedWidth', '14rem')"
+                  [side]="stringArgument('side', 'start')"
+                  [width]="stringArgument('width', 'var(--krn-shell-rail-width, 3.5rem)')"
+                >
                   <span krnRailHeader class="rail-brand" role="img" aria-label="Kern">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                       <path d="M6 4v16M18 4 9 12l9 8" />
@@ -125,8 +180,16 @@
             }
             @case ('container') {
               <div class="container-rulers">
-                <krn-container size="sm">
-                  <krn-card eyebrow="SM / 40REM" heading="Readable measure">
+                <krn-container
+                  [size]="stringArgument('size', 'sm')"
+                  [align]="stringArgument('align', 'center')"
+                  [gutter]="stringArgument('gutter', '4')"
+                  [maxWidth]="stringArgument('maxWidth', '')"
+                >
+                  <krn-card
+                    [eyebrow]="stringArgument('size', 'sm').toUpperCase() + ' / CONTAINER'"
+                    heading="Readable measure"
+                  >
                     Containers constrain line length and preserve logical gutters as the viewport
                     changes.
                   </krn-card>
@@ -135,7 +198,12 @@
               </div>
             }
             @case ('stack') {
-              <krn-stack class="layout-sample stack-specimen" gap="3">
+              <krn-stack
+                class="layout-sample stack-specimen"
+                [gap]="stringArgument('gap', '3')"
+                [align]="stringArgument('align', 'stretch')"
+                [justify]="stringArgument('justify', 'start')"
+              >
                 <article>
                   <span>01</span>
                   <div><strong>Workspace label</strong><small>Names the control</small></div>
@@ -156,7 +224,13 @@
               </krn-stack>
             }
             @case ('inline') {
-              <krn-inline class="layout-sample horizontal" gap="3" wrap>
+              <krn-inline
+                class="layout-sample horizontal"
+                [wrap]="booleanArgument('wrap', true)"
+                [align]="stringArgument('align', 'center')"
+                [gap]="stringArgument('gap', '3')"
+                [justify]="stringArgument('justify', 'start')"
+              >
                 <krn-badge tone="brand">Design</krn-badge>
                 <krn-badge tone="info">Engineering</krn-badge>
                 <krn-badge tone="success">Released</krn-badge>
@@ -164,7 +238,14 @@
               </krn-inline>
             }
             @case ('cluster') {
-              <krn-cluster class="cluster-sample" gap="2" justify="space-between">
+              <krn-cluster
+                class="cluster-sample"
+                [gap]="stringArgument('gap', '2')"
+                [justify]="stringArgument('justify', 'start')"
+                [align]="stringArgument('align', 'center')"
+                [columnGap]="stringArgument('columnGap', '')"
+                [rowGap]="stringArgument('rowGap', '')"
+              >
                 <strong>12 selected records</strong>
                 <krn-cluster gap="2">
                   <krn-button size="sm" variant="outline" tone="neutral">Export</krn-button>
@@ -173,7 +254,13 @@
               </krn-cluster>
             }
             @case ('grid') {
-              <krn-grid [columns]="3" gap="3">
+              <krn-grid
+                [responsive]="booleanArgument('responsive', true)"
+                [columns]="argument('columns') ?? 3"
+                [gap]="stringArgument('gap', '3')"
+                [align]="stringArgument('align', 'stretch')"
+                [minColumnWidth]="stringArgument('minColumnWidth', '16rem')"
+              >
                 <krn-card eyebrow="01" heading="Identity">Stable naming</krn-card>
                 <krn-card eyebrow="02" heading="Policy">Visible constraints</krn-card>
                 <krn-card eyebrow="03" heading="Health">Live status</krn-card>
@@ -183,7 +270,13 @@
               </krn-grid>
             }
             @case ('split-layout') {
-              <krn-split-layout ratio="1:2" gap="4" collapseAt="md">
+              <krn-split-layout
+                [reverseCollapsed]="booleanArgument('reverseCollapsed')"
+                [gap]="stringArgument('gap', '4')"
+                [ratio]="stringArgument('ratio', '1:2')"
+                [align]="stringArgument('align', 'start')"
+                [collapseAt]="stringArgument('collapseAt', 'md')"
+              >
                 <krn-card krnSplitPrimary eyebrow="FILTERS" heading="Refine results"
                   >Persistent controls live in the primary region.</krn-card
                 >
@@ -196,7 +289,11 @@
               </krn-split-layout>
             }
             @case ('center') {
-              <krn-center maxWidth="28rem" intrinsic>
+              <krn-center
+                [intrinsic]="booleanArgument('intrinsic', true)"
+                [maxWidth]="stringArgument('maxWidth', '28rem')"
+                [gutters]="stringArgument('gutters', '4')"
+              >
                 <span class="specimen-kicker">EMPTY / 00</span>
                 <h3>Start with one workspace.</h3>
                 <p>
@@ -209,7 +306,10 @@
             @case ('spacer') {
               <div class="spacer-demo">
                 <krn-button variant="outline" tone="neutral">Cancel</krn-button>
-                <krn-spacer axis="horizontal" size="12" />
+                <krn-spacer
+                  [axis]="stringArgument('axis', 'horizontal')"
+                  [size]="stringArgument('size', '12')"
+                />
                 <krn-button>Save changes</krn-button>
                 <span class="spacer-measure">3rem flexible separation</span>
               </div>
@@ -219,21 +319,57 @@
                 <div>
                   <strong>Workspace settings</strong><small>General identity and ownership</small>
                 </div>
-                <krn-divider label="Access policy" />
+                <krn-divider
+                  [orientation]="stringArgument('orientation', 'horizontal')"
+                  [label]="stringArgument('label', 'Access policy')"
+                  [inset]="stringArgument('inset', '0')"
+                />
                 <div><strong>Single sign-on</strong><small>Required for administrators</small></div>
                 <krn-divider orientation="vertical" label="Logical boundary" />
               </krn-stack>
             }
             @case ('aspect-ratio') {
-              <krn-aspect-ratio ratio="16 / 9">
-                <div class="media-poster">
-                  <span>16:9</span><strong>Release overview</strong
-                  ><small>Container-safe media frame</small>
-                </div>
+              <krn-aspect-ratio ratio="16 / 9" [fit]="stringArgument('fit', 'cover')">
+                <svg
+                  class="media-poster"
+                  viewBox="0 0 800 450"
+                  role="img"
+                  aria-label="Release overview media fixture"
+                >
+                  <defs>
+                    <radialGradient id="aspect-glow" cx="72%" cy="25%" r="48%">
+                      <stop stop-color="#5c7cfa" stop-opacity=".75" />
+                      <stop offset="1" stop-color="#101424" stop-opacity="0" />
+                    </radialGradient>
+                    <linearGradient id="aspect-base" x1="0" y1="0" x2="1" y2="1">
+                      <stop stop-color="#101424" />
+                      <stop offset="1" stop-color="#303b67" />
+                    </linearGradient>
+                  </defs>
+                  <rect width="800" height="450" fill="url(#aspect-base)" />
+                  <rect width="800" height="450" fill="url(#aspect-glow)" />
+                  <text x="400" y="166" text-anchor="middle" class="media-poster__kicker">
+                    16:9
+                  </text>
+                  <text x="400" y="236" text-anchor="middle" class="media-poster__title">
+                    Release overview
+                  </text>
+                  <text x="400" y="286" text-anchor="middle" class="media-poster__detail">
+                    Container-safe media frame
+                  </text>
+                </svg>
               </krn-aspect-ratio>
             }
             @case ('scroll-area') {
-              <krn-scroll-area class="scroll-demo" maxBlockSize="16rem" ariaLabel="Audit activity">
+              <krn-scroll-area
+                class="scroll-demo"
+                ariaLabel="Audit activity"
+                [axis]="stringArgument('axis', 'vertical')"
+                [maxBlockSize]="stringArgument('maxBlockSize', '16rem')"
+                [keyboardAccessible]="booleanArgument('keyboardAccessible', true)"
+                [maxInlineSize]="stringArgument('maxInlineSize', '100%')"
+                [scrollbar]="stringArgument('scrollbar', 'auto')"
+              >
                 @for (row of specimenRows; track row.id) {
                   <article>
                     <span>{{ row.id.toString().padStart(2, '0') }}</span
@@ -262,14 +398,18 @@
                     ><b class="viewport-desktop">48rem and wider</b></span
                   >
                 </header>
-                <krn-show from="md">
+                <krn-show
+                  [display]="stringArgument('display', 'block')"
+                  [from]="stringArgument('from', 'md')"
+                  [until]="stringArgument('until', 'none')"
+                >
                   <div class="responsive-card">
                     <span>DESKTOP SLOT</span>
                     <strong>Wide navigation + contextual actions</strong>
                     <small><code>from="md"</code> becomes visible at 48rem.</small>
                   </div>
                 </krn-show>
-                <krn-show until="md">
+                <krn-show until="md" [display]="stringArgument('display', 'block')">
                   <div class="responsive-card">
                     <span>MOBILE SLOT</span>
                     <strong>Compact navigation + essential actions</strong>
@@ -284,7 +424,12 @@
               </div>
             }
             @case ('resizable-panels') {
-              <krn-resizable-panels [sizes]="[32, 68]" [step]="5">
+              <krn-resizable-panels
+                [sizes]="[32, 68]"
+                [disabled]="booleanArgument('disabled')"
+                [step]="numberArgument('step', 5)"
+                [orientation]="stringArgument('orientation', 'horizontal')"
+              >
                 <krn-resizable-panel ariaLabel="Navigation">
                   <div class="panel-copy">
                     <span>PANEL / A</span><strong>Navigation</strong><small>min 20%</small>
@@ -311,7 +456,17 @@
           @switch (item().id) {
             @case ('button') {
               <div class="action-gallery">
-                <krn-button>Publish changes</krn-button>
+                <krn-button
+                  [variant]="stringArgument('variant', 'solid')"
+                  [tone]="stringArgument('tone', 'brand')"
+                  [size]="stringArgument('size', 'md')"
+                  [loading]="booleanArgument('loading')"
+                  [disabled]="booleanArgument('disabled')"
+                  [pressed]="booleanArgument('pressed')"
+                  [type]="stringArgument('type', 'button')"
+                  [value]="stringArgument('value', '')"
+                  >Publish changes</krn-button
+                >
                 <krn-button variant="outline" tone="neutral">Preview</krn-button>
                 <krn-button variant="ghost" tone="danger">Delete</krn-button>
                 <krn-button loading>Publishing</krn-button>
@@ -320,14 +475,27 @@
             }
             @case ('icon-button') {
               <div class="action-gallery icon-gallery">
-                <krn-icon-button ariaLabel="Create workspace">＋</krn-icon-button>
+                <krn-icon-button
+                  ariaLabel="Create workspace"
+                  [variant]="stringArgument('variant', 'ghost')"
+                  [tone]="stringArgument('tone', 'neutral')"
+                  [size]="stringArgument('size', 'md')"
+                  [loading]="booleanArgument('loading')"
+                  [disabled]="booleanArgument('disabled')"
+                  [pressed]="booleanArgument('pressed')"
+                  [type]="stringArgument('type', 'button')"
+                  >＋</krn-icon-button
+                >
                 <krn-icon-button ariaLabel="Duplicate workspace">⧉</krn-icon-button>
                 <krn-icon-button ariaLabel="More actions">•••</krn-icon-button>
                 <span>Each glyph keeps a programmatic name and 44px target.</span>
               </div>
             }
             @case ('button-group') {
-              <krn-button-group ariaLabel="Text alignment">
+              <krn-button-group
+                ariaLabel="Text alignment"
+                [orientation]="stringArgument('orientation', 'horizontal')"
+              >
                 <krn-button size="sm" variant="outline" tone="neutral" ariaLabel="Align start"
                   >⇤</krn-button
                 >
@@ -340,7 +508,14 @@
               </krn-button-group>
             }
             @case ('split-button') {
-              <krn-split-button>
+              <krn-split-button
+                [(open)]="actionMenuOpen"
+                [disabled]="booleanArgument('disabled', false)"
+                [loading]="booleanArgument('loading', false)"
+                [size]="stringArgument('size', 'md')"
+                [tone]="stringArgument('tone', 'brand')"
+                [variant]="stringArgument('variant', 'solid')"
+              >
                 <span krnLabel>Publish</span>
                 <button krnMenu role="menuitem" type="button">Publish now</button>
                 <button krnMenu role="menuitem" type="button">Schedule…</button>
@@ -350,21 +525,39 @@
             @case ('floating-action-button') {
               <div class="fab-stage">
                 <p>The primary creation action remains anchored above transient content.</p>
-                <krn-floating-action-button ariaLabel="Create workspace"
+                <krn-floating-action-button
+                  ariaLabel="Create workspace"
+                  [variant]="stringArgument('variant', 'solid')"
+                  [tone]="stringArgument('tone', 'brand')"
+                  [size]="stringArgument('size', 'lg')"
+                  [extended]="booleanArgument('extended', true)"
+                  [loading]="booleanArgument('loading')"
+                  [disabled]="booleanArgument('disabled')"
                   >＋ <span>Create workspace</span></krn-floating-action-button
                 >
               </div>
             }
             @case ('toggle-button') {
               <div class="action-gallery">
-                <krn-toggle-button value="watch">Watch changes</krn-toggle-button>
+                <krn-toggle-button
+                  [(pressed)]="togglePressed"
+                  [disabled]="booleanArgument('disabled')"
+                  [size]="stringArgument('size', 'md')"
+                  [value]="stringArgument('value', 'watch')"
+                  >Watch changes</krn-toggle-button
+                >
                 <krn-toggle-button value="pin" [disabled]="true"
                   >Pinned by policy</krn-toggle-button
                 >
               </div>
             }
             @case ('toggle-group') {
-              <krn-toggle-group ariaLabel="View mode">
+              <krn-toggle-group
+                ariaLabel="View mode"
+                [multiple]="booleanArgument('multiple')"
+                [disabled]="booleanArgument('disabled', false)"
+                [orientation]="stringArgument('orientation', 'horizontal')"
+              >
                 <krn-toggle-button value="list">List</krn-toggle-button>
                 <krn-toggle-button value="board">Board</krn-toggle-button>
                 <krn-toggle-button value="timeline">Timeline</krn-toggle-button>
@@ -373,7 +566,10 @@
             @case ('copy-button') {
               <div class="copy-demo">
                 <code>npm i &#64;kern-ui/angular</code>
-                <krn-copy-button value="npm i @kern-ui/angular"
+                <krn-copy-button
+                  [disabled]="booleanArgument('disabled')"
+                  [size]="stringArgument('size', 'md')"
+                  [value]="stringArgument('value', 'npm i @kern-ui/angular')"
                   >Copy install command</krn-copy-button
                 >
               </div>
@@ -381,14 +577,26 @@
             @case ('link') {
               <div class="link-demo">
                 <p>Links move between locations; buttons perform actions in the current context.</p>
-                <krn-link href="/foundations"
+                <krn-link
+                  [disabled]="booleanArgument('disabled')"
+                  [download]="stringArgument('download', '')"
+                  [href]="stringArgument('href', '/foundations')"
+                  [rel]="stringArgument('rel', '')"
+                  [target]="stringArgument('target', '_self')"
                   >Read the foundations <span aria-hidden="true">↗</span></krn-link
                 >
                 <krn-link href="/changelog" target="_self">View release notes</krn-link>
               </div>
             }
             @case ('dropdown-button') {
-              <krn-dropdown-button>
+              <krn-dropdown-button
+                [(open)]="actionMenuOpen"
+                [disabled]="booleanArgument('disabled', false)"
+                [loading]="booleanArgument('loading', false)"
+                [size]="stringArgument('size', 'md')"
+                [tone]="stringArgument('tone', 'brand')"
+                [variant]="stringArgument('variant', 'solid')"
+              >
                 <span krnLabel>Export</span>
                 <button krnMenu role="menuitem" type="button">CSV spreadsheet</button>
                 <button krnMenu role="menuitem" type="button">PDF report</button>
@@ -406,13 +614,19 @@
         @defer (on immediate) {
           @switch (item().id) {
             @case ('form-field') {
-              @if (scenario() === 'stress') {
+              @if (effectiveScenario() === 'stress') {
                 <form class="form-surface stress-form" aria-label="Enterprise form stress fixture">
                   @for (field of stressFormFields; track field.id) {
                     <krn-form-field
-                      [label]="field.label"
-                      hint="Required enterprise value."
-                      required
+                      [state]="stringArgument('state', 'default')"
+                      [label]="stringArgumentOverride('label', field.label)"
+                      [disabled]="booleanArgument('disabled', false)"
+                      [error]="stringArgument('error', '')"
+                      [hint]="stringArgument('hint', 'Required enterprise value.')"
+                      [id]="stringArgument('id', '')"
+                      [optionalText]="stringArgument('optionalText', '')"
+                      [readonly]="booleanArgument('readonly', false)"
+                      [required]="booleanArgument('required', true)"
                     >
                       <krn-text-input
                         [id]="field.id"
@@ -426,10 +640,15 @@
               } @else {
                 <div class="form-surface">
                   <krn-form-field
-                    label="Workspace name"
-                    hint="Visible to every member."
+                    [label]="stringArgumentOverride('label', 'Workspace name')"
+                    [hint]="stringArgument('hint', 'Visible to every member.')"
                     [error]="workspaceNameError()"
-                    required
+                    [state]="stringArgument('state', 'default')"
+                    [disabled]="booleanArgument('disabled', false)"
+                    [id]="stringArgument('id', '')"
+                    [optionalText]="stringArgument('optionalText', '')"
+                    [readonly]="booleanArgument('readonly', false)"
+                    [required]="booleanArgument('required', true)"
                   >
                     <krn-text-input
                       placeholder="Northstar"
@@ -449,15 +668,22 @@
                   <span>Describes a control; it does not own a value or popup.</span>
                 </div>
                 <div class="message-demo">
-                  <krn-label for="workspace-slug" required>Workspace slug</krn-label>
-                  <krn-text-input id="workspace-slug" placeholder="northstar-ops" required />
+                  <krn-label for="workspace-slug" [required]="booleanArgument('required')"
+                    >Workspace slug</krn-label
+                  >
+                  <krn-text-input
+                    id="workspace-slug"
+                    placeholder="northstar-ops"
+                    [required]="booleanArgument('required')"
+                  />
                 </div>
               </div>
             }
             @case ('hint') {
               <div class="form-surface message-demo">
                 <krn-text-input ariaLabel="Workspace slug" placeholder="northstar-ops" /><krn-hint
-                  >Lowercase letters, numbers, and hyphens only.</krn-hint
+                  [id]="stringArgument('id', '')"
+                  >{{ stringArgument('content', 'Use at least 12 characters.') }}</krn-hint
                 >
               </div>
             }
@@ -467,13 +693,27 @@
                   ariaLabel="Workspace name"
                   invalid
                   placeholder="N"
-                /><krn-validation-message>Use at least 3 characters.</krn-validation-message>
+                /><krn-validation-message [id]="stringArgument('id', '')">{{
+                  stringArgument('content', 'Use 3–48 characters.')
+                }}</krn-validation-message>
               </div>
             }
             @case ('text-input') {
               <div class="form-surface">
                 <krn-form-field label="Workspace name" hint="Stable identifier for members."
-                  ><krn-text-input placeholder="Northstar" autocomplete="organization"
+                  ><krn-text-input
+                    [placeholder]="stringArgument('placeholder', 'Northstar')"
+                    [size]="stringArgument('size', 'md')"
+                    [disabled]="booleanArgument('disabled')"
+                    [readonly]="booleanArgument('readOnly')"
+                    [required]="booleanArgument('required')"
+                    [invalid]="booleanArgument('invalid')"
+                    [autocomplete]="stringArgument('autocomplete', 'organization')"
+                    [id]="stringArgument('id', '')"
+                    [inputMode]="stringArgument('inputMode', 'text')"
+                    [maxLength]="numberArgument('maxLength', 100)"
+                    [minLength]="numberArgument('minLength', 0)"
+                    [spellcheck]="booleanArgument('spellcheck', true)"
                 /></krn-form-field>
               </div>
             }
@@ -481,18 +721,34 @@
               <div class="form-surface">
                 <krn-form-field label="Change summary" hint="Describe the change for reviewers."
                   ><krn-textarea
-                    placeholder="Explain what changed and why…"
-                    [maxLength]="280"
-                    [rows]="5"
-                    [showCount]="true"
-                    autoResize
+                    [placeholder]="stringArgument('placeholder', 'Explain what changed and why…')"
+                    [size]="stringArgument('size', 'md')"
+                    [maxLength]="numberArgument('maxLength', 280)"
+                    [rows]="numberArgument('rows', 5)"
+                    [showCount]="booleanArgument('showCount', true)"
+                    [autoResize]="booleanArgument('autoResize', true)"
+                    [disabled]="booleanArgument('disabled')"
+                    [readonly]="booleanArgument('readOnly')"
+                    [required]="booleanArgument('required')"
+                    [invalid]="booleanArgument('invalid')"
+                    [autocomplete]="stringArgument('autocomplete', '')"
+                    [id]="stringArgument('id', '')"
                 /></krn-form-field>
               </div>
             }
             @case ('password-input') {
               <div class="form-surface">
                 <krn-form-field label="Password" hint="At least 12 characters."
-                  ><krn-password-input placeholder="Enter password"
+                  ><krn-password-input
+                    [placeholder]="stringArgument('placeholder', 'Enter password')"
+                    [disabled]="booleanArgument('disabled')"
+                    [readonly]="booleanArgument('readOnly')"
+                    [required]="booleanArgument('required')"
+                    [invalid]="booleanArgument('invalid')"
+                    [hideText]="stringArgumentOverride('hideText', translations.forms.hide)"
+                    [showText]="stringArgumentOverride('showText', translations.forms.show)"
+                    [autocomplete]="stringArgument('autocomplete', 'current-password')"
+                    [id]="stringArgument('id', '')"
                 /></krn-form-field>
               </div>
             }
@@ -500,27 +756,62 @@
               <div class="form-surface">
                 <krn-search-input
                   ariaLabel="Search workspaces"
-                  placeholder="Search 248 workspaces…"
+                  [placeholder]="stringArgument('placeholder', 'Search 248 workspaces…')"
+                  [disabled]="booleanArgument('disabled')"
+                  [readonly]="booleanArgument('readOnly')"
+                  [invalid]="booleanArgument('invalid')"
+                  [autocomplete]="stringArgument('autocomplete', 'off')"
+                  [id]="stringArgument('id', '')"
                 />
               </div>
             }
             @case ('number-input') {
               <div class="form-surface narrow-form">
                 <krn-form-field label="Seat limit" hint="Between 1 and 500."
-                  ><krn-number-input ariaLabel="Seat limit" [min]="1" [max]="500" [step]="5"
+                  ><krn-number-input
+                    ariaLabel="Seat limit"
+                    [min]="numberArgument('min', 1)"
+                    [max]="numberArgument('max', 500)"
+                    [step]="numberArgument('step', 5)"
+                    [showSteppers]="booleanArgument('showSteppers', true)"
+                    [disabled]="booleanArgument('disabled')"
+                    [readonly]="booleanArgument('readOnly')"
+                    [required]="booleanArgument('required')"
+                    [invalid]="booleanArgument('invalid')"
+                    [id]="stringArgument('id', '')"
+                    [placeholder]="stringArgument('placeholder', '')"
                 /></krn-form-field>
               </div>
             }
             @case ('checkbox') {
               <div class="form-surface">
-                <krn-checkbox description="Receive a summary every Monday at 09:00."
+                <krn-checkbox
+                  [ngModel]="checkboxValue()"
+                  (ngModelChange)="checkboxValue.set($event)"
+                  [indeterminate]="booleanArgument('indeterminate')"
+                  [disabled]="booleanArgument('disabled')"
+                  [readonly]="booleanArgument('readOnly')"
+                  [required]="booleanArgument('required')"
+                  [invalid]="booleanArgument('invalid')"
+                  [description]="
+                    stringArgument('description', 'Receive a summary every Monday at 09:00.')
+                  "
+                  [id]="stringArgument('id', '')"
+                  [value]="stringArgument('value', 'Example value')"
                   >Weekly operations report</krn-checkbox
                 >
               </div>
             }
             @case ('checkbox-group') {
               <div class="form-surface">
-                <krn-checkbox-group label="Included events"
+                <krn-checkbox-group
+                  [disabled]="booleanArgument('disabled')"
+                  [label]="stringArgument('label', 'Included events')"
+                  [id]="stringArgument('id', '')"
+                  [invalid]="booleanArgument('invalid', false)"
+                  [orientation]="stringArgument('orientation', 'vertical')"
+                  [readonly]="booleanArgument('readonly', false)"
+                  [required]="booleanArgument('required', false)"
                   ><krn-checkbox>Policy changes</krn-checkbox
                   ><krn-checkbox>Failed automations</krn-checkbox
                   ><krn-checkbox>New members</krn-checkbox></krn-checkbox-group
@@ -529,8 +820,15 @@
             }
             @case ('radio') {
               <div class="form-surface">
-                <krn-radio-group label="Billing cycle"
-                  ><krn-radio value="monthly" description="Flexible, billed each month"
+                <krn-radio-group
+                  label="Billing cycle"
+                  [ngModel]="radioValue()"
+                  (ngModelChange)="radioValue.set($event)"
+                  [disabled]="booleanArgument('disabled')"
+                  [readonly]="booleanArgument('readOnly')"
+                  ><krn-radio
+                    [description]="stringArgument('description', 'Flexible, billed each month')"
+                    [value]="stringArgument('value', 'monthly')"
                     >Monthly</krn-radio
                   ><krn-radio value="annual" description="Save 18% with one invoice"
                     >Annual</krn-radio
@@ -540,7 +838,14 @@
             }
             @case ('radio-group') {
               <div class="form-surface">
-                <krn-radio-group label="Default visibility" orientation="horizontal"
+                <krn-radio-group
+                  [disabled]="booleanArgument('disabled')"
+                  [label]="stringArgument('label', 'Default visibility')"
+                  [orientation]="stringArgument('orientation', 'horizontal')"
+                  [id]="stringArgument('id', '')"
+                  [invalid]="booleanArgument('invalid', false)"
+                  [readonly]="booleanArgument('readonly', false)"
+                  [required]="booleanArgument('required', false)"
                   ><krn-radio value="private">Private</krn-radio
                   ><krn-radio value="team">Team</krn-radio
                   ><krn-radio value="public">Public</krn-radio></krn-radio-group
@@ -549,7 +854,20 @@
             }
             @case ('switch') {
               <div class="form-surface">
-                <krn-switch description="Members will authenticate through your identity provider."
+                <krn-switch
+                  [ngModel]="switchValue()"
+                  (ngModelChange)="switchValue.set($event)"
+                  [disabled]="booleanArgument('disabled')"
+                  [readonly]="booleanArgument('readOnly')"
+                  [required]="booleanArgument('required')"
+                  [invalid]="booleanArgument('invalid')"
+                  [description]="
+                    stringArgument(
+                      'description',
+                      'Members will authenticate through your identity provider.'
+                    )
+                  "
+                  [id]="stringArgument('id', '')"
                   >Require SSO for administrators</krn-switch
                 >
               </div>
@@ -563,9 +881,28 @@
                 <krn-form-field label="Workspace plan" hint="Choose exactly one available plan."
                   ><krn-select
                     ariaLabel="Workspace plan"
-                    placeholder="Choose a plan"
+                    [placeholder]="stringArgument('placeholder', 'Choose a plan')"
                     [options]="activeSelectOptions()"
-                    [optionsState]="scenario() === 'states' ? 'loading' : 'ready'"
+                    [optionsState]="optionsStateArgument('loading')"
+                    [(open)]="selectOpen"
+                    [disabled]="booleanArgument('disabled')"
+                    [readonly]="booleanArgument('readOnly')"
+                    [required]="booleanArgument('required')"
+                    [invalid]="booleanArgument('invalid')"
+                    [emptyText]="stringArgumentOverride('emptyText', translations.forms.noOptions)"
+                    [errorText]="
+                      stringArgumentOverride(
+                        'errorText',
+                        translations.forms.optionsLoadFailed ?? 'Could not load options'
+                      )
+                    "
+                    [loadingText]="
+                      stringArgumentOverride(
+                        'loadingText',
+                        translations.forms.loadingOptions ?? 'Loading options…'
+                      )
+                    "
+                    [id]="stringArgument('id', '')"
                 /></krn-form-field>
               </div>
             }
@@ -578,8 +915,13 @@
                 <krn-form-field label="Data region" hint="Best for compact, platform-native forms."
                   ><krn-native-select
                     ariaLabel="Data region"
-                    placeholder="Choose a region"
+                    [placeholder]="stringArgument('placeholder', 'Choose a region')"
                     [options]="activeSelectOptions()"
+                    [disabled]="booleanArgument('disabled')"
+                    [readonly]="booleanArgument('readOnly')"
+                    [required]="booleanArgument('required')"
+                    [invalid]="booleanArgument('invalid')"
+                    [id]="stringArgument('id', '')"
                 /></krn-form-field>
               </div>
             }
@@ -592,9 +934,29 @@
                 <krn-form-field label="Owners" hint="Choose one or more teams."
                   ><krn-multi-select
                     ariaLabel="Owners"
-                    placeholder="Select owners"
+                    [placeholder]="stringArgument('placeholder', 'Select owners')"
                     [options]="activeSelectOptions()"
-                    [optionsState]="scenario() === 'states' ? 'error' : 'ready'"
+                    [optionsState]="optionsStateArgument('error')"
+                    [(open)]="selectOpen"
+                    [disabled]="booleanArgument('disabled')"
+                    [readonly]="booleanArgument('readOnly')"
+                    [required]="booleanArgument('required')"
+                    [invalid]="booleanArgument('invalid')"
+                    [emptyText]="stringArgumentOverride('emptyText', translations.forms.noOptions)"
+                    [errorText]="
+                      stringArgumentOverride(
+                        'errorText',
+                        translations.forms.optionsLoadFailed ?? 'Could not load options'
+                      )
+                    "
+                    [loadingText]="
+                      stringArgumentOverride(
+                        'loadingText',
+                        translations.forms.loadingOptions ?? 'Loading options…'
+                      )
+                    "
+                    [id]="stringArgument('id', '')"
+                    [maxVisible]="numberArgument('maxVisible', 2)"
                 /></krn-form-field>
               </div>
             }
@@ -609,9 +971,29 @@
                   hint="Filter the list, then choose one of the available plans."
                   ><krn-combobox
                     ariaLabel="Workspace plan"
-                    placeholder="Filter plans…"
+                    [placeholder]="stringArgument('placeholder', 'Filter plans…')"
                     [options]="activeSelectOptions()"
-                    [optionsState]="scenario() === 'states' ? 'loading' : 'ready'"
+                    [optionsState]="optionsStateArgument('loading')"
+                    [(open)]="selectOpen"
+                    [disabled]="booleanArgument('disabled')"
+                    [readonly]="booleanArgument('readOnly')"
+                    [required]="booleanArgument('required')"
+                    [invalid]="booleanArgument('invalid')"
+                    [emptyText]="stringArgumentOverride('emptyText', translations.forms.noOptions)"
+                    [errorText]="
+                      stringArgumentOverride(
+                        'errorText',
+                        translations.forms.optionsLoadFailed ?? 'Could not load options'
+                      )
+                    "
+                    [loadingText]="
+                      stringArgumentOverride(
+                        'loadingText',
+                        translations.forms.loadingOptions ?? 'Loading options…'
+                      )
+                    "
+                    [filterLocally]="booleanArgument('filterLocally', true)"
+                    [id]="stringArgument('id', '')"
                 /></krn-form-field>
               </div>
             }
@@ -626,38 +1008,92 @@
                   hint="Choose a suggestion or keep the custom text you entered."
                   ><krn-autocomplete
                     ariaLabel="Workspace alias"
-                    placeholder="Type a workspace alias…"
+                    [placeholder]="stringArgument('placeholder', 'Type a workspace alias…')"
                     [options]="activeSelectOptions()"
-                    [optionsState]="scenario() === 'states' ? 'error' : 'ready'"
+                    [optionsState]="optionsStateArgument('error')"
+                    [(open)]="selectOpen"
+                    [disabled]="booleanArgument('disabled')"
+                    [readonly]="booleanArgument('readOnly')"
+                    [required]="booleanArgument('required')"
+                    [invalid]="booleanArgument('invalid')"
+                    [emptyText]="stringArgumentOverride('emptyText', translations.forms.noOptions)"
+                    [errorText]="
+                      stringArgumentOverride(
+                        'errorText',
+                        translations.forms.optionsLoadFailed ?? 'Could not load options'
+                      )
+                    "
+                    [loadingText]="
+                      stringArgumentOverride(
+                        'loadingText',
+                        translations.forms.loadingOptions ?? 'Loading options…'
+                      )
+                    "
+                    [filterLocally]="booleanArgument('filterLocally', true)"
+                    [id]="stringArgument('id', '')"
                 /></krn-form-field>
               </div>
             }
             @case ('slider') {
               <div class="form-surface">
-                <krn-slider label="Seat allocation" [min]="1" [max]="100" [step]="1" />
+                <krn-slider
+                  [min]="numberArgument('min', 1)"
+                  [max]="numberArgument('max', 100)"
+                  [step]="numberArgument('step', 1)"
+                  [showValue]="booleanArgument('showValue', true)"
+                  [disabled]="booleanArgument('disabled')"
+                  [readonly]="booleanArgument('readOnly')"
+                  [invalid]="booleanArgument('invalid')"
+                  [id]="stringArgument('id', '')"
+                  [label]="stringArgument('label', 'Seat allocation')"
+                />
               </div>
             }
             @case ('range-slider') {
               <div class="form-surface">
                 <krn-range-slider
-                  label="Usage range"
                   startLabel="Minimum usage"
                   endLabel="Maximum usage"
-                  [min]="0"
-                  [max]="100"
-                  [step]="5"
+                  [min]="numberArgument('min', 0)"
+                  [max]="numberArgument('max', 100)"
+                  [step]="numberArgument('step', 5)"
+                  [disabled]="booleanArgument('disabled')"
+                  [readonly]="booleanArgument('readOnly')"
+                  [invalid]="booleanArgument('invalid')"
+                  [id]="stringArgument('id', '')"
+                  [label]="stringArgument('label', 'Usage range')"
                 />
               </div>
             }
             @case ('segmented-control') {
               <div class="form-surface">
-                <krn-segmented-control ariaLabel="Workspace view" [options]="segmentOptions" />
+                <krn-segmented-control
+                  ariaLabel="Workspace view"
+                  [options]="segmentOptions"
+                  [ngModel]="segmentedValue()"
+                  (ngModelChange)="segmentedValue.set($event)"
+                  [disabled]="booleanArgument('disabled')"
+                  [readonly]="booleanArgument('readOnly')"
+                  [required]="booleanArgument('required')"
+                  [invalid]="booleanArgument('invalid')"
+                  [id]="stringArgument('id', '')"
+                />
               </div>
             }
             @case ('date-picker') {
               <div class="form-surface narrow-form">
                 <krn-form-field label="Launch date"
-                  ><krn-date-picker ariaLabel="Launch date" min="2026-01-01" max="2027-12-31"
+                  ><krn-date-picker
+                    ariaLabel="Launch date"
+                    [min]="stringArgument('min', '2026-01-01')"
+                    [max]="stringArgument('max', '2027-12-31')"
+                    [weekStartsOn]="numberArgument('weekStartsOn', 1)"
+                    [disabled]="booleanArgument('disabled')"
+                    [readonly]="booleanArgument('readOnly')"
+                    [required]="booleanArgument('required')"
+                    [invalid]="booleanArgument('invalid')"
+                    [id]="stringArgument('id', '')"
+                    [today]="stringArgument('today', '2026-07-30')"
                 /></krn-form-field>
               </div>
             }
@@ -668,13 +1104,31 @@
                     ariaLabel="Reporting period"
                     startLabel="Period start"
                     endLabel="Period end"
+                    [disabled]="booleanArgument('disabled')"
+                    [readonly]="booleanArgument('readOnly')"
+                    [required]="booleanArgument('required')"
+                    [invalid]="booleanArgument('invalid')"
+                    [id]="stringArgument('id', '')"
+                    [max]="stringArgument('max', '')"
+                    [min]="stringArgument('min', '')"
+                    [today]="stringArgument('today', '2026-07-30')"
+                    [weekStartsOn]="numberArgument('weekStartsOn', 0)"
                 /></krn-form-field>
               </div>
             }
             @case ('time-picker') {
               <div class="form-surface narrow-form">
                 <krn-form-field label="Daily digest" hint="Type HH:mm or choose a common time."
-                  ><krn-time-picker ariaLabel="Digest time" [step]="900"
+                  ><krn-time-picker
+                    ariaLabel="Digest time"
+                    [min]="stringArgument('min', '08:00')"
+                    [max]="stringArgument('max', '20:00')"
+                    [step]="numberArgument('step', 900)"
+                    [disabled]="booleanArgument('disabled')"
+                    [readonly]="booleanArgument('readOnly')"
+                    [required]="booleanArgument('required')"
+                    [invalid]="booleanArgument('invalid')"
+                    [id]="stringArgument('id', '')"
                 /></krn-form-field>
               </div>
             }
@@ -684,16 +1138,27 @@
                   ><krn-color-picker
                     pickerLabel="Choose brand accent"
                     textLabel="Brand color value"
+                    [invalid]="booleanArgument('invalid')"
+                    [disabled]="booleanArgument('disabled', false)"
+                    [id]="stringArgument('id', '')"
+                    [readonly]="booleanArgument('readonly', false)"
                 /></krn-form-field>
               </div>
             }
             @case ('file-upload') {
               <div class="form-surface">
                 <krn-file-upload
-                  label="Choose a CSV file"
-                  description="CSV, up to 10 MB."
-                  accept=".csv,text/csv"
-                  [maxSize]="10485760"
+                  [multiple]="booleanArgument('multiple')"
+                  [accept]="stringArgument('accept', '.csv,text/csv')"
+                  [description]="stringArgument('description', 'CSV, up to 10 MB.')"
+                  [disabled]="booleanArgument('disabled', false)"
+                  [id]="stringArgument('id', '')"
+                  [invalid]="booleanArgument('invalid', false)"
+                  [label]="stringArgument('label', 'Choose a CSV file')"
+                  [maxFiles]="numberArgument('maxFiles', 5)"
+                  [maxSize]="numberArgument('maxSize', 10485760)"
+                  [readonly]="booleanArgument('readonly', false)"
+                  [required]="booleanArgument('required', false)"
                 />
               </div>
             }
@@ -701,22 +1166,48 @@
               <div class="form-surface">
                 <krn-drop-upload
                   dropLabel="Drop brand assets here"
-                  label="Browse files"
-                  description="SVG, PNG, or JPG · 5 MB each"
-                  accept=".svg,.png,.jpg,.jpeg"
-                  multiple
+                  [multiple]="booleanArgument('multiple')"
+                  [accept]="stringArgument('accept', '.svg,.png,.jpg,.jpeg')"
+                  [description]="stringArgument('description', 'SVG, PNG, or JPG · 5 MB each')"
+                  [disabled]="booleanArgument('disabled', false)"
+                  [id]="stringArgument('id', '')"
+                  [invalid]="booleanArgument('invalid', false)"
+                  [label]="stringArgument('label', 'Browse files')"
+                  [maxFiles]="numberArgument('maxFiles', 5)"
+                  [maxSize]="numberArgument('maxSize', 5000000)"
+                  [readonly]="booleanArgument('readonly', false)"
+                  [required]="booleanArgument('required', false)"
                 />
               </div>
             }
             @case ('verification-code') {
               <div class="form-surface">
-                <krn-otp-input label="Enter the 6-digit verification code" [length]="6" />
+                <krn-otp-input
+                  [length]="numberArgument('length', 6)"
+                  [disabled]="booleanArgument('disabled', false)"
+                  [id]="stringArgument('id', '')"
+                  [invalid]="booleanArgument('invalid', false)"
+                  [label]="stringArgument('label', 'Enter the 6-digit verification code')"
+                  [numericOnly]="booleanArgument('numericOnly', true)"
+                  [readonly]="booleanArgument('readonly', false)"
+                  [required]="booleanArgument('required', false)"
+                />
               </div>
             }
             @case ('tags-input') {
               <div class="form-surface">
                 <krn-form-field label="Workspace tags" hint="Press Enter or comma to add."
-                  ><krn-tags-input ariaLabel="Workspace tags" placeholder="Add a tag" [maxTags]="6"
+                  ><krn-tags-input
+                    ariaLabel="Workspace tags"
+                    [disabled]="booleanArgument('disabled')"
+                    [addOnBlur]="booleanArgument('addOnBlur', true)"
+                    [allowDuplicates]="booleanArgument('allowDuplicates', false)"
+                    [id]="stringArgument('id', '')"
+                    [invalid]="booleanArgument('invalid', false)"
+                    [maxTags]="numberArgument('maxTags', 6)"
+                    [placeholder]="stringArgument('placeholder', 'Add a tag')"
+                    [readonly]="booleanArgument('readonly', false)"
+                    [required]="booleanArgument('required', false)"
                 /></krn-form-field>
               </div>
             }
@@ -732,7 +1223,11 @@
           @switch (item().id) {
             @case ('breadcrumbs') {
               <div class="navigation-surface">
-                <krn-breadcrumbs [items]="breadcrumbs()" />
+                <krn-breadcrumbs
+                  [items]="breadcrumbs()"
+                  [maxItems]="numberArgument('maxItems', 5)"
+                  [separator]="stringArgument('separator', '›')"
+                />
                 <div class="surface-copy">
                   <span>Current location</span><strong>Settings</strong>
                 </div>
@@ -740,7 +1235,10 @@
             }
             @case ('tabs') {
               <div class="navigation-surface">
-                <krn-tabs [items]="tabs"
+                <krn-tabs
+                  [items]="tabs"
+                  [orientation]="stringArgument('orientation', 'horizontal')"
+                  [(value)]="tabValue"
                   ><div class="tab-panel">
                     <strong>Overview</strong>
                     <p>Arrow keys move between tabs without leaving the composite.</p>
@@ -750,7 +1248,10 @@
             }
             @case ('vertical-tabs') {
               <div class="navigation-surface vertical-tab-stage">
-                <krn-vertical-tabs [items]="tabs" orientation="vertical"
+                <krn-vertical-tabs
+                  [items]="tabs"
+                  [(value)]="tabValue"
+                  [orientation]="stringArgument('orientation', 'vertical')"
                   ><div class="tab-panel">
                     <strong>Workspace overview</strong>
                     <p>Vertical orientation preserves the same keyboard contract.</p>
@@ -761,21 +1262,29 @@
             @case ('pagination') {
               <div class="navigation-surface">
                 <p class="result-count">
-                  Showing <strong>{{ paginationRange() }}</strong> of 248 workspaces
+                  Showing <strong>{{ paginationRange() }}</strong> of
+                  {{ numberArgument('totalItems', 248) }} workspaces
                 </p>
                 <krn-pagination
-                  [totalItems]="248"
-                  [pageSize]="20"
-                  [siblingCount]="1"
+                  [totalItems]="numberArgument('totalItems', 248)"
+                  [pageSize]="numberArgument('pageSize', 20)"
+                  [siblingCount]="numberArgument('siblingCount', 1)"
                   [(page)]="paginationPage"
                 />
               </div>
             }
             @case ('stepper') {
               <div class="navigation-surface">
-                <krn-stepper [steps]="steps" [completedSteps]="[0]" [activeStep]="1" />
+                <krn-stepper
+                  [steps]="steps"
+                  [completedSteps]="[0]"
+                  [(activeStep)]="formStep"
+                  [linear]="booleanArgument('linear', false)"
+                  [orientation]="stringArgument('orientation', 'horizontal')"
+                />
                 <div class="step-panel">
-                  <span>STEP 02 / PEOPLE</span><strong>Invite collaborators</strong>
+                  <span>STEP {{ formStep() + 1 }} / {{ steps[formStep()]?.id }}</span
+                  ><strong>{{ steps[formStep()]?.label }}</strong>
                 </div>
               </div>
             }
@@ -785,13 +1294,15 @@
                   triggerLabel="Workspace actions"
                   menuAriaLabel="Workspace actions"
                   [items]="navigationItems"
+                  [(open)]="actionMenuOpen"
+                  [hasProjectedTrigger]="booleanArgument('hasProjectedTrigger', false)"
                 />
                 <p>Open, then use ↑ ↓ Home End and Escape.</p>
               </div>
             }
             @case ('menubar') {
               <div class="navigation-surface">
-                <krn-menubar ariaLabel="Editor menu" [items]="navigationItems" />
+                <krn-menubar ariaLabel="Editor menu" [items]="activeMenubarItems()" />
                 <div class="surface-copy">
                   Horizontal composite navigation with roving tabindex.
                 </div>
@@ -799,7 +1310,7 @@
             }
             @case ('context-menu') {
               <krn-context-menu ariaLabel="Canvas actions" [items]="contextMenuItems"
-                ><div class="context-target" tabindex="0">
+                ><div #contextMenuTarget class="context-target" tabindex="0">
                   <span>RIGHT CLICK / CONTEXT</span><strong>Northstar workspace</strong
                   ><small>Open the menu, then hover “Move to” for its nested destinations.</small>
                 </div></krn-context-menu
@@ -810,8 +1321,12 @@
                 <krn-tree-navigation
                   ariaLabel="Workspace navigation"
                   [items]="activeTreeNavigationItems()"
-                  [expandedIds]="scenario() === 'states' ? [] : ['workspace', 'operations']"
-                  [selectedId]="scenario() === 'states' ? null : 'automations'"
+                  [expandedIds]="
+                    effectiveScenario() === 'states' ? [] : ['workspace', 'operations']
+                  "
+                  [(selectedId)]="treeNavigationSelected"
+                  [indent]="stringArgument('indent', '1rem')"
+                  [showGuides]="booleanArgument('showGuides', true)"
                 />
               </div>
             }
@@ -823,7 +1338,7 @@
                 <krn-bottom-navigation
                   ariaLabel="Primary"
                   [items]="navigationItems.slice(0, 3)"
-                  value="overview"
+                  [(value)]="bottomNavigationValue"
                 />
               </div>
             }
@@ -835,9 +1350,20 @@
                 <p>Search, arrow through results, then press Enter.</p>
               </div>
               <krn-command-palette
-                title="Jump to…"
                 [items]="navigationItems"
                 [(open)]="commandOpen"
+                [closeShortcut]="
+                  stringArgumentOverride('closeShortcut', translations.navigation.escapeShortcut)
+                "
+                [placeholder]="
+                  stringArgumentOverride(
+                    'placeholder',
+                    translations.navigation.searchCommandsPlaceholder
+                  )
+                "
+                [(query)]="commandQuery"
+                [description]="stringArgument('description', '')"
+                [title]="stringArgument('title', 'Jump to…')"
               />
             }
             @case ('table-of-contents') {
@@ -851,15 +1377,19 @@
                   <p>The active section is announced as a location.</p>
                 </div>
                 <krn-table-of-contents
-                  title="On this page"
                   [items]="tocItems"
-                  activeId="specimen-overview"
+                  [(activeId)]="tableOfContentsActive"
+                  [observe]="booleanArgument('observe', true)"
+                  [title]="stringArgument('title', 'On this page')"
                 />
               </div>
             }
             @case ('back-button') {
               <div class="navigation-surface compact-nav">
-                <krn-back-button href="/" label="Back to catalog" />
+                <krn-back-button
+                  [label]="stringArgument('label', 'Back to components')"
+                  [href]="stringArgument('href', '/')"
+                />
                 <div class="surface-copy">
                   <span>DETAIL / NORTHSTAR</span><strong>Workspace policy</strong>
                 </div>
@@ -869,7 +1399,7 @@
               <div class="skip-demo">
                 <krn-skip-link
                   targetId="specimen-skip-target"
-                  label="Skip specimen navigation"
+                  [label]="stringArgument('label', 'Skip specimen navigation')"
                 /><span>KEYBOARD-ONLY SHORTCUT</span
                 ><strong>Press Tab, then Enter to bypass repeated navigation.</strong>
                 <p>The link stays off-screen until it receives keyboard focus.</p>
@@ -893,7 +1423,11 @@
           @switch (item().id) {
             @case ('alert') {
               <div class="feedback-stack">
-                <krn-alert tone="success" title="Changes published" [dismissible]="true"
+                <krn-alert
+                  [tone]="stringArgument('tone', 'success')"
+                  [title]="stringArgument('title', 'Changes published')"
+                  [dismissible]="booleanArgument('dismissible', true)"
+                  [icon]="stringArgument('icon', '')"
                   >All twelve environments now use the current configuration.</krn-alert
                 ><krn-alert tone="warning" title="Review required"
                   >Two workspaces exceed the configured seat threshold.</krn-alert
@@ -901,7 +1435,11 @@
               </div>
             }
             @case ('banner') {
-              <krn-banner tone="info" title="Scheduled maintenance"
+              <krn-banner
+                [dismissible]="booleanArgument('dismissible')"
+                [icon]="stringArgument('icon', '')"
+                [title]="stringArgument('title', 'Scheduled maintenance')"
+                [tone]="stringArgument('tone', 'info')"
                 >Exports will be unavailable on Sunday from 02:00–03:00 UTC.</krn-banner
               >
             }
@@ -910,21 +1448,33 @@
                 <krn-button (activated)="showToast()">Show success toast</krn-button>
                 <p>Add several notifications, then hover or focus the stack to review each one.</p>
               </div>
-              <krn-toast-viewport ariaLabel="Specimen notifications" />
+              <krn-toast-viewport
+                ariaLabel="Specimen notifications"
+                [(expanded)]="toastExpanded"
+                [maxExpanded]="numberArgument('maxExpanded', 12)"
+                [maxVisible]="numberArgument('maxVisible', 4)"
+                [position]="stringArgument('position', 'top-end')"
+              />
             }
             @case ('tooltip') {
               <div class="feedback-trigger">
                 <krn-icon-button
                   ariaLabel="Copy public link"
-                  krnTooltip="Copy public link"
-                  krnTooltipPosition="above"
+                  [krnTooltip]="stringArgument('text', 'Copy public link')"
+                  [krnTooltipPosition]="stringArgument('position', 'above')"
+                  [krnTooltipShowDelay]="numberArgument('showDelay', 400)"
+                  [krnTooltipHideDelay]="numberArgument('hideDelay', 80)"
                   >↗</krn-icon-button
                 >
                 <p>Hover or focus the icon to reveal concise help.</p>
               </div>
             }
             @case ('popover') {
-              <krn-popover ariaLabel="Deployment details">
+              <krn-popover
+                ariaLabel="Deployment details"
+                [(open)]="surfaceOpen"
+                [autoFocus]="booleanArgument('autoFocus', true)"
+              >
                 <span krnPopoverTrigger class="person-link">Deployment details</span>
                 <div class="overlay-copy">
                   <strong>Production / EU-WEST</strong>
@@ -933,7 +1483,10 @@
               >
             }
             @case ('hover-card') {
-              <krn-hover-card ariaLabel="Avery Cole profile"
+              <krn-hover-card
+                ariaLabel="Avery Cole profile"
+                [openDelay]="numberArgument('openDelay', 350)"
+                [closeDelay]="numberArgument('closeDelay', 120)"
                 ><span krnHoverCardTrigger class="person-link">Avery Cole</span>
                 <div class="profile-preview">
                   <krn-avatar name="Avery Cole" status="online" /><span
@@ -948,9 +1501,13 @@
                 <p>Modal task with focus trap, Escape, and focus restoration.</p>
               </div>
               <krn-dialog
-                title="Edit workspace"
-                description="Changes apply to every member."
+                [title]="stringArgument('title', 'Edit workspace')"
+                [description]="stringArgument('description', 'Changes apply to every member.')"
+                [showClose]="booleanArgument('showClose', true)"
+                [closeOnEscape]="booleanArgument('closeOnEscape', true)"
                 [(open)]="surfaceOpen"
+                [closeOnOutside]="nullableBooleanArgument('closeOnOutside')"
+                [eyebrow]="stringArgument('eyebrow', '')"
                 ><div class="overlay-copy">
                   <label>Workspace name <input value="Northstar" /></label>
                 </div>
@@ -973,9 +1530,13 @@
                 <p>Destructive confirmation does not close on outside click.</p>
               </div>
               <krn-alert-dialog
-                title="Delete Northstar?"
-                description="This action cannot be undone."
                 [(open)]="surfaceOpen"
+                [closeOnOutside]="nullableBooleanArgument('closeOnOutside')"
+                [closeOnEscape]="booleanArgument('closeOnEscape', true)"
+                [description]="stringArgument('description', 'This action cannot be undone.')"
+                [eyebrow]="stringArgument('eyebrow', '')"
+                [showClose]="booleanArgument('showClose', true)"
+                [title]="stringArgument('title', 'Delete Northstar?')"
                 ><p>18 automations and 42 reports will also be deleted.</p>
                 <krn-button
                   krnDialogAction
@@ -995,7 +1556,14 @@
                 >
                 <p>Edge-aligned context without leaving the underlying page.</p>
               </div>
-              <krn-drawer eyebrow="AUDIT" title="Recent activity" [(open)]="surfaceOpen"
+              <krn-drawer
+                [(open)]="surfaceOpen"
+                [closeOnOutside]="nullableBooleanArgument('closeOnOutside')"
+                [closeOnEscape]="booleanArgument('closeOnEscape', true)"
+                [description]="stringArgument('description', '')"
+                [eyebrow]="stringArgument('eyebrow', 'AUDIT')"
+                [showClose]="booleanArgument('showClose', true)"
+                [title]="stringArgument('title', 'Recent activity')"
                 ><krn-timeline
                   ><krn-timeline-item heading="Policy updated" time="8 min ago"
                     >Avery Cole</krn-timeline-item
@@ -1012,7 +1580,14 @@
                 >
                 <p>A thumb-reachable transient surface for narrow viewports.</p>
               </div>
-              <krn-bottom-sheet title="Workspace actions" [(open)]="surfaceOpen"
+              <krn-bottom-sheet
+                [(open)]="surfaceOpen"
+                [closeOnOutside]="nullableBooleanArgument('closeOnOutside')"
+                [closeOnEscape]="booleanArgument('closeOnEscape', true)"
+                [description]="stringArgument('description', '')"
+                [eyebrow]="stringArgument('eyebrow', '')"
+                [showClose]="booleanArgument('showClose', true)"
+                [title]="stringArgument('title', 'Workspace actions')"
                 ><krn-list
                   ><krn-list-item heading="Duplicate">Create a copy</krn-list-item
                   ><krn-list-item heading="Export">Download records</krn-list-item></krn-list
@@ -1021,7 +1596,11 @@
             }
             @case ('loading-overlay') {
               <div class="loading-stage">
-                <krn-loading-overlay [active]="true" label="Importing customer records…">
+                <krn-loading-overlay
+                  [active]="booleanArgument('active', true)"
+                  [label]="stringArgument('label', 'Importing customer records…')"
+                  [blocking]="booleanArgument('blocking', true)"
+                >
                   <krn-card eyebrow="IMPORT / 84%" heading="Customer records"
                     ><p>Processing 8,410 of 10,000 rows.</p></krn-card
                   >
@@ -1031,10 +1610,14 @@
             @case ('progress-bar') {
               <div class="progress-specimen">
                 <span
-                  >Importing records <strong>{{ progressValue() }}%</strong></span
+                  >Importing records <strong>{{ progressPercent() }}%</strong></span
                 ><krn-progress-bar
                   [value]="progressValue()"
-                  [valueText]="progressValue() + ' percent complete'"
+                  [max]="progressMaximum()"
+                  [indeterminate]="booleanArgument('indeterminate')"
+                  [valueText]="
+                    stringArgumentOverride('valueText', progressValue() + ' percent complete')
+                  "
                 />
                 <div class="progress-controls" role="group" aria-label="Adjust import progress">
                   <krn-button
@@ -1058,12 +1641,14 @@
               <div class="circular-gallery">
                 <krn-circular-progress
                   [value]="progressValue()"
-                  [showValue]="true"
+                  [max]="progressMaximum()"
+                  [indeterminate]="booleanArgument('indeterminate')"
+                  [showValue]="booleanArgument('showValue', true)"
                   ariaLabel="Storage used"
                 />
                 <div>
-                  <strong>{{ progressValue() }}% used</strong
-                  ><small>{{ 100 - progressValue() }} GB available</small>
+                  <strong>{{ progressPercent() }}% used</strong
+                  ><small>{{ progressAvailable() }} GB available</small>
                 </div>
                 <div class="progress-controls" role="group" aria-label="Adjust storage progress">
                   <krn-button
@@ -1085,7 +1670,7 @@
             }
             @case ('spinner') {
               <div class="feedback-trigger">
-                <krn-spinner label="Refreshing workspace data" />
+                <krn-spinner [label]="stringArgument('label', 'Refreshing workspace data')" />
                 <p>Refreshing workspace data…</p>
               </div>
             }
@@ -1094,20 +1679,36 @@
                 <krn-skeleton width="38%" height="1rem" /><krn-skeleton
                   width="72%"
                   height="2rem"
-                /><krn-skeleton width="100%" height="5rem" shape="rectangle" />
+                /><krn-skeleton
+                  [width]="stringArgument('width', '100%')"
+                  [height]="stringArgument('height', '5rem')"
+                  [shape]="stringArgument('shape', 'rectangle')"
+                />
               </div>
             }
             @case ('empty-state') {
               <krn-empty-state
-                title="No automations yet"
-                description="Create an automation to connect events with repeatable actions."
+                [tone]="stringArgument('tone', 'neutral')"
+                [description]="
+                  stringArgument(
+                    'description',
+                    'Create an automation to connect events with repeatable actions.'
+                  )
+                "
+                [title]="stringArgument('title', 'No automations yet')"
                 ><krn-button krnStateAction>Create automation</krn-button></krn-empty-state
               >
             }
             @case ('error-state') {
               <krn-error-state
-                title="Could not load workspaces"
-                description="The service did not respond. Your changes are safe."
+                [tone]="stringArgument('tone', 'danger')"
+                [description]="
+                  stringArgument(
+                    'description',
+                    'The service did not respond. Your changes are safe.'
+                  )
+                "
+                [title]="stringArgument('title', 'Could not load workspaces')"
                 ><krn-button krnStateAction variant="outline" tone="neutral"
                   >Try again</krn-button
                 ></krn-error-state
@@ -1115,17 +1716,21 @@
             }
             @case ('success-state') {
               <krn-success-state
-                title="Workspace created"
-                description="Northstar is ready for collaborators."
+                [tone]="stringArgument('tone', 'success')"
+                [description]="
+                  stringArgument('description', 'Northstar is ready for collaborators.')
+                "
+                [title]="stringArgument('title', 'Workspace created')"
                 ><krn-button krnStateAction>Invite people</krn-button></krn-success-state
               >
             }
             @case ('confirmation-pattern') {
               <krn-confirmation
                 requestLabel="Archive workspace"
-                prompt="Archive Northstar and pause all automations?"
                 confirmLabel="Archive"
                 cancelLabel="Keep active"
+                [(confirming)]="confirmationOpen"
+                [prompt]="stringArgument('prompt', 'Archive Northstar and pause all automations?')"
               />
             }
           }
@@ -1140,45 +1745,75 @@
           @switch (item().id) {
             @case ('badge') {
               <div class="badge-gallery">
-                <krn-badge tone="neutral">Draft</krn-badge><krn-badge tone="brand">Pro</krn-badge
-                ><krn-badge tone="info">Beta</krn-badge><krn-badge tone="warning">Review</krn-badge>
+                <krn-badge
+                  [tone]="stringArgument('tone', 'neutral')"
+                  [status]="booleanArgument('status')"
+                  >Draft</krn-badge
+                ><krn-badge tone="brand">Pro</krn-badge><krn-badge tone="info">Beta</krn-badge
+                ><krn-badge tone="warning">Review</krn-badge>
               </div>
             }
             @case ('status-badge') {
               <div class="badge-gallery">
-                <krn-status-badge status tone="success">Healthy</krn-status-badge
+                <krn-status-badge
+                  [tone]="stringArgument('tone', 'success')"
+                  [status]="booleanArgument('status', true)"
+                  >Healthy</krn-status-badge
                 ><krn-status-badge status tone="warning">Attention</krn-status-badge
                 ><krn-status-badge status tone="danger">Offline</krn-status-badge>
               </div>
             }
             @case ('chip') {
               <div class="badge-gallery">
-                <krn-chip interactive [selected]="true">Enterprise</krn-chip
+                <krn-chip
+                  [interactive]="booleanArgument('interactive', true)"
+                  [(selected)]="chipSelected"
+                  [removable]="booleanArgument('removable')"
+                  [disabled]="booleanArgument('disabled')"
+                  >Enterprise</krn-chip
                 ><krn-chip interactive>Research</krn-chip
                 ><krn-chip interactive>Operations</krn-chip>
               </div>
             }
             @case ('tag') {
               <div class="badge-gallery">
-                <krn-tag removable accessibleLabel="Environment: production">production</krn-tag
+                <krn-tag
+                  accessibleLabel="Environment: production"
+                  [interactive]="booleanArgument('interactive')"
+                  [(selected)]="tagSelected"
+                  [removable]="booleanArgument('removable', true)"
+                  [disabled]="booleanArgument('disabled')"
+                  >production</krn-tag
                 ><krn-tag removable accessibleLabel="Region: eu-west">eu-west</krn-tag
                 ><krn-tag>audit-ready</krn-tag>
               </div>
             }
             @case ('avatar') {
               <div class="avatar-gallery">
-                <krn-avatar name="Avery Cole" size="lg" status="online" />
+                <krn-avatar
+                  [(imageFailed)]="avatarImageFailed"
+                  [alt]="stringArgument('alt', '')"
+                  [name]="stringArgument('name', 'Avery Cole')"
+                  [size]="stringArgument('size', 'lg')"
+                  [src]="stringArgument('src', '')"
+                  [status]="stringArgument('status', 'online')"
+                />
                 <div><strong>Avery Cole</strong><small>Operations lead</small></div>
               </div>
             }
             @case ('avatar-group') {
-              <krn-avatar-group ariaLabel="Workspace collaborators"
+              <krn-avatar-group
+                ariaLabel="Workspace collaborators"
+                [overlap]="stringArgument('overlap', '0.625rem')"
                 ><krn-avatar name="Avery Cole" /><krn-avatar name="Mina Chen" /><krn-avatar
                   name="Ravi Singh" /><krn-avatar name="Nora Costa"
               /></krn-avatar-group>
             }
             @case ('card') {
-              <krn-card eyebrow="WORKSPACE / 0248" heading="Northstar" interactive
+              <krn-card
+                [eyebrow]="stringArgument('eyebrow', 'WORKSPACE / 0248')"
+                [heading]="stringArgument('heading', 'Northstar')"
+                [interactive]="booleanArgument('interactive', true)"
                 ><p>Operations workspace · 18 active automations</p>
                 <div krnCardFooter>
                   <krn-badge status tone="success">Healthy</krn-badge
@@ -1189,10 +1824,10 @@
             @case ('stat') {
               <div class="stat-gallery">
                 <krn-stat
-                  label="Active workspaces"
-                  value="2,481"
-                  detail="+12.4% this quarter"
-                  trend="up"
+                  [trend]="stringArgument('trend', 'up')"
+                  [detail]="stringArgument('detail', '+12.4% this quarter')"
+                  [label]="stringArgument('label', 'Active workspaces')"
+                  [value]="stringArgument('value', '2,481')"
                 /><krn-stat
                   label="Attention needed"
                   value="24"
@@ -1202,17 +1837,39 @@
               </div>
             }
             @case ('description-list') {
-              <krn-description-list
-                ><krn-description-item term="Owner">Avery Cole</krn-description-item
-                ><krn-description-item term="Data region">European Union</krn-description-item
-                ><krn-description-item term="Created">18 January 2026</krn-description-item
-                ><krn-description-item term="Plan"
-                  >Scale</krn-description-item
-                ></krn-description-list
-              >
+              @switch (contentDataState()) {
+                @case ('empty') {
+                  <krn-description-list />
+                  <p class="fixture-empty-message">No workspace metadata is available.</p>
+                }
+                @case ('long-text') {
+                  <krn-description-list
+                    ><krn-description-item term="Owner"
+                      >Avery Cole, Principal Operations Lead for Enterprise Reliability and Global
+                      Governance</krn-description-item
+                    ><krn-description-item term="Data region"
+                      >European Union — multi-region residency with extended disaster-recovery
+                      replication</krn-description-item
+                    ><krn-description-item term="Plan"
+                      >Scale with advanced policy controls, audit retention, and delegated
+                      administration</krn-description-item
+                    ></krn-description-list
+                  >
+                }
+                @default {
+                  <krn-description-list
+                    ><krn-description-item term="Owner">Avery Cole</krn-description-item
+                    ><krn-description-item term="Data region">European Union</krn-description-item
+                    ><krn-description-item term="Created">18 January 2026</krn-description-item
+                    ><krn-description-item term="Plan"
+                      >Scale</krn-description-item
+                    ></krn-description-list
+                  >
+                }
+              }
             }
             @case ('list') {
-              <krn-list ariaLabel="Recent workspaces"
+              <krn-list ariaLabel="Recent workspaces" [role]="stringArgument('role', 'list')"
                 ><krn-list-item heading="Northstar" selected>Operations · Healthy</krn-list-item
                 ><krn-list-item heading="Fieldnote">Research · Attention</krn-list-item
                 ><krn-list-item heading="Orchard">Commerce · Healthy</krn-list-item></krn-list
@@ -1220,7 +1877,9 @@
             }
             @case ('list-item') {
               <krn-list ariaLabel="Audit packages"
-                ><krn-list-item heading="Quarterly audit package"
+                ><krn-list-item
+                  [selected]="booleanArgument('selected')"
+                  [heading]="stringArgument('heading', 'Quarterly audit package')"
                   ><span>PDF · 18.4 MB · created 8 minutes ago</span
                   ><krn-button size="sm" variant="outline" tone="neutral"
                     >Download</krn-button
@@ -1230,7 +1889,8 @@
             }
             @case ('accordion') {
               <krn-accordion ariaLabel="Workspace settings"
-                ><krn-disclosure heading="Identity">Name, slug, and brand assets.</krn-disclosure
+                ><krn-disclosure heading="Identity" [(open)]="accordionExpanded"
+                  >Name, slug, and brand assets.</krn-disclosure
                 ><krn-disclosure heading="Access policy"
                   >Single sign-on and guest permissions.</krn-disclosure
                 ><krn-disclosure heading="Retention"
@@ -1239,34 +1899,82 @@
               >
             }
             @case ('disclosure') {
-              <krn-disclosure heading="Advanced automation settings"
+              <krn-disclosure
+                [(open)]="disclosureOpen"
+                [heading]="stringArgument('heading', 'Advanced automation settings')"
                 ><p>Retries, timeouts, concurrency, and failure policy.</p></krn-disclosure
               >
             }
             @case ('timeline') {
-              <krn-timeline ariaLabel="Workspace activity"
-                ><krn-timeline-item heading="Configuration published" time="8 min ago"
-                  >Avery Cole changed guest access.</krn-timeline-item
-                ><krn-timeline-item heading="Export completed" time="34 min ago"
-                  >Q3 audit package is ready.</krn-timeline-item
-                ><krn-timeline-item heading="Member invited" time="Yesterday"
-                  >Mina Chen joined Northstar.</krn-timeline-item
-                ></krn-timeline
-              >
+              @switch (contentDataState()) {
+                @case ('empty') {
+                  <krn-timeline ariaLabel="Workspace activity" />
+                  <p class="fixture-empty-message">No workspace activity has been recorded.</p>
+                }
+                @case ('long-text') {
+                  <krn-timeline ariaLabel="Workspace activity"
+                    ><krn-timeline-item
+                      heading="Enterprise configuration policy published"
+                      time="8 min ago"
+                      >Avery Cole updated guest access, cross-region retention, delegated
+                      administration, and recovery requirements for every production
+                      workspace.</krn-timeline-item
+                    ><krn-timeline-item heading="Regulatory export completed" time="34 min ago"
+                      >The complete Q3 audit package with supporting evidence and signed
+                      attestations is ready for review.</krn-timeline-item
+                    ></krn-timeline
+                  >
+                }
+                @default {
+                  <krn-timeline ariaLabel="Workspace activity"
+                    ><krn-timeline-item heading="Configuration published" time="8 min ago"
+                      >Avery Cole changed guest access.</krn-timeline-item
+                    ><krn-timeline-item heading="Export completed" time="34 min ago"
+                      >Q3 audit package is ready.</krn-timeline-item
+                    ><krn-timeline-item heading="Member invited" time="Yesterday"
+                      >Mina Chen joined Northstar.</krn-timeline-item
+                    ></krn-timeline
+                  >
+                }
+              }
             }
             @case ('tree') {
               <div class="tree-data-stage">
-                <krn-tree ariaLabel="Project files" [nodes]="activeTreeNodes()" />
+                <krn-tree
+                  ariaLabel="Project files"
+                  [nodes]="activeTreeNodes()"
+                  [(selected)]="treeSelected"
+                />
               </div>
             }
             @case ('data-table') {
               <krn-data-table
                 ariaLabel="Workspace directory"
-                [data]="specimenRows"
+                [data]="activeSpecimenRows()"
                 [columns]="activeSpecimenColumns()"
                 [rowIdentity]="rowIdentity"
-                [pagination]="false"
-                [resizable]="false"
+                [pagination]="booleanArgument('pagination')"
+                [resizable]="booleanArgument('resizable')"
+                [compact]="booleanArgument('compact')"
+                [pageSize]="numberArgument('pageSize', 4)"
+                [(filter)]="gridFilter"
+                [filterPlaceholder]="
+                  stringArgumentOverride(
+                    'filterPlaceholder',
+                    translations.dataGrid.filterPlaceholder
+                  )
+                "
+                [(page)]="gridPage"
+                [(sortDirection)]="gridSortDirection"
+                [(sortKey)]="gridSortKey"
+                [columnChooser]="booleanArgument('columnChooser', false)"
+                [error]="stringArgument('error', '')"
+                [expandable]="booleanArgument('expandable', false)"
+                [filterable]="booleanArgument('filterable', true)"
+                [loading]="booleanArgument('loading', false)"
+                [selectable]="booleanArgument('selectable', false)"
+                [viewportHeight]="numberArgument('viewportHeight', 360)"
+                [virtualize]="booleanArgument('virtualize', false)"
               />
             }
             @case ('data-grid') {
@@ -1275,43 +1983,80 @@
                 [data]="activeSpecimenRows()"
                 [columns]="activeSpecimenColumns()"
                 [rowIdentity]="rowIdentity"
-                selectable
-                [expandable]="scenario() !== 'virtual'"
+                [selectable]="booleanArgument('selectable', true)"
+                [expandable]="
+                  effectiveScenario() !== 'virtual' &&
+                  !booleanArgument('virtualize', false) &&
+                  booleanArgument('expandable', true)
+                "
                 [expandedContent]="expandedRow"
-                [pageSize]="3"
-                [mode]="scenario() === 'virtual' ? virtualGridMode : null"
-                [viewportHeight]="360"
+                [filterable]="booleanArgument('filterable', true)"
+                [resizable]="booleanArgument('resizable', true)"
+                [pagination]="booleanArgument('pagination', true)"
+                [compact]="booleanArgument('compact')"
+                [pageSize]="numberArgument('pageSize', 3)"
+                [mode]="effectiveScenario() === 'virtual' ? virtualGridMode : null"
+                [viewportHeight]="numberArgument('viewportHeight', 360)"
+                [virtualize]="booleanArgument('virtualize', false)"
+                [(filter)]="gridFilter"
+                [filterPlaceholder]="
+                  stringArgumentOverride(
+                    'filterPlaceholder',
+                    translations.dataGrid.filterPlaceholder
+                  )
+                "
+                [(page)]="gridPage"
+                [(sortDirection)]="gridSortDirection"
+                [(sortKey)]="gridSortKey"
+                [columnChooser]="booleanArgument('columnChooser', false)"
+                [error]="stringArgument('error', '')"
+                [loading]="booleanArgument('loading', false)"
               />
             }
             @case ('calendar') {
               <div class="calendar-stage">
-                <krn-calendar activeMonth="2026-07" today="2026-07-26" />
+                <krn-calendar
+                  [(activeMonth)]="calendarActiveMonth"
+                  [(focusedDate)]="calendarFocusedDate"
+                  [(value)]="calendarValue"
+                  [max]="stringArgument('max', '')"
+                  [min]="stringArgument('min', '')"
+                  [showTodayAction]="booleanArgument('showTodayAction', true)"
+                  [today]="stringArgument('today', '2026-07-26')"
+                  [weekStartsOn]="numberArgument('weekStartsOn', 1)"
+                />
               </div>
             }
             @case ('code-block') {
-              <krn-code-block language="typescript" [code]="codeSnippet" />
+              <krn-code-block
+                [language]="stringArgument('language', 'typescript')"
+                [languageLabel]="stringArgument('languageLabel', '')"
+                [(copied)]="codeCopied"
+                [code]="stringArgumentOverride('code', codeSnippet)"
+              />
             }
             @case ('keyboard-shortcut') {
               <div class="shortcut-gallery">
-                <span>Open command palette</span><krn-keyboard-shortcut [keys]="['⌘', 'K']" /><span
-                  >Save changes</span
-                ><krn-keyboard-shortcut [keys]="['⌘', 'S']" /><span>Close layer</span
+                <span>Open command palette</span
+                ><krn-keyboard-shortcut [keys]="shortcutKeys()" /><span>Save changes</span
+                ><krn-keyboard-shortcut [keys]="saveShortcutKeys()" /><span>Close layer</span
                 ><krn-keyboard-shortcut [keys]="['Esc']" />
               </div>
             }
             @case ('meter') {
               <div class="meter-gallery">
                 <div>
-                  <span>Storage</span><strong>{{ meterValue() }} GB / 100 GB</strong>
+                  <span>Storage</span
+                  ><strong>{{ meterValue() }} GB / {{ meterMaximum() }} GB</strong>
                 </div>
                 <krn-meter
-                  label="Storage used"
                   [value]="meterValue()"
-                  [min]="0"
-                  [max]="100"
-                  [low]="40"
-                  [high]="80"
-                  [optimum]="20"
+                  [min]="numberArgument('min', 0)"
+                  [max]="numberArgument('max', 100)"
+                  [low]="numberArgument('low', 40)"
+                  [high]="numberArgument('high', 80)"
+                  [optimum]="numberArgument('optimum', 20)"
+                  [label]="stringArgument('label', 'Storage used')"
                 />
                 <div class="progress-controls" role="group" aria-label="Adjust storage meter">
                   <krn-button
@@ -1333,14 +2078,21 @@
             }
             @case ('rating') {
               <div class="rating-gallery">
-                <krn-rating [value]="4" ariaLabel="Customer rating" /><span
-                  ><strong>4.0</strong><small>128 responses</small></span
+                <krn-rating
+                  [(value)]="ratingValue"
+                  ariaLabel="Customer rating"
+                  [disabled]="booleanArgument('disabled', false)"
+                  [max]="numberArgument('max', 5)"
+                  [readonly]="booleanArgument('readonly', false)"
+                /><span
+                  ><strong>{{ ratingValue().toFixed(1) }}</strong
+                  ><small>128 responses</small></span
                 >
               </div>
             }
             @case ('line-chart') {
               <div class="chart-stage">
-                @if (scenario() === 'states') {
+                @if (effectiveScenario() === 'states') {
                   <krn-button
                     size="sm"
                     variant="outline"
@@ -1350,16 +2102,18 @@
                   >
                 }
                 <krn-line-chart
-                  title="Weekly active users"
-                  eyebrow="THROUGHPUT"
-                  description="Unique members, last 6 days"
+                  [title]="stringArgument('title', 'Weekly active users')"
+                  [description]="stringArgument('description', 'Unique members, last 6 days')"
                   [data]="activeChartData()"
+                  [summaryItemLimit]="numberArgument('summaryItemLimit', 12)"
+                  [eyebrow]="stringArgument('eyebrow', 'THROUGHPUT')"
+                  [negativeValuePolicy]="stringArgument('negativeValuePolicy', 'clamp')"
                 />
               </div>
             }
             @case ('bar-chart') {
               <div class="chart-stage">
-                @if (scenario() === 'states') {
+                @if (effectiveScenario() === 'states') {
                   <krn-button
                     size="sm"
                     variant="outline"
@@ -1369,16 +2123,18 @@
                   >
                 }
                 <krn-bar-chart
-                  title="Runs by environment"
-                  eyebrow="AUTOMATION"
-                  description="Successful runs"
+                  [title]="stringArgument('title', 'Runs by environment')"
+                  [description]="stringArgument('description', 'Successful runs')"
                   [data]="activeChartData()"
+                  [summaryItemLimit]="numberArgument('summaryItemLimit', 12)"
+                  [eyebrow]="stringArgument('eyebrow', 'AUTOMATION')"
+                  [negativeValuePolicy]="stringArgument('negativeValuePolicy', 'clamp')"
                 />
               </div>
             }
             @case ('donut-chart') {
               <div class="chart-stage donut-stage">
-                @if (scenario() === 'states') {
+                @if (effectiveScenario() === 'states') {
                   <krn-button
                     size="sm"
                     variant="outline"
@@ -1388,15 +2144,17 @@
                   >
                 }
                 <krn-donut-chart
-                  title="Workspace plan mix"
-                  eyebrow="ALLOCATION"
-                  description="Current active workspaces"
+                  [title]="stringArgument('title', 'Workspace plan mix')"
+                  [description]="stringArgument('description', 'Current active workspaces')"
                   [data]="activeChartData().slice(0, 4)"
+                  [summaryItemLimit]="numberArgument('summaryItemLimit', 12)"
+                  [eyebrow]="stringArgument('eyebrow', 'ALLOCATION')"
+                  [negativeValuePolicy]="stringArgument('negativeValuePolicy', 'clamp')"
                 />
               </div>
             }
             @case ('responsive-media') {
-              <krn-responsive-media aspectRatio="16 / 9"
+              <krn-responsive-media [aspectRatio]="stringArgument('aspectRatio', '16 / 9')"
                 ><svg viewBox="0 0 800 450" role="img" aria-label="Abstract operational map">
                   <defs>
                     <linearGradient id="media-gradient" x1="0" x2="1">
@@ -1427,7 +2185,10 @@
         @defer (on immediate) {
           @switch (item().id) {
             @case ('user-menu') {
-              <krn-user-menu name="Avery Cole" detail="avery@north.ops"
+              <krn-user-menu
+                [(open)]="actionMenuOpen"
+                [detail]="stringArgument('detail', 'avery@north.ops')"
+                [name]="stringArgument('name', 'Avery Cole')"
                 ><span krnUserAvatar class="avatar-token">AC</span
                 ><button role="menuitem" type="button">Profile</button
                 ><button role="menuitem" type="button">Workspace settings</button
@@ -1436,31 +2197,49 @@
             }
             @case ('notification-center') {
               <div class="pattern-stage">
-                <krn-notification-center heading="Recent events" [notifications]="notifications" />
+                <krn-notification-center
+                  [notifications]="activeNotifications()"
+                  [heading]="stringArgument('heading', 'Recent events')"
+                />
               </div>
             }
             @case ('global-search') {
               <div class="pattern-stage search-stage">
                 <krn-global-search
                   ariaLabel="Search workspaces and projects"
-                  placeholder="Search workspaces, projects, people…"
                   [results]="searchResults"
+                  [(query)]="globalSearchQuery"
+                  [placeholder]="
+                    stringArgument('placeholder', 'Search workspaces, projects, people…')
+                  "
+                  [(activeIndex)]="globalSearchActiveIndex"
+                  [(open)]="globalSearchOpen"
+                  [maxResults]="numberArgument('maxResults', 8)"
                 />
                 <p>Type “north” to see grouped, keyboard-accessible results.</p>
               </div>
             }
             @case ('filter-bar') {
               <div class="pattern-stage">
-                <krn-filter-bar ariaLabel="Workspace filters" [filters]="filters" />
+                <krn-filter-bar
+                  ariaLabel="Workspace filters"
+                  [filters]="filters"
+                  [(values)]="filterValues"
+                />
               </div>
             }
             @case ('page-header') {
               <div class="pattern-stage page-header-stage">
                 <krn-page-header
-                  index="07"
-                  eyebrow="Workspace / Northstar"
-                  heading="Automation health"
-                  description="Monitor runs, failures, and throughput across environments."
+                  [heading]="stringArgument('heading', 'Automation health')"
+                  [description]="
+                    stringArgument(
+                      'description',
+                      'Monitor runs, failures, and throughput across environments.'
+                    )
+                  "
+                  [eyebrow]="stringArgument('eyebrow', 'Workspace / Northstar')"
+                  [index]="stringArgument('index', '07')"
                   ><krn-badge status tone="success">Systems nominal</krn-badge
                   ><krn-button>New automation</krn-button></krn-page-header
                 >
@@ -1473,7 +2252,9 @@
                 >
                 <p>Persistent product settings in an edge-aligned panel.</p>
               </div>
-              <krn-settings-panel heading="Workspace settings" [(open)]="settingsOpen"
+              <krn-settings-panel
+                [(open)]="settingsOpen"
+                [heading]="stringArgument('heading', 'Workspace settings')"
                 ><div class="overlay-copy">
                   <label>Workspace name <input value="Northstar" /></label
                   ><label
@@ -1492,7 +2273,9 @@
             }
             @case ('crud-toolbar') {
               <div class="pattern-stage">
-                <krn-crud-toolbar ariaLabel="Workspace actions"
+                <krn-crud-toolbar
+                  ariaLabel="Workspace actions"
+                  [selectedCount]="numberArgument('selectedCount', 0)"
                   ><strong krnToolbarTitle>Workspaces</strong
                   ><krn-button variant="outline" tone="neutral">Export</krn-button
                   ><krn-button>New workspace</krn-button></krn-crud-toolbar
@@ -1535,7 +2318,9 @@
             }
             @case ('dashboard-widget') {
               <div class="pattern-stage widget-stage">
-                <krn-dashboard-widget eyebrow="AUTOMATION" heading="Runs by environment"
+                <krn-dashboard-widget
+                  [heading]="stringArgument('heading', 'Automation health')"
+                  [eyebrow]="stringArgument('eyebrow', 'AUTOMATION')"
                   ><krn-bar-chart title="Last 24 hours" [data]="chartData.slice(0, 4)" />
                   <div krnWidgetFooter>
                     <krn-link href="/patterns">View automation report</krn-link>
@@ -1547,14 +2332,26 @@
               <div class="auth-card">
                 <span>ACCOUNT / SIGN IN</span>
                 <h3>Continue to Kern</h3>
-                <krn-login-form recoveryHref="#specimen" />
+                <krn-login-form
+                  [loading]="booleanArgument('loading')"
+                  [errorMessage]="stringArgument('errorMessage', '')"
+                  [minimumPasswordLength]="numberArgument('minimumPasswordLength', 8)"
+                  [recoveryHref]="stringArgument('recoveryHref', '#specimen')"
+                />
               </div>
             }
             @case ('profile-form') {
               <div class="auth-card wide-auth">
                 <span>SETTINGS / PROFILE</span>
                 <h3>Public profile</h3>
-                <krn-profile-form [value]="profile" />
+                <krn-profile-form
+                  [value]="profile"
+                  [saving]="booleanArgument('saving')"
+                  [dirtyMessage]="
+                    stringArgumentOverride('dirtyMessage', translations.patterns.unsavedChanges)
+                  "
+                  [bioMaxLength]="numberArgument('bioMaxLength', 280)"
+                />
               </div>
             }
             @case ('multi-step-form') {
@@ -1563,6 +2360,9 @@
                   [steps]="steps"
                   [(current)]="formStep"
                   completeLabel="Create workspace"
+                  [(furthestStep)]="multiStepFurthestStep"
+                  [allowStepNavigation]="booleanArgument('allowStepNavigation', true)"
+                  [orientation]="stringArgument('orientation', 'horizontal')"
                   ><div class="step-copy">
                     <span>STEP {{ formStep() + 1 }}</span>
                     <h3>{{ steps[formStep()]?.label }}</h3>
@@ -1583,19 +2383,39 @@
                   ><a
                     [routerLink]="['/components', item().id]"
                     fragment="specimen"
-                    aria-current="page"
+                    [attr.aria-current]="mobileNavigationSelected() === 'overview' ? 'page' : null"
+                    (click)="mobileNavigationSelected.set('overview')"
                     >Overview</a
-                  ><a [routerLink]="['/components', item().id]" fragment="specimen">Reports</a
-                  ><button type="button">Create</button
-                  ><button type="button">Account</button></krn-mobile-navigation
+                  ><a
+                    [routerLink]="['/components', item().id]"
+                    fragment="specimen"
+                    [attr.aria-current]="mobileNavigationSelected() === 'activity' ? 'page' : null"
+                    (click)="mobileNavigationSelected.set('activity')"
+                    >Activity</a
+                  ><button
+                    type="button"
+                    [attr.aria-current]="mobileNavigationSelected() === 'settings' ? 'page' : null"
+                    (click)="mobileNavigationSelected.set('settings')"
+                  >
+                    Settings
+                  </button></krn-mobile-navigation
                 >
               </div>
             }
             @case ('responsive-application-shell') {
               <div class="responsive-shell-stage">
-                <krn-responsive-application-shell mainId="specimen-responsive-main"
+                <krn-responsive-application-shell
+                  mainId="specimen-responsive-main"
+                  [(navigationOpen)]="responsiveNavigationOpen"
                   ><div krnAppHeader class="responsive-shell-header">
-                    <strong>NORTH / OPS</strong><krn-badge status tone="success">Live</krn-badge>
+                    <strong>NORTH / OPS</strong
+                    ><krn-button
+                      size="sm"
+                      variant="ghost"
+                      tone="neutral"
+                      (activated)="responsiveNavigationOpen.update((open) => !open)"
+                      >Navigation</krn-button
+                    ><krn-badge status tone="success">Live</krn-badge>
                   </div>
                   <nav krnAppNavigation class="responsive-shell-nav">
                     <a [routerLink]="['/components', item().id]" fragment="specimen">Overview</a

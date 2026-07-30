@@ -29,11 +29,14 @@
     "focus-visible",
     "active",
     "disabled",
+    "selected",
+    "unselected",
+    "closed",
+    "open",
     "loading branch",
     "error branch",
     "collapsed",
-    "expanded",
-    "selected"
+    "expanded"
   ],
   "lifecycle": {
     "status": "beta",
@@ -201,5 +204,338 @@
     "route": "components/tree",
     "json": "components/tree.json",
     "markdown": "components/tree.md"
+  },
+  "playground": {
+    "route": "preview/tree",
+    "scenarios": ["default", "states", "stress"],
+    "controls": [
+      {
+        "key": "dataState",
+        "label": "Data state",
+        "kind": "select",
+        "defaultValue": "ready",
+        "testValue": "loading",
+        "description": "Shows ready, loading, error, or large-tree data.",
+        "binding": {
+          "kind": "fixture",
+          "target": "data",
+          "description": "Selects the specimen node fixture; it is not a KrnTree input."
+        },
+        "options": [
+          {
+            "label": "ready",
+            "value": "ready"
+          },
+          {
+            "label": "loading",
+            "value": "loading"
+          },
+          {
+            "label": "error",
+            "value": "error"
+          },
+          {
+            "label": "stress",
+            "value": "stress"
+          }
+        ]
+      },
+      {
+        "key": "selected",
+        "label": "Selected",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Changes the selected tree node.",
+        "binding": {
+          "kind": "model",
+          "publicName": "selected"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "stress",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "overflow",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "stress",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "long text",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "disabled",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "disabled",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "selected",
+        "label": "selected",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "selected",
+          "label": "selected",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "unselected",
+        "label": "unselected",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "selected",
+          "label": "unselected",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "closed",
+        "label": "closed",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "closed",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "open",
+        "label": "open",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "open",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "loading-branch",
+        "label": "loading branch",
+        "scenario": "default",
+        "args": {
+          "dataState": "loading"
+        },
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "loading",
+          "label": "loading branch",
+          "description": "The fixture is waiting for enterprise data."
+        }
+      },
+      {
+        "id": "error-branch",
+        "label": "error branch",
+        "scenario": "default",
+        "args": {
+          "dataState": "error"
+        },
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "error",
+          "label": "error branch",
+          "description": "The fixture data request failed and can be retried."
+        }
+      },
+      {
+        "id": "collapsed",
+        "label": "collapsed",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "collapsed",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "expanded",
+        "label": "expanded",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "expanded",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "loading",
+        "label": "Loading",
+        "scenario": "default",
+        "args": {
+          "dataState": "loading"
+        }
+      },
+      {
+        "id": "error",
+        "label": "Error",
+        "scenario": "default",
+        "args": {
+          "dataState": "error"
+        }
+      },
+      {
+        "id": "stress",
+        "label": "Stress",
+        "scenario": "stress",
+        "args": {
+          "dataState": "stress"
+        }
+      },
+      {
+        "id": "async-branches",
+        "label": "Async branches",
+        "scenario": "states",
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 4,
+      "controlled": 1,
+      "excluded": 3,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "tree",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#tree"
+        }
+      },
+      {
+        "componentId": "tree",
+        "publicName": "expanded",
+        "kind": "model",
+        "type": "ReadonlySet<string>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/tree?state=default"
+        }
+      },
+      {
+        "componentId": "tree",
+        "publicName": "nodes",
+        "kind": "input",
+        "type": "ReadonlyArray<KrnTreeNode>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/tree?state=default"
+        }
+      }
+    ]
   }
 }

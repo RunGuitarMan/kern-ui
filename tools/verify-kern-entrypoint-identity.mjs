@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { cp, mkdir, mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { basename, join, relative, resolve, sep } from 'node:path';
 
 const workspaceRoot = resolve(import.meta.dirname, '..');
@@ -56,6 +56,13 @@ async function copyFixtureTemplate(destination) {
       return !excludedRoots.has(rootName) && !sourcePath.endsWith('.tgz');
     },
   });
+}
+
+async function keepRuntimeDependenciesOnly(consumerRoot) {
+  const manifestPath = join(consumerRoot, 'package.json');
+  const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+  delete manifest.devDependencies;
+  await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 }
 
 function validateConfig(value) {
@@ -285,6 +292,10 @@ async function main() {
       ['ci', '--omit=dev', '--ignore-scripts', '--offline', '--no-audit', '--no-fund'],
       { cwd: consumerRoot },
     );
+    // The linked-identity program imports only runtime dependencies. Removing
+    // build-only declarations keeps the second offline install focused on peer
+    // compatibility instead of requiring registry metadata for omitted tools.
+    await keepRuntimeDependenciesOnly(consumerRoot);
 
     const packOutput = run(npmCommand, [
       'pack',
@@ -305,8 +316,7 @@ async function main() {
         'install',
         join(stagingRoot, archiveName),
         '--ignore-scripts',
-        '--no-save',
-        '--package-lock=false',
+        '--save-exact',
         '--omit=dev',
         '--offline',
         '--no-audit',

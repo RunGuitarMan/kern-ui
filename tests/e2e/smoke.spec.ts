@@ -1,6 +1,39 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
-import { DOCS_URL, labUrl, settlePage, watchRuntimeErrors } from '../support/browser';
+import { DOCS_URL, previewUrl, settlePage, watchRuntimeErrors } from '../support/browser';
+
+async function expectQueryParam(page: Page, key: string, value: string | null): Promise<void> {
+  await expect.poll(() => new URL(page.url()).searchParams.get(key)).toBe(value);
+}
+
+interface DocumentEnvironmentSnapshot {
+  readonly brand500: string;
+  readonly density: string | null;
+  readonly direction: string | null;
+  readonly language: string | null;
+  readonly motion: string | null;
+  readonly resolvedTheme: string | null;
+  readonly themeMode: string | null;
+}
+
+async function documentEnvironment(page: Page): Promise<DocumentEnvironmentSnapshot> {
+  return page.locator('html').evaluate((root) => ({
+    brand500: getComputedStyle(root).getPropertyValue('--krn-color-brand-500').trim(),
+    density: root.getAttribute('data-krn-density'),
+    direction: root.getAttribute('dir'),
+    language: root.getAttribute('lang'),
+    motion: root.getAttribute('data-krn-motion'),
+    resolvedTheme: root.getAttribute('data-krn-theme'),
+    themeMode: root.getAttribute('data-krn-theme-mode'),
+  }));
+}
+
+async function expectDocumentEnvironment(
+  page: Page,
+  expected: DocumentEnvironmentSnapshot,
+): Promise<void> {
+  await expect.poll(() => documentEnvironment(page)).toEqual(expected);
+}
 
 test.describe('Docs smoke contracts', () => {
   test('renders the calibration bench and complete navigation catalog', async ({ page }) => {
@@ -43,12 +76,16 @@ test.describe('Docs smoke contracts', () => {
   }
 });
 
-test.describe('Lab smoke contracts', () => {
-  test('hydrates an exact query state and exposes all catalog addresses', async ({ page }) => {
+test.describe('Docs preview smoke contracts', () => {
+  test('hydrates an exact query state on the shared Docs runtime', async ({ page }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
 
+    await page.goto(DOCS_URL);
+    await settlePage(page);
+    const docsEnvironment = await documentEnvironment(page);
+
     await page.goto(
-      labUrl({
+      previewUrl({
         component: 'data-grid',
         scenario: 'stress',
         theme: 'dark',
@@ -58,25 +95,484 @@ test.describe('Lab smoke contracts', () => {
     );
     await settlePage(page);
 
-    await expect(page.getByTestId('lab-root')).toBeVisible();
-    await expect(page.getByTestId('specimen-data-grid')).toBeVisible();
-    await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
-    await expect(page.locator('html')).toHaveAttribute('data-krn-theme', 'dark');
-    await expect(page.locator('html')).toHaveAttribute('data-krn-density', 'compact');
-    await expect(page.locator('[data-testid^="catalog-item-"]')).toHaveCount(131);
+    await expect(page.getByTestId('docs-preview-root')).toBeVisible();
+    await expect(page.getByTestId('preview-controls')).toBeVisible();
+    await expect(page.getByTestId('component-specimen-data-grid')).toBeVisible();
+    await expect(page.getByTestId('theme-control').locator('option')).toHaveText([
+      'System',
+      'Light',
+      'Dark',
+      'High contrast',
+    ]);
+    await expect(page.getByTestId('density-control').locator('option')).toHaveText([
+      'Compact',
+      'Comfortable',
+      'Spacious',
+    ]);
+    await expect(page.getByTestId('direction-control').locator('option')).toHaveText([
+      'LTR',
+      'RTL',
+    ]);
+    await expect(page.getByTestId('locale-control').locator('option')).toHaveText([
+      'en-US',
+      'ru-RU',
+    ]);
+    await expect(page.getByTestId('motion-control').locator('option')).toHaveText([
+      'System',
+      'Reduce',
+      'Full',
+    ]);
+    await expect(page.getByTestId('brand-color-control')).toHaveValue('#4666da');
+    await expect(page.getByTestId('viewport-control').locator('option')).toHaveText([
+      'Responsive',
+      'Phone',
+      'Tablet',
+    ]);
+    await expect(page.getByTestId('scenario-control').locator('option')).toHaveText([
+      'Default',
+      'States',
+      'Stress',
+      'Virtual',
+    ]);
+    const stage = page.getByTestId('specimen-stage');
+    await expect(stage).toHaveAttribute('dir', 'rtl');
+    await expect(stage).toHaveAttribute('data-krn-theme-mode', 'dark');
+    await expect(stage).toHaveAttribute('data-krn-theme', 'dark');
+    await expect(stage).toHaveAttribute('data-krn-density', 'compact');
+    await expect(stage).toHaveAttribute('lang', 'en-US');
+    await expect(stage).toHaveAttribute('data-krn-motion', 'system');
+    await expect(page.getByTestId('component-specimen-data-grid')).toHaveAttribute(
+      'data-scenario',
+      'stress',
+    );
+    await expectDocumentEnvironment(page, docsEnvironment);
     assertNoRuntimeErrors();
   });
 
-  test('changes component state through a stable catalog address', async ({ page }) => {
-    await page.goto(labUrl());
+  test('addresses component state through a stable, shareable preview URL', async ({ page }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    await page.goto(
+      previewUrl({
+        component: 'data-grid',
+        scenario: 'states',
+        theme: 'high-contrast',
+        density: 'spacious',
+        direction: 'rtl',
+      }),
+    );
     await settlePage(page);
 
-    await page.getByTestId('catalog-search').fill('data grid');
-    const dataGridEntry = page.getByTestId('catalog-item-data-grid');
-    await expect(dataGridEntry).toBeVisible();
-    await dataGridEntry.click();
+    await expect(page).toHaveURL(/\/preview\/data-grid\?/);
+    await expect(page).toHaveURL(/scenario=states/);
+    const stage = page.getByTestId('specimen-stage');
+    await expect(stage).toHaveAttribute('dir', 'rtl');
+    await expect(stage).toHaveAttribute('data-krn-theme-mode', 'high-contrast');
+    await expect(stage).toHaveAttribute('data-krn-theme', 'high-contrast');
+    await expect(stage).toHaveAttribute('data-krn-density', 'spacious');
+    await expect(page.getByTestId('component-specimen-data-grid')).toBeVisible();
+    assertNoRuntimeErrors();
+  });
 
-    await expect(page).toHaveURL(/component=data-grid/);
-    await expect(page.getByTestId('specimen-data-grid')).toBeVisible();
+  test('applies every supported environment variant to the isolated specimen', async ({ page }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    await page.goto(DOCS_URL);
+    await settlePage(page);
+    const docsEnvironment = await documentEnvironment(page);
+
+    await page.goto(previewUrl({ component: 'data-grid' }));
+    await settlePage(page);
+
+    const stage = page.getByTestId('specimen-stage');
+    const previewPanel = page.locator('#preview-panel');
+    const specimen = page.getByTestId('component-specimen-data-grid');
+
+    for (const theme of ['system', 'light', 'dark', 'high-contrast'] as const) {
+      await page.getByTestId('theme-control').selectOption(theme);
+      await expectQueryParam(page, 'theme', theme === 'system' ? null : theme);
+      await expect(stage).toHaveAttribute('data-krn-theme-mode', theme);
+      await expect
+        .poll(async () => {
+          const [stageSurface, specimenSurface] = await Promise.all([
+            stage.evaluate((element) =>
+              getComputedStyle(element).getPropertyValue('--krn-color-surface').trim(),
+            ),
+            specimen.evaluate((element) =>
+              getComputedStyle(element).getPropertyValue('--krn-color-surface').trim(),
+            ),
+          ]);
+          return stageSurface !== '' && stageSurface === specimenSurface;
+        })
+        .toBe(true);
+    }
+
+    for (const density of ['compact', 'comfortable', 'spacious'] as const) {
+      await page.getByTestId('density-control').selectOption(density);
+      await expectQueryParam(page, 'density', density === 'comfortable' ? null : density);
+      await expect(stage).toHaveAttribute('data-krn-density', density);
+      await expect
+        .poll(async () => {
+          const [stageHeight, specimenHeight] = await Promise.all([
+            stage.evaluate((element) =>
+              getComputedStyle(element).getPropertyValue('--krn-control-height-md').trim(),
+            ),
+            specimen.evaluate((element) =>
+              getComputedStyle(element).getPropertyValue('--krn-control-height-md').trim(),
+            ),
+          ]);
+          return stageHeight !== '' && stageHeight === specimenHeight;
+        })
+        .toBe(true);
+    }
+
+    for (const direction of ['ltr', 'rtl'] as const) {
+      await page.getByTestId('direction-control').selectOption(direction);
+      await expectQueryParam(page, 'direction', direction === 'ltr' ? null : direction);
+      await expect(stage).toHaveAttribute('dir', direction);
+    }
+
+    for (const locale of ['en-US', 'ru-RU'] as const) {
+      await page.getByTestId('locale-control').selectOption(locale);
+      await expectQueryParam(page, 'locale', locale === 'en-US' ? null : locale);
+      await expect(stage).toHaveAttribute('lang', locale);
+    }
+
+    for (const motion of ['system', 'reduce', 'full'] as const) {
+      await page.getByTestId('motion-control').selectOption(motion);
+      await expectQueryParam(page, 'motion', motion === 'system' ? null : motion);
+      await expect(stage).toHaveAttribute('data-krn-motion', motion);
+      await expect
+        .poll(() =>
+          stage.evaluate((element) => {
+            const duration = getComputedStyle(element)
+              .getPropertyValue('--krn-motion-duration-fast')
+              .trim();
+            return duration.endsWith('ms') ? Number.parseFloat(duration) : Number.NaN;
+          }),
+        )
+        .toBe(motion === 'full' ? 90 : 0.01);
+    }
+
+    const brandControl = page.getByTestId('brand-color-control');
+    const defaultBrand500 = await stage.evaluate((element) =>
+      getComputedStyle(element).getPropertyValue('--krn-color-brand-500').trim(),
+    );
+    await brandControl.evaluate((element) => {
+      const input = element as HTMLInputElement;
+      input.value = '#d95831';
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    await expectQueryParam(page, 'brandColor', '#d95831');
+    await expect(brandControl).toHaveValue('#d95831');
+    await expect
+      .poll(() =>
+        stage.evaluate((element) =>
+          getComputedStyle(element).getPropertyValue('--krn-color-brand-500').trim(),
+        ),
+      )
+      .not.toBe(defaultBrand500);
+    await brandControl.evaluate((element) => {
+      const input = element as HTMLInputElement;
+      input.value = '#4666da';
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    await expectQueryParam(page, 'brandColor', null);
+
+    for (const viewport of ['responsive', 'phone', 'tablet'] as const) {
+      await page.getByTestId('viewport-control').selectOption(viewport);
+      await expectQueryParam(page, 'viewport', viewport === 'responsive' ? null : viewport);
+      await expect(previewPanel).toHaveAttribute('data-viewport', viewport);
+    }
+
+    for (const scenario of ['default', 'states', 'stress', 'virtual'] as const) {
+      await page.getByTestId('scenario-control').selectOption(scenario);
+      await expectQueryParam(page, 'scenario', scenario === 'default' ? null : scenario);
+      await expect(specimen).toHaveAttribute('data-scenario', scenario);
+    }
+
+    await expectDocumentEnvironment(page, docsEnvironment);
+    assertNoRuntimeErrors();
+  });
+
+  test('live inputs and state presets update the rendered component and URL contract', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    await page.goto(`${DOCS_URL}/preview/button`);
+    await settlePage(page);
+
+    const specimen = page.getByTestId('component-specimen-button');
+    const stage = page.getByTestId('specimen-stage');
+    const statePresets = page.locator('.state-presets');
+    const primaryAction = specimen.getByRole('button', { name: 'Publish changes' });
+    await expect(primaryAction).toHaveAttribute('data-variant', 'solid');
+    await expect(primaryAction).toBeEnabled();
+
+    await statePresets.getByRole('button', { name: 'Focus visible', exact: true }).click();
+    await expectQueryParam(page, 'state', 'focus-visible');
+    await expect(specimen).toHaveAttribute('data-visual-pseudo-state', 'focus-visible');
+
+    await statePresets.getByRole('button', { name: 'High contrast', exact: true }).click();
+    await expectQueryParam(page, 'state', 'high-contrast');
+    await expectQueryParam(page, 'theme', null);
+    await expect(page.getByTestId('theme-control')).toHaveValue('high-contrast');
+    await expect(stage).toHaveAttribute('data-krn-theme-mode', 'high-contrast');
+
+    await statePresets.getByRole('button', { name: 'Default', exact: true }).click();
+    await expectQueryParam(page, 'state', null);
+    await expectQueryParam(page, 'theme', null);
+    await expect(specimen).not.toHaveAttribute('data-visual-pseudo-state');
+
+    await page.getByRole('combobox', { name: 'Variant' }).selectOption('soft');
+    await expect(page).toHaveURL(/arg\.variant=soft/);
+    await expect(primaryAction).toHaveAttribute('data-variant', 'soft');
+
+    const disabledControl = page.getByRole('checkbox', { name: 'Disabled' });
+    await disabledControl.check();
+    await expect(page).toHaveURL(/arg\.disabled=true/);
+    await expect(primaryAction).toBeDisabled();
+
+    await disabledControl.uncheck();
+    await expectQueryParam(page, 'arg.disabled', null);
+    await expect(primaryAction).toBeEnabled();
+
+    await statePresets.getByRole('button', { name: 'Loading', exact: true }).click();
+    await expect(page).toHaveURL(/state=loading/);
+    await expectQueryParam(page, 'scenario', null);
+    await expectQueryParam(page, 'arg.loading', null);
+    await expect(stage).toHaveAttribute('data-state', 'loading');
+    await expect(specimen).toHaveAttribute('data-scenario', 'default');
+    await expect(primaryAction).toHaveAttribute('aria-busy', 'true');
+    assertNoRuntimeErrors();
+  });
+
+  test('reset restores locally changed component models even when the URL is already canonical', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    await page.goto(`${DOCS_URL}/preview/toggle-button`);
+    await settlePage(page);
+
+    const toggle = page
+      .getByTestId('component-specimen-toggle-button')
+      .getByRole('button', { name: 'Watch changes' });
+    await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+    await expect(page).toHaveURL(`${DOCS_URL}/preview/toggle-button`);
+
+    await page.getByRole('button', { name: 'Reset', exact: true }).click();
+    await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+    await expect(page).toHaveURL(`${DOCS_URL}/preview/toggle-button`);
+    assertNoRuntimeErrors();
+  });
+
+  test('keeps incompatible data-grid expansion and virtualization controls canonical', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    await page.goto(previewUrl({ component: 'data-grid' }));
+    await settlePage(page);
+
+    const expandable = page.getByRole('checkbox', { name: 'Expandable' });
+    const virtualize = page.getByRole('checkbox', { name: 'Virtualize' });
+    await expect(expandable).toBeChecked();
+    await expect(virtualize).not.toBeChecked();
+
+    await virtualize.check();
+    await expectQueryParam(page, 'arg.virtualize', 'true');
+    await expectQueryParam(page, 'arg.expandable', null);
+    await expect(expandable).not.toBeChecked();
+    await expect(virtualize).toBeChecked();
+
+    await expandable.check();
+    await expectQueryParam(page, 'arg.virtualize', null);
+    await expectQueryParam(page, 'arg.expandable', null);
+    await expect(expandable).toBeChecked();
+    await expect(virtualize).not.toBeChecked();
+    assertNoRuntimeErrors();
+  });
+
+  test('round-trips valid URL state and canonicalizes invalid or unknown values', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    await page.goto(DOCS_URL);
+    await settlePage(page);
+    const docsEnvironment = await documentEnvironment(page);
+
+    await page.goto(
+      previewUrl({
+        component: 'button',
+        theme: 'high-contrast',
+        density: 'spacious',
+        direction: 'rtl',
+        locale: 'ru-RU',
+        motion: 'reduce',
+        brandColor: '#d95831',
+        viewport: 'phone',
+        state: 'loading',
+        args: { variant: 'soft' },
+      }),
+    );
+    await settlePage(page);
+
+    const sharedUrl = page.url();
+    const primaryAction = page
+      .getByTestId('component-specimen-button')
+      .getByRole('button', { name: 'Publish changes' });
+    await expect(primaryAction).toHaveAttribute('data-variant', 'soft');
+    await expect(primaryAction).toHaveAttribute('aria-busy', 'true');
+    await expect(page.getByTestId('specimen-stage')).toHaveAttribute('data-state', 'loading');
+    await expect(page.getByTestId('specimen-stage')).toHaveAttribute('data-krn-motion', 'reduce');
+    await expect(page.getByTestId('brand-color-control')).toHaveValue('#d95831');
+
+    await page.reload();
+    await settlePage(page);
+    await expect(page).toHaveURL(sharedUrl);
+    await expect(page.getByRole('combobox', { name: 'Variant' })).toHaveValue('soft');
+    await expect(page.getByRole('checkbox', { name: 'Loading' })).toBeChecked();
+    await expect(page.getByTestId('motion-control')).toHaveValue('reduce');
+    await expect(page.getByTestId('brand-color-control')).toHaveValue('#d95831');
+    await expect(primaryAction).toHaveAttribute('data-variant', 'soft');
+    await expect(primaryAction).toHaveAttribute('aria-busy', 'true');
+
+    await page.goto(
+      `${DOCS_URL}/preview/button?theme=sepia&density=tiny&direction=sideways&locale=xx-YY` +
+        '&motion=warp&brandColor=red&viewport=watch&scenario=virtual&state=imaginary&arg.variant=neon' +
+        '&arg.disabled=maybe&arg.unknown=injected',
+    );
+    await settlePage(page);
+
+    await expect(page.getByTestId('theme-control')).toHaveValue('system');
+    await expect(page.getByTestId('density-control')).toHaveValue('comfortable');
+    await expect(page.getByTestId('direction-control')).toHaveValue('ltr');
+    await expect(page.getByTestId('locale-control')).toHaveValue('en-US');
+    await expect(page.getByTestId('motion-control')).toHaveValue('system');
+    await expect(page.getByTestId('brand-color-control')).toHaveValue('#4666da');
+    await expect(page.getByTestId('viewport-control')).toHaveValue('responsive');
+    await expect(page.getByTestId('scenario-control')).toHaveValue('default');
+    await expect(page.getByRole('combobox', { name: 'Variant' })).toHaveValue('solid');
+    await expect(page.getByRole('checkbox', { name: 'Disabled' })).not.toBeChecked();
+    await expect(primaryAction).toHaveAttribute('data-variant', 'solid');
+    await expect(primaryAction).toBeEnabled();
+    await expect(page.getByTestId('specimen-stage')).toHaveAttribute('data-state', 'default');
+
+    await expect
+      .poll(() => {
+        const params = new URL(page.url()).searchParams;
+        return (
+          params.get('theme') !== 'sepia' &&
+          params.get('density') !== 'tiny' &&
+          params.get('direction') !== 'sideways' &&
+          params.get('locale') !== 'xx-YY' &&
+          params.get('motion') !== 'warp' &&
+          params.get('brandColor') !== 'red' &&
+          params.get('viewport') !== 'watch' &&
+          params.get('scenario') !== 'virtual' &&
+          params.get('state') !== 'imaginary' &&
+          params.get('arg.variant') !== 'neon' &&
+          params.get('arg.disabled') !== 'maybe' &&
+          !params.has('arg.unknown')
+        );
+      })
+      .toBe(true);
+
+    await expectDocumentEnvironment(page, docsEnvironment);
+    assertNoRuntimeErrors();
+  });
+
+  test('uses replace history for transient range updates', async ({ page }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    await page.goto(DOCS_URL);
+    await settlePage(page);
+    await page.goto(previewUrl({ component: 'progress-bar' }));
+    await settlePage(page);
+
+    const historyLength = await page.evaluate(() => history.length);
+    const valueControl = page.getByRole('slider', { name: 'Value' });
+    for (const value of ['12', '37', '82']) {
+      await valueControl.evaluate((element, nextValue) => {
+        const input = element as HTMLInputElement;
+        input.value = nextValue;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      }, value);
+      await expectQueryParam(page, 'arg.value', value);
+    }
+
+    await expect.poll(() => page.evaluate(() => history.length)).toBe(historyLength);
+    await expect(
+      page.getByTestId('component-specimen-progress-bar').getByText('82%', { exact: false }),
+    ).toBeVisible();
+
+    await page.goBack();
+    await expect(page).toHaveURL(`${DOCS_URL}/`);
+    assertNoRuntimeErrors();
+  });
+
+  test('recreates locale providers and preserves RTL semantics', async ({ page }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    await page.goto(DOCS_URL);
+    await settlePage(page);
+    const docsEnvironment = await documentEnvironment(page);
+
+    await page.goto(
+      previewUrl({
+        component: 'select',
+        state: 'async-loading',
+        locale: 'ru-RU',
+        direction: 'rtl',
+      }),
+    );
+    await settlePage(page);
+
+    const stage = page.getByTestId('specimen-stage');
+    await expect(stage).toHaveAttribute('lang', 'ru-RU');
+    await expect(stage).toHaveAttribute('dir', 'rtl');
+    await expectDocumentEnvironment(page, docsEnvironment);
+    const select = page
+      .getByTestId('component-specimen-select')
+      .getByRole('combobox', { name: 'Workspace plan' });
+    await expect(select).toHaveAttribute('aria-busy', 'true');
+    await select.click();
+    await expect(page.getByRole('status').getByText('Загрузка вариантов…')).toBeVisible();
+
+    await page.getByTestId('locale-control').selectOption('en-US');
+    await expectQueryParam(page, 'locale', null);
+    await expect(stage).toHaveAttribute('lang', 'en-US');
+    await expect(stage).toHaveAttribute('dir', 'rtl');
+    await expect(select).toHaveAttribute('aria-busy', 'true');
+    await select.click();
+    await expect(page.getByRole('status').getByText('Loading options…')).toBeVisible();
+    await expectDocumentEnvironment(page, docsEnvironment);
+    assertNoRuntimeErrors();
+  });
+
+  test('materializes configured bindings without claiming the live output was AOT verified', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    await page.goto(previewUrl({ component: 'button', args: { variant: 'soft' } }));
+    await settlePage(page);
+    await page.getByRole('button', { name: 'Code', exact: true }).click();
+
+    const codePanel = page.locator('#code-panel');
+    await expect(codePanel).toBeVisible();
+    await expect(codePanel).not.toContainText(
+      'Strict AOT verified against the packed npm artifact.',
+    );
+    await expect(codePanel).toContainText('generated base scaffold');
+    await expect(codePanel).toContainText(`[variant]="'soft'"`);
+    await expect(codePanel).toContainText(/variant\s+\(Public input:\s*variant\)\s*=\s*"soft"/);
+    assertNoRuntimeErrors();
   });
 });

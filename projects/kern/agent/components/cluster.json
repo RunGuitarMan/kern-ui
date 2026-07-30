@@ -177,5 +177,222 @@
     "route": "components/cluster",
     "json": "components/cluster.json",
     "markdown": "components/cluster.md"
+  },
+  "playground": {
+    "route": "preview/cluster",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "gap",
+        "label": "Gap",
+        "kind": "select",
+        "defaultValue": "2",
+        "testValue": "1",
+        "description": "Changes the spacing between clustered items.",
+        "binding": {
+          "kind": "input",
+          "publicName": "gap",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "1",
+            "value": "1"
+          },
+          {
+            "label": "2",
+            "value": "2"
+          },
+          {
+            "label": "4",
+            "value": "4"
+          }
+        ]
+      },
+      {
+        "key": "justify",
+        "label": "Justify",
+        "kind": "select",
+        "defaultValue": "space-between",
+        "testValue": "start",
+        "description": "Distributes the cluster along its inline axis.",
+        "binding": {
+          "kind": "input",
+          "publicName": "justify",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "start",
+            "value": "start"
+          },
+          {
+            "label": "center",
+            "value": "center"
+          },
+          {
+            "label": "end",
+            "value": "end"
+          },
+          {
+            "label": "space-between",
+            "value": "space-between"
+          },
+          {
+            "label": "space-around",
+            "value": "space-around"
+          },
+          {
+            "label": "space-evenly",
+            "value": "space-evenly"
+          }
+        ]
+      },
+      {
+        "key": "align",
+        "label": "Align",
+        "kind": "select",
+        "defaultValue": "center",
+        "testValue": "start",
+        "description": "Configures the component align contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "align",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "start",
+            "value": "start"
+          },
+          {
+            "label": "center",
+            "value": "center"
+          },
+          {
+            "label": "end",
+            "value": "end"
+          },
+          {
+            "label": "stretch",
+            "value": "stretch"
+          },
+          {
+            "label": "baseline",
+            "value": "baseline"
+          }
+        ]
+      },
+      {
+        "key": "columnGap",
+        "label": "Column Gap",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "20rem",
+        "description": "Configures the component columnGap contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "columnGap",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "rowGap",
+        "label": "Row Gap",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "20rem",
+        "description": "Configures the component rowGap contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "rowGap",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 5,
+      "controlled": 5,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

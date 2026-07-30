@@ -39,6 +39,7 @@ export const appConfig: ApplicationConfig = {
       theme: 'system',
       density: 'comfortable',
       motion: 'system',
+      overlayHost: '[data-krn-preview-overlay-host]',
       persistPreferences: true,
       preferenceStorageKey: 'kern.docs.preferences.v2',
     }),

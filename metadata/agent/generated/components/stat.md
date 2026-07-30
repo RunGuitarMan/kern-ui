@@ -94,6 +94,40 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - RTL
 - mobile
 
+## Interactive playground
+
+Route: `preview/stat`
+
+Scenarios: `default`.
+Public API coverage: 4/4
+directly controlled; 0 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument | Control | Default                 | Test value                        | Binding                   | Description                         |
+| -------- | ------- | ----------------------- | --------------------------------- | ------------------------- | ----------------------------------- |
+| `trend`  | select  | `"up"`                  | `"flat"`                          | input `trend` (property)  | Changes the trend indicator.        |
+| `detail` | text    | `"+12.4% this quarter"` | `"20rem"`                         | input `detail` (property) | Adds context for the statistic.     |
+| `label`  | text    | `"Active workspaces"`   | `"Active workspaces · alternate"` | input `label` (property)  | Names the statistic.                |
+| `value`  | text    | `"2,481"`               | `"2,481 · alternate"`             | input `value` (property)  | Sets the displayed statistic value. |
+
+Exact API exclusions:
+
+_No excluded public API members._
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+
 ## Related
 
 - `badge`

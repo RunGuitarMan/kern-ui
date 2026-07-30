@@ -93,6 +93,41 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - RTL
 - mobile
 
+## Interactive playground
+
+Route: `preview/cluster`
+
+Scenarios: `default`.
+Public API coverage: 5/5
+directly controlled; 0 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument    | Control | Default           | Test value | Binding                      | Description                                    |
+| ----------- | ------- | ----------------- | ---------- | ---------------------------- | ---------------------------------------------- |
+| `gap`       | select  | `"2"`             | `"1"`      | input `gap` (property)       | Changes the spacing between clustered items.   |
+| `justify`   | select  | `"space-between"` | `"start"`  | input `justify` (property)   | Distributes the cluster along its inline axis. |
+| `align`     | select  | `"center"`        | `"start"`  | input `align` (property)     | Configures the component align contract.       |
+| `columnGap` | text    | `""`              | `"20rem"`  | input `columnGap` (property) | Configures the component columnGap contract.   |
+| `rowGap`    | text    | `""`              | `"20rem"`  | input `rowGap` (property)    | Configures the component rowGap contract.      |
+
+Exact API exclusions:
+
+_No excluded public API members._
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+
 ## Related
 
 - `app-shell`

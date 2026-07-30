@@ -167,5 +167,163 @@
     "route": "components/card",
     "json": "components/card.json",
     "markdown": "components/card.md"
+  },
+  "playground": {
+    "route": "preview/card",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "eyebrow",
+        "label": "Eyebrow",
+        "kind": "text",
+        "defaultValue": "WORKSPACE / 0248",
+        "testValue": "WORKSPACE / 0248 · alternate",
+        "description": "Sets compact contextual metadata.",
+        "binding": {
+          "kind": "input",
+          "publicName": "eyebrow",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "heading",
+        "label": "Heading",
+        "kind": "text",
+        "defaultValue": "Northstar",
+        "testValue": "Northstar · alternate",
+        "description": "Sets the card heading.",
+        "binding": {
+          "kind": "input",
+          "publicName": "heading",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "interactive",
+        "label": "Interactive",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Adds the interactive surface treatment.",
+        "binding": {
+          "kind": "input",
+          "publicName": "interactive",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "static",
+        "label": "Static",
+        "scenario": "default",
+        "args": {
+          "interactive": false
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 3,
+      "controlled": 3,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

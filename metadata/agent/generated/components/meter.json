@@ -26,8 +26,8 @@
     "RTL",
     "mobile",
     "minimum",
-    "partial",
-    "maximum"
+    "maximum",
+    "partial"
   ],
   "lifecycle": {
     "status": "stable",
@@ -207,5 +207,241 @@
     "route": "components/meter",
     "json": "components/meter.json",
     "markdown": "components/meter.md"
+  },
+  "playground": {
+    "route": "preview/meter",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "value",
+        "label": "Value",
+        "kind": "range",
+        "defaultValue": 68,
+        "testValue": 69,
+        "description": "Sets the current measured value.",
+        "binding": {
+          "kind": "input",
+          "publicName": "value",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "min",
+        "label": "Minimum",
+        "kind": "number",
+        "defaultValue": 0,
+        "testValue": 1,
+        "description": "Sets the lower bound.",
+        "binding": {
+          "kind": "input",
+          "publicName": "min",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "max",
+        "label": "Maximum",
+        "kind": "number",
+        "defaultValue": 100,
+        "testValue": 101,
+        "description": "Sets the upper bound.",
+        "binding": {
+          "kind": "input",
+          "publicName": "max",
+          "syntax": "property"
+        },
+        "min": 1,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "low",
+        "label": "Low threshold",
+        "kind": "number",
+        "defaultValue": 40,
+        "testValue": 41,
+        "description": "Sets the low-range threshold.",
+        "binding": {
+          "kind": "input",
+          "publicName": "low",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "high",
+        "label": "High threshold",
+        "kind": "number",
+        "defaultValue": 80,
+        "testValue": 81,
+        "description": "Sets the high-range threshold.",
+        "binding": {
+          "kind": "input",
+          "publicName": "high",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "optimum",
+        "label": "Optimum",
+        "kind": "number",
+        "defaultValue": 20,
+        "testValue": 21,
+        "description": "Sets the preferred value.",
+        "binding": {
+          "kind": "input",
+          "publicName": "optimum",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "kind": "text",
+        "defaultValue": "Storage used",
+        "testValue": "Storage used · alternate",
+        "description": "Names the meter for assistive technology.",
+        "binding": {
+          "kind": "input",
+          "publicName": "label",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "minimum",
+        "label": "Minimum",
+        "scenario": "default",
+        "args": {
+          "value": 0
+        }
+      },
+      {
+        "id": "maximum",
+        "label": "Maximum",
+        "scenario": "default",
+        "args": {
+          "value": 100
+        }
+      },
+      {
+        "id": "partial",
+        "label": "Partial",
+        "scenario": "default",
+        "args": {
+          "value": 50
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 8,
+      "controlled": 7,
+      "excluded": 1,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "meter",
+        "publicName": "locale",
+        "kind": "input",
+        "type": "string | Array<string>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/meter?state=default"
+        }
+      }
+    ]
   }
 }

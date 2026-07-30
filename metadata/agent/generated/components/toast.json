@@ -24,7 +24,9 @@
     "high contrast",
     "compact",
     "RTL",
-    "mobile"
+    "mobile",
+    "closed",
+    "open"
   ],
   "lifecycle": {
     "status": "stable",
@@ -183,5 +185,227 @@
     "route": "components/toast",
     "json": "components/toast.json",
     "markdown": "components/toast.md"
+  },
+  "playground": {
+    "route": "preview/toast",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "expanded",
+        "label": "Expanded",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Expands the toast viewport stack.",
+        "binding": {
+          "kind": "model",
+          "publicName": "expanded"
+        }
+      },
+      {
+        "key": "maxExpanded",
+        "label": "Max Expanded",
+        "kind": "number",
+        "defaultValue": 12,
+        "testValue": 13,
+        "description": "Configures the component maxExpanded contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "maxExpanded",
+          "syntax": "property"
+        },
+        "min": -1000,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "maxVisible",
+        "label": "Max Visible",
+        "kind": "number",
+        "defaultValue": 4,
+        "testValue": 5,
+        "description": "Configures the component maxVisible contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "maxVisible",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "position",
+        "label": "Position",
+        "kind": "select",
+        "defaultValue": "top-end",
+        "testValue": "top-start",
+        "description": "Configures the component position contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "position",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "top-start",
+            "value": "top-start"
+          },
+          {
+            "label": "top-center",
+            "value": "top-center"
+          },
+          {
+            "label": "top-end",
+            "value": "top-end"
+          },
+          {
+            "label": "bottom-start",
+            "value": "bottom-start"
+          },
+          {
+            "label": "bottom-center",
+            "value": "bottom-center"
+          },
+          {
+            "label": "bottom-end",
+            "value": "bottom-end"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "closed",
+        "label": "closed",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "closed",
+          "description": "The fixture exposes the closed status without claiming a public component input."
+        }
+      },
+      {
+        "id": "open",
+        "label": "open",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "info",
+          "label": "open",
+          "description": "The fixture exposes the open status without claiming a public component input."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 6,
+      "controlled": 4,
+      "excluded": 2,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "toast",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#toast"
+        }
+      },
+      {
+        "componentId": "toast",
+        "publicName": "labels",
+        "kind": "input",
+        "type": "Partial<KrnToastTranslations>",
+        "code": "translation-object",
+        "reason": "Structured translation overrides are exercised through locale providers, not lossy scalar controls.",
+        "evidence": {
+          "category": "locale-preview",
+          "pointer": "preview/toast?locale=ru-RU"
+        }
+      }
+    ]
   }
 }

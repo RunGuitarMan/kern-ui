@@ -92,6 +92,44 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - RTL
 - mobile
 
+## Interactive playground
+
+Route: `preview/avatar`
+
+Scenarios: `default`.
+Public API coverage: 6/7
+directly controlled; 1 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument      | Control | Default        | Test value                 | Binding                   | Description                                |
+| ------------- | ------- | -------------- | -------------------------- | ------------------------- | ------------------------------------------ |
+| `imageFailed` | boolean | `false`        | `true`                     | model `imageFailed`       | Shows the deterministic initials fallback. |
+| `alt`         | text    | `""`           | `"Alternate value"`        | input `alt` (property)    | Configures the component alt contract.     |
+| `name`        | text    | `"Avery Cole"` | `"Avery Cole · alternate"` | input `name` (property)   | Configures the component name contract.    |
+| `size`        | select  | `"lg"`         | `"md"`                     | input `size` (property)   | Semantic component size.                   |
+| `src`         | text    | `""`           | `"/favicon.ico"`           | input `src` (property)    | Configures the component src contract.     |
+| `status`      | select  | `"online"`     | `"away"`                   | input `status` (property) | Configures the component status contract.  |
+
+Exact API exclusions:
+
+| Public API | Category           | Evidence                                     | Reason                                                                                                           |
+| ---------- | ------------------ | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `locale`   | locale-environment | `locale-preview:preview/avatar?locale=ru-RU` | Locale is owned by the playground environment selector so every locale-sensitive component changes consistently. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+
 ## Related
 
 - `badge`

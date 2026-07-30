@@ -31,6 +31,11 @@
     "disabled",
     "filled",
     "empty",
+    "readonly",
+    "required",
+    "invalid",
+    "minimum",
+    "maximum",
     "closed",
     "open",
     "empty results",
@@ -302,5 +307,401 @@
     "route": "components/date-picker",
     "json": "components/date-picker.json",
     "markdown": "components/date-picker.md"
+  },
+  "playground": {
+    "route": "preview/date-picker",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "min",
+        "label": "Minimum date",
+        "kind": "text",
+        "defaultValue": "2026-01-01",
+        "testValue": "2026-02-01",
+        "description": "Sets the first selectable ISO date.",
+        "binding": {
+          "kind": "input",
+          "publicName": "min",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "max",
+        "label": "Maximum date",
+        "kind": "text",
+        "defaultValue": "2027-12-31",
+        "testValue": "2026-11-30",
+        "description": "Sets the last selectable ISO date.",
+        "binding": {
+          "kind": "input",
+          "publicName": "max",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "weekStartsOn",
+        "label": "Week starts on",
+        "kind": "number",
+        "defaultValue": 1,
+        "testValue": 2,
+        "description": "Uses 0 for Sunday through 6 for Saturday.",
+        "binding": {
+          "kind": "input",
+          "publicName": "weekStartsOn",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 6,
+        "step": 1
+      },
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Prevents user interaction.",
+        "binding": {
+          "kind": "input",
+          "publicName": "disabled",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "readOnly",
+        "label": "Read only",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Keeps the value focusable while preventing edits.",
+        "binding": {
+          "kind": "input",
+          "publicName": "readonly",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "required",
+        "label": "Required",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Marks the control as required.",
+        "binding": {
+          "kind": "input",
+          "publicName": "required",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "invalid",
+        "label": "Invalid",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Exposes the invalid visual and ARIA state.",
+        "binding": {
+          "kind": "input",
+          "publicName": "invalid",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "id",
+        "label": "Id",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component id contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "id",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "today",
+        "label": "Today",
+        "kind": "text",
+        "defaultValue": "2026-07-30",
+        "testValue": "2026-08-15",
+        "description": "Configures the component today contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "today",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "Hover",
+        "scenario": "default",
+        "visualPseudoState": "hover",
+        "args": {}
+      },
+      {
+        "id": "focus-visible",
+        "label": "Focus visible",
+        "scenario": "default",
+        "visualPseudoState": "focus-visible",
+        "args": {}
+      },
+      {
+        "id": "active",
+        "label": "Active",
+        "scenario": "default",
+        "visualPseudoState": "active",
+        "args": {}
+      },
+      {
+        "id": "disabled",
+        "label": "Disabled",
+        "scenario": "default",
+        "args": {
+          "disabled": true
+        }
+      },
+      {
+        "id": "filled",
+        "label": "filled",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "filled",
+          "label": "filled",
+          "description": "The component is composed with a representative populated value."
+        }
+      },
+      {
+        "id": "empty",
+        "label": "empty",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "empty",
+          "label": "empty",
+          "description": "The component is composed with intentionally empty content."
+        }
+      },
+      {
+        "id": "readonly",
+        "label": "Readonly",
+        "scenario": "default",
+        "args": {
+          "readOnly": true
+        }
+      },
+      {
+        "id": "required",
+        "label": "Required",
+        "scenario": "default",
+        "args": {
+          "required": true
+        }
+      },
+      {
+        "id": "invalid",
+        "label": "Invalid",
+        "scenario": "default",
+        "args": {
+          "invalid": true
+        }
+      },
+      {
+        "id": "minimum",
+        "label": "minimum",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "minimum",
+          "description": "The fixture exposes the minimum status without claiming a public component input."
+        }
+      },
+      {
+        "id": "maximum",
+        "label": "maximum",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "maximum",
+          "description": "The fixture exposes the maximum status without claiming a public component input."
+        }
+      },
+      {
+        "id": "closed",
+        "label": "closed",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "closed",
+          "description": "The fixture exposes the closed status without claiming a public component input."
+        }
+      },
+      {
+        "id": "open",
+        "label": "open",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "info",
+          "label": "open",
+          "description": "The fixture exposes the open status without claiming a public component input."
+        }
+      },
+      {
+        "id": "empty-results",
+        "label": "empty results",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "empty",
+          "label": "empty results",
+          "description": "The fixture data source returned no records."
+        }
+      },
+      {
+        "id": "async-loading",
+        "label": "async loading",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "info",
+          "label": "async loading",
+          "description": "The fixture exposes the async loading status without claiming a public component input."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 12,
+      "controlled": 9,
+      "excluded": 3,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "date-picker",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#date-picker"
+        }
+      },
+      {
+        "componentId": "date-picker",
+        "publicName": "labels",
+        "kind": "input",
+        "type": "Partial<KrnDatePickerLabels>",
+        "code": "translation-object",
+        "reason": "Structured translation overrides are exercised through locale providers, not lossy scalar controls.",
+        "evidence": {
+          "category": "locale-preview",
+          "pointer": "preview/date-picker?locale=ru-RU"
+        }
+      },
+      {
+        "componentId": "date-picker",
+        "publicName": "locale",
+        "kind": "input",
+        "type": "string",
+        "code": "locale-environment",
+        "reason": "Locale is owned by the playground environment selector so every locale-sensitive component changes consistently.",
+        "evidence": {
+          "category": "locale-preview",
+          "pointer": "preview/date-picker?locale=ru-RU"
+        }
+      }
+    ]
   }
 }

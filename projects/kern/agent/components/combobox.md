@@ -129,10 +129,75 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - disabled
 - filled
 - empty
+- readonly
+- required
+- invalid
 - closed
 - open
 - empty results
 - async loading
+
+## Interactive playground
+
+Route: `preview/combobox`
+
+Scenarios: `default`, `stress`.
+Public API coverage: 12/16
+directly controlled; 4 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument        | Control | Default                    | Test value                             | Binding                          | Description                                                          |
+| --------------- | ------- | -------------------------- | -------------------------------------- | -------------------------------- | -------------------------------------------------------------------- |
+| `placeholder`   | text    | `"Filter plans…"`          | `"Filter plans… · alternate"`          | input `placeholder` (property)   | Sets the empty input prompt.                                         |
+| `optionsState`  | select  | `"ready"`                  | `"loading"`                            | input `optionsState` (property)  | Shows ready, loading, or error option content.                       |
+| `emptyText`     | text    | `"No options"`             | `"No options · alternate"`             | input `emptyText` (property)     | Uses locale-aware empty-options copy until explicitly changed.       |
+| `errorText`     | text    | `"Could not load options"` | `"Could not load options · alternate"` | input `errorText` (property)     | Uses locale-aware option-load failure copy until explicitly changed. |
+| `loadingText`   | text    | `"Loading options…"`       | `"Loading options… · alternate"`       | input `loadingText` (property)   | Uses locale-aware loading copy until explicitly changed.             |
+| `open`          | boolean | `false`                    | `true`                                 | model `open`                     | Opens the filtered listbox.                                          |
+| `disabled`      | boolean | `false`                    | `true`                                 | input `disabled` (property)      | Prevents user interaction.                                           |
+| `readOnly`      | boolean | `false`                    | `true`                                 | input `readonly` (property)      | Keeps the value focusable while preventing edits.                    |
+| `required`      | boolean | `false`                    | `true`                                 | input `required` (property)      | Marks the control as required.                                       |
+| `invalid`       | boolean | `false`                    | `true`                                 | input `invalid` (property)       | Exposes the invalid visual and ARIA state.                           |
+| `filterLocally` | boolean | `true`                     | `false`                                | input `filterLocally` (property) | Configures the component filterLocally contract.                     |
+| `id`            | text    | `""`                       | `"Alternate value"`                    | input `id` (property)            | Configures the component id contract.                                |
+
+Exact API exclusions:
+
+| Public API     | Category           | Evidence                                              | Reason                                                                                                                                                              |
+| -------------- | ------------------ | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#combobox` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
+| `optionFilter` | complex-data       | `specimen-fixture:preview/combobox?state=default`     | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                    |
+| `options`      | complex-data       | `specimen-fixture:preview/combobox?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+| `toggleLabel`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#combobox` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `stress`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `stress`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — Disabled; scenario `default`; `disabled=true`.
+- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
+- `readonly` — Readonly; scenario `default`; `readOnly=true`.
+- `required` — Required; scenario `default`; `required=true`.
+- `invalid` — Invalid; scenario `default`; `invalid=true`.
+- `closed` — closed; scenario `default`; `open=false`; fixture effect `status/neutral` — closed: The fixture exposes the closed status without claiming a public component input..
+- `open` — Open; scenario `default`; `open=true`.
+- `empty-results` — empty results; scenario `default`; fixture effect `data/empty` — empty results: The fixture data source returned no records..
+- `async-loading` — Async loading; scenario `default`; `optionsState="loading"`.
+- `error` — Error; scenario `default`; `optionsState="error"`.
+- `stress` — Stress data; scenario `stress`.
 
 ## Related
 

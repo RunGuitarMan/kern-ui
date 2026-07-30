@@ -9,7 +9,7 @@ import ts from 'typescript';
 
 const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const packageName = '@kern-ui/angular';
-const schemaVersion = '1.1.0';
+const schemaVersion = '1.2.0';
 const writeMode = process.argv.includes('--write');
 const verboseMode = process.argv.includes('--verbose');
 
@@ -19,6 +19,7 @@ const paths = {
   runtimeEntrypoints: resolve(workspaceRoot, 'projects/kern/api/runtime-entrypoints.json'),
   testingPublicApi: resolve(workspaceRoot, 'projects/kern/testing/src/public-api.ts'),
   catalog: resolve(workspaceRoot, 'projects/showcase/src/lib/catalog.ts'),
+  playground: resolve(workspaceRoot, 'projects/showcase/specimen/src/lib/playground.ts'),
   schema: resolve(workspaceRoot, 'metadata/agent/schema/component-manifest.schema.json'),
   overrides: resolve(workspaceRoot, 'metadata/agent/curated/component-overrides.json'),
   nonStableContracts: resolve(workspaceRoot, 'metadata/agent/curated/non-stable-contracts.json'),
@@ -66,6 +67,30 @@ const genericMistakes = [
   'Loading only tokens.css instead of the complete styles/kern.css component bundle.',
   'Assuming the documentation SSR build replaces validation of the consuming application.',
 ];
+
+const playgroundFixtureEffectModes = new Map([
+  ['layout', new Set(['alternate', 'constrained', 'expanded', 'overflow'])],
+  [
+    'content',
+    new Set(['alternate', 'empty', 'filled', 'long-text', 'with-action', 'without-action']),
+  ],
+  [
+    'data',
+    new Set([
+      'alternate',
+      'empty',
+      'error',
+      'filtered',
+      'loading',
+      'selected',
+      'sorted',
+      'success',
+      'virtualized',
+    ]),
+  ],
+  ['status', new Set(['danger', 'info', 'neutral', 'success', 'warning'])],
+]);
+const playgroundFixtureEffectFields = new Set(['kind', 'mode', 'label', 'description']);
 
 function normalizePath(value) {
   return value.split(sep).join('/');
@@ -825,7 +850,7 @@ async function decoratedComponents(program, checker) {
   return records;
 }
 
-function executeCatalog(sourceText) {
+function executeCatalog(sourceText, runtimeComponents) {
   const compiled = ts.transpileModule(sourceText, {
     compilerOptions: {
       module: ts.ModuleKind.CommonJS,
@@ -840,7 +865,7 @@ function executeCatalog(sourceText) {
     exports: module.exports,
     require: (specifier) => {
       if (specifier === './generated-component-contract') {
-        return { KERN_RUNTIME_COMPONENTS: {} };
+        return { KERN_RUNTIME_COMPONENTS: runtimeComponents };
       }
       throw new Error(`Catalog evaluation rejected unexpected import ${specifier}`);
     },
@@ -863,9 +888,133 @@ function executeCatalog(sourceText) {
     states: [...item.states],
     keyboard: [...item.keyboard],
     accessibility: [...item.accessibility],
+    api: item.api.map((member) => ({ ...member })),
     do: item.do,
     dont: item.dont,
   }));
+}
+
+function executePlayground(sourceText, catalog) {
+  const compiled = ts.transpileModule(sourceText, {
+    compilerOptions: {
+      module: ts.ModuleKind.CommonJS,
+      target: ts.ScriptTarget.ES2022,
+      esModuleInterop: true,
+    },
+    fileName: paths.playground,
+  }).outputText;
+  const module = { exports: {} };
+  const sandbox = {
+    module,
+    exports: module.exports,
+    require: (specifier) => {
+      if (specifier === '@kern-ui/showcase') return { KERN_CATALOG: catalog };
+      throw new Error(`Playground evaluation rejected unexpected import ${specifier}`);
+    },
+    console,
+  };
+  vm.runInNewContext(compiled, sandbox, {
+    filename: paths.playground,
+    timeout: 2_000,
+  });
+  const definitions = module.exports.KERN_PLAYGROUND_DEFINITIONS;
+  if (!Array.isArray(definitions)) {
+    throw new Error('Playground evaluation did not export KERN_PLAYGROUND_DEFINITIONS.');
+  }
+  const normalizeStateId = module.exports.normalizeKernPlaygroundStateId;
+  if (typeof normalizeStateId !== 'function') {
+    throw new Error('Playground evaluation did not export normalizeKernPlaygroundStateId.');
+  }
+  return {
+    definitions: JSON.parse(JSON.stringify(definitions)),
+    exclusions: JSON.parse(JSON.stringify(module.exports.KERN_PLAYGROUND_API_EXCLUSIONS ?? [])),
+    coverage: JSON.parse(JSON.stringify(module.exports.KERN_PLAYGROUND_API_COVERAGE ?? {})),
+    normalizeStateId,
+  };
+}
+
+function validatePlaygroundFixtureEffect(componentId, preset) {
+  const effect = preset.fixtureEffect;
+  if (effect === undefined) return;
+
+  const context = `${componentId}.${preset.id ?? '<missing-preset-id>'}.fixtureEffect`;
+  if (typeof effect !== 'object' || effect === null || Array.isArray(effect)) {
+    throw new Error(`${context} must be an object.`);
+  }
+
+  const supportedModes = playgroundFixtureEffectModes.get(effect.kind);
+  if (!supportedModes) {
+    throw new Error(`${context}.kind must be layout, content, data, or status.`);
+  }
+  if (!supportedModes.has(effect.mode)) {
+    throw new Error(
+      `${context}.mode "${String(effect.mode)}" is not valid for kind "${effect.kind}".`,
+    );
+  }
+  for (const field of ['label', 'description']) {
+    if (typeof effect[field] !== 'string' || effect[field].trim().length === 0) {
+      throw new Error(`${context}.${field} must be a non-empty string.`);
+    }
+  }
+
+  const undeclaredFields = Object.keys(effect).filter(
+    (field) => !playgroundFixtureEffectFields.has(field),
+  );
+  if (undeclaredFields.length > 0) {
+    throw new Error(`${context} contains undeclared fields: ${undeclaredFields.join(', ')}.`);
+  }
+}
+
+function playgroundQueryContract() {
+  return {
+    routePattern: 'preview/{componentId}',
+    argumentsPrefix: 'arg.',
+    scenarioParameter: 'scenario',
+    presetParameter: 'state',
+    environment: [
+      {
+        key: 'theme',
+        parameter: 'theme',
+        defaultValue: 'system',
+        values: ['system', 'light', 'dark', 'high-contrast'],
+      },
+      {
+        key: 'density',
+        parameter: 'density',
+        defaultValue: 'comfortable',
+        values: ['compact', 'comfortable', 'spacious'],
+      },
+      {
+        key: 'direction',
+        parameter: 'direction',
+        defaultValue: 'ltr',
+        values: ['ltr', 'rtl'],
+      },
+      {
+        key: 'locale',
+        parameter: 'locale',
+        defaultValue: 'en-US',
+        values: ['en-US', 'ru-RU'],
+      },
+      {
+        key: 'motion',
+        parameter: 'motion',
+        defaultValue: 'system',
+        values: ['system', 'reduce', 'full'],
+      },
+      {
+        key: 'viewport',
+        parameter: 'viewport',
+        defaultValue: 'responsive',
+        values: ['responsive', 'phone', 'tablet'],
+      },
+    ],
+    brandColor: {
+      parameter: 'brandColor',
+      defaultValue: '#4666da',
+      pattern: '^#[0-9a-fA-F]{6}$',
+    },
+  };
 }
 
 function ownerEntrypoints(runtimeConfig) {
@@ -1050,6 +1199,7 @@ function publicComponentContract({
   override,
   catalog,
   lifecycleRecord,
+  playground,
 }) {
   const symbol = catalogSymbolName(item, symbolRecord);
   const aliasSymbols = unique(
@@ -1122,6 +1272,14 @@ function publicComponentContract({
       json: `components/${item.id}.json`,
       markdown: `components/${item.id}.md`,
     },
+    playground: {
+      route: `preview/${item.id}`,
+      scenarios: playground.scenarios,
+      controls: playground.controls,
+      presets: playground.presets,
+      apiCoverage: playground.apiCoverage,
+      exclusions: playground.exclusions,
+    },
   };
   return component;
 }
@@ -1139,6 +1297,82 @@ function markdownApi(api) {
     '| --- | --- | --- | --- | --- | --- |',
     ...rows,
   ].join('\n');
+}
+
+function markdownPlaygroundBinding(binding) {
+  if (binding.kind === 'input') {
+    return `input \`${binding.publicName}\` (${binding.syntax ?? 'property'})`;
+  }
+  if (binding.kind === 'model') return `model \`${binding.publicName}\``;
+  if (binding.kind === 'fixture') return `fixture ${binding.target}`;
+  return `composition \`${binding.attribute}\``;
+}
+
+function markdownPlaygroundFixtureEffect(effect) {
+  if (!effect) return '';
+  return `fixture effect \`${effect.kind}/${effect.mode}\` — ${effect.label}: ${effect.description}`;
+}
+
+function markdownPlayground(component) {
+  const controls = component.playground.controls.map(
+    (control) =>
+      `| \`${control.key}\` | ${control.kind} | \`${JSON.stringify(control.defaultValue).replaceAll(
+        '|',
+        '\\|',
+      )}\` | \`${JSON.stringify(control.testValue).replaceAll(
+        '|',
+        '\\|',
+      )}\` | ${markdownPlaygroundBinding(control.binding)} | ${control.description.replaceAll(
+        '|',
+        '\\|',
+      )} |`,
+  );
+  const controlTable = [
+    '| Argument | Control | Default | Test value | Binding | Description |',
+    '| --- | --- | --- | --- | --- | --- |',
+    ...controls,
+  ].join('\n');
+  const presets = component.playground.presets
+    .map((preset) => {
+      const effects = [
+        `scenario \`${preset.scenario}\``,
+        ...Object.entries(preset.environment ?? {}).map(([key, value]) => `${key} \`${value}\``),
+        ...Object.entries(preset.args).map(([key, value]) => `\`${key}=${JSON.stringify(value)}\``),
+        preset.visualPseudoState ? `visual state \`${preset.visualPseudoState}\`` : '',
+        markdownPlaygroundFixtureEffect(preset.fixtureEffect),
+      ].filter(Boolean);
+      return `- \`${preset.id}\` — ${preset.label}; ${effects.join('; ')}.`;
+    })
+    .join('\n');
+  const exclusions = component.playground.exclusions.length
+    ? [
+        '| Public API | Category | Evidence | Reason |',
+        '| --- | --- | --- | --- |',
+        ...component.playground.exclusions.map(
+          (exclusion) =>
+            `| \`${exclusion.publicName}\` | ${exclusion.code} | \`${exclusion.evidence.category}:${exclusion.evidence.pointer}\` | ${exclusion.reason.replaceAll('|', '\\|')} |`,
+        ),
+      ].join('\n')
+    : '_No excluded public API members._';
+  return `Route: \`${component.playground.route}\`
+
+Scenarios: ${component.playground.scenarios.map((scenario) => `\`${scenario}\``).join(', ')}.
+Public API coverage: ${component.playground.apiCoverage.controlled}/${component.playground.apiCoverage.publicInputsAndModels}
+directly controlled; ${component.playground.apiCoverage.excluded} exact exclusions; 0 unclassified.
+Use \`arg.<key>\` query parameters for controls. Controls tagged \`fixture\` or \`composition\`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+${controlTable}
+
+Exact API exclusions:
+
+${exclusions}
+
+Presets:
+
+${presets}`;
 }
 
 function componentMarkdown(component) {
@@ -1200,6 +1434,10 @@ Hydration evidence scope: \`${component.ssr.evidenceScope}\`; status:
 ## Acceptance states
 
 ${component.acceptanceStates.map((state) => `- ${state}`).join('\n')}
+
+## Interactive playground
+
+${markdownPlayground(component)}
 
 ## Related
 
@@ -1326,6 +1564,8 @@ KERN is a standalone Angular component library for enterprise product interfaces
 - Common mistakes: [common-mistakes.md](./common-mistakes.md)
 - Full reference: [llms-full.txt](./llms-full.txt)
 - Compile-verified examples: [examples/index.json](./examples/index.json)
+- Interactive previews: each component contract publishes a \`preview/<component-id>\` route,
+  typed \`arg.*\` controls, executable presets, scenarios, and input/model/fixture binding metadata.
 
 ${groups}
 `;
@@ -1453,6 +1693,7 @@ async function main() {
     packageJson,
     runtimeConfig,
     catalogSource,
+    playgroundSource,
     schema,
     baseOverrides,
     nonStableContracts,
@@ -1464,6 +1705,7 @@ async function main() {
     readJson(paths.packageJson),
     readJson(paths.runtimeEntrypoints),
     readFile(paths.catalog, 'utf8'),
+    readFile(paths.playground, 'utf8'),
     readJson(paths.schema),
     readJson(paths.overrides),
     readJson(paths.nonStableContracts),
@@ -1485,7 +1727,110 @@ async function main() {
   const symbols = publicSymbols(checker, program, entrypoints);
   const rootExports = rootExportMap(checker, program, runtimeConfig, symbols);
   const decorated = await decoratedComponents(program, checker);
-  const catalog = executeCatalog(catalogSource);
+  const bySelector = new Map();
+  for (const component of decorated) {
+    for (const selector of component.selectors) {
+      if (bySelector.has(selector)) {
+        throw new Error(`Selector ${selector} is implemented by more than one component class.`);
+      }
+      bySelector.set(selector, component);
+    }
+  }
+  const runtimeComponents = Object.fromEntries(
+    [...bySelector].map(([selector, component]) => [
+      selector,
+      {
+        className: component.className,
+        kind: component.kind,
+        source: component.source,
+        api: component.api,
+      },
+    ]),
+  );
+  const catalog = executeCatalog(catalogSource, runtimeComponents);
+  const {
+    definitions: playgroundDefinitions,
+    exclusions: playgroundExclusions,
+    coverage: playgroundCoverage,
+    normalizeStateId,
+  } = executePlayground(playgroundSource, catalog);
+  if (
+    playgroundCoverage.unclassified !== 0 ||
+    playgroundCoverage.controlled + playgroundCoverage.excluded !==
+      playgroundCoverage.publicInputsAndModels
+  ) {
+    throw new Error(
+      `Playground public API coverage is incomplete: ${JSON.stringify(playgroundCoverage)}.`,
+    );
+  }
+  const exclusionsById = new Map();
+  for (const exclusion of playgroundExclusions) {
+    const exclusions = exclusionsById.get(exclusion.componentId) ?? [];
+    exclusions.push(exclusion);
+    exclusionsById.set(exclusion.componentId, exclusions);
+  }
+  const playgroundById = new Map();
+  for (const definition of playgroundDefinitions) {
+    if (playgroundById.has(definition.id)) {
+      throw new Error(`Duplicate playground definition "${definition.id}".`);
+    }
+    if (
+      !Array.isArray(definition.scenarios) ||
+      definition.scenarios.length === 0 ||
+      !Array.isArray(definition.controls) ||
+      definition.controls.length === 0 ||
+      !Array.isArray(definition.presets) ||
+      definition.presets.length === 0
+    ) {
+      throw new Error(`Playground definition "${definition.id}" is incomplete.`);
+    }
+    const publicInputsAndModels = catalog
+      .find(({ id }) => id === definition.id)
+      .api.filter(({ kind }) => kind === 'input' || kind === 'model').length;
+    const controlled = definition.controls.filter(
+      ({ binding }) => binding.kind === 'input' || binding.kind === 'model',
+    ).length;
+    const exclusions = exclusionsById.get(definition.id) ?? [];
+    playgroundById.set(definition.id, {
+      ...definition,
+      apiCoverage: {
+        publicInputsAndModels,
+        controlled,
+        excluded: exclusions.length,
+        unclassified: publicInputsAndModels - controlled - exclusions.length,
+      },
+      exclusions,
+    });
+  }
+  const missingPlaygrounds = catalog.map((item) => item.id).filter((id) => !playgroundById.has(id));
+  const stalePlaygrounds = [...playgroundById.keys()].filter(
+    (id) => !catalog.some((item) => item.id === id),
+  );
+  if (missingPlaygrounds.length || stalePlaygrounds.length) {
+    throw new Error(
+      [
+        missingPlaygrounds.length
+          ? `missing playground definitions: ${missingPlaygrounds.join(', ')}`
+          : '',
+        stalePlaygrounds.length
+          ? `stale playground definitions: ${stalePlaygrounds.join(', ')}`
+          : '',
+      ]
+        .filter(Boolean)
+        .join('; '),
+    );
+  }
+  for (const item of catalog) {
+    const presetIds = new Set(playgroundById.get(item.id).presets.map(({ id }) => id));
+    const missingAcceptanceStates = item.states.filter(
+      (state) => !presetIds.has(normalizeStateId(state)),
+    );
+    if (missingAcceptanceStates.length > 0) {
+      throw new Error(
+        `${item.id} playground omits catalog acceptance states: ${missingAcceptanceStates.join(', ')}.`,
+      );
+    }
+  }
   for (const item of catalog.filter(
     (candidate) => candidate.status === 'beta' || candidate.status === 'experimental',
   )) {
@@ -1508,16 +1853,6 @@ async function main() {
       }
     }
   }
-  const bySelector = new Map();
-  for (const component of decorated) {
-    for (const selector of component.selectors) {
-      if (bySelector.has(selector)) {
-        throw new Error(`Selector ${selector} is implemented by more than one component class.`);
-      }
-      bySelector.set(selector, component);
-    }
-  }
-
   const componentGroups = new Map();
   for (const item of catalog) {
     const implementation = bySelector.get(item.selector);
@@ -1548,6 +1883,7 @@ async function main() {
       override: overrides[item.id],
       catalog,
       lifecycleRecord: lifecycleRecords.get(item.id),
+      playground: playgroundById.get(item.id),
     });
     symbolRecord.componentIds = unique([...symbolRecord.componentIds, item.id]).sort(
       compareStrings,
@@ -1555,6 +1891,57 @@ async function main() {
     return contract;
   });
   for (const component of components) {
+    if (
+      component.playground.apiCoverage.unclassified !== 0 ||
+      component.playground.apiCoverage.controlled + component.playground.apiCoverage.excluded !==
+        component.playground.apiCoverage.publicInputsAndModels
+    ) {
+      throw new Error(
+        `${component.id}: playground API coverage is incomplete (${JSON.stringify(component.playground.apiCoverage)}).`,
+      );
+    }
+    const excludedPublicNames = new Set();
+    for (const exclusion of component.playground.exclusions) {
+      if (
+        exclusion.componentId !== component.id ||
+        excludedPublicNames.has(exclusion.publicName) ||
+        !exclusion.reason ||
+        !exclusion.evidence?.pointer?.includes(component.id)
+      ) {
+        throw new Error(`${component.id}.${exclusion.publicName}: invalid exact API exclusion.`);
+      }
+      excludedPublicNames.add(exclusion.publicName);
+    }
+    const playgroundControlKeys = new Set(
+      component.playground.controls.map((control) => control.key),
+    );
+    for (const control of component.playground.controls) {
+      if (control.testValue === undefined || Object.is(control.testValue, control.defaultValue)) {
+        throw new Error(
+          `${component.id}.${control.key}: playground control requires a distinct testValue.`,
+        );
+      }
+      if (control.binding.kind === 'input' || control.binding.kind === 'model') {
+        const member = component.api.find(
+          (candidate) => candidate.name === control.binding.publicName,
+        );
+        if (!member || member.kind !== control.binding.kind) {
+          throw new Error(
+            `${component.id}.${control.key} claims ${control.binding.kind} "${control.binding.publicName}" outside the compiler-derived public API.`,
+          );
+        }
+      }
+    }
+    for (const preset of component.playground.presets) {
+      validatePlaygroundFixtureEffect(component.id, preset);
+      for (const key of Object.keys(preset.args)) {
+        if (!playgroundControlKeys.has(key)) {
+          throw new Error(
+            `${component.id}.${preset.id} configures unknown playground argument "${key}".`,
+          );
+        }
+      }
+    }
     for (const member of component.api) {
       if (/^(?:Configures the public|Typed value that defines)/.test(member.description)) {
         throw new Error(
@@ -1632,8 +2019,9 @@ async function main() {
         notes:
           'Injection-token defaults support zero-config rendering; use provideKrn for application-owned preferences.',
       },
+      playground: playgroundQueryContract(),
       entrypoints: entrypoints.map((entrypoint) => entrypoint.importPath),
-      sourceDigest: sourceDigest([catalogSource, ...sourceTexts]),
+      sourceDigest: sourceDigest([catalogSource, playgroundSource, ...sourceTexts]),
     },
     components,
     symbols: cleanSymbols,

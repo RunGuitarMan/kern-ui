@@ -122,6 +122,32 @@ function assertWithinBase(url, baseUrl, label) {
   }
 }
 
+async function selectQueryOption(page, control, value, queryKey) {
+  await control.selectOption(value);
+  await page.waitForFunction(
+    ({ key, expected }) => new URL(window.location.href).searchParams.get(key) === expected,
+    { key: queryKey, expected: value },
+  );
+}
+
+async function requireControlValue(control, expected, label) {
+  await control.waitFor({ state: 'visible' });
+  const actual = await control.inputValue();
+  if (actual !== expected) {
+    throw new Error(`${label} did not preserve "${expected}"; received "${actual}".`);
+  }
+}
+
+async function requireAttribute(locator, name, expected, label) {
+  await locator.waitFor({ state: 'visible' });
+  const actual = await locator.getAttribute(name);
+  if (actual !== expected) {
+    throw new Error(
+      `${label} did not expose ${name}="${expected}"; received ${JSON.stringify(actual)}.`,
+    );
+  }
+}
+
 async function fetchRequired(url, baseUrl, label) {
   assertWithinBase(url, baseUrl, label);
   const response = await fetch(url, {
@@ -397,6 +423,7 @@ async function verifyBrowserHydration(origin, basePath, playwrightVersion) {
       viewport: { width: 1280, height: 900 },
       reducedMotion: 'reduce',
       serviceWorkers: 'block',
+      permissions: ['clipboard-read', 'clipboard-write'],
     });
     const page = await context.newPage();
     page.on('pageerror', (error) => {
@@ -420,7 +447,8 @@ async function verifyBrowserHydration(origin, basePath, playwrightVersion) {
       }
     });
 
-    const homeUrl = new URL(basePath, origin).href;
+    const baseUrl = new URL(basePath, origin);
+    const homeUrl = baseUrl.href;
     await page.goto(homeUrl, { waitUntil: 'networkidle' });
     await page.waitForFunction(() => Boolean(document.querySelector('[ng-version]')));
     await page.evaluate(() => {
@@ -481,6 +509,155 @@ async function verifyBrowserHydration(origin, basePath, playwrightVersion) {
     if (!page.url().startsWith(new URL(basePath, origin).href)) {
       throw new Error(`Client navigation escaped the versioned base path: ${page.url()}`);
     }
+
+    const openCanvasLink = page.getByTestId('open-isolated-preview');
+    await openCanvasLink.waitFor({ state: 'visible' });
+    const canvasHref = await openCanvasLink.getAttribute('href');
+    if (!canvasHref) throw new Error('Tabs component page does not expose an Open canvas URL.');
+    const canvasUrl = new URL(canvasHref, page.url());
+    assertWithinBase(canvasUrl, baseUrl, 'Open canvas link');
+    if (canvasUrl.pathname !== new URL('preview/tabs', homeUrl).pathname) {
+      throw new Error(`Open canvas link targets an unexpected route: ${canvasUrl.href}`);
+    }
+
+    await Promise.all([
+      page.waitForURL((url) => url.pathname === canvasUrl.pathname),
+      openCanvasLink.click(),
+    ]);
+    await page.waitForLoadState('networkidle');
+    await page.getByTestId('docs-preview-root').waitFor({ state: 'visible' });
+    if (
+      (await page.evaluate(() => Reflect.get(globalThis, '__kernVersionedSmokeDocument'))) !==
+      'preserved'
+    ) {
+      throw new Error('Open canvas reloaded the document instead of using the Angular router.');
+    }
+    assertWithinBase(new URL(page.url()), baseUrl, 'Open canvas navigation');
+
+    const previewSpecimen = page.getByTestId('component-specimen-tabs');
+    const previewStage = page.getByTestId('specimen-stage');
+    await previewSpecimen.waitFor({ state: 'visible' });
+    const focusVisiblePreset = page
+      .locator('.state-presets')
+      .getByRole('button', { name: 'Focus visible', exact: true });
+    await focusVisiblePreset.click();
+    await page.waitForFunction(
+      () => new URL(window.location.href).searchParams.get('state') === 'focus-visible',
+    );
+
+    await selectQueryOption(page, page.getByTestId('theme-control'), 'dark', 'theme');
+    await selectQueryOption(page, page.getByTestId('density-control'), 'spacious', 'density');
+    await selectQueryOption(page, page.getByTestId('direction-control'), 'rtl', 'direction');
+    await selectQueryOption(page, page.getByTestId('motion-control'), 'reduce', 'motion');
+    await selectQueryOption(page, page.getByTestId('viewport-control'), 'phone', 'viewport');
+    await selectQueryOption(
+      page,
+      page.getByRole('combobox', { name: 'Orientation', exact: true }),
+      'vertical',
+      'arg.orientation',
+    );
+    await selectQueryOption(
+      page,
+      page.getByRole('combobox', { name: 'Selected tab', exact: true }),
+      'settings',
+      'arg.selected',
+    );
+
+    assertWithinBase(new URL(page.url()), baseUrl, 'Configured preview');
+    await requireAttribute(previewStage, 'data-state', 'focus-visible', 'Preview stage');
+    await requireAttribute(previewStage, 'data-krn-theme-mode', 'dark', 'Preview stage');
+    await requireAttribute(previewStage, 'data-krn-density', 'spacious', 'Preview stage');
+    await requireAttribute(previewStage, 'dir', 'rtl', 'Preview stage');
+    await requireAttribute(previewStage, 'data-krn-motion', 'reduce', 'Preview stage');
+    await requireAttribute(previewSpecimen, 'data-state', 'focus-visible', 'Tabs specimen');
+    await requireAttribute(
+      previewSpecimen,
+      'data-visual-pseudo-state',
+      'focus-visible',
+      'Tabs specimen',
+    );
+    await requireAttribute(
+      previewSpecimen.getByRole('tablist'),
+      'aria-orientation',
+      'vertical',
+      'Tabs specimen',
+    );
+    await requireAttribute(
+      previewSpecimen.getByRole('tab', { name: 'Settings', exact: true }),
+      'aria-selected',
+      'true',
+      'Tabs specimen',
+    );
+
+    const configuredPreviewUrl = page.url();
+    const copyLink = page.locator('.workbench-toolbar krn-copy-button').getByRole('button');
+    await copyLink.click();
+    await page
+      .locator('.workbench-toolbar .krn-copy-status')
+      .getByText('Copied', { exact: true })
+      .waitFor({ state: 'visible' });
+    const copiedPreviewUrl = await page.evaluate(() => navigator.clipboard.readText());
+    if (copiedPreviewUrl !== configuredPreviewUrl) {
+      throw new Error(
+        `Copy link did not serialize the configured preview URL: ${copiedPreviewUrl}`,
+      );
+    }
+    assertWithinBase(new URL(copiedPreviewUrl), baseUrl, 'Copied preview link');
+
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.waitForFunction(() => Boolean(document.querySelector('[ng-version]')));
+    await page.getByTestId('docs-preview-root').waitFor({ state: 'visible' });
+    if (page.url() !== configuredPreviewUrl) {
+      throw new Error(`Hard reload did not preserve the configured preview URL: ${page.url()}`);
+    }
+    assertWithinBase(new URL(page.url()), baseUrl, 'Reloaded preview');
+
+    await requireControlValue(page.getByTestId('theme-control'), 'dark', 'Theme control');
+    await requireControlValue(page.getByTestId('density-control'), 'spacious', 'Density control');
+    await requireControlValue(page.getByTestId('direction-control'), 'rtl', 'Direction control');
+    await requireControlValue(page.getByTestId('motion-control'), 'reduce', 'Motion control');
+    await requireControlValue(page.getByTestId('viewport-control'), 'phone', 'Viewport control');
+    await requireControlValue(
+      page.getByRole('combobox', { name: 'Orientation', exact: true }),
+      'vertical',
+      'Orientation control',
+    );
+    await requireControlValue(
+      page.getByRole('combobox', { name: 'Selected tab', exact: true }),
+      'settings',
+      'Selected-tab control',
+    );
+    await requireAttribute(
+      page.locator('.state-presets').getByRole('button', { name: 'Focus visible', exact: true }),
+      'aria-pressed',
+      'true',
+      'Focus-visible state control',
+    );
+
+    const reloadedStage = page.getByTestId('specimen-stage');
+    const reloadedSpecimen = page.getByTestId('component-specimen-tabs');
+    await requireAttribute(reloadedStage, 'data-state', 'focus-visible', 'Reloaded preview stage');
+    await requireAttribute(reloadedStage, 'data-krn-theme-mode', 'dark', 'Reloaded preview stage');
+    await requireAttribute(reloadedStage, 'data-krn-density', 'spacious', 'Reloaded preview stage');
+    await requireAttribute(reloadedStage, 'dir', 'rtl', 'Reloaded preview stage');
+    await requireAttribute(
+      reloadedSpecimen,
+      'data-visual-pseudo-state',
+      'focus-visible',
+      'Reloaded Tabs specimen',
+    );
+    await requireAttribute(
+      reloadedSpecimen.getByRole('tablist'),
+      'aria-orientation',
+      'vertical',
+      'Reloaded Tabs specimen',
+    );
+    await requireAttribute(
+      reloadedSpecimen.getByRole('tab', { name: 'Settings', exact: true }),
+      'aria-selected',
+      'true',
+      'Reloaded Tabs specimen',
+    );
 
     await context.close();
   } finally {

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { DOCS_URL, labUrl, settlePage } from '../support/browser';
+import { DOCS_URL, previewUrl, settlePage, watchRuntimeErrors } from '../support/browser';
 
 test.describe('Keyboard interaction', () => {
   test('global search selects the active result with Enter', async ({ page }) => {
@@ -40,27 +40,36 @@ test.describe('Keyboard interaction', () => {
     await expect(first).toHaveAttribute('aria-selected', 'false');
   });
 
-  test('Lab controls update state and catalog entries activate from the keyboard', async ({
+  test('Docs preview controls update shareable state without leaving the specimen', async ({
     page,
   }) => {
-    await page.goto(labUrl());
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    await page.goto(previewUrl());
     await settlePage(page);
 
+    const stage = page.getByTestId('specimen-stage');
     const direction = page.getByTestId('direction-control');
     await direction.selectOption('rtl');
     await expect(page).toHaveURL(/direction=rtl/);
-    await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+    await expect(stage).toHaveAttribute('dir', 'rtl');
 
     const theme = page.getByTestId('theme-control');
     await theme.selectOption('dark');
     await expect(page).toHaveURL(/theme=dark/);
-    await expect(page.locator('html')).toHaveAttribute('data-krn-theme', 'dark');
+    await expect(stage).toHaveAttribute('data-krn-theme-mode', 'dark');
 
-    const dataGridEntry = page.getByTestId('catalog-item-data-grid');
-    await dataGridEntry.focus();
-    await dataGridEntry.press('Enter');
-    await expect(page).toHaveURL(/component=data-grid/);
-    await expect(page.getByTestId('specimen-data-grid')).toBeVisible();
+    const density = page.getByTestId('density-control');
+    await density.selectOption('spacious');
+    await expect(page).toHaveURL(/density=spacious/);
+    await expect(stage).toHaveAttribute('data-krn-density', 'spacious');
+
+    await expect(page).toHaveURL(/\/preview\/button\?/);
+    await expect(page.getByTestId('component-specimen-button')).toBeVisible();
+    await expect(page.locator('html')).not.toHaveAttribute('dir', 'rtl');
+    await expect(page.locator('html')).not.toHaveAttribute('data-krn-theme-mode', 'dark');
+    await expect(page.locator('html')).not.toHaveAttribute('data-krn-density', 'spacious');
+    assertNoRuntimeErrors();
   });
 
   test('skip link is the first focus target and reaches documentation content', async ({

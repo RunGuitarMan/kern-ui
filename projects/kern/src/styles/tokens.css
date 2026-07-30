@@ -118,25 +118,38 @@
     --krn-container-lg: 72rem;
     --krn-container-xl: 86rem;
 
+    --_krn-motion-duration-fast-full: 90ms;
+    --_krn-motion-duration-normal-full: 160ms;
+    --_krn-motion-duration-slow-full: 240ms;
+    --_krn-motion-duration-deliberate-full: 360ms;
+    --_krn-motion-duration-feedback-full: 1400ms;
+    --_krn-motion-duration-spinner-full: 900ms;
+    --_krn-motion-duration-progress-full: 1100ms;
+    --_krn-motion-duration-skeleton-full: 1550ms;
+    --_krn-motion-ease-standard-full: cubic-bezier(0.2, 0, 0, 1);
+    --_krn-motion-ease-enter-full: cubic-bezier(0.16, 1, 0.3, 1);
+    --_krn-motion-ease-exit-full: cubic-bezier(0.7, 0, 0.84, 0);
+    --_krn-motion-ease-spring-full: cubic-bezier(0.2, 1.35, 0.4, 1);
+
     --krn-motion-duration-instant: 0ms;
-    --krn-motion-duration-fast: 90ms;
-    --krn-motion-duration-normal: 160ms;
-    --krn-motion-duration-slow: 240ms;
-    --krn-motion-duration-deliberate: 360ms;
-    --krn-motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
-    --krn-motion-ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
-    --krn-motion-ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
-    --krn-motion-ease-spring: cubic-bezier(0.2, 1.35, 0.4, 1);
+    --krn-motion-duration-fast: var(--_krn-motion-duration-fast-full);
+    --krn-motion-duration-normal: var(--_krn-motion-duration-normal-full);
+    --krn-motion-duration-slow: var(--_krn-motion-duration-slow-full);
+    --krn-motion-duration-deliberate: var(--_krn-motion-duration-deliberate-full);
+    --krn-motion-ease-standard: var(--_krn-motion-ease-standard-full);
+    --krn-motion-ease-enter: var(--_krn-motion-ease-enter-full);
+    --krn-motion-ease-exit: var(--_krn-motion-ease-exit-full);
+    --krn-motion-ease-spring: var(--_krn-motion-ease-spring-full);
     /* Semantic recipes used by components; raw timing values stay centralized here. */
     --krn-motion-duration-interaction: var(--krn-motion-duration-fast);
     --krn-motion-duration-selection: var(--krn-motion-duration-normal);
     --krn-motion-duration-enter: var(--krn-motion-duration-slow);
     --krn-motion-duration-exit: var(--krn-motion-duration-normal);
     --krn-motion-duration-layout: var(--krn-motion-duration-deliberate);
-    --krn-motion-duration-feedback: 1400ms;
-    --krn-motion-duration-spinner: 900ms;
-    --krn-motion-duration-progress: 1100ms;
-    --krn-motion-duration-skeleton: 1550ms;
+    --krn-motion-duration-feedback: var(--_krn-motion-duration-feedback-full);
+    --krn-motion-duration-spinner: var(--_krn-motion-duration-spinner-full);
+    --krn-motion-duration-progress: var(--_krn-motion-duration-progress-full);
+    --krn-motion-duration-skeleton: var(--_krn-motion-duration-skeleton-full);
     --krn-motion-iteration-continuous: infinite;
 
     --krn-icon-size-sm: 1rem;

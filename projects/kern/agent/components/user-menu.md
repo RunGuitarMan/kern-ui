@@ -98,6 +98,49 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - empty
 - error
 - success
+- closed
+- open
+
+## Interactive playground
+
+Route: `preview/user-menu`
+
+Scenarios: `default`.
+Public API coverage: 3/4
+directly controlled; 1 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument | Control | Default             | Test value                      | Binding                   | Description                               |
+| -------- | ------- | ------------------- | ------------------------------- | ------------------------- | ----------------------------------------- |
+| `open`   | boolean | `false`             | `true`                          | model `open`              | Opens the user menu.                      |
+| `detail` | text    | `"avery@north.ops"` | `"avery@north.ops · alternate"` | input `detail` (property) | Configures the component detail contract. |
+| `name`   | text    | `"Avery Cole"`      | `"Avery Cole · alternate"`      | input `name` (property)   | Configures the component name contract.   |
+
+Exact API exclusions:
+
+| Public API      | Category           | Evidence                                               | Reason                                                                                                                  |
+| --------------- | ------------------ | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `menuAriaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#user-menu` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `data/alternate` — overflow: The fixture data projection is changed for this acceptance state..
+- `long-text` — long text; scenario `default`; fixture effect `data/alternate` — long text: The fixture data projection is changed for this acceptance state..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `loading` — loading; scenario `default`; fixture effect `data/loading` — loading: The fixture is waiting for enterprise data..
+- `empty` — empty; scenario `default`; fixture effect `data/empty` — empty: The fixture data source returned no records..
+- `error` — error; scenario `default`; fixture effect `data/error` — error: The fixture data request failed and can be retried..
+- `success` — success; scenario `default`; fixture effect `data/success` — success: The fixture operation completed successfully..
+- `closed` — closed; scenario `default`; `open=false`; fixture effect `data/alternate` — closed: The fixture data projection is changed for this acceptance state..
+- `open` — Open; scenario `default`; `open=true`.
 
 ## Related
 

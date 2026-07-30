@@ -1,8 +1,22 @@
 import { DOCUMENT } from '@angular/common';
-import { PLATFORM_ID } from '@angular/core';
+import { Component, PLATFORM_ID, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { applyKrnPrepaintTheme, provideKrnTheme, KrnThemeService } from './theme';
+import { generateKrnBrandPalette } from '../foundations/brand-color';
+import {
+  applyKrnPrepaintTheme,
+  provideKrnTheme,
+  KrnThemeDirective,
+  KrnThemeService,
+} from './theme';
+
+@Component({
+  imports: [KrnThemeDirective],
+  template: `<div data-testid="scope" [krnTheme]="'system'" [krnBrandColor]="brandColor()"></div>`,
+})
+class ScopedThemeFixture {
+  readonly brandColor = signal<string | null>('#4666da');
+}
 
 describe('KrnThemeService', () => {
   afterEach(() => {
@@ -53,6 +67,35 @@ describe('KrnThemeService', () => {
     service.setBrandColor(null);
     TestBed.tick();
     expect(root.style.getPropertyValue('--krn-color-brand-500')).toBe('');
+  });
+
+  it('updates scoped brand custom properties through the theme directive', () => {
+    TestBed.configureTestingModule({
+      providers: [provideKrnTheme({ persist: false })],
+    });
+    const fixture = TestBed.createComponent(ScopedThemeFixture);
+    fixture.detectChanges();
+    TestBed.tick();
+    const scope = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
+      '[data-testid="scope"]',
+    );
+    const initial = scope?.style.getPropertyValue('--krn-color-brand-500');
+
+    expect(initial).toBe(generateKrnBrandPalette('#4666da')?.[500]);
+
+    fixture.componentInstance.brandColor.set('#d95831');
+    TestBed.tick();
+    fixture.detectChanges();
+
+    expect(scope?.style.getPropertyValue('--krn-color-brand-500')).toBe(
+      generateKrnBrandPalette('#d95831')?.[500],
+    );
+
+    fixture.componentInstance.brandColor.set(null);
+    TestBed.tick();
+    fixture.detectChanges();
+
+    expect(scope?.style.getPropertyValue('--krn-color-brand-500')).toBe('');
   });
 
   it('initializes without browser globals during SSR', () => {

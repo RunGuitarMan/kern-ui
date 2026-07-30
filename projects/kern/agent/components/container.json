@@ -166,5 +166,183 @@
     "route": "components/container",
     "json": "components/container.json",
     "markdown": "components/container.md"
+  },
+  "playground": {
+    "route": "preview/container",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "size",
+        "label": "Size",
+        "kind": "select",
+        "defaultValue": "sm",
+        "testValue": "md",
+        "description": "Changes the maximum container width.",
+        "binding": {
+          "kind": "input",
+          "publicName": "size",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "sm",
+            "value": "sm"
+          },
+          {
+            "label": "md",
+            "value": "md"
+          },
+          {
+            "label": "lg",
+            "value": "lg"
+          },
+          {
+            "label": "xl",
+            "value": "xl"
+          },
+          {
+            "label": "full",
+            "value": "full"
+          }
+        ]
+      },
+      {
+        "key": "align",
+        "label": "Align",
+        "kind": "select",
+        "defaultValue": "center",
+        "testValue": "end",
+        "description": "Configures the component align contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "align",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "center",
+            "value": "center"
+          },
+          {
+            "label": "end",
+            "value": "end"
+          },
+          {
+            "label": "start",
+            "value": "start"
+          }
+        ]
+      },
+      {
+        "key": "gutter",
+        "label": "Gutter",
+        "kind": "text",
+        "defaultValue": "4",
+        "testValue": "20rem",
+        "description": "Configures the component gutter contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "gutter",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "maxWidth",
+        "label": "Max Width",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "20rem",
+        "description": "Configures the component maxWidth contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "maxWidth",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 4,
+      "controlled": 4,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

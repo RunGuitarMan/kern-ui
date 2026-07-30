@@ -95,6 +95,46 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - selected
 - unselected
 
+## Interactive playground
+
+Route: `preview/toggle-button`
+
+Scenarios: `default`.
+Public API coverage: 4/4
+directly controlled; 0 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument   | Control | Default   | Test value            | Binding                     | Description                 |
+| ---------- | ------- | --------- | --------------------- | --------------------------- | --------------------------- |
+| `disabled` | boolean | `false`   | `true`                | input `disabled` (property) | Prevents user interaction.  |
+| `selected` | boolean | `false`   | `true`                | model `pressed`             | Selects the action.         |
+| `size`     | select  | `"md"`    | `"sm"`                | input `size` (property)     | Semantic component size.    |
+| `value`    | text    | `"watch"` | `"watch · alternate"` | input `value` (property)    | Controlled component value. |
+
+Exact API exclusions:
+
+_No excluded public API members._
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — Disabled; scenario `default`; `disabled=true`.
+- `selected` — Selected; scenario `default`; `selected=true`.
+- `unselected` — unselected; scenario `default`; `selected=false`; fixture effect `status/neutral` — unselected: The fixture exposes the unselected status without claiming a public component input..
+
 ## Related
 
 - `button`

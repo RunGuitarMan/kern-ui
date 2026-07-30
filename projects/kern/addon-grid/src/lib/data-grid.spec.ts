@@ -899,9 +899,12 @@ describe('KrnDataGrid', () => {
         'cdk-virtual-scroll-viewport',
       )!;
       const row = viewportElement.querySelector<HTMLElement>('.virtual-row')!;
+      const rowMeasure = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
+        '.virtual-row-measure',
+      )!;
       const firstCell = row.querySelector<HTMLElement>('[data-cell="0-0"]')!;
       const checkViewport = vi.spyOn(viewport, 'checkViewportSize');
-      const rowRect = vi.spyOn(row, 'getBoundingClientRect');
+      const rowRect = vi.spyOn(rowMeasure, 'getBoundingClientRect');
 
       rowRect.mockReturnValue({ height: 52 } as DOMRect);
       resizeCallback?.([], {} as ResizeObserver);

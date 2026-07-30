@@ -107,8 +107,65 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - disabled
 - filled
 - empty
+- readonly
+- required
+- invalid
 - selected
 - unselected
+
+## Interactive playground
+
+Route: `preview/checkbox`
+
+Scenarios: `default`.
+Public API coverage: 8/10
+directly controlled; 2 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument        | Control | Default                                      | Test value                                               | Binding                          | Description                                       |
+| --------------- | ------- | -------------------------------------------- | -------------------------------------------------------- | -------------------------------- | ------------------------------------------------- |
+| `selected`      | boolean | `false`                                      | `true`                                                   | fixture interaction              | Shows the checked state.                          |
+| `indeterminate` | boolean | `false`                                      | `true`                                                   | input `indeterminate` (property) | Shows a mixed selection state.                    |
+| `disabled`      | boolean | `false`                                      | `true`                                                   | input `disabled` (property)      | Prevents user interaction.                        |
+| `readOnly`      | boolean | `false`                                      | `true`                                                   | input `readonly` (property)      | Keeps the value focusable while preventing edits. |
+| `required`      | boolean | `false`                                      | `true`                                                   | input `required` (property)      | Marks the control as required.                    |
+| `invalid`       | boolean | `false`                                      | `true`                                                   | input `invalid` (property)       | Exposes the invalid visual and ARIA state.        |
+| `description`   | text    | `"Receive a summary every Monday at 09:00."` | `"Receive a summary every Monday at 09:00. · alternate"` | input `description` (property)   | Configures the component description contract.    |
+| `id`            | text    | `""`                                         | `"Alternate value"`                                      | input `id` (property)            | Configures the component id contract.             |
+| `value`         | text    | `"Example value"`                            | `"Example value · alternate"`                            | input `value` (property)         | Controlled component value.                       |
+
+Exact API exclusions:
+
+| Public API  | Category           | Evidence                                                             | Reason                                                                                                                  |
+| ----------- | ------------------ | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#checkbox`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `name`      | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#checkbox` | Form submission field names do not alter the rendered component and are covered by forms integration tests.             |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — Hover; scenario `default`; visual state `hover`.
+- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
+- `active` — Active; scenario `default`; visual state `active`.
+- `disabled` — Disabled; scenario `default`; `disabled=true`.
+- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
+- `readonly` — Readonly; scenario `default`; `readOnly=true`.
+- `required` — Required; scenario `default`; `required=true`.
+- `invalid` — Invalid; scenario `default`; `invalid=true`.
+- `selected` — Selected; scenario `default`; `selected=true`.
+- `unselected` — unselected; scenario `default`; `selected=false`; fixture effect `status/neutral` — unselected: The fixture exposes the unselected status without claiming a public component input..
+- `indeterminate` — Indeterminate; scenario `default`; `indeterminate=true`.
 
 ## Related
 

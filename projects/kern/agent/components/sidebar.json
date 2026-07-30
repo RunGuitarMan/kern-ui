@@ -200,5 +200,192 @@
     "route": "components/sidebar",
     "json": "components/sidebar.json",
     "markdown": "components/sidebar.md"
+  },
+  "playground": {
+    "route": "preview/sidebar",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "collapsed",
+        "label": "Collapsed",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Collapses the sidebar to its configured compact mode.",
+        "binding": {
+          "kind": "model",
+          "publicName": "collapsed"
+        }
+      },
+      {
+        "key": "width",
+        "label": "Width",
+        "kind": "text",
+        "defaultValue": "15rem",
+        "testValue": "20rem",
+        "description": "Sets the expanded sidebar width.",
+        "binding": {
+          "kind": "input",
+          "publicName": "width",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "collapsedMode",
+        "label": "Collapsed Mode",
+        "kind": "select",
+        "defaultValue": "icons",
+        "testValue": "hidden",
+        "description": "Configures the component collapsedMode contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "collapsedMode",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "hidden",
+            "value": "hidden"
+          },
+          {
+            "label": "icons",
+            "value": "icons"
+          }
+        ]
+      },
+      {
+        "key": "collapsedWidth",
+        "label": "Collapsed Width",
+        "kind": "text",
+        "defaultValue": "4rem",
+        "testValue": "20rem",
+        "description": "Configures the component collapsedWidth contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "collapsedWidth",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "side",
+        "label": "Side",
+        "kind": "select",
+        "defaultValue": "start",
+        "testValue": "end",
+        "description": "Configures the component side contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "side",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "end",
+            "value": "end"
+          },
+          {
+            "label": "start",
+            "value": "start"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 6,
+      "controlled": 5,
+      "excluded": 1,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "sidebar",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#sidebar"
+        }
+      }
+    ]
   }
 }

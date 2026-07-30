@@ -272,5 +272,318 @@
     "route": "components/donut-chart",
     "json": "components/donut-chart.json",
     "markdown": "components/donut-chart.md"
+  },
+  "playground": {
+    "route": "preview/donut-chart",
+    "scenarios": ["default", "states", "stress"],
+    "controls": [
+      {
+        "key": "title",
+        "label": "Title",
+        "kind": "text",
+        "defaultValue": "Workspace plan mix",
+        "testValue": "Workspace plan mix · alternate",
+        "description": "Sets the visible chart title.",
+        "binding": {
+          "kind": "input",
+          "publicName": "title",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "description",
+        "label": "Description",
+        "kind": "text",
+        "defaultValue": "Current active workspaces",
+        "testValue": "Current active workspaces · alternate",
+        "description": "Adds concise dataset context.",
+        "binding": {
+          "kind": "input",
+          "publicName": "description",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "summaryItemLimit",
+        "label": "Summary limit",
+        "kind": "number",
+        "defaultValue": 12,
+        "testValue": 13,
+        "description": "Limits items in the accessible data summary.",
+        "binding": {
+          "kind": "input",
+          "publicName": "summaryItemLimit",
+          "syntax": "property"
+        },
+        "min": 1,
+        "max": 120,
+        "step": 1
+      },
+      {
+        "key": "eyebrow",
+        "label": "Eyebrow",
+        "kind": "text",
+        "defaultValue": "ALLOCATION",
+        "testValue": "ALLOCATION · alternate",
+        "description": "Configures the component eyebrow contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "eyebrow",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "negativeValuePolicy",
+        "label": "Negative Value Policy",
+        "kind": "select",
+        "defaultValue": "clamp",
+        "testValue": "reject",
+        "description": "Configures the component negativeValuePolicy contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "negativeValuePolicy",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "clamp",
+            "value": "clamp"
+          },
+          {
+            "label": "reject",
+            "value": "reject"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "stress",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "stress",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "hover",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "hover",
+          "description": "The fixture exposes the hover status without claiming a public component input."
+        }
+      },
+      {
+        "id": "focus-visible",
+        "label": "focus-visible",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "focus-visible",
+          "description": "The fixture exposes the focus visible status without claiming a public component input."
+        }
+      },
+      {
+        "id": "active",
+        "label": "active",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "active",
+          "description": "The fixture exposes the active status without claiming a public component input."
+        }
+      },
+      {
+        "id": "disabled",
+        "label": "disabled",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "disabled",
+          "description": "The fixture exposes the disabled status without claiming a public component input."
+        }
+      },
+      {
+        "id": "stress",
+        "label": "Stress data",
+        "scenario": "stress",
+        "args": {}
+      },
+      {
+        "id": "interactive-order",
+        "label": "Interactive order",
+        "scenario": "states",
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 12,
+      "controlled": 5,
+      "excluded": 7,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "donut-chart",
+        "publicName": "data",
+        "kind": "input",
+        "type": "ReadonlyArray<KrnChartDatum>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/donut-chart?state=default"
+        }
+      },
+      {
+        "componentId": "donut-chart",
+        "publicName": "datumIdentity",
+        "kind": "input",
+        "type": "KrnChartDatumIdentity",
+        "code": "callback",
+        "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/donut-chart.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "donut-chart",
+        "publicName": "labels",
+        "kind": "input",
+        "type": "Partial<KrnChartLabels>",
+        "code": "translation-object",
+        "reason": "Structured translation overrides are exercised through locale providers, not lossy scalar controls.",
+        "evidence": {
+          "category": "locale-preview",
+          "pointer": "preview/donut-chart?locale=ru-RU"
+        }
+      },
+      {
+        "componentId": "donut-chart",
+        "publicName": "locale",
+        "kind": "input",
+        "type": "string | Array<string>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/donut-chart?state=default"
+        }
+      },
+      {
+        "componentId": "donut-chart",
+        "publicName": "palette",
+        "kind": "input",
+        "type": "ReadonlyArray<string>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/donut-chart?state=default"
+        }
+      },
+      {
+        "componentId": "donut-chart",
+        "publicName": "percentFormatter",
+        "kind": "input",
+        "type": "KrnChartValueFormatter | null",
+        "code": "callback",
+        "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/donut-chart.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "donut-chart",
+        "publicName": "valueFormatter",
+        "kind": "input",
+        "type": "KrnChartValueFormatter | null",
+        "code": "callback",
+        "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/donut-chart.json#/examples/0"
+        }
+      }
+    ]
   }
 }

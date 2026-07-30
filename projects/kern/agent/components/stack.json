@@ -146,5 +146,200 @@
     "route": "components/stack",
     "json": "components/stack.json",
     "markdown": "components/stack.md"
+  },
+  "playground": {
+    "route": "preview/stack",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "gap",
+        "label": "Gap",
+        "kind": "select",
+        "defaultValue": "3",
+        "testValue": "2",
+        "description": "Changes the vertical spacing between projected items.",
+        "binding": {
+          "kind": "input",
+          "publicName": "gap",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "2",
+            "value": "2"
+          },
+          {
+            "label": "3",
+            "value": "3"
+          },
+          {
+            "label": "4",
+            "value": "4"
+          },
+          {
+            "label": "8",
+            "value": "8"
+          }
+        ]
+      },
+      {
+        "key": "align",
+        "label": "Align",
+        "kind": "select",
+        "defaultValue": "stretch",
+        "testValue": "start",
+        "description": "Configures the component align contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "align",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "start",
+            "value": "start"
+          },
+          {
+            "label": "center",
+            "value": "center"
+          },
+          {
+            "label": "end",
+            "value": "end"
+          },
+          {
+            "label": "stretch",
+            "value": "stretch"
+          },
+          {
+            "label": "baseline",
+            "value": "baseline"
+          }
+        ]
+      },
+      {
+        "key": "justify",
+        "label": "Justify",
+        "kind": "select",
+        "defaultValue": "start",
+        "testValue": "center",
+        "description": "Configures the component justify contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "justify",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "start",
+            "value": "start"
+          },
+          {
+            "label": "center",
+            "value": "center"
+          },
+          {
+            "label": "end",
+            "value": "end"
+          },
+          {
+            "label": "space-between",
+            "value": "space-between"
+          },
+          {
+            "label": "space-around",
+            "value": "space-around"
+          },
+          {
+            "label": "space-evenly",
+            "value": "space-evenly"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 3,
+      "controlled": 3,
+      "excluded": 0,
+      "unclassified": 0
+    },
+    "exclusions": []
   }
 }

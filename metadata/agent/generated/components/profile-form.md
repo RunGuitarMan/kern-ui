@@ -126,6 +126,53 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - error
 - success
 
+## Interactive playground
+
+Route: `preview/profile-form`
+
+Scenarios: `default`.
+Public API coverage: 3/12
+directly controlled; 9 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument       | Control | Default             | Test value                      | Binding                         | Description                                                      |
+| -------------- | ------- | ------------------- | ------------------------------- | ------------------------------- | ---------------------------------------------------------------- |
+| `saving`       | boolean | `false`             | `true`                          | input `saving` (property)       | Shows the saving state.                                          |
+| `dirtyMessage` | text    | `"Unsaved changes"` | `"Unsaved changes · alternate"` | input `dirtyMessage` (property) | Uses locale-aware unsaved-changes copy until explicitly changed. |
+| `bioMaxLength` | number  | `280`               | `281`                           | input `bioMaxLength` (property) | Configures the component bioMaxLength contract.                  |
+
+Exact API exclusions:
+
+| Public API       | Category           | Evidence                                                  | Reason                                                                                                                                                              |
+| ---------------- | ------------------ | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bioLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `nameErrorLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `nameLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `roleLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `saveLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `savingLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `timezoneLabel`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `timezones`      | complex-data       | `specimen-fixture:preview/profile-form?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+| `value`          | complex-data       | `specimen-fixture:preview/profile-form?state=default`     | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                    |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `data/alternate` — overflow: The fixture data projection is changed for this acceptance state..
+- `long-text` — long text; scenario `default`; fixture effect `data/alternate` — long text: The fixture data projection is changed for this acceptance state..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `loading` — loading; scenario `default`; fixture effect `data/loading` — loading: The fixture is waiting for enterprise data..
+- `empty` — empty; scenario `default`; fixture effect `data/empty` — empty: The fixture data source returned no records..
+- `error` — error; scenario `default`; fixture effect `data/error` — error: The fixture data request failed and can be retried..
+- `success` — success; scenario `default`; fixture effect `data/success` — success: The fixture operation completed successfully..
+
 ## Related
 
 - `user-menu`

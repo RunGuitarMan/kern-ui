@@ -93,8 +93,50 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - RTL
 - mobile
 - minimum
-- partial
 - maximum
+- partial
+
+## Interactive playground
+
+Route: `preview/meter`
+
+Scenarios: `default`.
+Public API coverage: 7/8
+directly controlled; 1 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument  | Control | Default          | Test value                   | Binding                    | Description                               |
+| --------- | ------- | ---------------- | ---------------------------- | -------------------------- | ----------------------------------------- |
+| `value`   | range   | `68`             | `69`                         | input `value` (property)   | Sets the current measured value.          |
+| `min`     | number  | `0`              | `1`                          | input `min` (property)     | Sets the lower bound.                     |
+| `max`     | number  | `100`            | `101`                        | input `max` (property)     | Sets the upper bound.                     |
+| `low`     | number  | `40`             | `41`                         | input `low` (property)     | Sets the low-range threshold.             |
+| `high`    | number  | `80`             | `81`                         | input `high` (property)    | Sets the high-range threshold.            |
+| `optimum` | number  | `20`             | `21`                         | input `optimum` (property) | Sets the preferred value.                 |
+| `label`   | text    | `"Storage used"` | `"Storage used · alternate"` | input `label` (property)   | Names the meter for assistive technology. |
+
+Exact API exclusions:
+
+| Public API | Category     | Evidence                                       | Reason                                                                                                                  |
+| ---------- | ------------ | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `locale`   | complex-data | `specimen-fixture:preview/meter?state=default` | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `minimum` — Minimum; scenario `default`; `value=0`.
+- `maximum` — Maximum; scenario `default`; `value=100`.
+- `partial` — Partial; scenario `default`; `value=50`.
 
 ## Related
 

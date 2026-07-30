@@ -9,7 +9,7 @@ interface WorkspaceRow {
 }
 
 @Component({
-  selector: 'klab-consumer-root',
+  selector: 'krn-consumer-root',
   imports: [KrnDataGrid],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: ` <krn-data-grid [columns]="columns" [data]="rows" [rowIdentity]="rowIdentity" /> `,

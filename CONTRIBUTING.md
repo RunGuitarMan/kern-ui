@@ -26,15 +26,37 @@ npm ci
 npm start
 ```
 
-The documentation application runs at `http://localhost:4200`; the deterministic component Lab
-runs at `http://localhost:4201`.
+The documentation application and its deterministic component previews run at
+`http://localhost:4200`. The default `npm start` command watches `kern`, `showcase`, and `docs` as
+one Nx development stack. `npm run serve:docs` is the narrower escape hatch for a prebuilt,
+Docs-only session. The dev stack performs one initial dependency build and then rebuilds the
+ordered `kern → showcase` graph only after library source changes.
+
+### Working with Nx
+
+Nx is the workspace orchestrator. `docs` may depend on `showcase` and `kern`, while `showcase` may
+depend on `kern`; tagged ESLint boundaries prevent dependencies in the opposite direction. Prefer
+the root npm scripts for the complete supported checks and use Nx for focused iteration:
+
+```bash
+npm run nx:projects
+npx nx show project showcase
+npx nx test kern
+npx nx run showcase:test-specimens
+npm run affected:test -- --base=main --head=HEAD
+```
+
+The committed root `.env` sets `NG_BUILD_MAX_WORKERS=1`. Nx loads it automatically so Angular and
+Sass compilation shuts down deterministically with the supported Node 24 toolchain. Do not remove
+or override it in CI without running the complete verification gate repeatedly. Nx remains the
+only persistent task-cache owner—the nested Angular cache is disabled per project—and can still
+run independent targets in parallel.
 
 The workspace contains:
 
 - `projects/kern`: the publishable `@kern-ui/angular` package;
 - `projects/showcase`: typed component catalog and documentation metadata;
-- `projects/docs`: SSR documentation application;
-- `projects/lab`: deterministic browser-test specimens;
+- `projects/docs`: SSR documentation, interactive playground, and deterministic preview host;
 - `tests`: Playwright end-to-end, accessibility, responsive, and visual tests.
 
 Import library code through supported public entry points. Deep imports into any
@@ -87,8 +109,8 @@ Import library code through supported public entry points. Deep imports into any
 - Treat `styles/kern.css` as the supported global composition. Shared action/form selectors are
   internal implementation details and must stay prefixed; consumers should not target them.
 - Component layout should respond to its container where embedding context matters.
-- Visual changes need deterministic Lab coverage. Review all supported themes, densities,
-  directions, and relevant responsive states.
+- Visual changes need deterministic Docs preview coverage. Review all supported themes,
+  densities, directions, and relevant responsive states.
 
 ## Verification
 
@@ -111,6 +133,8 @@ Useful focused commands are:
 
 ```bash
 npm run test:kern
+npm run test:showcase
+npm run test:showcase:specimens
 npm run test:a11y
 npm run test:responsive
 npm run test:visual

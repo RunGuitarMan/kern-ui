@@ -86,6 +86,36 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - RTL
 - mobile
 
+## Interactive playground
+
+Route: `preview/spacer`
+
+Scenarios: `default`.
+Public API coverage: 2/2
+directly controlled; 0 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument | Control | Default        | Test value   | Binding                 | Description                             |
+| -------- | ------- | -------------- | ------------ | ----------------------- | --------------------------------------- |
+| `axis`   | select  | `"horizontal"` | `"vertical"` | input `axis` (property) | Chooses the axis that receives spacing. |
+| `size`   | text    | `"12"`         | `"20rem"`    | input `size` (property) | Sets the spacer length.                 |
+
+Exact API exclusions:
+
+_No excluded public API members._
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+
 ## Related
 
 - `app-shell`

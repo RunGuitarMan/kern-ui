@@ -217,5 +217,260 @@
     "route": "components/notification-center",
     "json": "components/notification-center.json",
     "markdown": "components/notification-center.md"
+  },
+  "playground": {
+    "route": "preview/notification-center",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "dataState",
+        "label": "Data state",
+        "kind": "select",
+        "defaultValue": "ready",
+        "testValue": "empty",
+        "description": "Changes the notification collection fixture.",
+        "binding": {
+          "kind": "fixture",
+          "target": "data",
+          "description": "Selects ready, empty, or unread notification records."
+        },
+        "options": [
+          {
+            "label": "ready",
+            "value": "ready"
+          },
+          {
+            "label": "empty",
+            "value": "empty"
+          },
+          {
+            "label": "unread",
+            "value": "unread"
+          }
+        ]
+      },
+      {
+        "key": "heading",
+        "label": "Heading",
+        "kind": "text",
+        "defaultValue": "Recent events",
+        "testValue": "Recent events · alternate",
+        "description": "Configures the component heading contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "heading",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "overflow",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "alternate",
+          "label": "long text",
+          "description": "The fixture data projection is changed for this acceptance state."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "loading",
+        "label": "loading",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "loading",
+          "label": "loading",
+          "description": "The fixture is waiting for enterprise data."
+        }
+      },
+      {
+        "id": "empty",
+        "label": "Empty",
+        "scenario": "default",
+        "args": {
+          "dataState": "empty"
+        }
+      },
+      {
+        "id": "error",
+        "label": "error",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "error",
+          "label": "error",
+          "description": "The fixture data request failed and can be retried."
+        }
+      },
+      {
+        "id": "success",
+        "label": "success",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "data",
+          "mode": "success",
+          "label": "success",
+          "description": "The fixture operation completed successfully."
+        }
+      },
+      {
+        "id": "unread",
+        "label": "Unread",
+        "scenario": "default",
+        "args": {
+          "dataState": "unread"
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 7,
+      "controlled": 1,
+      "excluded": 6,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "notification-center",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#notification-center"
+        }
+      },
+      {
+        "componentId": "notification-center",
+        "publicName": "emptyLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#notification-center"
+        }
+      },
+      {
+        "componentId": "notification-center",
+        "publicName": "markAllReadLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#notification-center"
+        }
+      },
+      {
+        "componentId": "notification-center",
+        "publicName": "notifications",
+        "kind": "input",
+        "type": "ReadonlyArray<KrnNotification>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/notification-center?state=default"
+        }
+      },
+      {
+        "componentId": "notification-center",
+        "publicName": "unreadLabel",
+        "kind": "input",
+        "type": "(count: number) => string",
+        "code": "callback",
+        "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/notification-center.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "notification-center",
+        "publicName": "unreadStateLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#notification-center"
+        }
+      }
+    ]
   }
 }

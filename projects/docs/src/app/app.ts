@@ -56,6 +56,7 @@ export class App {
     { initialValue: this.router.url },
   );
   protected readonly currentPath = computed(() => this.currentUrl().split(/[?#]/, 1)[0] || '/');
+  protected readonly previewMode = computed(() => this.currentPath().startsWith('/preview/'));
   private readonly expandedCategories = signal<ReadonlySet<KernCategory>>(
     new Set<KernCategory>(['Actions']),
   );

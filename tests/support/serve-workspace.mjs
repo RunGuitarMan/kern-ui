@@ -2,14 +2,10 @@ import { spawn, spawnSync } from 'node:child_process';
 import { createServer } from 'node:http';
 import { join } from 'node:path';
 
-import express from 'express';
-
 const workspace = process.cwd();
 const host = '127.0.0.1';
 const docsUrl = 'http://localhost:4200/';
-const labUrl = 'http://localhost:4201/';
-/** @type {import('node:http').Server[]} */
-const applicationServers = [];
+const reuseExistingServer = process.env['KERN_E2E_REUSE_SERVER'] === 'true';
 /** @type {import('node:child_process').ChildProcess[]} */
 const applicationProcesses = [];
 /** @type {import('node:http').Server | undefined} */
@@ -55,30 +51,6 @@ function runBuild(script) {
 }
 
 /**
- * @param {string} label
- * @param {string} root
- * @param {string} fallback
- * @param {number} port
- */
-function startProject(label, root, fallback, port) {
-  const application = express();
-  application.disable('x-powered-by');
-  application.use(express.static(root, { index: 'index.html' }));
-  application.use((request, response, next) => {
-    if (request.method !== 'GET' && request.method !== 'HEAD') {
-      next();
-      return;
-    }
-    response.sendFile(fallback);
-  });
-  const server = application.listen(port, host);
-  applicationServers.push(server);
-  server.once('error', (error) => {
-    if (!shuttingDown) console.error(`${label} static server failed.`, error);
-  });
-}
-
-/**
  * Runs the built Angular Node server so browser tests exercise server rendering
  * and hydration instead of a client-side index fallback.
  *
@@ -114,9 +86,6 @@ async function shutdown(exitCode = 0) {
       child.kill('SIGTERM');
     }
   }
-  for (const server of applicationServers) {
-    await new Promise((resolve) => server.close(resolve));
-  }
   if (healthServer) {
     const server = healthServer;
     await new Promise((resolve) => server.close(resolve));
@@ -124,32 +93,23 @@ async function shutdown(exitCode = 0) {
   process.exit(exitCode);
 }
 
-const docsAlreadyRunning = await responds(docsUrl);
-const labAlreadyRunning = await responds(labUrl);
+const docsAlreadyRunning = reuseExistingServer && (await responds(docsUrl));
 
-if (!docsAlreadyRunning || !labAlreadyRunning) {
-  // Build and serve production output. This validates exactly what ships and
-  // avoids two long-lived esbuild watchers competing on constrained CI hosts.
-  runBuild('build:kern');
-  runBuild('build:showcase');
-  if (!docsAlreadyRunning) runBuild('build:docs');
-  if (!labAlreadyRunning) runBuild('build:lab');
+if (!docsAlreadyRunning) {
+  // Nx builds the complete docs dependency graph in production mode. Serving
+  // that output validates exactly what ships and avoids a long-lived watcher
+  // on constrained CI hosts.
+  runBuild('build:docs');
 }
 
 if (!docsAlreadyRunning) {
   startDocsServer(join(workspace, 'dist', 'docs', 'server', 'server.mjs'), 4200);
   await waitFor(docsUrl, 'Docs');
 }
-if (!labAlreadyRunning) {
-  const labRoot = join(workspace, 'dist', 'lab', 'browser');
-  startProject('Lab', labRoot, join(labRoot, 'index.html'), 4201);
-  await waitFor(labUrl, 'Lab');
-}
-
 healthServer = createServer((request, response) => {
   if (request.url === '/ready') {
     response.writeHead(200, { 'content-type': 'text/plain; charset=utf-8' });
-    response.end('docs=ready lab=ready');
+    response.end('docs=ready');
     return;
   }
   response.writeHead(404);

@@ -227,6 +227,7 @@ const GRID_CELL_ACTION_SELECTOR = [
           [attr.aria-multiselectable]="selectable() ? 'true' : null"
           (focusout)="onGridFocusOut($event)"
         >
+          <div #virtualRowMeasure class="virtual-row-measure" aria-hidden="true"></div>
           <div class="virtual-header" role="row" aria-rowindex="1">
             @if (selectable()) {
               <div
@@ -1016,8 +1017,17 @@ const GRID_CELL_ACTION_SELECTOR = [
         var(--krn-motion-iteration-continuous);
     }
     .virtual-grid {
+      position: relative;
       max-inline-size: 100%;
       overflow: auto;
+    }
+    .virtual-row-measure {
+      position: absolute;
+      inset: 0 auto auto 0;
+      visibility: hidden;
+      inline-size: 0;
+      block-size: var(--krn-data-row-size, 2.75rem);
+      pointer-events: none;
     }
     .virtual-header,
     .virtual-row {
@@ -1844,7 +1854,7 @@ export class KrnDataGrid<T> implements AfterViewChecked {
 
   private syncVirtualRowMeasurement(): void {
     const row = this.isVirtual()
-      ? this.host.nativeElement.querySelector<HTMLElement>('.virtual-row')
+      ? this.host.nativeElement.querySelector<HTMLElement>('.virtual-row-measure')
       : null;
     if (row === this.observedVirtualRow) {
       if (row) this.measureVirtualRow(row);

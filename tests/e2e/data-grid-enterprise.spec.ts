@@ -1,13 +1,13 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
-import { labUrl, settlePage, watchRuntimeErrors } from '../support/browser';
+import { previewUrl, settlePage, watchRuntimeErrors } from '../support/browser';
 
 async function openVirtualGrid(
   page: Page,
   density: 'compact' | 'spacious',
 ): Promise<{ readonly row: Locator; readonly viewport: Locator }> {
   await page.goto(
-    labUrl({
+    previewUrl({
       component: 'data-grid',
       scenario: 'virtual',
       theme: 'light',
@@ -17,7 +17,7 @@ async function openVirtualGrid(
   );
   await settlePage(page);
 
-  const specimen = page.getByTestId('specimen-data-grid');
+  const specimen = page.getByTestId('component-specimen-data-grid');
   await expect(specimen).toBeVisible();
   const viewport = specimen.locator('cdk-virtual-scroll-viewport');
   const row = viewport.locator('.virtual-row').first();
@@ -74,7 +74,7 @@ test.describe('Data grid enterprise contracts', () => {
   }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
     await openVirtualGrid(page, 'compact');
-    const grid = page.getByTestId('specimen-data-grid').locator('[role="grid"]');
+    const grid = page.getByTestId('component-specimen-data-grid').locator('[role="grid"]');
     const managedCells = grid.locator('[data-cell]');
     const managedActions = grid.locator('button, input, [role="separator"]');
 

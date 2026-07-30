@@ -6,7 +6,7 @@ import { KERN_CATALOG } from '../../projects/showcase/src/lib/catalog';
 import {
   DOCS_URL,
   expectNoPageOverflow,
-  labUrl,
+  previewUrl,
   settlePage,
   watchRuntimeErrors,
 } from '../support/browser';
@@ -72,26 +72,26 @@ test.describe('WCAG automated checks', () => {
     });
   }
 
-  const labStates = [
-    labUrl(),
-    labUrl({
+  const previewStates = [
+    previewUrl(),
+    previewUrl({
       component: 'text-input',
-      scenario: 'states',
+      state: 'invalid',
       theme: 'dark',
       density: 'compact',
       direction: 'rtl',
     }),
-    labUrl({
+    previewUrl({
       component: 'alert',
-      scenario: 'stress',
+      state: 'long-text',
       theme: 'high-contrast',
       density: 'spacious',
       direction: 'ltr',
     }),
   ] as const;
 
-  for (const [index, url] of labStates.entries()) {
-    test(`Lab state ${index + 1} has no serious automated violations`, async ({
+  for (const [index, url] of previewStates.entries()) {
+    test(`Docs preview state ${index + 1} has no serious automated violations`, async ({
       page,
     }, testInfo) => {
       await page.goto(url);
@@ -116,7 +116,7 @@ test.describe('WCAG automated checks', () => {
     page,
   }) => {
     await page.goto(
-      labUrl({
+      previewUrl({
         component: 'line-chart',
         scenario: 'default',
         theme: 'light',
@@ -126,7 +126,7 @@ test.describe('WCAG automated checks', () => {
     );
     await settlePage(page);
 
-    const specimen = page.getByTestId('specimen-line-chart');
+    const specimen = page.getByTestId('component-specimen-line-chart');
     const chart = specimen.locator('svg[role="group"]');
     await expect(chart).toHaveAttribute('aria-label', /Weekly active users/);
     await expect(chart.locator('[role="button"][data-chart-index]')).toHaveCount(6);
@@ -149,9 +149,9 @@ test.describe('WCAG automated checks', () => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
     await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
     await page.goto(
-      labUrl({
+      previewUrl({
         component: 'select',
-        scenario: 'states',
+        state: 'async-loading',
         theme: 'high-contrast',
         density: 'comfortable',
         direction: 'ltr',
@@ -160,7 +160,7 @@ test.describe('WCAG automated checks', () => {
     await settlePage(page);
 
     expect(await page.evaluate(() => matchMedia('(forced-colors: active)').matches)).toBe(true);
-    let specimen = page.getByTestId('specimen-select');
+    let specimen = page.getByTestId('component-specimen-select');
     const select = specimen.getByRole('combobox', { name: 'Workspace plan' });
     await select.focus();
     const focusStyle = await specimen.locator('.krn-control-shell').evaluate((element) => {
@@ -176,7 +176,7 @@ test.describe('WCAG automated checks', () => {
     await expect(specimen.getByRole('status')).toHaveText('Loading options…');
 
     await page.goto(
-      labUrl({
+      previewUrl({
         component: 'line-chart',
         scenario: 'states',
         theme: 'high-contrast',
@@ -185,14 +185,14 @@ test.describe('WCAG automated checks', () => {
       }),
     );
     await settlePage(page);
-    specimen = page.getByTestId('specimen-line-chart');
+    specimen = page.getByTestId('component-specimen-line-chart');
     const mark = specimen.locator('[role="button"][aria-label="Mon: 42"]');
     await mark.focus();
     await expect(mark).toBeFocused();
     await expect(specimen.getByRole('status')).toContainText('Mon');
 
     await page.goto(
-      labUrl({
+      previewUrl({
         component: 'dialog',
         scenario: 'default',
         theme: 'high-contrast',
