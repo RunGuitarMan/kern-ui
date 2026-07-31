@@ -28,6 +28,7 @@ import type {
 } from './form-types';
 import { createKrnId } from './form-field';
 import {
+  type KrnControlStateInputs,
   KrnValueAccessor,
   provideKrnFormControl,
   requiredError,
@@ -39,6 +40,7 @@ interface KrnCheckboxGroupController {
   readonly isDisabled: () => boolean;
   readonly isReadOnly: () => boolean;
   has(value: string): boolean;
+  markTouched(): void;
   toggle(value: string, checked: boolean): void;
 }
 
@@ -62,16 +64,20 @@ const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string
   providers: [CHECKBOX_GROUP_PROVIDER, ...provideKrnFormControl(() => KrnCheckboxGroup)],
   template: `
     <fieldset
+      #fieldset
       class="krn-choice-group"
-      [attr.aria-describedby]="describedBy() || a11y.describedBy()"
+      [attr.aria-describedby]="effectiveDescribedBy()"
       [attr.aria-invalid]="a11y.invalid()"
+      [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
+      [attr.aria-labelledby]="effectiveLabelledBy()"
       [attr.aria-required]="a11y.required()"
+      [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
       [attr.data-orientation]="orientation()"
       [attr.data-readonly]="isReadOnly()"
       [disabled]="isDisabled()"
       [id]="a11y.id()"
     >
-      @if (label()) {
+      @if (label() && !formFieldLabelledBy()) {
         <legend class="krn-label">{{ label() }}</legend>
       }
       <div class="krn-choice-group__options">
@@ -85,9 +91,16 @@ export class KrnCheckboxGroup
   extends KrnValueAccessor<readonly string[]>
   implements KrnCheckboxGroupController
 {
+  private readonly fieldset = viewChild<ElementRef<HTMLFieldSetElement>>('fieldset');
+  private angularOwnsValue = false;
+
   readonly id = input('');
   readonly label = input('');
+  readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
   readonly orientation = input<KrnOrientation>('vertical');
+  readonly value = input<readonly string[] | undefined>(undefined);
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false, {
     alias: 'readonly',
@@ -100,20 +113,59 @@ export class KrnCheckboxGroup
 
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'checkbox-group', {
     disabled: this.disabled,
+    labelStrategy: 'group',
     readOnly: this.readOnly,
     required: this.required,
-  });
+  } as KrnControlStateInputs & { readonly labelStrategy: 'group' });
   readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
   readonly isReadOnly = computed(() => this.a11y.readOnly());
+  protected readonly formFieldLabelledBy = computed(
+    () =>
+      (
+        this.a11y as typeof this.a11y & {
+          readonly labelledBy?: () => string | null;
+        }
+      ).labelledBy?.() ?? null,
+  );
+  protected readonly effectiveLabelledBy = computed(() =>
+    mergeAriaIds(this.ariaLabelledBy(), this.formFieldLabelledBy()),
+  );
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(this.describedBy(), this.ariaDescribedBy(), this.a11y.describedBy()),
+  );
+  protected readonly isFormFieldControl = computed(
+    () =>
+      (
+        this.a11y as typeof this.a11y & {
+          readonly isFormFieldControl?: () => boolean;
+        }
+      ).isFormFieldControl?.() ?? false,
+  );
 
   constructor() {
     super([]);
+    effect(() => {
+      const value = this.value();
+      if (value !== undefined && !this.angularOwnsValue) {
+        this.controlValue.set(this.normalizeIncomingValue(value));
+      }
+    });
     this.watchValidationInputs(this.required, this.a11y.required);
+  }
+
+  override writeValue(value: unknown): void {
+    this.angularOwnsValue = true;
+    super.writeValue(value);
+  }
+
+  override registerOnChange(fn: (value: readonly string[]) => void): void {
+    this.angularOwnsValue = true;
+    super.registerOnChange(fn);
   }
 
   protected override normalizeIncomingValue(value: unknown): readonly string[] {
     return Array.isArray(value)
-      ? value.filter((item): item is string => typeof item === 'string')
+      ? [...new Set(value.filter((item): item is string => typeof item === 'string'))]
       : [];
   }
 
@@ -125,19 +177,28 @@ export class KrnCheckboxGroup
     return this.controlValue().includes(value);
   }
 
+  markTouched(): void {
+    this.touch();
+  }
+
   toggle(value: string, checked: boolean): void {
     if (this.isDisabled() || this.isReadOnly()) {
       return;
     }
     const current = this.controlValue();
-    const next = checked
-      ? current.includes(value)
-        ? current
-        : [...current, value]
-      : current.filter((item) => item !== value);
+    const currentlyChecked = current.includes(value);
+    if (currentlyChecked === checked) {
+      return;
+    }
+    const next = checked ? [...current, value] : current.filter((item) => item !== value);
     this.commitValue(next);
-    this.touch();
     this.valueChange.emit(next);
+  }
+
+  focus(options?: FocusOptions): void {
+    this.fieldset()
+      ?.nativeElement.querySelector<HTMLInputElement>('input[type="checkbox"]:not(:disabled)')
+      ?.focus(options);
   }
 }
 
@@ -175,7 +236,7 @@ export class KrnCheckboxGroup
         [required]="a11y.required()"
         [tabIndex]="tabIndex()"
         [value]="value()"
-        (blur)="touch()"
+        (blur)="blurred()"
         (change)="changeChecked($event)"
       />
       <span class="krn-choice__mark" aria-hidden="true">
@@ -338,6 +399,11 @@ export class KrnCheckbox extends KrnValueAccessor<boolean | null> {
     }
     this.commitValue(next);
     this.checkedChange.emit(next);
+  }
+
+  protected blurred(): void {
+    this.touch();
+    this.group?.markTouched();
   }
 
   focus(options?: FocusOptions): void {

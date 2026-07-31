@@ -79,6 +79,9 @@ contract or upgrade decision.
 - Strengthened Checkbox with deterministic standalone `checked` ownership, nullable
   Angular-Forms-owned mixed state, user-cleared indeterminate state, composable visible/external
   names and descriptions, native-only tab order, and public native focus and blur methods.
+- Strengthened Checkbox Group with deterministic standalone `value` ownership, unique
+  duplicate-free values and outputs, composable group names and descriptions, blur-driven touched
+  state, and public focus delegation to the first available native checkbox.
 
 ### Deprecated
 
