@@ -1,4 +1,4 @@
-import { A11yModule } from '@angular/cdk/a11y';
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import {
   booleanAttribute,
   ChangeDetectionStrategy,
@@ -14,7 +14,13 @@ import {
 } from '@angular/core';
 import type { ElementRef } from '@angular/core';
 
-import { KRN_PLATFORM, KrnIdService, KrnOverlayCoordinator } from '@kern-ui/angular/cdk';
+import {
+  KRN_PLATFORM,
+  KrnIdService,
+  KrnOverlayCoordinator,
+  krnIsHtmlElement,
+  type KrnOverlayInitialFocus,
+} from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnLayoutSpace } from './layout.types';
 import { krnCssLength } from './layout.types';
@@ -22,7 +28,7 @@ import { krnCssLength } from './layout.types';
 @Component({
   selector: 'krn-app-shell',
   standalone: true,
-  imports: [A11yModule],
+  imports: [CdkTrapFocus],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <button
@@ -31,8 +37,9 @@ import { krnCssLength } from './layout.types';
       class="krn-shell__mobile-trigger"
       [attr.aria-controls]="mobileNavigationId()"
       [attr.aria-expanded]="isMobileNavigationOpen()"
+      aria-haspopup="dialog"
       [attr.aria-label]="isMobileNavigationOpen() ? closeNavigationLabel() : openNavigationLabel()"
-      (click)="mobileNavigationOpen.update(toggle)"
+      (click)="toggleMobileNavigation()"
     >
       <span aria-hidden="true">☰</span>
     </button>
@@ -45,7 +52,19 @@ import { krnCssLength } from './layout.types';
         class="krn-shell__navigation"
         [id]="mobileNavigationId()"
         [attr.role]="isMobileNavigationOpen() ? 'dialog' : null"
-        [attr.aria-label]="isMobileNavigationOpen() ? mobileNavigationLabel() : null"
+        [attr.aria-describedby]="
+          isMobileNavigationOpen() && mobileNavigationDescribedBy()
+            ? mobileNavigationDescribedBy()
+            : null
+        "
+        [attr.aria-label]="
+          isMobileNavigationOpen() && !mobileNavigationLabelledBy() ? mobileNavigationLabel() : null
+        "
+        [attr.aria-labelledby]="
+          isMobileNavigationOpen() && mobileNavigationLabelledBy()
+            ? mobileNavigationLabelledBy()
+            : null
+        "
         [attr.aria-modal]="isMobileNavigationOpen() ? 'true' : null"
         [attr.tabindex]="isMobileNavigationOpen() ? '-1' : null"
         [cdkTrapFocus]="isMobileNavigationOpen()"
@@ -57,7 +76,7 @@ import { krnCssLength } from './layout.types';
             type="button"
             class="krn-shell__mobile-close"
             [attr.aria-label]="closeNavigationLabel()"
-            (click)="mobileNavigationOpen.set(false)"
+            (click)="closeMobileNavigation()"
           >
             <span aria-hidden="true">×</span>
           </button>
@@ -69,7 +88,7 @@ import { krnCssLength } from './layout.types';
           </div>
         </div>
       </div>
-      <main class="krn-shell__main" [id]="mainId()" tabindex="-1">
+      <main #mainElement class="krn-shell__main" [id]="mainId()" tabindex="-1">
         <ng-content />
       </main>
     </div>
@@ -266,7 +285,9 @@ export class KrnAppShell {
   private readonly destroyRef = inject(DestroyRef);
   private readonly mobilePanel = viewChild<ElementRef<HTMLElement>>('mobilePanel');
   private readonly mobileTrigger = viewChild<ElementRef<HTMLButtonElement>>('mobileTrigger');
+  private readonly mainElement = viewChild<ElementRef<HTMLElement>>('mainElement');
   private readonly mobileViewport = signal(false);
+  private readonly responsiveViewportKnown = signal(false);
   private readonly overlayId = this.ids.next('mobile-navigation-overlay');
   readonly sidebarWidth = input<KrnLayoutSpace>('17rem');
   readonly railWidth = input<KrnLayoutSpace>('3.5rem');
@@ -276,10 +297,12 @@ export class KrnAppShell {
   readonly mobileNavigationOpen = model(false);
   readonly mobileNavigationId = input(this.ids.next('mobile-navigation'));
   readonly mobileNavigationLabel = input(this.translations.layout.mobileNavigation);
+  readonly mobileNavigationLabelledBy = input('');
+  readonly mobileNavigationDescribedBy = input('');
+  readonly mobileNavigationInitialFocus = input<KrnOverlayInitialFocus>('first-tabbable');
   readonly openNavigationLabel = input(this.translations.layout.openNavigation);
   readonly closeNavigationLabel = input(this.translations.layout.closeNavigation);
   readonly mainId = input('main-content');
-  protected readonly toggle = (value: boolean): boolean => !value;
   protected readonly isMobileNavigationOpen = computed(
     () =>
       this.mobileViewport() && this.mobileNavigation() !== 'hidden' && this.mobileNavigationOpen(),
@@ -295,10 +318,13 @@ export class KrnAppShell {
 
   constructor() {
     const query = this.platform.matchMedia('(max-width: 48rem)');
-    this.mobileViewport.set(query?.matches ?? false);
+    if (query) {
+      this.mobileViewport.set(query.matches);
+      this.responsiveViewportKnown.set(true);
+    }
     const onViewportChange = (event: MediaQueryListEvent): void => {
       this.mobileViewport.set(event.matches);
-      if (!event.matches) this.mobileNavigationOpen.set(false);
+      if (!event.matches) this.closeMobileNavigation();
     };
     query?.addEventListener('change', onViewportChange);
     this.destroyRef.onDestroy(() => query?.removeEventListener('change', onViewportChange));
@@ -310,8 +336,18 @@ export class KrnAppShell {
 
       const panel = this.mobilePanel()?.nativeElement;
       if (!panel) return;
-      this.coordinator.activate(this.overlayId, panel, this.mobileTrigger()?.nativeElement ?? null);
-      this.platform.queueMicrotask(() => this.coordinator.focusInitial(panel, 'first-tabbable'));
+      const activeElement = this.platform.document.activeElement;
+      const restoreFocus =
+        krnIsHtmlElement(this.platform, activeElement) &&
+        activeElement.isConnected &&
+        activeElement !== this.platform.document.body &&
+        activeElement !== this.platform.document.documentElement
+          ? activeElement
+          : (this.mobileTrigger()?.nativeElement ?? null);
+      this.coordinator.activate(this.overlayId, panel, restoreFocus);
+      this.platform.queueMicrotask(() =>
+        this.coordinator.focusInitial(panel, this.mobileNavigationInitialFocus()),
+      );
       const onKeydown = (event: KeyboardEvent): void => {
         if (
           event.key !== 'Escape' ||
@@ -322,7 +358,7 @@ export class KrnAppShell {
         }
         event.preventDefault();
         event.stopPropagation();
-        this.mobileNavigationOpen.set(false);
+        this.closeMobileNavigation();
       };
       this.platform.document.addEventListener('keydown', onKeydown);
       onCleanup(() => {
@@ -332,16 +368,42 @@ export class KrnAppShell {
     });
 
     effect(() => {
-      if (this.mobileNavigation() === 'hidden' && this.mobileNavigationOpen()) {
-        this.mobileNavigationOpen.set(false);
+      if (
+        this.mobileNavigationOpen() &&
+        (this.mobileNavigation() === 'hidden' ||
+          (this.responsiveViewportKnown() && !this.mobileViewport()))
+      ) {
+        this.closeMobileNavigation();
       }
     });
   }
 
   protected closeFromBackdrop(event: PointerEvent): void {
     if (event.target === event.currentTarget) {
-      this.mobileNavigationOpen.set(false);
+      this.closeMobileNavigation();
     }
+  }
+
+  openMobileNavigation(): void {
+    if (this.mobileViewport() && this.mobileNavigation() !== 'hidden') {
+      this.mobileNavigationOpen.set(true);
+    }
+  }
+
+  closeMobileNavigation(): void {
+    this.mobileNavigationOpen.set(false);
+  }
+
+  toggleMobileNavigation(): void {
+    if (this.isMobileNavigationOpen()) {
+      this.closeMobileNavigation();
+    } else {
+      this.openMobileNavigation();
+    }
+  }
+
+  focusMain(options?: FocusOptions): void {
+    this.mainElement()?.nativeElement.focus(options);
   }
 }
 

@@ -59,6 +59,9 @@ contract or upgrade decision.
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned
   Popover/Hover Card semantics with disclosure and non-modal preview behavior.
+- Strengthened App Shell with canonical responsive drawer state, composed dialog naming and
+  descriptions, configurable initial focus, explicit dialog trigger semantics, and public
+  navigation and main-focus methods.
 - Removed duplicate state-change outputs where signal models already provide the canonical event.
 - Rebuilt Form Field as a control-owned label/description coordinator: registered controls now
   supply identity and Angular state, full control events drive pending/valid/disabled presentation,
