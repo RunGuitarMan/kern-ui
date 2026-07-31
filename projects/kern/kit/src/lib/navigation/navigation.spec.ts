@@ -769,6 +769,43 @@ describe('Kern navigation', () => {
     }
   });
 
+  it('normalizes skip-link inputs and focuses a non-tabbable target without permanent mutation', async () => {
+    const originalUrl = `${location.pathname}${location.search}${location.hash}`;
+    const fixture = await create(KrnSkipLink, { targetId: '   ', label: '   ' });
+    const activated = vi.fn();
+    fixture.componentInstance.activated.subscribe(activated);
+    const link = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>('a')!;
+    const target = document.createElement('main');
+    target.id = 'main-content';
+    document.body.append(target);
+
+    try {
+      expect(link.getAttribute('href')).toContain('#main-content');
+      expect(link.textContent?.trim()).toBeTruthy();
+
+      const modified = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        metaKey: true,
+      });
+      link.dispatchEvent(modified);
+      expect(modified.defaultPrevented).toBe(false);
+      expect(activated).not.toHaveBeenCalled();
+
+      target.addEventListener('blur', () => (target.tabIndex = 0), { once: true });
+      link.click();
+      expect(document.activeElement).toBe(target);
+      expect(target.getAttribute('tabindex')).toBe('-1');
+      expect(activated).toHaveBeenCalledOnce();
+
+      link.focus();
+      expect(target.getAttribute('tabindex')).toBe('0');
+    } finally {
+      target.remove();
+      history.replaceState({}, '', originalUrl || '/');
+    }
+  });
+
   it('keeps table-of-contents observation state across partial observer batches', async () => {
     const originalObserver = window.IntersectionObserver;
     let callback: IntersectionObserverCallback | undefined;

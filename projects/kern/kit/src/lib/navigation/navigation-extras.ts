@@ -80,7 +80,22 @@ function navigateToAnchor(
   target.scrollIntoView?.({ behavior: 'auto', block: 'start' });
   const HTMLElementConstructor = view?.HTMLElement;
   if (moveFocus && HTMLElementConstructor && target instanceof HTMLElementConstructor) {
+    const restoreTabIndex = !target.hasAttribute('tabindex') && target.tabIndex < 0;
+    if (restoreTabIndex) target.tabIndex = -1;
     target.focus({ preventScroll: true });
+    if (restoreTabIndex) {
+      if (document.activeElement === target) {
+        target.addEventListener(
+          'blur',
+          () => {
+            if (target.getAttribute('tabindex') === '-1') target.removeAttribute('tabindex');
+          },
+          { once: true },
+        );
+      } else {
+        target.removeAttribute('tabindex');
+      }
+    }
   }
   return true;
 }
@@ -536,13 +551,21 @@ export class KrnBackButton {
   selector: 'krn-skip-link',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<a class="skip-link" [href]="href()" (click)="activate($event)">{{ label() }}</a>`,
+  template: `<a class="skip-link" [href]="href()" (click)="activate($event)">{{
+    resolvedLabel()
+  }}</a>`,
   styles: `
+    :host([hidden]) {
+      display: none;
+    }
     .skip-link {
       position: fixed;
       z-index: var(--krn-z-toast);
       inset-block-start: var(--krn-space-3);
       inset-inline-start: var(--krn-space-3);
+      box-sizing: border-box;
+      max-inline-size: calc(100vi - 2 * var(--krn-space-3));
+      min-block-size: var(--krn-touch-target-min);
       padding: var(--krn-space-2) var(--krn-space-4);
       border: var(--krn-border-width-1) solid var(--krn-color-border-strong);
       border-radius: var(--krn-radius-sm);
@@ -551,6 +574,7 @@ export class KrnBackButton {
       color: var(--krn-color-text-inverse);
       font-weight: var(--krn-font-weight-semibold);
       text-decoration: none;
+      overflow-wrap: anywhere;
       transform: translateY(calc(-100% - var(--krn-space-6)));
       transition: transform var(--krn-motion-duration-interaction) var(--krn-motion-ease-enter);
     }
@@ -558,6 +582,16 @@ export class KrnBackButton {
       outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
       outline-offset: var(--krn-focus-ring-offset);
       transform: translateY(0);
+    }
+    @media (forced-colors: active) {
+      .skip-link {
+        border-color: ButtonText;
+        background: Canvas;
+        color: CanvasText;
+      }
+      .skip-link:focus {
+        outline-color: Highlight;
+      }
     }
     @media (prefers-reduced-motion: reduce) {
       :host-context(html:not([data-krn-motion='full'])) .skip-link {
@@ -572,13 +606,17 @@ export class KrnSkipLink {
   readonly targetId = input('main-content');
   readonly label = input(this.translations.navigation.skipToMainContent);
   readonly activated = output<void>();
+  protected readonly resolvedTargetId = computed(() => this.targetId().trim() || 'main-content');
+  protected readonly resolvedLabel = computed(
+    () => this.label().trim() || this.translations.navigation.skipToMainContent.trim(),
+  );
 
   protected href(): string {
-    return sameDocumentHref(this.platform.document, this.targetId());
+    return sameDocumentHref(this.platform.document, this.resolvedTargetId());
   }
 
   protected activate(event: MouseEvent): void {
-    if (navigateToAnchor(this.platform.document, this.targetId(), event, true)) {
+    if (navigateToAnchor(this.platform.document, this.resolvedTargetId(), event, true)) {
       this.activated.emit();
     }
   }
