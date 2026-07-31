@@ -35,12 +35,21 @@ function gridColumnsAttribute(value: unknown): number | 'auto' {
     :host {
       container: krn-grid / inline-size;
       display: block;
+      box-sizing: border-box;
+      max-inline-size: 100%;
       min-inline-size: 0;
+      min-block-size: 0;
+    }
+
+    :host([hidden]) {
+      display: none;
     }
 
     .krn-grid__layout {
       display: grid;
+      max-inline-size: 100%;
       min-inline-size: 0;
+      min-block-size: 0;
       gap: var(--krn-grid-gap);
       align-items: var(--krn-grid-align, stretch);
       grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--krn-grid-min)), 1fr));
@@ -66,7 +75,7 @@ function gridColumnsAttribute(value: unknown): number | 'auto' {
       --krn-grid-align: baseline;
     }
 
-    @container krn-grid (max-width: 36rem) {
+    @container krn-grid (max-inline-size: 36rem) {
       :host([data-mode='fixed'][data-responsive]) .krn-grid__layout {
         grid-template-columns: minmax(0, 1fr);
       }
@@ -74,12 +83,17 @@ function gridColumnsAttribute(value: unknown): number | 'auto' {
   `,
 })
 export class KrnGrid {
+  /** Fixed column count clamped to 1–12, or `auto` for fluid auto-fit columns. */
   readonly columns = input<number | 'auto', unknown>('auto', {
     transform: gridColumnsAttribute,
   });
+  /** Minimum fluid column width used when columns is `auto`. */
   readonly minColumnWidth = input<KrnLayoutSpace>('16rem');
+  /** Logical spacing between rows and columns. */
   readonly gap = input<KrnLayoutSpace>('4');
+  /** Block-axis alignment of items within their grid areas. */
   readonly align = input<KrnLayoutAlignment>('stretch');
+  /** Collapses fixed columns below the component-owned 36rem container boundary. */
   readonly responsive = input(true, { transform: booleanAttribute });
 
   protected readonly resolvedColumns = computed(() => {

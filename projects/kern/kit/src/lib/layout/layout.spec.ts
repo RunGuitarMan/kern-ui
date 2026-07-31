@@ -187,14 +187,59 @@ describe('Kern layout primitives', () => {
     expect(getComputedStyle(host).display).toBe('none');
   });
 
-  it('uses its own inline-size as the responsive grid boundary', () => {
+  it('clamps fixed columns and contains grid content at its responsive boundary', () => {
     const fixture = TestBed.createComponent(KrnGrid);
-    fixture.componentRef.setInput('columns', 3);
+    fixture.componentRef.setInput('columns', 99);
+    fixture.componentRef.setInput('minColumnWidth', 240);
+    fixture.componentRef.setInput('gap', 12);
+    fixture.componentRef.setInput('align', 'center');
     fixture.detectChanges();
-
     const host = fixture.nativeElement as HTMLElement;
+    const layout = host.querySelector<HTMLElement>('.krn-grid__layout')!;
+    const style = getComputedStyle(host);
+    const layoutStyle = getComputedStyle(layout);
+
+    expect(host.style.getPropertyValue('--krn-grid-columns')).toBe('12');
+    expect(host.style.getPropertyValue('--krn-grid-min')).toBe('240px');
+    expect(host.style.getPropertyValue('--krn-grid-gap')).toBe('12px');
+    expect(host.getAttribute('data-mode')).toBe('fixed');
+    expect(host.getAttribute('data-align')).toBe('center');
     expect(host.getAttribute('data-responsive')).toBe('');
-    expect(host.querySelector('.krn-grid__layout')).not.toBeNull();
+    expect(style.boxSizing).toBe('border-box');
+    expect(style.maxInlineSize).toBe('100%');
+    expect(style.minInlineSize).toBe('0px');
+    expect(style.minBlockSize).toBe('0px');
+    expect(layoutStyle.display).toBe('grid');
+    expect(layoutStyle.maxInlineSize).toBe('100%');
+    expect(layoutStyle.minInlineSize).toBe('0px');
+    expect(layoutStyle.minBlockSize).toBe('0px');
+    expect(layoutStyle.getPropertyValue('--krn-grid-align')).toBe('center');
+
+    const compiledStyles = Array.from(document.head.querySelectorAll('style'))
+      .map((element) => element.textContent ?? '')
+      .join('\n');
+    expect(compiledStyles).toContain('container: krn-grid / inline-size');
+    expect(compiledStyles).toContain('@container krn-grid (max-inline-size: 36rem)');
+    expect(compiledStyles).toContain('[data-mode="fixed"][data-responsive]');
+  });
+
+  it('falls back to fluid columns and preserves native hidden semantics', () => {
+    const fixture = TestBed.createComponent(KrnGrid);
+    fixture.componentRef.setInput('columns', 'invalid');
+    fixture.componentRef.setInput('minColumnWidth', '');
+    fixture.componentRef.setInput('gap', '');
+    fixture.componentRef.setInput('responsive', false);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+
+    expect(host.style.getPropertyValue('--krn-grid-columns')).toBe('1');
+    expect(host.style.getPropertyValue('--krn-grid-min')).toBe('16rem');
+    expect(host.style.getPropertyValue('--krn-grid-gap')).toBe('var(--krn-space-4)');
+    expect(host.getAttribute('data-mode')).toBe('fluid');
+    expect(host.hasAttribute('data-responsive')).toBe(false);
+
+    host.hidden = true;
+    expect(getComputedStyle(host).display).toBe('none');
   });
 
   it('provides a controlled modal navigation drawer at the mobile breakpoint', async () => {
