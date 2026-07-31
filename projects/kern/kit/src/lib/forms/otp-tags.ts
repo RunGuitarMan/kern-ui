@@ -259,16 +259,19 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
   providers: [...provideKrnFormControl(() => KrnTagsInput)],
   template: `
     <div
+      #tagsShell
       class="krn-control-shell"
       [attr.data-disabled]="isDisabled()"
       [attr.data-invalid]="a11y.invalid()"
       [attr.data-readonly]="a11y.readOnly()"
       (click)="focusInput()"
+      (focusout)="handleFocusOut($event)"
     >
       <div
         class="krn-tag-input"
         role="group"
-        [attr.aria-label]="a11y.labelledBy() ? null : ariaLabel()"
+        [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel()"
+        [attr.aria-labelledby]="effectiveLabelledBy()"
       >
         @for (tag of controlValue(); track $index; let index = $index) {
           <span class="krn-token">
@@ -279,6 +282,7 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
                 type="button"
                 [attr.aria-label]="translations.forms.removeTag(tag)"
                 [disabled]="isDisabled()"
+                (pointerdown)="$event.preventDefault()"
                 (click)="remove(index, $event)"
               >
                 ×
@@ -290,19 +294,20 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
           #tagInput
           class="krn-input"
           type="text"
-          autocomplete="off"
-          [attr.aria-describedby]="a11y.describedBy()"
+          [attr.aria-describedby]="effectiveDescribedBy()"
           [attr.aria-invalid]="a11y.invalid()"
-          [attr.aria-label]="a11y.labelledBy() ? null : inputLabel()"
-          [attr.aria-labelledby]="a11y.labelledBy()"
+          [attr.aria-label]="effectiveLabelledBy() ? null : inputLabel()"
+          [attr.aria-labelledby]="effectiveLabelledBy()"
+          [attr.aria-required]="a11y.required()"
+          [attr.autocomplete]="autocomplete()"
           [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
           [disabled]="isDisabled()"
           [id]="a11y.id()"
           [placeholder]="controlValue().length ? '' : placeholder()"
           [readOnly]="a11y.readOnly()"
           [required]="a11y.required() && controlValue().length === 0"
+          [tabIndex]="isDisabled() ? -1 : tabIndex()"
           [value]="draft()"
-          (blur)="commitOnBlur(); touch()"
           (input)="updateDraft($event)"
           (keydown)="handleKey($event)"
         />
@@ -328,7 +333,8 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
   private readonly destroyRef = inject(DestroyRef);
   private readonly platform = inject(KRN_PLATFORM);
   protected readonly translations = inject(KRN_TRANSLATIONS);
-  private readonly inputElement = viewChildren<ElementRef<HTMLInputElement>>('tagInput');
+  private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('tagInput');
+  private readonly shellElement = viewChild<ElementRef<HTMLElement>>('tagsShell');
   private feedbackTimer: KrnScheduledHandle | null = null;
   private feedbackId = 0;
 
@@ -336,7 +342,12 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
   readonly ariaLabel = input(this.translations.forms.tags);
   readonly inputLabel = input(this.translations.forms.addTag);
   readonly placeholder = input(this.translations.forms.addTagPlaceholder);
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
+  readonly autocomplete = input('off');
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
   readonly separatorKeys = input<readonly string[]>(['Enter', ',']);
+  readonly separator = input<string | RegExp>(/[,\n]+/);
   readonly maxTags = input(Number.POSITIVE_INFINITY, {
     transform: numberAttribute,
   });
@@ -349,6 +360,7 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
   });
   readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
+  readonly value = input<readonly string[] | undefined>(undefined);
   readonly valueChange = output<readonly string[]>();
   readonly tagAdded = output<string>();
   readonly tagRemoved = output<string>();
@@ -362,10 +374,21 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
     required: this.required,
   });
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
+  protected readonly safeMaxTags = computed(() => {
+    const maximum = Math.trunc(this.maxTags());
+    return Number.isFinite(maximum) ? Math.max(0, maximum) : Number.POSITIVE_INFINITY;
+  });
+  protected readonly effectiveLabelledBy = computed(() =>
+    mergeAriaIds(this.ariaLabelledBy(), this.a11y.labelledBy()),
+  );
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(this.ariaDescribedBy(), this.a11y.describedBy()),
+  );
 
   constructor() {
     super([]);
-    this.watchValidationInputs(this.required, this.a11y.required, this.maxTags);
+    this.bindStandaloneValue(this.value);
+    this.watchValidationInputs(this.required, this.a11y.required, this.safeMaxTags);
     this.destroyRef.onDestroy(() => {
       this.platform.cancelScheduled(this.feedbackTimer);
     });
@@ -380,7 +403,7 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
   protected override validateValue(value: unknown) {
     return mergeValidationErrors(
       requiredError(value, this.a11y.required()),
-      maxLengthError(value, this.maxTags()),
+      maxLengthError(value, this.safeMaxTags()),
     );
   }
 
@@ -389,19 +412,37 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
   }
 
   protected handleKey(event: KeyboardEvent): void {
+    if (event.isComposing) {
+      return;
+    }
     if (this.separatorKeys().includes(event.key)) {
       event.preventDefault();
-      this.addDraft();
+      this.commitDraft();
     } else if (event.key === 'Backspace' && !this.draft() && this.controlValue().length > 0) {
       event.preventDefault();
       this.remove(this.controlValue().length - 1);
     }
   }
 
-  protected commitOnBlur(): void {
-    if (this.addOnBlur()) {
-      this.addDraft();
+  protected handleFocusOut(event: FocusEvent): void {
+    const nextTarget = event.relatedTarget;
+    if (nextTarget instanceof Node && this.shellElement()?.nativeElement.contains(nextTarget)) {
+      return;
     }
+    if (nextTarget) {
+      this.commitDraftAndTouch();
+      return;
+    }
+    this.platform.queueMicrotask(() => {
+      const shell = this.shellElement()?.nativeElement;
+      if (!shell) {
+        return;
+      }
+      const activeElement = shell?.ownerDocument.activeElement;
+      if (!activeElement || !shell.contains(activeElement)) {
+        this.commitDraftAndTouch();
+      }
+    });
   }
 
   protected remove(index: number, event?: Event): void {
@@ -414,7 +455,9 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
       return;
     }
     const next = this.controlValue().filter((_, itemIndex) => itemIndex !== index);
-    this.commitValue(next);
+    if (!this.commitUserValue(next)) {
+      return;
+    }
     this.valueChange.emit(next);
     this.tagRemoved.emit(removed);
     this.showFeedback(
@@ -422,39 +465,76 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
       this.translations.forms.removed,
       'removed',
     );
+    if (event) {
+      this.platform.queueMicrotask(() => this.focus({ preventScroll: true }));
+    }
   }
 
   protected focusInput(): void {
-    this.inputElement()[0]?.nativeElement.focus();
+    this.focus();
   }
 
-  private addDraft(): void {
-    if (this.isDisabled() || this.a11y.readOnly() || this.controlValue().length >= this.maxTags()) {
+  private commitDraft(): void {
+    if (this.isDisabled() || this.a11y.readOnly()) {
       return;
     }
-    const tag = this.draft().trim();
-    if (!tag) {
+    const separator = this.separator();
+    const candidates = (
+      typeof separator === 'string' && !separator ? [this.draft()] : this.draft().split(separator)
+    )
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+    if (candidates.length === 0) {
+      this.clearDraft();
       return;
     }
-    if (!this.allowDuplicates() && this.controlValue().includes(tag)) {
+    const current = this.controlValue();
+    const accepted: string[] = [];
+    const seen = this.allowDuplicates() ? null : new Set(current);
+    let duplicate: string | undefined;
+    for (const tag of candidates) {
+      if (current.length + accepted.length >= this.safeMaxTags()) {
+        break;
+      }
+      if (seen?.has(tag)) {
+        duplicate ??= tag;
+        continue;
+      }
+      accepted.push(tag);
+      seen?.add(tag);
+    }
+    if (accepted.length === 0) {
+      if (!duplicate) {
+        return;
+      }
       this.showFeedback(
-        this.translations.forms.tagAlreadyPresent(tag),
+        this.translations.forms.tagAlreadyPresent(duplicate),
         this.translations.forms.alreadyAdded,
         'duplicate',
       );
-      this.draft.set('');
+      this.clearDraft();
       return;
     }
-    const next = [...this.controlValue(), tag];
-    this.commitValue(next);
+    const next = [...current, ...accepted];
+    if (!this.commitUserValue(next)) {
+      return;
+    }
     this.valueChange.emit(next);
-    this.tagAdded.emit(tag);
+    accepted.forEach((tag) => this.tagAdded.emit(tag));
+    const lastAdded = accepted.at(-1)!;
     this.showFeedback(
-      this.translations.forms.tagAdded(tag),
+      this.translations.forms.tagAdded(lastAdded),
       this.translations.forms.added,
       'added',
     );
-    this.draft.set('');
+    this.clearDraft();
+  }
+
+  private commitDraftAndTouch(): void {
+    if (this.addOnBlur()) {
+      this.commitDraft();
+    }
+    this.touch();
   }
 
   private showFeedback(announcement: string, text: string, kind: KrnTagFeedback['kind']): void {
@@ -467,6 +547,22 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
       this.visualFeedback.set(null);
       this.feedbackTimer = null;
     }, 1400);
+  }
+
+  private clearDraft(): void {
+    this.draft.set('');
+    const input = this.inputElement()?.nativeElement;
+    if (input) {
+      input.value = '';
+    }
+  }
+
+  focus(options?: FocusOptions): void {
+    this.inputElement()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    this.inputElement()?.nativeElement.blur();
   }
 }
 

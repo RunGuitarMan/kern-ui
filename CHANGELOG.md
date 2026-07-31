@@ -158,6 +158,10 @@ contract or upgrade decision.
   deterministic standalone string ownership, duplicate-free user emissions, composed external and
   Form Field semantics, configurable autocomplete and tab order, public focus and blur methods, and
   testing harness support for both documented selectors.
+- Strengthened Tags Input with deterministic standalone array ownership, atomic separator-based
+  batch commits, bounded duplicate handling, IME-safe keyboard behavior, composite focus/touched
+  semantics, composed external and Form Field ARIA references, configurable autocomplete and tab
+  order, focus recovery after removal, and public focus and blur methods.
 
 ### Deprecated
 
