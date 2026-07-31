@@ -96,6 +96,46 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "ariaLabelledBy",
+      "property": "ariaLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that provide the accessible name and take precedence over ariaLabel.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaDescribedBy",
+      "property": "ariaDescribedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids composed with Form Field hints and validation descriptions.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "autocomplete",
+      "property": "autocomplete",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "'off'",
+      "description": "Native autocomplete purpose forwarded to the editable control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "tabindex",
+      "property": "tabIndex",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Native sequential-focus order forwarded to the owned interactive element.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "separatorKeys",
       "property": "separatorKeys",
       "kind": "input",
@@ -104,6 +144,16 @@
       "defaultValue": "['Enter', ',']",
       "description": "Stable identifier value used by the separator contract.",
       "descriptionSource": "inferred"
+    },
+    {
+      "name": "separator",
+      "property": "separator",
+      "kind": "input",
+      "type": "RegExp | string",
+      "required": false,
+      "defaultValue": "/[,\\n]+/",
+      "description": "Delimiter or pattern used to split committed draft text into tags.",
+      "descriptionSource": "source"
     },
     {
       "name": "maxTags",
@@ -173,6 +223,16 @@
       "required": false,
       "defaultValue": "false",
       "description": "Exposes an externally controlled invalid presentation state.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "value",
+      "property": "value",
+      "kind": "input",
+      "type": "ReadonlyArray<string> | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controlled component value.",
       "descriptionSource": "inferred"
     },
     {
@@ -264,7 +324,12 @@
     "ariaLabel",
     "inputLabel",
     "placeholder",
+    "ariaLabelledBy",
+    "ariaDescribedBy",
+    "autocomplete",
+    "tabindex",
     "separatorKeys",
+    "separator",
     "maxTags",
     "allowDuplicates",
     "addOnBlur",
@@ -272,6 +337,7 @@
     "readonly",
     "required",
     "invalid",
+    "value",
     "valueChange",
     "tagAdded",
     "tagRemoved"
@@ -316,6 +382,45 @@
           "publicName": "disabled",
           "syntax": "property"
         }
+      },
+      {
+        "key": "autocomplete",
+        "label": "Autocomplete",
+        "kind": "select",
+        "defaultValue": "off",
+        "testValue": "on",
+        "description": "Controls native browser autocomplete for the tag editor.",
+        "binding": {
+          "kind": "input",
+          "publicName": "autocomplete",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "off",
+            "value": "off"
+          },
+          {
+            "label": "on",
+            "value": "on"
+          }
+        ]
+      },
+      {
+        "key": "tabindex",
+        "label": "Tab index",
+        "kind": "number",
+        "defaultValue": 0,
+        "testValue": -1,
+        "description": "Includes or removes the tag editor from sequential keyboard focus.",
+        "binding": {
+          "kind": "input",
+          "publicName": "tabindex",
+          "syntax": "property"
+        },
+        "min": -1,
+        "max": 0,
+        "step": 1
       },
       {
         "key": "addOnBlur",
@@ -584,15 +689,39 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 12,
-      "controlled": 9,
-      "excluded": 3,
+      "publicInputsAndModels": 18,
+      "controlled": 11,
+      "excluded": 7,
       "unclassified": 0
     },
     "exclusions": [
       {
         "componentId": "tags-input",
+        "publicName": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#tags-input"
+        }
+      },
+      {
+        "componentId": "tags-input",
         "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#tags-input"
+        }
+      },
+      {
+        "componentId": "tags-input",
+        "publicName": "ariaLabelledBy",
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
@@ -616,9 +745,33 @@
       },
       {
         "componentId": "tags-input",
+        "publicName": "separator",
+        "kind": "input",
+        "type": "RegExp | string",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/tags-input?state=default"
+        }
+      },
+      {
+        "componentId": "tags-input",
         "publicName": "separatorKeys",
         "kind": "input",
         "type": "ReadonlyArray<string>",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/tags-input?state=default"
+        }
+      },
+      {
+        "componentId": "tags-input",
+        "publicName": "value",
+        "kind": "input",
+        "type": "ReadonlyArray<string> | undefined",
         "code": "complex-data",
         "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
         "evidence": {

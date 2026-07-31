@@ -544,6 +544,15 @@ describe('KERN playground registry', () => {
         expect.objectContaining({ key: 'required', defaultValue: true }),
       ]),
     );
+    expect(definition('tags-input').controls).toContainEqual(
+      expect.objectContaining({
+        key: 'tabindex',
+        defaultValue: 0,
+        min: -1,
+        max: 0,
+        testValue: -1,
+      }),
+    );
     expect(definition('calendar').controls).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -560,12 +569,12 @@ describe('KERN playground registry', () => {
 
   it('classifies every public input/model as one real control or one exact exclusion', () => {
     expect(KERN_PLAYGROUND_API_COVERAGE).toEqual({
-      publicInputsAndModels: 1007,
-      controlled: 642,
-      excluded: 365,
+      publicInputsAndModels: 1023,
+      controlled: 645,
+      excluded: 378,
       unclassified: 0,
     });
-    expect(KERN_PLAYGROUND_API_EXCLUSIONS).toHaveLength(365);
+    expect(KERN_PLAYGROUND_API_EXCLUSIONS).toHaveLength(378);
     expect(Object.values(KERN_PLAYGROUND_AUTO_CONTROL_KEYS).flat().length).toBeGreaterThan(0);
 
     for (const item of KERN_CATALOG) {

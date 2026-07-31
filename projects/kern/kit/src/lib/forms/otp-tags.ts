@@ -347,6 +347,7 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
   readonly autocomplete = input('off');
   readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
   readonly separatorKeys = input<readonly string[]>(['Enter', ',']);
+  /** Delimiter or pattern used to split committed draft text into tags. */
   readonly separator = input<string | RegExp>(/[,\n]+/);
   readonly maxTags = input(Number.POSITIVE_INFINITY, {
     transform: numberAttribute,

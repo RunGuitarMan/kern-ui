@@ -51,14 +51,16 @@ void bootstrapApplication(KernSidebarAgentExample);
 
 ## API
 
-| Name             | Kind  | Type                  | Required | Default                                        | Description                                                             |
-| ---------------- | ----- | --------------------- | -------- | ---------------------------------------------- | ----------------------------------------------------------------------- |
-| `collapsed`      | model | `boolean`             | no       | `false`                                        | Controlled collapsed state with a matching Angular model-change output. |
-| `collapsedMode`  | input | `"hidden" \| "icons"` | no       | `'icons'`                                      | Controls whether the component applies the collapsed mode behavior.     |
-| `width`          | input | `KrnLayoutSpace`      | no       | `'var(--krn-shell-sidebar-width, 17rem)'`      | Explicit inline size of the rendered surface.                           |
-| `collapsedWidth` | input | `KrnLayoutSpace`      | no       | `'4rem'`                                       | Controls whether the component applies the collapsed width behavior.    |
-| `ariaLabel`      | input | `string`              | no       | `this.translations.layout.secondaryNavigation` | Accessible name used when visible content is not sufficient.            |
-| `side`           | input | `"end" \| "start"`    | no       | `'start'`                                      | Logical side on which the anchored or modal surface is placed.          |
+| Name              | Kind  | Type                         | Required | Default                                        | Description                                                                  |
+| ----------------- | ----- | ---------------------------- | -------- | ---------------------------------------------- | ---------------------------------------------------------------------------- |
+| `collapsed`       | model | `boolean`                    | no       | `false`                                        | Controlled collapsed state with a matching Angular model-change output.      |
+| `collapsedMode`   | input | `"hidden" \| "icons"`        | no       | `'icons'`                                      | Controls whether the component applies the collapsed mode behavior.          |
+| `width`           | input | `KrnLayoutSpace`             | no       | `'var(--krn-shell-sidebar-width, 17rem)'`      | Explicit inline size of the rendered surface.                                |
+| `collapsedWidth`  | input | `KrnLayoutSpace`             | no       | `'4rem'`                                       | Controls whether the component applies the collapsed width behavior.         |
+| `ariaLabel`       | input | `string`                     | no       | `this.translations.layout.secondaryNavigation` | Accessible name used when visible content is not sufficient.                 |
+| `ariaLabelledBy`  | input | `string`                     | no       | `''`                                           | Space-separated element ids that name the native complementary landmark.     |
+| `ariaDescribedBy` | input | `string`                     | no       | `''`                                           | Space-separated element ids that describe the native complementary landmark. |
+| `side`            | input | `"auto" \| "end" \| "start"` | no       | `'auto'`                                       | Logical side on which the anchored or modal surface is placed.               |
 
 ## Deprecated selectors
 
@@ -66,9 +68,9 @@ _No deprecated selectors._
 
 ## Content slots
 
-- `[krnSidebarHeader]` — Projects content matching [krnSidebarHeader].
+- `[krnSidebarHeader],header` — Projects content matching [krnSidebarHeader],header.
 - `*` — Projects default component content.
-- `[krnSidebarFooter]` — Projects content matching [krnSidebarFooter].
+- `[krnSidebarFooter],footer` — Projects content matching [krnSidebarFooter],footer.
 
 ## Angular Forms
 
@@ -107,8 +109,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/sidebar`
 
 Scenarios: `default`.
-Public API coverage: 5/6
-directly controlled; 1 exact exclusions; 0 unclassified.
+Public API coverage: 5/8
+directly controlled; 3 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -120,13 +122,15 @@ component inputs or models.
 | `width`          | text    | `"15rem"` | `"20rem"`  | input `width` (property)          | Sets the expanded sidebar width.                      |
 | `collapsedMode`  | select  | `"icons"` | `"hidden"` | input `collapsedMode` (property)  | Configures the component collapsedMode contract.      |
 | `collapsedWidth` | text    | `"4rem"`  | `"20rem"`  | input `collapsedWidth` (property) | Configures the component collapsedWidth contract.     |
-| `side`           | select  | `"start"` | `"end"`    | input `side` (property)           | Configures the component side contract.               |
+| `side`           | select  | `"auto"`  | `"end"`    | input `side` (property)           | Configures the component side contract.               |
 
 Exact API exclusions:
 
-| Public API  | Category           | Evidence                                             | Reason                                                                                                                  |
-| ----------- | ------------------ | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#sidebar` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| Public API        | Category           | Evidence                                             | Reason                                                                                                                  |
+| ----------------- | ------------------ | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#sidebar` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#sidebar` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabelledBy`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#sidebar` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 
 Presets:
 

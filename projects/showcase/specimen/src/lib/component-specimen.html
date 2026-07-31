@@ -58,6 +58,11 @@
                   [(mobileNavigationOpen)]="appShellNavigationOpen"
                   [mainMaxWidth]="stringArgument('mainMaxWidth', '48rem')"
                   [sidebarWidth]="stringArgument('sidebarWidth', '10rem')"
+                  [mobileNavigationDescribedBy]="stringArgument('mobileNavigationDescribedBy', '')"
+                  [mobileNavigationInitialFocus]="
+                    stringArgument('mobileNavigationInitialFocus', 'first-tabbable')
+                  "
+                  [mobileNavigationLabelledBy]="stringArgument('mobileNavigationLabelledBy', '')"
                   [mobileNavigation]="stringArgument('mobileNavigation', 'auto')"
                   [railWidth]="stringArgument('railWidth', '3.5rem')"
                   [sidebarPosition]="stringArgument('sidebarPosition', 'start')"
@@ -95,6 +100,7 @@
                   [elevated]="booleanArgument('elevated', true)"
                   [height]="stringArgument('height', '4rem')"
                   [sticky]="booleanArgument('sticky', true)"
+                  [stickyOffset]="stringArgument('stickyOffset', '0')"
                 >
                   <strong krnHeaderStart>KERN / OPS</strong>
                   <nav class="header-links">
@@ -116,7 +122,7 @@
                   [width]="stringArgument('width', '15rem')"
                   [collapsedMode]="stringArgument('collapsedMode', 'icons')"
                   [collapsedWidth]="stringArgument('collapsedWidth', '4rem')"
-                  [side]="stringArgument('side', 'start')"
+                  [side]="stringArgument('side', 'auto')"
                 >
                   <strong krnSidebarHeader>NORTHSTAR</strong>
                   <nav class="demo-nav">
@@ -145,7 +151,7 @@
                   ariaLabel="Primary tools"
                   [(expanded)]="navigationRailExpanded"
                   [expandedWidth]="stringArgument('expandedWidth', '14rem')"
-                  [side]="stringArgument('side', 'start')"
+                  [side]="stringArgument('side', 'auto')"
                   [width]="stringArgument('width', 'var(--krn-shell-rail-width, 3.5rem)')"
                 >
                   <span krnRailHeader class="rail-brand" role="img" aria-label="Kern">
@@ -1282,6 +1288,8 @@
                   ><krn-tags-input
                     ariaLabel="Workspace tags"
                     [disabled]="booleanArgument('disabled')"
+                    [autocomplete]="stringArgument('autocomplete', 'off')"
+                    [tabindex]="numberArgument('tabindex', 0)"
                     [addOnBlur]="booleanArgument('addOnBlur', true)"
                     [allowDuplicates]="booleanArgument('allowDuplicates', false)"
                     [id]="stringArgument('id', '')"

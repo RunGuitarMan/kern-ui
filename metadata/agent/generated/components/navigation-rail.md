@@ -51,13 +51,15 @@ void bootstrapApplication(KernNavigationRailAgentExample);
 
 ## API
 
-| Name            | Kind  | Type               | Required | Default                                      | Description                                                         |
-| --------------- | ----- | ------------------ | -------- | -------------------------------------------- | ------------------------------------------------------------------- |
-| `expanded`      | model | `boolean`          | no       | `false`                                      | Controlled expanded state for a disclosure or hierarchical item.    |
-| `width`         | input | `KrnLayoutSpace`   | no       | `'var(--krn-shell-rail-width, 3.5rem)'`      | Explicit inline size of the rendered surface.                       |
-| `expandedWidth` | input | `KrnLayoutSpace`   | no       | `'14rem'`                                    | Controls whether the component applies the expanded width behavior. |
-| `ariaLabel`     | input | `string`           | no       | `this.translations.layout.primaryNavigation` | Accessible name used when visible content is not sufficient.        |
-| `side`          | input | `"end" \| "start"` | no       | `'start'`                                    | Logical side on which the anchored or modal surface is placed.      |
+| Name              | Kind  | Type                         | Required | Default                                      | Description                                                               |
+| ----------------- | ----- | ---------------------------- | -------- | -------------------------------------------- | ------------------------------------------------------------------------- |
+| `expanded`        | model | `boolean`                    | no       | `false`                                      | Controlled expanded state for a disclosure or hierarchical item.          |
+| `width`           | input | `KrnLayoutSpace`             | no       | `'var(--krn-shell-rail-width, 3.5rem)'`      | Explicit inline size of the rendered surface.                             |
+| `expandedWidth`   | input | `KrnLayoutSpace`             | no       | `'14rem'`                                    | Controls whether the component applies the expanded width behavior.       |
+| `ariaLabel`       | input | `string`                     | no       | `this.translations.layout.primaryNavigation` | Accessible name used when visible content is not sufficient.              |
+| `ariaLabelledBy`  | input | `string`                     | no       | `''`                                         | Space-separated element ids that name the native navigation landmark.     |
+| `ariaDescribedBy` | input | `string`                     | no       | `''`                                         | Space-separated element ids that describe the native navigation landmark. |
+| `side`            | input | `"auto" \| "end" \| "start"` | no       | `'auto'`                                     | Logical side on which the anchored or modal surface is placed.            |
 
 ## Deprecated selectors
 
@@ -65,9 +67,9 @@ _No deprecated selectors._
 
 ## Content slots
 
-- `[krnRailHeader]` — Projects content matching [krnRailHeader].
+- `[krnRailHeader],header` — Projects content matching [krnRailHeader],header.
 - `*` — Projects default component content.
-- `[krnRailFooter]` — Projects content matching [krnRailFooter].
+- `[krnRailFooter],footer` — Projects content matching [krnRailFooter],footer.
 
 ## Angular Forms
 
@@ -108,8 +110,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/navigation-rail`
 
 Scenarios: `default`.
-Public API coverage: 4/5
-directly controlled; 1 exact exclusions; 0 unclassified.
+Public API coverage: 4/7
+directly controlled; 3 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -119,14 +121,16 @@ component inputs or models.
 | --------------- | ------- | --------------------------------------- | ---------- | -------------------------------- | ------------------------------------------------ |
 | `expanded`      | boolean | `false`                                 | `true`     | model `expanded`                 | Expands the rail to show persistent labels.      |
 | `expandedWidth` | text    | `"14rem"`                               | `"20rem"`  | input `expandedWidth` (property) | Configures the component expandedWidth contract. |
-| `side`          | select  | `"start"`                               | `"end"`    | input `side` (property)          | Configures the component side contract.          |
+| `side`          | select  | `"auto"`                                | `"end"`    | input `side` (property)          | Configures the component side contract.          |
 | `width`         | text    | `"var(--krn-shell-rail-width, 3.5rem)"` | `"20rem"`  | input `width` (property)         | Configures the component width contract.         |
 
 Exact API exclusions:
 
-| Public API  | Category           | Evidence                                                     | Reason                                                                                                                  |
-| ----------- | ------------------ | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#navigation-rail` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| Public API        | Category           | Evidence                                                     | Reason                                                                                                                  |
+| ----------------- | ------------------ | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#navigation-rail` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#navigation-rail` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabelledBy`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#navigation-rail` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 
 Presets:
 

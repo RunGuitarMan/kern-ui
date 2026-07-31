@@ -318,6 +318,7 @@ function textTestValue(key: string, defaultValue: string): string {
   if (normalized === 'src') return '/favicon.ico';
   if (normalized === 'sortkey') return 'usage';
   if (normalized === 'accept') return '.png,.jpg';
+  if (normalized.endsWith('offset')) return defaultValue === '0' ? '1rem' : '0';
   if (
     /(width|height|gutter|gap|inset|indent|space|size)$/.test(normalized) ||
     /(?:rem|px|%|var\()/.test(defaultValue)
@@ -532,6 +533,12 @@ function safeStringDefault(api: KernApiRow, options?: readonly string[]): string
   const parsed = parseQuotedDefault(api.defaultValue);
   if (parsed !== undefined) return parsed;
   if (api.defaultValue.trim() === 'null' || api.defaultValue.trim() === 'undefined') return '';
+  if (
+    api.type.includes('KrnLayoutSpace') &&
+    /^-?(?:\d+(?:\.\d+)?|\.\d+)$/.test(api.defaultValue.trim())
+  ) {
+    return api.defaultValue.trim();
+  }
   const named = PUBLIC_API_COPY_DEFAULTS[api.name];
   if (named !== undefined) return named;
   return options?.[0] ?? humanizePublicName(api.name);
@@ -711,11 +718,15 @@ function publicApiExclusion(
       evidence: exclusionEvidence(item.id, 'locale-environment'),
     });
   }
-  const accessibilityCopy = api.name.startsWith('aria') || api.name.includes('Aria');
+  const accessibilityCopy =
+    api.name.startsWith('aria') ||
+    api.name.includes('Aria') ||
+    /(?:LabelledBy|DescribedBy)$/.test(api.name);
   if (
     accessibilityCopy ||
     /(?:Id|Ids)$/.test(api.name) ||
-    ['describedBy', 'for', 'initialFocus', 'targetId'].includes(api.name)
+    ['describedBy', 'for', 'initialFocus', 'targetId'].includes(api.name) ||
+    /InitialFocus$/.test(api.name)
   ) {
     return Object.freeze({
       ...base,
@@ -1211,7 +1222,24 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
   'verification-code': [
     number('length', 'Length', 6, 'Changes the number of verification cells.', 4, 12),
   ],
-  'tags-input': [disabled],
+  'tags-input': [
+    disabled,
+    select(
+      'autocomplete',
+      'Autocomplete',
+      'off',
+      'Controls native browser autocomplete for the tag editor.',
+      ['off', 'on'],
+    ),
+    number(
+      'tabindex',
+      'Tab index',
+      0,
+      'Includes or removes the tag editor from sequential keyboard focus.',
+      -1,
+      0,
+    ),
+  ],
 
   // Navigation
   breadcrumbs: [

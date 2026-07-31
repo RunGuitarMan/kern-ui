@@ -127,6 +127,36 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "mobileNavigationLabelledBy",
+      "property": "mobileNavigationLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that name the mobile navigation dialog.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "mobileNavigationDescribedBy",
+      "property": "mobileNavigationDescribedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that describe the mobile navigation dialog.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "mobileNavigationInitialFocus",
+      "property": "mobileNavigationInitialFocus",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "'first-tabbable'",
+      "description": "Focus target applied after the mobile navigation dialog opens.",
+      "descriptionSource": "source"
+    },
+    {
       "name": "openNavigationLabel",
       "property": "openNavigationLabel",
       "kind": "input",
@@ -238,6 +268,9 @@
     "mobileNavigationOpen",
     "mobileNavigationId",
     "mobileNavigationLabel",
+    "mobileNavigationLabelledBy",
+    "mobileNavigationDescribedBy",
+    "mobileNavigationInitialFocus",
     "openNavigationLabel",
     "closeNavigationLabel",
     "mainId"
@@ -452,9 +485,9 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 11,
+      "publicInputsAndModels": 14,
       "controlled": 6,
-      "excluded": 5,
+      "excluded": 8,
       "unclassified": 0
     },
     "exclusions": [
@@ -484,7 +517,31 @@
       },
       {
         "componentId": "app-shell",
+        "publicName": "mobileNavigationDescribedBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#app-shell"
+        }
+      },
+      {
+        "componentId": "app-shell",
         "publicName": "mobileNavigationId",
+        "kind": "input",
+        "type": "string",
+        "code": "dom-wiring",
+        "reason": "DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#app-shell"
+        }
+      },
+      {
+        "componentId": "app-shell",
+        "publicName": "mobileNavigationInitialFocus",
         "kind": "input",
         "type": "string",
         "code": "dom-wiring",
@@ -501,6 +558,18 @@
         "type": "string",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#app-shell"
+        }
+      },
+      {
+        "componentId": "app-shell",
+        "publicName": "mobileNavigationLabelledBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#app-shell"

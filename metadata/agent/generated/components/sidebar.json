@@ -97,22 +97,42 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "ariaLabelledBy",
+      "property": "ariaLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that name the native complementary landmark.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "ariaDescribedBy",
+      "property": "ariaDescribedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that describe the native complementary landmark.",
+      "descriptionSource": "source"
+    },
+    {
       "name": "side",
       "property": "side",
       "kind": "input",
-      "type": "\"end\" | \"start\"",
+      "type": "\"auto\" | \"end\" | \"start\"",
       "required": false,
-      "defaultValue": "'start'",
+      "defaultValue": "'auto'",
       "description": "Logical side on which the anchored or modal surface is placed.",
       "descriptionSource": "inferred"
     }
   ],
   "slots": [
     {
-      "name": "krnSidebarHeader",
-      "selector": "[krnSidebarHeader]",
+      "name": "krnsidebarheader-header",
+      "selector": "[krnSidebarHeader],header",
       "required": false,
-      "description": "Projects content matching [krnSidebarHeader]."
+      "description": "Projects content matching [krnSidebarHeader],header."
     },
     {
       "name": "default-2",
@@ -121,10 +141,10 @@
       "description": "Projects default component content."
     },
     {
-      "name": "krnSidebarFooter",
-      "selector": "[krnSidebarFooter]",
+      "name": "krnsidebarfooter-footer",
+      "selector": "[krnSidebarFooter],footer",
       "required": false,
-      "description": "Projects content matching [krnSidebarFooter]."
+      "description": "Projects content matching [krnSidebarFooter],footer."
     }
   ],
   "forms": {
@@ -178,6 +198,8 @@
     "width",
     "collapsedWidth",
     "ariaLabel",
+    "ariaLabelledBy",
+    "ariaDescribedBy",
     "side"
   ],
   "guidance": {
@@ -271,7 +293,7 @@
         "key": "side",
         "label": "Side",
         "kind": "select",
-        "defaultValue": "start",
+        "defaultValue": "auto",
         "testValue": "end",
         "description": "Configures the component side contract.",
         "binding": {
@@ -280,6 +302,10 @@
           "syntax": "property"
         },
         "options": [
+          {
+            "label": "auto",
+            "value": "auto"
+          },
           {
             "label": "end",
             "value": "end"
@@ -369,15 +395,39 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 6,
+      "publicInputsAndModels": 8,
       "controlled": 5,
-      "excluded": 1,
+      "excluded": 3,
       "unclassified": 0
     },
     "exclusions": [
       {
         "componentId": "sidebar",
+        "publicName": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#sidebar"
+        }
+      },
+      {
+        "componentId": "sidebar",
         "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#sidebar"
+        }
+      },
+      {
+        "componentId": "sidebar",
+        "publicName": "ariaLabelledBy",
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",

@@ -38,7 +38,9 @@ declare class KrnAppShell {
   private readonly destroyRef;
   private readonly mobilePanel;
   private readonly mobileTrigger;
+  private readonly mainElement;
   private readonly mobileViewport;
+  private readonly responsiveViewportKnown;
   private readonly overlayId;
   readonly sidebarWidth: _angular_core.InputSignal<KrnLayoutSpace>;
   readonly railWidth: _angular_core.InputSignal<KrnLayoutSpace>;
@@ -48,16 +50,25 @@ declare class KrnAppShell {
   readonly mobileNavigationOpen: _angular_core.ModelSignal<boolean>;
   readonly mobileNavigationId: _angular_core.InputSignal<string>;
   readonly mobileNavigationLabel: _angular_core.InputSignal<string>;
+  /** Space-separated element ids that name the mobile navigation dialog. */
+  readonly mobileNavigationLabelledBy: _angular_core.InputSignal<string>;
+  /** Space-separated element ids that describe the mobile navigation dialog. */
+  readonly mobileNavigationDescribedBy: _angular_core.InputSignal<string>;
+  /** Focus target applied after the mobile navigation dialog opens. */
+  readonly mobileNavigationInitialFocus: _angular_core.InputSignal<string>;
   readonly openNavigationLabel: _angular_core.InputSignal<string>;
   readonly closeNavigationLabel: _angular_core.InputSignal<string>;
   readonly mainId: _angular_core.InputSignal<string>;
-  protected readonly toggle: (value: boolean) => boolean;
   protected readonly isMobileNavigationOpen: _angular_core.Signal<boolean>;
   protected readonly resolvedSidebarWidth: _angular_core.Signal<string>;
   protected readonly resolvedRailWidth: _angular_core.Signal<string>;
   protected readonly resolvedMainMaxWidth: _angular_core.Signal<string>;
   constructor();
   protected closeFromBackdrop(event: PointerEvent): void;
+  openMobileNavigation(): void;
+  closeMobileNavigation(): void;
+  toggleMobileNavigation(): void;
+  focusMain(options?: FocusOptions): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnAppShell, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnAppShell,
@@ -72,6 +83,21 @@ declare class KrnAppShell {
       mobileNavigationOpen: { alias: 'mobileNavigationOpen'; required: false; isSignal: true };
       mobileNavigationId: { alias: 'mobileNavigationId'; required: false; isSignal: true };
       mobileNavigationLabel: { alias: 'mobileNavigationLabel'; required: false; isSignal: true };
+      mobileNavigationLabelledBy: {
+        alias: 'mobileNavigationLabelledBy';
+        required: false;
+        isSignal: true;
+      };
+      mobileNavigationDescribedBy: {
+        alias: 'mobileNavigationDescribedBy';
+        required: false;
+        isSignal: true;
+      };
+      mobileNavigationInitialFocus: {
+        alias: 'mobileNavigationInitialFocus';
+        required: false;
+        isSignal: true;
+      };
       openNavigationLabel: { alias: 'openNavigationLabel'; required: false; isSignal: true };
       closeNavigationLabel: { alias: 'closeNavigationLabel'; required: false; isSignal: true };
       mainId: { alias: 'mainId'; required: false; isSignal: true };
@@ -90,9 +116,15 @@ declare class KrnAppShell {
 }
 declare class KrnHeader {
   readonly height: _angular_core.InputSignal<KrnLayoutSpace>;
+  /** Logical inset between a sticky header and its scrolling boundary. */
+  readonly stickyOffset: _angular_core.InputSignal<KrnLayoutSpace>;
   readonly sticky: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly elevated: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly ariaLabel: _angular_core.InputSignal<string>;
+  /** Space-separated element ids that name the native header landmark. */
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
   protected readonly resolvedHeight: _angular_core.Signal<string>;
+  protected readonly resolvedStickyOffset: _angular_core.Signal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnHeader, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnHeader,
@@ -100,8 +132,11 @@ declare class KrnHeader {
     never,
     {
       height: { alias: 'height'; required: false; isSignal: true };
+      stickyOffset: { alias: 'stickyOffset'; required: false; isSignal: true };
       sticky: { alias: 'sticky'; required: false; isSignal: true };
       elevated: { alias: 'elevated'; required: false; isSignal: true };
+      ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
     },
     {},
     never,
@@ -117,9 +152,16 @@ declare class KrnSidebar {
   readonly width: _angular_core.InputSignal<KrnLayoutSpace>;
   readonly collapsedWidth: _angular_core.InputSignal<KrnLayoutSpace>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
-  readonly side: _angular_core.InputSignal<'start' | 'end'>;
+  /** Space-separated element ids that name the native complementary landmark. */
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  /** Space-separated element ids that describe the native complementary landmark. */
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
+  readonly side: _angular_core.InputSignal<'start' | 'end' | 'auto'>;
+  protected readonly isHidden: _angular_core.Signal<boolean>;
   protected readonly resolvedWidth: _angular_core.Signal<string>;
   protected readonly resolvedCollapsedWidth: _angular_core.Signal<string>;
+  expand(): void;
+  collapse(): void;
   toggle(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnSidebar, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
@@ -132,11 +174,13 @@ declare class KrnSidebar {
       width: { alias: 'width'; required: false; isSignal: true };
       collapsedWidth: { alias: 'collapsedWidth'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       side: { alias: 'side'; required: false; isSignal: true };
     },
     { collapsed: 'collapsedChange' },
     never,
-    ['[krnSidebarHeader]', '*', '[krnSidebarFooter]'],
+    ['[krnSidebarHeader],header', '*', '[krnSidebarFooter],footer'],
     true,
     never
   >;
@@ -147,9 +191,15 @@ declare class KrnNavigationRail {
   readonly width: _angular_core.InputSignal<KrnLayoutSpace>;
   readonly expandedWidth: _angular_core.InputSignal<KrnLayoutSpace>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
-  readonly side: _angular_core.InputSignal<'start' | 'end'>;
+  /** Space-separated element ids that name the native navigation landmark. */
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  /** Space-separated element ids that describe the native navigation landmark. */
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
+  readonly side: _angular_core.InputSignal<'start' | 'end' | 'auto'>;
   protected readonly resolvedWidth: _angular_core.Signal<string>;
   protected readonly resolvedExpandedWidth: _angular_core.Signal<string>;
+  expand(): void;
+  collapse(): void;
   toggle(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnNavigationRail, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
@@ -161,11 +211,13 @@ declare class KrnNavigationRail {
       width: { alias: 'width'; required: false; isSignal: true };
       expandedWidth: { alias: 'expandedWidth'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       side: { alias: 'side'; required: false; isSignal: true };
     },
     { expanded: 'expandedChange' },
     never,
-    ['[krnRailHeader]', '*', '[krnRailFooter]'],
+    ['[krnRailHeader],header', '*', '[krnRailFooter],footer'],
     true,
     never
   >;
@@ -174,7 +226,7 @@ declare class KrnNavigationRail {
 type KrnContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 declare class KrnContainer {
   readonly size: _angular_core.InputSignal<KrnContainerSize>;
-  readonly maxWidth: _angular_core.InputSignal<string | null>;
+  readonly maxWidth: _angular_core.InputSignal<KrnLayoutSpace | null>;
   readonly gutter: _angular_core.InputSignal<KrnLayoutSpace>;
   readonly align: _angular_core.InputSignal<'start' | 'center' | 'end'>;
   protected readonly resolvedMaxWidth: _angular_core.Signal<string>;
@@ -2175,13 +2227,20 @@ declare class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
   private readonly platform;
   protected readonly translations: Readonly<_kern_ui_angular_core.KrnTranslations>;
   private readonly inputElement;
+  private readonly shellElement;
   private feedbackTimer;
   private feedbackId;
   readonly id: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly inputLabel: _angular_core.InputSignal<string>;
   readonly placeholder: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
+  readonly autocomplete: _angular_core.InputSignal<string>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly separatorKeys: _angular_core.InputSignal<readonly string[]>;
+  /** Delimiter or pattern used to split committed draft text into tags. */
+  readonly separator: _angular_core.InputSignal<string | RegExp>;
   readonly maxTags: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly allowDuplicates: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly addOnBlur: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -2189,6 +2248,7 @@ declare class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly value: _angular_core.InputSignal<readonly string[] | undefined>;
   readonly valueChange: _angular_core.OutputEmitterRef<readonly string[]>;
   readonly tagAdded: _angular_core.OutputEmitterRef<string>;
   readonly tagRemoved: _angular_core.OutputEmitterRef<string>;
@@ -2197,16 +2257,23 @@ declare class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
   protected readonly visualFeedback: _angular_core.WritableSignal<KrnTagFeedback | null>;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly safeMaxTags: _angular_core.Signal<number>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
   constructor();
   protected normalizeIncomingValue(value: unknown): readonly string[];
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
   protected updateDraft(event: Event): void;
   protected handleKey(event: KeyboardEvent): void;
-  protected commitOnBlur(): void;
+  protected handleFocusOut(event: FocusEvent): void;
   protected remove(index: number, event?: Event): void;
   protected focusInput(): void;
-  private addDraft;
+  private commitDraft;
+  private commitDraftAndTouch;
   private showFeedback;
+  private clearDraft;
+  focus(options?: FocusOptions): void;
+  blur(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnTagsInput, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnTagsInput,
@@ -2217,7 +2284,12 @@ declare class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
       inputLabel: { alias: 'inputLabel'; required: false; isSignal: true };
       placeholder: { alias: 'placeholder'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
+      autocomplete: { alias: 'autocomplete'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
       separatorKeys: { alias: 'separatorKeys'; required: false; isSignal: true };
+      separator: { alias: 'separator'; required: false; isSignal: true };
       maxTags: { alias: 'maxTags'; required: false; isSignal: true };
       allowDuplicates: { alias: 'allowDuplicates'; required: false; isSignal: true };
       addOnBlur: { alias: 'addOnBlur'; required: false; isSignal: true };
@@ -2225,6 +2297,7 @@ declare class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       required: { alias: 'required'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
     },
     { valueChange: 'valueChange'; tagAdded: 'tagAdded'; tagRemoved: 'tagRemoved' },
     never,

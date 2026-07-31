@@ -1447,6 +1447,9 @@ void bootstrapApplication(KernAppShellAgentExample);
 | `mobileNavigationOpen` | model | `boolean` | no | `false` | Controlled mobile navigation open state with a matching Angular model-change output. |
 | `mobileNavigationId` | input | `string` | no | `this.ids.next('mobile-navigation')` | Stable identifier value used by the mobile navigation contract. |
 | `mobileNavigationLabel` | input | `string` | no | `this.translations.layout.mobileNavigation` | Human-readable copy for the mobile navigation state or control. |
+| `mobileNavigationLabelledBy` | input | `string` | no | `''` | Space-separated element ids that name the mobile navigation dialog. |
+| `mobileNavigationDescribedBy` | input | `string` | no | `''` | Space-separated element ids that describe the mobile navigation dialog. |
+| `mobileNavigationInitialFocus` | input | `string` | no | `'first-tabbable'` | Focus target applied after the mobile navigation dialog opens. |
 | `openNavigationLabel` | input | `string` | no | `this.translations.layout.openNavigation` | Human-readable copy for the open navigation state or control. |
 | `closeNavigationLabel` | input | `string` | no | `this.translations.layout.closeNavigation` | Human-readable copy for the close navigation state or control. |
 | `mainId` | input | `string` | no | `'main-content'` | Stable identifier value used by the main contract. |
@@ -1500,8 +1503,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/app-shell`
 
 Scenarios: `default`.
-Public API coverage: 6/11
-directly controlled; 5 exact exclusions; 0 unclassified.
+Public API coverage: 6/14
+directly controlled; 8 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -1522,8 +1525,11 @@ Exact API exclusions:
 | --- | --- | --- | --- |
 | `closeNavigationLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `mainId` | dom-wiring | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid. |
+| `mobileNavigationDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 | `mobileNavigationId` | dom-wiring | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid. |
+| `mobileNavigationInitialFocus` | dom-wiring | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid. |
 | `mobileNavigationLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `mobileNavigationLabelledBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 | `openNavigationLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
@@ -1616,8 +1622,11 @@ void bootstrapApplication(KernHeaderAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `height` | input | `KrnLayoutSpace` | no | `'4rem'` | Explicit block size of the rendered surface or virtual viewport. |
+| `stickyOffset` | input | `KrnLayoutSpace` | no | `0` | Logical inset between a sticky header and its scrolling boundary. |
 | `sticky` | input | `boolean` | no | `true` | Keeps the surface attached to its scrolling boundary while content moves. |
 | `elevated` | input | `boolean` | no | `false` | Adds semantic surface elevation for content that sits above its surroundings. |
+| `ariaLabel` | input | `string` | no | `''` | Accessible name used when visible content is not sufficient. |
+| `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that name the native header landmark. |
 
 ## Deprecated selectors
 
@@ -1666,8 +1675,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/header`
 
 Scenarios: `default`.
-Public API coverage: 3/3
-directly controlled; 0 exact exclusions; 0 unclassified.
+Public API coverage: 4/6
+directly controlled; 2 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -1678,10 +1687,14 @@ component inputs or models.
 | `elevated` | boolean | `true` | `false` | input `elevated` (property) | Adds the elevated header treatment. |
 | `height` | text | `"4rem"` | `"20rem"` | input `height` (property) | Configures the component height contract. |
 | `sticky` | boolean | `true` | `false` | input `sticky` (property) | Configures the component sticky contract. |
+| `stickyOffset` | text | `"0"` | `"1rem"` | input `stickyOffset` (property) | Configures the component stickyOffset contract. |
 
 Exact API exclusions:
 
-_No excluded public API members._
+| Public API | Category | Evidence | Reason |
+| --- | --- | --- | --- |
+| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#header` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabelledBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#header` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 
 Presets:
 
@@ -1779,7 +1792,9 @@ void bootstrapApplication(KernSidebarAgentExample);
 | `width` | input | `KrnLayoutSpace` | no | `'var(--krn-shell-sidebar-width, 17rem)'` | Explicit inline size of the rendered surface. |
 | `collapsedWidth` | input | `KrnLayoutSpace` | no | `'4rem'` | Controls whether the component applies the collapsed width behavior. |
 | `ariaLabel` | input | `string` | no | `this.translations.layout.secondaryNavigation` | Accessible name used when visible content is not sufficient. |
-| `side` | input | `"end" \| "start"` | no | `'start'` | Logical side on which the anchored or modal surface is placed. |
+| `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that name the native complementary landmark. |
+| `ariaDescribedBy` | input | `string` | no | `''` | Space-separated element ids that describe the native complementary landmark. |
+| `side` | input | `"auto" \| "end" \| "start"` | no | `'auto'` | Logical side on which the anchored or modal surface is placed. |
 
 ## Deprecated selectors
 
@@ -1787,9 +1802,9 @@ _No deprecated selectors._
 
 ## Content slots
 
-- `[krnSidebarHeader]` — Projects content matching [krnSidebarHeader].
+- `[krnSidebarHeader],header` — Projects content matching [krnSidebarHeader],header.
 - `*` — Projects default component content.
-- `[krnSidebarFooter]` — Projects content matching [krnSidebarFooter].
+- `[krnSidebarFooter],footer` — Projects content matching [krnSidebarFooter],footer.
 
 ## Angular Forms
 
@@ -1828,8 +1843,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/sidebar`
 
 Scenarios: `default`.
-Public API coverage: 5/6
-directly controlled; 1 exact exclusions; 0 unclassified.
+Public API coverage: 5/8
+directly controlled; 3 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -1841,13 +1856,15 @@ component inputs or models.
 | `width` | text | `"15rem"` | `"20rem"` | input `width` (property) | Sets the expanded sidebar width. |
 | `collapsedMode` | select | `"icons"` | `"hidden"` | input `collapsedMode` (property) | Configures the component collapsedMode contract. |
 | `collapsedWidth` | text | `"4rem"` | `"20rem"` | input `collapsedWidth` (property) | Configures the component collapsedWidth contract. |
-| `side` | select | `"start"` | `"end"` | input `side` (property) | Configures the component side contract. |
+| `side` | select | `"auto"` | `"end"` | input `side` (property) | Configures the component side contract. |
 
 Exact API exclusions:
 
 | Public API | Category | Evidence | Reason |
 | --- | --- | --- | --- |
+| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#sidebar` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 | `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#sidebar` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabelledBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#sidebar` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 
 Presets:
 
@@ -1944,7 +1961,9 @@ void bootstrapApplication(KernNavigationRailAgentExample);
 | `width` | input | `KrnLayoutSpace` | no | `'var(--krn-shell-rail-width, 3.5rem)'` | Explicit inline size of the rendered surface. |
 | `expandedWidth` | input | `KrnLayoutSpace` | no | `'14rem'` | Controls whether the component applies the expanded width behavior. |
 | `ariaLabel` | input | `string` | no | `this.translations.layout.primaryNavigation` | Accessible name used when visible content is not sufficient. |
-| `side` | input | `"end" \| "start"` | no | `'start'` | Logical side on which the anchored or modal surface is placed. |
+| `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that name the native navigation landmark. |
+| `ariaDescribedBy` | input | `string` | no | `''` | Space-separated element ids that describe the native navigation landmark. |
+| `side` | input | `"auto" \| "end" \| "start"` | no | `'auto'` | Logical side on which the anchored or modal surface is placed. |
 
 ## Deprecated selectors
 
@@ -1952,9 +1971,9 @@ _No deprecated selectors._
 
 ## Content slots
 
-- `[krnRailHeader]` — Projects content matching [krnRailHeader].
+- `[krnRailHeader],header` — Projects content matching [krnRailHeader],header.
 - `*` — Projects default component content.
-- `[krnRailFooter]` — Projects content matching [krnRailFooter].
+- `[krnRailFooter],footer` — Projects content matching [krnRailFooter],footer.
 
 ## Angular Forms
 
@@ -1995,8 +2014,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/navigation-rail`
 
 Scenarios: `default`.
-Public API coverage: 4/5
-directly controlled; 1 exact exclusions; 0 unclassified.
+Public API coverage: 4/7
+directly controlled; 3 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -2006,14 +2025,16 @@ component inputs or models.
 | --- | --- | --- | --- | --- | --- |
 | `expanded` | boolean | `false` | `true` | model `expanded` | Expands the rail to show persistent labels. |
 | `expandedWidth` | text | `"14rem"` | `"20rem"` | input `expandedWidth` (property) | Configures the component expandedWidth contract. |
-| `side` | select | `"start"` | `"end"` | input `side` (property) | Configures the component side contract. |
+| `side` | select | `"auto"` | `"end"` | input `side` (property) | Configures the component side contract. |
 | `width` | text | `"var(--krn-shell-rail-width, 3.5rem)"` | `"20rem"` | input `width` (property) | Configures the component width contract. |
 
 Exact API exclusions:
 
 | Public API | Category | Evidence | Reason |
 | --- | --- | --- | --- |
+| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#navigation-rail` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 | `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#navigation-rail` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabelledBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#navigation-rail` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 
 Presets:
 
@@ -2106,7 +2127,7 @@ void bootstrapApplication(KernContainerAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `size` | input | `KrnContainerSize` | no | `'lg'` | Named semantic size resolved through KERN density and sizing tokens. |
-| `maxWidth` | input | `string \| null` | no | `null` | Upper or lower bound applied to the width value. |
+| `maxWidth` | input | `KrnLayoutSpace \| null` | no | `null` | Upper or lower bound applied to the width value. |
 | `gutter` | input | `KrnLayoutSpace` | no | `'4'` | Outer or inter-column spacing applied by the layout. |
 | `align` | input | `"center" \| "end" \| "start"` | no | `'center'` | Logical cross-axis alignment applied to children by the layout. |
 
@@ -12035,7 +12056,12 @@ void bootstrapApplication(KernTagsInputAgentExample);
 | `ariaLabel` | input | `string` | no | `this.translations.forms.tags` | Accessible name used when visible content is not sufficient. |
 | `inputLabel` | input | `string` | no | `this.translations.forms.addTag` | Human-readable copy for the input state or control. |
 | `placeholder` | input | `string` | no | `this.translations.forms.addTagPlaceholder` | Short input hint shown only while no value is present. |
+| `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input | `string` | no | `''` | Space-separated element ids composed with Form Field hints and validation descriptions. |
+| `autocomplete` | input | `string` | no | `'off'` | Native autocomplete purpose forwarded to the editable control. |
+| `tabindex` | input | `number` | no | `0` | Native sequential-focus order forwarded to the owned interactive element. |
 | `separatorKeys` | input | `ReadonlyArray<string>` | no | `['Enter', ',']` | Stable identifier value used by the separator contract. |
+| `separator` | input | `RegExp \| string` | no | `/[,\n]+/` | Delimiter or pattern used to split committed draft text into tags. |
 | `maxTags` | input | `number` | no | `Number.POSITIVE_INFINITY` | Upper or lower bound applied to the tags value. |
 | `allowDuplicates` | input | `boolean` | no | `false` | Controls whether the component applies the allow duplicates behavior. |
 | `addOnBlur` | input | `boolean` | no | `true` | Commits a valid draft tag when the text input loses focus. |
@@ -12043,6 +12069,7 @@ void bootstrapApplication(KernTagsInputAgentExample);
 | `readonly` | input | `boolean` | no | `false` | Keeps the value perceivable while preventing user edits. |
 | `required` | input | `boolean` | no | `false` | Marks the value as required and participates in Angular Forms validation. |
 | `invalid` | input | `boolean` | no | `false` | Exposes an externally controlled invalid presentation state. |
+| `value` | input | `ReadonlyArray<string> \| undefined` | no | `undefined` | Controlled component value. |
 | `valueChange` | output | `ReadonlyArray<string>` | no | `undefined` | Notifies the consumer after the value change interaction completes. |
 | `tagAdded` | output | `string` | no | `undefined` | Notifies the consumer after the tag added interaction completes. |
 | `tagRemoved` | output | `string` | no | `undefined` | Notifies the consumer after the tag removed interaction completes. |
@@ -12103,8 +12130,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/tags-input`
 
 Scenarios: `default`.
-Public API coverage: 9/12
-directly controlled; 3 exact exclusions; 0 unclassified.
+Public API coverage: 11/18
+directly controlled; 7 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -12113,6 +12140,8 @@ component inputs or models.
 | Argument | Control | Default | Test value | Binding | Description |
 | --- | --- | --- | --- | --- | --- |
 | `disabled` | boolean | `false` | `true` | input `disabled` (property) | Prevents user interaction. |
+| `autocomplete` | select | `"off"` | `"on"` | input `autocomplete` (property) | Controls native browser autocomplete for the tag editor. |
+| `tabindex` | number | `0` | `-1` | input `tabindex` (property) | Includes or removes the tag editor from sequential keyboard focus. |
 | `addOnBlur` | boolean | `true` | `false` | input `addOnBlur` (property) | Configures the component addOnBlur contract. |
 | `allowDuplicates` | boolean | `false` | `true` | input `allowDuplicates` (property) | Configures the component allowDuplicates contract. |
 | `id` | text | `""` | `"Alternate value"` | input `id` (property) | Configures the component id contract. |
@@ -12126,9 +12155,13 @@ Exact API exclusions:
 
 | Public API | Category | Evidence | Reason |
 | --- | --- | --- | --- |
+| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#tags-input` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 | `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#tags-input` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabelledBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#tags-input` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 | `inputLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#tags-input` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `separator` | complex-data | `specimen-fixture:preview/tags-input?state=default` | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture. |
 | `separatorKeys` | complex-data | `specimen-fixture:preview/tags-input?state=default` | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
+| `value` | complex-data | `specimen-fixture:preview/tags-input?state=default` | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
 
 Presets:
 

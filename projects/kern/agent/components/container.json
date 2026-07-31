@@ -60,7 +60,7 @@
       "name": "maxWidth",
       "property": "maxWidth",
       "kind": "input",
-      "type": "string | null",
+      "type": "KrnLayoutSpace | null",
       "required": false,
       "defaultValue": "null",
       "description": "Upper or lower bound applied to the width value.",

@@ -311,8 +311,11 @@ export class KrnAppShell {
   readonly mobileNavigationOpen = model(false);
   readonly mobileNavigationId = input(this.ids.next('mobile-navigation'));
   readonly mobileNavigationLabel = input(this.translations.layout.mobileNavigation);
+  /** Space-separated element ids that name the mobile navigation dialog. */
   readonly mobileNavigationLabelledBy = input('');
+  /** Space-separated element ids that describe the mobile navigation dialog. */
   readonly mobileNavigationDescribedBy = input('');
+  /** Focus target applied after the mobile navigation dialog opens. */
   readonly mobileNavigationInitialFocus = input<KrnOverlayInitialFocus>('first-tabbable');
   readonly openNavigationLabel = input(this.translations.layout.openNavigation);
   readonly closeNavigationLabel = input(this.translations.layout.closeNavigation);
@@ -536,10 +539,12 @@ export class KrnAppShell {
 })
 export class KrnHeader {
   readonly height = input<KrnLayoutSpace>('4rem');
+  /** Logical inset between a sticky header and its scrolling boundary. */
   readonly stickyOffset = input<KrnLayoutSpace>(0);
   readonly sticky = input(true, { transform: booleanAttribute });
   readonly elevated = input(false, { transform: booleanAttribute });
   readonly ariaLabel = input('');
+  /** Space-separated element ids that name the native header landmark. */
   readonly ariaLabelledBy = input('');
 
   protected readonly resolvedHeight = computed(() => krnCssLength(this.height(), '4rem'));
@@ -665,7 +670,9 @@ export class KrnSidebar {
   readonly width = input<KrnLayoutSpace>('var(--krn-shell-sidebar-width, 17rem)');
   readonly collapsedWidth = input<KrnLayoutSpace>('4rem');
   readonly ariaLabel = input(this.translations.layout.secondaryNavigation);
+  /** Space-separated element ids that name the native complementary landmark. */
   readonly ariaLabelledBy = input('');
+  /** Space-separated element ids that describe the native complementary landmark. */
   readonly ariaDescribedBy = input('');
   readonly side = input<'auto' | 'start' | 'end'>('auto');
 
@@ -800,7 +807,9 @@ export class KrnNavigationRail {
   readonly width = input<KrnLayoutSpace>('var(--krn-shell-rail-width, 3.5rem)');
   readonly expandedWidth = input<KrnLayoutSpace>('14rem');
   readonly ariaLabel = input(this.translations.layout.primaryNavigation);
+  /** Space-separated element ids that name the native navigation landmark. */
   readonly ariaLabelledBy = input('');
+  /** Space-separated element ids that describe the native navigation landmark. */
   readonly ariaDescribedBy = input('');
   readonly side = input<'auto' | 'start' | 'end'>('auto');
 

@@ -49,11 +49,14 @@ void bootstrapApplication(KernHeaderAgentExample);
 
 ## API
 
-| Name       | Kind  | Type             | Required | Default  | Description                                                                   |
-| ---------- | ----- | ---------------- | -------- | -------- | ----------------------------------------------------------------------------- |
-| `height`   | input | `KrnLayoutSpace` | no       | `'4rem'` | Explicit block size of the rendered surface or virtual viewport.              |
-| `sticky`   | input | `boolean`        | no       | `true`   | Keeps the surface attached to its scrolling boundary while content moves.     |
-| `elevated` | input | `boolean`        | no       | `false`  | Adds semantic surface elevation for content that sits above its surroundings. |
+| Name             | Kind  | Type             | Required | Default  | Description                                                                   |
+| ---------------- | ----- | ---------------- | -------- | -------- | ----------------------------------------------------------------------------- |
+| `height`         | input | `KrnLayoutSpace` | no       | `'4rem'` | Explicit block size of the rendered surface or virtual viewport.              |
+| `stickyOffset`   | input | `KrnLayoutSpace` | no       | `0`      | Logical inset between a sticky header and its scrolling boundary.             |
+| `sticky`         | input | `boolean`        | no       | `true`   | Keeps the surface attached to its scrolling boundary while content moves.     |
+| `elevated`       | input | `boolean`        | no       | `false`  | Adds semantic surface elevation for content that sits above its surroundings. |
+| `ariaLabel`      | input | `string`         | no       | `''`     | Accessible name used when visible content is not sufficient.                  |
+| `ariaLabelledBy` | input | `string`         | no       | `''`     | Space-separated element ids that name the native header landmark.             |
 
 ## Deprecated selectors
 
@@ -102,22 +105,26 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/header`
 
 Scenarios: `default`.
-Public API coverage: 3/3
-directly controlled; 0 exact exclusions; 0 unclassified.
+Public API coverage: 4/6
+directly controlled; 2 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument   | Control | Default  | Test value | Binding                     | Description                               |
-| ---------- | ------- | -------- | ---------- | --------------------------- | ----------------------------------------- |
-| `elevated` | boolean | `true`   | `false`    | input `elevated` (property) | Adds the elevated header treatment.       |
-| `height`   | text    | `"4rem"` | `"20rem"`  | input `height` (property)   | Configures the component height contract. |
-| `sticky`   | boolean | `true`   | `false`    | input `sticky` (property)   | Configures the component sticky contract. |
+| Argument       | Control | Default  | Test value | Binding                         | Description                                     |
+| -------------- | ------- | -------- | ---------- | ------------------------------- | ----------------------------------------------- |
+| `elevated`     | boolean | `true`   | `false`    | input `elevated` (property)     | Adds the elevated header treatment.             |
+| `height`       | text    | `"4rem"` | `"20rem"`  | input `height` (property)       | Configures the component height contract.       |
+| `sticky`       | boolean | `true`   | `false`    | input `sticky` (property)       | Configures the component sticky contract.       |
+| `stickyOffset` | text    | `"0"`    | `"1rem"`   | input `stickyOffset` (property) | Configures the component stickyOffset contract. |
 
 Exact API exclusions:
 
-_No excluded public API members._
+| Public API       | Category           | Evidence                                            | Reason                                                                                                                  |
+| ---------------- | ------------------ | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#header` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabelledBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#header` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 
 Presets:
 

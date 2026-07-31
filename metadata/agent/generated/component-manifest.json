@@ -73,7 +73,7 @@
       "@kern-ui/angular/patterns",
       "@kern-ui/angular/testing"
     ],
-    "sourceDigest": "sha256-e8b190511f5878535e4b8b236efc0922f141629fcde7c12028f9bd901b361a3a"
+    "sourceDigest": "sha256-4753752fa032df5f73df8f5906ddd9bfa7a2bc4ca82ef68c28ed7426992959ce"
   },
   "components": [
     {
@@ -205,6 +205,36 @@
           "descriptionSource": "inferred"
         },
         {
+          "name": "mobileNavigationLabelledBy",
+          "property": "mobileNavigationLabelledBy",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "''",
+          "description": "Space-separated element ids that name the mobile navigation dialog.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "mobileNavigationDescribedBy",
+          "property": "mobileNavigationDescribedBy",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "''",
+          "description": "Space-separated element ids that describe the mobile navigation dialog.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "mobileNavigationInitialFocus",
+          "property": "mobileNavigationInitialFocus",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "'first-tabbable'",
+          "description": "Focus target applied after the mobile navigation dialog opens.",
+          "descriptionSource": "source"
+        },
+        {
           "name": "openNavigationLabel",
           "property": "openNavigationLabel",
           "kind": "input",
@@ -316,6 +346,9 @@
         "mobileNavigationOpen",
         "mobileNavigationId",
         "mobileNavigationLabel",
+        "mobileNavigationLabelledBy",
+        "mobileNavigationDescribedBy",
+        "mobileNavigationInitialFocus",
         "openNavigationLabel",
         "closeNavigationLabel",
         "mainId"
@@ -530,9 +563,9 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 11,
+          "publicInputsAndModels": 14,
           "controlled": 6,
-          "excluded": 5,
+          "excluded": 8,
           "unclassified": 0
         },
         "exclusions": [
@@ -562,7 +595,31 @@
           },
           {
             "componentId": "app-shell",
+            "publicName": "mobileNavigationDescribedBy",
+            "kind": "input",
+            "type": "string",
+            "code": "accessibility-copy",
+            "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#app-shell"
+            }
+          },
+          {
+            "componentId": "app-shell",
             "publicName": "mobileNavigationId",
+            "kind": "input",
+            "type": "string",
+            "code": "dom-wiring",
+            "reason": "DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#app-shell"
+            }
+          },
+          {
+            "componentId": "app-shell",
+            "publicName": "mobileNavigationInitialFocus",
             "kind": "input",
             "type": "string",
             "code": "dom-wiring",
@@ -579,6 +636,18 @@
             "type": "string",
             "code": "accessibility-copy",
             "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#app-shell"
+            }
+          },
+          {
+            "componentId": "app-shell",
+            "publicName": "mobileNavigationLabelledBy",
+            "kind": "input",
+            "type": "string",
+            "code": "accessibility-copy",
+            "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
             "evidence": {
               "category": "a11y-test",
               "pointer": "tests/a11y/accessibility.spec.ts#app-shell"
@@ -658,6 +727,16 @@
           "descriptionSource": "inferred"
         },
         {
+          "name": "stickyOffset",
+          "property": "stickyOffset",
+          "kind": "input",
+          "type": "KrnLayoutSpace",
+          "required": false,
+          "defaultValue": "0",
+          "description": "Logical inset between a sticky header and its scrolling boundary.",
+          "descriptionSource": "source"
+        },
+        {
           "name": "sticky",
           "property": "sticky",
           "kind": "input",
@@ -676,6 +755,26 @@
           "defaultValue": "false",
           "description": "Adds semantic surface elevation for content that sits above its surroundings.",
           "descriptionSource": "inferred"
+        },
+        {
+          "name": "ariaLabel",
+          "property": "ariaLabel",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "''",
+          "description": "Accessible name used when visible content is not sufficient.",
+          "descriptionSource": "inferred"
+        },
+        {
+          "name": "ariaLabelledBy",
+          "property": "ariaLabelledBy",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "''",
+          "description": "Space-separated element ids that name the native header landmark.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [
@@ -745,8 +844,11 @@
         "krn-header",
         "KrnHeader",
         "height",
+        "stickyOffset",
         "sticky",
-        "elevated"
+        "elevated",
+        "ariaLabel",
+        "ariaLabelledBy"
       ],
       "guidance": {
         "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
@@ -810,6 +912,19 @@
             "binding": {
               "kind": "input",
               "publicName": "sticky",
+              "syntax": "property"
+            }
+          },
+          {
+            "key": "stickyOffset",
+            "label": "Sticky Offset",
+            "kind": "text",
+            "defaultValue": "0",
+            "testValue": "1rem",
+            "description": "Configures the component stickyOffset contract.",
+            "binding": {
+              "kind": "input",
+              "publicName": "stickyOffset",
               "syntax": "property"
             }
           }
@@ -892,12 +1007,37 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 3,
-          "controlled": 3,
-          "excluded": 0,
+          "publicInputsAndModels": 6,
+          "controlled": 4,
+          "excluded": 2,
           "unclassified": 0
         },
-        "exclusions": []
+        "exclusions": [
+          {
+            "componentId": "header",
+            "publicName": "ariaLabel",
+            "kind": "input",
+            "type": "string",
+            "code": "accessibility-copy",
+            "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#header"
+            }
+          },
+          {
+            "componentId": "header",
+            "publicName": "ariaLabelledBy",
+            "kind": "input",
+            "type": "string",
+            "code": "accessibility-copy",
+            "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#header"
+            }
+          }
+        ]
       }
     },
     {
@@ -999,22 +1139,42 @@
           "descriptionSource": "inferred"
         },
         {
+          "name": "ariaLabelledBy",
+          "property": "ariaLabelledBy",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "''",
+          "description": "Space-separated element ids that name the native complementary landmark.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "ariaDescribedBy",
+          "property": "ariaDescribedBy",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "''",
+          "description": "Space-separated element ids that describe the native complementary landmark.",
+          "descriptionSource": "source"
+        },
+        {
           "name": "side",
           "property": "side",
           "kind": "input",
-          "type": "\"end\" | \"start\"",
+          "type": "\"auto\" | \"end\" | \"start\"",
           "required": false,
-          "defaultValue": "'start'",
+          "defaultValue": "'auto'",
           "description": "Logical side on which the anchored or modal surface is placed.",
           "descriptionSource": "inferred"
         }
       ],
       "slots": [
         {
-          "name": "krnSidebarHeader",
-          "selector": "[krnSidebarHeader]",
+          "name": "krnsidebarheader-header",
+          "selector": "[krnSidebarHeader],header",
           "required": false,
-          "description": "Projects content matching [krnSidebarHeader]."
+          "description": "Projects content matching [krnSidebarHeader],header."
         },
         {
           "name": "default-2",
@@ -1023,10 +1183,10 @@
           "description": "Projects default component content."
         },
         {
-          "name": "krnSidebarFooter",
-          "selector": "[krnSidebarFooter]",
+          "name": "krnsidebarfooter-footer",
+          "selector": "[krnSidebarFooter],footer",
           "required": false,
-          "description": "Projects content matching [krnSidebarFooter]."
+          "description": "Projects content matching [krnSidebarFooter],footer."
         }
       ],
       "forms": {
@@ -1080,6 +1240,8 @@
         "width",
         "collapsedWidth",
         "ariaLabel",
+        "ariaLabelledBy",
+        "ariaDescribedBy",
         "side"
       ],
       "guidance": {
@@ -1173,7 +1335,7 @@
             "key": "side",
             "label": "Side",
             "kind": "select",
-            "defaultValue": "start",
+            "defaultValue": "auto",
             "testValue": "end",
             "description": "Configures the component side contract.",
             "binding": {
@@ -1182,6 +1344,10 @@
               "syntax": "property"
             },
             "options": [
+              {
+                "label": "auto",
+                "value": "auto"
+              },
               {
                 "label": "end",
                 "value": "end"
@@ -1271,15 +1437,39 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 6,
+          "publicInputsAndModels": 8,
           "controlled": 5,
-          "excluded": 1,
+          "excluded": 3,
           "unclassified": 0
         },
         "exclusions": [
           {
             "componentId": "sidebar",
+            "publicName": "ariaDescribedBy",
+            "kind": "input",
+            "type": "string",
+            "code": "accessibility-copy",
+            "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#sidebar"
+            }
+          },
+          {
+            "componentId": "sidebar",
             "publicName": "ariaLabel",
+            "kind": "input",
+            "type": "string",
+            "code": "accessibility-copy",
+            "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#sidebar"
+            }
+          },
+          {
+            "componentId": "sidebar",
+            "publicName": "ariaLabelledBy",
             "kind": "input",
             "type": "string",
             "code": "accessibility-copy",
@@ -1383,22 +1573,42 @@
           "descriptionSource": "inferred"
         },
         {
+          "name": "ariaLabelledBy",
+          "property": "ariaLabelledBy",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "''",
+          "description": "Space-separated element ids that name the native navigation landmark.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "ariaDescribedBy",
+          "property": "ariaDescribedBy",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "''",
+          "description": "Space-separated element ids that describe the native navigation landmark.",
+          "descriptionSource": "source"
+        },
+        {
           "name": "side",
           "property": "side",
           "kind": "input",
-          "type": "\"end\" | \"start\"",
+          "type": "\"auto\" | \"end\" | \"start\"",
           "required": false,
-          "defaultValue": "'start'",
+          "defaultValue": "'auto'",
           "description": "Logical side on which the anchored or modal surface is placed.",
           "descriptionSource": "inferred"
         }
       ],
       "slots": [
         {
-          "name": "krnRailHeader",
-          "selector": "[krnRailHeader]",
+          "name": "krnrailheader-header",
+          "selector": "[krnRailHeader],header",
           "required": false,
-          "description": "Projects content matching [krnRailHeader]."
+          "description": "Projects content matching [krnRailHeader],header."
         },
         {
           "name": "default-2",
@@ -1407,10 +1617,10 @@
           "description": "Projects default component content."
         },
         {
-          "name": "krnRailFooter",
-          "selector": "[krnRailFooter]",
+          "name": "krnrailfooter-footer",
+          "selector": "[krnRailFooter],footer",
           "required": false,
-          "description": "Projects content matching [krnRailFooter]."
+          "description": "Projects content matching [krnRailFooter],footer."
         }
       ],
       "forms": {
@@ -1463,6 +1673,8 @@
         "width",
         "expandedWidth",
         "ariaLabel",
+        "ariaLabelledBy",
+        "ariaDescribedBy",
         "side"
       ],
       "guidance": {
@@ -1520,7 +1732,7 @@
             "key": "side",
             "label": "Side",
             "kind": "select",
-            "defaultValue": "start",
+            "defaultValue": "auto",
             "testValue": "end",
             "description": "Configures the component side contract.",
             "binding": {
@@ -1529,6 +1741,10 @@
               "syntax": "property"
             },
             "options": [
+              {
+                "label": "auto",
+                "value": "auto"
+              },
               {
                 "label": "end",
                 "value": "end"
@@ -1655,15 +1871,39 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 5,
+          "publicInputsAndModels": 7,
           "controlled": 4,
-          "excluded": 1,
+          "excluded": 3,
           "unclassified": 0
         },
         "exclusions": [
           {
             "componentId": "navigation-rail",
+            "publicName": "ariaDescribedBy",
+            "kind": "input",
+            "type": "string",
+            "code": "accessibility-copy",
+            "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#navigation-rail"
+            }
+          },
+          {
+            "componentId": "navigation-rail",
             "publicName": "ariaLabel",
+            "kind": "input",
+            "type": "string",
+            "code": "accessibility-copy",
+            "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#navigation-rail"
+            }
+          },
+          {
+            "componentId": "navigation-rail",
+            "publicName": "ariaLabelledBy",
             "kind": "input",
             "type": "string",
             "code": "accessibility-copy",
@@ -1738,7 +1978,7 @@
           "name": "maxWidth",
           "property": "maxWidth",
           "kind": "input",
-          "type": "string | null",
+          "type": "KrnLayoutSpace | null",
           "required": false,
           "defaultValue": "null",
           "description": "Upper or lower bound applied to the width value.",
@@ -31503,6 +31743,46 @@
           "descriptionSource": "inferred"
         },
         {
+          "name": "ariaLabelledBy",
+          "property": "ariaLabelledBy",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "''",
+          "description": "Space-separated element ids that provide the accessible name and take precedence over ariaLabel.",
+          "descriptionSource": "inferred"
+        },
+        {
+          "name": "ariaDescribedBy",
+          "property": "ariaDescribedBy",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "''",
+          "description": "Space-separated element ids composed with Form Field hints and validation descriptions.",
+          "descriptionSource": "inferred"
+        },
+        {
+          "name": "autocomplete",
+          "property": "autocomplete",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "'off'",
+          "description": "Native autocomplete purpose forwarded to the editable control.",
+          "descriptionSource": "inferred"
+        },
+        {
+          "name": "tabindex",
+          "property": "tabIndex",
+          "kind": "input",
+          "type": "number",
+          "required": false,
+          "defaultValue": "0",
+          "description": "Native sequential-focus order forwarded to the owned interactive element.",
+          "descriptionSource": "inferred"
+        },
+        {
           "name": "separatorKeys",
           "property": "separatorKeys",
           "kind": "input",
@@ -31511,6 +31791,16 @@
           "defaultValue": "['Enter', ',']",
           "description": "Stable identifier value used by the separator contract.",
           "descriptionSource": "inferred"
+        },
+        {
+          "name": "separator",
+          "property": "separator",
+          "kind": "input",
+          "type": "RegExp | string",
+          "required": false,
+          "defaultValue": "/[,\\n]+/",
+          "description": "Delimiter or pattern used to split committed draft text into tags.",
+          "descriptionSource": "source"
         },
         {
           "name": "maxTags",
@@ -31580,6 +31870,16 @@
           "required": false,
           "defaultValue": "false",
           "description": "Exposes an externally controlled invalid presentation state.",
+          "descriptionSource": "inferred"
+        },
+        {
+          "name": "value",
+          "property": "value",
+          "kind": "input",
+          "type": "ReadonlyArray<string> | undefined",
+          "required": false,
+          "defaultValue": "undefined",
+          "description": "Controlled component value.",
           "descriptionSource": "inferred"
         },
         {
@@ -31671,7 +31971,12 @@
         "ariaLabel",
         "inputLabel",
         "placeholder",
+        "ariaLabelledBy",
+        "ariaDescribedBy",
+        "autocomplete",
+        "tabindex",
         "separatorKeys",
+        "separator",
         "maxTags",
         "allowDuplicates",
         "addOnBlur",
@@ -31679,6 +31984,7 @@
         "readonly",
         "required",
         "invalid",
+        "value",
         "valueChange",
         "tagAdded",
         "tagRemoved"
@@ -31723,6 +32029,45 @@
               "publicName": "disabled",
               "syntax": "property"
             }
+          },
+          {
+            "key": "autocomplete",
+            "label": "Autocomplete",
+            "kind": "select",
+            "defaultValue": "off",
+            "testValue": "on",
+            "description": "Controls native browser autocomplete for the tag editor.",
+            "binding": {
+              "kind": "input",
+              "publicName": "autocomplete",
+              "syntax": "property"
+            },
+            "options": [
+              {
+                "label": "off",
+                "value": "off"
+              },
+              {
+                "label": "on",
+                "value": "on"
+              }
+            ]
+          },
+          {
+            "key": "tabindex",
+            "label": "Tab index",
+            "kind": "number",
+            "defaultValue": 0,
+            "testValue": -1,
+            "description": "Includes or removes the tag editor from sequential keyboard focus.",
+            "binding": {
+              "kind": "input",
+              "publicName": "tabindex",
+              "syntax": "property"
+            },
+            "min": -1,
+            "max": 0,
+            "step": 1
           },
           {
             "key": "addOnBlur",
@@ -31991,15 +32336,39 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 12,
-          "controlled": 9,
-          "excluded": 3,
+          "publicInputsAndModels": 18,
+          "controlled": 11,
+          "excluded": 7,
           "unclassified": 0
         },
         "exclusions": [
           {
             "componentId": "tags-input",
+            "publicName": "ariaDescribedBy",
+            "kind": "input",
+            "type": "string",
+            "code": "accessibility-copy",
+            "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#tags-input"
+            }
+          },
+          {
+            "componentId": "tags-input",
             "publicName": "ariaLabel",
+            "kind": "input",
+            "type": "string",
+            "code": "accessibility-copy",
+            "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#tags-input"
+            }
+          },
+          {
+            "componentId": "tags-input",
+            "publicName": "ariaLabelledBy",
             "kind": "input",
             "type": "string",
             "code": "accessibility-copy",
@@ -32023,9 +32392,33 @@
           },
           {
             "componentId": "tags-input",
+            "publicName": "separator",
+            "kind": "input",
+            "type": "RegExp | string",
+            "code": "complex-data",
+            "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+            "evidence": {
+              "category": "specimen-fixture",
+              "pointer": "preview/tags-input?state=default"
+            }
+          },
+          {
+            "componentId": "tags-input",
             "publicName": "separatorKeys",
             "kind": "input",
             "type": "ReadonlyArray<string>",
+            "code": "complex-data",
+            "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+            "evidence": {
+              "category": "specimen-fixture",
+              "pointer": "preview/tags-input?state=default"
+            }
+          },
+          {
+            "componentId": "tags-input",
+            "publicName": "value",
+            "kind": "input",
+            "type": "ReadonlyArray<string> | undefined",
             "code": "complex-data",
             "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
             "evidence": {

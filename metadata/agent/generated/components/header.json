@@ -57,6 +57,16 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "stickyOffset",
+      "property": "stickyOffset",
+      "kind": "input",
+      "type": "KrnLayoutSpace",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Logical inset between a sticky header and its scrolling boundary.",
+      "descriptionSource": "source"
+    },
+    {
       "name": "sticky",
       "property": "sticky",
       "kind": "input",
@@ -75,6 +85,26 @@
       "defaultValue": "false",
       "description": "Adds semantic surface elevation for content that sits above its surroundings.",
       "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabelledBy",
+      "property": "ariaLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that name the native header landmark.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [
@@ -144,8 +174,11 @@
     "krn-header",
     "KrnHeader",
     "height",
+    "stickyOffset",
     "sticky",
-    "elevated"
+    "elevated",
+    "ariaLabel",
+    "ariaLabelledBy"
   ],
   "guidance": {
     "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
@@ -209,6 +242,19 @@
         "binding": {
           "kind": "input",
           "publicName": "sticky",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "stickyOffset",
+        "label": "Sticky Offset",
+        "kind": "text",
+        "defaultValue": "0",
+        "testValue": "1rem",
+        "description": "Configures the component stickyOffset contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "stickyOffset",
           "syntax": "property"
         }
       }
@@ -291,11 +337,36 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 3,
-      "controlled": 3,
-      "excluded": 0,
+      "publicInputsAndModels": 6,
+      "controlled": 4,
+      "excluded": 2,
       "unclassified": 0
     },
-    "exclusions": []
+    "exclusions": [
+      {
+        "componentId": "header",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#header"
+        }
+      },
+      {
+        "componentId": "header",
+        "publicName": "ariaLabelledBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#header"
+        }
+      }
+    ]
   }
 }
