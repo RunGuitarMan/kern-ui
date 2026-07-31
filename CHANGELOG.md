@@ -78,6 +78,9 @@ contract or upgrade decision.
 - Hardened Profile Form runtime limits and timezone identities, required-name and invalid-value
   semantics, normalized labels, persistent save status, and focus-preserving async saving behavior;
   added customizable `bioErrorLabel` and `timezoneErrorLabel` inputs.
+- Strengthened Multi Step Form step identities and index reconciliation, functional orientation and
+  responsive sizing, normalized navigation copy, semantic disabled states, and focus handoff;
+  removed the unreachable `emptyStepLabel` input because empty step collections are now rejected.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned

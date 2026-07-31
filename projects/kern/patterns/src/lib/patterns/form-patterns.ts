@@ -1,6 +1,9 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
+  Injector,
   booleanAttribute,
   computed,
   effect,
@@ -9,6 +12,7 @@ import {
   model,
   numberAttribute,
   output,
+  viewChild,
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KrnIdService } from '@kern-ui/angular/cdk';
@@ -614,23 +618,25 @@ export class KrnProfileForm {
   selector: 'krn-multi-step-form',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[attr.data-orientation]': 'orientation()',
+    '[attr.data-orientation]': 'resolvedOrientation()',
+    '[style.--krn-step-count]': 'validatedSteps().length',
   },
   template: `
-    <nav [attr.aria-label]="ariaLabel()">
+    <nav [attr.aria-label]="resolvedAriaLabel()">
       <ol>
-        @for (step of steps(); track step.id; let index = $index) {
+        @for (step of validatedSteps(); track step.id; let index = $index) {
           <li
             [attr.data-current]="index === current() ? '' : null"
-            [attr.data-complete]="index < current() ? '' : null"
+            [attr.data-complete]="isStepComplete(step, index) ? '' : null"
           >
             <button
               type="button"
-              [disabled]="!allowStepNavigation() || index > furthestStep()"
+              [attr.aria-disabled]="!canNavigateTo(index)"
+              [attr.tabindex]="canNavigateTo(index) ? null : -1"
               [attr.aria-current]="index === current() ? 'step' : null"
               (click)="goTo(index)"
             >
-              <span>{{ index < current() ? '✓' : index + 1 }}</span>
+              <span aria-hidden="true">{{ isStepComplete(step, index) ? '✓' : index + 1 }}</span>
               <span>
                 <strong>{{ step.label }}</strong>
                 @if (step.description) {
@@ -638,7 +644,7 @@ export class KrnProfileForm {
                 }
               </span>
               @if (step.optional) {
-                <em>{{ optionalLabel() }}</em>
+                <em>{{ resolvedOptionalLabel() }}</em>
               }
             </button>
           </li>
@@ -646,31 +652,38 @@ export class KrnProfileForm {
       </ol>
     </nav>
     <section role="group" [attr.aria-labelledby]="currentStepLabelId()">
-      <h2 [id]="currentStepLabelId()" class="sr-only">{{ currentStep().label }}</h2>
+      <h2 #stepHeading [id]="currentStepLabelId()" class="sr-only" tabindex="-1">
+        {{ currentStep().label }}
+      </h2>
       <ng-content />
     </section>
     <footer>
-      <button type="button" class="secondary" [disabled]="current() === 0" (click)="previous()">
-        {{ backLabel() }}
+      <button
+        type="button"
+        class="secondary"
+        [attr.aria-disabled]="current() === 0"
+        (click)="previous()"
+      >
+        {{ resolvedBackLabel() }}
       </button>
-      <span>{{ stepCounterLabel()(current() + 1, steps().length) }}</span>
-      @if (current() < steps().length - 1) {
+      <span aria-live="polite">{{ resolvedStepCounterLabel() }}</span>
+      @if (current() < validatedSteps().length - 1) {
         <button
           type="button"
           class="primary"
-          [disabled]="currentStep().valid === false"
+          [attr.aria-disabled]="currentStep().valid === false"
           (click)="next()"
         >
-          {{ continueLabel() }}
+          {{ resolvedContinueLabel() }}
         </button>
       } @else {
         <button
           type="button"
           class="primary"
-          [disabled]="currentStep().valid === false"
-          (click)="completed.emit()"
+          [attr.aria-disabled]="currentStep().valid === false"
+          (click)="complete()"
         >
-          {{ completeLabel() }}
+          {{ resolvedCompleteLabel() }}
         </button>
       }
     </footer>
@@ -680,6 +693,10 @@ export class KrnProfileForm {
       display: grid;
       gap: var(--krn-space-6, 1.5rem);
       color: var(--krn-color-text, #252932);
+      container-type: inline-size;
+    }
+    :host([hidden]) {
+      display: none;
     }
     ol {
       display: grid;
@@ -716,6 +733,7 @@ export class KrnProfileForm {
       background: transparent;
       font: inherit;
       text-align: start;
+      overflow-wrap: anywhere;
     }
     li button > span:first-child {
       display: grid;
@@ -775,8 +793,8 @@ export class KrnProfileForm {
       outline: var(--krn-focus-ring, 2px solid #4f6feb);
       outline-offset: 2px;
     }
-    footer button:disabled,
-    li button:disabled {
+    footer button[aria-disabled='true'],
+    li button[aria-disabled='true'] {
       opacity: var(--krn-opacity-disabled, 0.48);
       cursor: not-allowed;
     }
@@ -791,20 +809,33 @@ export class KrnProfileForm {
       ol {
         grid-template-columns: 1fr;
       }
-      li:not([data-current]) button > span:nth-child(2),
-      li:not([data-current]) em {
+      :host(:not([data-orientation='vertical'])) li:not([data-current]) button > span:nth-child(2),
+      :host(:not([data-orientation='vertical'])) li:not([data-current]) em {
         display: none;
       }
-      li:not([data-current]) {
+      :host(:not([data-orientation='vertical'])) li:not([data-current]) {
         display: none;
+      }
+    }
+    :host([data-orientation='vertical']) ol {
+      grid-template-columns: 1fr;
+    }
+    @media (forced-colors: active) {
+      ol,
+      footer,
+      footer button,
+      li button > span:first-child {
+        border-color: CanvasText;
       }
     }
   `,
 })
 export class KrnMultiStepForm {
   private readonly ids = inject(KrnIdService);
+  private readonly injector = inject(Injector);
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly instanceId = this.ids.next('multi-step-form');
+  private readonly stepHeading = viewChild<ElementRef<HTMLHeadingElement>>('stepHeading');
   readonly steps = input.required<readonly KrnFormStep[]>();
   readonly current = model(0);
   readonly furthestStep = model(0);
@@ -815,31 +846,148 @@ export class KrnMultiStepForm {
   readonly optionalLabel = input(this.translations.patterns.optional);
   readonly backLabel = input(this.translations.patterns.back);
   readonly continueLabel = input(this.translations.patterns.continue);
-  readonly emptyStepLabel = input(this.translations.patterns.step);
   readonly stepCounterLabel = input(this.translations.patterns.stepCounter);
   readonly completed = output<void>();
-  protected readonly currentStep = (): KrnFormStep =>
-    this.steps()[Math.max(0, Math.min(this.steps().length - 1, this.current()))] ?? {
-      id: 'step',
-      label: this.emptyStepLabel(),
-    };
-  protected readonly currentStepLabelId = (): string =>
-    this.ids.fromKey(this.instanceId, this.currentStep().id);
+  protected readonly validatedSteps = computed(() => {
+    const steps = this.steps();
+    if (!Array.isArray(steps) || steps.length === 0) {
+      throw new Error('KrnMultiStepForm: steps must contain at least one step.');
+    }
+
+    const ids = new Set<string>();
+    return steps.map((step) => {
+      const id = this.normalizeText(step?.id);
+      const label = this.normalizeText(step?.label);
+      if (!id || !label || ids.has(id)) {
+        throw new Error(
+          'KrnMultiStepForm: steps must use non-empty unique ids and non-empty labels.',
+        );
+      }
+      if (
+        (step.optional !== undefined && typeof step.optional !== 'boolean') ||
+        (step.valid !== undefined && typeof step.valid !== 'boolean')
+      ) {
+        throw new Error('KrnMultiStepForm: optional and valid step states must be boolean.');
+      }
+
+      ids.add(id);
+      return {
+        ...step,
+        id,
+        label,
+        description: this.normalizeText(step.description ?? '') || undefined,
+      };
+    });
+  });
+  protected readonly resolvedOrientation = computed(() => {
+    const orientation = this.orientation();
+    if (orientation !== 'horizontal' && orientation !== 'vertical') {
+      throw new Error('KrnMultiStepForm: orientation must be horizontal or vertical.');
+    }
+
+    return orientation;
+  });
+  protected readonly resolvedCompleteLabel = computed(() =>
+    this.requiredLabel(this.completeLabel(), this.translations.patterns.complete, 'Complete'),
+  );
+  protected readonly resolvedAriaLabel = computed(() =>
+    this.requiredLabel(this.ariaLabel(), this.translations.patterns.formProgress, 'Form progress'),
+  );
+  protected readonly resolvedOptionalLabel = computed(() =>
+    this.requiredLabel(this.optionalLabel(), this.translations.patterns.optional, 'Optional'),
+  );
+  protected readonly resolvedBackLabel = computed(() =>
+    this.requiredLabel(this.backLabel(), this.translations.patterns.back, 'Back'),
+  );
+  protected readonly resolvedContinueLabel = computed(() =>
+    this.requiredLabel(this.continueLabel(), this.translations.patterns.continue, 'Continue'),
+  );
+  protected readonly currentStep = computed(() => {
+    const steps = this.validatedSteps();
+    return steps[this.clampIndex(this.current(), steps.length)]!;
+  });
+  protected readonly currentStepLabelId = computed(() =>
+    this.ids.fromKey(this.instanceId, this.currentStep().id),
+  );
+  protected readonly resolvedStepCounterLabel = computed(() => {
+    const total = this.validatedSteps().length;
+    const current = this.clampIndex(this.current(), total) + 1;
+    return this.requiredLabel(
+      this.stepCounterLabel()(current, total),
+      this.translations.patterns.stepCounter(current, total),
+      `Step ${current} of ${total}`,
+    );
+  });
+
+  constructor() {
+    effect(() => {
+      const length = this.validatedSteps().length;
+      const current = this.clampIndex(this.current(), length);
+      const furthest = Math.max(current, this.clampIndex(this.furthestStep(), length));
+      if (current !== this.current()) {
+        this.current.set(current);
+      }
+      if (furthest !== this.furthestStep()) {
+        this.furthestStep.set(furthest);
+      }
+    });
+  }
+
+  protected canNavigateTo(index: number): boolean {
+    return (
+      this.allowStepNavigation() &&
+      Number.isSafeInteger(index) &&
+      index >= 0 &&
+      index <= this.furthestStep() &&
+      index < this.validatedSteps().length
+    );
+  }
+
+  protected isStepComplete(step: KrnFormStep, index: number): boolean {
+    return step.valid === true && index <= this.furthestStep() && index !== this.current();
+  }
 
   goTo(index: number): void {
-    if (!this.allowStepNavigation() || index < 0 || index > this.furthestStep()) return;
-    this.current.set(index);
+    if (!this.canNavigateTo(index)) return;
+    this.moveTo(index);
   }
 
   next(): void {
     if (this.currentStep().valid === false) return;
-    const next = Math.min(this.steps().length - 1, this.current() + 1);
-    this.current.set(next);
+    const next = Math.min(this.validatedSteps().length - 1, this.current() + 1);
     this.furthestStep.update((value) => Math.max(value, next));
+    this.moveTo(next);
   }
 
   previous(): void {
+    if (this.current() === 0) return;
     const previous = Math.max(0, this.current() - 1);
-    this.current.set(previous);
+    this.moveTo(previous);
+  }
+
+  complete(): void {
+    if (this.currentStep().valid === false) return;
+    this.completed.emit();
+  }
+
+  private moveTo(index: number): void {
+    if (index === this.current()) return;
+    this.current.set(index);
+    afterNextRender(
+      { write: () => this.stepHeading()?.nativeElement.focus({ preventScroll: true }) },
+      { injector: this.injector },
+    );
+  }
+
+  private clampIndex(value: number, length: number): number {
+    return Number.isSafeInteger(value) ? Math.max(0, Math.min(length - 1, value)) : 0;
+  }
+
+  private normalizeText(value: string): string {
+    return typeof value === 'string' ? value.trim() : '';
+  }
+
+  private requiredLabel(value: string, fallback: string, hardFallback: string): string {
+    return this.normalizeText(value) || this.normalizeText(fallback) || hardFallback;
   }
 }

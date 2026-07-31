@@ -816,6 +816,11 @@ describe('Kern product patterns', () => {
     ]);
     await fixture.whenStable();
 
+    const futureStep = (fixture.nativeElement as HTMLElement).querySelectorAll('li')[1] as
+      HTMLLIElement | undefined;
+    expect(futureStep?.hasAttribute('data-complete')).toBe(false);
+    expect(futureStep?.querySelector('button > span')?.textContent?.trim()).toBe('2');
+
     fixture.componentInstance.next();
     expect(fixture.componentInstance.current()).toBe(0);
     fixture.componentRef.setInput('steps', [
@@ -824,5 +829,68 @@ describe('Kern product patterns', () => {
     ]);
     fixture.componentInstance.next();
     expect(fixture.componentInstance.current()).toBe(1);
+  });
+
+  it('reconciles multi-step state and exposes responsive, focus-safe navigation', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnMultiStepForm] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnMultiStepForm);
+    fixture.componentRef.setInput('steps', [
+      { id: ' account ', label: ' Account ', valid: true },
+      { id: 'profile', label: ' Profile ', description: ' Details ', valid: true },
+    ]);
+    fixture.componentRef.setInput('orientation', 'vertical');
+    fixture.componentRef.setInput('ariaLabel', '   ');
+    fixture.componentRef.setInput('continueLabel', '   ');
+    fixture.componentInstance.current.set(Number.NaN);
+    fixture.componentInstance.furthestStep.set(99);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const nav = element.querySelector('nav') as HTMLElement;
+    expect(fixture.componentInstance.current()).toBe(0);
+    expect(fixture.componentInstance.furthestStep()).toBe(1);
+    expect(element.getAttribute('data-orientation')).toBe('vertical');
+    expect(element.style.getPropertyValue('--krn-step-count')).toBe('2');
+    expect(nav.getAttribute('aria-label')?.trim()).toBeTruthy();
+    expect(element.querySelector('strong')?.textContent).toBe('Account');
+    expect(element.querySelector('small')?.textContent).toBe('Details');
+    expect(element.querySelector('footer .primary')?.textContent?.trim()).toBeTruthy();
+
+    fixture.componentInstance.next();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const heading = element.querySelector('section h2') as HTMLHeadingElement;
+    expect(fixture.componentInstance.current()).toBe(1);
+    expect(document.activeElement).toBe(heading);
+    expect(element.querySelector('[aria-live="polite"]')?.textContent).toContain('2');
+
+    const componentStyles = (
+      KrnMultiStepForm as unknown as { ɵcmp: { styles: readonly string[] } }
+    ).ɵcmp.styles.join('\n');
+    expect(componentStyles).toContain('container-type: inline-size');
+    expect(componentStyles).toMatch(/\[data-orientation=["']vertical["']\]/);
+    expect(componentStyles).toMatch(/:not\(\[data-orientation=["']vertical["']\]\)/);
+    expect(componentStyles).toContain('@media (forced-colors: active)');
+  });
+
+  it('rejects invalid multi-step identities and boolean states', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnMultiStepForm] }).compileComponents();
+    const empty = TestBed.createComponent(KrnMultiStepForm);
+    empty.componentRef.setInput('steps', []);
+    expect(() => empty.detectChanges()).toThrowError(/at least one step/);
+
+    const duplicate = TestBed.createComponent(KrnMultiStepForm);
+    duplicate.componentRef.setInput('steps', [
+      { id: 'same', label: 'First' },
+      { id: ' same ', label: 'Second' },
+    ]);
+    expect(() => duplicate.detectChanges()).toThrowError(/non-empty unique ids/);
+
+    const invalidState = TestBed.createComponent(KrnMultiStepForm);
+    invalidState.componentRef.setInput('steps', [
+      { id: 'state', label: 'State', valid: 'yes' as unknown as boolean },
+    ]);
+    expect(() => invalidState.detectChanges()).toThrowError(/states must be boolean/);
   });
 });
