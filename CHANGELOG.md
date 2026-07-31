@@ -154,6 +154,10 @@ contract or upgrade decision.
   single visible focus target, readonly-safe interaction, composed drop/local/Form Field
   descriptions, configurable tab order, public focus and blur methods, and state-aware testing
   harness filters.
+- Strengthened Verification Code with a single autofill-friendly native input, visual pin slots,
+  deterministic standalone string ownership, duplicate-free user emissions, composed external and
+  Form Field semantics, configurable autocomplete and tab order, public focus and blur methods, and
+  testing harness support for both documented selectors.
 
 ### Deprecated
 

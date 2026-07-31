@@ -1874,35 +1874,79 @@ krn-form-field[data-valid='true'] .krn-control-shell:not([data-invalid='true']) 
   color: var(--_control-danger);
 }
 
+.krn-otp-control {
+  display: grid;
+  gap: var(--krn-space-2, 0.5rem);
+  min-inline-size: 0;
+}
+
 .krn-otp {
+  display: inline-grid;
+  inline-size: max-content;
+  max-inline-size: 100%;
+  position: relative;
+}
+
+.krn-otp__input,
+.krn-otp__slots {
+  grid-area: 1 / 1;
+}
+
+.krn-otp__input {
+  appearance: none;
+  background: transparent;
   border: 0;
+  block-size: 100%;
+  caret-color: transparent;
+  color: transparent;
+  inline-size: 100%;
+  inset: 0;
+  opacity: 0;
+  outline: 0;
+  position: absolute;
+  z-index: 1;
+}
+
+.krn-otp__slots {
   display: flex;
   flex-wrap: wrap;
   gap: var(--krn-space-2, 0.5rem);
-  margin: 0;
-  min-inline-size: 0;
-  padding: 0;
+  pointer-events: none;
 }
 
-.krn-otp input {
+.krn-otp__slot {
+  align-items: center;
   appearance: none;
   background: var(--_control-bg);
   border: 1px solid var(--_control-border);
   border-radius: var(--_control-radius);
   color: var(--_control-fg);
+  display: inline-flex;
   font: 650 var(--krn-font-size-lg, 1.125rem) / 1
     var(--krn-font-family-mono, ui-monospace, monospace);
   block-size: var(--krn-control-height-lg);
-  inline-size: var(--krn-control-height-md);
-  outline: 0;
-  text-align: center;
   direction: ltr;
+  inline-size: var(--krn-control-height-md);
+  justify-content: center;
+  text-align: center;
 }
 
-.krn-otp input:focus-visible {
+.krn-otp__slot[data-active] {
   border-color: var(--_control-accent);
   box-shadow: var(--_control-ring);
   outline: 2px solid transparent;
+}
+
+.krn-otp[data-disabled='true'] {
+  opacity: var(--krn-opacity-disabled, 0.56);
+}
+
+.krn-otp[data-readonly='true'] .krn-otp__slot {
+  background: var(--_control-bg-muted);
+}
+
+.krn-otp[data-invalid='true'] .krn-otp__slot {
+  border-color: var(--_control-danger);
 }
 
 .krn-tag-input {
@@ -2040,7 +2084,7 @@ krn-form-field[data-valid='true'] .krn-control-shell:not([data-invalid='true']) 
   .krn-control-shell,
   .krn-choice__mark,
   .krn-upload,
-  .krn-otp input {
+  .krn-otp__slot {
     border-color: CanvasText;
     forced-color-adjust: none;
   }
@@ -2048,7 +2092,7 @@ krn-form-field[data-valid='true'] .krn-control-shell:not([data-invalid='true']) 
   .krn-control-shell:focus-within,
   .krn-choice__native:focus-visible + .krn-choice__mark,
   .krn-range:focus-visible,
-  .krn-otp input:focus-visible {
+  .krn-otp__slot[data-active] {
     outline: 2px solid Highlight;
   }
 

@@ -1706,39 +1706,37 @@ describe('Kern form controls', () => {
     expect(input.disabled).toBe(true);
   });
 
-  it('supports paste distribution and completion in OTP input', async () => {
+  it('accepts pasted or autofilled OTP values through one native input', async () => {
     const fixture = TestBed.createComponent(KrnOtpInput);
     fixture.componentRef.setInput('id', 'verification-code');
     fixture.componentRef.setInput('length', 4);
     const completed = vi.fn();
     fixture.componentInstance.completed.subscribe(completed);
     await fixture.whenStable();
-    const first = fixture.nativeElement.querySelector('input') as HTMLInputElement;
-    const fieldset = fixture.nativeElement.querySelector('fieldset') as HTMLFieldSetElement;
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
     expect((fixture.nativeElement as HTMLElement).hasAttribute('id')).toBe(false);
-    expect(fieldset.id).toBe('verification-code');
-    const pasteEvent = new Event('paste', { bubbles: true });
-    Object.defineProperty(pasteEvent, 'clipboardData', {
-      value: { getData: () => '1234' },
-    });
-    first.dispatchEvent(pasteEvent);
+    expect(input.id).toBe('verification-code');
+    expect(input.autocomplete).toBe('one-time-code');
+    input.value = '12a34';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
     await fixture.whenStable();
 
+    expect(input.value).toBe('1234');
     expect(completed).toHaveBeenCalledWith('1234');
   });
 
-  it('keeps readonly OTP semantics on each native input without prohibited fieldset ARIA', async () => {
+  it('keeps readonly OTP semantics on its single native input', async () => {
     const fixture = TestBed.createComponent(KrnOtpInput);
     fixture.componentRef.setInput('readonly', true);
     await fixture.whenStable();
 
-    const fieldset = fixture.nativeElement.querySelector('fieldset') as HTMLFieldSetElement;
     const inputs = [
       ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLInputElement>('input'),
     ];
-    expect(fieldset.hasAttribute('aria-readonly')).toBe(false);
-    expect(fieldset.getAttribute('data-readonly')).toBe('true');
-    expect(inputs.every((input) => input.readOnly)).toBe(true);
+    const shell = fixture.nativeElement.querySelector('.krn-otp') as HTMLElement;
+    expect(inputs).toHaveLength(1);
+    expect(shell.getAttribute('data-readonly')).toBe('true');
+    expect(inputs[0]?.readOnly).toBe(true);
   });
 
   it('marks number controls with steppers for the 48px target-size layout', async () => {
@@ -1749,57 +1747,39 @@ describe('Kern form controls', () => {
     expect(shell.querySelectorAll('.krn-stepper button')).toHaveLength(2);
   });
 
-  it('keeps OTP slots editable while blocking non-numeric input', async () => {
+  it('sanitizes OTP input and emits each accepted value once', async () => {
     const fixture = TestBed.createComponent(KrnOtpInput);
     fixture.componentRef.setInput('length', 4);
     const change = vi.fn();
+    const valueChange = vi.fn();
     fixture.componentInstance.registerOnChange(change);
+    fixture.componentInstance.valueChange.subscribe(valueChange);
     fixture.componentInstance.writeValue('1234');
     await fixture.whenStable();
-    const inputs = [
-      ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLInputElement>('input'),
-    ];
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
 
-    const invalidKey = new KeyboardEvent('keydown', {
-      bubbles: true,
-      cancelable: true,
-      key: 'a',
-    });
-    inputs[2]!.dispatchEvent(invalidKey);
-    expect(invalidKey.defaultPrevented).toBe(true);
-
-    inputs[2]!.value = 'x';
-    inputs[2]!.dispatchEvent(new Event('input', { bubbles: true }));
+    input.value = '12x34';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
     await fixture.whenStable();
-    expect(inputs.map((input) => input.value)).toEqual(['1', '2', '3', '4']);
+    expect(input.value).toBe('1234');
+    expect(change).not.toHaveBeenCalled();
+    expect(valueChange).not.toHaveBeenCalled();
 
-    inputs[2]!.focus();
-    inputs[2]!.dispatchEvent(
-      new KeyboardEvent('keydown', {
-        bubbles: true,
-        cancelable: true,
-        key: 'Backspace',
-      }),
-    );
+    input.value = '12x3';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
     await fixture.whenStable();
-    expect(inputs.map((input) => input.value)).toEqual(['1', '2', '', '4']);
-    expect(change).toHaveBeenLastCalledWith('124');
-    expect(document.activeElement).toBe(inputs[2]);
+    expect(input.value).toBe('123');
+    expect(change).toHaveBeenCalledOnce();
+    expect(change).toHaveBeenLastCalledWith('123');
+    expect(valueChange).toHaveBeenCalledOnce();
 
-    inputs[2]!.value = '3';
-    inputs[2]!.dispatchEvent(new Event('input', { bubbles: true }));
+    input.value = '1234';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
     await fixture.whenStable();
-    expect(inputs.map((input) => input.value)).toEqual(['1', '2', '3', '4']);
+    expect(input.value).toBe('1234');
     expect(change).toHaveBeenLastCalledWith('1234');
-
-    inputs[2]!.dispatchEvent(
-      new KeyboardEvent('keydown', {
-        bubbles: true,
-        cancelable: true,
-        key: 'ArrowLeft',
-      }),
-    );
-    expect(document.activeElement).toBe(inputs[1]);
+    expect(change).toHaveBeenCalledTimes(2);
+    expect(valueChange).toHaveBeenCalledTimes(2);
   });
 
   it('adds and removes tags with keyboard controls', async () => {

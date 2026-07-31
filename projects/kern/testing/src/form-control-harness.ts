@@ -28,6 +28,8 @@ export class KrnFormControlHarness extends ComponentHarness {
     'krn-password-input',
     'krn-search-input',
     'krn-number-input',
+    'krn-otp-input',
+    'krn-verification-code',
   ].join(', ');
 
   static with(options: KrnFormControlHarnessFilters = {}): HarnessPredicate<KrnFormControlHarness> {

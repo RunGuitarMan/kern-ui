@@ -10,9 +10,10 @@ import {
   numberAttribute,
   output,
   signal,
+  viewChild,
   viewChildren,
 } from '@angular/core';
-import { KRN_PLATFORM, krnIsInputElement, type KrnScheduledHandle } from '@kern-ui/angular/cdk';
+import { KRN_PLATFORM, type KrnScheduledHandle } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import {
   KrnValueAccessor,
@@ -30,6 +31,11 @@ interface KrnTagFeedback {
   readonly text: string;
 }
 
+const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string | null => {
+  const ids = values.flatMap((value) => value?.split(/\s+/).filter(Boolean) ?? []);
+  return ids.length > 0 ? [...new Set(ids)].join(' ') : null;
+};
+
 @Component({
   selector: 'krn-otp-input, krn-verification-code',
   host: {
@@ -37,54 +43,72 @@ interface KrnTagFeedback {
   },
   providers: [...provideKrnFormControl(() => KrnOtpInput)],
   template: `
-    <fieldset
-      class="krn-otp"
-      [attr.aria-describedby]="a11y.describedBy()"
-      [attr.aria-invalid]="a11y.invalid()"
-      [attr.aria-labelledby]="a11y.labelledBy()"
-      [attr.aria-required]="a11y.required()"
-      [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
-      [attr.data-readonly]="a11y.readOnly()"
-      [disabled]="isDisabled()"
-      [id]="a11y.id()"
-      (paste)="pasteCode($event)"
-    >
-      @if (!a11y.labelledBy()) {
-        <legend class="krn-label">{{ label() }}</legend>
+    <div class="krn-otp-control">
+      @if (!effectiveLabelledBy()) {
+        <span class="krn-label" [id]="internalLabelId()">{{ label() }}</span>
       }
-      @for (index of slots(); track index) {
+      <div
+        class="krn-otp"
+        [attr.data-disabled]="isDisabled()"
+        [attr.data-invalid]="a11y.invalid()"
+        [attr.data-readonly]="a11y.readOnly()"
+        (pointerdown)="selectSlot($event)"
+      >
         <input
           #otpInput
+          class="krn-otp__input"
           type="text"
           autocapitalize="off"
-          [attr.aria-label]="digitLabel(index)"
-          [attr.autocomplete]="index === 0 ? 'one-time-code' : 'off'"
+          autocorrect="off"
+          [attr.aria-describedby]="effectiveDescribedBy()"
+          [attr.aria-invalid]="a11y.invalid()"
+          [attr.aria-labelledby]="effectiveLabelledBy() || internalLabelId()"
+          [attr.autocomplete]="autocomplete()"
+          [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
           [attr.inputmode]="numericOnly() ? 'numeric' : 'text'"
+          [attr.pattern]="numericOnly() ? '[0-9]*' : null"
           [disabled]="isDisabled()"
+          [id]="a11y.id()"
           [readOnly]="a11y.readOnly()"
-          [maxLength]="1"
-          [value]="characterAt(index)"
-          (beforeinput)="blockInvalidInput($event)"
-          (blur)="touch()"
-          (focus)="selectInput($event)"
-          (input)="inputCharacter(index, $event)"
-          (keydown)="navigate(index, $event)"
+          [required]="a11y.required()"
+          [spellcheck]="false"
+          [tabIndex]="isDisabled() ? -1 : tabIndex()"
+          [value]="controlValue()"
+          (blur)="handleBlur()"
+          (focus)="handleFocus()"
+          (input)="inputCode($event)"
+          (select)="syncSelection()"
         />
-      }
-    </fieldset>
+        <span class="krn-otp__slots" aria-hidden="true">
+          @for (index of slots(); track index) {
+            <span
+              #otpSlot
+              class="krn-otp__slot"
+              [attr.data-active]="focused() && activeIndex() === index ? '' : null"
+              [attr.data-filled]="characterAt(index) ? '' : null"
+            >
+              {{ characterAt(index) }}
+            </span>
+          }
+        </span>
+      </div>
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnOtpInput extends KrnValueAccessor<string> {
-  private readonly platform = inject(KRN_PLATFORM);
   private readonly translations = inject(KRN_TRANSLATIONS);
-  protected readonly inputs = viewChildren<ElementRef<HTMLInputElement>>('otpInput');
-  private readonly slotValues = signal<readonly string[]>([]);
+  private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('otpInput');
+  private readonly slotElements = viewChildren<ElementRef<HTMLElement>>('otpSlot');
 
   readonly id = input('');
   readonly label = input(this.translations.forms.verificationCode);
   readonly length = input(6, { transform: numberAttribute });
   readonly numericOnly = input(true, { transform: booleanAttribute });
+  readonly autocomplete = input('one-time-code');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false, {
     alias: 'readonly',
@@ -92,39 +116,42 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
   });
   readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
+  readonly value = input<string | undefined>(undefined);
   readonly valueChange = output<string>();
   readonly completed = output<string>();
+  protected readonly focused = signal(false);
+  protected readonly activeIndex = signal(0);
 
-  protected readonly safeLength = computed(() =>
-    Math.min(12, Math.max(1, Math.trunc(this.length()))),
-  );
+  protected readonly safeLength = computed(() => {
+    const length = Math.trunc(this.length());
+    return Number.isFinite(length) ? Math.min(12, Math.max(1, length)) : 6;
+  });
   protected readonly slots = computed(() =>
     Array.from({ length: this.safeLength() }, (_, index) => index),
   );
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'otp', {
     disabled: this.disabled,
-    labelStrategy: 'group',
     readOnly: this.readOnly,
     required: this.required,
   });
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
+  protected readonly internalLabelId = computed(() => `${this.a11y.id()}-label`);
+  protected readonly effectiveLabelledBy = computed(() =>
+    mergeAriaIds(this.ariaLabelledBy(), this.a11y.labelledBy()),
+  );
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(this.ariaDescribedBy(), this.a11y.describedBy()),
+  );
 
   constructor() {
     super('');
+    this.bindStandaloneValue(this.value);
     this.watchValidationInputs(
       this.required,
       this.a11y.required,
       this.safeLength,
       this.numericOnly,
     );
-  }
-
-  override writeValue(value: unknown): void {
-    const normalized = this.normalizeIncomingValue(value);
-    this.slotValues.set(
-      Array.from({ length: this.safeLength() }, (_, index) => normalized.at(index) ?? ''),
-    );
-    super.writeValue(normalized);
   }
 
   protected override normalizeIncomingValue(value: unknown): string {
@@ -144,152 +171,83 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
   }
 
   protected characterAt(index: number): string {
-    return this.slotValues().at(index) ?? '';
+    return this.controlValue().at(index) ?? '';
   }
 
-  protected digitLabel(index: number): string {
-    return this.translations.forms.verificationCharacter(index + 1, this.safeLength());
-  }
-
-  protected inputCharacter(index: number, event: Event): void {
+  protected inputCode(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (this.a11y.readOnly()) {
-      input.value = this.characterAt(index);
+    if (this.isDisabled() || this.a11y.readOnly()) {
+      input.value = this.controlValue();
       return;
     }
     const raw = input.value;
-    const characters = this.sanitize(raw);
-    if (raw && !characters) {
-      input.value = this.characterAt(index);
+    const selection = input.selectionStart ?? raw.length;
+    const next = this.normalizeIncomingValue(raw);
+    const normalizedSelection = this.normalizeIncomingValue(raw.slice(0, selection)).length;
+    input.value = next;
+    input.setSelectionRange(normalizedSelection, normalizedSelection);
+    this.syncSelection();
+    if (!this.commitUserValue(next)) {
       return;
     }
-    if (characters.length > 1) {
-      this.insertAt(index, characters);
-      return;
+    this.valueChange.emit(next);
+    if (next.length === this.safeLength()) {
+      this.completed.emit(next);
     }
-    const next = [...this.slotValues()];
-    next[index] = characters.at(-1) ?? '';
-    this.emitSlots(next);
-    if (characters && index < this.safeLength() - 1) {
-      this.focus(index + 1);
-    }
-  }
-
-  protected blockInvalidInput(event: InputEvent): void {
-    if (
-      this.numericOnly() &&
-      event.inputType.startsWith('insert') &&
-      event.data !== null &&
-      /\D/.test(event.data)
-    ) {
-      event.preventDefault();
-    }
-  }
-
-  protected selectInput(event: FocusEvent): void {
-    const target = event.target;
-    if (krnIsInputElement(this.platform, target)) {
-      target.select();
-    }
-  }
-
-  protected navigate(index: number, event: KeyboardEvent): void {
-    if (
-      this.a11y.readOnly() &&
-      (event.key === 'Backspace' ||
-        event.key === 'Delete' ||
-        (event.key.length === 1 && !event.altKey && !event.ctrlKey && !event.metaKey))
-    ) {
-      event.preventDefault();
-    } else if (
-      this.numericOnly() &&
-      event.key.length === 1 &&
-      !event.altKey &&
-      !event.ctrlKey &&
-      !event.metaKey &&
-      !/^\d$/.test(event.key)
-    ) {
-      event.preventDefault();
-    } else if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      this.focus(Math.max(0, index - 1));
-    } else if (event.key === 'ArrowRight') {
-      event.preventDefault();
-      this.focus(Math.min(this.safeLength() - 1, index + 1));
-    } else if (event.key === 'Home') {
-      event.preventDefault();
-      this.focus(0);
-    } else if (event.key === 'End') {
-      event.preventDefault();
-      this.focus(this.safeLength() - 1);
-    } else if (event.key === 'Backspace') {
-      event.preventDefault();
-      const targetIndex = this.characterAt(index) ? index : Math.max(0, index - 1);
-      const next = [...this.slotValues()];
-      next[targetIndex] = '';
-      this.emitSlots(next);
-      this.focus(targetIndex);
-    } else if (event.key === 'Delete') {
-      event.preventDefault();
-      const next = [...this.slotValues()];
-      next[index] = '';
-      this.emitSlots(next);
-      this.focus(index);
-    }
-  }
-
-  protected pasteCode(event: ClipboardEvent): void {
-    event.preventDefault();
-    if (this.a11y.readOnly()) {
-      return;
-    }
-    const target = event.target;
-    const index = krnIsInputElement(this.platform, target)
-      ? this.inputs().findIndex((item) => item.nativeElement === target)
-      : 0;
-    this.insertAt(Math.max(0, index), event.clipboardData?.getData('text') ?? '');
-  }
-
-  private insertAt(index: number, characters: string): void {
-    const safe = this.sanitize(characters);
-    if (!safe) {
-      return;
-    }
-    const next = Array.from(
-      { length: this.safeLength() },
-      (_, slotIndex) => this.slotValues().at(slotIndex) ?? '',
-    );
-    for (const [offset, character] of [...safe].entries()) {
-      const targetIndex = index + offset;
-      if (targetIndex >= this.safeLength()) {
-        break;
-      }
-      next[targetIndex] = character;
-    }
-    this.emitSlots(next);
-    this.focus(Math.min(this.safeLength() - 1, index + safe.length));
   }
 
   private sanitize(value: string): string {
     return this.numericOnly() ? value.replace(/\D/g, '') : value.replace(/\s/g, '');
   }
 
-  private emitSlots(values: readonly string[]): void {
-    const slots = Array.from(
-      { length: this.safeLength() },
-      (_, index) => values.at(index)?.slice(0, 1) ?? '',
-    );
-    const value = slots.join('');
-    this.slotValues.set(slots);
-    this.commitValue(value);
-    this.valueChange.emit(value);
-    if (slots.every(Boolean)) {
-      this.completed.emit(value);
-    }
+  protected handleFocus(): void {
+    this.focused.set(true);
+    this.syncSelection();
   }
 
-  private focus(index: number): void {
-    this.inputs()[index]?.nativeElement.focus();
+  protected handleBlur(): void {
+    this.focused.set(false);
+    this.touch();
+  }
+
+  protected selectSlot(event: PointerEvent): void {
+    if (this.isDisabled()) {
+      return;
+    }
+    event.preventDefault();
+    const input = this.inputElement()?.nativeElement;
+    if (!input) {
+      return;
+    }
+    input.focus();
+    const index = this.slotElements().reduce(
+      (closest, slot, slotIndex) => {
+        const bounds = slot.nativeElement.getBoundingClientRect();
+        const distanceX = Math.max(bounds.left - event.clientX, 0, event.clientX - bounds.right);
+        const distanceY = Math.max(bounds.top - event.clientY, 0, event.clientY - bounds.bottom);
+        const distance = distanceX * distanceX + distanceY * distanceY;
+        return distance < closest.distance ? { distance, index: slotIndex } : closest;
+      },
+      { distance: Number.POSITIVE_INFINITY, index: 0 },
+    ).index;
+    const selectionEnd = Math.min(input.value.length, index + 1);
+    const selectionStart = Math.min(index, selectionEnd);
+    input.setSelectionRange(selectionStart, selectionEnd);
+    this.syncSelection();
+  }
+
+  protected syncSelection(): void {
+    const position =
+      this.inputElement()?.nativeElement.selectionStart ?? this.controlValue().length;
+    this.activeIndex.set(Math.min(this.safeLength() - 1, Math.max(0, position)));
+  }
+
+  focus(options?: FocusOptions): void {
+    this.inputElement()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    this.inputElement()?.nativeElement.blur();
   }
 }
 

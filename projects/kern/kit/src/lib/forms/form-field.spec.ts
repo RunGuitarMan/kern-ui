@@ -191,7 +191,6 @@ describe('KrnFormField', () => {
         KrnCheckbox,
         KrnCheckboxGroup,
         KrnFormField,
-        KrnOtpInput,
         KrnRadio,
         KrnRadioGroup,
         KrnRangeSlider,
@@ -211,9 +210,6 @@ describe('KrnFormField', () => {
         <krn-form-field label="Density" hint="Choose a density.">
           <krn-segmented-control ariaLabel="Internal density" [options]="segments" />
         </krn-form-field>
-        <krn-form-field label="Verification code" hint="Enter every digit.">
-          <krn-otp-input label="Internal verification code" />
-        </krn-form-field>
         <krn-form-field label="Budget range" hint="Choose both limits.">
           <krn-range-slider label="Internal budget range" />
         </krn-form-field>
@@ -228,7 +224,7 @@ describe('KrnFormField', () => {
     const host = fixture.nativeElement as HTMLElement;
     const fields = [...host.querySelectorAll<HTMLElement>('krn-form-field')];
 
-    expect(fields).toHaveLength(5);
+    expect(fields).toHaveLength(4);
     for (const field of fields) {
       const label = field.querySelector<HTMLLabelElement>('.krn-field-heading label');
       const control = field.querySelector<HTMLElement>('[data-krn-form-field-control]');
@@ -245,7 +241,7 @@ describe('KrnFormField', () => {
     }
   });
 
-  it('keeps a composite control internal name when no Form Field label is mounted', async () => {
+  it('keeps the OTP internal name when no Form Field label is mounted', async () => {
     @Component({
       imports: [KrnFormField, KrnOtpInput],
       template: `
@@ -258,10 +254,11 @@ describe('KrnFormField', () => {
 
     const fixture = TestBed.createComponent(InternallyLabelledCompositeHost);
     await fixture.whenStable();
-    const fieldset = fixture.nativeElement.querySelector('fieldset') as HTMLFieldSetElement;
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    const label = fixture.nativeElement.querySelector(`#${input.id}-label`) as HTMLElement;
 
-    expect(fieldset.getAttribute('aria-labelledby')).toBeNull();
-    expect(fieldset.querySelector('legend')?.textContent?.trim()).toBe('Verification code');
+    expect(input.getAttribute('aria-labelledby')).toBe(label.id);
+    expect(label.textContent?.trim()).toBe('Verification code');
   });
 
   it('gives every native-strategy control visible Form Field label ownership', async () => {
@@ -279,6 +276,7 @@ describe('KrnFormField', () => {
         KrnMultiSelect,
         KrnNativeSelect,
         KrnNumberInput,
+        KrnOtpInput,
         KrnPasswordInput,
         KrnSearchInput,
         KrnSelect,
@@ -334,6 +332,9 @@ describe('KrnFormField', () => {
         <krn-form-field label="Drop files">
           <krn-drop-upload label="Local drop files" />
         </krn-form-field>
+        <krn-form-field label="Verification code">
+          <krn-otp-input label="Local verification code" />
+        </krn-form-field>
       `,
     })
     class NativeControlsHost {
@@ -345,7 +346,7 @@ describe('KrnFormField', () => {
     const host = fixture.nativeElement as HTMLElement;
     const fields = [...host.querySelectorAll<HTMLElement>('krn-form-field')];
 
-    expect(fields).toHaveLength(20);
+    expect(fields).toHaveLength(21);
     for (const field of fields) {
       const label = field.querySelector<HTMLLabelElement>('.krn-field-heading label');
       const control = field.querySelector<HTMLElement>('[data-krn-form-field-control]');
