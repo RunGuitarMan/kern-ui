@@ -20,7 +20,10 @@ import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnLayoutAxis } from './layout.types';
 
 interface ResizeSession {
+  readonly axis: 'x' | 'y';
+  readonly direction: 1 | -1;
   readonly handleIndex: number;
+  readonly orientation: KrnLayoutAxis;
   readonly pointerId: number;
   readonly startCoordinate: number;
   readonly trackSize: number;
@@ -54,16 +57,24 @@ function normalizeSizes(sizes: readonly number[], panelCount: number): readonly 
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<ng-content />`,
   host: {
-    '[attr.data-orientation]': 'orientation()',
+    '[attr.data-orientation]': 'resolvedOrientation()',
+    '[attr.data-resize-axis]': 'physicalAxis()',
     '[attr.data-resizing]': 'resizing() ? "" : null',
     '[attr.data-disabled]': 'disabled() ? "" : null',
+    '(focusin)': 'refreshAxisMetadata()',
   },
   styles: `
     :host {
       display: flex;
+      box-sizing: border-box;
+      max-inline-size: 100%;
       min-inline-size: 0;
       min-block-size: 0;
       isolation: isolate;
+    }
+
+    :host([hidden]) {
+      display: none;
     }
 
     :host([data-orientation='horizontal']) {
@@ -76,13 +87,14 @@ function normalizeSizes(sizes: readonly number[], panelCount: number): readonly 
       block-size: 100%;
     }
 
-    :host([data-resizing]) {
+    :host([data-resize-axis='x'][data-resizing]) {
       cursor: col-resize;
       user-select: none;
     }
 
-    :host([data-orientation='vertical'][data-resizing]) {
+    :host([data-resize-axis='y'][data-resizing]) {
       cursor: row-resize;
+      user-select: none;
     }
 
     :host([data-disabled]) {
@@ -101,14 +113,25 @@ export class KrnResizablePanels {
   );
   private session: ResizeSession | null = null;
 
+  /** Sets the panel flow axis: horizontal follows inline, vertical follows block. */
   readonly orientation = input<KrnLayoutAxis>('horizontal');
   readonly sizes = model<readonly number[]>([]);
+
+  /** Sets the keyboard resize increment in percentage points, with a 0.25 minimum. */
   readonly step = input(2, { transform: numberAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly resizeEnd = output<readonly number[]>();
 
   private readonly resizingState = signal(false);
   readonly resizing = this.resizingState.asReadonly();
+  protected readonly physicalAxis = signal<'x' | 'y'>('x');
+  protected readonly resolvedOrientation = computed<KrnLayoutAxis>(() =>
+    this.orientation() === 'vertical' ? 'vertical' : 'horizontal',
+  );
+  private readonly resolvedStep = computed(() => {
+    const step = this.step();
+    return Number.isFinite(step) ? Math.max(0.25, step) : 2;
+  });
   private readonly normalizedSizes = computed(() =>
     normalizeSizes(this.requestedSizes(), this.panelChildren().length),
   );
@@ -125,24 +148,54 @@ export class KrnResizablePanels {
 
   constructor() {
     effect(() => {
+      this.refreshAxisMetadata(this.resolvedOrientation());
+    });
+
+    effect(() => {
       const panels = this.panelChildren();
       const sizes = this.normalizedSizes();
-      const orientation = this.orientation();
+      const orientation = this.resolvedOrientation();
+      const disabled = this.disabled();
+
+      if (this.session && (disabled || this.session.orientation !== orientation)) {
+        this.cancelActiveResize();
+      }
 
       panels.forEach((panel, index) => {
         panel.setManagedLayout(sizes[index] ?? 0, orientation);
       });
 
       const handles = this.handleChildren();
+      const separatorOrientation = this.physicalAxis() === 'x' ? 'vertical' : 'horizontal';
       handles.forEach((handle, index) => {
         const position = sizes.slice(0, index + 1).reduce((sum, size) => sum + size, 0);
-        handle.setManagedState(orientation, clamp(position, 0, 100), this.disabled());
+        const before = panels[index];
+        const after = panels[index + 1];
+        const prefix = sizes.slice(0, index).reduce((sum, size) => sum + size, 0);
+        const pairTotal = (sizes[index] ?? 0) + (sizes[index + 1] ?? 0);
+        const min =
+          before && after ? prefix + Math.max(before.minSize(), pairTotal - after.maxSize()) : 0;
+        const max =
+          before && after ? prefix + Math.min(before.maxSize(), pairTotal - after.minSize()) : 100;
+        handle.setManagedState(
+          orientation,
+          separatorOrientation,
+          clamp(position, 0, 100),
+          clamp(min, 0, 100),
+          clamp(max, 0, 100),
+          disabled || !before || !after,
+        );
       });
     });
   }
 
   startPointerResize(event: PointerEvent, handle: KrnResizeHandle): void {
-    if (this.disabled() || (event.button !== 0 && event.pointerType !== 'touch')) {
+    if (
+      this.session ||
+      this.disabled() ||
+      !event.isPrimary ||
+      (event.button !== 0 && event.pointerType !== 'touch')
+    ) {
       return;
     }
 
@@ -152,16 +205,22 @@ export class KrnResizablePanels {
       return;
     }
 
+    const orientation = this.resolvedOrientation();
+    const { axis, direction } = this.axisMetrics(orientation);
+    this.physicalAxis.set(axis);
     const rect = this.host.nativeElement.getBoundingClientRect();
-    const trackSize = this.orientation() === 'horizontal' ? rect.width : rect.height;
+    const trackSize = axis === 'x' ? rect.width : rect.height;
     if (trackSize <= 0) {
       return;
     }
 
     this.session = {
+      axis,
+      direction,
       handleIndex,
+      orientation,
       pointerId: event.pointerId,
-      startCoordinate: this.coordinate(event),
+      startCoordinate: this.coordinate(event, axis),
       trackSize,
       beforeSize: sizes[handleIndex] ?? 0,
       afterSize: sizes[handleIndex + 1] ?? 0,
@@ -175,11 +234,16 @@ export class KrnResizablePanels {
       return;
     }
 
-    const direction = this.inlineDirection();
+    if (this.disabled() || this.session.orientation !== this.resolvedOrientation()) {
+      this.cancelActiveResize();
+      return;
+    }
+
     const delta =
-      ((this.coordinate(event) - this.session.startCoordinate) / this.session.trackSize) *
+      ((this.coordinate(event, this.session.axis) - this.session.startCoordinate) /
+        this.session.trackSize) *
       100 *
-      direction;
+      this.session.direction;
     this.resizePair(
       this.session.handleIndex,
       this.session.beforeSize + delta,
@@ -199,8 +263,7 @@ export class KrnResizablePanels {
     if (!this.session || event.pointerId !== this.session.pointerId) {
       return;
     }
-    this.session = null;
-    this.resizingState.set(false);
+    this.cancelActiveResize();
   }
 
   resizeByKeyboard(event: KeyboardEvent, handle: KrnResizeHandle): void {
@@ -213,21 +276,18 @@ export class KrnResizablePanels {
       return;
     }
 
-    const horizontal = this.orientation() === 'horizontal';
-    const decrementKey = horizontal ? 'ArrowLeft' : 'ArrowUp';
-    const incrementKey = horizontal ? 'ArrowRight' : 'ArrowDown';
+    const { axis, direction } = this.axisMetrics(this.resolvedOrientation());
+    this.physicalAxis.set(axis);
+    const decrementKey = axis === 'x' ? 'ArrowLeft' : 'ArrowUp';
+    const incrementKey = axis === 'x' ? 'ArrowRight' : 'ArrowDown';
     const sizes = this.normalizedSizes();
     const pairTotal = (sizes[handleIndex] ?? 0) + (sizes[handleIndex + 1] ?? 0);
     let target: number | null = null;
 
     if (event.key === decrementKey) {
-      target =
-        (sizes[handleIndex] ?? 0) -
-        Math.max(0.25, this.step()) * (horizontal ? this.inlineDirection() : 1);
+      target = (sizes[handleIndex] ?? 0) - this.resolvedStep() * direction;
     } else if (event.key === incrementKey) {
-      target =
-        (sizes[handleIndex] ?? 0) +
-        Math.max(0.25, this.step()) * (horizontal ? this.inlineDirection() : 1);
+      target = (sizes[handleIndex] ?? 0) + this.resolvedStep() * direction;
     } else if (event.key === 'Home') {
       target = this.panelChildren()[handleIndex]?.minSize() ?? 0;
     } else if (event.key === 'End') {
@@ -286,18 +346,53 @@ export class KrnResizablePanels {
     this.resizeEnd.emit(this.normalizedSizes());
   }
 
-  private coordinate(event: PointerEvent): number {
-    return this.orientation() === 'horizontal' ? event.clientX : event.clientY;
+  private cancelActiveResize(): void {
+    const session = this.session;
+    if (!session) {
+      return;
+    }
+
+    this.session = null;
+    this.resizingState.set(false);
+    const restored = [...this.normalizedSizes()];
+    restored[session.handleIndex] = session.beforeSize;
+    restored[session.handleIndex + 1] = session.afterSize;
+    this.sizes.set(restored);
   }
 
-  private inlineDirection(): 1 | -1 {
-    if (this.orientation() === 'vertical') {
-      return 1;
+  private coordinate(event: PointerEvent, axis: 'x' | 'y'): number {
+    return axis === 'x' ? event.clientX : event.clientY;
+  }
+
+  private axisMetrics(orientation: KrnLayoutAxis): {
+    readonly axis: 'x' | 'y';
+    readonly direction: 1 | -1;
+  } {
+    const element = this.host.nativeElement;
+    const style = element.ownerDocument.defaultView?.getComputedStyle(element);
+    const writingMode = style?.writingMode || 'horizontal-tb';
+    const verticalWriting =
+      writingMode.startsWith('vertical') || writingMode.startsWith('sideways');
+
+    if (orientation === 'horizontal') {
+      const elementDirection =
+        style?.direction ||
+        element.closest('[dir]')?.getAttribute('dir') ||
+        this.platform.document.documentElement.dir;
+      return {
+        axis: verticalWriting ? 'y' : 'x',
+        direction: elementDirection.toLowerCase() === 'rtl' ? -1 : 1,
+      };
     }
-    const elementDirection =
-      this.host.nativeElement.closest('[dir]')?.getAttribute('dir') ??
-      this.platform.document.documentElement.dir;
-    return elementDirection.toLowerCase() === 'rtl' ? -1 : 1;
+
+    return {
+      axis: verticalWriting ? 'x' : 'y',
+      direction: verticalWriting && writingMode.endsWith('-rl') ? -1 : 1,
+    };
+  }
+
+  protected refreshAxisMetadata(orientation = this.resolvedOrientation()): void {
+    this.physicalAxis.set(this.axisMetrics(orientation).axis);
   }
 }
 
@@ -363,14 +458,15 @@ export class KrnResizablePanel {
   host: {
     role: 'separator',
     '[attr.tabindex]': 'managedDisabled() ? -1 : 0',
-    '[attr.aria-orientation]': 'managedOrientation()',
-    '[attr.aria-valuemin]': '0',
-    '[attr.aria-valuemax]': '100',
+    '[attr.aria-orientation]': 'managedAriaOrientation()',
+    '[attr.aria-valuemin]': 'managedMin()',
+    '[attr.aria-valuemax]': 'managedMax()',
     '[attr.aria-valuenow]': 'managedValue()',
     '[attr.aria-valuetext]': 'ariaValueText() ?? managedValue() + "%"',
     '[attr.aria-label]': 'ariaLabel()',
     '[attr.aria-disabled]': 'managedDisabled() ? "true" : null',
     '[attr.data-orientation]': 'managedOrientation()',
+    '[attr.data-resize-axis]': 'managedPhysicalAxis()',
     '[class.krn-resize-handle--disabled]': 'managedDisabled()',
     '(pointerdown)': 'onPointerDown($event)',
     '(pointermove)': 'onPointerMove($event)',
@@ -395,12 +491,18 @@ export class KrnResizablePanel {
     :host([data-orientation='horizontal']) {
       inline-size: 1px;
       block-size: 100%;
-      cursor: col-resize;
     }
 
     :host([data-orientation='vertical']) {
       inline-size: 100%;
       block-size: 1px;
+    }
+
+    :host([data-resize-axis='x']) {
+      cursor: col-resize;
+    }
+
+    :host([data-resize-axis='y']) {
       cursor: row-resize;
     }
 
@@ -486,14 +588,29 @@ export class KrnResizeHandle {
     { optional: true },
   );
   protected readonly managedOrientation = signal<KrnLayoutAxis>('horizontal');
+  protected readonly managedAriaOrientation = signal<'horizontal' | 'vertical'>('vertical');
+  protected readonly managedPhysicalAxis = signal<'x' | 'y'>('x');
+  protected readonly managedMin = signal(0);
+  protected readonly managedMax = signal(100);
   protected readonly managedValue = signal(50);
   protected readonly managedDisabled = signal(false);
 
   readonly ariaLabel = input(this.translations.layout.resizeAdjacentPanels);
   readonly ariaValueText = input<string | null>(null);
 
-  setManagedState(orientation: KrnLayoutAxis, value: number, disabled: boolean): void {
+  setManagedState(
+    orientation: KrnLayoutAxis,
+    ariaOrientation: 'horizontal' | 'vertical',
+    value: number,
+    min: number,
+    max: number,
+    disabled: boolean,
+  ): void {
     this.managedOrientation.set(orientation);
+    this.managedAriaOrientation.set(ariaOrientation);
+    this.managedPhysicalAxis.set(ariaOrientation === 'vertical' ? 'x' : 'y');
+    this.managedMin.set(Math.round(min * 10) / 10);
+    this.managedMax.set(Math.round(max * 10) / 10);
     this.managedValue.set(Math.round(value * 10) / 10);
     this.managedDisabled.set(disabled);
   }

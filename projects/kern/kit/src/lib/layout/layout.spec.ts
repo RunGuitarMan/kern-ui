@@ -17,7 +17,12 @@ import { KrnSplitLayout } from './split-layout';
   standalone: true,
   imports: [KrnResizablePanels, KrnResizablePanel, KrnResizeHandle],
   template: `
-    <krn-resizable-panels [(sizes)]="sizes" [disabled]="disabled()" [step]="5">
+    <krn-resizable-panels
+      [(sizes)]="sizes"
+      [disabled]="disabled()"
+      [orientation]="orientation()"
+      [step]="step()"
+    >
       <krn-resizable-panel ariaLabel="Navigation">A</krn-resizable-panel>
       <krn-resize-handle />
       <krn-resizable-panel ariaLabel="Content">B</krn-resizable-panel>
@@ -27,6 +32,26 @@ import { KrnSplitLayout } from './split-layout';
 class ResizableHost {
   readonly sizes = signal<readonly number[]>([50, 50]);
   readonly disabled = signal(false);
+  readonly orientation = signal<'horizontal' | 'vertical'>('horizontal');
+  readonly step = signal(5);
+}
+
+@Component({
+  selector: 'krn-test-vertical-writing-resizable-host',
+  standalone: true,
+  imports: [KrnResizablePanels, KrnResizablePanel, KrnResizeHandle],
+  template: `
+    <div style="writing-mode: vertical-rl">
+      <krn-resizable-panels [(sizes)]="sizes" orientation="horizontal" [step]="5">
+        <krn-resizable-panel>A</krn-resizable-panel>
+        <krn-resize-handle />
+        <krn-resizable-panel>B</krn-resizable-panel>
+      </krn-resizable-panels>
+    </div>
+  `,
+})
+class VerticalWritingResizableHost {
+  readonly sizes = signal<readonly number[]>([50, 50]);
 }
 
 @Component({
@@ -58,14 +83,16 @@ class AspectRatioHost {
   readonly fit = signal<'cover' | 'contain' | 'fill' | 'none'>('contain');
 }
 
-function pointerEvent(type: string, clientX: number): PointerEvent {
+function pointerEvent(type: string, clientX: number, clientY = 0): PointerEvent {
   const event = new MouseEvent(type, {
     bubbles: true,
     button: 0,
     cancelable: true,
     clientX,
+    clientY,
   });
   Object.defineProperties(event, {
+    isPrimary: { value: true },
     pointerId: { value: 7 },
     pointerType: { value: 'mouse' },
   });
@@ -654,7 +681,9 @@ describe('KrnResizablePanels', () => {
     const handle = fixture.nativeElement.querySelector('krn-resize-handle') as HTMLElement;
 
     expect(handle.getAttribute('role')).toBe('separator');
-    expect(handle.getAttribute('aria-orientation')).toBe('horizontal');
+    expect(handle.getAttribute('aria-orientation')).toBe('vertical');
+    expect(handle.getAttribute('aria-valuemin')).toBe('10');
+    expect(handle.getAttribute('aria-valuemax')).toBe('90');
 
     handle.dispatchEvent(
       new KeyboardEvent('keydown', {
@@ -701,6 +730,7 @@ describe('KrnResizablePanels', () => {
     const handleDebug = fixture.debugElement.query(By.directive(KrnResizeHandle));
     const group = groupDebug.componentInstance as KrnResizablePanels;
     const handle = handleDebug.componentInstance as KrnResizeHandle;
+    const styleReads = vi.spyOn(window, 'getComputedStyle');
     vi.spyOn(groupDebug.nativeElement as HTMLElement, 'getBoundingClientRect').mockReturnValue({
       bottom: 100,
       height: 100,
@@ -713,12 +743,107 @@ describe('KrnResizablePanels', () => {
       toJSON: () => ({}),
     });
 
+    const readsBeforeResize = styleReads.mock.calls.length;
     group.startPointerResize(pointerEvent('pointerdown', 250), handle);
+    group.movePointerResize(pointerEvent('pointermove', 275));
     group.movePointerResize(pointerEvent('pointermove', 300));
-    group.endPointerResize(pointerEvent('pointerup', 300));
+    group.movePointerResize(pointerEvent('pointermove', 325));
+    group.endPointerResize(pointerEvent('pointerup', 325));
     fixture.detectChanges();
 
+    expect(fixture.componentInstance.sizes()).toEqual([65, 35]);
+    expect(group.resizing()).toBe(false);
+    expect(styleReads.mock.calls.length - readsBeforeResize).toBe(1);
+  });
+
+  it('normalizes invalid orientation and keyboard step values', () => {
+    fixture.componentInstance.orientation.set('diagonal' as 'horizontal');
+    fixture.componentInstance.step.set(Number.NaN);
+    fixture.detectChanges();
+    TestBed.tick();
+    const group = fixture.nativeElement.querySelector('krn-resizable-panels') as HTMLElement;
+    const handle = fixture.nativeElement.querySelector('krn-resize-handle') as HTMLElement;
+
+    expect(group.getAttribute('data-orientation')).toBe('horizontal');
+    expect(handle.getAttribute('aria-orientation')).toBe('vertical');
+    handle.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key: 'ArrowRight',
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    fixture.detectChanges();
+    expect(fixture.componentInstance.sizes()).toEqual([52, 48]);
+
+    group.hidden = true;
+    expect(getComputedStyle(group).display).toBe('none');
+  });
+
+  it('maps the inline resize axis in vertical writing mode', () => {
+    const verticalFixture = TestBed.createComponent(VerticalWritingResizableHost);
+    verticalFixture.detectChanges();
+    TestBed.tick();
+    const handle = verticalFixture.nativeElement.querySelector('krn-resize-handle') as HTMLElement;
+
+    expect(handle.getAttribute('data-orientation')).toBe('horizontal');
+    expect(handle.getAttribute('data-resize-axis')).toBe('y');
+    expect(handle.getAttribute('aria-orientation')).toBe('horizontal');
+    expect(getComputedStyle(handle).cursor).toBe('row-resize');
+    handle.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key: 'ArrowDown',
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    verticalFixture.detectChanges();
+    expect(verticalFixture.componentInstance.sizes()).toEqual([55, 45]);
+  });
+
+  it('restores the starting pair through pointer cancellation DOM bindings', () => {
+    const groupDebug = fixture.debugElement.query(By.directive(KrnResizablePanels));
+    const group = groupDebug.componentInstance as KrnResizablePanels;
+    const handle = fixture.nativeElement.querySelector('krn-resize-handle') as HTMLElement;
+    Object.defineProperties(handle, {
+      hasPointerCapture: { value: vi.fn(() => true) },
+      releasePointerCapture: { value: vi.fn() },
+      setPointerCapture: { value: vi.fn() },
+    });
+    vi.spyOn(groupDebug.nativeElement as HTMLElement, 'getBoundingClientRect').mockReturnValue({
+      bottom: 100,
+      height: 100,
+      left: 0,
+      right: 500,
+      top: 0,
+      width: 500,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    });
+
+    handle.dispatchEvent(pointerEvent('pointerdown', 250));
+    handle.dispatchEvent(pointerEvent('pointermove', 300));
     expect(fixture.componentInstance.sizes()).toEqual([60, 40]);
+
+    handle.dispatchEvent(pointerEvent('pointercancel', 300));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.sizes()).toEqual([50, 50]);
+    expect(group.resizing()).toBe(false);
+
+    handle.dispatchEvent(pointerEvent('pointerdown', 250));
+    handle.dispatchEvent(pointerEvent('pointermove', 300));
+    handle.dispatchEvent(pointerEvent('lostpointercapture', 300));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.sizes()).toEqual([50, 50]);
+    expect(group.resizing()).toBe(false);
+
+    handle.dispatchEvent(pointerEvent('pointerdown', 250));
+    handle.dispatchEvent(pointerEvent('pointermove', 300));
+    fixture.componentInstance.disabled.set(true);
+    fixture.detectChanges();
+    TestBed.tick();
+    expect(fixture.componentInstance.sizes()).toEqual([50, 50]);
     expect(group.resizing()).toBe(false);
   });
 });
