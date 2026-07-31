@@ -177,6 +177,11 @@ import { krnCssLength } from './layout.types';
       justify-self: start;
     }
 
+    :host([data-sidebar-position='end']) .krn-shell__sidebar {
+      --krn-sidebar-divider-start-width: 1px;
+      --krn-sidebar-divider-end-width: 0;
+    }
+
     .krn-shell__main {
       grid-area: main;
       inline-size: min(100%, var(--krn-shell-main-max));
@@ -543,16 +548,18 @@ export class KrnHeader {
   template: `
     <aside
       class="krn-sidebar"
-      [attr.aria-label]="ariaLabel()"
-      [attr.aria-hidden]="collapsed() && collapsedMode() === 'hidden' ? 'true' : null"
-      [attr.inert]="collapsed() && collapsedMode() === 'hidden' ? '' : null"
+      [attr.aria-label]="ariaLabelledBy() ? null : ariaLabel() || null"
+      [attr.aria-labelledby]="ariaLabelledBy() || null"
+      [attr.aria-describedby]="ariaDescribedBy() || null"
+      [hidden]="isHidden()"
+      [attr.inert]="isHidden() ? '' : null"
     >
       <div class="krn-sidebar__header">
-        <ng-content select="[krnSidebarHeader]" />
+        <ng-content select="[krnSidebarHeader],header" />
       </div>
       <div class="krn-sidebar__body"><ng-content /></div>
       <div class="krn-sidebar__footer">
-        <ng-content select="[krnSidebarFooter]" />
+        <ng-content select="[krnSidebarFooter],footer" />
       </div>
     </aside>
   `,
@@ -572,6 +579,10 @@ export class KrnHeader {
       transition: inline-size var(--krn-motion-duration-layout) var(--krn-motion-ease-standard);
     }
 
+    :host([hidden]) {
+      display: none;
+    }
+
     :host([data-collapsed]) {
       inline-size: var(--krn-sidebar-collapsed-width);
     }
@@ -585,19 +596,29 @@ export class KrnHeader {
       overflow: clip;
     }
 
+    :host([data-side='start']) {
+      --krn-sidebar-divider-start-width: 0;
+      --krn-sidebar-divider-end-width: 1px;
+    }
+
+    :host([data-side='end']) {
+      --krn-sidebar-divider-start-width: 1px;
+      --krn-sidebar-divider-end-width: 0;
+    }
+
+    .krn-sidebar[hidden] {
+      display: none;
+    }
+
     .krn-sidebar {
       display: grid;
       block-size: 100%;
       min-block-size: 0;
       grid-template-rows: auto minmax(0, 1fr) auto;
-      border-inline-end: 1px solid var(--krn-color-border);
+      border-inline-start: var(--krn-sidebar-divider-start-width, 0) solid var(--krn-color-border);
+      border-inline-end: var(--krn-sidebar-divider-end-width, 1px) solid var(--krn-color-border);
       background: var(--krn-color-surface);
       color: var(--krn-color-text);
-    }
-
-    :host([data-side='end']) .krn-sidebar {
-      border-inline-start: 1px solid var(--krn-color-border);
-      border-inline-end: 0;
     }
 
     .krn-sidebar__header,
@@ -626,6 +647,7 @@ export class KrnHeader {
 
     @media (forced-colors: active) {
       .krn-sidebar {
+        border-inline-start-color: CanvasText;
         border-inline-end-color: CanvasText;
       }
     }
@@ -638,12 +660,25 @@ export class KrnSidebar {
   readonly width = input<KrnLayoutSpace>('var(--krn-shell-sidebar-width, 17rem)');
   readonly collapsedWidth = input<KrnLayoutSpace>('4rem');
   readonly ariaLabel = input(this.translations.layout.secondaryNavigation);
-  readonly side = input<'start' | 'end'>('start');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
+  readonly side = input<'auto' | 'start' | 'end'>('auto');
 
+  protected readonly isHidden = computed(
+    () => this.collapsed() && this.collapsedMode() === 'hidden',
+  );
   protected readonly resolvedWidth = computed(() => krnCssLength(this.width(), '17rem'));
   protected readonly resolvedCollapsedWidth = computed(() =>
     krnCssLength(this.collapsedWidth(), '4rem'),
   );
+
+  expand(): void {
+    this.collapsed.set(false);
+  }
+
+  collapse(): void {
+    this.collapsed.set(true);
+  }
 
   toggle(): void {
     this.collapsed.update((collapsed) => !collapsed);

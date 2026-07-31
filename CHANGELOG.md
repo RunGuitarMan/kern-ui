@@ -64,6 +64,9 @@ contract or upgrade decision.
   navigation and main-focus methods.
 - Strengthened Header with native landmark naming, stable logical grid areas, configurable sticky
   offset, restored hidden semantics, and sticky App Shell projection without an extra layout box.
+- Strengthened Sidebar with composed landmark naming, native hidden/inert collapse semantics,
+  semantic header/footer projection, automatic App Shell side alignment, and explicit
+  expand/collapse methods.
 - Removed duplicate state-change outputs where signal models already provide the canonical event.
 - Rebuilt Form Field as a control-owned label/description coordinator: registered controls now
   supply identity and Angular state, full control events drive pending/valid/disabled presentation,
