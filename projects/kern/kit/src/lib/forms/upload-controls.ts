@@ -25,6 +25,17 @@ import {
   useKrnControlA11y,
 } from './value-accessor';
 
+const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string | null => {
+  const ids = values.flatMap((value) => value?.split(/\s+/).filter(Boolean) ?? []);
+  return ids.length > 0 ? [...new Set(ids)].join(' ') : null;
+};
+
+const sameFile = (left: File, right: File): boolean =>
+  left.name === right.name &&
+  left.size === right.size &&
+  left.type === right.type &&
+  left.lastModified === right.lastModified;
+
 /**
  * Base contract for custom KERN upload controls.
  *
@@ -106,6 +117,12 @@ export abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
     );
   }
 
+  protected override valuesEqual(current: readonly File[], next: readonly File[]): boolean {
+    return (
+      current.length === next.length && current.every((file, index) => sameFile(file, next[index]!))
+    );
+  }
+
   protected openPicker(): void {
     if (!this.isDisabled() && !this.a11y.readOnly()) {
       this.fileInput()?.nativeElement.click();
@@ -130,6 +147,9 @@ export abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
     const rejections: KrnUploadRejection[] = [];
 
     for (const file of candidates) {
+      if (accepted.some((existing) => sameFile(existing, file))) {
+        continue;
+      }
       if (accepted.length >= this.maxFiles()) {
         rejections.push({
           file,
@@ -151,22 +171,17 @@ export abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
             this.formatBytes(this.maxSize()),
           ),
         });
-      } else if (
-        !accepted.some(
-          (existing) =>
-            existing.name === file.name &&
-            existing.size === file.size &&
-            existing.lastModified === file.lastModified,
-        )
-      ) {
+      } else {
         accepted.push(file);
       }
     }
 
     this.rejections.set(rejections);
-    this.commitValue(accepted);
+    const changed = this.commitUserValue(accepted);
     this.touch();
-    this.filesChange.emit(accepted);
+    if (changed) {
+      this.filesChange.emit(accepted);
+    }
     if (rejections.length > 0) {
       this.rejected.emit(rejections);
     }
@@ -177,9 +192,11 @@ export abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
       return;
     }
     const next = this.controlValue().filter((_, itemIndex) => itemIndex !== index);
-    this.commitValue(next);
+    const changed = this.commitUserValue(next);
     this.touch();
-    this.filesChange.emit(next);
+    if (changed) {
+      this.filesChange.emit(next);
+    }
   }
 
   protected formatBytes(bytes: number): string {
@@ -197,7 +214,7 @@ export abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
   }
 
   protected fileKey(file: File): string {
-    return `${file.name}:${file.size}:${file.lastModified}`;
+    return `${file.name}:${file.size}:${file.type}:${file.lastModified}`;
   }
 
   private matchesAccept(file: File): boolean {
@@ -247,27 +264,37 @@ export abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
         class="krn-upload__input"
         type="file"
         [accept]="accept()"
-        [attr.aria-describedby]="a11y.describedBy()"
-        [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="a11y.labelledBy() ? null : label()"
-        [attr.aria-labelledby]="a11y.labelledBy()"
-        [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
+        aria-hidden="true"
         [disabled]="isDisabled() || a11y.readOnly()"
-        [id]="a11y.id()"
+        [id]="nativeInputId()"
         [multiple]="multiple()"
-        [required]="a11y.required() && controlValue().length === 0"
+        tabindex="-1"
         (change)="selectFromInput($event)"
       />
       <button
+        #action
         class="krn-upload__button"
         type="button"
-        [disabled]="isDisabled() || a11y.readOnly()"
+        [attr.aria-describedby]="effectiveDescribedBy()"
+        [attr.aria-disabled]="a11y.readOnly() ? 'true' : null"
+        [attr.aria-invalid]="a11y.invalid()"
+        [attr.aria-labelledby]="effectiveLabelledBy()"
+        [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
+        [disabled]="isDisabled()"
+        [id]="a11y.id()"
+        [tabIndex]="isDisabled() ? -1 : tabIndex()"
+        (blur)="touch()"
         (click)="openPicker()"
       >
         {{ label() }}
       </button>
       @if (description()) {
-        <span class="krn-message">{{ description() }}</span>
+        <span class="krn-message" [id]="descriptionId()">{{ description() }}</span>
+      }
+      @if (a11y.required()) {
+        <span class="krn-visually-hidden" [id]="requiredDescriptionId()">
+          {{ translations.forms.fileSelectionRequired }}
+        </span>
       }
       <ng-container [ngTemplateOutlet]="fileSummary" />
     </div>
@@ -304,8 +331,37 @@ export abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnFileUpload extends KrnUploadBase {
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
+  readonly value = input<readonly File[] | undefined>(undefined);
+  protected readonly nativeInputId = computed(() => `${this.a11y.id()}-native`);
+  protected readonly descriptionId = computed(() => `${this.a11y.id()}-description`);
+  protected readonly requiredDescriptionId = computed(() => `${this.a11y.id()}-required`);
+  protected readonly effectiveLabelledBy = computed(() =>
+    mergeAriaIds(this.ariaLabelledBy(), this.a11y.labelledBy()),
+  );
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(
+      this.ariaDescribedBy(),
+      this.a11y.describedBy(),
+      this.description() ? this.descriptionId() : null,
+      this.a11y.required() ? this.requiredDescriptionId() : null,
+    ),
+  );
+  private readonly action = viewChild<ElementRef<HTMLButtonElement>>('action');
+
   constructor() {
     super();
+    this.bindStandaloneValue(this.value);
+  }
+
+  focus(options?: FocusOptions): void {
+    this.action()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    this.action()?.nativeElement.blur();
   }
 }
 

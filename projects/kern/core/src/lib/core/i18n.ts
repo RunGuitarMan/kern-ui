@@ -187,6 +187,7 @@ export interface KrnNavigationTranslations {
 
 export interface KrnFormTranslations {
   readonly chooseFiles: string;
+  readonly fileSelectionRequired: string;
   readonly dropFilesHere: string;
   readonly selectedFiles: string;
   readonly unlimited: string;
@@ -547,6 +548,7 @@ export const KRN_ENGLISH_TRANSLATIONS: Readonly<KrnTranslations> = Object.freeze
   }),
   forms: Object.freeze({
     chooseFiles: 'Choose files',
+    fileSelectionRequired: 'At least one file is required.',
     dropFilesHere: 'Drop files here',
     selectedFiles: 'Selected files',
     unlimited: 'Unlimited',

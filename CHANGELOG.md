@@ -144,6 +144,11 @@ contract or upgrade decision.
   contrast, composable external/Form Field ARIA references, composite focus/touched behavior,
   configurable tab order, public focus and blur methods, and lightness-aware translations and
   testing harness controls.
+- Strengthened File Upload with deterministic standalone file-list ownership, metadata-based
+  duplicate suppression, duplicate-free accepted-file outputs, a single visible focus target,
+  readonly-safe interaction, composable external/Form Field/local and localized required
+  descriptions, configurable tab order, public focus and blur methods, and state-aware testing
+  harness filters.
 
 ### Deprecated
 

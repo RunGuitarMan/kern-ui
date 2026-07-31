@@ -219,6 +219,7 @@ export const KRN_RU_RU_LOCALE: Readonly<KrnLocalePack> = Object.freeze({
     },
     forms: {
       chooseFiles: 'Выберите файлы',
+      fileSelectionRequired: 'Требуется выбрать хотя бы один файл.',
       dropFilesHere: 'Перетащите файлы сюда',
       selectedFiles: 'Выбранные файлы',
       unlimited: 'Без ограничений',
