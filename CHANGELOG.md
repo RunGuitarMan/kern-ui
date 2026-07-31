@@ -91,6 +91,10 @@ contract or upgrade decision.
 - Strengthened Switch with deterministic standalone `checked` ownership, duplicate-free accepted
   changes, readonly-safe native interaction, composable visible/external names and descriptions,
   native-only tab order, and public native focus and blur methods.
+- Strengthened Select with deterministic standalone `value` ownership, identity-based
+  duplicate-free changes, canonical enabled-option commits, non-interactive popup invariants,
+  composable external/Form Field ARIA references, configurable tab order, and public trigger
+  focus.
 
 ### Deprecated
 

@@ -11,6 +11,7 @@ import {
   numberAttribute,
   output,
   signal,
+  type ElementRef,
   type TemplateRef,
   viewChild,
 } from '@angular/core';
@@ -40,6 +41,11 @@ const optionalBooleanAttribute = (value: unknown): boolean | undefined =>
   value === undefined || value === null ? undefined : booleanAttribute(value);
 
 const nativeSelectPlaceholderKey = '__krn-native-select-placeholder__';
+
+const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string | null => {
+  const ids = values.flatMap((value) => value?.split(/\s+/).filter(Boolean) ?? []);
+  return ids.length > 0 ? [...new Set(ids)].join(' ') : null;
+};
 
 const consumeOpenEscape = (event: Event, open: boolean, close: () => void): void => {
   if (!open || event.defaultPrevented) return;
@@ -190,6 +196,7 @@ export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
   host: {
     class: 'krn-select-host',
     '[attr.id]': 'null',
+    '[attr.tabindex]': 'null',
   },
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, NgTemplateOutlet, Option],
   providers: [...provideKrnFormControl(() => KrnSelect)],
@@ -207,19 +214,23 @@ export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
       >
         <button
           #combo="ngCombobox"
+          #trigger
           ngCombobox
           class="krn-select-trigger"
           type="button"
-          [attr.aria-describedby]="a11y.describedBy()"
+          [attr.aria-describedby]="effectiveDescribedBy()"
           [attr.aria-busy]="optionsState() === 'loading' ? 'true' : null"
           [attr.aria-invalid]="a11y.invalid()"
-          [attr.aria-label]="ariaLabel() || null"
-          [attr.aria-readonly]="a11y.readOnly()"
+          [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
+          [attr.aria-labelledby]="effectiveLabelledBy()"
+          [attr.aria-readonly]="isReadOnly()"
           [attr.aria-required]="a11y.required()"
           [attr.disabled]="isDisabled() ? '' : null"
+          [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
           [disabled]="isDisabled()"
           [expanded]="open()"
           [id]="a11y.id()"
+          [tabindex]="isDisabled() ? -1 : tabIndex()"
           (expandedChange)="setOpen($event)"
         >
           @if (selectedOption(); as selected) {
@@ -323,6 +334,7 @@ export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
 })
 export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
   private readonly translations = inject(KRN_TRANSLATIONS);
+  private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
   readonly id = input('');
   readonly placeholder = input(this.translations.forms.selectOption);
   readonly emptyText = input(this.translations.forms.noOptions);
@@ -335,6 +347,8 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
       '',
   );
   readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
   readonly options = input.required<readonly KrnSelectOption<T>[]>();
   /** Controls whether options are interactive or replaced by an announced loading/error state. */
   readonly optionsState = input<KrnOptionsState>('ready');
@@ -353,6 +367,8 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
   });
   readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
+  readonly value = input<T | null | undefined>(undefined);
   readonly open = model(false);
   readonly valueChange = output<T | null>();
   readonly selectionChange = output<KrnSelectOption<T> | null>();
@@ -363,6 +379,13 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
     required: this.required,
   });
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
+  protected readonly isReadOnly = computed(() => this.a11y.readOnly());
+  protected readonly effectiveLabelledBy = computed(() =>
+    mergeAriaIds(this.ariaLabelledBy(), this.a11y.labelledBy()),
+  );
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(this.ariaDescribedBy(), this.a11y.describedBy()),
+  );
   protected readonly selectedOption = computed(
     () =>
       this.options().find((option) => {
@@ -377,6 +400,12 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
 
   constructor() {
     super(null);
+    this.bindStandaloneValue(this.value);
+    effect(() => {
+      if (this.open() && (this.isDisabled() || this.isReadOnly())) {
+        this.open.set(false);
+      }
+    });
     this.watchValidationInputs(this.required, this.a11y.required);
   }
 
@@ -388,8 +417,14 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
     return requiredError(value, this.a11y.required());
   }
 
+  protected override valuesEqual(current: T | null, next: T | null): boolean {
+    return current === null || next === null
+      ? current === next
+      : this.identityMatcher()(current, next);
+  }
+
   protected setOpen(open: boolean): void {
-    if (!this.isDisabled() && !this.a11y.readOnly()) {
+    if (!this.isDisabled() && !this.isReadOnly()) {
       this.open.set(open);
     }
   }
@@ -411,17 +446,23 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
   }
 
   protected selectValues(values: T[]): void {
-    if (this.a11y.readOnly() || this.optionsState() !== 'ready') {
+    if (this.isDisabled() || this.isReadOnly() || this.optionsState() !== 'ready') {
       return;
     }
-    const value = values.at(-1) ?? null;
-    this.commitValue(value);
-    this.valueChange.emit(value);
-    this.selectionChange.emit(
-      value === null
+    const requested = values.at(-1) ?? null;
+    const option =
+      requested === null
         ? null
-        : (this.options().find((option) => this.identityMatcher()(option.value, value)) ?? null),
-    );
+        : (this.options().find((candidate) => this.identityMatcher()(candidate.value, requested)) ??
+          null);
+    if (requested !== null && (option === null || this.disabledHandler()(option))) {
+      return;
+    }
+    const value = option?.value ?? null;
+    if (this.commitUserValue(value)) {
+      this.valueChange.emit(value);
+      this.selectionChange.emit(option);
+    }
     this.close();
   }
 
@@ -436,6 +477,10 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
       option,
       selected: this.isSelected(option),
     };
+  }
+
+  focus(options?: FocusOptions): void {
+    this.trigger()?.nativeElement.focus(options);
   }
 }
 
