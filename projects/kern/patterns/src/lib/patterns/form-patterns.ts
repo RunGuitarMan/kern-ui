@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   booleanAttribute,
+  computed,
   effect,
   inject,
   input,
@@ -142,61 +143,97 @@ const FORM_PATTERN_STYLES = `
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule],
   template: `
-    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <form [formGroup]="form" [attr.aria-busy]="loading()" (ngSubmit)="submit()" novalidate>
       <div class="field">
-        <label [for]="emailId">{{ emailLabel() }} <span aria-hidden="true">*</span></label>
+        <label [for]="emailId">{{ resolvedEmailLabel() }} <span aria-hidden="true">*</span></label>
         <input
           [id]="emailId"
           type="email"
           inputmode="email"
           autocomplete="email"
+          autocapitalize="none"
+          required
+          [spellcheck]="false"
           formControlName="email"
           [attr.aria-invalid]="showError('email')"
-          [attr.aria-describedby]="emailErrorId"
+          [attr.aria-describedby]="showError('email') ? emailErrorId : null"
         />
         @if (showError('email')) {
-          <p class="error" [id]="emailErrorId" role="alert">{{ emailErrorLabel() }}</p>
+          <p class="error" [id]="emailErrorId" role="alert">{{ resolvedEmailErrorLabel() }}</p>
         }
       </div>
       <div class="field">
-        <label [for]="passwordId">{{ passwordLabel() }} <span aria-hidden="true">*</span></label>
+        <label [for]="passwordId"
+          >{{ resolvedPasswordLabel() }} <span aria-hidden="true">*</span></label
+        >
         <input
           [id]="passwordId"
           type="password"
           autocomplete="current-password"
+          required
           formControlName="password"
           [attr.aria-invalid]="showError('password')"
-          [attr.aria-describedby]="passwordErrorId"
+          [attr.aria-describedby]="showError('password') ? passwordErrorId : null"
         />
         @if (showError('password')) {
           <p class="error" [id]="passwordErrorId" role="alert">
-            {{ passwordErrorLabel()(minimumPasswordLength()) }}
+            {{ resolvedPasswordErrorLabel() }}
           </p>
         }
       </div>
       <div class="row">
         <label class="check">
           <input type="checkbox" formControlName="remember" />
-          {{ rememberLabel() }}
+          {{ resolvedRememberLabel() }}
         </label>
-        @if (recoveryHref()) {
-          <a [href]="recoveryHref()">{{ recoveryLabel() }}</a>
+        @if (resolvedRecoveryHref(); as href) {
+          <a [href]="href">{{ resolvedRecoveryLabel() }}</a>
         }
       </div>
-      @if (errorMessage()) {
-        <p class="error" role="alert">{{ errorMessage() }}</p>
+      @if (resolvedErrorMessage(); as message) {
+        <p class="error" role="alert">{{ message }}</p>
       }
-      <button class="submit" type="submit" [disabled]="loading() || form.invalid">
+      <button class="submit" type="submit" [attr.aria-disabled]="loading()">
         @if (loading()) {
           <span aria-hidden="true">◌</span>
-          {{ loadingLabel() }}
+          {{ resolvedLoadingLabel() }}
         } @else {
-          {{ submitLabel() }}
+          {{ resolvedSubmitLabel() }}
         }
       </button>
+      <span class="sr-only" aria-live="polite">
+        {{ loading() ? resolvedLoadingLabel() : '' }}
+      </span>
     </form>
   `,
-  styles: [FORM_PATTERN_STYLES],
+  styles: [
+    FORM_PATTERN_STYLES,
+    `
+      :host([hidden]) {
+        display: none;
+      }
+      .submit[aria-disabled='true'] {
+        opacity: var(--krn-opacity-disabled, 0.48);
+        cursor: wait;
+      }
+      @media (forced-colors: active) {
+        input,
+        button {
+          border-color: CanvasText;
+        }
+      }
+      .sr-only {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        padding: 0;
+        overflow: hidden;
+        border: 0;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+    `,
+  ],
 })
 export class KrnLoginForm {
   private readonly translations = inject(KRN_TRANSLATIONS);
@@ -218,6 +255,53 @@ export class KrnLoginForm {
   readonly loadingLabel = input(this.translations.patterns.signingIn);
   readonly minimumPasswordLength = input(8, { transform: numberAttribute });
   readonly submitted = output<KrnLoginCredentials>();
+  protected readonly resolvedMinimumPasswordLength = computed(() => {
+    const minimum = this.minimumPasswordLength();
+    if (!Number.isSafeInteger(minimum) || minimum < 1) {
+      throw new Error('KrnLoginForm: minimumPasswordLength must be a positive safe integer.');
+    }
+
+    return minimum;
+  });
+  protected readonly resolvedSubmitLabel = computed(() =>
+    this.requiredLabel(this.submitLabel(), this.translations.patterns.signIn, 'Sign in'),
+  );
+  protected readonly resolvedEmailLabel = computed(() =>
+    this.requiredLabel(this.emailLabel(), this.translations.patterns.email, 'Email'),
+  );
+  protected readonly resolvedEmailErrorLabel = computed(() =>
+    this.requiredLabel(
+      this.emailErrorLabel(),
+      this.translations.patterns.invalidEmail,
+      'Enter a valid email address',
+    ),
+  );
+  protected readonly resolvedPasswordLabel = computed(() =>
+    this.requiredLabel(this.passwordLabel(), this.translations.patterns.password, 'Password'),
+  );
+  protected readonly resolvedPasswordErrorLabel = computed(() => {
+    const minimum = this.resolvedMinimumPasswordLength();
+    return this.requiredLabel(
+      this.passwordErrorLabel()(minimum),
+      this.translations.patterns.minimumPasswordLength(minimum),
+      `Use at least ${minimum} characters`,
+    );
+  });
+  protected readonly resolvedRememberLabel = computed(() =>
+    this.requiredLabel(this.rememberLabel(), this.translations.patterns.rememberMe, 'Remember me'),
+  );
+  protected readonly resolvedRecoveryLabel = computed(() =>
+    this.requiredLabel(
+      this.recoveryLabel(),
+      this.translations.patterns.forgotPassword,
+      'Forgot password?',
+    ),
+  );
+  protected readonly resolvedLoadingLabel = computed(() =>
+    this.requiredLabel(this.loadingLabel(), this.translations.patterns.signingIn, 'Signing in'),
+  );
+  protected readonly resolvedRecoveryHref = computed(() => this.normalizeText(this.recoveryHref()));
+  protected readonly resolvedErrorMessage = computed(() => this.normalizeText(this.errorMessage()));
 
   readonly form = new FormGroup({
     email: new FormControl('', {
@@ -235,7 +319,7 @@ export class KrnLoginForm {
     effect(() => {
       this.form.controls.password.setValidators([
         Validators.required,
-        Validators.minLength(Math.max(1, this.minimumPasswordLength())),
+        Validators.minLength(this.resolvedMinimumPasswordLength()),
       ]);
       this.form.controls.password.updateValueAndValidity({ emitEvent: false });
     });
@@ -250,6 +334,14 @@ export class KrnLoginForm {
     this.form.markAllAsTouched();
     if (this.form.invalid || this.loading()) return;
     this.submitted.emit(this.form.getRawValue());
+  }
+
+  private normalizeText(value: string): string {
+    return typeof value === 'string' ? value.trim() : '';
+  }
+
+  private requiredLabel(value: string, fallback: string, hardFallback: string): string {
+    return this.normalizeText(value) || this.normalizeText(fallback) || hardFallback;
   }
 }
 

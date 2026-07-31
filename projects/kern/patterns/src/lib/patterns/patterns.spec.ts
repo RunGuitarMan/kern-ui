@@ -611,6 +611,54 @@ describe('Kern product patterns', () => {
     ]);
   });
 
+  it('keeps login labels and error references valid across loading and validation states', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnLoginForm] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnLoginForm);
+    fixture.componentRef.setInput('emailLabel', '   ');
+    fixture.componentRef.setInput('submitLabel', '   ');
+    fixture.componentRef.setInput('recoveryHref', '   ');
+    fixture.componentRef.setInput('errorMessage', '   ');
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const form = element.querySelector('form') as HTMLFormElement;
+    const email = element.querySelector('input[type="email"]') as HTMLInputElement;
+    const submit = element.querySelector('button[type="submit"]') as HTMLButtonElement;
+    expect(element.querySelector(`label[for="${email.id}"]`)?.textContent?.trim()).toBeTruthy();
+    expect(submit.textContent?.trim()).toBeTruthy();
+    expect(email.required).toBe(true);
+    expect((element.querySelector('input[type="password"]') as HTMLInputElement).required).toBe(
+      true,
+    );
+    expect(submit.disabled).toBe(false);
+    expect(email.hasAttribute('aria-describedby')).toBe(false);
+    expect(email.getAttribute('autocapitalize')).toBe('none');
+    expect(email.spellcheck).toBe(false);
+    expect(element.querySelector('a')).toBeNull();
+    expect(element.querySelector('[role="alert"]')).toBeNull();
+
+    submit.click();
+    fixture.detectChanges();
+    const errorId = email.getAttribute('aria-describedby');
+    expect(errorId).toBeTruthy();
+    expect(element.querySelector(`#${errorId}`)?.getAttribute('role')).toBe('alert');
+
+    fixture.componentRef.setInput('loading', true);
+    fixture.detectChanges();
+    expect(form.getAttribute('aria-busy')).toBe('true');
+    expect(submit.disabled).toBe(false);
+    expect(submit.getAttribute('aria-disabled')).toBe('true');
+    expect(submit.textContent?.trim()).toBeTruthy();
+    expect(element.querySelector('[aria-live="polite"]')?.textContent?.trim()).toBeTruthy();
+  });
+
+  it('rejects an invalid login password-length contract', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnLoginForm] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnLoginForm);
+    fixture.componentRef.setInput('minimumPasswordLength', Number.NaN);
+    expect(() => fixture.detectChanges()).toThrowError(/positive safe integer/);
+  });
+
   it('keeps pattern field ids instance-safe and reacts to validation inputs', async () => {
     await TestBed.configureTestingModule({
       imports: [KrnLoginForm, KrnProfileForm],

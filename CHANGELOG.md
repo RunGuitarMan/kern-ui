@@ -73,6 +73,8 @@ contract or upgrade decision.
   detail regions, and normalized pane labels.
 - Strengthened Dashboard Widget with non-empty normalized headings, labelled region semantics,
   bottom-aligned optional footers, and resilient narrow/high-contrast layout behavior.
+- Hardened Login Form validation limits, label fallbacks, conditional error relationships, loading
+  semantics, and email keyboard hints.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned
