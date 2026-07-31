@@ -65,6 +65,7 @@ declare class KrnChart {
   private readonly platform;
   private readonly translations;
   private readonly host;
+  protected readonly tableId: string;
   private hideTimer;
   protected readonly Math: Math;
   protected readonly gridLines: number[];
@@ -92,6 +93,9 @@ declare class KrnChart {
   private previousValidatedData;
   private previousActiveIndex;
   readonly palette: _angular_core.InputSignal<readonly string[]>;
+  protected readonly resolvedType: _angular_core.Signal<KrnChartType>;
+  protected readonly resolvedTitle: _angular_core.Signal<string>;
+  private readonly resolvedPalette;
   protected readonly resolvedLabels: _angular_core.Signal<KrnResolvedChartLabels>;
   private readonly numberFormatter;
   private readonly percentageNumberFormatter;
@@ -187,6 +191,10 @@ declare class KrnLineChart {
   readonly negativeValuePolicy: _angular_core.InputSignal<KrnChartNegativeValuePolicy>;
   /** Limits the accessible text summary while the full data table remains available. */
   readonly summaryItemLimit: _angular_core.InputSignal<number>;
+  /** Controls source-data disclosure and reflects user toggles. */
+  readonly tableVisible: _angular_core.ModelSignal<boolean>;
+  /** Controls the disclosed datum and reflects pointer or keyboard interaction. */
+  readonly activeIndex: _angular_core.ModelSignal<number | null>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnLineChart, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnLineChart,
@@ -205,8 +213,10 @@ declare class KrnLineChart {
       datumIdentity: { alias: 'datumIdentity'; required: false; isSignal: true };
       negativeValuePolicy: { alias: 'negativeValuePolicy'; required: false; isSignal: true };
       summaryItemLimit: { alias: 'summaryItemLimit'; required: false; isSignal: true };
+      tableVisible: { alias: 'tableVisible'; required: false; isSignal: true };
+      activeIndex: { alias: 'activeIndex'; required: false; isSignal: true };
     },
-    {},
+    { tableVisible: 'tableVisibleChange'; activeIndex: 'activeIndexChange' },
     never,
     never,
     true,
@@ -229,6 +239,10 @@ declare class KrnBarChart {
   readonly negativeValuePolicy: _angular_core.InputSignal<KrnChartNegativeValuePolicy>;
   /** Limits the accessible text summary while the full data table remains available. */
   readonly summaryItemLimit: _angular_core.InputSignal<number>;
+  /** Controls source-data disclosure and reflects user toggles. */
+  readonly tableVisible: _angular_core.ModelSignal<boolean>;
+  /** Controls the disclosed datum and reflects pointer or keyboard interaction. */
+  readonly activeIndex: _angular_core.ModelSignal<number | null>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnBarChart, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnBarChart,
@@ -247,8 +261,10 @@ declare class KrnBarChart {
       datumIdentity: { alias: 'datumIdentity'; required: false; isSignal: true };
       negativeValuePolicy: { alias: 'negativeValuePolicy'; required: false; isSignal: true };
       summaryItemLimit: { alias: 'summaryItemLimit'; required: false; isSignal: true };
+      tableVisible: { alias: 'tableVisible'; required: false; isSignal: true };
+      activeIndex: { alias: 'activeIndex'; required: false; isSignal: true };
     },
-    {},
+    { tableVisible: 'tableVisibleChange'; activeIndex: 'activeIndexChange' },
     never,
     never,
     true,
@@ -271,6 +287,10 @@ declare class KrnDonutChart {
   readonly negativeValuePolicy: _angular_core.InputSignal<KrnChartNegativeValuePolicy>;
   /** Limits the accessible text summary while the full data table remains available. */
   readonly summaryItemLimit: _angular_core.InputSignal<number>;
+  /** Controls source-data disclosure and reflects user toggles. */
+  readonly tableVisible: _angular_core.ModelSignal<boolean>;
+  /** Controls the disclosed segment and reflects pointer or keyboard interaction. */
+  readonly activeIndex: _angular_core.ModelSignal<number | null>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDonutChart, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnDonutChart,
@@ -289,8 +309,10 @@ declare class KrnDonutChart {
       datumIdentity: { alias: 'datumIdentity'; required: false; isSignal: true };
       negativeValuePolicy: { alias: 'negativeValuePolicy'; required: false; isSignal: true };
       summaryItemLimit: { alias: 'summaryItemLimit'; required: false; isSignal: true };
+      tableVisible: { alias: 'tableVisible'; required: false; isSignal: true };
+      activeIndex: { alias: 'activeIndex'; required: false; isSignal: true };
     },
-    {},
+    { tableVisible: 'tableVisibleChange'; activeIndex: 'activeIndexChange' },
     never,
     never,
     true,

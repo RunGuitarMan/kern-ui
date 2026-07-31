@@ -73,7 +73,7 @@
       "@kern-ui/angular/patterns",
       "@kern-ui/angular/testing"
     ],
-    "sourceDigest": "sha256-fe69b5a753bff3fd82fdcccf9ca915d1b22e468c1acaae7fae27ce680de94691"
+    "sourceDigest": "sha256-eef674c1ad13f6fce9d96a8d73222325344df611fd341bda41703f18aabc3107"
   },
   "components": [
     {
@@ -55650,6 +55650,26 @@
           "defaultValue": "12",
           "description": "Limits the accessible text summary while the full data table remains available.",
           "descriptionSource": "source"
+        },
+        {
+          "name": "tableVisible",
+          "property": "tableVisible",
+          "kind": "model",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "Controls source-data disclosure and reflects user toggles.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "activeIndex",
+          "property": "activeIndex",
+          "kind": "model",
+          "type": "number | null",
+          "required": false,
+          "defaultValue": "null",
+          "description": "Controls the disclosed datum and reflects pointer or keyboard interaction.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [],
@@ -55717,7 +55737,9 @@
         "percentFormatter",
         "datumIdentity",
         "negativeValuePolicy",
-        "summaryItemLimit"
+        "summaryItemLimit",
+        "tableVisible",
+        "activeIndex"
       ],
       "guidance": {
         "useWhen": "Use Line Chart for an ordered trend where direction and change over adjacent values are the primary task.",
@@ -55824,6 +55846,18 @@
                 "value": "reject"
               }
             ]
+          },
+          {
+            "key": "tableVisible",
+            "label": "Table Visible",
+            "kind": "boolean",
+            "defaultValue": false,
+            "testValue": true,
+            "description": "Controlled tableVisible state with a matching tableVisibleChange output.",
+            "binding": {
+              "kind": "model",
+              "publicName": "tableVisible"
+            }
           }
         ],
         "presets": [
@@ -55964,12 +55998,24 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 12,
-          "controlled": 5,
-          "excluded": 7,
+          "publicInputsAndModels": 14,
+          "controlled": 6,
+          "excluded": 8,
           "unclassified": 0
         },
         "exclusions": [
+          {
+            "componentId": "line-chart",
+            "publicName": "activeIndex",
+            "kind": "model",
+            "type": "number | null",
+            "code": "complex-data",
+            "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+            "evidence": {
+              "category": "specimen-fixture",
+              "pointer": "preview/line-chart?state=default"
+            }
+          },
           {
             "componentId": "line-chart",
             "publicName": "data",
@@ -56240,6 +56286,26 @@
           "defaultValue": "12",
           "description": "Limits the accessible text summary while the full data table remains available.",
           "descriptionSource": "source"
+        },
+        {
+          "name": "tableVisible",
+          "property": "tableVisible",
+          "kind": "model",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "Controls source-data disclosure and reflects user toggles.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "activeIndex",
+          "property": "activeIndex",
+          "kind": "model",
+          "type": "number | null",
+          "required": false,
+          "defaultValue": "null",
+          "description": "Controls the disclosed datum and reflects pointer or keyboard interaction.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [],
@@ -56307,7 +56373,9 @@
         "percentFormatter",
         "datumIdentity",
         "negativeValuePolicy",
-        "summaryItemLimit"
+        "summaryItemLimit",
+        "tableVisible",
+        "activeIndex"
       ],
       "guidance": {
         "useWhen": "Use Bar Chart to compare a small set of categorical values where a common baseline makes differences meaningful.",
@@ -56414,6 +56482,18 @@
                 "value": "reject"
               }
             ]
+          },
+          {
+            "key": "tableVisible",
+            "label": "Table Visible",
+            "kind": "boolean",
+            "defaultValue": false,
+            "testValue": true,
+            "description": "Controlled tableVisible state with a matching tableVisibleChange output.",
+            "binding": {
+              "kind": "model",
+              "publicName": "tableVisible"
+            }
           }
         ],
         "presets": [
@@ -56554,12 +56634,24 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 12,
-          "controlled": 5,
-          "excluded": 7,
+          "publicInputsAndModels": 14,
+          "controlled": 6,
+          "excluded": 8,
           "unclassified": 0
         },
         "exclusions": [
+          {
+            "componentId": "bar-chart",
+            "publicName": "activeIndex",
+            "kind": "model",
+            "type": "number | null",
+            "code": "complex-data",
+            "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+            "evidence": {
+              "category": "specimen-fixture",
+              "pointer": "preview/bar-chart?state=default"
+            }
+          },
           {
             "componentId": "bar-chart",
             "publicName": "data",
@@ -56830,6 +56922,26 @@
           "defaultValue": "12",
           "description": "Limits the accessible text summary while the full data table remains available.",
           "descriptionSource": "source"
+        },
+        {
+          "name": "tableVisible",
+          "property": "tableVisible",
+          "kind": "model",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "Controls source-data disclosure and reflects user toggles.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "activeIndex",
+          "property": "activeIndex",
+          "kind": "model",
+          "type": "number | null",
+          "required": false,
+          "defaultValue": "null",
+          "description": "Controls the disclosed segment and reflects pointer or keyboard interaction.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [],
@@ -56897,7 +57009,9 @@
         "percentFormatter",
         "datumIdentity",
         "negativeValuePolicy",
-        "summaryItemLimit"
+        "summaryItemLimit",
+        "tableVisible",
+        "activeIndex"
       ],
       "guidance": {
         "useWhen": "Use Donut Chart for a small part-to-whole composition with clearly distinguishable proportions.",
@@ -57004,6 +57118,18 @@
                 "value": "reject"
               }
             ]
+          },
+          {
+            "key": "tableVisible",
+            "label": "Table Visible",
+            "kind": "boolean",
+            "defaultValue": false,
+            "testValue": true,
+            "description": "Controlled tableVisible state with a matching tableVisibleChange output.",
+            "binding": {
+              "kind": "model",
+              "publicName": "tableVisible"
+            }
           }
         ],
         "presets": [
@@ -57144,12 +57270,24 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 12,
-          "controlled": 5,
-          "excluded": 7,
+          "publicInputsAndModels": 14,
+          "controlled": 6,
+          "excluded": 8,
           "unclassified": 0
         },
         "exclusions": [
+          {
+            "componentId": "donut-chart",
+            "publicName": "activeIndex",
+            "kind": "model",
+            "type": "number | null",
+            "code": "complex-data",
+            "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+            "evidence": {
+              "category": "specimen-fixture",
+              "pointer": "preview/donut-chart?state=default"
+            }
+          },
           {
             "componentId": "donut-chart",
             "publicName": "data",

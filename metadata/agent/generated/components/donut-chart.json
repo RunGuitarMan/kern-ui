@@ -181,6 +181,26 @@
       "defaultValue": "12",
       "description": "Limits the accessible text summary while the full data table remains available.",
       "descriptionSource": "source"
+    },
+    {
+      "name": "tableVisible",
+      "property": "tableVisible",
+      "kind": "model",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controls source-data disclosure and reflects user toggles.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "activeIndex",
+      "property": "activeIndex",
+      "kind": "model",
+      "type": "number | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Controls the disclosed segment and reflects pointer or keyboard interaction.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [],
@@ -248,7 +268,9 @@
     "percentFormatter",
     "datumIdentity",
     "negativeValuePolicy",
-    "summaryItemLimit"
+    "summaryItemLimit",
+    "tableVisible",
+    "activeIndex"
   ],
   "guidance": {
     "useWhen": "Use Donut Chart for a small part-to-whole composition with clearly distinguishable proportions.",
@@ -355,6 +377,18 @@
             "value": "reject"
           }
         ]
+      },
+      {
+        "key": "tableVisible",
+        "label": "Table Visible",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Controlled tableVisible state with a matching tableVisibleChange output.",
+        "binding": {
+          "kind": "model",
+          "publicName": "tableVisible"
+        }
       }
     ],
     "presets": [
@@ -495,12 +529,24 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 12,
-      "controlled": 5,
-      "excluded": 7,
+      "publicInputsAndModels": 14,
+      "controlled": 6,
+      "excluded": 8,
       "unclassified": 0
     },
     "exclusions": [
+      {
+        "componentId": "donut-chart",
+        "publicName": "activeIndex",
+        "kind": "model",
+        "type": "number | null",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/donut-chart?state=default"
+        }
+      },
       {
         "componentId": "donut-chart",
         "publicName": "data",

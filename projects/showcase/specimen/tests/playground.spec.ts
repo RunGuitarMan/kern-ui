@@ -576,12 +576,12 @@ describe('KERN playground registry', () => {
 
   it('classifies every public input/model as one real control or one exact exclusion', () => {
     expect(KERN_PLAYGROUND_API_COVERAGE).toEqual({
-      publicInputsAndModels: 1022,
-      controlled: 644,
-      excluded: 378,
+      publicInputsAndModels: 1028,
+      controlled: 647,
+      excluded: 381,
       unclassified: 0,
     });
-    expect(KERN_PLAYGROUND_API_EXCLUSIONS).toHaveLength(378);
+    expect(KERN_PLAYGROUND_API_EXCLUSIONS).toHaveLength(381);
     expect(Object.values(KERN_PLAYGROUND_AUTO_CONTROL_KEYS).flat().length).toBeGreaterThan(0);
 
     for (const item of KERN_CATALOG) {

@@ -69,6 +69,8 @@ void bootstrapApplication(KernLineChartAgentExample);
 | `datumIdentity`       | input | `KrnChartDatumIdentity`          | no       | `(datum, index) => datum.id ?? (datum.label \|\| index)` | Returns a stable unique key used to preserve DOM and active state across data reordering. |
 | `negativeValuePolicy` | input | `KrnChartNegativeValuePolicy`    | no       | `'clamp'`                                                | Clamps negative values to zero by default or rejects them with a validation error.        |
 | `summaryItemLimit`    | input | `number`                         | no       | `12`                                                     | Limits the accessible text summary while the full data table remains available.           |
+| `tableVisible`        | model | `boolean`                        | no       | `false`                                                  | Controls source-data disclosure and reflects user toggles.                                |
+| `activeIndex`         | model | `number \| null`                 | no       | `null`                                                   | Controls the disclosed datum and reflects pointer or keyboard interaction.                |
 
 ## Deprecated selectors
 
@@ -121,25 +123,27 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/line-chart`
 
 Scenarios: `default`, `states`, `stress`.
-Public API coverage: 5/12
-directly controlled; 7 exact exclusions; 0 unclassified.
+Public API coverage: 6/14
+directly controlled; 8 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument              | Control | Default                         | Test value                                  | Binding                                | Description                                            |
-| --------------------- | ------- | ------------------------------- | ------------------------------------------- | -------------------------------------- | ------------------------------------------------------ |
-| `title`               | text    | `"Weekly active users"`         | `"Weekly active users · alternate"`         | input `title` (property)               | Sets the visible chart title.                          |
-| `description`         | text    | `"Unique members, last 6 days"` | `"Unique members, last 6 days · alternate"` | input `description` (property)         | Adds concise context for the dataset.                  |
-| `summaryItemLimit`    | number  | `12`                            | `13`                                        | input `summaryItemLimit` (property)    | Limits items in the accessible data summary.           |
-| `eyebrow`             | text    | `"THROUGHPUT"`                  | `"THROUGHPUT · alternate"`                  | input `eyebrow` (property)             | Configures the component eyebrow contract.             |
-| `negativeValuePolicy` | select  | `"clamp"`                       | `"reject"`                                  | input `negativeValuePolicy` (property) | Configures the component negativeValuePolicy contract. |
+| Argument              | Control | Default                         | Test value                                  | Binding                                | Description                                                              |
+| --------------------- | ------- | ------------------------------- | ------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------ |
+| `title`               | text    | `"Weekly active users"`         | `"Weekly active users · alternate"`         | input `title` (property)               | Sets the visible chart title.                                            |
+| `description`         | text    | `"Unique members, last 6 days"` | `"Unique members, last 6 days · alternate"` | input `description` (property)         | Adds concise context for the dataset.                                    |
+| `summaryItemLimit`    | number  | `12`                            | `13`                                        | input `summaryItemLimit` (property)    | Limits items in the accessible data summary.                             |
+| `eyebrow`             | text    | `"THROUGHPUT"`                  | `"THROUGHPUT · alternate"`                  | input `eyebrow` (property)             | Configures the component eyebrow contract.                               |
+| `negativeValuePolicy` | select  | `"clamp"`                       | `"reject"`                                  | input `negativeValuePolicy` (property) | Configures the component negativeValuePolicy contract.                   |
+| `tableVisible`        | boolean | `false`                         | `true`                                      | model `tableVisible`                   | Controlled tableVisible state with a matching tableVisibleChange output. |
 
 Exact API exclusions:
 
 | Public API         | Category           | Evidence                                                         | Reason                                                                                                                  |
 | ------------------ | ------------------ | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `activeIndex`      | complex-data       | `specimen-fixture:preview/line-chart?state=default`              | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                        |
 | `data`             | complex-data       | `specimen-fixture:preview/line-chart?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
 | `datumIdentity`    | callback           | `component-example:agent/components/line-chart.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                      |
 | `labels`           | translation-object | `locale-preview:preview/line-chart?locale=ru-RU`                 | Structured translation overrides are exercised through locale providers, not lossy scalar controls.                     |

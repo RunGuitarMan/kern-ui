@@ -190,9 +190,12 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
   protected readonly actionCell: _angular_core.WritableSignal<KrnDataGridCellPosition | null>;
   protected readonly widths: _angular_core.WritableSignal<Readonly<Record<string, number>>>;
   protected readonly rowHeight: _angular_core.Signal<number>;
+  protected readonly normalizedViewportHeight: _angular_core.Signal<number>;
+  protected readonly normalizedPageSize: _angular_core.Signal<number>;
   protected readonly isVirtual: _angular_core.Signal<boolean>;
   protected readonly isControlled: _angular_core.Signal<boolean>;
   protected readonly usesPagination: _angular_core.Signal<boolean>;
+  private readonly normalizedHiddenColumnKeys;
   protected readonly visibleColumns: _angular_core.Signal<KrnDataColumn<T>[]>;
   protected readonly hasPinnedStartColumns: _angular_core.Signal<boolean>;
   private readonly pinnedBoundaryKeys;
@@ -203,6 +206,7 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
   private normalizeForSearch;
   protected readonly totalRowCount: _angular_core.Signal<number>;
   protected readonly pageCount: _angular_core.Signal<number>;
+  protected readonly currentPage: _angular_core.Signal<number>;
   protected readonly rowOffset: _angular_core.Signal<number>;
   protected readonly pageRows: _angular_core.Signal<KrnDataRowOccurrence<T>[]>;
   protected readonly visibleRows: _angular_core.Signal<KrnDataRowOccurrence<T>[]>;
@@ -224,6 +228,7 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
   ngAfterViewChecked(): void;
   protected value(row: T, column: KrnDataColumn<T>): unknown;
   protected cellText(row: T, column: KrnDataColumn<T>): string;
+  protected columnLabel(column: KrnDataColumn<T>): string;
   protected resolveCellTemplate(
     column: KrnDataColumn<T>,
   ): TemplateRef<KrnDataCellContext<T>> | null;
@@ -247,6 +252,8 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
   protected isColumnVisible(key: string): boolean;
   protected setColumnVisible(key: string, event: Event): void;
   protected columnWidth(column: KrnDataColumn<T>): number;
+  protected columnMinWidth(column: KrnDataColumn<T>): number;
+  protected columnMaxWidth(column: KrnDataColumn<T>): number;
   private pinnedColumnWidth;
   protected utilityColumnOffset(index: number): string;
   protected columnPinnedStart(column: KrnDataColumn<T>): string | null;
@@ -287,6 +294,7 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
   private emitQuery;
   private setColumnWidth;
   private isRtl;
+  private positiveInteger;
   private toggleSet;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDataGrid<any>, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
