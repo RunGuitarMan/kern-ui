@@ -23,7 +23,13 @@ import { KrnSplitLayout } from './split-layout';
       [orientation]="orientation()"
       [step]="step()"
     >
-      <krn-resizable-panel ariaLabel="Navigation">A</krn-resizable-panel>
+      <krn-resizable-panel
+        ariaLabel="Navigation"
+        [maxSize]="firstMaxSize()"
+        [minSize]="firstMinSize()"
+      >
+        A
+      </krn-resizable-panel>
       <krn-resize-handle />
       <krn-resizable-panel ariaLabel="Content">B</krn-resizable-panel>
     </krn-resizable-panels>
@@ -34,6 +40,8 @@ class ResizableHost {
   readonly disabled = signal(false);
   readonly orientation = signal<'horizontal' | 'vertical'>('horizontal');
   readonly step = signal(5);
+  readonly firstMinSize = signal(10);
+  readonly firstMaxSize = signal(90);
 }
 
 @Component({
@@ -752,6 +760,105 @@ describe('KrnResizablePanels', () => {
     const handle = fixture.nativeElement.querySelector('krn-resize-handle') as HTMLElement;
     expect(handle.getAttribute('aria-disabled')).toBe('true');
     expect(handle.getAttribute('tabindex')).toBe('-1');
+  });
+
+  it('normalizes a labelled panel host and its percentage constraints', () => {
+    const panelFixture = TestBed.createComponent(KrnResizablePanel);
+    panelFixture.componentRef.setInput('id', '  navigation-panel  ');
+    panelFixture.componentRef.setInput('ariaLabel', '  Navigation  ');
+    panelFixture.componentRef.setInput('overflow', 'clip');
+    panelFixture.componentRef.setInput('minSize', 25);
+    panelFixture.componentRef.setInput('maxSize', 75);
+    panelFixture.detectChanges();
+    const panel = panelFixture.nativeElement as HTMLElement;
+    const style = getComputedStyle(panel);
+
+    expect(panel.id).toBe('navigation-panel');
+    expect(panel.getAttribute('role')).toBe('region');
+    expect(panel.getAttribute('aria-label')).toBe('Navigation');
+    expect(panel.getAttribute('data-overflow')).toBe('clip');
+    expect(panelFixture.componentInstance.effectiveMinSize()).toBe(25);
+    expect(panelFixture.componentInstance.effectiveMaxSize()).toBe(75);
+    expect(style.boxSizing).toBe('border-box');
+    expect(style.maxInlineSize).toBe('100%');
+  });
+
+  it('falls back from invalid panel metadata and preserves native hidden semantics', () => {
+    const panelFixture = TestBed.createComponent(KrnResizablePanel);
+    panelFixture.componentRef.setInput('id', '   ');
+    panelFixture.componentRef.setInput('ariaLabel', '   ');
+    panelFixture.componentRef.setInput('overflow', 'scroll');
+    panelFixture.componentRef.setInput('minSize', 90);
+    panelFixture.componentRef.setInput('maxSize', 20);
+    panelFixture.detectChanges();
+    const panel = panelFixture.nativeElement as HTMLElement;
+
+    expect(panel.hasAttribute('id')).toBe(false);
+    expect(panel.hasAttribute('role')).toBe(false);
+    expect(panel.hasAttribute('aria-label')).toBe(false);
+    expect(panel.getAttribute('data-overflow')).toBe('auto');
+    expect(panelFixture.componentInstance.effectiveMinSize()).toBe(10);
+    expect(panelFixture.componentInstance.effectiveMaxSize()).toBe(90);
+
+    panel.hidden = true;
+    expect(getComputedStyle(panel).display).toBe('none');
+  });
+
+  it('exposes normalized panel bounds through the managed separator', () => {
+    fixture.componentInstance.firstMinSize.set(30);
+    fixture.componentInstance.firstMaxSize.set(70);
+    fixture.detectChanges();
+    TestBed.tick();
+    const handle = fixture.nativeElement.querySelector('krn-resize-handle') as HTMLElement;
+
+    expect(handle.getAttribute('aria-valuemin')).toBe('30');
+    expect(handle.getAttribute('aria-valuemax')).toBe('70');
+
+    fixture.componentInstance.firstMinSize.set(90);
+    fixture.componentInstance.firstMaxSize.set(20);
+    fixture.detectChanges();
+    TestBed.tick();
+    expect(handle.getAttribute('aria-valuemin')).toBe('10');
+    expect(handle.getAttribute('aria-valuemax')).toBe('90');
+  });
+
+  it('keeps controlled out-of-range sizes ARIA-valid and returns them monotonically', () => {
+    const handle = fixture.nativeElement.querySelector('krn-resize-handle') as HTMLElement;
+    const press = (key: string): void => {
+      handle.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key,
+          bubbles: true,
+          cancelable: true,
+        }),
+      );
+      fixture.detectChanges();
+      TestBed.tick();
+    };
+
+    fixture.componentInstance.sizes.set([5, 95]);
+    fixture.detectChanges();
+    TestBed.tick();
+    expect(handle.getAttribute('aria-valuemin')).toBe('5');
+    expect(handle.getAttribute('aria-valuenow')).toBe('5');
+    expect(handle.getAttribute('aria-valuemax')).toBe('90');
+    press('ArrowLeft');
+    expect(fixture.componentInstance.sizes()).toEqual([5, 95]);
+    press('ArrowRight');
+    expect(fixture.componentInstance.sizes()).toEqual([10, 90]);
+    expect(handle.getAttribute('aria-valuemin')).toBe('10');
+
+    fixture.componentInstance.sizes.set([95, 5]);
+    fixture.detectChanges();
+    TestBed.tick();
+    expect(handle.getAttribute('aria-valuemin')).toBe('10');
+    expect(handle.getAttribute('aria-valuenow')).toBe('95');
+    expect(handle.getAttribute('aria-valuemax')).toBe('95');
+    press('ArrowRight');
+    expect(fixture.componentInstance.sizes()).toEqual([95, 5]);
+    press('ArrowLeft');
+    expect(fixture.componentInstance.sizes()).toEqual([90, 10]);
+    expect(handle.getAttribute('aria-valuemax')).toBe('90');
   });
 
   it('tracks pointer movement as a percentage of the panel group', () => {

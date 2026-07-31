@@ -173,16 +173,13 @@ export class KrnResizablePanels {
         const after = panels[index + 1];
         const prefix = sizes.slice(0, index).reduce((sum, size) => sum + size, 0);
         const pairTotal = (sizes[index] ?? 0) + (sizes[index + 1] ?? 0);
-        const min =
-          before && after ? prefix + Math.max(before.minSize(), pairTotal - after.maxSize()) : 0;
-        const max =
-          before && after ? prefix + Math.min(before.maxSize(), pairTotal - after.minSize()) : 100;
+        const bounds = this.pairBounds(index, pairTotal, sizes[index] ?? 0);
         handle.setManagedState(
           orientation,
           separatorOrientation,
           clamp(position, 0, 100),
-          clamp(min, 0, 100),
-          clamp(max, 0, 100),
+          clamp(prefix + bounds.min, 0, 100),
+          clamp(prefix + bounds.max, 0, 100),
           disabled || !before || !after,
         );
       });
@@ -282,6 +279,7 @@ export class KrnResizablePanels {
     const incrementKey = axis === 'x' ? 'ArrowRight' : 'ArrowDown';
     const sizes = this.normalizedSizes();
     const pairTotal = (sizes[handleIndex] ?? 0) + (sizes[handleIndex + 1] ?? 0);
+    const bounds = this.pairBounds(handleIndex, pairTotal, sizes[handleIndex] ?? 0);
     let target: number | null = null;
 
     if (event.key === decrementKey) {
@@ -289,12 +287,9 @@ export class KrnResizablePanels {
     } else if (event.key === incrementKey) {
       target = (sizes[handleIndex] ?? 0) + this.resolvedStep() * direction;
     } else if (event.key === 'Home') {
-      target = this.panelChildren()[handleIndex]?.minSize() ?? 0;
+      target = bounds.min;
     } else if (event.key === 'End') {
-      target = Math.min(
-        this.panelChildren()[handleIndex]?.maxSize() ?? 100,
-        pairTotal - (this.panelChildren()[handleIndex + 1]?.minSize() ?? 0),
-      );
+      target = bounds.max;
     } else if (event.key === 'Enter' || event.key === ' ') {
       target = pairTotal / 2;
     }
@@ -330,9 +325,12 @@ export class KrnResizablePanels {
       return;
     }
 
-    const lowerBound = Math.max(before.minSize(), pairTotal - after.maxSize());
-    const upperBound = Math.min(before.maxSize(), pairTotal - after.minSize());
-    const beforeSize = clamp(requestedBefore, lowerBound, upperBound);
+    const bounds = this.pairBounds(
+      handleIndex,
+      pairTotal,
+      this.normalizedSizes()[handleIndex] ?? pairTotal / 2,
+    );
+    const beforeSize = clamp(requestedBefore, bounds.min, bounds.max);
     const afterSize = pairTotal - beforeSize;
     const next = [...this.normalizedSizes()];
     next[handleIndex] = beforeSize;
@@ -344,6 +342,29 @@ export class KrnResizablePanels {
     this.session = null;
     this.resizingState.set(false);
     this.resizeEnd.emit(this.normalizedSizes());
+  }
+
+  private pairBounds(
+    handleIndex: number,
+    pairTotal: number,
+    currentBefore: number,
+  ): { readonly max: number; readonly min: number } {
+    const before = this.panelChildren()[handleIndex];
+    const after = this.panelChildren()[handleIndex + 1];
+    if (!before || !after) {
+      return { min: 0, max: pairTotal };
+    }
+
+    const min = Math.max(before.effectiveMinSize(), pairTotal - after.effectiveMaxSize());
+    const max = Math.min(before.effectiveMaxSize(), pairTotal - after.effectiveMinSize());
+    if (min > max) {
+      const fixed = clamp(currentBefore, 0, pairTotal);
+      return { min: fixed, max: fixed };
+    }
+    return {
+      min: Math.min(min, currentBefore),
+      max: Math.max(max, currentBefore),
+    };
   }
 
   private cancelActiveResize(): void {
@@ -402,19 +423,25 @@ export class KrnResizablePanels {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<ng-content />`,
   host: {
-    '[id]': 'id()',
+    '[attr.id]': 'resolvedId()',
     '[style.--krn-panel-size]': 'resolvedSize()',
     '[attr.data-orientation]': 'managedOrientation()',
-    '[attr.data-overflow]': 'overflow()',
-    '[attr.role]': 'ariaLabel() ? "region" : null',
-    '[attr.aria-label]': 'ariaLabel() || null',
+    '[attr.data-overflow]': 'resolvedOverflow()',
+    '[attr.role]': 'resolvedAriaLabel() ? "region" : null',
+    '[attr.aria-label]': 'resolvedAriaLabel()',
   },
   styles: `
     :host {
       display: block;
+      box-sizing: border-box;
+      max-inline-size: 100%;
       min-inline-size: 0;
       min-block-size: 0;
       flex: 0 0 var(--krn-panel-size);
+    }
+
+    :host([hidden]) {
+      display: none;
     }
 
     :host([data-overflow='auto']) {
@@ -434,15 +461,37 @@ export class KrnResizablePanel {
   protected readonly managedOrientation = signal<KrnLayoutAxis>('horizontal');
 
   readonly id = input<string | null>(null);
+
+  /** Sets the initial percentage weight when every sibling panel provides a size. */
   readonly size = input<number | null, unknown>(null, {
     transform: nullableNumberAttribute,
   });
+
+  /** Sets the minimum percentage size used while resizing. */
   readonly minSize = input(10, { transform: numberAttribute });
+
+  /** Sets the maximum percentage size used while resizing. */
   readonly maxSize = input(90, { transform: numberAttribute });
   readonly overflow = input<'auto' | 'visible' | 'clip'>('auto');
   readonly ariaLabel = input<string | null>(null);
 
+  private readonly resolvedBounds = computed(() => {
+    const rawMin = this.minSize();
+    const rawMax = this.maxSize();
+    const min = Number.isFinite(rawMin) ? clamp(rawMin, 0, 100) : 10;
+    const max = Number.isFinite(rawMax) ? clamp(rawMax, 0, 100) : 90;
+    return min <= max ? { min, max } : { min: 10, max: 90 };
+  });
+  protected readonly resolvedId = computed(() => this.id()?.trim() || null);
+  protected readonly resolvedAriaLabel = computed(() => this.ariaLabel()?.trim() || null);
+  protected readonly resolvedOverflow = computed<'auto' | 'visible' | 'clip'>(() => {
+    const overflow = this.overflow();
+    return overflow === 'visible' || overflow === 'clip' ? overflow : 'auto';
+  });
   protected readonly resolvedSize = computed(() => `${clamp(this.managedSize(), 0, 100)}%`);
+
+  readonly effectiveMinSize = computed(() => this.resolvedBounds().min);
+  readonly effectiveMaxSize = computed(() => this.resolvedBounds().max);
 
   setManagedLayout(size: number, orientation: KrnLayoutAxis): void {
     this.managedSize.set(size);
