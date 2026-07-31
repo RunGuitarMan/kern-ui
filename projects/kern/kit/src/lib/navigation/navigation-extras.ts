@@ -54,22 +54,24 @@ function sameDocumentHref(document: Document, targetId: string): string {
   return `${url.pathname}${url.search}#${encodeURIComponent(targetId)}`;
 }
 
-function navigateToAnchor(
-  document: Document,
-  targetId: string,
-  event: MouseEvent,
-  moveFocus = false,
-): boolean {
-  if (
+function isPlainPrimaryActivation(event: MouseEvent): boolean {
+  return !(
     event.defaultPrevented ||
     event.button !== 0 ||
     event.altKey ||
     event.ctrlKey ||
     event.metaKey ||
     event.shiftKey
-  ) {
-    return false;
-  }
+  );
+}
+
+function navigateToAnchor(
+  document: Document,
+  targetId: string,
+  event: MouseEvent,
+  moveFocus = false,
+): boolean {
+  if (!isPlainPrimaryActivation(event)) return false;
   const target = document.getElementById(targetId);
   if (!target) return true;
   event.preventDefault();
@@ -441,25 +443,32 @@ export class KrnTableOfContents {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    @if (href()) {
-      <a [href]="href()" (click)="activated.emit()"
-        ><span aria-hidden="true">←</span><span>{{ label() }}</span></a
+    @if (resolvedHref(); as destination) {
+      <a [href]="destination" (click)="activateLink($event)"
+        ><span class="back-icon" aria-hidden="true">←</span
+        ><span class="back-label">{{ resolvedLabel() }}</span></a
       >
     } @else {
       <button type="button" (click)="goBack()">
-        <span aria-hidden="true">←</span><span>{{ label() }}</span>
+        <span class="back-icon" aria-hidden="true">←</span
+        ><span class="back-label">{{ resolvedLabel() }}</span>
       </button>
     }
   `,
   styles: `
     :host {
       display: inline-block;
+      max-inline-size: 100%;
+    }
+    :host([hidden]) {
+      display: none;
     }
     :is(a, button) {
       display: inline-flex;
+      max-inline-size: 100%;
       align-items: center;
       gap: var(--krn-space-2);
-      min-block-size: var(--krn-control-height-sm);
+      min-block-size: var(--krn-touch-target-min);
       padding-inline: var(--krn-space-2);
       border: 0;
       border-radius: var(--krn-radius-sm);
@@ -470,6 +479,20 @@ export class KrnTableOfContents {
       text-decoration: none;
       cursor: pointer;
     }
+    .back-icon {
+      flex: 0 0 auto;
+      font-size: var(--krn-icon-size-md);
+      line-height: 1;
+    }
+    :host-context([dir='rtl']) .back-icon {
+      scale: -1 1;
+    }
+    .back-label {
+      min-inline-size: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     :is(a, button):hover {
       background: var(--krn-color-surface-subtle);
       color: var(--krn-color-text);
@@ -477,6 +500,14 @@ export class KrnTableOfContents {
     :is(a, button):focus-visible {
       outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
       outline-offset: var(--krn-focus-ring-offset);
+    }
+    :is(a, button):active {
+      background: var(--krn-color-surface-sunken);
+    }
+    @media (forced-colors: active) {
+      :is(a, button):focus-visible {
+        outline-color: Highlight;
+      }
     }
   `,
 })
@@ -486,6 +517,14 @@ export class KrnBackButton {
   readonly href = input<string | null>(null);
   readonly label = input(this.translations.navigation.back);
   readonly activated = output<void>();
+  protected readonly resolvedHref = computed(() => this.href()?.trim() || null);
+  protected readonly resolvedLabel = computed(
+    () => this.label()?.trim() || this.translations.navigation.back.trim(),
+  );
+
+  protected activateLink(event: MouseEvent): void {
+    if (isPlainPrimaryActivation(event)) this.activated.emit();
+  }
 
   protected goBack(): void {
     this.activated.emit();

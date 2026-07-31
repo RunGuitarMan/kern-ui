@@ -1,6 +1,7 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import type { Type } from '@angular/core';
+import { Location } from '@angular/common';
 import {
   createKrnTranslations,
   KRN_LOCALE,
@@ -901,6 +902,43 @@ describe('Kern navigation', () => {
       ).toThrow(/non-empty unique item ids/);
     } finally {
       target.remove();
+    }
+  });
+
+  it('keeps back-button history and link activation semantics consistent', async () => {
+    const back = vi.fn();
+    TestBed.configureTestingModule({ providers: [{ provide: Location, useValue: { back } }] });
+    const fixture = await create(KrnBackButton, { href: '   ', label: '   ' });
+    const activated = vi.fn();
+    fixture.componentInstance.activated.subscribe(activated);
+    const element = fixture.nativeElement as HTMLElement;
+
+    const button = element.querySelector<HTMLButtonElement>('button')!;
+    expect(button.textContent?.trim()).toBeTruthy();
+    button.click();
+    expect(back).toHaveBeenCalledOnce();
+    expect(activated).toHaveBeenCalledOnce();
+
+    fixture.componentRef.setInput('href', ' #back-target ');
+    fixture.detectChanges();
+    const link = element.querySelector<HTMLAnchorElement>('a')!;
+    expect(link.getAttribute('href')).toBe('#back-target');
+
+    const modified = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      ctrlKey: true,
+    });
+    link.dispatchEvent(modified);
+    expect(modified.defaultPrevented).toBe(false);
+    expect(activated).toHaveBeenCalledOnce();
+
+    const originalUrl = `${location.pathname}${location.search}${location.hash}`;
+    try {
+      link.click();
+      expect(activated).toHaveBeenCalledTimes(2);
+    } finally {
+      history.replaceState({}, '', originalUrl || '/');
     }
   });
 
