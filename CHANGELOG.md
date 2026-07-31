@@ -65,6 +65,8 @@ contract or upgrade decision.
   live active-count labels, and post-clear focus restoration.
 - Strengthened Page Header with native header semantics, stable heading and description
   associations, required heading validation, and normalized optional copy.
+- Opened Settings Panel focus and dismissal policies through `initialFocus`, `closeOnEscape`, and
+  `closeOnOutside`, added typed `closed` reasons, and normalized accessible labels.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned

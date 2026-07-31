@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { KRN_ENGLISH_TRANSLATIONS, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { KrnDrawer } from '@kern-ui/angular/kit';
 
 import { KrnLoginForm, KrnMultiStepForm, KrnProfileForm } from './form-patterns';
 import {
@@ -442,8 +443,13 @@ describe('Kern product patterns', () => {
   it('composes settings with the coordinated drawer contract', async () => {
     await TestBed.configureTestingModule({ imports: [KrnSettingsPanel] }).compileComponents();
     const fixture = TestBed.createComponent(KrnSettingsPanel);
-    fixture.componentRef.setInput('heading', 'Workspace settings');
+    fixture.componentRef.setInput('heading', '  Workspace settings  ');
+    fixture.componentRef.setInput('closeLabel', '   ');
+    fixture.componentRef.setInput('initialFocus', 'surface');
+    fixture.componentRef.setInput('closeOnEscape', false);
     fixture.componentInstance.open.set(true);
+    const closeReasons: string[] = [];
+    fixture.componentInstance.closed.subscribe((reason) => closeReasons.push(reason));
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -452,10 +458,25 @@ describe('Kern product patterns', () => {
     expect(dialog).not.toBeNull();
     expect(title.textContent).toContain('Workspace settings');
     expect(dialog.getAttribute('aria-labelledby')).toBe(title.id);
+    const drawer = fixture.debugElement.query(By.directive(KrnDrawer))
+      .componentInstance as KrnDrawer;
+    expect(drawer.initialFocus()).toBe('surface');
+    expect(drawer.closeOnEscape()).toBe(false);
+    expect(
+      (fixture.nativeElement.querySelector('.close') as HTMLButtonElement)
+        .getAttribute('aria-label')
+        ?.trim(),
+    ).toBeTruthy();
+
+    document.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+    );
+    expect(fixture.componentInstance.open()).toBe(true);
 
     (fixture.nativeElement.querySelector('.close') as HTMLButtonElement).click();
     fixture.detectChanges();
     expect(fixture.componentInstance.open()).toBe(false);
+    expect(closeReasons).toEqual(['action']);
   });
 
   it('emits only valid typed login credentials', async () => {
