@@ -437,16 +437,17 @@ export class KrnMenu {
     <div
       class="menubar"
       role="menubar"
-      [attr.aria-label]="ariaLabel()"
+      [attr.aria-label]="resolvedAriaLabel()"
       (keydown)="onKeydown($event)"
     >
-      @for (item of items(); track item.id; let index = $index) {
+      @for (item of items(); track $index; let index = $index) {
         @if (item.href && !item.disabled) {
           <a
             #barItem
             role="menuitem"
             [href]="item.href"
             [attr.tabindex]="index === activeIndex() ? 0 : -1"
+            (focus)="activeIndex.set(index)"
             (click)="itemSelected.emit(item)"
             >{{ item.label }}</a
           >
@@ -457,6 +458,7 @@ export class KrnMenu {
             role="menuitem"
             [disabled]="item.disabled"
             [attr.tabindex]="index === activeIndex() ? 0 : -1"
+            (focus)="activeIndex.set(index)"
             (click)="!item.disabled && itemSelected.emit(item)"
           >
             {{ item.label }}
@@ -469,11 +471,19 @@ export class KrnMenu {
     :host {
       display: block;
     }
+    :host([hidden]) {
+      display: none;
+    }
     .menubar {
       display: flex;
+      min-inline-size: 0;
       align-items: center;
       gap: var(--krn-space-1);
-      min-inline-size: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .menubar::-webkit-scrollbar {
+      display: none;
     }
     .menubar :is(a, button) {
       display: inline-flex;
@@ -502,32 +512,85 @@ export class KrnMenu {
       color: var(--krn-color-text-disabled);
       cursor: not-allowed;
     }
+    @media (forced-colors: active) {
+      .menubar :is(a, button):focus-visible {
+        outline-color: Highlight;
+      }
+    }
   `,
 })
 export class KrnMenubar {
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly platform = inject(KRN_PLATFORM);
   private readonly elements = viewChildren<ElementRef<HTMLElement>>('barItem');
   private readonly translations = inject(KRN_TRANSLATIONS);
+  private focusRepairToken = 0;
   readonly items = input<readonly KrnNavigationItem[]>([]);
   readonly ariaLabel = input(this.translations.navigation.applicationMenu);
   readonly itemSelected = output<KrnNavigationItem>();
   protected readonly activeIndex = signal(0);
+  protected readonly resolvedAriaLabel = computed(
+    () => this.ariaLabel()?.trim() || this.translations.navigation.applicationMenu.trim() || null,
+  );
+
+  constructor() {
+    effect(() => {
+      const items = this.items();
+      const active = this.activeIndex();
+      const hadFocus = this.host.nativeElement.contains(
+        this.host.nativeElement.ownerDocument.activeElement,
+      );
+      if (items[active] && !items[active]?.disabled) {
+        if (hadFocus) this.scheduleFocus(active);
+        return;
+      }
+      const next = items.findIndex((item) => !item.disabled);
+      if (next !== active) this.activeIndex.set(next);
+      if (hadFocus && next >= 0) this.scheduleFocus(next);
+    });
+  }
 
   protected onKeydown(event: KeyboardEvent): void {
-    const delta = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
+    const rightToLeft =
+      this.platform.window?.getComputedStyle(this.host.nativeElement).direction === 'rtl';
+    const forward = rightToLeft ? -1 : 1;
+    const delta = event.key === 'ArrowRight' ? forward : event.key === 'ArrowLeft' ? -forward : 0;
     if (!delta && event.key !== 'Home' && event.key !== 'End') return;
+    const selectable = this.items()
+      .map((_, index) => index)
+      .filter((index) => !this.items()[index]?.disabled);
+    if (selectable.length === 0) return;
     event.preventDefault();
-    const items = this.items();
-    let next =
+    const current = selectable.indexOf(this.activeIndex());
+    const next =
       event.key === 'Home'
-        ? 0
+        ? selectable[0]
         : event.key === 'End'
-          ? items.length - 1
-          : (this.activeIndex() + delta + items.length) % items.length;
-    while (items[next]?.disabled && next !== this.activeIndex()) {
-      next = (next + (delta || 1) + items.length) % items.length;
-    }
+          ? selectable.at(-1)
+          : current < 0
+            ? selectable[delta > 0 ? 0 : selectable.length - 1]
+            : selectable[(current + delta + selectable.length) % selectable.length];
+    if (next === undefined) return;
     this.activeIndex.set(next);
     this.elements()[next]?.nativeElement.focus();
+  }
+
+  private scheduleFocus(index: number): void {
+    const token = ++this.focusRepairToken;
+    const host = this.host.nativeElement;
+    const document = host.ownerDocument;
+    const previousFocus = document.activeElement;
+    const focus = (): void => {
+      const currentFocus = document.activeElement;
+      const movedOutside =
+        currentFocus !== previousFocus &&
+        currentFocus !== document.body &&
+        !!currentFocus?.isConnected &&
+        !host.contains(currentFocus);
+      if (token !== this.focusRepairToken || this.activeIndex() !== index || movedOutside) return;
+      this.elements()[index]?.nativeElement.focus();
+    };
+    if (this.platform.schedule(focus) === null) focus();
   }
 }
 

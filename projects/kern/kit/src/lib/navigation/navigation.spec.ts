@@ -578,6 +578,111 @@ describe('Kern navigation', () => {
     subscription.unsubscribe();
   });
 
+  it('normalizes menubar focus for duplicate, disabled, and dynamic items', async () => {
+    const fixture = await create(KrnMenubar, {
+      items: [
+        { id: 'duplicate', label: 'Disabled', disabled: true },
+        { id: 'duplicate', label: 'Overview' },
+        { id: 'reports', label: 'Reports' },
+      ],
+      ariaLabel: '   ',
+    });
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('[role="menubar"]')?.getAttribute('aria-label')).toBeTruthy();
+    expect(element.querySelectorAll('[role="menuitem"][tabindex="0"]')).toHaveLength(1);
+    expect(element.querySelector('[role="menuitem"][tabindex="0"]')?.textContent?.trim()).toBe(
+      'Overview',
+    );
+    element.querySelector<HTMLElement>('[role="menuitem"][tabindex="0"]')?.focus();
+
+    fixture.componentRef.setInput('items', [
+      { id: 'duplicate', label: 'Disabled', disabled: true },
+      { id: 'duplicate', label: 'Overview', href: '/overview' },
+      { id: 'reports', label: 'Reports' },
+    ]);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+    const linkedOverview = element.querySelector<HTMLElement>('[role="menuitem"][tabindex="0"]');
+    expect(linkedOverview?.tagName).toBe('A');
+    expect(document.activeElement).toBe(linkedOverview);
+
+    fixture.componentRef.setInput('items', [
+      { id: 'first', label: 'First' },
+      { id: 'overview', label: 'Overview', disabled: true },
+      { id: 'reports', label: 'Reports' },
+    ]);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(element.querySelector('[role="menuitem"][tabindex="0"]')?.textContent?.trim()).toBe(
+      'First',
+    );
+    expect(document.activeElement?.textContent?.trim()).toBe('First');
+  });
+
+  it('does not steal focus that leaves during a scheduled menubar repair', async () => {
+    const fixture = await create(KrnMenubar, {
+      items: [{ id: 'overview', label: 'Overview' }],
+    });
+    const element = fixture.nativeElement as HTMLElement;
+    element.querySelector<HTMLElement>('[role="menuitem"]')?.focus();
+    const external = document.createElement('button');
+    external.textContent = 'External';
+    document.body.append(external);
+
+    try {
+      fixture.componentRef.setInput('items', [
+        { id: 'overview', label: 'Overview', href: '/overview' },
+      ]);
+      fixture.detectChanges();
+      external.focus();
+      await fixture.whenStable();
+      await new Promise((resolve) => setTimeout(resolve));
+
+      expect(document.activeElement).toBe(external);
+    } finally {
+      external.remove();
+    }
+  });
+
+  it('uses RTL-aware menubar arrows and finds enabled Home and End items', async () => {
+    const fixture = await create(KrnMenubar, {
+      items: [
+        { id: 'overview', label: 'Overview' },
+        { id: 'reports', label: 'Reports' },
+        { id: 'disabled-tail', label: 'Disabled tail', disabled: true },
+      ],
+    });
+    const element = fixture.nativeElement as HTMLElement;
+    element.style.direction = 'rtl';
+    const menubar = element.querySelector<HTMLElement>('[role="menubar"]')!;
+    const items = element.querySelectorAll<HTMLElement>('[role="menuitem"]');
+    items[1]?.focus();
+
+    items[1]?.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+    fixture.detectChanges();
+    expect(document.activeElement).toBe(items[1]);
+
+    items[1]?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    fixture.detectChanges();
+    expect(document.activeElement).toBe(items[0]);
+
+    fixture.componentRef.setInput('items', []);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const emptyArrow = new KeyboardEvent('keydown', {
+      key: 'ArrowRight',
+      bubbles: true,
+      cancelable: true,
+    });
+    menubar.dispatchEvent(emptyArrow);
+    expect(emptyArrow.defaultPrevented).toBe(false);
+  });
+
   it('keeps table-of-contents and skip-link anchors on the current route', async () => {
     const originalUrl = `${location.pathname}${location.search}${location.hash}`;
     history.pushState({}, '', '/components/table-of-contents?theme=dark');
