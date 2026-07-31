@@ -73,7 +73,7 @@
       "@kern-ui/angular/patterns",
       "@kern-ui/angular/testing"
     ],
-    "sourceDigest": "sha256-11a758f06660db3338f2b04bfdde127f0e1cfd53e8228800a0633bc67dcfa232"
+    "sourceDigest": "sha256-fe69b5a753bff3fd82fdcccf9ca915d1b22e468c1acaae7fae27ce680de94691"
   },
   "components": [
     {
@@ -3426,8 +3426,8 @@
           "type": "\"auto\" | number",
           "required": false,
           "defaultValue": "'auto'",
-          "description": "Typed column definitions with stable keys.",
-          "descriptionSource": "inferred"
+          "description": "Fixed column count clamped to 1–12, or `auto` for fluid auto-fit columns.",
+          "descriptionSource": "source"
         },
         {
           "name": "minColumnWidth",
@@ -3436,8 +3436,8 @@
           "type": "KrnLayoutSpace",
           "required": false,
           "defaultValue": "'16rem'",
-          "description": "Upper or lower bound applied to the column width value.",
-          "descriptionSource": "inferred"
+          "description": "Minimum fluid column width used when columns is `auto`.",
+          "descriptionSource": "source"
         },
         {
           "name": "gap",
@@ -3446,8 +3446,8 @@
           "type": "KrnLayoutSpace",
           "required": false,
           "defaultValue": "'4'",
-          "description": "Logical spacing inserted between adjacent layout children.",
-          "descriptionSource": "inferred"
+          "description": "Logical spacing between rows and columns.",
+          "descriptionSource": "source"
         },
         {
           "name": "align",
@@ -3456,8 +3456,8 @@
           "type": "KrnLayoutAlignment",
           "required": false,
           "defaultValue": "'stretch'",
-          "description": "Logical cross-axis alignment applied to children by the layout.",
-          "descriptionSource": "inferred"
+          "description": "Block-axis alignment of items within their grid areas.",
+          "descriptionSource": "source"
         },
         {
           "name": "responsive",
@@ -3466,8 +3466,8 @@
           "type": "boolean",
           "required": false,
           "defaultValue": "true",
-          "description": "Enables the component’s documented container-responsive presentation.",
-          "descriptionSource": "inferred"
+          "description": "Collapses fixed columns below the component-owned 36rem container boundary.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [
@@ -3804,11 +3804,11 @@
           "name": "ratio",
           "property": "ratio",
           "kind": "input",
-          "type": "string",
+          "type": "KrnSplitRatio",
           "required": false,
           "defaultValue": "'1:1'",
-          "description": "Required width-to-height ratio maintained by the layout.",
-          "descriptionSource": "inferred"
+          "description": "Sets the relative primary-to-secondary track sizes. Accepts presets, `3:2`, or `3fr 2fr`.",
+          "descriptionSource": "source"
         },
         {
           "name": "gap",
@@ -3817,8 +3817,8 @@
           "type": "KrnLayoutSpace",
           "required": false,
           "defaultValue": "'6'",
-          "description": "Logical spacing inserted between adjacent layout children.",
-          "descriptionSource": "inferred"
+          "description": "Sets the space between the two panels using a spacing token, number of pixels, or CSS length.",
+          "descriptionSource": "source"
         },
         {
           "name": "collapseAt",
@@ -3827,18 +3827,8 @@
           "type": "KrnResponsiveBreakpoint",
           "required": false,
           "defaultValue": "'md'",
-          "description": "Controls whether the component applies the collapse at behavior.",
-          "descriptionSource": "inferred"
-        },
-        {
-          "name": "reverseCollapsed",
-          "property": "reverseCollapsed",
-          "kind": "input",
-          "type": "boolean",
-          "required": false,
-          "defaultValue": "false",
-          "description": "Collapses the logical end panel instead of the logical start panel.",
-          "descriptionSource": "inferred"
+          "description": "Stacks the panels when the split layout's inline size reaches the selected breakpoint.",
+          "descriptionSource": "source"
         },
         {
           "name": "align",
@@ -3847,8 +3837,8 @@
           "type": "\"center\" | \"end\" | \"start\" | \"stretch\"",
           "required": false,
           "defaultValue": "'start'",
-          "description": "Logical cross-axis alignment applied to children by the layout.",
-          "descriptionSource": "inferred"
+          "description": "Aligns the panels within the split layout's block axis.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [
@@ -3914,7 +3904,6 @@
         "ratio",
         "gap",
         "collapseAt",
-        "reverseCollapsed",
         "align"
       ],
       "guidance": {
@@ -3943,19 +3932,6 @@
         "route": "preview/split-layout",
         "scenarios": ["default"],
         "controls": [
-          {
-            "key": "reverseCollapsed",
-            "label": "Reverse when collapsed",
-            "kind": "boolean",
-            "defaultValue": false,
-            "testValue": true,
-            "description": "Reverses pane order after the layout collapses.",
-            "binding": {
-              "kind": "input",
-              "publicName": "reverseCollapsed",
-              "syntax": "property"
-            }
-          },
           {
             "key": "ratio",
             "label": "Ratio",
@@ -4145,8 +4121,8 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 5,
-          "controlled": 5,
+          "publicInputsAndModels": 4,
+          "controlled": 4,
           "excluded": 0,
           "unclassified": 0
         },
@@ -4715,8 +4691,8 @@
           "type": "\"horizontal\" | \"vertical\"",
           "required": false,
           "defaultValue": "'horizontal'",
-          "description": "Defines the logical axis used by layout and keyboard navigation.",
-          "descriptionSource": "inferred"
+          "description": "Sets the separator and visual line orientation. Invalid runtime values fall back to horizontal.",
+          "descriptionSource": "source"
         },
         {
           "name": "inset",
@@ -4725,8 +4701,8 @@
           "type": "KrnLayoutSpace",
           "required": false,
           "defaultValue": "'0'",
-          "description": "Aligns the divider or content edge with surrounding inset content.",
-          "descriptionSource": "inferred"
+          "description": "Insets both ends of the divider along its length using a spacing token, pixels, or CSS length.",
+          "descriptionSource": "source"
         },
         {
           "name": "label",
@@ -4735,8 +4711,8 @@
           "type": "string | null",
           "required": false,
           "defaultValue": "null",
-          "description": "Visible text that names the control or data value.",
-          "descriptionSource": "inferred"
+          "description": "Adds a visible label and uses its trimmed text as the separator's accessible name.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [],
@@ -4974,8 +4950,8 @@
           "type": "number | string",
           "required": false,
           "defaultValue": "16 / 9",
-          "description": "Required width-to-height ratio maintained by the layout.",
-          "descriptionSource": "inferred"
+          "description": "Sets a positive width-to-height ratio as a number, `16 / 9`, or `16:9`.",
+          "descriptionSource": "source"
         },
         {
           "name": "fit",
@@ -4984,8 +4960,8 @@
           "type": "\"contain\" | \"cover\" | \"fill\" | \"none\"",
           "required": false,
           "defaultValue": "'cover'",
-          "description": "Media fitting strategy used when intrinsic and container ratios differ.",
-          "descriptionSource": "inferred"
+          "description": "Controls how direct projected media fills the ratio box. Invalid runtime values use cover.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [
@@ -5233,8 +5209,8 @@
           "type": "\"both\" | \"horizontal\" | \"vertical\"",
           "required": false,
           "defaultValue": "'vertical'",
-          "description": "Chart axis represented by the data series and keyboard movement.",
-          "descriptionSource": "inferred"
+          "description": "Selects the scrollable axis. Invalid runtime values fall back to vertical.",
+          "descriptionSource": "source"
         },
         {
           "name": "maxBlockSize",
@@ -5263,8 +5239,8 @@
           "type": "boolean",
           "required": false,
           "defaultValue": "true",
-          "description": "Confirms that the custom rendered action participates in keyboard interaction.",
-          "descriptionSource": "inferred"
+          "description": "Keeps the native viewport keyboard-scrollable when enabled.",
+          "descriptionSource": "source"
         },
         {
           "name": "ariaLabel",
@@ -5273,8 +5249,8 @@
           "type": "string | null",
           "required": false,
           "defaultValue": "this.translations.layout.scrollableContent",
-          "description": "Accessible name used when visible content is not sufficient.",
-          "descriptionSource": "inferred"
+          "description": "Names the scrollable region. Blank values omit the region role and accessible name.",
+          "descriptionSource": "source"
         },
         {
           "name": "scrollbar",
@@ -5283,8 +5259,8 @@
           "type": "\"auto\" | \"hidden\" | \"stable\"",
           "required": false,
           "defaultValue": "'auto'",
-          "description": "Controls whether the scroll area uses native or visually hidden scrollbars.",
-          "descriptionSource": "inferred"
+          "description": "Controls native scrollbar visibility and gutter allocation.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [
@@ -5613,8 +5589,8 @@
           "type": "KrnResponsiveBreakpoint",
           "required": false,
           "defaultValue": "'none'",
-          "description": "Starting boundary of the represented range or interval.",
-          "descriptionSource": "inferred"
+          "description": "Shows content at this viewport width and above.",
+          "descriptionSource": "source"
         },
         {
           "name": "until",
@@ -5623,8 +5599,8 @@
           "type": "KrnResponsiveBreakpoint",
           "required": false,
           "defaultValue": "'none'",
-          "description": "Ending boundary of the represented range or interval.",
-          "descriptionSource": "inferred"
+          "description": "Shows content below this viewport width.",
+          "descriptionSource": "source"
         },
         {
           "name": "display",
@@ -5633,8 +5609,8 @@
           "type": "KrnResponsiveDisplay",
           "required": false,
           "defaultValue": "'block'",
-          "description": "Named presentation strategy used to render the supplied value.",
-          "descriptionSource": "inferred"
+          "description": "Restores this display mode while the component is visible.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [
@@ -5953,8 +5929,8 @@
           "type": "KrnLayoutAxis",
           "required": false,
           "defaultValue": "'horizontal'",
-          "description": "Defines the logical axis used by layout and keyboard navigation.",
-          "descriptionSource": "inferred"
+          "description": "Sets the panel flow axis: horizontal follows inline, vertical follows block.",
+          "descriptionSource": "source"
         },
         {
           "name": "sizes",
@@ -5973,8 +5949,8 @@
           "type": "number",
           "required": false,
           "defaultValue": "2",
-          "description": "Increment applied by keyboard and pointer value adjustments.",
-          "descriptionSource": "inferred"
+          "description": "Sets the keyboard resize increment in percentage points, with a 0.25 minimum.",
+          "descriptionSource": "source"
         },
         {
           "name": "disabled",
@@ -67412,7 +67388,7 @@
       "owner": "kit",
       "importPath": "@kern-ui/angular/kit",
       "kind": "type",
-      "type": "string",
+      "type": "KrnSplitRatio",
       "deprecated": false,
       "description": "Public type owned by @kern-ui/angular/kit.",
       "source": "projects/kern/kit/src/lib/layout/split-layout.ts",
@@ -69505,6 +69481,16 @@
       "components": ["switch"],
       "before": "<krn-switch (valueChange)=\"enabled = $event\">Notifications</krn-switch>",
       "after": "<krn-switch [(checked)]=\"enabled\">Notifications</krn-switch>",
+      "automatic": false
+    },
+    {
+      "id": "split-layout-source-order",
+      "from": "KrnSplitLayout.reverseCollapsed",
+      "to": "Primary and secondary content declared in the intended reading and focus order",
+      "summary": "Remove reverseCollapsed and keep the visual panel sequence aligned with DOM, assistive-technology, and keyboard focus order. If secondary content must precede primary content, declare it as primary content and choose the matching ratio.",
+      "components": ["split-layout"],
+      "before": "<krn-split-layout reverseCollapsed>\n  <main krnSplitPrimary>Primary</main>\n  <aside krnSplitSecondary>Secondary first when stacked</aside>\n</krn-split-layout>",
+      "after": "<krn-split-layout ratio=\"1:2\">\n  <aside krnSplitPrimary>Secondary first in every reading mode</aside>\n  <main krnSplitSecondary>Primary second in every reading mode</main>\n</krn-split-layout>",
       "automatic": false
     },
     {

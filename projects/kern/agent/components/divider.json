@@ -44,8 +44,8 @@
       "type": "\"horizontal\" | \"vertical\"",
       "required": false,
       "defaultValue": "'horizontal'",
-      "description": "Defines the logical axis used by layout and keyboard navigation.",
-      "descriptionSource": "inferred"
+      "description": "Sets the separator and visual line orientation. Invalid runtime values fall back to horizontal.",
+      "descriptionSource": "source"
     },
     {
       "name": "inset",
@@ -54,8 +54,8 @@
       "type": "KrnLayoutSpace",
       "required": false,
       "defaultValue": "'0'",
-      "description": "Aligns the divider or content edge with surrounding inset content.",
-      "descriptionSource": "inferred"
+      "description": "Insets both ends of the divider along its length using a spacing token, pixels, or CSS length.",
+      "descriptionSource": "source"
     },
     {
       "name": "label",
@@ -64,8 +64,8 @@
       "type": "string | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Visible text that names the control or data value.",
-      "descriptionSource": "inferred"
+      "description": "Adds a visible label and uses its trimmed text as the separator's accessible name.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [],

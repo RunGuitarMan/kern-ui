@@ -4325,6 +4325,7 @@ declare class KrnTreeNavigation {
   private readonly treeId;
   private typeaheadBuffer;
   private typeaheadTimer;
+  private focusToken;
   readonly items: _angular_core.InputSignal<readonly KrnTreeNavigationItem[]>;
   readonly selectedId: _angular_core.ModelSignal<string | null>;
   readonly expandedIds: _angular_core.ModelSignal<readonly string[]>;
@@ -4334,6 +4335,7 @@ declare class KrnTreeNavigation {
   readonly itemSelected: _angular_core.OutputEmitterRef<KrnTreeNavigationItem>;
   /** Requests children when an unloaded item is expanded or its failed request is retried. */
   readonly loadChildren: _angular_core.OutputEmitterRef<KrnTreeNavigationItem>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   protected readonly treeItems: _angular_core.Signal<readonly KrnTreeNavigationItem[]>;
   private readonly visibleTreeItems;
   private readonly focusableTreeItems;
@@ -4358,6 +4360,7 @@ declare class KrnTreeNavigation {
   private requestChildren;
   private enabledParent;
   private focusItem;
+  private hostContains;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnTreeNavigation, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnTreeNavigation,
@@ -4386,11 +4389,19 @@ declare class KrnTreeNavigation {
 
 declare class KrnBottomNavigation {
   private readonly translations;
-  readonly items: _angular_core.InputSignal<readonly KrnNavigationItem[]>;
+  readonly items: _angular_core.InputSignalWithTransform<
+    readonly KrnNavigationItem[],
+    readonly KrnNavigationItem[]
+  >;
   readonly value: _angular_core.ModelSignal<string | null>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly itemSelected: _angular_core.OutputEmitterRef<KrnNavigationItem>;
+  protected readonly columnCount: _angular_core.Signal<number>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
+  constructor();
   protected select(item: KrnNavigationItem): void;
+  protected badgeText(badge: string | number): string;
+  protected badgeAriaLabel(badge: string | number): string;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnBottomNavigation, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnBottomNavigation,
@@ -4411,12 +4422,17 @@ declare class KrnBottomNavigation {
 declare class KrnTableOfContents {
   private readonly platform;
   private readonly translations;
-  readonly items: _angular_core.InputSignal<readonly KrnTocItem[]>;
+  readonly items: _angular_core.InputSignalWithTransform<
+    readonly KrnTocItem[],
+    readonly KrnTocItem[]
+  >;
   readonly activeId: _angular_core.ModelSignal<string | null>;
   readonly observe: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly title: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly itemActivated: _angular_core.OutputEmitterRef<KrnTocItem>;
+  protected readonly resolvedTitle: _angular_core.Signal<string | null>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
   constructor();
   protected anchorHref(id: string): string;
   protected activate(event: MouseEvent, item: KrnTocItem): void;
@@ -4445,6 +4461,9 @@ declare class KrnBackButton {
   readonly href: _angular_core.InputSignal<string | null>;
   readonly label: _angular_core.InputSignal<string>;
   readonly activated: _angular_core.OutputEmitterRef<void>;
+  protected readonly resolvedHref: _angular_core.Signal<string | null>;
+  protected readonly resolvedLabel: _angular_core.Signal<string>;
+  protected activateLink(event: MouseEvent): void;
   protected goBack(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnBackButton, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
@@ -4468,6 +4487,8 @@ declare class KrnSkipLink {
   readonly targetId: _angular_core.InputSignal<string>;
   readonly label: _angular_core.InputSignal<string>;
   readonly activated: _angular_core.OutputEmitterRef<void>;
+  protected readonly resolvedTargetId: _angular_core.Signal<string>;
+  protected readonly resolvedLabel: _angular_core.Signal<string>;
   protected href(): string;
   protected activate(event: MouseEvent): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnSkipLink, never>;
@@ -4507,7 +4528,11 @@ declare class KrnCommandPalette {
   private readonly host;
   private readonly translations;
   private readonly panel;
-  readonly items: _angular_core.InputSignal<readonly KrnCommandItem[]>;
+  private readonly options;
+  readonly items: _angular_core.InputSignalWithTransform<
+    readonly KrnCommandItem[],
+    readonly KrnCommandItem[]
+  >;
   readonly open: _angular_core.ModelSignal<boolean>;
   readonly query: _angular_core.ModelSignal<string>;
   readonly title: _angular_core.InputSignal<string>;
@@ -4525,6 +4550,11 @@ declare class KrnCommandPalette {
   protected readonly headingId: string;
   protected readonly descriptionId: string;
   protected readonly resultsId: string;
+  protected readonly resolvedTitle: _angular_core.Signal<string>;
+  protected readonly resolvedDescription: _angular_core.Signal<string | null>;
+  protected readonly resolvedPlaceholder: _angular_core.Signal<string>;
+  protected readonly resolvedResultsLabel: _angular_core.Signal<string>;
+  protected readonly resolvedCloseShortcut: _angular_core.Signal<string>;
   protected readonly resolvedLabels: _angular_core.Signal<KrnCommandPaletteLabels>;
   protected readonly noResultsMessage: _angular_core.Signal<string>;
   protected readonly filteredItems: _angular_core.Signal<KrnCommandItem[]>;
@@ -4535,6 +4565,7 @@ declare class KrnCommandPalette {
   protected choose(item: KrnCommandItem): void;
   protected close(reason: 'escape' | 'outside' | 'selection'): void;
   protected onKeydown(event: KeyboardEvent): void;
+  private setActiveIndex;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnCommandPalette, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnCommandPalette,

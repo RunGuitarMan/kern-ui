@@ -44,8 +44,8 @@
       "type": "KrnResponsiveBreakpoint",
       "required": false,
       "defaultValue": "'none'",
-      "description": "Starting boundary of the represented range or interval.",
-      "descriptionSource": "inferred"
+      "description": "Shows content at this viewport width and above.",
+      "descriptionSource": "source"
     },
     {
       "name": "until",
@@ -54,8 +54,8 @@
       "type": "KrnResponsiveBreakpoint",
       "required": false,
       "defaultValue": "'none'",
-      "description": "Ending boundary of the represented range or interval.",
-      "descriptionSource": "inferred"
+      "description": "Shows content below this viewport width.",
+      "descriptionSource": "source"
     },
     {
       "name": "display",
@@ -64,8 +64,8 @@
       "type": "KrnResponsiveDisplay",
       "required": false,
       "defaultValue": "'block'",
-      "description": "Named presentation strategy used to render the supplied value.",
-      "descriptionSource": "inferred"
+      "description": "Restores this display mode while the component is visible.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [

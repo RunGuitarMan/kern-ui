@@ -47,11 +47,11 @@ void bootstrapApplication(KernResponsiveShowHideAgentExample);
 
 ## API
 
-| Name      | Kind  | Type                      | Required | Default   | Description                                                    |
-| --------- | ----- | ------------------------- | -------- | --------- | -------------------------------------------------------------- |
-| `from`    | input | `KrnResponsiveBreakpoint` | no       | `'none'`  | Starting boundary of the represented range or interval.        |
-| `until`   | input | `KrnResponsiveBreakpoint` | no       | `'none'`  | Ending boundary of the represented range or interval.          |
-| `display` | input | `KrnResponsiveDisplay`    | no       | `'block'` | Named presentation strategy used to render the supplied value. |
+| Name      | Kind  | Type                      | Required | Default   | Description                                                |
+| --------- | ----- | ------------------------- | -------- | --------- | ---------------------------------------------------------- |
+| `from`    | input | `KrnResponsiveBreakpoint` | no       | `'none'`  | Shows content at this viewport width and above.            |
+| `until`   | input | `KrnResponsiveBreakpoint` | no       | `'none'`  | Shows content below this viewport width.                   |
+| `display` | input | `KrnResponsiveDisplay`    | no       | `'block'` | Restores this display mode while the component is visible. |
 
 ## Deprecated selectors
 

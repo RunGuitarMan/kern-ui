@@ -44,8 +44,8 @@
       "type": "number | string",
       "required": false,
       "defaultValue": "16 / 9",
-      "description": "Required width-to-height ratio maintained by the layout.",
-      "descriptionSource": "inferred"
+      "description": "Sets a positive width-to-height ratio as a number, `16 / 9`, or `16:9`.",
+      "descriptionSource": "source"
     },
     {
       "name": "fit",
@@ -54,8 +54,8 @@
       "type": "\"contain\" | \"cover\" | \"fill\" | \"none\"",
       "required": false,
       "defaultValue": "'cover'",
-      "description": "Media fitting strategy used when intrinsic and container ratios differ.",
-      "descriptionSource": "inferred"
+      "description": "Controls how direct projected media fills the ratio box. Invalid runtime values use cover.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [

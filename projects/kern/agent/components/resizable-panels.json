@@ -61,8 +61,8 @@
       "type": "KrnLayoutAxis",
       "required": false,
       "defaultValue": "'horizontal'",
-      "description": "Defines the logical axis used by layout and keyboard navigation.",
-      "descriptionSource": "inferred"
+      "description": "Sets the panel flow axis: horizontal follows inline, vertical follows block.",
+      "descriptionSource": "source"
     },
     {
       "name": "sizes",
@@ -81,8 +81,8 @@
       "type": "number",
       "required": false,
       "defaultValue": "2",
-      "description": "Increment applied by keyboard and pointer value adjustments.",
-      "descriptionSource": "inferred"
+      "description": "Sets the keyboard resize increment in percentage points, with a 0.25 minimum.",
+      "descriptionSource": "source"
     },
     {
       "name": "disabled",

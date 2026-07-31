@@ -47,10 +47,10 @@ void bootstrapApplication(KernAspectRatioAgentExample);
 
 ## API
 
-| Name    | Kind  | Type                                       | Required | Default   | Description                                                             |
-| ------- | ----- | ------------------------------------------ | -------- | --------- | ----------------------------------------------------------------------- |
-| `ratio` | input | `number \| string`                         | no       | `16 / 9`  | Required width-to-height ratio maintained by the layout.                |
-| `fit`   | input | `"contain" \| "cover" \| "fill" \| "none"` | no       | `'cover'` | Media fitting strategy used when intrinsic and container ratios differ. |
+| Name    | Kind  | Type                                       | Required | Default   | Description                                                                                |
+| ------- | ----- | ------------------------------------------ | -------- | --------- | ------------------------------------------------------------------------------------------ |
+| `ratio` | input | `number \| string`                         | no       | `16 / 9`  | Sets a positive width-to-height ratio as a number, `16 / 9`, or `16:9`.                    |
+| `fit`   | input | `"contain" \| "cover" \| "fill" \| "none"` | no       | `'cover'` | Controls how direct projected media fills the ratio box. Invalid runtime values use cover. |
 
 ## Deprecated selectors
 

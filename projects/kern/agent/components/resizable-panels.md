@@ -55,13 +55,13 @@ void bootstrapApplication(KernResizablePanelsAgentExample);
 
 ## API
 
-| Name          | Kind   | Type                    | Required | Default        | Description                                                                |
-| ------------- | ------ | ----------------------- | -------- | -------------- | -------------------------------------------------------------------------- |
-| `orientation` | input  | `KrnLayoutAxis`         | no       | `'horizontal'` | Defines the logical axis used by layout and keyboard navigation.           |
-| `sizes`       | model  | `ReadonlyArray<number>` | no       | `[]`           | Controlled sizes state with a matching Angular model-change output.        |
-| `step`        | input  | `number`                | no       | `2`            | Increment applied by keyboard and pointer value adjustments.               |
-| `disabled`    | input  | `boolean`               | no       | `false`        | Prevents user interaction and participates in the disabled-state contract. |
-| `resizeEnd`   | output | `ReadonlyArray<number>` | no       | `undefined`    | Notifies the consumer after the resize end interaction completes.          |
+| Name          | Kind   | Type                    | Required | Default        | Description                                                                   |
+| ------------- | ------ | ----------------------- | -------- | -------------- | ----------------------------------------------------------------------------- |
+| `orientation` | input  | `KrnLayoutAxis`         | no       | `'horizontal'` | Sets the panel flow axis: horizontal follows inline, vertical follows block.  |
+| `sizes`       | model  | `ReadonlyArray<number>` | no       | `[]`           | Controlled sizes state with a matching Angular model-change output.           |
+| `step`        | input  | `number`                | no       | `2`            | Sets the keyboard resize increment in percentage points, with a 0.25 minimum. |
+| `disabled`    | input  | `boolean`               | no       | `false`        | Prevents user interaction and participates in the disabled-state contract.    |
+| `resizeEnd`   | output | `ReadonlyArray<number>` | no       | `undefined`    | Notifies the consumer after the resize end interaction completes.             |
 
 ## Deprecated selectors
 

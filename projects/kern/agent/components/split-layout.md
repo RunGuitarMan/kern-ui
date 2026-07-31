@@ -51,13 +51,12 @@ void bootstrapApplication(KernSplitLayoutAgentExample);
 
 ## API
 
-| Name               | Kind  | Type                                        | Required | Default   | Description                                                         |
-| ------------------ | ----- | ------------------------------------------- | -------- | --------- | ------------------------------------------------------------------- |
-| `ratio`            | input | `string`                                    | no       | `'1:1'`   | Required width-to-height ratio maintained by the layout.            |
-| `gap`              | input | `KrnLayoutSpace`                            | no       | `'6'`     | Logical spacing inserted between adjacent layout children.          |
-| `collapseAt`       | input | `KrnResponsiveBreakpoint`                   | no       | `'md'`    | Controls whether the component applies the collapse at behavior.    |
-| `reverseCollapsed` | input | `boolean`                                   | no       | `false`   | Collapses the logical end panel instead of the logical start panel. |
-| `align`            | input | `"center" \| "end" \| "start" \| "stretch"` | no       | `'start'` | Logical cross-axis alignment applied to children by the layout.     |
+| Name         | Kind  | Type                                        | Required | Default   | Description                                                                                   |
+| ------------ | ----- | ------------------------------------------- | -------- | --------- | --------------------------------------------------------------------------------------------- |
+| `ratio`      | input | `KrnSplitRatio`                             | no       | `'1:1'`   | Sets the relative primary-to-secondary track sizes. Accepts presets, `3:2`, or `3fr 2fr`.     |
+| `gap`        | input | `KrnLayoutSpace`                            | no       | `'6'`     | Sets the space between the two panels using a spacing token, number of pixels, or CSS length. |
+| `collapseAt` | input | `KrnResponsiveBreakpoint`                   | no       | `'md'`    | Stacks the panels when the split layout's inline size reaches the selected breakpoint.        |
+| `align`      | input | `"center" \| "end" \| "start" \| "stretch"` | no       | `'start'` | Aligns the panels within the split layout's block axis.                                       |
 
 ## Deprecated selectors
 
@@ -105,20 +104,19 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/split-layout`
 
 Scenarios: `default`.
-Public API coverage: 5/5
+Public API coverage: 4/4
 directly controlled; 0 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument           | Control | Default   | Test value | Binding                             | Description                                     |
-| ------------------ | ------- | --------- | ---------- | ----------------------------------- | ----------------------------------------------- |
-| `reverseCollapsed` | boolean | `false`   | `true`     | input `reverseCollapsed` (property) | Reverses pane order after the layout collapses. |
-| `ratio`            | select  | `"1:2"`   | `"1:1"`    | input `ratio` (property)            | Changes the primary-to-secondary pane ratio.    |
-| `gap`              | text    | `"4"`     | `"20rem"`  | input `gap` (property)              | Sets the separation between panes.              |
-| `align`            | select  | `"start"` | `"center"` | input `align` (property)            | Configures the component align contract.        |
-| `collapseAt`       | select  | `"md"`    | `"none"`   | input `collapseAt` (property)       | Configures the component collapseAt contract.   |
+| Argument     | Control | Default   | Test value | Binding                       | Description                                   |
+| ------------ | ------- | --------- | ---------- | ----------------------------- | --------------------------------------------- |
+| `ratio`      | select  | `"1:2"`   | `"1:1"`    | input `ratio` (property)      | Changes the primary-to-secondary pane ratio.  |
+| `gap`        | text    | `"4"`     | `"20rem"`  | input `gap` (property)        | Sets the separation between panes.            |
+| `align`      | select  | `"start"` | `"center"` | input `align` (property)      | Configures the component align contract.      |
+| `collapseAt` | select  | `"md"`    | `"none"`   | input `collapseAt` (property) | Configures the component collapseAt contract. |
 
 Exact API exclusions:
 

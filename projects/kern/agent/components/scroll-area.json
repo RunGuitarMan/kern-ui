@@ -53,8 +53,8 @@
       "type": "\"both\" | \"horizontal\" | \"vertical\"",
       "required": false,
       "defaultValue": "'vertical'",
-      "description": "Chart axis represented by the data series and keyboard movement.",
-      "descriptionSource": "inferred"
+      "description": "Selects the scrollable axis. Invalid runtime values fall back to vertical.",
+      "descriptionSource": "source"
     },
     {
       "name": "maxBlockSize",
@@ -83,8 +83,8 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "true",
-      "description": "Confirms that the custom rendered action participates in keyboard interaction.",
-      "descriptionSource": "inferred"
+      "description": "Keeps the native viewport keyboard-scrollable when enabled.",
+      "descriptionSource": "source"
     },
     {
       "name": "ariaLabel",
@@ -93,8 +93,8 @@
       "type": "string | null",
       "required": false,
       "defaultValue": "this.translations.layout.scrollableContent",
-      "description": "Accessible name used when visible content is not sufficient.",
-      "descriptionSource": "inferred"
+      "description": "Names the scrollable region. Blank values omit the region role and accessible name.",
+      "descriptionSource": "source"
     },
     {
       "name": "scrollbar",
@@ -103,8 +103,8 @@
       "type": "\"auto\" | \"hidden\" | \"stable\"",
       "required": false,
       "defaultValue": "'auto'",
-      "description": "Controls whether the scroll area uses native or visually hidden scrollbars.",
-      "descriptionSource": "inferred"
+      "description": "Controls native scrollbar visibility and gutter allocation.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [

@@ -43,11 +43,11 @@ void bootstrapApplication(KernDividerAgentExample);
 
 ## API
 
-| Name          | Kind  | Type                         | Required | Default        | Description                                                        |
-| ------------- | ----- | ---------------------------- | -------- | -------------- | ------------------------------------------------------------------ |
-| `orientation` | input | `"horizontal" \| "vertical"` | no       | `'horizontal'` | Defines the logical axis used by layout and keyboard navigation.   |
-| `inset`       | input | `KrnLayoutSpace`             | no       | `'0'`          | Aligns the divider or content edge with surrounding inset content. |
-| `label`       | input | `string \| null`             | no       | `null`         | Visible text that names the control or data value.                 |
+| Name          | Kind  | Type                         | Required | Default        | Description                                                                                     |
+| ------------- | ----- | ---------------------------- | -------- | -------------- | ----------------------------------------------------------------------------------------------- |
+| `orientation` | input | `"horizontal" \| "vertical"` | no       | `'horizontal'` | Sets the separator and visual line orientation. Invalid runtime values fall back to horizontal. |
+| `inset`       | input | `KrnLayoutSpace`             | no       | `'0'`          | Insets both ends of the divider along its length using a spacing token, pixels, or CSS length.  |
+| `label`       | input | `string \| null`             | no       | `null`         | Adds a visible label and uses its trimmed text as the separator's accessible name.              |
 
 ## Deprecated selectors
 

@@ -53,8 +53,8 @@
       "type": "\"auto\" | number",
       "required": false,
       "defaultValue": "'auto'",
-      "description": "Typed column definitions with stable keys.",
-      "descriptionSource": "inferred"
+      "description": "Fixed column count clamped to 1–12, or `auto` for fluid auto-fit columns.",
+      "descriptionSource": "source"
     },
     {
       "name": "minColumnWidth",
@@ -63,8 +63,8 @@
       "type": "KrnLayoutSpace",
       "required": false,
       "defaultValue": "'16rem'",
-      "description": "Upper or lower bound applied to the column width value.",
-      "descriptionSource": "inferred"
+      "description": "Minimum fluid column width used when columns is `auto`.",
+      "descriptionSource": "source"
     },
     {
       "name": "gap",
@@ -73,8 +73,8 @@
       "type": "KrnLayoutSpace",
       "required": false,
       "defaultValue": "'4'",
-      "description": "Logical spacing inserted between adjacent layout children.",
-      "descriptionSource": "inferred"
+      "description": "Logical spacing between rows and columns.",
+      "descriptionSource": "source"
     },
     {
       "name": "align",
@@ -83,8 +83,8 @@
       "type": "KrnLayoutAlignment",
       "required": false,
       "defaultValue": "'stretch'",
-      "description": "Logical cross-axis alignment applied to children by the layout.",
-      "descriptionSource": "inferred"
+      "description": "Block-axis alignment of items within their grid areas.",
+      "descriptionSource": "source"
     },
     {
       "name": "responsive",
@@ -93,8 +93,8 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "true",
-      "description": "Enables the component’s documented container-responsive presentation.",
-      "descriptionSource": "inferred"
+      "description": "Collapses fixed columns below the component-owned 36rem container boundary.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [
