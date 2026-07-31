@@ -60,6 +60,13 @@ contract or upgrade decision.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned
   Popover/Hover Card semantics with disclosure and non-modal preview behavior.
 - Removed duplicate state-change outputs where signal models already provide the canonical event.
+- Rebuilt Form Field as a control-owned label/description coordinator: registered controls now
+  supply identity and Angular state, full control events drive pending/valid/disabled presentation,
+  projected labels replace shorthand labels without duplication, every primary control is named by
+  the mounted visible field label, self-labelled controls compose both visible names, and composite
+  controls delegate label focus. Deterministic live DOM-first ownership prevents duplicate ids,
+  pristine Angular errors stay visually neutral until interaction, and `aria-describedby`
+  deduplicates manual ids with mounted hints and errors.
 - Strengthened Text Input with deterministic standalone `value` ownership, IME-safe and
   duplicate-free updates, composable ARIA references, validated length constraints, and public
   native focus, blur, and selection methods.
@@ -130,6 +137,9 @@ contract or upgrade decision.
 
 ### Removed
 
+- Removed the pre-1.0 Form Field control-state proxies (`id`, `required`, `disabled`, `readonly`,
+  and `state`). Keep those semantics on the projected control or its Angular `FormControl`; use
+  the `form-field-control-owned-state` migration recipe.
 - Removed the pre-1.0 `KrnSwitch.valueChange` output; use `(checkedChange)` or `[(checked)]`
   through the `switch-checked-output` migration recipe.
 

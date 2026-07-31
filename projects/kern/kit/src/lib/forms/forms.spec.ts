@@ -81,6 +81,10 @@ describe('Kern form controls', () => {
     const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
 
     expect(input.required).toBe(true);
+    expect(input.getAttribute('aria-invalid')).toBe('false');
+
+    fixture.componentInstance.control.markAsTouched();
+    await fixture.whenStable();
     expect(input.getAttribute('aria-invalid')).toBe('true');
 
     fixture.componentInstance.control.setValue('Enterprise');
@@ -111,10 +115,16 @@ describe('Kern form controls', () => {
     const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
 
     expect(field.getAttribute('data-required')).toBe('true');
-    expect(field.getAttribute('data-invalid')).toBe('true');
+    expect(field.getAttribute('data-invalid')).toBe('false');
+    expect(field.getAttribute('data-state')).toBe('default');
     expect(field.querySelector('.krn-required')).not.toBeNull();
     expect(field.querySelector('.krn-optional')).toBeNull();
     expect(input.required).toBe(true);
+    expect(input.getAttribute('aria-invalid')).toBe('false');
+
+    fixture.componentInstance.control.markAsTouched();
+    await fixture.whenStable();
+    expect(field.getAttribute('data-invalid')).toBe('true');
     expect(input.getAttribute('aria-invalid')).toBe('true');
 
     fixture.componentInstance.control.setValue('Enterprise');
@@ -133,21 +143,19 @@ describe('Kern form controls', () => {
 
   it('clears invalid form-field semantics when the value becomes valid', async () => {
     @Component({
-      imports: [KrnFormField, KrnTextInput],
+      imports: [KrnFormField, KrnTextInput, ReactiveFormsModule],
       template: `
-        <krn-form-field
-          id="workspace-name"
-          label="Workspace name"
-          [error]="error()"
-          [state]="state()"
-        >
-          <krn-text-input />
+        <krn-form-field id="workspace-field" label="Workspace name" [error]="error()">
+          <krn-text-input id="workspace-name" required [formControl]="control" />
         </krn-form-field>
       `,
     })
     class FormFieldHost {
       readonly error = signal('Use 3–48 characters.');
-      readonly state = signal<'default' | 'invalid' | 'valid' | 'pending'>('invalid');
+      readonly control = new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      });
     }
 
     const fixture = TestBed.createComponent(FormFieldHost);
@@ -155,13 +163,15 @@ describe('Kern form controls', () => {
     const field = fixture.nativeElement.querySelector('krn-form-field') as HTMLElement;
     const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
     expect(field.getAttribute('data-invalid')).toBe('true');
-    expect(field.hasAttribute('id')).toBe(false);
+    expect(field.id).toBe('workspace-field');
     expect(input.id).toBe('workspace-name');
     expect(input.getAttribute('aria-invalid')).toBe('true');
+    expect(field.querySelector('.krn-message--error')?.getAttribute('aria-live')).toBe('polite');
+    expect(field.querySelector('.krn-message--error')?.hasAttribute('role')).toBe(false);
 
     fixture.componentInstance.error.set('');
-    fixture.componentInstance.state.set('valid');
-    fixture.detectChanges();
+    fixture.componentInstance.control.setValue('Enterprise');
+    fixture.componentInstance.control.markAsTouched();
     await fixture.whenStable();
 
     expect(field.getAttribute('data-invalid')).toBe('false');
@@ -174,8 +184,8 @@ describe('Kern form controls', () => {
     @Component({
       imports: [KrnFormField, KrnHint, KrnTextInput, KrnValidationMessage],
       template: `
-        <krn-form-field id="project-name" label="Project name">
-          <krn-text-input />
+        <krn-form-field label="Project name">
+          <krn-text-input id="project-name" />
           <krn-hint id="project-name-guidance">Use a recognizable name.</krn-hint>
           @if (showError()) {
             <krn-validation-message id="project-name-conflict">
@@ -214,24 +224,24 @@ describe('Kern form controls', () => {
     expect(input.getAttribute('aria-invalid')).toBe('false');
   });
 
-  it('propagates form-field state and intrinsic constraints to Angular Forms', async () => {
+  it('derives form-field state from the registered control and Angular Forms', async () => {
     @Component({
       imports: [KrnFormField, KrnTextInput, ReactiveFormsModule],
       template: `
-        <krn-form-field
-          id="account-name"
-          required
-          [disabled]="fieldDisabled()"
-          [readonly]="fieldReadOnly()"
-        >
-          <krn-text-input [formControl]="control" [minLength]="minimum()" />
+        <krn-form-field>
+          <krn-text-input
+            id="account-name"
+            required
+            [readonly]="fieldReadOnly()"
+            [formControl]="control"
+            [minLength]="minimum()"
+          />
         </krn-form-field>
       `,
     })
     class FormContractHost {
       readonly control = new FormControl('', { nonNullable: true });
       readonly minimum = signal(3);
-      readonly fieldDisabled = signal(false);
       readonly fieldReadOnly = signal(false);
     }
 
@@ -260,10 +270,15 @@ describe('Kern form controls', () => {
     });
 
     host.fieldReadOnly.set(true);
-    host.fieldDisabled.set(true);
+    host.control.disable();
     await fixture.whenStable();
     expect(input.readOnly).toBe(true);
     expect(input.disabled).toBe(true);
+    expect(
+      (fixture.nativeElement.querySelector('krn-form-field') as HTMLElement).getAttribute(
+        'data-disabled',
+      ),
+    ).toBe('true');
   });
 
   it('exposes an explicit textarea limit and keeps its counter in sync', async () => {
@@ -430,8 +445,8 @@ describe('Kern form controls', () => {
         ReactiveFormsModule,
       ],
       template: `
-        <krn-form-field required>
-          <krn-checkbox-group [formControl]="checks">
+        <krn-form-field>
+          <krn-checkbox-group required [formControl]="checks">
             <krn-checkbox value="audit">Audit</krn-checkbox>
             <krn-checkbox value="billing">Billing</krn-checkbox>
           </krn-checkbox-group>

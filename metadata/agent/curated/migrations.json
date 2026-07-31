@@ -20,6 +20,16 @@
     "automatic": false
   },
   {
+    "id": "form-field-control-owned-state",
+    "from": "KrnFormField id, required, disabled, readonly, and state inputs",
+    "to": "The projected control id/native state and its Angular FormControl status",
+    "summary": "Keep Form Field as a label, layout, and description coordinator. Move control identity and required/readonly state to the projected control, disable reactive controls through FormControl.disable(), and represent invalid/pending/valid through the real Angular control or mounted error content.",
+    "components": ["form-field"],
+    "before": "<krn-form-field\n  id=\"workspace-name\"\n  label=\"Workspace name\"\n  required\n  [disabled]=\"saving\"\n  [readonly]=\"locked\"\n  [state]=\"fieldState\"\n>\n  <krn-text-input [formControl]=\"control\" />\n</krn-form-field>",
+    "after": "<krn-form-field\n  label=\"Workspace name\"\n  [error]=\"visibleError\"\n>\n  <krn-text-input\n    id=\"workspace-name\"\n    required\n    [readonly]=\"locked\"\n    [formControl]=\"control\"\n  />\n</krn-form-field>\n\n// Disable the Angular model and native control together.\nif (saving) control.disable();\nelse control.enable();",
+    "automatic": false
+  },
+  {
     "id": "data-grid-pagination-mode",
     "from": "KrnDataGrid.pagination",
     "to": "KrnDataGrid.mode",

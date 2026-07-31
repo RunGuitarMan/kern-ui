@@ -40,7 +40,7 @@ class SsrNativeSelectHost {
 }
 
 describe('Kern forms SSR', () => {
-  it('serializes validators-only required and invalid semantics', async () => {
+  it('serializes validators-only required state without exposing pristine invalid state', async () => {
     const html = await renderApplication(
       (context) => bootstrapApplication(SsrValidatorsHost, { providers: [] }, context),
       {
@@ -55,11 +55,12 @@ describe('Kern forms SSR', () => {
     const input = document.querySelector('krn-text-input input');
 
     expect(field?.getAttribute('data-required')).toBe('true');
-    expect(field?.getAttribute('data-invalid')).toBe('true');
+    expect(field?.getAttribute('data-invalid')).toBe('false');
+    expect(field?.getAttribute('data-state')).toBe('default');
     expect(field?.querySelector('.krn-required')).not.toBeNull();
     expect(field?.querySelector('.krn-optional')).toBeNull();
     expect(input?.hasAttribute('required')).toBe(true);
-    expect(input?.getAttribute('aria-invalid')).toBe('true');
+    expect(input?.getAttribute('aria-invalid')).toBe('false');
   });
 
   it('serializes a null sentinel before native options when no placeholder is supplied', async () => {

@@ -41,13 +41,17 @@ interface KrnTagFeedback {
       class="krn-otp"
       [attr.aria-describedby]="a11y.describedBy()"
       [attr.aria-invalid]="a11y.invalid()"
+      [attr.aria-labelledby]="a11y.labelledBy()"
       [attr.aria-required]="a11y.required()"
+      [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
       [attr.data-readonly]="a11y.readOnly()"
       [disabled]="isDisabled()"
       [id]="a11y.id()"
       (paste)="pasteCode($event)"
     >
-      <legend class="krn-label">{{ label() }}</legend>
+      @if (!a11y.labelledBy()) {
+        <legend class="krn-label">{{ label() }}</legend>
+      }
       @for (index of slots(); track index) {
         <input
           #otpInput
@@ -99,6 +103,7 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
   );
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'otp', {
     disabled: this.disabled,
+    labelStrategy: 'group',
     readOnly: this.readOnly,
     required: this.required,
   });
@@ -302,7 +307,11 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
       [attr.data-readonly]="a11y.readOnly()"
       (click)="focusInput()"
     >
-      <div class="krn-tag-input" role="group" [attr.aria-label]="ariaLabel()">
+      <div
+        class="krn-tag-input"
+        role="group"
+        [attr.aria-label]="a11y.labelledBy() ? null : ariaLabel()"
+      >
         @for (tag of controlValue(); track $index; let index = $index) {
           <span class="krn-token">
             <span>{{ tag }}</span>
@@ -326,7 +335,9 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
           autocomplete="off"
           [attr.aria-describedby]="a11y.describedBy()"
           [attr.aria-invalid]="a11y.invalid()"
-          [attr.aria-label]="inputLabel()"
+          [attr.aria-label]="a11y.labelledBy() ? null : inputLabel()"
+          [attr.aria-labelledby]="a11y.labelledBy()"
+          [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
           [disabled]="isDisabled()"
           [id]="a11y.id()"
           [placeholder]="controlValue().length ? '' : placeholder()"

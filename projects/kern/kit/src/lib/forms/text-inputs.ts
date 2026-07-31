@@ -92,6 +92,7 @@ const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string
         [attr.minlength]="minLength() ?? null"
         [attr.name]="name() || null"
         [attr.spellcheck]="spellcheck()"
+        [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
         [disabled]="isDisabled()"
         [id]="a11y.id()"
         [placeholder]="placeholder()"
