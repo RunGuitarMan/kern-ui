@@ -1277,6 +1277,73 @@ describe('Kern navigation', () => {
     expect(element.querySelector('footer')?.textContent).toContain('Seçin');
   });
 
+  it('keeps command focus in the combobox and normalizes dynamic active results', async () => {
+    const fixture = await create(KrnCommandPalette, {
+      open: true,
+      title: '   ',
+      description: '   ',
+      placeholder: '   ',
+      resultsLabel: '   ',
+      closeShortcut: '   ',
+      locale: ['invalid_locale_!'],
+      items: [
+        { id: 'first', label: 'First' },
+        { id: 'second', label: 'Second' },
+        { id: 'third', label: 'Third' },
+      ],
+    });
+    const element = fixture.nativeElement as HTMLElement;
+    const input = element.querySelector<HTMLInputElement>('input')!;
+    const options = element.querySelectorAll<HTMLButtonElement>('[role="option"]');
+    const scrollIntoView = vi.fn();
+    Object.defineProperty(options[2]!, 'scrollIntoView', {
+      configurable: true,
+      value: scrollIntoView,
+    });
+
+    expect(element.querySelector('h2')?.textContent?.trim()).toBeTruthy();
+    expect(element.querySelector('.palette')?.hasAttribute('aria-describedby')).toBe(false);
+    expect(input.placeholder).toBeTruthy();
+    expect(element.querySelector('[role="listbox"]')?.getAttribute('aria-label')).toBeTruthy();
+    expect(Array.from(options).every((option) => option.tabIndex === -1)).toBe(true);
+
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(input.getAttribute('aria-activedescendant')).toBe(options[2]?.id);
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'nearest' });
+
+    fixture.componentRef.setInput('items', [{ id: 'first', label: 'First' }]);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const onlyOption = element.querySelector<HTMLButtonElement>('[role="option"]')!;
+    expect(input.getAttribute('aria-activedescendant')).toBe(onlyOption.id);
+
+    const selected = vi.fn();
+    fixture.componentInstance.selected.subscribe(selected);
+    input.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }),
+    );
+    fixture.detectChanges();
+    expect(selected).toHaveBeenCalledWith({ id: 'first', label: 'First' });
+    expect(fixture.componentInstance.open()).toBe(false);
+  });
+
+  it('rejects blank and duplicate command ids', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnCommandPalette] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnCommandPalette);
+
+    expect(() => fixture.componentRef.setInput('items', [{ id: '', label: 'Blank' }])).toThrow(
+      /non-empty unique item ids/,
+    );
+    expect(() =>
+      fixture.componentRef.setInput('items', [
+        { id: 'same', label: 'First' },
+        { id: 'same', label: 'Second' },
+      ]),
+    ).toThrow(/non-empty unique item ids/);
+  });
+
   it('expands a tree branch and selects a child', async () => {
     const fixture = await create(KrnTreeNavigation, {
       items: [

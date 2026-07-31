@@ -10,6 +10,7 @@ import {
   output,
   signal,
   viewChild,
+  viewChildren,
 } from '@angular/core';
 import { A11yModule, LiveAnnouncer } from '@angular/cdk/a11y';
 import {
@@ -20,6 +21,27 @@ import {
 } from '@kern-ui/angular/cdk';
 import { KRN_LOCALE, KRN_TRANSLATIONS, krnFormatTranslation } from '@kern-ui/angular/core';
 import type { KrnCommandItem } from './navigation.types';
+
+function validateCommandItems(items: readonly KrnCommandItem[]): readonly KrnCommandItem[] {
+  const ids = new Set<string>();
+  for (const item of items) {
+    if (typeof item.id !== 'string' || item.id.trim().length === 0 || ids.has(item.id)) {
+      throw new Error(
+        `KrnCommandPalette requires non-empty unique item ids; received "${item.id}".`,
+      );
+    }
+    ids.add(item.id);
+  }
+  return items;
+}
+
+function normalizeSearchText(value: string, locale: string | readonly string[]): string {
+  try {
+    return value.toLocaleLowerCase(locale);
+  } catch {
+    return value.toLocaleLowerCase();
+  }
+}
 
 export interface KrnCommandPaletteLabels {
   readonly search: string;
@@ -48,15 +70,15 @@ export interface KrnCommandPaletteLabels {
           role="dialog"
           aria-modal="true"
           [attr.aria-labelledby]="headingId"
-          [attr.aria-describedby]="description() ? descriptionId : null"
+          [attr.aria-describedby]="resolvedDescription() ? descriptionId : null"
           cdkTrapFocus
           [cdkTrapFocusAutoCapture]="true"
           (pointerdown)="$event.stopPropagation()"
           (keydown)="onKeydown($event)"
         >
-          <h2 [id]="headingId">{{ title() }}</h2>
-          @if (description()) {
-            <p class="visually-hidden" [id]="descriptionId">{{ description() }}</p>
+          <h2 [id]="headingId">{{ resolvedTitle() }}</h2>
+          @if (resolvedDescription(); as dialogDescription) {
+            <p class="visually-hidden" [id]="descriptionId">{{ dialogDescription }}</p>
           }
           <label class="search">
             <span class="visually-hidden">{{ resolvedLabels().search }}</span>
@@ -67,21 +89,28 @@ export interface KrnCommandPaletteLabels {
               role="combobox"
               aria-autocomplete="list"
               [attr.aria-expanded]="open()"
-              [placeholder]="placeholder()"
+              [placeholder]="resolvedPlaceholder()"
               [value]="query()"
               [attr.aria-controls]="resultsId"
               [attr.aria-activedescendant]="activeItemId()"
               (input)="setQuery($event)"
             />
-            <kbd>{{ closeShortcut() }}</kbd>
+            <kbd>{{ resolvedCloseShortcut() }}</kbd>
           </label>
-          <div class="results" [id]="resultsId" role="listbox" [attr.aria-label]="resultsLabel()">
+          <div
+            class="results"
+            [id]="resultsId"
+            role="listbox"
+            [attr.aria-label]="resolvedResultsLabel()"
+          >
             @for (item of filteredItems(); track item.id; let index = $index) {
               <button
+                #option
                 type="button"
                 role="option"
                 [id]="optionId(item)"
                 [attr.aria-selected]="index === activeIndex()"
+                tabindex="-1"
                 (click)="choose(item)"
                 (pointerenter)="activeIndex.set(index)"
               >
@@ -113,6 +142,9 @@ export interface KrnCommandPaletteLabels {
   styles: `
     :host {
       display: contents;
+    }
+    :host([hidden]) {
+      display: none;
     }
     .backdrop {
       position: fixed;
@@ -206,6 +238,7 @@ export interface KrnCommandPaletteLabels {
       gap: var(--krn-space-4);
       padding: var(--krn-space-2) var(--krn-space-3);
       border: 0;
+      border-inline-start: calc(var(--krn-border-width-1) * 2) solid transparent;
       border-radius: var(--krn-radius-sm);
       color: var(--krn-color-text);
       background: transparent;
@@ -217,8 +250,8 @@ export interface KrnCommandPaletteLabels {
       background: color-mix(in oklch, var(--krn-color-surface-subtle) 68%, transparent);
     }
     .results button[aria-selected='true'] {
+      border-inline-start-color: var(--krn-color-primary);
       background: var(--krn-color-surface-subtle);
-      box-shadow: inset calc(var(--krn-border-width-1) * 2) 0 0 var(--krn-color-primary);
     }
     .results button:focus-visible {
       outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
@@ -226,7 +259,11 @@ export interface KrnCommandPaletteLabels {
     }
     .command-copy {
       display: grid;
+      min-inline-size: 0;
       gap: var(--krn-space-0-5);
+    }
+    .command-copy :is(strong, span) {
+      overflow-wrap: anywhere;
     }
     .command-copy strong {
       font-weight: var(--krn-font-weight-medium);
@@ -248,6 +285,7 @@ export interface KrnCommandPaletteLabels {
     }
     footer {
       display: flex;
+      flex-wrap: wrap;
       gap: var(--krn-space-4);
       padding: var(--krn-space-2) var(--krn-space-4);
       border-block-start: var(--krn-border-width-1) solid var(--krn-color-border);
@@ -286,6 +324,32 @@ export interface KrnCommandPaletteLabels {
         transform: none;
       }
     }
+    @media (max-width: 30rem) {
+      .backdrop {
+        padding: var(--krn-space-3);
+        padding-block-end: max(var(--krn-space-3), env(safe-area-inset-bottom));
+      }
+      .palette {
+        max-block-size: calc(100dvh - var(--krn-space-6));
+      }
+      footer {
+        display: none;
+      }
+    }
+    @media (forced-colors: active) {
+      .palette,
+      .search,
+      footer,
+      kbd {
+        border-color: CanvasText;
+      }
+      .results button[aria-selected='true'] {
+        border-inline-start-color: Highlight;
+      }
+      .results button:focus-visible {
+        outline-color: Highlight;
+      }
+    }
   `,
 })
 export class KrnCommandPalette {
@@ -296,7 +360,10 @@ export class KrnCommandPalette {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
-  readonly items = input<readonly KrnCommandItem[]>([]);
+  private readonly options = viewChildren<ElementRef<HTMLButtonElement>>('option');
+  readonly items = input<readonly KrnCommandItem[], readonly KrnCommandItem[]>([], {
+    transform: validateCommandItems,
+  });
   readonly open = model(false);
   readonly query = model('');
   readonly title = input(this.translations.navigation.commandPalette);
@@ -314,6 +381,20 @@ export class KrnCommandPalette {
   protected readonly headingId = `${this.instanceId}-heading`;
   protected readonly descriptionId = `${this.instanceId}-description`;
   protected readonly resultsId = `${this.instanceId}-results`;
+  protected readonly resolvedTitle = computed(
+    () => this.title()?.trim() || this.translations.navigation.commandPalette.trim(),
+  );
+  protected readonly resolvedDescription = computed(() => this.description()?.trim() || null);
+  protected readonly resolvedPlaceholder = computed(
+    () =>
+      this.placeholder()?.trim() || this.translations.navigation.searchCommandsPlaceholder.trim(),
+  );
+  protected readonly resolvedResultsLabel = computed(
+    () => this.resultsLabel()?.trim() || this.translations.navigation.commands.trim(),
+  );
+  protected readonly resolvedCloseShortcut = computed(
+    () => this.closeShortcut()?.trim() || this.translations.navigation.escapeShortcut.trim(),
+  );
   protected readonly resolvedLabels = computed<KrnCommandPaletteLabels>(() => {
     const overrides = this.labels();
     return {
@@ -343,15 +424,15 @@ export class KrnCommandPalette {
     ),
   );
   protected readonly filteredItems = computed(() => {
-    const query = this.query().trim().toLocaleLowerCase(this.locale());
+    const locale = this.locale();
+    const query = normalizeSearchText(this.query().trim(), locale);
     if (!query) return this.items().filter((item) => !item.disabled);
     return this.items().filter((item) => {
       if (item.disabled) return false;
       const haystack = [item.label, item.description, item.group, ...(item.keywords ?? [])]
         .filter(Boolean)
-        .join(' ')
-        .toLocaleLowerCase(this.locale());
-      return haystack.includes(query);
+        .join(' ');
+      return normalizeSearchText(haystack, locale).includes(query);
     });
   });
   protected readonly activeItemId = computed(() => {
@@ -382,6 +463,12 @@ export class KrnCommandPalette {
     });
     effect(() => {
       const count = this.filteredItems().length;
+      const current = this.activeIndex();
+      const normalized = count === 0 ? 0 : Math.min(Math.max(0, Math.trunc(current)), count - 1);
+      if (current !== normalized) this.activeIndex.set(normalized);
+    });
+    effect(() => {
+      const count = this.filteredItems().length;
       if (this.open())
         void this.announcer.announce(
           count === 1
@@ -403,7 +490,7 @@ export class KrnCommandPalette {
 
   protected setQuery(event: Event): void {
     this.query.set((event.target as HTMLInputElement).value);
-    this.activeIndex.set(0);
+    this.setActiveIndex(0);
   }
 
   protected choose(item: KrnCommandItem): void {
@@ -434,6 +521,13 @@ export class KrnCommandPalette {
     const delta = event.key === 'ArrowDown' ? 1 : event.key === 'ArrowUp' ? -1 : 0;
     if (!delta || items.length === 0) return;
     event.preventDefault();
-    this.activeIndex.update((index) => (index + delta + items.length) % items.length);
+    this.setActiveIndex((this.activeIndex() + delta + items.length) % items.length);
+  }
+
+  private setActiveIndex(index: number): void {
+    this.activeIndex.set(index);
+    this.platform.queueMicrotask(() => {
+      this.options()[index]?.nativeElement.scrollIntoView?.({ block: 'nearest' });
+    });
   }
 }
