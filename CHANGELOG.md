@@ -76,6 +76,9 @@ contract or upgrade decision.
 - Strengthened Number Input with deterministic standalone `value` ownership, non-destructive range
   validation, finite native constraints, precise bounded stepping, composable ARIA references,
   focus-retaining single-tab-stop steppers, and public native focus and blur methods.
+- Strengthened Checkbox with deterministic standalone `checked` ownership, nullable
+  Angular-Forms-owned mixed state, user-cleared indeterminate state, composable visible/external
+  names and descriptions, native-only tab order, and public native focus and blur methods.
 
 ### Deprecated
 

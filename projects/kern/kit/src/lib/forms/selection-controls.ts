@@ -4,11 +4,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   forwardRef,
   inject,
   InjectionToken,
   input,
+  numberAttribute,
   output,
+  signal,
+  untracked,
+  viewChild,
   viewChildren,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -42,6 +47,11 @@ const KRN_CHECKBOX_GROUP = new InjectionToken<KrnCheckboxGroupController>('KRN_C
 const CHECKBOX_GROUP_PROVIDER: Provider = {
   provide: KRN_CHECKBOX_GROUP,
   useExisting: forwardRef(() => KrnCheckboxGroup),
+};
+
+const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string | null => {
+  const ids = values.flatMap((value) => value?.split(/\s+/).filter(Boolean) ?? []);
+  return ids.length > 0 ? [...new Set(ids)].join(' ') : null;
 };
 
 @Component({
@@ -135,6 +145,7 @@ export class KrnCheckboxGroup
   selector: 'krn-checkbox',
   host: {
     '[attr.id]': 'null',
+    '[attr.tabindex]': 'null',
   },
   providers: [...provideKrnFormControl(() => KrnCheckbox)],
   template: `
@@ -145,48 +156,60 @@ export class KrnCheckboxGroup
       [attr.data-readonly]="isReadOnly()"
     >
       <input
+        #input
         class="krn-choice__native"
         type="checkbox"
-        [attr.aria-describedby]="a11y.describedBy()"
+        [attr.aria-describedby]="effectiveDescribedBy()"
         [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="ariaLabel() || null"
-        [attr.aria-checked]="indeterminate() ? 'mixed' : checked()"
+        [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
+        [attr.aria-labelledby]="effectiveLabelledBy()"
+        [attr.aria-checked]="isIndeterminate() ? 'mixed' : null"
         [attr.aria-disabled]="isReadOnly() || null"
-        [attr.data-indeterminate]="indeterminate()"
-        [checked]="checked()"
+        [attr.data-indeterminate]="isIndeterminate()"
+        [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
+        [checked]="renderedChecked()"
         [disabled]="isDisabled()"
         [id]="a11y.id()"
-        [indeterminate]="indeterminate()"
+        [indeterminate]="isIndeterminate()"
         [name]="name()"
         [required]="a11y.required()"
+        [tabIndex]="tabIndex()"
         [value]="value()"
         (blur)="touch()"
         (change)="changeChecked($event)"
       />
       <span class="krn-choice__mark" aria-hidden="true">
-        @if (indeterminate()) {
+        @if (isIndeterminate()) {
           −
-        } @else if (checked()) {
+        } @else if (renderedChecked()) {
           ✓
         }
       </span>
       <span class="krn-choice__text">
-        <span><ng-content /></span>
+        <span [id]="labelId()"><ng-content /></span>
         @if (description()) {
-          <span class="krn-choice__description">{{ description() }}</span>
+          <span class="krn-choice__description" [id]="descriptionId()">
+            {{ description() }}
+          </span>
         }
       </span>
     </label>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnCheckbox extends KrnValueAccessor<boolean> {
+export class KrnCheckbox extends KrnValueAccessor<boolean | null> {
   private readonly group = inject(KRN_CHECKBOX_GROUP, { optional: true });
+  private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('input');
+  private readonly indeterminateOverride = signal<boolean | null>(null);
+  private angularOwnsChecked = false;
 
   readonly id = input('');
   readonly name = input('');
   readonly value = input(createKrnId('checkbox-option'));
+  readonly checked = input<boolean | undefined>(undefined, { transform: booleanAttribute });
   readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
   readonly description = input('');
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false, {
@@ -196,7 +219,9 @@ export class KrnCheckbox extends KrnValueAccessor<boolean> {
   readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly indeterminate = input(false, { transform: booleanAttribute });
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
   readonly checkedChange = output<boolean>();
+  readonly indeterminateChange = output<boolean>();
 
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'checkbox', {
     disabled: this.disabled,
@@ -210,17 +235,75 @@ export class KrnCheckbox extends KrnValueAccessor<boolean> {
   protected readonly isReadOnly = computed(
     () => this.a11y.readOnly() || Boolean(this.group?.isReadOnly()),
   );
-  protected readonly checked = computed(() =>
-    this.group ? this.group.has(this.value()) : this.controlValue(),
+  protected readonly labelId = computed(() => `${this.a11y.id()}-label`);
+  protected readonly descriptionId = computed(() => `${this.a11y.id()}-description`);
+  protected readonly effectiveLabelledBy = computed(() => {
+    const external = mergeAriaIds(
+      this.ariaLabelledBy(),
+      (
+        this.a11y as typeof this.a11y & {
+          readonly labelledBy?: () => string | null;
+        }
+      ).labelledBy?.(),
+    );
+    return external
+      ? mergeAriaIds(external, this.labelId())
+      : this.ariaLabel()
+        ? null
+        : this.labelId();
+  });
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(
+      this.ariaDescribedBy(),
+      this.a11y.describedBy(),
+      this.description() ? this.descriptionId() : null,
+    ),
+  );
+  protected readonly renderedChecked = computed(() =>
+    this.group ? this.group.has(this.value()) : this.controlValue() === true,
+  );
+  protected readonly isFormFieldControl = computed(
+    () =>
+      (
+        this.a11y as typeof this.a11y & {
+          readonly isFormFieldControl?: () => boolean;
+        }
+      ).isFormFieldControl?.() ?? false,
+  );
+  protected readonly isIndeterminate = computed(
+    () =>
+      this.indeterminateOverride() ??
+      (this.indeterminate() || (!this.group && this.controlValue() === null)),
   );
 
   constructor() {
     super(false);
+    effect(() => {
+      const checked = this.checked();
+      if (checked !== undefined && !this.angularOwnsChecked) {
+        this.controlValue.set(this.normalizeIncomingValue(checked));
+      }
+    });
     this.watchValidationInputs(this.required, this.a11y.required);
+    effect(() => {
+      this.indeterminate();
+      untracked(() => this.indeterminateOverride.set(null));
+    });
   }
 
-  protected override normalizeIncomingValue(value: unknown): boolean {
-    return Boolean(value);
+  override writeValue(value: unknown): void {
+    this.angularOwnsChecked = true;
+    this.indeterminateOverride.set(null);
+    super.writeValue(value);
+  }
+
+  override registerOnChange(fn: (value: boolean | null) => void): void {
+    this.angularOwnsChecked = true;
+    super.registerOnChange(fn);
+  }
+
+  protected override normalizeIncomingValue(value: unknown): boolean | null {
+    return value === null ? null : Boolean(value);
   }
 
   protected override validateValue(value: unknown) {
@@ -230,16 +313,39 @@ export class KrnCheckbox extends KrnValueAccessor<boolean> {
   protected changeChecked(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (this.isReadOnly()) {
-      input.checked = this.checked();
+      input.checked = this.renderedChecked();
+      input.indeterminate = this.isIndeterminate();
       return;
     }
-    const checked = input.checked;
-    if (this.group) {
-      this.group.toggle(this.value(), checked);
-    } else {
-      this.commitValue(checked);
+
+    const next = input.checked;
+    if (this.isIndeterminate()) {
+      this.indeterminateOverride.set(false);
+      this.indeterminateChange.emit(false);
     }
-    this.checkedChange.emit(checked);
+
+    if (this.group) {
+      const previous = this.renderedChecked();
+      this.group.toggle(this.value(), next);
+      if (previous !== next) {
+        this.checkedChange.emit(next);
+      }
+      return;
+    }
+
+    if (Object.is(this.controlValue(), next)) {
+      return;
+    }
+    this.commitValue(next);
+    this.checkedChange.emit(next);
+  }
+
+  focus(options?: FocusOptions): void {
+    this.inputElement()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    this.inputElement()?.nativeElement.blur();
   }
 }
 
