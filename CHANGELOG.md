@@ -20,8 +20,9 @@ contract or upgrade decision.
 - Cross-cutting `provideKrn` configuration for locale, direction, theme, density, motion,
   preference persistence, overlay host, platform adaptation, and typed translation overrides.
 - Shared SSR-safe platform, deterministic-ID, overlay-coordination, and typed-content primitives.
-- Physical `/cdk`, `/core`, `/kit`, `/addon-grid`, `/addon-charts`, and `/patterns` runtime
-  entrypoints with a compatibility-only package root and strict mixed-import identity gates.
+- Physical `/cdk`, `/i18n`, `/core`, `/kit`, `/addon-grid`, `/addon-charts`, and `/patterns`
+  runtime entrypoints with a compatibility-only package root and strict mixed-import identity
+  gates.
 - The isolated `@kern-ui/angular/testing` secondary entry point with harnesses for buttons, forms,
   selection controls, date/time controls, navigation, feedback, uploads, dialogs, and data grid.
 - Typed shared-copy contracts across component families plus locale-aware search and generated
@@ -54,7 +55,8 @@ contract or upgrade decision.
 - Added explicit async loading/error states and server-query control to selection components, plus
   retryable lazy-child state for Tree and Tree Navigation.
 - Strengthened Charts with stable datum identity, finite-value validation, negative-value policy,
-  explicit empty state, and bounded accessible summaries.
+  explicit empty state, bounded accessible summaries, and two-way source-table and active-datum
+  state on `KrnLineChart`.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned
@@ -73,14 +75,50 @@ contract or upgrade decision.
 - Reworked Container gutters as logical border-box padding, normalized numeric/token max widths,
   restored size fallback for empty overrides, and preserved native hidden semantics.
 - Removed duplicate state-change outputs where signal models already provide the canonical event.
+- Moved Button and Icon Button behavior onto native `button[krnButton]` and
+  `button[krnIconButton]` hosts, added inheritable visual/loading-copy options, and aligned both
+  actions on a focus-retaining, localized loading contract that blocks duplicate activation and
+  implicit form submission.
+- Made `div[krnButtonGroup]` the canonical Button Group host, added an opt-in connected layout,
+  and clarified that child actions retain native document-order focus, activation, disabled,
+  loading, form, and selection semantics.
+- Rebuilt Copy Button around a single-flight asynchronous state machine with immutable value
+  snapshots, destroy-safe outcomes, focus-retaining pending behavior, stable feedback geometry,
+  a stable visible/native action name, one sibling live region for every asynchronous state,
+  scoped appearance/timing options, lightweight localized copy labels, and a replaceable
+  modern-Clipboard/CDK-fallback boundary. Application-wide `provideKrn()` remains source
+  compatible; a low-level child injector that provides `KRN_TRANSLATIONS` directly must now add
+  `provideKrnTranslationBridge()` or override `KRN_COPY_LABELS`, as documented by the
+  `copy-button-lightweight-i18n-bridge` migration.
+- Rebuilt Dropdown Button and Split Button around native `KrnButton` triggers, deterministic menu
+  ownership, controlled disabled/loading invariants, dynamic ARIA-menu navigation, nested-overlay
+  ownership, scoped appearance/position options, lightweight localized labels, and public
+  component harnesses. `KrnMenuButtonBase` now exposes `getFocusReturnTarget()` as a protected
+  extension hook so compound variants can preserve focus without coupling the shared menu behavior
+  to variant-specific DOM.
+- Moved Floating Action Button onto a native `button[krnFab]` host with native form,
+  accessible-name, and description semantics, a compact label that remains in the accessibility
+  tree, focus-retaining loading, density-aware geometry, scoped defaults, and a public component
+  harness. Button, Icon Button, and Floating Action Button reserve `aria-disabled` as a
+  deterministic derived loading state; ordinary unavailability uses native `disabled`.
+- Moved Toggle Button onto a native `button[krnToggleButton]` host, made effective
+  standalone/group state the deterministic owner of `aria-pressed`, separated its implementation
+  from Toggle Group for isolated tree shaking, and added scoped pressed/unpressed appearance
+  defaults plus a public pressed/value-aware harness.
+- Made `div[krnToggleGroup]` the canonical Toggle Group host and rebuilt the compound interaction
+  as a labelled `toolbar` with roving focus, orientation-aware Arrow/Home/End navigation, RTL,
+  disabled-item skipping, canonical single/multiple value transitions, scoped defaults, and a
+  public group harness.
+- Moved Link presentation onto one native `a[krnLink]` host with browser-owned URL, RouterLink,
+  named-target, relationship, referrer, download, ARIA, focus, and click semantics; restored
+  inherited inline typography and multiline wrapping, and added a public native-link harness.
 - Rebuilt Form Field as a control-owned label/description coordinator: registered controls now
   supply identity and Angular state, full control events drive pending/valid/disabled presentation,
   projected labels replace shorthand labels without duplication, every primary control is named by
   the mounted visible field label, self-labelled controls compose both visible names, and composite
   controls delegate label focus. Deterministic live DOM-first ownership prevents duplicate ids,
   pristine Angular errors stay visually neutral until interaction, and `aria-describedby`
-  deduplicates manual ids with mounted hints and errors. The public Form Field harness now resolves
-  registered primary roots and exposes readonly and pending predicates.
+  deduplicates manual ids with mounted hints and errors.
 - Strengthened Text Input with deterministic standalone `value` ownership, IME-safe and
   duplicate-free updates, composable ARIA references, validated length constraints, and public
   native focus, blur, and selection methods.
@@ -181,6 +219,10 @@ contract or upgrade decision.
 - `KrnDataGrid.pagination`; use the discriminated client `mode` with `pagination: true`.
 - `KrnDataGrid.virtualize`; use `{ kind: 'virtual' }` through the `mode` input.
 - `KrnMenu.hasProjectedTrigger`; apply `KrnMenuTrigger` to the projected trigger instead.
+- The legacy `<krn-button-group>` host and `KrnButtonGroup.ariaLabel`; use
+  `<div krnButtonGroup>` with native `aria-label` or `aria-labelledby`.
+- The legacy `<krn-toggle-group>` host and `KrnToggleGroup.ariaLabel`; use
+  `<div krnToggleGroup>` with native `aria-label` or `aria-labelledby`.
 
 ### Removed
 
@@ -188,6 +230,15 @@ contract or upgrade decision.
   diverged from DOM, assistive-technology, and keyboard focus order. Primary content now always
   precedes secondary content; swap the `krnSplitPrimary` and `krnSplitSecondary` slot roles when a
   different meaningful sequence is required.
+- Removed the pre-1.0 Button, Icon Button, and Floating Action Button native-API proxies
+  (`ariaLabel`, `type`, `disabled`, `pressed`, and `activated`) plus the redundant `KrnButtonType`
+  alias. Applications now use native button attributes/events directly and `KrnToggleButton` for
+  managed toggle semantics; explicit migration recipes cover every native-host change.
+- Removed the pre-1.0 `<krn-toggle-button>` wrapper selector; use one native
+  `<button krnToggleButton>` and the `toggle-button-native-host` migration recipe.
+- Removed the pre-1.0 `<krn-link>` wrapper, `KrnLinkTarget`, `href`, `target`, `rel`, `download`,
+  `ariaLabel`, and `disabled` proxies, plus `(activated)`. Use `<a krnLink>` with native
+  attributes, `RouterLink`, and `(click)` through the `link-native-host` migration recipe.
 - Removed the pre-1.0 Form Field control-state proxies (`id`, `required`, `disabled`, `readonly`,
   and `state`). Keep those semantics on the projected control or its Angular `FormControl`; use
   the `form-field-control-owned-state` migration recipe.
