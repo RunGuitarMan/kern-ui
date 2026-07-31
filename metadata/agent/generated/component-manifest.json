@@ -73,7 +73,7 @@
       "@kern-ui/angular/patterns",
       "@kern-ui/angular/testing"
     ],
-    "sourceDigest": "sha256-eef674c1ad13f6fce9d96a8d73222325344df611fd341bda41703f18aabc3107"
+    "sourceDigest": "sha256-b32b5996072a3da67959bd1a1e7b42bb9d8294c1af2281ab5b8a43ebe822ba47"
   },
   "components": [
     {
@@ -57749,7 +57749,8 @@
         "evidenceScope": "library-docs-route-smoke",
         "notes": [
           "KERN avoids ambient browser globals in reusable runtime infrastructure.",
-          "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+          "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+          "Uses the shared deterministic KERN id service."
         ]
       },
       "examples": [
@@ -58178,7 +58179,8 @@
         "evidenceScope": "library-docs-route-smoke",
         "notes": [
           "KERN avoids ambient browser globals in reusable runtime infrastructure.",
-          "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+          "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+          "Uses the shared deterministic KERN id service."
         ]
       },
       "examples": [
@@ -58616,7 +58618,7 @@
           "kind": "input",
           "type": "string",
           "required": false,
-          "defaultValue": "this.ids.next('global-search-results')",
+          "defaultValue": "this.generatedResultsId",
           "description": "Stable identifier value used by the results contract.",
           "descriptionSource": "inferred"
         },
@@ -59611,7 +59613,8 @@
         "evidenceScope": "library-docs-route-smoke",
         "notes": [
           "KERN avoids ambient browser globals in reusable runtime infrastructure.",
-          "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+          "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+          "Uses the shared deterministic KERN id service."
         ]
       },
       "examples": [
@@ -59925,6 +59928,36 @@
           "descriptionSource": "inferred"
         },
         {
+          "name": "initialFocus",
+          "property": "initialFocus",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "'first-tabbable'",
+          "description": "Identifies the element that receives focus when the modal surface opens.",
+          "descriptionSource": "inferred"
+        },
+        {
+          "name": "closeOnEscape",
+          "property": "closeOnEscape",
+          "kind": "input",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "Allows Escape to dismiss the topmost owned overlay.",
+          "descriptionSource": "inferred"
+        },
+        {
+          "name": "closeOnOutside",
+          "property": "closeOnOutside",
+          "kind": "input",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "Allows an interaction outside the owned overlay to dismiss it.",
+          "descriptionSource": "inferred"
+        },
+        {
           "name": "open",
           "property": "open",
           "kind": "model",
@@ -59932,6 +59965,16 @@
           "required": false,
           "defaultValue": "false",
           "description": "Controls whether the disclosure or overlay surface is visible.",
+          "descriptionSource": "inferred"
+        },
+        {
+          "name": "closed",
+          "property": "closed",
+          "kind": "output",
+          "type": "KrnOverlayCloseReason",
+          "required": false,
+          "defaultValue": "undefined",
+          "description": "Notifies the consumer after the closed interaction completes.",
           "descriptionSource": "inferred"
         }
       ],
@@ -59997,7 +60040,11 @@
         "KrnSettingsPanel",
         "heading",
         "closeLabel",
-        "open"
+        "initialFocus",
+        "closeOnEscape",
+        "closeOnOutside",
+        "open",
+        "closed"
       ],
       "guidance": {
         "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
@@ -60035,6 +60082,32 @@
             "binding": {
               "kind": "model",
               "publicName": "open"
+            }
+          },
+          {
+            "key": "closeOnEscape",
+            "label": "Close On Escape",
+            "kind": "boolean",
+            "defaultValue": true,
+            "testValue": false,
+            "description": "Configures the component closeOnEscape contract.",
+            "binding": {
+              "kind": "input",
+              "publicName": "closeOnEscape",
+              "syntax": "property"
+            }
+          },
+          {
+            "key": "closeOnOutside",
+            "label": "Close On Outside",
+            "kind": "boolean",
+            "defaultValue": true,
+            "testValue": false,
+            "description": "Configures the component closeOnOutside contract.",
+            "binding": {
+              "kind": "input",
+              "publicName": "closeOnOutside",
+              "syntax": "property"
             }
           },
           {
@@ -60199,9 +60272,9 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 3,
-          "controlled": 2,
-          "excluded": 1,
+          "publicInputsAndModels": 6,
+          "controlled": 4,
+          "excluded": 2,
           "unclassified": 0
         },
         "exclusions": [
@@ -60212,6 +60285,18 @@
             "type": "string",
             "code": "accessibility-copy",
             "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#settings-panel"
+            }
+          },
+          {
+            "componentId": "settings-panel",
+            "publicName": "initialFocus",
+            "kind": "input",
+            "type": "string",
+            "code": "dom-wiring",
+            "reason": "DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.",
             "evidence": {
               "category": "a11y-test",
               "pointer": "tests/a11y/accessibility.spec.ts#settings-panel"

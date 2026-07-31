@@ -127,7 +127,7 @@
       "kind": "input",
       "type": "string",
       "required": false,
-      "defaultValue": "this.ids.next('global-search-results')",
+      "defaultValue": "this.generatedResultsId",
       "description": "Stable identifier value used by the results contract.",
       "descriptionSource": "inferred"
     },

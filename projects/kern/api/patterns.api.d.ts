@@ -7,6 +7,7 @@
 
 import * as _angular_core from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { KrnOverlayCloseReason } from '@kern-ui/angular/kit';
 
 interface KrnLoginCredentials {
   readonly email: string;
@@ -201,6 +202,8 @@ interface KrnNotification {
   readonly title: string;
   readonly detail: string;
   readonly timestamp: string;
+  /** Optional ISO 8601 date or date-time for the rendered `<time datetime>` attribute. */
+  readonly dateTime?: string;
   readonly read: boolean;
   readonly tone?: 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 }
@@ -219,10 +222,16 @@ declare class KrnUserMenu {
   private readonly translations;
   private readonly host;
   private readonly injector;
+  protected readonly menuId: string;
   readonly name: _angular_core.InputSignal<string>;
   readonly detail: _angular_core.InputSignal<string>;
   readonly menuAriaLabel: _angular_core.InputSignal<string>;
   readonly open: _angular_core.ModelSignal<boolean>;
+  private readonly menu;
+  protected readonly resolvedName: _angular_core.Signal<string>;
+  protected readonly resolvedDetail: _angular_core.Signal<string>;
+  protected readonly resolvedMenuAriaLabel: _angular_core.Signal<string>;
+  private readonly blockDisabledActivation;
   protected toggleMenu(): void;
   protected onTriggerKeydown(event: KeyboardEvent): void;
   protected onMenuKeydown(event: KeyboardEvent): void;
@@ -231,6 +240,8 @@ declare class KrnUserMenu {
   protected closeOnOutsidePointer(event: PointerEvent): void;
   private closeAndFocus;
   private menuItems;
+  private allMenuItems;
+  private prepareMenuItems;
   private focusMenuItem;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnUserMenu, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
@@ -252,6 +263,7 @@ declare class KrnUserMenu {
 }
 declare class KrnNotificationCenter {
   private readonly translations;
+  protected readonly notificationsId: string;
   readonly heading: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly unreadLabel: _angular_core.InputSignal<(count: number) => string>;
@@ -261,7 +273,16 @@ declare class KrnNotificationCenter {
   readonly notifications: _angular_core.InputSignal<readonly KrnNotification[]>;
   readonly markAllRead: _angular_core.OutputEmitterRef<void>;
   readonly notificationSelected: _angular_core.OutputEmitterRef<KrnNotification>;
+  protected readonly resolvedHeading: _angular_core.Signal<string>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
+  protected readonly resolvedMarkAllReadLabel: _angular_core.Signal<string>;
+  protected readonly resolvedEmptyLabel: _angular_core.Signal<string>;
+  protected readonly validatedNotifications: _angular_core.Signal<readonly KrnNotification[]>;
   protected readonly unreadCount: _angular_core.Signal<number>;
+  protected readonly resolvedUnreadLabel: _angular_core.Signal<string>;
+  protected readonly resolvedUnreadStateLabel: _angular_core.Signal<string>;
+  private requiredLabel;
+  private isIsoDateTime;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnNotificationCenter, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnNotificationCenter,
@@ -285,8 +306,11 @@ declare class KrnNotificationCenter {
 }
 declare class KrnGlobalSearch {
   private readonly ids;
+  private readonly generatedResultsId;
   private readonly locale;
+  private readonly platform;
   private readonly translations;
+  private readonly searchInput;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly placeholder: _angular_core.InputSignal<string>;
   readonly clearLabel: _angular_core.InputSignal<string>;
@@ -299,13 +323,26 @@ declare class KrnGlobalSearch {
   readonly open: _angular_core.ModelSignal<boolean>;
   readonly activeIndex: _angular_core.ModelSignal<number>;
   readonly resultSelected: _angular_core.OutputEmitterRef<KrnSearchResult>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
+  protected readonly resolvedClearLabel: _angular_core.Signal<string>;
+  protected readonly resolvedResultsId: _angular_core.Signal<string>;
+  protected readonly validatedResults: _angular_core.Signal<readonly KrnSearchResult[]>;
+  protected readonly validatedMaxResults: _angular_core.Signal<number>;
+  protected readonly popupVisible: _angular_core.Signal<boolean>;
   protected readonly filteredResults: _angular_core.Signal<KrnSearchResult[]>;
   protected readonly activeResultId: _angular_core.Signal<string | null>;
+  protected readonly resolvedResultsLabel: _angular_core.Signal<string>;
+  protected readonly resolvedEmptyResultsLabel: _angular_core.Signal<string>;
+  private readonly resultsIdGuard;
+  private readonly activeIndexGuard;
   protected resultOptionId(id: string): string;
   protected onInput(event: Event): void;
   protected onKeydown(event: KeyboardEvent): void;
+  protected onFocusOut(event: FocusEvent): void;
   protected choose(result: KrnSearchResult): void;
   protected clear(): void;
+  private requiredLabel;
+  private validDomId;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnGlobalSearch, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnGlobalSearch,
@@ -338,15 +375,25 @@ declare class KrnGlobalSearch {
 }
 declare class KrnFilterBar {
   private readonly translations;
+  private readonly filterSelects;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly allLabel: _angular_core.InputSignal<string>;
   readonly activeLabel: _angular_core.InputSignal<(count: number) => string>;
   readonly clearAllLabel: _angular_core.InputSignal<string>;
   readonly filters: _angular_core.InputSignal<readonly KrnFilterDefinition[]>;
   readonly values: _angular_core.ModelSignal<Readonly<Partial<Record<string, string>>>>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
+  protected readonly resolvedAllLabel: _angular_core.Signal<string>;
+  protected readonly resolvedClearAllLabel: _angular_core.Signal<string>;
+  protected readonly validatedFilters: _angular_core.Signal<readonly KrnFilterDefinition[]>;
+  protected readonly validatedValues: _angular_core.Signal<
+    Readonly<Partial<Record<string, string>>>
+  >;
   protected readonly activeCount: _angular_core.Signal<number>;
+  protected readonly resolvedActiveLabel: _angular_core.Signal<string>;
   protected setFilter(id: string, event: Event): void;
   protected clear(): void;
+  private requiredLabel;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnFilterBar, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnFilterBar,
@@ -368,10 +415,18 @@ declare class KrnFilterBar {
   >;
 }
 declare class KrnPageHeader {
+  private readonly ids;
+  protected readonly headingId: string;
+  protected readonly descriptionId: string;
   readonly index: _angular_core.InputSignal<string>;
   readonly eyebrow: _angular_core.InputSignal<string>;
   readonly heading: _angular_core.InputSignal<string>;
   readonly description: _angular_core.InputSignal<string>;
+  protected readonly resolvedIndex: _angular_core.Signal<string>;
+  protected readonly resolvedEyebrow: _angular_core.Signal<string>;
+  protected readonly resolvedHeading: _angular_core.Signal<string>;
+  protected readonly resolvedDescription: _angular_core.Signal<string>;
+  private optionalText;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnPageHeader, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnPageHeader,
@@ -394,7 +449,14 @@ declare class KrnSettingsPanel {
   private readonly translations;
   readonly heading: _angular_core.InputSignal<string>;
   readonly closeLabel: _angular_core.InputSignal<string>;
+  readonly initialFocus: _angular_core.InputSignal<string>;
+  readonly closeOnEscape: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly closeOnOutside: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly open: _angular_core.ModelSignal<boolean>;
+  readonly closed: _angular_core.OutputEmitterRef<KrnOverlayCloseReason>;
+  protected readonly resolvedHeading: _angular_core.Signal<string>;
+  protected readonly resolvedCloseLabel: _angular_core.Signal<string>;
+  private requiredLabel;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnSettingsPanel, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnSettingsPanel,
@@ -403,9 +465,12 @@ declare class KrnSettingsPanel {
     {
       heading: { alias: 'heading'; required: false; isSignal: true };
       closeLabel: { alias: 'closeLabel'; required: false; isSignal: true };
+      initialFocus: { alias: 'initialFocus'; required: false; isSignal: true };
+      closeOnEscape: { alias: 'closeOnEscape'; required: false; isSignal: true };
+      closeOnOutside: { alias: 'closeOnOutside'; required: false; isSignal: true };
       open: { alias: 'open'; required: false; isSignal: true };
     },
-    { open: 'openChange' },
+    { open: 'openChange'; closed: 'closed' },
     never,
     ['*', '[krnSettingsActions]'],
     true,
@@ -417,6 +482,10 @@ declare class KrnCrudToolbar {
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly selectedCount: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly selectedLabel: _angular_core.InputSignal<(count: number) => string>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
+  protected readonly validatedSelectedCount: _angular_core.Signal<number>;
+  protected readonly resolvedSelectedLabel: _angular_core.Signal<string>;
+  private requiredLabel;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnCrudToolbar, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnCrudToolbar,

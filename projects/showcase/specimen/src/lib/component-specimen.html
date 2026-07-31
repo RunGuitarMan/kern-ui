@@ -2371,6 +2371,8 @@
               </div>
               <krn-settings-panel
                 [(open)]="settingsOpen"
+                [closeOnEscape]="booleanArgument('closeOnEscape', true)"
+                [closeOnOutside]="booleanArgument('closeOnOutside', true)"
                 [heading]="stringArgument('heading', 'Workspace settings')"
                 ><div class="overlay-copy">
                   <label>Workspace name <input value="Northstar" /></label

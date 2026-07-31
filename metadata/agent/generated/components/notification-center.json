@@ -166,7 +166,8 @@
     "evidenceScope": "library-docs-route-smoke",
     "notes": [
       "KERN avoids ambient browser globals in reusable runtime infrastructure.",
-      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+      "Uses the shared deterministic KERN id service."
     ]
   },
   "examples": [
