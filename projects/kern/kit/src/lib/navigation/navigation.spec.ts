@@ -768,6 +768,142 @@ describe('Kern navigation', () => {
     }
   });
 
+  it('keeps table-of-contents observation state across partial observer batches', async () => {
+    const originalObserver = window.IntersectionObserver;
+    let callback: IntersectionObserverCallback | undefined;
+    const observe = vi.fn();
+    const disconnect = vi.fn();
+    class TestIntersectionObserver {
+      readonly root = null;
+      readonly rootMargin = '';
+      readonly thresholds = [0, 1];
+      constructor(next: IntersectionObserverCallback) {
+        callback = next;
+      }
+      observe = observe;
+      unobserve(): void {}
+      disconnect = disconnect;
+      takeRecords(): IntersectionObserverEntry[] {
+        return [];
+      }
+    }
+    Object.defineProperty(window, 'IntersectionObserver', {
+      configurable: true,
+      value: TestIntersectionObserver,
+    });
+    const first = document.createElement('h2');
+    first.id = 'first-heading';
+    const second = document.createElement('h2');
+    second.id = 'second-heading';
+    let firstTop = 10;
+    let secondTop = 80;
+    Object.defineProperty(first, 'getBoundingClientRect', {
+      configurable: true,
+      value: () => ({ top: firstTop }) as DOMRect,
+    });
+    Object.defineProperty(second, 'getBoundingClientRect', {
+      configurable: true,
+      value: () => ({ top: secondTop }) as DOMRect,
+    });
+    document.body.append(first, second);
+    const entry = (
+      target: Element,
+      top: number,
+      isIntersecting: boolean,
+    ): IntersectionObserverEntry =>
+      ({
+        target,
+        isIntersecting,
+        boundingClientRect: { top } as DOMRect,
+        intersectionRatio: isIntersecting ? 1 : 0,
+        intersectionRect: {} as DOMRect,
+        rootBounds: { top: 0 } as DOMRect,
+        time: 0,
+      }) as IntersectionObserverEntry;
+
+    let fixture: ComponentFixture<KrnTableOfContents> | undefined;
+    try {
+      fixture = await create(KrnTableOfContents, {
+        items: [
+          { id: first.id, label: 'First' },
+          { id: second.id, label: 'Second' },
+        ],
+        activeId: 'missing',
+        title: '   ',
+        ariaLabel: '   ',
+      });
+      expect(observe).toHaveBeenCalledTimes(2);
+      expect(fixture.componentInstance.activeId()).toBeNull();
+      expect(fixture.nativeElement.querySelector('.title')?.textContent?.trim()).toBeTruthy();
+      expect(fixture.nativeElement.querySelector('nav')?.getAttribute('aria-label')).toBeTruthy();
+
+      callback?.([entry(first, 10, true), entry(second, 80, true)], {} as IntersectionObserver);
+      fixture.detectChanges();
+      expect(fixture.componentInstance.activeId()).toBe(first.id);
+
+      firstTop = 100;
+      secondTop = 5;
+      callback?.([entry(first, 100, true)], {} as IntersectionObserver);
+      fixture.detectChanges();
+      expect(fixture.componentInstance.activeId()).toBe(second.id);
+
+      callback?.([entry(first, -20, false)], {} as IntersectionObserver);
+      fixture.detectChanges();
+      expect(fixture.componentInstance.activeId()).toBe(second.id);
+      fixture.destroy();
+      fixture = undefined;
+      expect(disconnect).toHaveBeenCalled();
+    } finally {
+      fixture?.destroy();
+      first.remove();
+      second.remove();
+      Object.defineProperty(window, 'IntersectionObserver', {
+        configurable: true,
+        value: originalObserver,
+      });
+    }
+  });
+
+  it('validates table-of-contents ids and preserves modified link activation', async () => {
+    const target = document.createElement('h2');
+    target.id = 'target-heading';
+    document.body.append(target);
+    try {
+      const fixture = await create(KrnTableOfContents, {
+        observe: false,
+        items: [{ id: target.id, label: 'Target', level: 99 }],
+      });
+      const activated = vi.fn();
+      fixture.componentInstance.itemActivated.subscribe(activated);
+      const link = fixture.nativeElement.querySelector('a') as HTMLAnchorElement;
+      const modifiedClick = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        metaKey: true,
+      });
+      link.dispatchEvent(modifiedClick);
+      fixture.detectChanges();
+
+      expect(modifiedClick.defaultPrevented).toBe(false);
+      expect(fixture.componentInstance.activeId()).toBeNull();
+      expect(activated).not.toHaveBeenCalled();
+      expect(
+        (fixture.nativeElement.querySelector('li') as HTMLElement).style.getPropertyValue(
+          '--toc-level',
+        ),
+      ).toBe('2');
+
+      expect(() =>
+        fixture.componentRef.setInput('items', [
+          { id: 'same', label: 'First' },
+          { id: 'same', label: 'Second' },
+        ]),
+      ).toThrow(/non-empty unique item ids/);
+    } finally {
+      target.remove();
+    }
+  });
+
   it('opens nested context-menu destinations and supports ArrowLeft return', async () => {
     const fixture = await create(KrnContextMenu, {
       items: [
