@@ -56,6 +56,7 @@ describe('KrnRadioGroup', () => {
 
   it('owns a standalone value and suppresses no-op emissions', async () => {
     const fixture = TestBed.createComponent(StandaloneRadioGroupHost);
+    fixture.detectChanges();
     await fixture.whenStable();
     const group = fixture.debugElement.children[0]!.componentInstance as KrnRadioGroup;
     const valueChange = vi.fn();
@@ -79,6 +80,7 @@ describe('KrnRadioGroup', () => {
 
   it('keeps Angular Forms as owner when value APIs are mixed', async () => {
     const fixture = TestBed.createComponent(AngularOwnedRadioGroupHost);
+    fixture.detectChanges();
     await fixture.whenStable();
     const host = fixture.componentInstance;
     const inputs = [
@@ -98,6 +100,7 @@ describe('KrnRadioGroup', () => {
 
   it('composes group ARIA references and focuses selected then first available option', async () => {
     const fixture = TestBed.createComponent(AccessibleRadioGroupHost);
+    fixture.detectChanges();
     await fixture.whenStable();
     const group = fixture.debugElement.children[0]!.componentInstance as KrnRadioGroup;
     const fieldset = fixture.nativeElement.querySelector('fieldset') as HTMLFieldSetElement;
