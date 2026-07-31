@@ -135,6 +135,10 @@ contract or upgrade decision.
 - Strengthened Date Range Picker with normalized standalone range ownership, controlled open state,
   structural change deduplication, composable trigger semantics, shortcut-safe calendar navigation,
   composite focus/touched behavior, configurable tab order, and public focus and blur methods.
+- Strengthened Time Picker with canonical `HH:mm` standalone value ownership, controlled open
+  state, duplicate-free commits, min-anchored step validation, composable external/Form Field ARIA
+  references, composite focus/touched behavior, configurable tab order, and public focus and blur
+  methods.
 
 ### Deprecated
 

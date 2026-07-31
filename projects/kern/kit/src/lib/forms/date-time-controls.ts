@@ -65,7 +65,15 @@ const groupCalendarRows = (
   );
 
 const isTime = (value: unknown): value is string =>
-  typeof value === 'string' && /^(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/.test(value);
+  typeof value === 'string' && /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value);
+
+const timeToMinutes = (value: string): number =>
+  Number(value.slice(0, 2)) * 60 + Number(value.slice(3, 5));
+
+const timeMatchesStep = (value: number, base: number, stepSeconds: number): boolean => {
+  const steps = ((value - base) * 60) / stepSeconds;
+  return Math.abs(steps - Math.round(steps)) <= 1e-9;
+};
 
 const closeWhenFocusLeaves = (event: FocusEvent, close: () => void): void => {
   const current = event.currentTarget;
@@ -1113,17 +1121,18 @@ export class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
           class="krn-picker__trigger"
           type="button"
           [attr.aria-controls]="panelId()"
-          [attr.aria-describedby]="a11y.describedBy()"
+          [attr.aria-describedby]="effectiveDescribedBy()"
+          [attr.aria-disabled]="a11y.readOnly() ? 'true' : null"
           [attr.aria-expanded]="open()"
           [attr.aria-haspopup]="'dialog'"
           [attr.aria-invalid]="a11y.invalid()"
-          [attr.aria-label]="a11y.labelledBy() ? null : copy().chooseTime"
-          [attr.aria-labelledby]="a11y.labelledBy()"
+          [attr.aria-label]="effectiveLabelledBy() ? null : pickerAriaLabel()"
+          [attr.aria-labelledby]="effectiveLabelledBy()"
           [attr.aria-required]="a11y.required()"
           [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
           [disabled]="isDisabled()"
           [id]="a11y.id()"
-          (blur)="touch()"
+          [tabIndex]="isDisabled() ? -1 : tabIndex()"
           (click)="toggleOpen()"
         >
           @if (controlValue()) {
@@ -1144,7 +1153,7 @@ export class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
           popover="manual"
           role="dialog"
           [attr.aria-describedby]="panelId() + '-help'"
-          [attr.aria-label]="copy().chooseTime"
+          [attr.aria-label]="pickerAriaLabel()"
           [id]="panelId()"
         >
           <div class="krn-time-panel__header">
@@ -1158,6 +1167,7 @@ export class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
             <label class="krn-time-part">
               <span>{{ copy().hour }}</span>
               <input
+                #hourInput
                 type="text"
                 role="spinbutton"
                 autocomplete="off"
@@ -1247,7 +1257,9 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
   private readonly translations = inject(KRN_TRANSLATIONS);
   readonly id = input('');
   readonly labels = input<Partial<KrnTimePickerTranslations>>({});
-  readonly ariaLabel = input(this.translations.timePicker.chooseTime);
+  readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
   readonly min = input('');
   readonly max = input('');
   readonly step = input(60, { transform: numberAttribute });
@@ -1258,38 +1270,44 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
   });
   readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
+  readonly value = input<string | undefined>(undefined);
+  readonly open = model(false);
   readonly valueChange = output<string>();
-  protected readonly open = signal(false);
   protected readonly hourDraft = signal('');
   protected readonly minuteDraft = signal('');
   protected readonly copy = computed(() => ({
     ...this.translations.timePicker,
-    chooseTime: this.ariaLabel(),
     ...this.labels(),
   }));
+  protected readonly pickerAriaLabel = computed(() => this.ariaLabel() || this.copy().chooseTime);
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'time', {
     disabled: this.disabled,
     readOnly: this.readOnly,
     required: this.required,
   });
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
+  protected readonly effectiveLabelledBy = computed(() =>
+    mergeAriaIds(this.ariaLabelledBy(), this.a11y.labelledBy()),
+  );
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(this.ariaDescribedBy(), this.a11y.describedBy()),
+  );
   protected readonly panelId = computed(() => `${this.a11y.id()}-panel`);
-  protected readonly displayTime = computed(() => this.controlValue().slice(0, 5));
-  protected readonly minutes = computed(() => {
-    const increment = Math.min(60, Math.max(1, Math.round(this.step() / 60) || 1));
-    const values: number[] = [];
-    for (let minute = 0; minute < 60; minute += increment) {
-      values.push(minute);
-    }
-    return values;
+  protected readonly displayTime = computed(() => this.controlValue());
+  protected readonly stepSeconds = computed(() => {
+    const step = this.step();
+    return Number.isFinite(step) && step > 0 ? step : 60;
   });
   protected readonly availableTimes = computed(() => {
     const values: string[] = [];
-    for (let hour = 0; hour < 24; hour += 1) {
-      for (const minute of this.minutes()) {
-        if (!this.timeDisabled(hour, minute)) {
-          values.push(`${pad(hour)}:${pad(minute)}`);
-        }
+    const min = isTime(this.min()) ? timeToMinutes(this.min()) : 0;
+    const step = this.stepSeconds();
+    for (let total = 0; total < 24 * 60; total += 1) {
+      const hour = Math.floor(total / 60);
+      const minute = total % 60;
+      if (timeMatchesStep(total, min, step) && !this.timeDisabled(hour, minute)) {
+        values.push(`${pad(hour)}:${pad(minute)}`);
       }
     }
     return values;
@@ -1301,7 +1319,7 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
   protected readonly draftTime = computed(() => {
     const hour = this.draftHourNumber();
     const minute = this.draftMinuteNumber();
-    if (hour === null || minute === null || !this.minutes().includes(minute)) {
+    if (hour === null || minute === null) {
       return '';
     }
     const value = `${pad(hour)}:${pad(minute)}`;
@@ -1326,6 +1344,23 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
   });
   private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
   private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
+  private readonly hourInput = viewChild<ElementRef<HTMLInputElement>>('hourInput');
+  private focusGeneration = 0;
+  private lastObservedOpen = this.open();
+  private readonly initializeControlledOpen = effect(() => {
+    const value = this.controlValue();
+    const open = this.open();
+    this.min();
+    this.max();
+    this.stepSeconds();
+    if (open !== this.lastObservedOpen) {
+      this.lastObservedOpen = open;
+      this.focusGeneration += 1;
+    }
+    if (open) {
+      untracked(() => this.seedDraft(value));
+    }
+  });
   private readonly syncPanel = effect((onCleanup) => {
     if (!this.open()) {
       return;
@@ -1336,6 +1371,18 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
       connectPickerPopover(trigger, panel, 320, 340, onCleanup);
     }
   });
+  private readonly focusDraftOnOpen = effect(() => {
+    if (!this.open()) {
+      return;
+    }
+    const input = this.hourInput()?.nativeElement;
+    const generation = this.focusGeneration;
+    this.platform.queueMicrotask(() => {
+      if (this.open() && this.focusGeneration === generation) {
+        input?.focus();
+      }
+    });
+  });
   private readonly closeWhenBlocked = effect(() => {
     const disabled = this.isDisabled();
     const readOnly = this.a11y.readOnly();
@@ -1343,15 +1390,16 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
       return;
     }
     this.seedDraft();
-    this.open.set(false);
+    const generation = this.setOpen(false);
     if (!disabled) {
-      this.platform.queueMicrotask(() => this.trigger()?.nativeElement.focus());
+      this.restoreTriggerFocus(generation);
     }
   });
 
   constructor() {
     super('');
-    this.watchValidationInputs(this.required, this.a11y.required, this.min, this.max);
+    this.bindStandaloneValue(this.value);
+    this.watchValidationInputs(this.required, this.a11y.required, this.min, this.max, this.step);
   }
 
   protected override normalizeIncomingValue(value: unknown): string {
@@ -1363,24 +1411,30 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
     const normalized = typeof value === 'string' ? value.slice(0, 5) : '';
     const min = isTime(this.min()) ? this.min().slice(0, 5) : '';
     const max = isTime(this.max()) ? this.max().slice(0, 5) : '';
+    const stepBase = min ? timeToMinutes(min) : 0;
+    const stepMismatch =
+      valid &&
+      normalized &&
+      !timeMatchesStep(timeToMinutes(normalized), stepBase, this.stepSeconds());
     return mergeValidationErrors(
       requiredError(value, this.a11y.required()),
       !valid ? { time: true } : null,
       valid && normalized && min && normalized < min ? { minTime: { min, actual: value } } : null,
       valid && normalized && max && normalized > max ? { maxTime: { max, actual: value } } : null,
+      stepMismatch ? { stepTime: { step: this.step(), actual: value } } : null,
     );
   }
 
   protected toggleOpen(): void {
-    if (!this.isDisabled() && !this.a11y.readOnly()) {
-      const shouldOpen = !this.open();
-      if (shouldOpen) {
-        this.seedDraft();
-        this.open.set(true);
-      } else {
-        this.close();
-      }
+    if (this.isDisabled() || this.a11y.readOnly()) {
+      return;
     }
+    if (this.open()) {
+      this.close();
+      return;
+    }
+    this.seedDraft();
+    this.setOpen(true);
   }
 
   protected close(restoreFocus = true): void {
@@ -1388,14 +1442,9 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
       return;
     }
     this.seedDraft();
-    this.open.set(false);
-    this.touch();
+    const generation = this.setOpen(false);
     if (restoreFocus) {
-      this.platform.queueMicrotask(() => {
-        if (!this.isDisabled()) {
-          this.trigger()?.nativeElement.focus();
-        }
-      });
+      this.restoreTriggerFocus(generation);
     }
   }
 
@@ -1404,7 +1453,10 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
   }
 
   protected closeOnFocusOut(event: FocusEvent): void {
-    closeWhenFocusLeaves(event, () => this.close(false));
+    closeWhenFocusLeaves(event, () => {
+      this.touch();
+      this.close(false);
+    });
   }
 
   protected updateDraftPart(part: 'hour' | 'minute', event: Event): void {
@@ -1491,17 +1543,26 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
     if (this.isDisabled() || this.a11y.readOnly()) {
       return;
     }
-    this.commitValue(value);
-    this.valueChange.emit(value);
+    if (this.commitUserValue(value)) {
+      this.valueChange.emit(value);
+    }
   }
 
-  private seedDraft(): void {
-    const fallback =
-      this.controlValue().slice(0, 5) ||
-      (isTime(this.min()) ? this.min().slice(0, 5) : '') ||
-      this.timePresets()[0] ||
-      this.availableTimes()[0] ||
-      '00:00';
+  focus(options?: FocusOptions): void {
+    this.trigger()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    const trigger = this.trigger()?.nativeElement;
+    const panel = this.panel()?.nativeElement;
+    const active = trigger?.ownerDocument.activeElement;
+    if (active === trigger || (active && panel?.contains(active))) {
+      (active as HTMLElement).blur();
+    }
+  }
+
+  private seedDraft(value = this.controlValue()): void {
+    const fallback = value || this.timePresets()[0] || this.availableTimes()[0] || '00:00';
     this.setDraft(fallback);
   }
 
@@ -1544,11 +1605,30 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
   }
 
   private minuteCandidates(hour: number, minute: number, direction: 1 | -1): string[] {
-    const minutes = this.minutes();
+    const minutes = this.availableTimes()
+      .filter((value) => Number(value.slice(0, 2)) === hour)
+      .map((value) => Number(value.slice(3, 5)));
     const currentIndex = Math.max(0, minutes.indexOf(minute));
     return Array.from({ length: minutes.length }, (_, offset) => {
       const index = (currentIndex + direction * (offset + 1) + minutes.length * 2) % minutes.length;
       return `${pad(hour)}:${pad(minutes[index] ?? 0)}`;
+    });
+  }
+
+  private setOpen(open: boolean): number {
+    if (this.open() !== open) {
+      this.focusGeneration += 1;
+      this.lastObservedOpen = open;
+      this.open.set(open);
+    }
+    return this.focusGeneration;
+  }
+
+  private restoreTriggerFocus(generation: number): void {
+    this.platform.queueMicrotask(() => {
+      if (!this.open() && this.focusGeneration === generation && !this.isDisabled()) {
+        this.trigger()?.nativeElement.focus();
+      }
     });
   }
 }
