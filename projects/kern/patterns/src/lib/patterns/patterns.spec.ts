@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 
 import { KrnLoginForm, KrnMultiStepForm, KrnProfileForm } from './form-patterns';
 import { KrnGlobalSearch, KrnSettingsPanel, KrnUserMenu } from './product-patterns';
@@ -47,12 +48,91 @@ describe('Kern product patterns', () => {
     const firstAction = fixture.nativeElement.querySelector(
       '[role="menuitem"]',
     ) as HTMLButtonElement;
+    const menu = fixture.nativeElement.querySelector('[role="menu"]') as HTMLElement;
     expect(firstAction).not.toBeNull();
+    expect(trigger.getAttribute('aria-controls')).toBe(menu.id);
     expect(document.activeElement).toBe(firstAction);
 
     firstAction.click();
     await fixture.whenStable();
     expect(fixture.nativeElement.querySelector('[role="menu"]')).toBeNull();
+  });
+
+  it('normalizes the user-menu name and handles menuitem variants and disabled items', async () => {
+    @Component({
+      imports: [KrnUserMenu],
+      template: `
+        <krn-user-menu name="  Avery Cole  " menuAriaLabel="   ">
+          <button
+            role="menuitemradio"
+            aria-checked="false"
+            aria-disabled="true"
+            type="button"
+            (click)="disabledActions += 1"
+          >
+            Disabled workspace
+          </button>
+          <button role="menuitemcheckbox" aria-checked="false" type="button">Compact mode</button>
+        </krn-user-menu>
+      `,
+    })
+    class UserMenuVariantsHost {
+      disabledActions = 0;
+    }
+
+    const fixture = TestBed.createComponent(UserMenuVariantsHost);
+    await fixture.whenStable();
+    const trigger = fixture.nativeElement.querySelector('.trigger') as HTMLButtonElement;
+    trigger.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await fixture.whenStable();
+    await new Promise<void>((resolve) => queueMicrotask(resolve));
+
+    const element = fixture.nativeElement as HTMLElement;
+    const menu = element.querySelector('[role="menu"]') as HTMLElement;
+    const items = element.querySelectorAll<HTMLButtonElement>('[role^="menuitem"]');
+    expect(trigger.querySelector('strong')?.textContent).toBe('Avery Cole');
+    expect(menu.getAttribute('aria-label')?.trim()).toBeTruthy();
+    expect([...items].map((item) => item.tabIndex)).toEqual([-1, -1]);
+    expect(document.activeElement).toBe(items[1]);
+
+    items[0]?.click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.disabledActions).toBe(0);
+    expect(fixture.nativeElement.querySelector('[role="menu"]')).not.toBeNull();
+
+    const instance = fixture.debugElement.query(By.directive(KrnUserMenu))
+      .componentInstance as KrnUserMenu;
+    items[1]?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+    await fixture.whenStable();
+    expect(instance.open()).toBe(false);
+
+    trigger.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await fixture.whenStable();
+    const reopenedItem = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>(
+      '[role="menuitemcheckbox"]',
+    );
+    reopenedItem?.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true }),
+    );
+    await fixture.whenStable();
+    expect(instance.open()).toBe(false);
+
+    instance.open.set(true);
+    fixture.detectChanges();
+    trigger.focus();
+    trigger.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+    );
+    await fixture.whenStable();
+    expect(instance.open()).toBe(false);
+    expect(document.activeElement).toBe(trigger);
+  });
+
+  it('rejects an empty user-menu name', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnUserMenu] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnUserMenu);
+    fixture.componentRef.setInput('name', '   ');
+    expect(() => fixture.detectChanges()).toThrowError(/non-empty name/);
   });
 
   it('composes settings with the coordinated drawer contract', async () => {

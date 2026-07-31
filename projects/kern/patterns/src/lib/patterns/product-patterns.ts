@@ -5,12 +5,14 @@ import {
   ElementRef,
   HostListener,
   computed,
+  effect,
   inject,
   Injector,
   input,
   model,
   numberAttribute,
   output,
+  viewChild,
 } from '@angular/core';
 
 import { KRN_PLATFORM, KrnIdService, krnIsElement, krnIsNode } from '@kern-ui/angular/cdk';
@@ -58,24 +60,27 @@ export interface KrnFilterDefinition {
         type="button"
         class="trigger"
         [attr.aria-expanded]="open()"
+        [attr.aria-controls]="open() ? menuId : null"
         aria-haspopup="menu"
         (click)="toggleMenu()"
         (keydown)="onTriggerKeydown($event)"
       >
         <ng-content select="[krnUserAvatar]" />
         <span class="identity">
-          <strong>{{ name() }}</strong>
-          @if (detail()) {
-            <small>{{ detail() }}</small>
+          <strong>{{ resolvedName() }}</strong>
+          @if (resolvedDetail()) {
+            <small>{{ resolvedDetail() }}</small>
           }
         </span>
         <span class="chevron" aria-hidden="true"></span>
       </button>
       @if (open()) {
         <div
+          #menu
           class="menu"
+          [id]="menuId"
           role="menu"
-          [attr.aria-label]="menuAriaLabel()"
+          [attr.aria-label]="resolvedMenuAriaLabel()"
           (click)="onMenuClick($event)"
           (keydown)="onMenuKeydown($event)"
         >
@@ -89,6 +94,9 @@ export interface KrnFilterDefinition {
       display: inline-block;
       max-inline-size: 100%;
       color: var(--krn-color-text, #252932);
+    }
+    :host([hidden]) {
+      display: none;
     }
     .root {
       position: relative;
@@ -177,7 +185,10 @@ export interface KrnFilterDefinition {
       animation: user-menu-in var(--krn-motion-duration-enter) var(--krn-ease-enter, ease-out);
       transform-origin: top left;
     }
-    .menu ::ng-deep [role='menuitem'] {
+    :host-context([dir='rtl']) .menu {
+      transform-origin: top right;
+    }
+    .menu ::ng-deep :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']) {
       display: flex;
       inline-size: 100%;
       min-block-size: 2.5rem;
@@ -191,11 +202,18 @@ export interface KrnFilterDefinition {
       text-align: start;
       cursor: pointer;
     }
-    .menu ::ng-deep [role='menuitem']:is(:hover, :focus-visible) {
+    .menu
+      ::ng-deep
+      :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']):is(
+        :hover,
+        :focus-visible
+      ) {
       background: var(--krn-color-surface-hover, #f2f3f5);
       outline: 0;
     }
-    .menu ::ng-deep [role='menuitem']:focus-visible {
+    .menu
+      ::ng-deep
+      :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']):focus-visible {
       box-shadow: inset 0 0 0 2px var(--krn-color-focus);
     }
     @keyframes user-menu-in {
@@ -215,6 +233,23 @@ export interface KrnFilterDefinition {
         animation: none;
       }
     }
+    @media (pointer: coarse) {
+      .menu ::ng-deep [role^='menuitem'] {
+        min-block-size: 2.75rem;
+      }
+    }
+    @media (forced-colors: active) {
+      .trigger,
+      .menu {
+        border-color: CanvasText;
+      }
+      .trigger:focus-visible,
+      .menu ::ng-deep [role^='menuitem']:focus-visible {
+        outline: 2px solid Highlight;
+        outline-offset: 2px;
+        box-shadow: none;
+      }
+    }
   `,
 })
 export class KrnUserMenu {
@@ -222,10 +257,45 @@ export class KrnUserMenu {
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly injector = inject(Injector);
+  protected readonly menuId = inject(KrnIdService).next('user-menu');
   readonly name = input.required<string>();
   readonly detail = input('');
   readonly menuAriaLabel = input(this.translations.patterns.userActions);
   readonly open = model(false);
+  private readonly menu = viewChild<ElementRef<HTMLElement>>('menu');
+  protected readonly resolvedName = computed(() => {
+    const name = this.name();
+    const normalized = typeof name === 'string' ? name.trim() : '';
+    if (!normalized) throw new Error('KrnUserMenu requires a non-empty name.');
+    return normalized;
+  });
+  protected readonly resolvedDetail = computed(() => {
+    const detail = this.detail();
+    return typeof detail === 'string' ? detail.trim() : '';
+  });
+  protected readonly resolvedMenuAriaLabel = computed(() => {
+    const inputLabel = this.menuAriaLabel();
+    const label = typeof inputLabel === 'string' ? inputLabel.trim() : '';
+    return label || this.translations.patterns.userActions.trim() || 'User actions';
+  });
+  private readonly blockDisabledActivation = effect((onCleanup) => {
+    const menu = this.menu()?.nativeElement;
+    if (!menu) return;
+    this.prepareMenuItems();
+    const captureDisabledClick = (event: Event): void => {
+      if (!krnIsElement(this.platform, event.target)) return;
+      const item = event.target.closest<HTMLElement>(
+        '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
+      );
+      if (!item || (!item.matches(':disabled') && item.getAttribute('aria-disabled') !== 'true')) {
+        return;
+      }
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    };
+    menu.addEventListener('click', captureDisabledClick, true);
+    onCleanup(() => menu.removeEventListener('click', captureDisabledClick, true));
+  });
 
   protected toggleMenu(): void {
     const next = !this.open();
@@ -236,6 +306,11 @@ export class KrnUserMenu {
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape' && this.open()) {
+      event.preventDefault();
+      this.closeAndFocus();
+      return;
+    }
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') {
       return;
     }
@@ -245,12 +320,17 @@ export class KrnUserMenu {
   }
 
   protected onMenuKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Tab') {
+      this.open.set(false);
+      return;
+    }
     if (event.key === 'Escape') {
       event.preventDefault();
       this.closeAndFocus();
       return;
     }
     const items = this.menuItems();
+    if (!items.length) return;
     const current = items.indexOf(this.platform.document.activeElement as HTMLElement);
     const next =
       event.key === 'Home'
@@ -270,9 +350,12 @@ export class KrnUserMenu {
   }
 
   protected onMenuClick(event: MouseEvent): void {
-    if (krnIsElement(this.platform, event.target) && event.target.closest('[role="menuitem"]')) {
-      this.closeAndFocus();
-    }
+    if (!krnIsElement(this.platform, event.target)) return;
+    const item = event.target.closest<HTMLElement>(
+      '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
+    );
+    if (!item || item.matches(':disabled') || item.getAttribute('aria-disabled') === 'true') return;
+    this.closeAndFocus(item);
   }
 
   protected onFocusOut(event: FocusEvent): void {
@@ -297,23 +380,37 @@ export class KrnUserMenu {
     }
   }
 
-  private closeAndFocus(): void {
+  private closeAndFocus(source?: HTMLElement): void {
     this.open.set(false);
-    const focus = (): void =>
+    const focus = (): void => {
+      const active = this.platform.document.activeElement;
+      if (source && active !== source && active !== this.platform.document.body) return;
       this.host.nativeElement.querySelector<HTMLButtonElement>('.trigger')?.focus();
+    };
     this.platform.queueMicrotask(focus);
   }
 
   private menuItems(): HTMLElement[] {
+    return this.allMenuItems().filter(
+      (item) => !item.matches(':disabled') && item.getAttribute('aria-disabled') !== 'true',
+    );
+  }
+
+  private allMenuItems(): HTMLElement[] {
     return Array.from(
       this.host.nativeElement.querySelectorAll<HTMLElement>(
-        '.menu [role="menuitem"]:not([disabled])',
+        '.menu :is([role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"])',
       ),
     );
   }
 
+  private prepareMenuItems(): void {
+    for (const item of this.allMenuItems()) item.tabIndex = -1;
+  }
+
   private focusMenuItem(index: number): void {
     const focusRequestedItem = (): void => {
+      this.prepareMenuItems();
       const items = this.menuItems();
       items[index < 0 ? items.length - 1 : index]?.focus();
     };
