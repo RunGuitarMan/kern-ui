@@ -100,8 +100,9 @@ export class KrnColorPickerHarness extends ComponentHarness {
   private readonly textInput = this.locatorForOptional('.krn-color-text');
   private readonly hueInput = this.locatorForOptional('.krn-color-range--hue');
   private readonly saturationInput = this.locatorForOptional(
-    '.krn-color-range:not(.krn-color-range--hue)',
+    '.krn-color-range:not(.krn-color-range--hue):not(.krn-color-range--lightness)',
   );
+  private readonly lightnessInput = this.locatorForOptional('.krn-color-range--lightness');
   private readonly status = this.locatorForOptional('.krn-color-status');
   private readonly doneButton = this.locatorForOptional('.krn-picker__footer button');
 
@@ -201,6 +202,26 @@ export class KrnColorPickerHarness extends ComponentHarness {
     await this.open();
     const input = await this.saturationInput();
     if (!input) throw new Error('The KERN color-picker saturation input is not available.');
+    await input.setInputValue(String(value));
+    await input.dispatchEvent('input');
+  }
+
+  async getLightness(): Promise<number> {
+    await this.open();
+    const input = await this.lightnessInput();
+    if (!input) throw new Error('The KERN color-picker lightness input is not available.');
+    return input.getProperty<number>('valueAsNumber');
+  }
+
+  async setLightness(value: number): Promise<void> {
+    if (!Number.isInteger(value) || value < 0 || value > 100) {
+      throw new Error(
+        `Color-picker lightness must be an integer from 0 to 100; received ${value}.`,
+      );
+    }
+    await this.open();
+    const input = await this.lightnessInput();
+    if (!input) throw new Error('The KERN color-picker lightness input is not available.');
     await input.setInputValue(String(value));
     await input.dispatchEvent('input');
   }

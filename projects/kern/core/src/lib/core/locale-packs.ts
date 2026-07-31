@@ -151,6 +151,7 @@ export const KRN_RU_RU_LOCALE: Readonly<KrnLocalePack> = Object.freeze({
       suggestedColors: 'Предлагаемые цвета',
       hue: 'Тон',
       saturation: 'Насыщенность',
+      lightness: 'Светлота',
       colorValue: 'Значение цвета',
       validColor: 'Корректный шестнадцатеричный цвет.',
       invalidColor: 'Введите корректный шестнадцатеричный цвет.',

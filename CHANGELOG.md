@@ -139,6 +139,11 @@ contract or upgrade decision.
   state, duplicate-free commits, min-anchored step validation, composable external/Form Field ARIA
   references, composite focus/touched behavior, configurable tab order, and public focus and blur
   methods.
+- Strengthened Color Picker with canonical six-digit hexadecimal standalone value ownership,
+  controlled open state, duplicate-free commits, complete HSL editing, perceptual preview
+  contrast, composable external/Form Field ARIA references, composite focus/touched behavior,
+  configurable tab order, public focus and blur methods, and lightness-aware translations and
+  testing harness controls.
 
 ### Deprecated
 

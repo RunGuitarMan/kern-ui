@@ -54,6 +54,11 @@ interface KrnHslColor {
 }
 
 const DEFAULT_COLOR = '#4666da';
+const isHexColor = (value: unknown): value is string =>
+  typeof value === 'string' && /^#[\da-f]{6}$/i.test(value);
+
+const normalizeColorValue = (value: unknown): string =>
+  typeof value === 'string' ? (isHexColor(value) ? value.toLowerCase() : value) : DEFAULT_COLOR;
 
 const pad = (value: number): string => `${value}`.padStart(2, '0');
 
@@ -1634,7 +1639,7 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
 }
 
 const hexToHsl = (value: string): KrnHslColor | null => {
-  if (!/^#[\da-f]{6}$/i.test(value)) {
+  if (!isHexColor(value)) {
     return null;
   }
   const red = Number.parseInt(value.slice(1, 3), 16) / 255;
@@ -1692,6 +1697,15 @@ const hslToHex = (hue: number, saturation: number, lightness: number): string =>
     .join('')}`;
 };
 
+const relativeLuminance = (value: string): number => {
+  const channels = [1, 3, 5].map((offset) => Number.parseInt(value.slice(offset, offset + 2), 16));
+  const [red, green, blue] = channels.map((channel) => {
+    const normalized = channel / 255;
+    return normalized <= 0.04045 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * (red ?? 0) + 0.7152 * (green ?? 0) + 0.0722 * (blue ?? 0);
+};
+
 @Component({
   selector: 'krn-color-picker',
   host: {
@@ -1716,16 +1730,17 @@ const hslToHex = (hue: number, saturation: number, lightness: number): string =>
           class="krn-picker__trigger krn-color-trigger"
           type="button"
           [attr.aria-controls]="panelId()"
-          [attr.aria-describedby]="a11y.describedBy()"
+          [attr.aria-describedby]="effectiveDescribedBy()"
+          [attr.aria-disabled]="a11y.readOnly() ? 'true' : null"
           [attr.aria-expanded]="open()"
           [attr.aria-haspopup]="'dialog'"
           [attr.aria-invalid]="a11y.invalid() || !validColor()"
-          [attr.aria-label]="a11y.labelledBy() ? null : copy().chooseColor"
-          [attr.aria-labelledby]="a11y.labelledBy()"
+          [attr.aria-label]="effectiveLabelledBy() ? null : copy().chooseColor"
+          [attr.aria-labelledby]="effectiveLabelledBy()"
           [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
           [disabled]="isDisabled()"
           [id]="a11y.id()"
-          (blur)="touch()"
+          [tabIndex]="isDisabled() ? -1 : tabIndex()"
           (click)="toggleOpen()"
         >
           <span
@@ -1806,8 +1821,27 @@ const hslToHex = (hue: number, saturation: number, lightness: number): string =>
           </label>
 
           <label class="krn-color-field">
+            <span
+              >{{ copy().lightness }} <output>{{ lightness() }}%</output></span
+            >
+            <input
+              class="krn-color-range krn-color-range--lightness"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              [attr.aria-label]="copy().lightness"
+              [disabled]="isDisabled() || a11y.readOnly()"
+              [style.background]="lightnessBackground()"
+              [value]="lightness()"
+              (input)="updateLightness($event)"
+            />
+          </label>
+
+          <label class="krn-color-field">
             <span>{{ copy().colorValue }}</span>
             <input
+              #colorText
               class="krn-color-text"
               type="text"
               autocapitalize="off"
@@ -1847,14 +1881,18 @@ export class KrnColorPicker extends KrnValueAccessor<string> {
   readonly labels = input<Partial<KrnColorPickerTranslations>>({});
   readonly pickerLabel = input(this.translations.colorPicker.chooseColor);
   readonly textLabel = input(this.translations.colorPicker.colorValue);
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false, {
     alias: 'readonly',
     transform: booleanAttribute,
   });
   readonly invalid = input(false, { transform: booleanAttribute });
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
+  readonly value = input<string | undefined>(undefined);
+  readonly open = model(false);
   readonly valueChange = output<string>();
-  protected readonly open = signal(false);
   protected readonly hue = signal(226);
   protected readonly saturation = signal(66);
   protected readonly lightness = signal(56);
@@ -1879,21 +1917,44 @@ export class KrnColorPicker extends KrnValueAccessor<string> {
     readOnly: this.readOnly,
   });
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
+  protected readonly effectiveLabelledBy = computed(() =>
+    mergeAriaIds(this.ariaLabelledBy(), this.a11y.labelledBy()),
+  );
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(this.ariaDescribedBy(), this.a11y.describedBy()),
+  );
   protected readonly panelId = computed(() => `${this.a11y.id()}-panel`);
-  protected readonly validColor = computed(() => /^#[\da-f]{6}$/i.test(this.controlValue()));
+  protected readonly validColor = computed(() => isHexColor(this.controlValue()));
   protected readonly normalizedColor = computed(() =>
-    this.validColor() ? this.controlValue().toLowerCase() : DEFAULT_COLOR,
+    this.validColor() ? this.controlValue() : DEFAULT_COLOR,
   );
   protected readonly saturationBackground = computed(
     () =>
       `linear-gradient(90deg, hsl(${this.hue()} 0% ${this.lightness()}%), ` +
       `hsl(${this.hue()} 100% ${this.lightness()}%))`,
   );
+  protected readonly lightnessBackground = computed(
+    () => `linear-gradient(90deg, #000000, hsl(${this.hue()} ${this.saturation()}% 50%), #ffffff)`,
+  );
   protected readonly previewTextColor = computed(() =>
-    this.lightness() > 66 ? '#111318' : '#ffffff',
+    relativeLuminance(this.normalizedColor()) > 0.179 ? '#000000' : '#ffffff',
   );
   private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
   private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
+  private readonly colorText = viewChild<ElementRef<HTMLInputElement>>('colorText');
+  private focusGeneration = 0;
+  private lastObservedOpen = this.open();
+  private readonly observeControlledOpen = effect(() => {
+    const open = this.open();
+    if (open !== this.lastObservedOpen) {
+      this.lastObservedOpen = open;
+      this.focusGeneration += 1;
+    }
+  });
+  private readonly syncColorState = effect(() => {
+    const value = this.controlValue();
+    untracked(() => this.syncHsl(value));
+  });
   private readonly syncPanel = effect((onCleanup) => {
     if (!this.open()) {
       return;
@@ -1901,8 +1962,20 @@ export class KrnColorPicker extends KrnValueAccessor<string> {
     const trigger = this.trigger()?.nativeElement;
     const panel = this.panel()?.nativeElement;
     if (trigger && panel) {
-      connectPickerPopover(trigger, panel, 320, 472, onCleanup);
+      connectPickerPopover(trigger, panel, 320, 536, onCleanup);
     }
+  });
+  private readonly focusColorTextOnOpen = effect(() => {
+    if (!this.open()) {
+      return;
+    }
+    const input = this.colorText()?.nativeElement;
+    const generation = this.focusGeneration;
+    this.platform.queueMicrotask(() => {
+      if (this.open() && this.focusGeneration === generation) {
+        input?.focus();
+      }
+    });
   });
   private readonly closeWhenBlocked = effect(() => {
     const disabled = this.isDisabled();
@@ -1910,47 +1983,43 @@ export class KrnColorPicker extends KrnValueAccessor<string> {
     if (!this.open() || (!disabled && !readOnly)) {
       return;
     }
-    this.open.set(false);
+    const generation = this.setOpen(false);
     if (!disabled) {
-      this.platform.queueMicrotask(() => this.trigger()?.nativeElement.focus());
+      this.restoreTriggerFocus(generation);
     }
   });
 
   constructor() {
     super(DEFAULT_COLOR);
-  }
-
-  override writeValue(value: unknown): void {
-    super.writeValue(value);
-    this.syncHsl(this.controlValue());
+    this.bindStandaloneValue(this.value);
   }
 
   protected override normalizeIncomingValue(value: unknown): string {
-    return typeof value === 'string' ? value : DEFAULT_COLOR;
+    return normalizeColorValue(value);
   }
 
   protected override validateValue(value: unknown) {
-    return typeof value === 'string' && /^#[\da-f]{6}$/i.test(value) ? null : { color: true };
+    return isHexColor(value) ? null : { color: true };
   }
 
   protected toggleOpen(): void {
-    if (!this.isDisabled() && !this.a11y.readOnly()) {
-      this.open.update((value) => !value);
+    if (this.isDisabled() || this.a11y.readOnly()) {
+      return;
     }
+    if (this.open()) {
+      this.close();
+      return;
+    }
+    this.setOpen(true);
   }
 
   protected close(restoreFocus = true): void {
     if (!this.open()) {
       return;
     }
-    this.open.set(false);
-    this.touch();
+    const generation = this.setOpen(false);
     if (restoreFocus) {
-      this.platform.queueMicrotask(() => {
-        if (!this.isDisabled()) {
-          this.trigger()?.nativeElement.focus();
-        }
-      });
+      this.restoreTriggerFocus(generation);
     }
   }
 
@@ -1959,7 +2028,10 @@ export class KrnColorPicker extends KrnValueAccessor<string> {
   }
 
   protected closeOnFocusOut(event: FocusEvent): void {
-    closeWhenFocusLeaves(event, () => this.close(false));
+    closeWhenFocusLeaves(event, () => {
+      this.touch();
+      this.close(false);
+    });
   }
 
   protected updateHue(event: Event): void {
@@ -1978,6 +2050,14 @@ export class KrnColorPicker extends KrnValueAccessor<string> {
     this.emitHslColor();
   }
 
+  protected updateLightness(event: Event): void {
+    if (this.isDisabled() || this.a11y.readOnly()) {
+      return;
+    }
+    this.lightness.set((event.target as HTMLInputElement).valueAsNumber);
+    this.emitHslColor();
+  }
+
   protected selectColor(value: string): void {
     if (this.isDisabled() || this.a11y.readOnly()) {
       return;
@@ -1990,9 +2070,10 @@ export class KrnColorPicker extends KrnValueAccessor<string> {
     if (this.isDisabled() || this.a11y.readOnly()) {
       return;
     }
-    const value = (event.target as HTMLInputElement).value.trim();
-    this.commitValue(value);
-    this.valueChange.emit(value);
+    const value = normalizeColorValue((event.target as HTMLInputElement).value.trim());
+    if (this.commitUserValue(value)) {
+      this.valueChange.emit(value);
+    }
     this.syncHsl(value);
   }
 
@@ -2004,8 +2085,23 @@ export class KrnColorPicker extends KrnValueAccessor<string> {
     if (this.isDisabled() || this.a11y.readOnly()) {
       return;
     }
-    this.commitValue(value);
-    this.valueChange.emit(value);
+    const normalized = normalizeColorValue(value);
+    if (this.commitUserValue(normalized)) {
+      this.valueChange.emit(normalized);
+    }
+  }
+
+  focus(options?: FocusOptions): void {
+    this.trigger()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    const trigger = this.trigger()?.nativeElement;
+    const panel = this.panel()?.nativeElement;
+    const active = trigger?.ownerDocument.activeElement;
+    if (active === trigger || (active && panel?.contains(active))) {
+      (active as HTMLElement).blur();
+    }
   }
 
   private syncHsl(value: string): void {
@@ -2016,5 +2112,22 @@ export class KrnColorPicker extends KrnValueAccessor<string> {
     this.hue.set(color.hue);
     this.saturation.set(color.saturation);
     this.lightness.set(color.lightness);
+  }
+
+  private setOpen(open: boolean): number {
+    if (this.open() !== open) {
+      this.focusGeneration += 1;
+      this.lastObservedOpen = open;
+      this.open.set(open);
+    }
+    return this.focusGeneration;
+  }
+
+  private restoreTriggerFocus(generation: number): void {
+    this.platform.queueMicrotask(() => {
+      if (!this.open() && this.focusGeneration === generation && !this.isDisabled()) {
+        this.trigger()?.nativeElement.focus();
+      }
+    });
   }
 }

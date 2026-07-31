@@ -749,9 +749,14 @@ describe('@kern-ui/angular/testing', () => {
 
     await picker.setHue(180);
     expect(await picker.getHue()).toBe(180);
+    const lightnessBeforeSaturation = await picker.getLightness();
     await picker.setSaturation(40);
     expect(await picker.getSaturation()).toBe(40);
+    expect(await picker.getLightness()).toBe(lightnessBeforeSaturation);
+    await picker.setLightness(25);
+    expect(await picker.getLightness()).toBe(25);
     await expect(picker.setHue(360)).rejects.toThrow('integer from 0 to 359');
+    await expect(picker.setLightness(101)).rejects.toThrow('integer from 0 to 100');
 
     await picker.setValue('not-a-color');
     expect(await picker.isInvalid()).toBe(true);

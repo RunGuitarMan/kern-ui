@@ -116,6 +116,7 @@ export interface KrnColorPickerTranslations {
   readonly suggestedColors: string;
   readonly hue: string;
   readonly saturation: string;
+  readonly lightness: string;
   readonly colorValue: string;
   readonly validColor: string;
   readonly invalidColor: string;
@@ -479,6 +480,7 @@ export const KRN_ENGLISH_TRANSLATIONS: Readonly<KrnTranslations> = Object.freeze
     suggestedColors: 'Suggested colors',
     hue: 'Hue',
     saturation: 'Saturation',
+    lightness: 'Lightness',
     colorValue: 'Color value',
     validColor: 'Valid hexadecimal color.',
     invalidColor: 'Enter a valid hexadecimal color.',
