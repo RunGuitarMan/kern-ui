@@ -131,6 +131,9 @@ contract or upgrade decision.
 - Strengthened Date Picker with deterministic standalone `value` ownership, controlled open state,
   duplicate-free date commits, composable trigger semantics, shortcut-safe calendar navigation,
   composite focus/touched behavior, configurable tab order, and public focus and blur methods.
+- Strengthened Date Range Picker with normalized standalone range ownership, controlled open state,
+  structural change deduplication, composable trigger semantics, shortcut-safe calendar navigation,
+  composite focus/touched behavior, configurable tab order, and public focus and blur methods.
 
 ### Deprecated
 
