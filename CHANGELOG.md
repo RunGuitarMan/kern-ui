@@ -62,6 +62,8 @@ contract or upgrade decision.
 - Strengthened App Shell with canonical responsive drawer state, composed dialog naming and
   descriptions, configurable initial focus, explicit dialog trigger semantics, and public
   navigation and main-focus methods.
+- Strengthened Header with native landmark naming, stable logical grid areas, configurable sticky
+  offset, restored hidden semantics, and sticky App Shell projection without an extra layout box.
 - Removed duplicate state-change outputs where signal models already provide the canonical event.
 - Rebuilt Form Field as a control-owned label/description coordinator: registered controls now
   supply identity and Angular state, full control events drive pending/valid/disabled presentation,

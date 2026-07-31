@@ -154,6 +154,10 @@ import { krnCssLength } from './layout.types';
       border-start-end-radius: inherit;
     }
 
+    .krn-shell__header:has(> krn-header) {
+      display: contents;
+    }
+
     .krn-shell__navigation,
     .krn-shell__navigation-surface {
       display: contents;
@@ -412,7 +416,11 @@ export class KrnAppShell {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <header class="krn-header">
+    <header
+      class="krn-header"
+      [attr.aria-label]="ariaLabelledBy() ? null : ariaLabel() || null"
+      [attr.aria-labelledby]="ariaLabelledBy() || null"
+    >
       <div class="krn-header__start">
         <ng-content select="[krnHeaderStart]" />
       </div>
@@ -424,6 +432,7 @@ export class KrnAppShell {
   `,
   host: {
     '[style.--krn-header-height]': 'resolvedHeight()',
+    '[style.--krn-header-sticky-offset]': 'resolvedStickyOffset()',
     '[attr.data-sticky]': 'sticky() ? "" : null',
     '[attr.data-elevated]': 'elevated() ? "" : null',
   },
@@ -436,15 +445,25 @@ export class KrnAppShell {
       border-start-end-radius: inherit;
     }
 
+    :host([hidden]) {
+      display: none;
+    }
+
+    :host-context(.krn-shell__header) {
+      grid-area: header;
+      min-inline-size: 0;
+    }
+
     :host([data-sticky]) {
       position: sticky;
       z-index: var(--krn-z-sticky);
-      inset-block-start: 0;
+      inset-block-start: var(--krn-header-sticky-offset);
     }
 
     .krn-header {
       display: grid;
       min-block-size: var(--krn-header-height);
+      grid-template-areas: 'start content end';
       grid-template-columns: auto minmax(0, 1fr) auto;
       align-items: center;
       gap: var(--krn-space-3);
@@ -471,8 +490,17 @@ export class KrnAppShell {
       gap: var(--krn-space-2);
     }
 
+    .krn-header__start {
+      grid-area: start;
+    }
+
     .krn-header__content {
+      grid-area: content;
       min-inline-size: 0;
+    }
+
+    .krn-header__end {
+      grid-area: end;
     }
 
     .krn-header__start:empty,
@@ -498,10 +526,14 @@ export class KrnAppShell {
 })
 export class KrnHeader {
   readonly height = input<KrnLayoutSpace>('4rem');
+  readonly stickyOffset = input<KrnLayoutSpace>(0);
   readonly sticky = input(true, { transform: booleanAttribute });
   readonly elevated = input(false, { transform: booleanAttribute });
+  readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
 
   protected readonly resolvedHeight = computed(() => krnCssLength(this.height(), '4rem'));
+  protected readonly resolvedStickyOffset = computed(() => krnCssLength(this.stickyOffset()));
 }
 
 @Component({
