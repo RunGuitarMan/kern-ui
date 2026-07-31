@@ -689,6 +689,124 @@ describe('Kern product patterns', () => {
     expect(profile.componentInstance.form.controls.bio.hasError('maxlength')).toBe(true);
   });
 
+  it('keeps profile labels, errors, save focus, and typed output coherent', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnProfileForm] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnProfileForm);
+    fixture.componentRef.setInput('nameLabel', '   ');
+    fixture.componentRef.setInput('saveLabel', '   ');
+    fixture.componentRef.setInput('timezones', [
+      { value: ' Europe/London ', label: ' London ' },
+      { value: 'Europe/Berlin', label: 'Berlin' },
+    ]);
+    fixture.componentRef.setInput('value', {
+      name: '',
+      role: 'Engineer',
+      bio: '',
+      timezone: 'Europe/London',
+    });
+    const saved: unknown[] = [];
+    fixture.componentInstance.saved.subscribe((value) => saved.push(value));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const form = element.querySelector('form') as HTMLFormElement;
+    const name = element.querySelector('input[autocomplete="name"]') as HTMLInputElement;
+    const submit = element.querySelector('button[type="submit"]') as HTMLButtonElement;
+    expect(name.required).toBe(true);
+    expect(element.querySelector(`label[for="${name.id}"]`)?.textContent?.trim()).toBeTruthy();
+    expect(name.hasAttribute('aria-describedby')).toBe(false);
+    expect(submit.disabled).toBe(false);
+    expect(submit.textContent?.trim()).toBeTruthy();
+
+    submit.click();
+    fixture.detectChanges();
+    const errorId = name.getAttribute('aria-describedby');
+    expect(errorId).toBeTruthy();
+    expect(element.querySelector(`#${errorId}`)?.getAttribute('role')).toBe('alert');
+    expect(saved).toEqual([]);
+
+    fixture.componentInstance.form.controls.timezone.setValue(' Europe/London ');
+    expect(fixture.componentInstance.form.controls.timezone.hasError('unavailable')).toBe(true);
+    fixture.componentInstance.form.controls.timezone.setValue('Europe/London');
+    fixture.componentInstance.form.controls.name.setValue('Ada Lovelace');
+    fixture.componentInstance.form.controls.name.markAsDirty();
+    fixture.detectChanges();
+    submit.focus();
+    fixture.componentRef.setInput('saving', true);
+    fixture.detectChanges();
+    expect(document.activeElement).toBe(submit);
+    expect(submit.getAttribute('aria-disabled')).toBe('true');
+    expect(form.getAttribute('aria-busy')).toBe('true');
+    expect(element.querySelector('[role="status"]')?.textContent?.trim()).toBeTruthy();
+
+    fixture.componentRef.setInput('saving', false);
+    fixture.detectChanges();
+    submit.click();
+    fixture.detectChanges();
+    expect(saved).toEqual([
+      {
+        name: 'Ada Lovelace',
+        role: 'Engineer',
+        bio: '',
+        timezone: 'Europe/London',
+      },
+    ]);
+    expect(fixture.componentInstance.form.dirty).toBe(true);
+    expect(document.activeElement).toBe(submit);
+
+    fixture.componentRef.setInput('value', saved[0]);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.form.pristine).toBe(true);
+  });
+
+  it('rejects invalid profile limits and timezone identities', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnProfileForm] }).compileComponents();
+    const invalidLimit = TestBed.createComponent(KrnProfileForm);
+    invalidLimit.componentRef.setInput('bioMaxLength', Number.POSITIVE_INFINITY);
+    expect(() => invalidLimit.detectChanges()).toThrowError(/non-negative safe integer/);
+
+    const duplicateTimezones = TestBed.createComponent(KrnProfileForm);
+    duplicateTimezones.componentRef.setInput('timezones', [
+      { value: 'UTC', label: 'Universal' },
+      { value: ' UTC ', label: 'Duplicate' },
+    ]);
+    expect(() => duplicateTimezones.detectChanges()).toThrowError(/non-empty unique values/);
+  });
+
+  it('reports profile bio and timezone values that fall outside current constraints', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnProfileForm] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnProfileForm);
+    fixture.componentRef.setInput('value', {
+      name: 'Ada Lovelace',
+      role: '',
+      bio: 'Long biography',
+      timezone: ' Removed/Timezone ',
+    });
+    fixture.componentRef.setInput('bioMaxLength', 4);
+    fixture.componentRef.setInput('timezones', [{ value: 'UTC', label: 'UTC' }]);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const bio = element.querySelector('textarea') as HTMLTextAreaElement;
+    const timezone = element.querySelector('select') as HTMLSelectElement;
+    expect(bio.getAttribute('aria-invalid')).toBe('true');
+    expect(bio.getAttribute('aria-describedby')?.split(' ')).toHaveLength(2);
+    expect(
+      element
+        .querySelector(`#${bio.getAttribute('aria-describedby')?.split(' ')[1]}`)
+        ?.textContent?.trim(),
+    ).toBeTruthy();
+    expect(timezone.value).toBe('');
+    expect(timezone.getAttribute('aria-invalid')).toBe('true');
+    expect(
+      element.querySelector(`#${timezone.getAttribute('aria-describedby')}`)?.textContent?.trim(),
+    ).toBeTruthy();
+    expect(fixture.componentInstance.form.invalid).toBe(true);
+  });
+
   it('prevents advancing an invalid multi-step form', async () => {
     await TestBed.configureTestingModule({ imports: [KrnMultiStepForm] }).compileComponents();
     const fixture = TestBed.createComponent(KrnMultiStepForm);

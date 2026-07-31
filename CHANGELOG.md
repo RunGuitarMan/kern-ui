@@ -75,6 +75,9 @@ contract or upgrade decision.
   bottom-aligned optional footers, and resilient narrow/high-contrast layout behavior.
 - Hardened Login Form validation limits, label fallbacks, conditional error relationships, loading
   semantics, and email keyboard hints.
+- Hardened Profile Form runtime limits and timezone identities, required-name and invalid-value
+  semantics, normalized labels, persistent save status, and focus-preserving async saving behavior;
+  added customizable `bioErrorLabel` and `timezoneErrorLabel` inputs.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned

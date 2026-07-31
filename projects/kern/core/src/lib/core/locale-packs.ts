@@ -47,6 +47,7 @@ export const KRN_RU_RU_LOCALE: Readonly<KrnLocalePack> = Object.freeze({
   translations: createKrnTranslations({
     actions: {
       copyToClipboard: 'Копировать в буфер обмена',
+      copying: 'Копирование…',
       copied: 'Скопировано',
       copyFailed: 'Не удалось скопировать',
       moreActions: 'Другие действия',
@@ -312,7 +313,10 @@ export const KRN_RU_RU_LOCALE: Readonly<KrnLocalePack> = Object.freeze({
       displayNameRequired: 'Укажите отображаемое имя.',
       role: 'Роль',
       bio: 'О себе',
+      bioMaximumLength: (maximumLength) =>
+        `Раздел «О себе» должен содержать не более ${maximumLength} символов.`,
       timezone: 'Часовой пояс',
+      timezoneUnavailable: 'Выберите доступный часовой пояс.',
       saving: 'Сохранение…',
       saveProfile: 'Сохранить профиль',
       complete: 'Завершено',

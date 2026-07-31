@@ -1,7 +1,13 @@
 import { InjectionToken } from '@angular/core';
+import { KRN_DEFAULT_LOADING_LABEL } from '@kern-ui/angular/i18n';
 
 export interface KrnActionTranslations {
   readonly copyToClipboard: string;
+  /**
+   * Pending copy feedback. Optional so complete third-party dictionaries made
+   * for earlier Kern versions remain source-compatible.
+   */
+  readonly copying?: string;
   readonly copied: string;
   readonly copyFailed: string;
   readonly moreActions: string;
@@ -282,7 +288,9 @@ export interface KrnPatternTranslations {
   readonly displayNameRequired: string;
   readonly role: string;
   readonly bio: string;
+  readonly bioMaximumLength: (maximumLength: number) => string;
   readonly timezone: string;
+  readonly timezoneUnavailable: string;
   readonly saving: string;
   readonly saveProfile: string;
   readonly complete: string;
@@ -377,6 +385,7 @@ export function krnFormatTranslation<Arguments extends readonly unknown[]>(
 export const KRN_ENGLISH_TRANSLATIONS: Readonly<KrnTranslations> = Object.freeze({
   actions: Object.freeze({
     copyToClipboard: 'Copy to clipboard',
+    copying: 'Copying…',
     copied: 'Copied',
     copyFailed: 'Could not copy',
     moreActions: 'More actions',
@@ -602,7 +611,7 @@ export const KRN_ENGLISH_TRANSLATIONS: Readonly<KrnTranslations> = Object.freeze
     dismissMessage: 'Dismiss message',
     progress: 'Progress',
     loading: 'Loading',
-    loadingInProgress: 'Loading…',
+    loadingInProgress: KRN_DEFAULT_LOADING_LABEL,
     emptyStateTitle: 'Nothing here yet',
     errorStateTitle: 'Something went wrong',
     successStateTitle: 'Completed',
@@ -644,7 +653,10 @@ export const KRN_ENGLISH_TRANSLATIONS: Readonly<KrnTranslations> = Object.freeze
     displayNameRequired: 'Add a display name.',
     role: 'Role',
     bio: 'Bio',
+    bioMaximumLength: (maximumLength: number): string =>
+      `Bio must contain at most ${maximumLength} characters.`,
     timezone: 'Timezone',
+    timezoneUnavailable: 'Select an available timezone.',
     saving: 'Saving…',
     saveProfile: 'Save profile',
     complete: 'Complete',

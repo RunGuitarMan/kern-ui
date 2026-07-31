@@ -350,65 +350,110 @@ export class KrnLoginForm {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule],
   template: `
-    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <form [formGroup]="form" [attr.aria-busy]="saving()" (ngSubmit)="submit()" novalidate>
       <div class="field">
-        <label [for]="nameId">{{ nameLabel() }} <span aria-hidden="true">*</span></label>
+        <label [for]="nameId">{{ resolvedNameLabel() }} <span aria-hidden="true">*</span></label>
         <input
           [id]="nameId"
           autocomplete="name"
+          required
           formControlName="name"
-          [attr.aria-invalid]="form.controls.name.invalid && form.controls.name.touched"
+          [attr.aria-invalid]="showNameError()"
+          [attr.aria-describedby]="showNameError() ? nameErrorId : null"
         />
-        @if (form.controls.name.invalid && form.controls.name.touched) {
-          <p class="error" role="alert">{{ nameErrorLabel() }}</p>
+        @if (showNameError()) {
+          <p class="error" [id]="nameErrorId" role="alert">{{ resolvedNameErrorLabel() }}</p>
         }
       </div>
       <div class="field">
-        <label [for]="roleId">{{ roleLabel() }}</label>
+        <label [for]="roleId">{{ resolvedRoleLabel() }}</label>
         <input [id]="roleId" autocomplete="organization-title" formControlName="role" />
       </div>
       <div class="field">
-        <label [for]="bioId">{{ bioLabel() }}</label>
+        <label [for]="bioId">{{ resolvedBioLabel() }}</label>
         <textarea
           [id]="bioId"
           formControlName="bio"
-          [attr.aria-describedby]="bioCountId"
-          [attr.maxlength]="bioMaxLength()"
+          [attr.aria-invalid]="showBioError()"
+          [attr.aria-describedby]="showBioError() ? bioCountId + ' ' + bioErrorId : bioCountId"
+          [attr.maxlength]="resolvedBioMaxLength()"
         ></textarea>
         <p class="hint" [id]="bioCountId">
-          {{ form.controls.bio.value.length }} / {{ bioMaxLength() }}
+          {{ form.controls.bio.value.length }} / {{ resolvedBioMaxLength() }}
         </p>
+        @if (showBioError()) {
+          <p class="error" [id]="bioErrorId" role="alert">{{ resolvedBioErrorLabel() }}</p>
+        }
       </div>
       <div class="field">
-        <label [for]="timezoneId">{{ timezoneLabel() }}</label>
-        <select [id]="timezoneId" formControlName="timezone">
-          @for (timezone of timezones(); track timezone.value) {
+        <label [for]="timezoneId">{{ resolvedTimezoneLabel() }}</label>
+        <select
+          [id]="timezoneId"
+          required
+          formControlName="timezone"
+          [attr.aria-invalid]="showTimezoneError()"
+          [attr.aria-describedby]="showTimezoneError() ? timezoneErrorId : null"
+        >
+          @for (timezone of resolvedTimezones(); track timezone.value) {
             <option [value]="timezone.value">{{ timezone.label }}</option>
           }
         </select>
+        @if (showTimezoneError()) {
+          <p class="error" [id]="timezoneErrorId" role="alert">
+            {{ resolvedTimezoneErrorLabel() }}
+          </p>
+        }
       </div>
       <div class="row">
-        @if (dirtyMessage() && form.dirty) {
-          <p class="hint" role="status">{{ dirtyMessage() }}</p>
-        } @else {
-          <span></span>
-        }
-        <button class="submit" type="submit" [disabled]="saving() || form.invalid || !form.dirty">
-          {{ saving() ? savingLabel() : saveLabel() }}
+        <p class="hint status" role="status">
+          {{ saving() ? resolvedSavingLabel() : form.dirty ? resolvedDirtyMessage() : '' }}
+        </p>
+        <button
+          class="submit"
+          type="submit"
+          [attr.aria-disabled]="saving() || (!form.dirty && form.valid)"
+        >
+          {{ saving() ? resolvedSavingLabel() : resolvedSaveLabel() }}
         </button>
       </div>
     </form>
   `,
-  styles: [FORM_PATTERN_STYLES],
+  styles: [
+    FORM_PATTERN_STYLES,
+    `
+      :host([hidden]) {
+        display: none;
+      }
+      .status {
+        min-inline-size: 0;
+        margin: 0;
+        overflow-wrap: anywhere;
+      }
+      .submit[aria-disabled='true'] {
+        opacity: var(--krn-opacity-disabled, 0.48);
+      }
+      @media (forced-colors: active) {
+        input,
+        textarea,
+        select,
+        button {
+          border-color: CanvasText;
+        }
+      }
+    `,
+  ],
 })
 export class KrnProfileForm {
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly instanceId = inject(KrnIdService).next('profile-form');
   protected readonly nameId = `${this.instanceId}-name`;
+  protected readonly nameErrorId = `${this.nameId}-error`;
   protected readonly roleId = `${this.instanceId}-role`;
   protected readonly bioId = `${this.instanceId}-bio`;
   protected readonly bioCountId = `${this.bioId}-count`;
+  protected readonly bioErrorId = `${this.bioId}-error`;
   protected readonly timezoneId = `${this.instanceId}-timezone`;
+  protected readonly timezoneErrorId = `${this.timezoneId}-error`;
   readonly value = input<KrnProfileValue>({ name: '', role: '', bio: '', timezone: 'UTC' });
   readonly timezones = input<readonly { readonly value: string; readonly label: string }[]>(
     this.translations.patterns.profileTimezones,
@@ -419,13 +464,93 @@ export class KrnProfileForm {
   readonly nameErrorLabel = input(this.translations.patterns.displayNameRequired);
   readonly roleLabel = input(this.translations.patterns.role);
   readonly bioLabel = input(this.translations.patterns.bio);
+  readonly bioErrorLabel = input(this.translations.patterns.bioMaximumLength);
   readonly bioMaxLength = input(280, { transform: numberAttribute });
   readonly timezoneLabel = input(this.translations.patterns.timezone);
+  readonly timezoneErrorLabel = input(this.translations.patterns.timezoneUnavailable);
   readonly savingLabel = input(this.translations.patterns.saving);
   readonly saveLabel = input(this.translations.patterns.saveProfile);
   readonly saved = output<KrnProfileValue>();
+  protected readonly resolvedBioMaxLength = computed(() => {
+    const maximum = this.bioMaxLength();
+    if (!Number.isSafeInteger(maximum) || maximum < 0) {
+      throw new Error('KrnProfileForm: bioMaxLength must be a non-negative safe integer.');
+    }
+
+    return maximum;
+  });
+  protected readonly resolvedTimezones = computed(() => {
+    const timezones = this.timezones();
+    if (!Array.isArray(timezones) || timezones.length === 0) {
+      throw new Error('KrnProfileForm: timezones must contain at least one option.');
+    }
+
+    const values = new Set<string>();
+    return timezones.map((timezone) => {
+      const value = this.normalizeText(timezone?.value);
+      const label = this.normalizeText(timezone?.label);
+      if (!value || !label || values.has(value)) {
+        throw new Error(
+          'KrnProfileForm: timezones must use non-empty unique values and non-empty labels.',
+        );
+      }
+
+      values.add(value);
+      return { value, label } as const;
+    });
+  });
+  protected readonly resolvedDirtyMessage = computed(() =>
+    this.requiredLabel(
+      this.dirtyMessage(),
+      this.translations.patterns.unsavedChanges,
+      'Unsaved changes',
+    ),
+  );
+  protected readonly resolvedNameLabel = computed(() =>
+    this.requiredLabel(this.nameLabel(), this.translations.patterns.displayName, 'Display name'),
+  );
+  protected readonly resolvedNameErrorLabel = computed(() =>
+    this.requiredLabel(
+      this.nameErrorLabel(),
+      this.translations.patterns.displayNameRequired,
+      'Display name is required',
+    ),
+  );
+  protected readonly resolvedRoleLabel = computed(() =>
+    this.requiredLabel(this.roleLabel(), this.translations.patterns.role, 'Role'),
+  );
+  protected readonly resolvedBioLabel = computed(() =>
+    this.requiredLabel(this.bioLabel(), this.translations.patterns.bio, 'Biography'),
+  );
+  protected readonly resolvedBioErrorLabel = computed(() => {
+    const maximum = this.resolvedBioMaxLength();
+    return this.requiredLabel(
+      this.bioErrorLabel()(maximum),
+      this.translations.patterns.bioMaximumLength(maximum),
+      `Biography must contain at most ${maximum} characters`,
+    );
+  });
+  protected readonly resolvedTimezoneLabel = computed(() =>
+    this.requiredLabel(this.timezoneLabel(), this.translations.patterns.timezone, 'Timezone'),
+  );
+  protected readonly resolvedTimezoneErrorLabel = computed(() =>
+    this.requiredLabel(
+      this.timezoneErrorLabel(),
+      this.translations.patterns.timezoneUnavailable,
+      'Select an available timezone',
+    ),
+  );
+  protected readonly resolvedSavingLabel = computed(() =>
+    this.requiredLabel(this.savingLabel(), this.translations.patterns.saving, 'Saving'),
+  );
+  protected readonly resolvedSaveLabel = computed(() =>
+    this.requiredLabel(this.saveLabel(), this.translations.patterns.saveProfile, 'Save profile'),
+  );
   readonly form = new FormGroup({
-    name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    name: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.pattern(/\S/)],
+    }),
     role: new FormControl('', { nonNullable: true }),
     bio: new FormControl('', { nonNullable: true, validators: [Validators.maxLength(280)] }),
     timezone: new FormControl('UTC', { nonNullable: true }),
@@ -433,22 +558,55 @@ export class KrnProfileForm {
 
   constructor() {
     effect(() => {
-      this.form.reset(this.value(), { emitEvent: false });
+      const value = this.value();
+      this.form.reset(
+        { ...value, timezone: this.normalizeText(value.timezone) },
+        { emitEvent: false },
+      );
       this.form.markAsPristine();
     });
     effect(() => {
-      this.form.controls.bio.setValidators([
-        Validators.maxLength(Math.max(0, this.bioMaxLength())),
-      ]);
+      this.form.controls.bio.setValidators([Validators.maxLength(this.resolvedBioMaxLength())]);
       this.form.controls.bio.updateValueAndValidity({ emitEvent: false });
     });
+    effect(() => {
+      const values = new Set(this.resolvedTimezones().map(({ value }) => value));
+      this.form.controls.timezone.setValidators([
+        Validators.required,
+        (control) => (values.has(control.value) ? null : { unavailable: true }),
+      ]);
+      this.form.controls.timezone.updateValueAndValidity({ emitEvent: false });
+    });
+  }
+
+  showNameError(): boolean {
+    const control = this.form.controls.name;
+    return control.invalid && (control.touched || control.dirty);
+  }
+
+  showBioError(): boolean {
+    return this.form.controls.bio.hasError('maxlength');
+  }
+
+  showTimezoneError(): boolean {
+    return (
+      this.form.controls.timezone.hasError('required') ||
+      this.form.controls.timezone.hasError('unavailable')
+    );
   }
 
   submit(): void {
     this.form.markAllAsTouched();
-    if (this.form.invalid || this.saving()) return;
+    if (this.form.invalid || this.saving() || !this.form.dirty) return;
     this.saved.emit(this.form.getRawValue());
-    this.form.markAsPristine();
+  }
+
+  private normalizeText(value: string): string {
+    return typeof value === 'string' ? value.trim() : '';
+  }
+
+  private requiredLabel(value: string, fallback: string, hardFallback: string): string {
+    return this.normalizeText(value) || this.normalizeText(fallback) || hardFallback;
   }
 }
 
