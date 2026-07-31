@@ -23,6 +23,25 @@ import { KRN_PLATFORM, KrnOverlayCoordinator, krnIsHtmlElement } from '@kern-ui/
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnContextMenuItem, KrnNavigationItem } from './navigation.types';
 
+function validateContextMenuItems(
+  items: readonly KrnContextMenuItem[],
+): readonly KrnContextMenuItem[] {
+  const ids = new Set<string>();
+  const visit = (branch: readonly KrnContextMenuItem[]): void => {
+    for (const item of branch) {
+      if (ids.has(item.id)) {
+        throw new Error(
+          `KrnContextMenu requires globally unique item ids; duplicate: "${item.id}".`,
+        );
+      }
+      ids.add(item.id);
+      visit(item.children ?? []);
+    }
+  };
+  visit(items);
+  return items;
+}
+
 /** Identifies projected trigger content without a parallel boolean input. */
 @Directive({
   selector: '[krnMenuTrigger]',
@@ -597,36 +616,59 @@ export class KrnMenubar {
 @Component({
   selector: 'krn-context-menu',
   standalone: true,
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, OverlayModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(contextmenu)': 'onContextMenu($event)',
   },
   template: `
     <ng-content />
-    @if (open()) {
+    <ng-template
+      #connectedOverlay="cdkConnectedOverlay"
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="origin()"
+      [cdkConnectedOverlayOpen]="open()"
+      [cdkConnectedOverlayHasBackdrop]="true"
+      [cdkConnectedOverlayBackdropClass]="[
+        'cdk-overlay-transparent-backdrop',
+        'krn-overlay-backdrop',
+      ]"
+      cdkConnectedOverlayPanelClass="krn-overlay-pane"
+      [cdkConnectedOverlayPositions]="positions"
+      [cdkConnectedOverlayPush]="true"
+      [cdkConnectedOverlayFlexibleDimensions]="true"
+      [cdkConnectedOverlayViewportMargin]="8"
+      cdkConnectedOverlayUsePopover="inline"
+      cdkConnectedOverlayTransformOriginOn=".context-panel--root"
+      (attach)="onAttach(connectedOverlay)"
+      (backdropClick)="dismiss(false)"
+      (detach)="onOverlayDetach()"
+    >
       <ng-container
         [ngTemplateOutlet]="menuBranch"
         [ngTemplateOutletContext]="{
           $implicit: items(),
           root: true,
-          label: ariaLabel(),
+          label: resolvedAriaLabel(),
+          owner: '',
         }"
       />
-    }
-    <ng-template #menuBranch let-menuItems let-root="root" let-label="label">
+    </ng-template>
+    <ng-template #menuBranch let-menuItems let-root="root" let-label="label" let-owner="owner">
       <div
+        #contextPanel
         class="context-panel"
         [class.context-panel--root]="root"
         [class.submenu]="!root"
+        [class.rtl]="rightToLeft()"
+        [class.submenu-towards-start]="!root && submenuOpensTowardsStart(owner)"
         role="menu"
+        [attr.tabindex]="root && !branchHasEnabledItem(menuItems) ? -1 : null"
         [attr.aria-label]="label"
-        [style.inset-inline-start.px]="root ? x() : null"
-        [style.inset-block-start.px]="root ? y() : null"
         (click)="$event.stopPropagation()"
         (keydown)="onKeydown($event)"
       >
-        @for (item of menuItems; track item.id) {
+        @for (item of menuItems; track $index) {
           <div class="context-entry" (pointerenter)="onPointerEnter(item)">
             <button
               #contextItem
@@ -656,10 +698,15 @@ export class KrnMenubar {
                   $implicit: item.children,
                   root: false,
                   label: item.label,
+                  owner: item.id,
                 }"
               />
             }
           </div>
+        } @empty {
+          <p class="empty" role="menuitem" aria-disabled="true">
+            {{ resolvedEmptyLabel() }}
+          </p>
         }
       </div>
     </ng-template>
@@ -667,6 +714,9 @@ export class KrnMenubar {
   styles: `
     :host {
       display: contents;
+    }
+    :host([hidden]) {
+      display: none;
     }
     .context-panel {
       z-index: var(--krn-z-dropdown);
@@ -681,9 +731,6 @@ export class KrnMenubar {
       background: var(--krn-color-surface-raised);
       box-shadow: var(--krn-shadow-overlay);
     }
-    .context-panel--root {
-      position: fixed;
-    }
     .context-entry {
       position: relative;
     }
@@ -691,6 +738,10 @@ export class KrnMenubar {
       position: absolute;
       inset-block-start: calc(var(--krn-space-2) * -1);
       inset-inline-start: calc(100% + var(--krn-space-1));
+    }
+    .submenu.submenu-towards-start {
+      inset-inline-start: auto;
+      inset-inline-end: calc(100% + var(--krn-space-1));
     }
     button {
       display: grid;
@@ -716,6 +767,10 @@ export class KrnMenubar {
       background: var(--krn-color-surface-subtle);
       outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
       outline-offset: calc(var(--krn-focus-ring-offset) * -1);
+    }
+    .context-panel:focus-visible {
+      outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
+      outline-offset: var(--krn-focus-ring-offset);
     }
     button:disabled {
       color: var(--krn-color-text-disabled);
@@ -746,46 +801,130 @@ export class KrnMenubar {
       border-block-end: 1.5px solid currentColor;
       rotate: -45deg;
     }
-    :host-context([dir='rtl']) .submenu-chevron {
+    .rtl .submenu-chevron {
       rotate: 45deg;
+    }
+    .empty {
+      margin: 0;
+      padding: var(--krn-space-3);
+      color: var(--krn-color-text-muted);
+      font-size: var(--krn-font-size-sm);
+    }
+    @media (forced-colors: active) {
+      .context-panel {
+        border-color: CanvasText;
+      }
+      button:focus-visible,
+      .context-panel:focus-visible {
+        outline-color: Highlight;
+      }
     }
   `,
 })
 export class KrnContextMenu {
+  private readonly overlayCoordinator = inject(KrnOverlayCoordinator);
   private readonly platform = inject(KRN_PLATFORM);
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly elements = viewChildren<ElementRef<HTMLButtonElement>>('contextItem');
-  readonly items = input<readonly KrnContextMenuItem[]>([]);
+  private readonly panels = viewChildren<ElementRef<HTMLElement>>('contextPanel');
+  readonly items = input<readonly KrnContextMenuItem[], readonly KrnContextMenuItem[]>([], {
+    transform: validateContextMenuItems,
+  });
   readonly ariaLabel = input(this.translations.navigation.contextActions);
   readonly itemSelected = output<KrnContextMenuItem>();
   protected readonly open = signal(false);
-  protected readonly x = signal(0);
-  protected readonly y = signal(0);
+  protected readonly origin = signal({ x: 0, y: 0 });
   protected readonly activeId = signal('');
   protected readonly openPath = signal<readonly string[]>([]);
+  private readonly submenusTowardsStart = signal<ReadonlySet<string>>(new Set());
+  protected readonly resolvedAriaLabel = computed(
+    () => this.ariaLabel()?.trim() || this.translations.navigation.contextActions.trim() || null,
+  );
+  protected readonly resolvedEmptyLabel = computed(() =>
+    this.translations.navigation.menuEmpty.trim(),
+  );
+  protected readonly positions = [
+    {
+      originX: 'start' as const,
+      originY: 'top' as const,
+      overlayX: 'start' as const,
+      overlayY: 'top' as const,
+    },
+    {
+      originX: 'start' as const,
+      originY: 'top' as const,
+      overlayX: 'end' as const,
+      overlayY: 'top' as const,
+    },
+    {
+      originX: 'start' as const,
+      originY: 'top' as const,
+      overlayX: 'start' as const,
+      overlayY: 'bottom' as const,
+    },
+  ];
   private previousFocus: HTMLElement | null = null;
+  private focusToken = 0;
+
+  constructor() {
+    effect(() => {
+      if (!this.open()) return;
+      const activePath = this.pathTo(this.activeId());
+      const current = activePath.at(-1);
+      const activeItemIsVisible = activePath
+        .slice(0, -1)
+        .every((ancestor) => !ancestor.disabled && this.openPath().includes(ancestor.id));
+      if (current && !current.disabled && activeItemIsVisible) return;
+      const document = this.platform.document;
+      const currentFocus = document.activeElement;
+      const focusWasInMenu = this.panels().some((panel) =>
+        currentFocus ? panel.nativeElement.contains(currentFocus) : false,
+      );
+      const focusWasLost = currentFocus === document.body || !currentFocus?.isConnected;
+      const next = this.items().find((item) => !item.disabled)?.id ?? '';
+      this.activeId.set(next);
+      this.openPath.set([]);
+      if (focusWasInMenu || focusWasLost) this.focusById(next);
+    });
+  }
 
   protected onContextMenu(event: MouseEvent): void {
     event.preventDefault();
-    const view = this.platform.window;
     this.previousFocus = krnIsHtmlElement(this.platform, this.platform.document.activeElement)
       ? this.platform.document.activeElement
       : null;
-    const panelWidth = this.items().some((item) => item.children?.length) ? 464 : 240;
-    this.x.set(
-      Math.min(
-        event.clientX,
-        Math.max(0, (view?.innerWidth ?? event.clientX + panelWidth) - panelWidth),
-      ),
-    );
-    this.y.set(
-      Math.min(event.clientY, Math.max(0, (view?.innerHeight ?? event.clientY + 288) - 288)),
-    );
+    this.origin.set({ x: event.clientX, y: event.clientY });
     this.activeId.set(this.items().find((item) => !item.disabled)?.id ?? '');
     this.openPath.set([]);
+    this.submenusTowardsStart.set(new Set());
     this.open.set(true);
     this.focusById(this.activeId());
+  }
+
+  protected onAttach(overlay: CdkConnectedOverlay): void {
+    this.overlayCoordinator.registerOverlayOwnership(
+      this.host.nativeElement,
+      overlay.overlayRef.overlayElement,
+      overlay.overlayRef.backdropElement,
+    );
+    this.focusById(this.activeId());
+  }
+
+  protected onOverlayDetach(): void {
+    if (this.open()) this.dismiss(true);
+  }
+
+  protected branchHasEnabledItem(items: readonly KrnContextMenuItem[]): boolean {
+    return items.some((item) => !item.disabled);
+  }
+
+  protected rightToLeft(): boolean {
+    return this.platform.window?.getComputedStyle(this.host.nativeElement).direction === 'rtl';
+  }
+
+  protected submenuOpensTowardsStart(id: string): boolean {
+    return this.submenusTowardsStart().has(id);
   }
 
   protected submenuOpen(id: string): boolean {
@@ -795,12 +934,17 @@ export class KrnContextMenu {
   protected onPointerEnter(item: KrnContextMenuItem): void {
     if (item.disabled) return;
     this.activeId.set(item.id);
+    if (item.children?.some((child) => !child.disabled)) this.updateSubmenuDirection(item.id);
     const path = this.pathTo(item.id);
     this.openPath.set(
       path
-        .filter((candidate) => candidate.id !== item.id || candidate.children?.length)
+        .filter(
+          (candidate) =>
+            candidate.id !== item.id || candidate.children?.some((child) => !child.disabled),
+        )
         .map((candidate) => candidate.id),
     );
+    this.focusById(item.id);
   }
 
   protected onItemClick(event: MouseEvent, item: KrnContextMenuItem): void {
@@ -815,8 +959,7 @@ export class KrnContextMenu {
   protected activate(item: KrnContextMenuItem): void {
     if (item.disabled) return;
     this.itemSelected.emit(item);
-    this.open.set(false);
-    this.openPath.set([]);
+    this.dismiss(true);
   }
 
   protected onKeydown(event: KeyboardEvent): void {
@@ -835,15 +978,12 @@ export class KrnContextMenu {
         this.focusById(parent.id);
         return;
       }
-      this.open.set(false);
-      this.openPath.set([]);
-      this.previousFocus?.focus();
+      this.dismiss(true);
       return;
     }
     const current = this.findItem(this.activeId());
     if (!current) return;
-    const rightToLeft =
-      this.platform.window?.getComputedStyle(this.host.nativeElement).direction === 'rtl';
+    const rightToLeft = this.rightToLeft();
     const openKey = rightToLeft ? 'ArrowLeft' : 'ArrowRight';
     const closeKey = rightToLeft ? 'ArrowRight' : 'ArrowLeft';
     if (event.key === openKey && current.children?.length) {
@@ -873,32 +1013,56 @@ export class KrnContextMenu {
     const delta = event.key === 'ArrowDown' ? 1 : event.key === 'ArrowUp' ? -1 : 0;
     if (!delta && event.key !== 'Home' && event.key !== 'End') return;
     event.preventDefault();
-    const siblings = this.findSiblings(current.id);
+    const siblings = this.findSiblings(current.id).filter((item) => !item.disabled);
     if (siblings.length === 0) return;
     const currentIndex = siblings.findIndex((item) => item.id === current.id);
-    let next =
+    const next =
       event.key === 'Home'
         ? 0
         : event.key === 'End'
           ? siblings.length - 1
           : (currentIndex + delta + siblings.length) % siblings.length;
-    while (siblings[next]?.disabled && next !== currentIndex) {
-      next = (next + (delta || 1) + siblings.length) % siblings.length;
-    }
     const nextItem = siblings[next];
-    if (!nextItem || nextItem.disabled) return;
+    if (!nextItem) return;
     this.activeId.set(nextItem.id);
     this.focusById(nextItem.id);
   }
 
   private openBranch(item: KrnContextMenuItem, focusChild: boolean): void {
+    const child = item.children?.find((candidate) => !candidate.disabled);
+    if (focusChild && !child) return;
+    if (child) this.updateSubmenuDirection(item.id);
     const path = this.pathTo(item.id).filter((candidate) => candidate.children?.length);
     this.openPath.set(path.map((candidate) => candidate.id));
-    if (!focusChild) return;
-    const child = item.children?.find((candidate) => !candidate.disabled);
-    if (!child) return;
+    if (!focusChild || !child) return;
     this.activeId.set(child.id);
     this.focusById(child.id);
+  }
+
+  private updateSubmenuDirection(id: string): void {
+    const trigger = this.elements().find(
+      (element) => element.nativeElement.dataset['contextItem'] === id,
+    )?.nativeElement;
+    const root = this.panels().find((panel) =>
+      panel.nativeElement.classList.contains('context-panel--root'),
+    )?.nativeElement;
+    const view = this.platform.window;
+    if (!trigger || !root || !view) return;
+    const triggerRect = trigger.getBoundingClientRect();
+    const rootFontSize = Number.parseFloat(
+      view.getComputedStyle(this.platform.document.documentElement).fontSize,
+    );
+    // A nested branch can be wider than its root. Use the CSS maximum instead of the
+    // currently rendered root width so the first frame never chooses an overflowing side.
+    const submenuWidth = 18 * (Number.isFinite(rootFontSize) ? rootFontSize : 16);
+    const rightToLeft = this.rightToLeft();
+    const spaceAtEnd = rightToLeft ? triggerRect.left : view.innerWidth - triggerRect.right;
+    const spaceAtStart = rightToLeft ? view.innerWidth - triggerRect.right : triggerRect.left;
+    const towardsStart = spaceAtEnd < submenuWidth + 8 && spaceAtStart > spaceAtEnd;
+    const directions = new Set(this.submenusTowardsStart());
+    if (towardsStart) directions.add(id);
+    else directions.delete(id);
+    this.submenusTowardsStart.set(directions);
   }
 
   private findItem(id: string): KrnContextMenuItem | null {
@@ -931,21 +1095,64 @@ export class KrnContextMenu {
   }
 
   private focusById(id: string): void {
-    if (!id) return;
+    const token = ++this.focusToken;
+    const document = this.platform.document;
+    const previousFocus = document.activeElement;
     const focus = (): void => {
-      this.elements()
-        .find((element) => element.nativeElement.dataset['contextItem'] === id)
-        ?.nativeElement.focus();
+      const panels = this.panels().map((panel) => panel.nativeElement);
+      const currentFocus = document.activeElement;
+      const movedOutside =
+        currentFocus !== previousFocus &&
+        currentFocus !== document.body &&
+        !!currentFocus?.isConnected &&
+        !panels.some((panel) => panel.contains(currentFocus));
+      if (token !== this.focusToken || !this.open() || movedOutside) return;
+      const item = id
+        ? this.elements().find((element) => element.nativeElement.dataset['contextItem'] === id)
+            ?.nativeElement
+        : null;
+      (item ?? panels.find((panel) => panel.classList.contains('context-panel--root')))?.focus();
     };
     if (this.platform.schedule(focus) === null) {
       focus();
     }
   }
 
-  @HostListener('document:click')
-  @HostListener('window:blur')
-  protected dismiss(): void {
+  protected dismiss(restoreFocus: boolean): void {
+    if (!this.open()) return;
+    this.focusToken += 1;
+    const document = this.platform.document;
+    const currentFocus = document.activeElement;
+    const focusWasInMenu = this.panels().some((panel) =>
+      currentFocus ? panel.nativeElement.contains(currentFocus) : false,
+    );
     this.open.set(false);
     this.openPath.set([]);
+    if (
+      restoreFocus &&
+      this.previousFocus?.isConnected &&
+      (focusWasInMenu || currentFocus === document.body || !currentFocus?.isConnected)
+    ) {
+      this.previousFocus.focus({ preventScroll: true });
+    }
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  protected onDocumentEscape(event: Event): void {
+    if (!this.open() || event.defaultPrevented) return;
+    event.preventDefault();
+    this.dismiss(true);
+  }
+
+  @HostListener('document:contextmenu', ['$event'])
+  protected onDocumentContextMenu(event: MouseEvent): void {
+    if (!this.open() || this.host.nativeElement.contains(event.target as Node)) return;
+    event.preventDefault();
+    this.dismiss(false);
+  }
+
+  @HostListener('window:blur')
+  protected onWindowBlur(): void {
+    this.dismiss(false);
   }
 }

@@ -746,15 +746,14 @@ describe('Kern navigation', () => {
     fixture.detectChanges();
     await new Promise((resolve) => setTimeout(resolve));
 
-    const buttons = (fixture.nativeElement as HTMLElement).querySelectorAll(
-      'button',
-    ) as NodeListOf<HTMLButtonElement>;
+    const rootPanel = document.querySelector<HTMLElement>('.context-panel--root');
+    const buttons = rootPanel?.querySelectorAll('button') as NodeListOf<HTMLButtonElement>;
     const move = Array.from(buttons).find((button) => button.textContent?.includes('Move to'));
     move?.click();
     fixture.detectChanges();
     await new Promise((resolve) => setTimeout(resolve));
 
-    expect(fixture.nativeElement.querySelectorAll('[role="menu"]')).toHaveLength(2);
+    expect(document.querySelectorAll('.context-panel')).toHaveLength(2);
     expect(document.activeElement?.textContent?.trim()).toBe('Operations');
 
     document.activeElement?.dispatchEvent(
@@ -764,7 +763,7 @@ describe('Kern navigation', () => {
     await new Promise((resolve) => setTimeout(resolve));
 
     expect(document.activeElement?.textContent).toContain('Move to');
-    expect(fixture.nativeElement.querySelectorAll('[role="menu"]')).toHaveLength(1);
+    expect(document.querySelectorAll('.context-panel')).toHaveLength(1);
 
     const escape = new KeyboardEvent('keydown', {
       key: 'Escape',
@@ -775,7 +774,220 @@ describe('Kern navigation', () => {
     fixture.detectChanges();
 
     expect(escape.defaultPrevented).toBe(true);
-    expect(fixture.nativeElement.querySelectorAll('[role="menu"]')).toHaveLength(0);
+    expect(document.querySelectorAll('.context-panel')).toHaveLength(0);
+  });
+
+  it('keeps empty and disabled context menus escapable and restores focus', async () => {
+    const fixture = await create(KrnContextMenu, {
+      items: [],
+      ariaLabel: '   ',
+    });
+    const host = fixture.nativeElement as HTMLElement;
+    const previous = document.createElement('button');
+    previous.textContent = 'Previous';
+    document.body.append(previous);
+
+    try {
+      for (const items of [[], [{ id: 'disabled', label: 'Disabled', disabled: true }]]) {
+        fixture.componentRef.setInput('items', items);
+        previous.focus();
+        host.dispatchEvent(
+          new MouseEvent('contextmenu', {
+            bubbles: true,
+            cancelable: true,
+            clientX: 20,
+            clientY: 20,
+          }),
+        );
+        fixture.detectChanges();
+        await fixture.whenStable();
+        await new Promise((resolve) => setTimeout(resolve));
+
+        const panel = document.querySelector<HTMLElement>('.context-panel--root');
+        expect(panel?.getAttribute('aria-label')).toBeTruthy();
+        expect(host.contains(panel)).toBe(false);
+        expect(document.activeElement).toBe(panel);
+        panel?.dispatchEvent(
+          new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+        );
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(previous);
+        expect(document.querySelector('.context-panel--root')).toBeNull();
+      }
+    } finally {
+      previous.remove();
+    }
+  });
+
+  it('normalizes context-menu boundaries, pointer focus, and dynamic items', async () => {
+    const fixture = await create(KrnContextMenu, {
+      items: [
+        { id: 'disabled-head', label: 'Disabled head', disabled: true },
+        { id: 'first', label: 'First' },
+        { id: 'last', label: 'Last' },
+        { id: 'disabled-tail', label: 'Disabled tail', disabled: true },
+      ],
+    });
+    (fixture.nativeElement as HTMLElement).dispatchEvent(
+      new MouseEvent('contextmenu', {
+        bubbles: true,
+        cancelable: true,
+        clientX: 24,
+        clientY: 24,
+      }),
+    );
+    fixture.detectChanges();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    let active = document.activeElement as HTMLElement;
+    active.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+    fixture.detectChanges();
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(document.activeElement?.textContent?.trim()).toBe('Last');
+
+    document.activeElement?.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Home', bubbles: true }),
+    );
+    fixture.detectChanges();
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(document.activeElement?.textContent?.trim()).toBe('First');
+
+    const lastEntry = Array.from(document.querySelectorAll<HTMLElement>('.context-entry')).find(
+      (entry) => entry.textContent?.includes('Last'),
+    );
+    lastEntry?.dispatchEvent(new Event('pointerenter'));
+    fixture.detectChanges();
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(document.activeElement?.textContent?.trim()).toBe('Last');
+
+    fixture.componentRef.setInput('items', [{ id: 'replacement', label: 'Replacement' }]);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+    active = document.activeElement as HTMLElement;
+    expect(active.textContent?.trim()).toBe('Replacement');
+
+    const external = document.createElement('button');
+    external.textContent = 'External';
+    document.body.append(external);
+    try {
+      external.focus();
+      fixture.componentRef.setInput('items', [{ id: 'next', label: 'Next' }]);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      await new Promise((resolve) => setTimeout(resolve));
+      expect(document.activeElement).toBe(external);
+    } finally {
+      external.remove();
+    }
+  });
+
+  it('normalizes an active context item moved below a closed parent', async () => {
+    const fixture = await create(KrnContextMenu, {
+      items: [
+        { id: 'first', label: 'First' },
+        { id: 'moving', label: 'Moving' },
+      ],
+    });
+    (fixture.nativeElement as HTMLElement).dispatchEvent(
+      new MouseEvent('contextmenu', { bubbles: true, cancelable: true }),
+    );
+    fixture.detectChanges();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    const moving = document.querySelector<HTMLButtonElement>('[data-context-item="moving"]')!;
+    moving.focus();
+    fixture.componentRef.setInput('items', [
+      {
+        id: 'parent',
+        label: 'Parent',
+        children: [{ id: 'moving', label: 'Moving' }],
+      },
+    ]);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(document.querySelector('.submenu')).toBeNull();
+    expect(document.activeElement).toBe(
+      document.querySelector<HTMLButtonElement>('[data-context-item="parent"]'),
+    );
+    expect(document.querySelector('[data-context-item="parent"]')?.getAttribute('tabindex')).toBe(
+      '0',
+    );
+  });
+
+  it('rejects duplicate context-menu ids across roots and nested branches', async () => {
+    const fixture = await create(KrnContextMenu, {
+      items: [{ id: 'valid', label: 'Valid' }],
+    });
+
+    expect(() =>
+      fixture.componentRef.setInput('items', [
+        { id: 'duplicate', label: 'First' },
+        { id: 'duplicate', label: 'Second' },
+      ]),
+    ).toThrow(/globally unique item ids/);
+    expect(() =>
+      fixture.componentRef.setInput('items', [
+        {
+          id: 'first-root',
+          label: 'First root',
+          children: [{ id: 'nested-duplicate', label: 'First nested' }],
+        },
+        {
+          id: 'second-root',
+          label: 'Second root',
+          children: [{ id: 'nested-duplicate', label: 'Second nested' }],
+        },
+      ]),
+    ).toThrow(/globally unique item ids/);
+  });
+
+  it('opens a potentially wider context submenu towards available viewport space', async () => {
+    const fixture = await create(KrnContextMenu, {
+      items: [
+        {
+          id: 'move',
+          label: 'Move',
+          children: [{ id: 'archive', label: 'Archive' }],
+        },
+      ],
+    });
+    const widthDescriptor = Object.getOwnPropertyDescriptor(window, 'innerWidth');
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 600 });
+
+    try {
+      (fixture.nativeElement as HTMLElement).dispatchEvent(
+        new MouseEvent('contextmenu', {
+          bubbles: true,
+          cancelable: true,
+          clientX: 210,
+          clientY: 40,
+        }),
+      );
+      fixture.detectChanges();
+      await new Promise((resolve) => setTimeout(resolve));
+      const root = document.querySelector<HTMLElement>('.context-panel--root')!;
+      const move = root.querySelector<HTMLButtonElement>('[data-context-item="move"]')!;
+      Object.defineProperty(root, 'getBoundingClientRect', {
+        configurable: true,
+        value: () => ({ left: 210, right: 330, width: 120 }) as DOMRect,
+      });
+      Object.defineProperty(move, 'getBoundingClientRect', {
+        configurable: true,
+        value: () => ({ left: 280, right: 330, width: 50 }) as DOMRect,
+      });
+
+      move.click();
+      fixture.detectChanges();
+      await new Promise((resolve) => setTimeout(resolve));
+      expect(document.querySelector('.submenu')?.classList.contains('submenu-towards-start')).toBe(
+        true,
+      );
+    } finally {
+      if (widthDescriptor) Object.defineProperty(window, 'innerWidth', widthDescriptor);
+    }
   });
 
   it('keeps horizontal step labels in a dedicated copy row below their markers', async () => {
