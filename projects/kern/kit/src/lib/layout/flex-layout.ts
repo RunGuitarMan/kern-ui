@@ -6,7 +6,12 @@ import {
   input,
 } from '@angular/core';
 
-import type { KrnLayoutAlignment, KrnLayoutJustification, KrnLayoutSpace } from './layout.types';
+import type {
+  KrnLayoutAlignment,
+  KrnLayoutAxis,
+  KrnLayoutJustification,
+  KrnLayoutSpace,
+} from './layout.types';
 import { krnCssLength } from './layout.types';
 
 @Component({
@@ -260,24 +265,33 @@ export class KrnCluster {
   styles: `
     :host {
       display: block;
+      box-sizing: border-box;
+      min-inline-size: 0;
+      min-block-size: 0;
       flex: 0 0 auto;
       pointer-events: none;
     }
 
+    :host([hidden]) {
+      display: none;
+    }
+
     :host([data-axis='horizontal']) {
       inline-size: var(--krn-spacer-size);
-      block-size: 1px;
+      block-size: 0;
     }
 
     :host([data-axis='vertical']) {
-      inline-size: 1px;
+      inline-size: 0;
       block-size: var(--krn-spacer-size);
     }
   `,
 })
 export class KrnSpacer {
+  /** Fixed logical length reserved by the spacer. */
   readonly size = input<KrnLayoutSpace>('4');
-  readonly axis = input<'horizontal' | 'vertical'>('vertical');
+  /** Axis receiving space: horizontal maps to inline and vertical maps to block. */
+  readonly axis = input<KrnLayoutAxis>('vertical');
 
   protected readonly resolvedSize = computed(() => krnCssLength(this.size(), 'var(--krn-space-4)'));
 }

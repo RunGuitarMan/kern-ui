@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 
 import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
 import { KrnAppShell, KrnHeader, KrnSidebar } from './app-shell';
-import { KrnCluster, KrnInline, KrnStack } from './flex-layout';
+import { KrnCluster, KrnInline, KrnSpacer, KrnStack } from './flex-layout';
 import { KrnGrid } from './grid';
 import { KrnResizablePanel, KrnResizablePanels, KrnResizeHandle } from './resizable-panels';
 
@@ -146,6 +146,42 @@ describe('Kern layout primitives', () => {
 
     expect(host.style.getPropertyValue('--krn-cluster-row-gap')).toBe('var(--krn-space-2)');
     expect(host.style.getPropertyValue('--krn-cluster-column-gap')).toBe('var(--krn-space-2)');
+
+    host.hidden = true;
+    expect(getComputedStyle(host).display).toBe('none');
+  });
+
+  it('reserves horizontal space without a cross-axis artifact', () => {
+    const fixture = TestBed.createComponent(KrnSpacer);
+    fixture.componentRef.setInput('axis', 'horizontal');
+    fixture.componentRef.setInput('size', 24);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const style = getComputedStyle(host);
+
+    expect(host.getAttribute('aria-hidden')).toBe('true');
+    expect(host.getAttribute('data-axis')).toBe('horizontal');
+    expect(host.style.getPropertyValue('--krn-spacer-size')).toBe('24px');
+    expect(style.boxSizing).toBe('border-box');
+    expect(style.inlineSize).toBe('var(--krn-spacer-size)');
+    expect(style.blockSize).toBe('0px');
+    expect(style.minInlineSize).toBe('0px');
+    expect(style.minBlockSize).toBe('0px');
+    expect(style.flex).toBe('0 0 auto');
+    expect(style.pointerEvents).toBe('none');
+  });
+
+  it('reserves vertical token space and preserves native hidden semantics', () => {
+    const fixture = TestBed.createComponent(KrnSpacer);
+    fixture.componentRef.setInput('size', '');
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const style = getComputedStyle(host);
+
+    expect(host.getAttribute('data-axis')).toBe('vertical');
+    expect(host.style.getPropertyValue('--krn-spacer-size')).toBe('var(--krn-space-4)');
+    expect(style.inlineSize).toBe('0px');
+    expect(style.blockSize).toBe('var(--krn-spacer-size)');
 
     host.hidden = true;
     expect(getComputedStyle(host).display).toBe('none');
