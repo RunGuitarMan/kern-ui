@@ -13,6 +13,7 @@ import {
   KrnFilterBar,
   KrnGlobalSearch,
   KrnMasterDetailLayout,
+  KrnMobileNavigation,
   type KrnNotification,
   KrnNotificationCenter,
   KrnPageHeader,
@@ -892,5 +893,40 @@ describe('Kern product patterns', () => {
       { id: 'state', label: 'State', valid: 'yes' as unknown as boolean },
     ]);
     expect(() => invalidState.detectChanges()).toThrowError(/states must be boolean/);
+  });
+
+  it('provides scoped, scroll-safe mobile navigation for native actions and links', async () => {
+    @Component({
+      imports: [KrnMobileNavigation],
+      template: `
+        <krn-mobile-navigation ariaLabel="   ">
+          <a href="#home" aria-current="true">Home</a>
+          <button type="button" disabled>Search</button>
+          <a href="#empty" aria-current="">Empty current</a>
+          <span><button type="button">Nested action</button></span>
+        </krn-mobile-navigation>
+      `,
+    })
+    class MobileNavigationHost {}
+
+    const fixture = TestBed.createComponent(MobileNavigationHost);
+    await fixture.whenStable();
+    const navigation = fixture.nativeElement.querySelector('krn-mobile-navigation') as HTMLElement;
+    expect(navigation.getAttribute('role')).toBe('navigation');
+    expect(navigation.getAttribute('aria-label')?.trim()).toBeTruthy();
+    expect(navigation.querySelector('a')?.getAttribute('aria-current')).toBe('true');
+
+    const componentStyles = (
+      KrnMobileNavigation as unknown as { ɵcmp: { styles: readonly string[] } }
+    ).ɵcmp.styles.join('\n');
+    expect(componentStyles).not.toContain('::ng-deep');
+    expect(componentStyles).toContain('krn-mobile-navigation > :where(a, button):focus-visible');
+    expect(componentStyles).not.toMatch(/krn-mobile-navigation\s+:where\(a, button\)/);
+    expect(componentStyles).toMatch(
+      /\[aria-current\]:not\(\[aria-current=["']?false["']?\]\):not\(\[aria-current=["']?["']?\]\)/,
+    );
+    expect(componentStyles).toContain('> button:disabled');
+    expect(componentStyles).toContain('overflow-x: auto');
+    expect(componentStyles).toContain('@media (forced-colors: active)');
   });
 });

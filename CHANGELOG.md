@@ -81,6 +81,8 @@ contract or upgrade decision.
 - Strengthened Multi Step Form step identities and index reconciliation, functional orientation and
   responsive sizing, normalized navigation copy, semantic disabled states, and focus handoff;
   removed the unreachable `emptyStepLabel` input because empty step collections are now rejected.
+- Modernized Mobile Navigation with normalized landmark naming, component-scoped projected-item
+  styles, complete `aria-current` support, focus/high-contrast states, and overflow-safe touch layout.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned
