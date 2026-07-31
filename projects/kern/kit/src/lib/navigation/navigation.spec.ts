@@ -55,6 +55,55 @@ describe('Kern navigation', () => {
     );
   });
 
+  it('normalizes invalid limits and exposes exactly one visible current breadcrumb', async () => {
+    const fixture = await create(KrnBreadcrumbs, {
+      items: [
+        { label: 'Home', href: '/' },
+        { label: 'Workspace', href: '/workspace', current: true },
+        { label: 'Settings', href: '/settings' },
+        { label: 'Members', href: '/members' },
+        { label: 'Invitations', href: '/invitations' },
+        { label: 'Details' },
+      ],
+      maxItems: Number.NaN,
+      ariaLabel: '   ',
+    });
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelectorAll('li')).toHaveLength(5);
+    expect(element.querySelectorAll('[aria-current="page"]')).toHaveLength(1);
+    expect(element.querySelector('[aria-current="page"]')?.textContent).toContain('Details');
+    expect(element.querySelector('nav')?.getAttribute('aria-label')).toBeTruthy();
+  });
+
+  it('recollapses breadcrumbs when their source items change after expansion', async () => {
+    const fixture = await create(KrnBreadcrumbs, {
+      items: [
+        { label: 'Home', href: '/' },
+        { label: 'Workspace', href: '/workspace' },
+        { label: 'Settings', href: '/settings' },
+        { label: 'Members', current: true },
+      ],
+      maxItems: 3,
+    });
+
+    (fixture.nativeElement.querySelector('.ellipsis') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('li')).toHaveLength(4);
+
+    fixture.componentRef.setInput('items', [
+      { label: 'Home', href: '/' },
+      { label: 'Workspace', href: '/workspace' },
+      { label: 'Settings', href: '/settings' },
+      { label: 'Members', href: '/members' },
+      { label: 'Details', current: true },
+    ]);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('li')).toHaveLength(3);
+    expect(fixture.nativeElement.querySelector('.ellipsis')).not.toBeNull();
+  });
+
   it('moves tabs with arrow keys and updates the tabpanel relationship', async () => {
     const fixture = await create(KrnTabs, {
       items: [

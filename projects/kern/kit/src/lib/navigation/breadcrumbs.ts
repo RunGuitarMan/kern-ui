@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   input,
   numberAttribute,
@@ -12,31 +13,35 @@ import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnBreadcrumbItem } from './navigation.types';
 
 interface VisibleBreadcrumb extends KrnBreadcrumbItem {
+  readonly source: KrnBreadcrumbItem;
+  readonly index: number;
   readonly ellipsis?: true;
 }
+
+const DEFAULT_MAX_ITEMS = 5;
 
 @Component({
   selector: 'krn-breadcrumbs',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <nav class="breadcrumbs" [attr.aria-label]="ariaLabel()">
+    <nav class="breadcrumbs" [attr.aria-label]="resolvedAriaLabel()">
       <ol>
-        @for (item of visibleItems(); track $index; let last = $last) {
+        @for (item of visibleItems(); track item.index; let last = $last) {
           <li>
             @if (item.ellipsis) {
               <button
                 type="button"
                 class="ellipsis"
                 (click)="expanded.set(true)"
-                [attr.aria-label]="showAllLabel()"
+                [attr.aria-label]="resolvedShowAllLabel()"
               >
                 <span aria-hidden="true">•••</span>
               </button>
-            } @else if (item.current || last) {
+            } @else if (item.index === currentIndex()) {
               <span class="current" aria-current="page">{{ item.label }}</span>
             } @else if (item.href && !item.disabled) {
-              <a [href]="item.href" (click)="itemActivated.emit(item)">{{ item.label }}</a>
+              <a [href]="item.href" (click)="itemActivated.emit(item.source)">{{ item.label }}</a>
             } @else {
               <span [attr.aria-disabled]="item.disabled || null">{{ item.label }}</span>
             }
@@ -52,6 +57,9 @@ interface VisibleBreadcrumb extends KrnBreadcrumbItem {
     :host {
       display: block;
       min-inline-size: 0;
+    }
+    :host([hidden]) {
+      display: none;
     }
     .breadcrumbs {
       color: var(--krn-color-text-muted);
@@ -135,6 +143,12 @@ interface VisibleBreadcrumb extends KrnBreadcrumbItem {
         transition: none;
       }
     }
+    @media (forced-colors: active) {
+      a:focus-visible,
+      button:focus-visible {
+        outline-color: Highlight;
+      }
+    }
   `,
 })
 export class KrnBreadcrumbs {
@@ -147,16 +161,53 @@ export class KrnBreadcrumbs {
   readonly showAllLabel = input(this.translations.navigation.breadcrumbShowAll);
   readonly itemActivated = output<KrnBreadcrumbItem>();
   protected readonly expanded = signal(false);
+  protected readonly resolvedMaxItems = computed(() => {
+    const maxItems = this.maxItems();
+    return Number.isFinite(maxItems) ? Math.max(0, Math.trunc(maxItems)) : DEFAULT_MAX_ITEMS;
+  });
+  protected readonly resolvedAriaLabel = computed(
+    () => this.ariaLabel()?.trim() || this.translations.navigation.breadcrumb.trim() || null,
+  );
+  protected readonly resolvedShowAllLabel = computed(
+    () =>
+      this.showAllLabel()?.trim() ||
+      this.translations.navigation.breadcrumbShowAll.trim() ||
+      this.translations.navigation.breadcrumbMore.trim(),
+  );
+  protected readonly currentIndex = computed(() => this.items().length - 1);
   protected readonly ellipsis = computed<VisibleBreadcrumb>(() => ({
     label: this.moreLabel(),
+    source: { label: this.moreLabel() },
+    index: -1,
     ellipsis: true,
   }));
   protected readonly visibleItems = computed<readonly VisibleBreadcrumb[]>(() => {
     const items = this.items();
-    if (this.expanded() || this.maxItems() < 3 || items.length <= this.maxItems()) {
-      return items;
+    const visibleItems = items.map((item, index) => ({ ...item, source: item, index }));
+    const maxItems = this.resolvedMaxItems();
+    if (this.expanded() || maxItems < 3 || items.length <= maxItems) {
+      return visibleItems;
     }
-    const tailCount = Math.max(1, this.maxItems() - 2);
-    return [items[0], this.ellipsis(), ...items.slice(-tailCount)];
+    const tailCount = Math.max(1, maxItems - 2);
+    const tailIndices = Array.from(
+      { length: tailCount },
+      (_, offset) => items.length - tailCount + offset,
+    );
+    return [visibleItems[0]!, this.ellipsis(), ...tailIndices.map((index) => visibleItems[index]!)];
   });
+
+  constructor() {
+    let previousItems = this.items();
+    let previousMaxItems = this.resolvedMaxItems();
+
+    effect(() => {
+      const items = this.items();
+      const maxItems = this.resolvedMaxItems();
+      if (items !== previousItems || maxItems !== previousMaxItems) {
+        this.expanded.set(false);
+        previousItems = items;
+        previousMaxItems = maxItems;
+      }
+    });
+  }
 }
