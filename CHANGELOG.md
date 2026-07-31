@@ -99,6 +99,10 @@ contract or upgrade decision.
   duplicate-free changes, canonical enabled-option commits, readonly-safe native interaction,
   composable external/Form Field ARIA references, native-only tab order, and public focus and blur
   methods.
+- Strengthened Multi Select with deterministic standalone array ownership, identity-based
+  duplicate-free canonical option commits, preserved disabled selections, non-interactive popup
+  invariants, bounded token summaries, composable external/Form Field ARIA references, native-only
+  tab order, and public trigger focus.
 
 ### Deprecated
 

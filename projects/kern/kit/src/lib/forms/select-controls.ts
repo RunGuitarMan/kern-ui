@@ -572,6 +572,7 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
   host: {
     class: 'krn-select-host krn-multi-select-host',
     '[attr.id]': 'null',
+    '[attr.tabindex]': 'null',
   },
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, NgTemplateOutlet, Option],
   providers: [...provideKrnFormControl(() => KrnMultiSelect)],
@@ -589,19 +590,23 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
       >
         <button
           #combo="ngCombobox"
+          #trigger
           ngCombobox
           class="krn-select-trigger krn-select-trigger--multiple"
           type="button"
-          [attr.aria-describedby]="a11y.describedBy()"
+          [attr.aria-describedby]="effectiveDescribedBy()"
           [attr.aria-busy]="optionsState() === 'loading' ? 'true' : null"
           [attr.aria-invalid]="a11y.invalid()"
-          [attr.aria-label]="ariaLabel() || null"
-          [attr.aria-readonly]="a11y.readOnly()"
+          [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
+          [attr.aria-labelledby]="effectiveLabelledBy()"
+          [attr.aria-readonly]="isReadOnly()"
           [attr.aria-required]="a11y.required()"
           [attr.disabled]="isDisabled() ? '' : null"
+          [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
           [disabled]="isDisabled()"
           [expanded]="open()"
           [id]="a11y.id()"
+          [tabindex]="isDisabled() ? -1 : tabIndex()"
           (expandedChange)="setOpen($event)"
         >
           @if (selectedOptions().length) {
@@ -713,6 +718,7 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
 })
 export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
   private readonly translations = inject(KRN_TRANSLATIONS);
+  private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
   readonly id = input('');
   readonly placeholder = input(this.translations.forms.selectOptions);
   readonly emptyText = input(this.translations.forms.noOptions);
@@ -725,6 +731,8 @@ export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
       '',
   );
   readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
   readonly options = input.required<readonly KrnSelectOption<T>[]>();
   /** Controls whether options are interactive or replaced by an announced loading/error state. */
   readonly optionsState = input<KrnOptionsState>('ready');
@@ -744,6 +752,8 @@ export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
   });
   readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
+  readonly value = input<readonly T[] | undefined>(undefined);
   readonly open = model(false);
   readonly valueChange = output<readonly T[]>();
 
@@ -753,14 +763,25 @@ export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
     required: this.required,
   });
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
+  protected readonly isReadOnly = computed(() => this.a11y.readOnly());
+  protected readonly effectiveLabelledBy = computed(() =>
+    mergeAriaIds(this.ariaLabelledBy(), this.a11y.labelledBy()),
+  );
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(this.ariaDescribedBy(), this.a11y.describedBy()),
+  );
+  protected readonly visibleLimit = computed(() => {
+    const limit = this.maxVisible();
+    return Number.isFinite(limit) ? Math.max(0, Math.trunc(limit)) : 0;
+  });
   protected readonly selectedOptions = computed(() =>
     this.options().filter((option) => this.isSelected(option)),
   );
   protected readonly visibleSelectedOptions = computed(() =>
-    this.selectedOptions().slice(0, this.maxVisible()),
+    this.selectedOptions().slice(0, this.visibleLimit()),
   );
   protected readonly remainingCount = computed(() =>
-    Math.max(0, this.selectedOptions().length - this.maxVisible()),
+    Math.max(0, this.selectedOptions().length - this.visibleLimit()),
   );
   protected readonly mutableValues = computed(() =>
     this.selectedOptions().map((option) => option.value),
@@ -768,6 +789,12 @@ export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
 
   constructor() {
     super([]);
+    this.bindStandaloneValue(this.value);
+    effect(() => {
+      if (this.open() && (this.isDisabled() || this.isReadOnly())) {
+        this.open.set(false);
+      }
+    });
     this.watchValidationInputs(this.required, this.a11y.required);
   }
 
@@ -779,8 +806,15 @@ export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
     return requiredError(value, this.a11y.required());
   }
 
+  protected override valuesEqual(current: readonly T[], next: readonly T[]): boolean {
+    return (
+      current.length === next.length &&
+      current.every((value, index) => this.identityMatcher()(value, next[index]!))
+    );
+  }
+
   protected setOpen(open: boolean): void {
-    if (!this.isDisabled() && !this.a11y.readOnly()) {
+    if (!this.isDisabled() && !this.isReadOnly()) {
       this.open.set(open);
     }
   }
@@ -802,15 +836,29 @@ export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
   }
 
   protected selectValues(values: T[]): void {
-    if (this.a11y.readOnly() || this.optionsState() !== 'ready') {
+    if (this.isDisabled() || this.isReadOnly() || this.optionsState() !== 'ready') {
       return;
     }
-    const unique = values.filter(
-      (value, index) =>
-        values.findIndex((candidate) => this.identityMatcher()(candidate, value)) === index,
-    );
-    this.commitValue(unique);
-    this.valueChange.emit(unique);
+    if (
+      values.some(
+        (value) => !this.options().some((option) => this.identityMatcher()(option.value, value)),
+      )
+    ) {
+      return;
+    }
+    const current = this.controlValue();
+    const canonical = this.options().reduce<T[]>((result, option) => {
+      const alreadyIncluded = result.some((value) => this.identityMatcher()(value, option.value));
+      const requested = values.some((value) => this.identityMatcher()(option.value, value));
+      const selected = current.some((value) => this.identityMatcher()(option.value, value));
+      if (!alreadyIncluded && (this.disabledHandler()(option) ? selected : requested)) {
+        result.push(option.value);
+      }
+      return result;
+    }, []);
+    if (this.commitUserValue(canonical)) {
+      this.valueChange.emit(canonical);
+    }
   }
 
   protected isSelected(option: KrnSelectOption<T>): boolean {
@@ -823,6 +871,10 @@ export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
       option,
       selected: this.isSelected(option),
     };
+  }
+
+  focus(options?: FocusOptions): void {
+    this.trigger()?.nativeElement.focus(options);
   }
 }
 
