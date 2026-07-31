@@ -96,12 +96,19 @@ export class KrnStack {
   styles: `
     :host {
       display: flex;
+      box-sizing: border-box;
+      max-inline-size: 100%;
       min-inline-size: 0;
+      min-block-size: 0;
       flex-direction: row;
       flex-wrap: nowrap;
       gap: var(--krn-inline-gap);
       align-items: var(--krn-inline-align, center);
       justify-content: var(--krn-inline-justify, flex-start);
+    }
+
+    :host([hidden]) {
+      display: none;
     }
 
     :host([data-wrap]) {
@@ -143,9 +150,13 @@ export class KrnStack {
   `,
 })
 export class KrnInline {
+  /** Logical spacing between adjacent projected children and wrapped flex lines. */
   readonly gap = input<KrnLayoutSpace>('3');
+  /** Cross-axis alignment of projected children within each flex line. */
   readonly align = input<KrnLayoutAlignment>('center');
+  /** Distribution of projected children along the inline axis. */
   readonly justify = input<KrnLayoutJustification>('start');
+  /** Allows projected children to continue on additional flex lines. */
   readonly wrap = input(false, { transform: booleanAttribute });
 
   protected readonly resolvedGap = computed(() => krnCssLength(this.gap(), 'var(--krn-space-3)'));

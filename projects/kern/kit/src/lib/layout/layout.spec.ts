@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 
 import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
 import { KrnAppShell, KrnHeader, KrnSidebar } from './app-shell';
-import { KrnStack } from './flex-layout';
+import { KrnInline, KrnStack } from './flex-layout';
 import { KrnGrid } from './grid';
 import { KrnResizablePanel, KrnResizablePanels, KrnResizeHandle } from './resizable-panels';
 
@@ -70,6 +70,45 @@ describe('Kern layout primitives', () => {
     const host = fixture.nativeElement as HTMLElement;
 
     expect(host.style.getPropertyValue('--krn-stack-gap')).toBe('var(--krn-space-4)');
+
+    host.hidden = true;
+    expect(getComputedStyle(host).display).toBe('none');
+  });
+
+  it('maps inline wrapping and alignment without escaping nested layouts', () => {
+    const fixture = TestBed.createComponent(KrnInline);
+    fixture.componentRef.setInput('gap', '2');
+    fixture.componentRef.setInput('align', 'baseline');
+    fixture.componentRef.setInput('justify', 'end');
+    fixture.componentRef.setInput('wrap', true);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const style = getComputedStyle(host);
+
+    expect(host.style.getPropertyValue('--krn-inline-gap')).toBe('var(--krn-space-2)');
+    expect(host.getAttribute('data-align')).toBe('baseline');
+    expect(host.getAttribute('data-justify')).toBe('end');
+    expect(host.hasAttribute('data-wrap')).toBe(true);
+    expect(style.boxSizing).toBe('border-box');
+    expect(style.maxInlineSize).toBe('100%');
+    expect(style.minInlineSize).toBe('0px');
+    expect(style.minBlockSize).toBe('0px');
+    expect(style.flexDirection).toBe('row');
+    expect(style.flexWrap).toBe('wrap');
+    expect(style.getPropertyValue('--krn-inline-align')).toBe('baseline');
+    expect(style.getPropertyValue('--krn-inline-justify')).toBe('flex-end');
+  });
+
+  it('keeps inline content unwrapped by default and honors native hidden', () => {
+    const fixture = TestBed.createComponent(KrnInline);
+    fixture.componentRef.setInput('gap', '');
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const style = getComputedStyle(host);
+
+    expect(host.style.getPropertyValue('--krn-inline-gap')).toBe('var(--krn-space-3)');
+    expect(host.hasAttribute('data-wrap')).toBe(false);
+    expect(style.flexWrap).toBe('nowrap');
 
     host.hidden = true;
     expect(getComputedStyle(host).display).toBe('none');
