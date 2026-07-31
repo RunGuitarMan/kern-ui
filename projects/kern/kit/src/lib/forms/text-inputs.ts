@@ -27,8 +27,18 @@ import {
   useKrnControlA11y,
 } from './value-accessor';
 
-const optionalNumber = (value: unknown): number | undefined =>
-  value === null || value === undefined || value === '' ? undefined : numberAttribute(value);
+const optionalNumber = (value: unknown): number | undefined => {
+  const numeric =
+    value === null || value === undefined || value === '' ? undefined : numberAttribute(value);
+
+  return numeric !== undefined && Number.isFinite(numeric) ? numeric : undefined;
+};
+
+const positiveStep = (value: unknown): number => {
+  const step = optionalNumber(value);
+
+  return step !== undefined && step > 0 ? step : 1;
+};
 
 const optionalTextLength = (value: unknown): number | undefined => {
   const length = optionalNumber(value);
@@ -905,17 +915,23 @@ export class KrnSearchInput extends KrnValueAccessor<string> {
       [attr.data-disabled]="isDisabled()"
       [attr.data-invalid]="a11y.invalid()"
       [attr.data-readonly]="a11y.readOnly()"
+      (pointerdown)="focusFromShell($event)"
     >
       <input
+        #inputElement
         class="krn-input"
         type="number"
-        [attr.aria-describedby]="a11y.describedBy()"
+        [attr.aria-describedby]="describedBy()"
         [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="ariaLabel() || null"
+        [attr.aria-label]="labelledBy() ? null : ariaLabel() || null"
+        [attr.aria-labelledby]="labelledBy()"
+        [attr.autocomplete]="autocomplete() || null"
+        [attr.inputmode]="inputMode()"
         [attr.max]="max() ?? null"
         [attr.min]="min() ?? null"
         [attr.name]="name() || null"
         [attr.step]="step()"
+        [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
         [disabled]="isDisabled()"
         [id]="a11y.id()"
         [placeholder]="placeholder()"
@@ -929,17 +945,23 @@ export class KrnSearchInput extends KrnValueAccessor<string> {
         <span class="krn-stepper">
           <button
             type="button"
+            tabindex="-1"
+            [attr.aria-controls]="a11y.id()"
             [attr.aria-label]="increaseLabel()"
-            [disabled]="isDisabled()"
+            [disabled]="!canIncrease()"
             (click)="stepBy(1)"
+            (pointerdown)="retainInputFocus($event)"
           >
             +
           </button>
           <button
             type="button"
+            tabindex="-1"
+            [attr.aria-controls]="a11y.id()"
             [attr.aria-label]="decreaseLabel()"
-            [disabled]="isDisabled()"
+            [disabled]="!canDecrease()"
             (click)="stepBy(-1)"
+            (pointerdown)="retainInputFocus($event)"
           >
             −
           </button>
@@ -951,10 +973,18 @@ export class KrnSearchInput extends KrnValueAccessor<string> {
 })
 export class KrnNumberInput extends KrnValueAccessor<number | null> {
   private readonly translations = inject(KRN_TRANSLATIONS);
+  private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('inputElement');
+  private angularOwnsValue = false;
+
   readonly id = input('');
   readonly name = input('');
   readonly placeholder = input('');
   readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
+  readonly autocomplete = input('off');
+  readonly inputMode = input<KrnInputMode>('decimal');
+  readonly value = input<number | null | undefined>(undefined);
   readonly increaseLabel = input(this.translations.forms.increaseValue);
   readonly decreaseLabel = input(this.translations.forms.decreaseValue);
   readonly min = input<number | undefined>(undefined, {
@@ -963,7 +993,7 @@ export class KrnNumberInput extends KrnValueAccessor<number | null> {
   readonly max = input<number | undefined>(undefined, {
     transform: optionalNumber,
   });
-  readonly step = input(1, { transform: numberAttribute });
+  readonly step = input(1, { transform: positiveStep });
   readonly showSteppers = input(true, { transform: booleanAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false, {
@@ -979,11 +1009,78 @@ export class KrnNumberInput extends KrnValueAccessor<number | null> {
     readOnly: this.readOnly,
     required: this.required,
   });
+  protected readonly labelledBy = computed(() =>
+    mergeAriaIds(
+      this.ariaLabelledBy(),
+      (
+        this.a11y as typeof this.a11y & {
+          readonly labelledBy?: () => string | null;
+        }
+      ).labelledBy?.(),
+    ),
+  );
+  protected readonly describedBy = computed(() =>
+    mergeAriaIds(this.ariaDescribedBy(), this.a11y.describedBy()),
+  );
+  protected readonly isFormFieldControl = computed(
+    () =>
+      (
+        this.a11y as typeof this.a11y & {
+          readonly isFormFieldControl?: () => boolean;
+        }
+      ).isFormFieldControl?.() ?? false,
+  );
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
+  protected readonly canIncrease = computed(() => {
+    const value = this.controlValue();
+    const max = this.max();
+
+    return (
+      !this.isDisabled() &&
+      !this.a11y.readOnly() &&
+      (value === null || max === undefined || value < max) &&
+      !Object.is(value, this.nextStepValue(1))
+    );
+  });
+  protected readonly canDecrease = computed(() => {
+    const value = this.controlValue();
+    const min = this.min();
+
+    return (
+      !this.isDisabled() &&
+      !this.a11y.readOnly() &&
+      (value === null || min === undefined || value > min) &&
+      !Object.is(value, this.nextStepValue(-1))
+    );
+  });
 
   constructor() {
     super(null);
+    effect(() => {
+      const value = this.value();
+      if (value !== undefined && !this.angularOwnsValue) {
+        this.controlValue.set(this.normalizeIncomingValue(value));
+      }
+    });
     this.watchValidationInputs(this.required, this.a11y.required, this.min, this.max);
+  }
+
+  override writeValue(value: unknown): void {
+    this.angularOwnsValue = true;
+    super.writeValue(value);
+  }
+
+  override registerOnChange(fn: (value: number | null) => void): void {
+    this.angularOwnsValue = true;
+    super.registerOnChange(fn);
+  }
+
+  focus(options?: FocusOptions): void {
+    this.inputElement()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    this.inputElement()?.nativeElement.blur();
   }
 
   protected override normalizeIncomingValue(value: unknown): number | null {
@@ -1004,8 +1101,14 @@ export class KrnNumberInput extends KrnValueAccessor<number | null> {
   }
 
   protected updateNumber(event: Event): void {
-    const raw = (event.target as HTMLInputElement).value;
-    const value = raw === '' ? null : this.clamp(Number(raw));
+    const input = event.target as HTMLInputElement;
+    const value = input.value === '' ? null : input.valueAsNumber;
+    if (value !== null && !Number.isFinite(value)) {
+      return;
+    }
+    if (Object.is(this.controlValue(), value)) {
+      return;
+    }
     this.commitValue(value);
     this.valueChange.emit(value);
   }
@@ -1014,10 +1117,79 @@ export class KrnNumberInput extends KrnValueAccessor<number | null> {
     if (this.isDisabled() || this.a11y.readOnly()) {
       return;
     }
-    const base = this.controlValue() ?? this.min() ?? 0;
-    const value = this.clamp(base + this.step() * direction);
+    const value = this.nextStepValue(direction);
+    if (Object.is(this.controlValue(), value)) {
+      return;
+    }
     this.commitValue(value);
     this.valueChange.emit(value);
+    this.focus();
+  }
+
+  protected focusFromShell(event: PointerEvent): void {
+    const target = event.target;
+
+    if (
+      event.button !== 0 ||
+      !(target instanceof Element) ||
+      target.closest('input,button,a,select,textarea,[contenteditable],[tabindex]')
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    this.focus();
+  }
+
+  protected retainInputFocus(event: PointerEvent): void {
+    if (event.button !== 0) {
+      return;
+    }
+
+    event.preventDefault();
+    this.focus();
+  }
+
+  private nextStepValue(direction: 1 | -1): number {
+    const base = this.controlValue() ?? this.min() ?? 0;
+
+    return this.clamp(this.addStep(base, direction));
+  }
+
+  private addStep(base: number, direction: 1 | -1): number {
+    const [baseCoefficient, baseScale] = this.decimalParts(base);
+    const [stepCoefficient, stepScale] = this.decimalParts(this.step());
+    const scale = Math.max(baseScale, stepScale);
+    const coefficient =
+      baseCoefficient * 10n ** BigInt(scale - baseScale) +
+      BigInt(direction) * stepCoefficient * 10n ** BigInt(scale - stepScale);
+    const value = this.decimalNumber(coefficient, scale);
+
+    return Number.isFinite(value) ? value : base;
+  }
+
+  private decimalParts(value: number): readonly [coefficient: bigint, scale: number] {
+    const [rawMantissa, rawExponent = '0'] = value.toString().toLowerCase().split('e');
+    const negative = rawMantissa.startsWith('-');
+    const mantissa = negative ? rawMantissa.slice(1) : rawMantissa;
+    const [integer, fraction = ''] = mantissa.split('.');
+    const exponent = Number(rawExponent);
+    const initialCoefficient = BigInt(`${integer}${fraction}`);
+    const initialScale = fraction.length - exponent;
+    const coefficient = negative ? -initialCoefficient : initialCoefficient;
+
+    return initialScale < 0
+      ? [coefficient * 10n ** BigInt(-initialScale), 0]
+      : [coefficient, initialScale];
+  }
+
+  private decimalNumber(coefficient: bigint, scale: number): number {
+    const negative = coefficient < 0n;
+    const digits = (negative ? -coefficient : coefficient).toString().padStart(scale + 1, '0');
+    const point = digits.length - scale;
+    const decimal = scale === 0 ? digits : `${digits.slice(0, point)}.${digits.slice(point)}`;
+
+    return Number(`${negative ? '-' : ''}${decimal}`);
   }
 
   private clamp(value: number): number {

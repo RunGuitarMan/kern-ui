@@ -73,6 +73,9 @@ contract or upgrade decision.
   non-destructive length validation, composable ARIA references, a focus-retaining single-tab-stop
   cleaner, and public native focus, blur, and selection methods. Clearing no longer emits
   `searchSubmitted`; that output now exclusively represents an explicit Enter submission.
+- Strengthened Number Input with deterministic standalone `value` ownership, non-destructive range
+  validation, finite native constraints, precise bounded stepping, composable ARIA references,
+  focus-retaining single-tab-stop steppers, and public native focus and blur methods.
 
 ### Deprecated
 
