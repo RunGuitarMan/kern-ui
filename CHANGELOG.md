@@ -82,6 +82,9 @@ contract or upgrade decision.
 - Strengthened Checkbox Group with deterministic standalone `value` ownership, unique
   duplicate-free values and outputs, composable group names and descriptions, blur-driven touched
   state, and public focus delegation to the first available native checkbox.
+- Strengthened Radio with deterministic standalone `checked` ownership, native name-based
+  exclusivity, readonly-safe group selection, composable visible/external names and descriptions,
+  native-only tab order, blur-driven group touched state, and public native focus and blur methods.
 
 ### Deprecated
 

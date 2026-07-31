@@ -420,6 +420,7 @@ interface KrnRadioGroupController {
   readonly isDisabled: () => boolean;
   readonly isReadOnly: () => boolean;
   isSelected(value: string): boolean;
+  markTouched(): void;
   select(value: string): void;
 }
 
@@ -509,13 +510,20 @@ export class KrnRadioGroup
       return;
     }
     this.commitValue(value);
-    this.touch();
     this.valueChange.emit(value);
+  }
+
+  markTouched(): void {
+    this.touch();
   }
 }
 
 @Component({
   selector: 'krn-radio',
+  host: {
+    '[attr.id]': 'null',
+    '[attr.tabindex]': 'null',
+  },
   template: `
     <label
       class="krn-choice"
@@ -523,21 +531,30 @@ export class KrnRadioGroup
       [attr.data-readonly]="isReadOnly()"
     >
       <input
+        #input
         class="krn-choice__native"
         type="radio"
-        [attr.aria-label]="ariaLabel() || null"
+        [attr.aria-describedby]="effectiveDescribedBy()"
+        [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
+        [attr.aria-labelledby]="effectiveLabelledBy()"
         [attr.aria-disabled]="isReadOnly() || null"
-        [checked]="checked()"
+        [checked]="renderedChecked()"
         [disabled]="isDisabled()"
-        [name]="group?.name() || name()"
+        [id]="nativeId()"
+        [name]="effectiveName()"
+        [tabIndex]="tabIndex()"
         [value]="value()"
+        (blur)="blurred()"
+        (click)="preventReadonly($event)"
         (change)="select($event)"
       />
       <span class="krn-choice__mark" aria-hidden="true"></span>
       <span class="krn-choice__text">
-        <span><ng-content /></span>
+        <span [id]="labelId()"><ng-content /></span>
         @if (description()) {
-          <span class="krn-choice__description">{{ description() }}</span>
+          <span class="krn-choice__description" [id]="descriptionId()">
+            {{ description() }}
+          </span>
         }
       </span>
     </label>
@@ -545,17 +562,24 @@ export class KrnRadioGroup
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnRadio {
-  protected readonly group = inject(KRN_RADIO_GROUP, { optional: true });
+  private readonly group = inject(KRN_RADIO_GROUP, { optional: true });
+  private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('input');
+  private readonly generatedId = createKrnId('radio');
 
+  readonly id = input('');
   readonly value = input.required<string>();
-  readonly name = input(createKrnId('radio'));
+  readonly name = input(this.generatedId);
+  readonly checked = input(false, { transform: booleanAttribute });
   readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
   readonly description = input('');
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false, {
     alias: 'readonly',
     transform: booleanAttribute,
   });
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
   readonly selected = output<string>();
 
   protected readonly isDisabled = computed(
@@ -564,18 +588,72 @@ export class KrnRadio {
   protected readonly isReadOnly = computed(
     () => this.readOnly() || Boolean(this.group?.isReadOnly()),
   );
-  protected readonly checked = computed(() => this.group?.isSelected(this.value()) ?? false);
+  protected readonly nativeId = computed(() => this.id() || this.generatedId);
+  protected readonly effectiveName = computed(() => this.group?.name() || this.name());
+  protected readonly labelId = computed(() => `${this.nativeId()}-label`);
+  protected readonly descriptionId = computed(() => `${this.nativeId()}-description`);
+  protected readonly effectiveLabelledBy = computed(() =>
+    this.ariaLabelledBy()
+      ? mergeAriaIds(this.ariaLabelledBy(), this.labelId())
+      : this.ariaLabel()
+        ? null
+        : this.labelId(),
+  );
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(this.ariaDescribedBy(), this.description() ? this.descriptionId() : null),
+  );
+  protected readonly renderedChecked = computed(
+    () => this.group?.isSelected(this.value()) ?? this.checked(),
+  );
 
   protected select(event: Event): void {
+    const input = event.target as HTMLInputElement;
     if (this.isDisabled()) {
+      this.restoreCheckedState(input);
       return;
     }
     if (this.isReadOnly()) {
-      (event.target as HTMLInputElement).checked = this.checked();
+      this.restoreCheckedState(input);
+      return;
+    }
+    if (!input.checked || Boolean(this.group?.isSelected(this.value()))) {
       return;
     }
     this.group?.select(this.value());
     this.selected.emit(this.value());
+  }
+
+  protected preventReadonly(event: Event): void {
+    if (this.isReadOnly()) {
+      event.preventDefault();
+      this.restoreCheckedState(event.target as HTMLInputElement);
+    }
+  }
+
+  protected blurred(): void {
+    this.group?.markTouched();
+  }
+
+  focus(options?: FocusOptions): void {
+    this.inputElement()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    this.inputElement()?.nativeElement.blur();
+  }
+
+  private restoreCheckedState(input: HTMLInputElement): void {
+    if (!this.group) {
+      input.checked = this.renderedChecked();
+      return;
+    }
+
+    input
+      .closest('fieldset')
+      ?.querySelectorAll<HTMLInputElement>('input[type="radio"]')
+      .forEach((radio) => {
+        radio.checked = this.group!.isSelected(radio.value);
+      });
   }
 }
 
