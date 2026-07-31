@@ -60,6 +60,9 @@ contract or upgrade decision.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned
   Popover/Hover Card semantics with disclosure and non-modal preview behavior.
 - Removed duplicate state-change outputs where signal models already provide the canonical event.
+- Strengthened Text Input with deterministic standalone `value` ownership, IME-safe and
+  duplicate-free updates, composable ARIA references, validated length constraints, and public
+  native focus, blur, and selection methods.
 
 ### Deprecated
 
