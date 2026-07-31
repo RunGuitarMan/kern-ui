@@ -1,5 +1,6 @@
 import type { TemplateRef } from '@angular/core';
 import {
+  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -7,12 +8,19 @@ import {
   inject,
   input,
   model,
+  signal,
+  viewChild,
   viewChildren,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { KRN_PLATFORM, KrnIdService } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnNavigationOrientation, KrnTabItem } from './navigation.types';
+
+interface TabScrollAdjustment {
+  readonly list: HTMLElement | null;
+  readonly left: number;
+}
 
 @Component({
   selector: 'krn-tabs, krn-vertical-tabs',
@@ -21,11 +29,12 @@ import type { KrnNavigationOrientation, KrnTabItem } from './navigation.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
+      #tabList
       class="tab-list"
       role="tablist"
-      [class.vertical]="orientation() === 'vertical'"
-      [attr.aria-label]="ariaLabel()"
-      [attr.aria-orientation]="orientation()"
+      [class.vertical]="resolvedOrientation() === 'vertical'"
+      [attr.aria-label]="resolvedAriaLabel()"
+      [attr.aria-orientation]="resolvedOrientation()"
     >
       @for (item of items(); track item.id; let index = $index) {
         <button
@@ -73,12 +82,19 @@ import type { KrnNavigationOrientation, KrnTabItem } from './navigation.types';
       display: block;
       min-inline-size: 0;
     }
+    :host([hidden]) {
+      display: none;
+    }
     .tab-list {
       position: relative;
       display: flex;
+      max-inline-size: 100%;
       align-items: flex-end;
       gap: var(--krn-space-1);
+      overflow-x: auto;
       border-block-end: var(--krn-border-width-1) solid var(--krn-color-border);
+      overscroll-behavior-inline: contain;
+      scrollbar-width: thin;
     }
     button {
       position: relative;
@@ -149,6 +165,7 @@ import type { KrnNavigationOrientation, KrnTabItem } from './navigation.types';
     .tab-list.vertical {
       align-items: stretch;
       flex-direction: column;
+      overflow: visible;
       border-block-end: 0;
       border-inline-end: var(--krn-border-width-1) solid var(--krn-color-border);
     }
@@ -170,6 +187,18 @@ import type { KrnNavigationOrientation, KrnTabItem } from './navigation.types';
         transition: none;
       }
     }
+    @media (forced-colors: active) {
+      button[aria-selected='true']::after {
+        background: Highlight;
+      }
+      button:focus-visible {
+        outline-color: Highlight;
+      }
+      .tab-list,
+      .tab-list.vertical {
+        border-color: CanvasText;
+      }
+    }
   `,
 })
 export class KrnTabs {
@@ -178,13 +207,21 @@ export class KrnTabs {
   private readonly platform = inject(KRN_PLATFORM);
   protected readonly translations = inject(KRN_TRANSLATIONS);
   private readonly instanceId = this.ids.next('tabs');
+  private readonly tabList = viewChild<ElementRef<HTMLElement>>('tabList');
   private readonly tabElements = viewChildren<ElementRef<HTMLButtonElement>>('tab');
+  private readonly tabListResizeRevision = signal(0);
   readonly items = input<readonly KrnTabItem[]>([]);
   readonly value = model<string | null>(null);
   readonly orientation = input<KrnNavigationOrientation>(
     this.host.nativeElement.localName === 'krn-vertical-tabs' ? 'vertical' : 'horizontal',
   );
   readonly ariaLabel = input(this.translations.navigation.sections);
+  protected readonly resolvedOrientation = computed<KrnNavigationOrientation>(() =>
+    this.orientation() === 'vertical' ? 'vertical' : 'horizontal',
+  );
+  protected readonly resolvedAriaLabel = computed(
+    () => this.ariaLabel()?.trim() || this.translations.navigation.sections.trim() || null,
+  );
   protected readonly selectedId = computed(() => {
     const requested = this.value();
     const items = this.items();
@@ -195,6 +232,54 @@ export class KrnTabs {
   protected readonly selectedItem = computed(
     () => this.items().find((item) => item.id === this.selectedId()) ?? null,
   );
+
+  constructor() {
+    afterRenderEffect({
+      write: (onCleanup) => {
+        const list = this.tabList()?.nativeElement;
+        const ResizeObserverConstructor = list?.ownerDocument.defaultView?.ResizeObserver;
+        if (!list || !ResizeObserverConstructor) {
+          return;
+        }
+
+        const observer = new ResizeObserverConstructor(() => {
+          this.tabListResizeRevision.update((revision) => revision + 1);
+        });
+        observer.observe(list);
+        onCleanup(() => observer.disconnect());
+      },
+    });
+    afterRenderEffect({
+      earlyRead: (): TabScrollAdjustment => {
+        this.tabListResizeRevision();
+        const selectedId = this.selectedId();
+        const selectedIndex = this.items().findIndex(
+          (item) => item.id === selectedId && !item.disabled,
+        );
+        const list = this.tabList()?.nativeElement ?? null;
+        const selectedTab = this.tabElements()[selectedIndex]?.nativeElement;
+        if (this.resolvedOrientation() !== 'horizontal' || !list || !selectedTab) {
+          return { list, left: 0 };
+        }
+
+        const listRect = list.getBoundingClientRect();
+        const tabRect = selectedTab.getBoundingClientRect();
+        const left =
+          tabRect.left < listRect.left
+            ? tabRect.left - listRect.left
+            : tabRect.right > listRect.right
+              ? tabRect.right - listRect.right
+              : 0;
+        return { list, left };
+      },
+      write: (adjustment) => {
+        const { list, left } = adjustment();
+        if (list && Math.abs(left) > 0.5) {
+          list.scrollBy?.({ behavior: 'auto', left });
+        }
+      },
+    });
+  }
 
   protected tabId(item: KrnTabItem): string {
     return `${this.instanceId}-tab-${item.id}`;
@@ -214,39 +299,42 @@ export class KrnTabs {
   }
 
   protected onKeydown(event: KeyboardEvent, currentIndex: number): void {
+    const orientation = this.resolvedOrientation();
     const rightToLeft =
-      this.orientation() === 'horizontal' &&
+      orientation === 'horizontal' &&
       this.platform.window?.getComputedStyle(this.host.nativeElement).direction === 'rtl';
     const forward = rightToLeft ? -1 : 1;
-    const direction =
-      event.key === 'Home'
-        ? -Infinity
-        : event.key === 'End'
-          ? Infinity
-          : event.key === 'ArrowRight'
-            ? forward
-            : event.key === 'ArrowLeft'
-              ? -forward
-              : event.key === 'ArrowDown'
-                ? 1
-                : event.key === 'ArrowUp'
-                  ? -1
-                  : 0;
     const relevantArrow =
-      this.orientation() === 'horizontal'
+      orientation === 'horizontal'
         ? event.key === 'ArrowLeft' || event.key === 'ArrowRight'
         : event.key === 'ArrowUp' || event.key === 'ArrowDown';
-    if (direction === 0 || (!relevantArrow && event.key !== 'Home' && event.key !== 'End')) return;
+    if (!relevantArrow && event.key !== 'Home' && event.key !== 'End') return;
     event.preventDefault();
     const items = this.items();
-    let next =
-      direction === -Infinity
-        ? 0
-        : direction === Infinity
-          ? items.length - 1
-          : (currentIndex + direction + items.length) % items.length;
-    while (items[next]?.disabled && next !== currentIndex) {
-      next = (next + (direction < 0 ? -1 : 1) + items.length) % items.length;
+    if (items.length === 0) return;
+
+    let next = currentIndex;
+    if (event.key === 'Home') {
+      next = items.findIndex((item) => !item.disabled);
+    } else if (event.key === 'End') {
+      for (let index = items.length - 1; index >= 0; index -= 1) {
+        if (!items[index]?.disabled) {
+          next = index;
+          break;
+        }
+      }
+    } else {
+      const direction =
+        event.key === 'ArrowRight'
+          ? forward
+          : event.key === 'ArrowLeft'
+            ? -forward
+            : event.key === 'ArrowDown'
+              ? 1
+              : -1;
+      do {
+        next = (next + direction + items.length) % items.length;
+      } while (items[next]?.disabled && next !== currentIndex);
     }
     const item = items[next];
     if (item && !item.disabled) {

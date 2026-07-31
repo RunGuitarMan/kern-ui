@@ -144,6 +144,120 @@ describe('Kern navigation', () => {
     expect(document.activeElement).toBe(tabs[2]);
   });
 
+  it('uses the first and last enabled tabs for Home and End and normalizes ARIA inputs', async () => {
+    const fixture = await create(KrnTabs, {
+      items: [
+        { id: 'first', label: 'First' },
+        { id: 'middle', label: 'Middle' },
+        { id: 'disabled-last', label: 'Disabled last', disabled: true },
+      ],
+      value: 'middle',
+      ariaLabel: '   ',
+    });
+    fixture.componentRef.setInput('orientation', 'diagonal');
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const tablist = element.querySelector<HTMLElement>('[role="tablist"]');
+    const tabs = element.querySelectorAll<HTMLButtonElement>('[role="tab"]');
+
+    tabs[1]?.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+    fixture.detectChanges();
+    expect(tabs[1]?.getAttribute('aria-selected')).toBe('true');
+    expect(document.activeElement).toBe(tabs[1]);
+
+    tabs[1]?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+    fixture.detectChanges();
+    expect(tabs[0]?.getAttribute('aria-selected')).toBe('true');
+    expect(document.activeElement).toBe(tabs[0]);
+    expect(tablist?.getAttribute('aria-orientation')).toBe('horizontal');
+    expect(tablist?.getAttribute('aria-label')).toBeTruthy();
+  });
+
+  it('keeps a controlled selection visible after selection and container resize', async () => {
+    const originalResizeObserver = window.ResizeObserver;
+    let resizeCallback: ResizeObserverCallback | undefined;
+    const disconnect = vi.fn();
+    class TestResizeObserver {
+      constructor(callback: ResizeObserverCallback) {
+        resizeCallback = callback;
+      }
+      observe(): void {}
+      unobserve(): void {}
+      disconnect(): void {
+        disconnect();
+      }
+    }
+    Object.defineProperty(window, 'ResizeObserver', {
+      configurable: true,
+      value: TestResizeObserver,
+    });
+
+    let fixture: ComponentFixture<KrnTabs> | undefined;
+    const scrollBy = vi.fn();
+    const scrollIntoView = vi.fn();
+    let listRight = 100;
+    let selectedLeft = 140;
+    let selectedRight = 180;
+
+    try {
+      fixture = await create(KrnTabs, {
+        items: [
+          { id: 'first', label: 'First' },
+          { id: 'second', label: 'Second' },
+          { id: 'third', label: 'Third' },
+          { id: 'fourth', label: 'Fourth' },
+          { id: 'fifth', label: 'Fifth' },
+          { id: 'sixth', label: 'Sixth' },
+        ],
+        value: 'first',
+      });
+      const element = fixture.nativeElement as HTMLElement;
+      const tablist = element.querySelector<HTMLElement>('[role="tablist"]')!;
+      const tabs = element.querySelectorAll<HTMLButtonElement>('[role="tab"]');
+      Object.defineProperty(tablist, 'scrollBy', { configurable: true, value: scrollBy });
+      Object.defineProperty(tablist, 'getBoundingClientRect', {
+        configurable: true,
+        value: () => ({ left: 0, right: listRight }) as DOMRect,
+      });
+      Object.defineProperty(tabs[5]!, 'scrollIntoView', {
+        configurable: true,
+        value: scrollIntoView,
+      });
+      Object.defineProperty(tabs[5]!, 'getBoundingClientRect', {
+        configurable: true,
+        value: () => ({ left: selectedLeft, right: selectedRight }) as DOMRect,
+      });
+
+      fixture.componentRef.setInput('value', 'sixth');
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(tabs[5]?.getAttribute('aria-selected')).toBe('true');
+      expect(scrollBy).toHaveBeenCalledWith({ behavior: 'auto', left: 80 });
+      expect(scrollIntoView).not.toHaveBeenCalled();
+
+      scrollBy.mockClear();
+      selectedLeft = 40;
+      selectedRight = 80;
+      listRight = 60;
+      resizeCallback?.([], {} as ResizeObserver);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(scrollBy).toHaveBeenCalledWith({ behavior: 'auto', left: 20 });
+      fixture.destroy();
+      fixture = undefined;
+      expect(disconnect).toHaveBeenCalledOnce();
+    } finally {
+      fixture?.destroy();
+      Object.defineProperty(window, 'ResizeObserver', {
+        configurable: true,
+        value: originalResizeObserver,
+      });
+    }
+  });
+
   it('calculates pagination tokens and announces the visible result range', async () => {
     const fixture = await create(KrnPagination, { totalItems: 203, pageSize: 20, page: 5 });
     const current = fixture.nativeElement.querySelector('[aria-current="page"]');
