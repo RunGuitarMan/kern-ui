@@ -34,6 +34,54 @@ describe('Kern navigation', () => {
     ]).toHaveLength(7);
   });
 
+  it('normalizes bottom-navigation selection and exposes compact accessible badges', async () => {
+    const fixture = await create(KrnBottomNavigation, {
+      items: [
+        { id: 'home', label: 'Home', href: '/home', badge: 1500 },
+        { id: 'disabled', label: 'Disabled', disabled: true },
+        { id: 'search', label: 'A very long search destination' },
+      ],
+      value: 'disabled',
+      ariaLabel: '   ',
+    });
+    const element = fixture.nativeElement as HTMLElement;
+    const nav = element.querySelector<HTMLElement>('.bottom-nav')!;
+    const badge = element.querySelector<HTMLElement>('.badge')!;
+
+    expect(fixture.componentInstance.value()).toBeNull();
+    expect(nav.getAttribute('aria-label')).toBeTruthy();
+    expect(element.style.getPropertyValue('--krn-bottom-nav-count')).toBe('3');
+    expect(element.querySelectorAll('a')).toHaveLength(1);
+    expect(element.querySelectorAll('button')).toHaveLength(2);
+    expect(badge.textContent?.trim()).toBe('999+');
+    expect(badge.getAttribute('aria-label')).toBe('1500');
+
+    element.querySelectorAll<HTMLButtonElement>('button')[1]?.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.value()).toBe('search');
+    expect(element.querySelector('[aria-current="page"]')?.textContent).toContain('search');
+
+    fixture.componentRef.setInput('value', '');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.value()).toBeNull();
+  });
+
+  it('rejects blank and duplicate bottom-navigation ids', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnBottomNavigation] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnBottomNavigation);
+
+    expect(() => fixture.componentRef.setInput('items', [{ id: '   ', label: 'Blank' }])).toThrow(
+      /non-empty unique item ids/,
+    );
+    expect(() =>
+      fixture.componentRef.setInput('items', [
+        { id: 'same', label: 'First' },
+        { id: 'same', label: 'Second' },
+      ]),
+    ).toThrow(/non-empty unique item ids/);
+  });
+
   it('collapses and reveals long breadcrumbs accessibly', async () => {
     const fixture = await create(KrnBreadcrumbs, {
       items: [

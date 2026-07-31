@@ -14,6 +14,21 @@ import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnNavigationItem, KrnTocItem } from './navigation.types';
 
+function validateBottomNavigationItems(
+  items: readonly KrnNavigationItem[],
+): readonly KrnNavigationItem[] {
+  const ids = new Set<string>();
+  for (const item of items) {
+    if (typeof item.id !== 'string' || item.id.trim().length === 0 || ids.has(item.id)) {
+      throw new Error(
+        `KrnBottomNavigation requires non-empty unique item ids; received "${item.id}".`,
+      );
+    }
+    ids.add(item.id);
+  }
+  return items;
+}
+
 function sameDocumentHref(document: Document, targetId: string): string {
   const current = document.defaultView?.location.href ?? document.baseURI;
   const url = new URL(current);
@@ -43,7 +58,7 @@ function navigateToAnchor(
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <nav class="bottom-nav" [attr.aria-label]="ariaLabel()">
+    <nav class="bottom-nav" [attr.aria-label]="resolvedAriaLabel()">
       @for (item of items(); track item.id) {
         @if (item.href && !item.disabled) {
           <a
@@ -56,7 +71,9 @@ function navigateToAnchor(
             }
             <span>{{ item.label }}</span>
             @if (item.badge !== undefined) {
-              <span class="badge">{{ item.badge }}</span>
+              <span class="badge" [attr.aria-label]="badgeAriaLabel(item.badge)">
+                {{ badgeText(item.badge) }}
+              </span>
             }
           </a>
         } @else {
@@ -71,7 +88,9 @@ function navigateToAnchor(
             }
             <span>{{ item.label }}</span>
             @if (item.badge !== undefined) {
-              <span class="badge">{{ item.badge }}</span>
+              <span class="badge" [attr.aria-label]="badgeAriaLabel(item.badge)">
+                {{ badgeText(item.badge) }}
+              </span>
             }
           </button>
         }
@@ -81,13 +100,23 @@ function navigateToAnchor(
   styles: `
     :host {
       display: block;
+      min-inline-size: 0;
+    }
+    :host([hidden]) {
+      display: none;
     }
     .bottom-nav {
       display: grid;
-      grid-template-columns: repeat(var(--krn-bottom-nav-count, 4), minmax(0, 1fr));
+      grid-template-columns: repeat(
+        var(--krn-bottom-nav-count, 1),
+        minmax(min(4.5rem, 100%), 1fr)
+      );
+      overflow-x: auto;
       padding: var(--krn-space-1);
       border-block-start: var(--krn-border-width-1) solid var(--krn-color-border);
       background: var(--krn-color-surface);
+      overscroll-behavior-inline: contain;
+      scrollbar-width: thin;
     }
     .bottom-nav :is(a, button) {
       position: relative;
@@ -107,6 +136,14 @@ function navigateToAnchor(
       line-height: var(--krn-line-height-tight);
       text-decoration: none;
       cursor: pointer;
+      scroll-snap-align: center;
+    }
+    .bottom-nav :is(a, button) > span:not(.icon, .badge) {
+      inline-size: 100%;
+      overflow: hidden;
+      text-align: center;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .bottom-nav :is(a, button):hover {
       background: var(--krn-color-surface-subtle);
@@ -144,23 +181,64 @@ function navigateToAnchor(
       background: var(--krn-color-danger);
       color: var(--krn-color-on-danger);
       font-variant-numeric: tabular-nums;
+      line-height: var(--krn-line-height-tight);
+      white-space: nowrap;
+    }
+    @media (forced-colors: active) {
+      .bottom-nav {
+        border-block-start-color: CanvasText;
+      }
+      .bottom-nav [aria-current='page']::before {
+        background: Highlight;
+      }
+      .bottom-nav :is(a, button):focus-visible {
+        outline-color: Highlight;
+      }
+      .badge {
+        border: 1px solid CanvasText;
+      }
     }
   `,
   host: {
-    '[style.--krn-bottom-nav-count]': 'items().length',
+    '[style.--krn-bottom-nav-count]': 'columnCount()',
   },
 })
 export class KrnBottomNavigation {
   private readonly translations = inject(KRN_TRANSLATIONS);
-  readonly items = input<readonly KrnNavigationItem[]>([]);
+  readonly items = input<readonly KrnNavigationItem[], readonly KrnNavigationItem[]>([], {
+    transform: validateBottomNavigationItems,
+  });
   readonly value = model<string | null>(null);
   readonly ariaLabel = input(this.translations.navigation.primary);
   readonly itemSelected = output<KrnNavigationItem>();
+  protected readonly columnCount = computed(() => Math.max(1, this.items().length));
+  protected readonly resolvedAriaLabel = computed(
+    () => this.ariaLabel()?.trim() || this.translations.navigation.primary.trim() || null,
+  );
+
+  constructor() {
+    effect(() => {
+      const value = this.value();
+      if (value !== null && !this.items().some((item) => item.id === value && !item.disabled)) {
+        this.value.set(null);
+      }
+    });
+  }
 
   protected select(item: KrnNavigationItem): void {
     if (item.disabled) return;
     this.value.set(item.id);
     this.itemSelected.emit(item);
+  }
+
+  protected badgeText(badge: string | number): string {
+    return typeof badge === 'number' && Number.isFinite(badge) && badge > 999
+      ? '999+'
+      : String(badge);
+  }
+
+  protected badgeAriaLabel(badge: string | number): string {
+    return String(badge);
   }
 }
 
