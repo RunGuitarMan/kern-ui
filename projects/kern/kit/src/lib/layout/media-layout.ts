@@ -429,13 +429,17 @@ export type KrnResponsiveDisplay = 'block' | 'inline' | 'contents' | 'flex' | 'g
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<ng-content />`,
   host: {
-    '[style.--krn-responsive-display]': 'display()',
-    '[attr.data-from]': 'from()',
-    '[attr.data-until]': 'until()',
+    '[style.--krn-responsive-display]': 'resolvedDisplay()',
+    '[attr.data-from]': 'resolvedFrom()',
+    '[attr.data-until]': 'resolvedUntil()',
   },
   styles: `
     :host {
       display: var(--krn-responsive-display);
+    }
+
+    :host([hidden]) {
+      display: none;
     }
 
     @media (width < 36rem) {
@@ -488,9 +492,32 @@ export type KrnResponsiveDisplay = 'block' | 'inline' | 'contents' | 'flex' | 'g
   `,
 })
 export class KrnShow {
+  /** Shows content at this viewport width and above. */
   readonly from = input<KrnResponsiveBreakpoint>('none');
+
+  /** Shows content below this viewport width. */
   readonly until = input<KrnResponsiveBreakpoint>('none');
+
+  /** Restores this display mode while the component is visible. */
   readonly display = input<KrnResponsiveDisplay>('block');
+
+  protected readonly resolvedFrom = computed<KrnResponsiveBreakpoint>(() => {
+    const from = this.from();
+    return from === 'sm' || from === 'md' || from === 'lg' || from === 'xl' ? from : 'none';
+  });
+  protected readonly resolvedUntil = computed<KrnResponsiveBreakpoint>(() => {
+    const until = this.until();
+    return until === 'sm' || until === 'md' || until === 'lg' || until === 'xl' ? until : 'none';
+  });
+  protected readonly resolvedDisplay = computed<KrnResponsiveDisplay>(() => {
+    const display = this.display();
+    return display === 'inline' ||
+      display === 'contents' ||
+      display === 'flex' ||
+      display === 'grid'
+      ? display
+      : 'block';
+  });
 }
 
 @Component({

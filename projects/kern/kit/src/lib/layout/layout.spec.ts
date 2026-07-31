@@ -8,7 +8,7 @@ import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
 import { KrnAppShell, KrnHeader, KrnSidebar } from './app-shell';
 import { KrnCluster, KrnInline, KrnSpacer, KrnStack } from './flex-layout';
 import { KrnGrid } from './grid';
-import { KrnAspectRatio, KrnDivider, KrnScrollArea } from './media-layout';
+import { KrnAspectRatio, KrnDivider, KrnScrollArea, KrnShow } from './media-layout';
 import { KrnResizablePanel, KrnResizablePanels, KrnResizeHandle } from './resizable-panels';
 import { KrnSplitLayout } from './split-layout';
 
@@ -516,6 +516,35 @@ describe('Kern layout primitives', () => {
     fixture.detectChanges();
     expect(getComputedStyle(viewport).overflowX).toBe('auto');
     expect(getComputedStyle(viewport).overscrollBehaviorX).toBe('contain');
+
+    host.hidden = true;
+    expect(getComputedStyle(host).display).toBe('none');
+  });
+
+  it('exposes a normalized responsive show range and visible display mode', () => {
+    const fixture = TestBed.createComponent(KrnShow);
+    fixture.componentRef.setInput('from', 'md');
+    fixture.componentRef.setInput('until', 'xl');
+    fixture.componentRef.setInput('display', 'flex');
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+
+    expect(host.getAttribute('data-from')).toBe('md');
+    expect(host.getAttribute('data-until')).toBe('xl');
+    expect(host.style.getPropertyValue('--krn-responsive-display')).toBe('flex');
+  });
+
+  it('falls back from invalid show inputs and preserves native hidden semantics', () => {
+    const fixture = TestBed.createComponent(KrnShow);
+    fixture.componentRef.setInput('from', 'tablet');
+    fixture.componentRef.setInput('until', 'desktop');
+    fixture.componentRef.setInput('display', 'table');
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+
+    expect(host.getAttribute('data-from')).toBe('none');
+    expect(host.getAttribute('data-until')).toBe('none');
+    expect(host.style.getPropertyValue('--krn-responsive-display')).toBe('block');
 
     host.hidden = true;
     expect(getComputedStyle(host).display).toBe('none');
