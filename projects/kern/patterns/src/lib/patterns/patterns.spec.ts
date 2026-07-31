@@ -17,21 +17,102 @@ describe('Kern product patterns', () => {
   it('filters and chooses a global-search result', async () => {
     await TestBed.configureTestingModule({ imports: [KrnGlobalSearch] }).compileComponents();
     const fixture = TestBed.createComponent(KrnGlobalSearch);
+    const buttonResult = { id: 'button', label: 'Button', keywords: ['action'] } as const;
+    fixture.componentRef.setInput('ariaLabel', '   ');
     fixture.componentRef.setInput('results', [
-      { id: 'button', label: 'Button', keywords: ['action'] },
+      buttonResult,
       { id: 'dialog', label: 'Dialog', keywords: ['overlay'] },
     ]);
     fixture.componentInstance.query.set('action');
     fixture.componentInstance.open.set(true);
+    const selected: unknown[] = [];
+    fixture.componentInstance.resultSelected.subscribe((value) => selected.push(value));
     fixture.detectChanges();
     await fixture.whenStable();
 
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    const listbox = fixture.nativeElement.querySelector('[role="listbox"]') as HTMLElement;
     const option = fixture.nativeElement.querySelector('[role="option"]') as HTMLButtonElement;
+    expect(input.getAttribute('aria-label')?.trim()).toBeTruthy();
+    expect(input.getAttribute('aria-controls')).toBe(listbox.id);
+    expect(input.getAttribute('aria-autocomplete')).toBe('list');
+    expect(option.tabIndex).toBe(-1);
     expect(option.textContent).toContain('Button');
+    input.focus();
+    const pointerDown = new Event('pointerdown', { bubbles: true, cancelable: true });
+    option.dispatchEvent(pointerDown);
+    expect(pointerDown.defaultPrevented).toBe(true);
+    expect(document.activeElement).toBe(input);
     option.click();
     fixture.detectChanges();
     expect(fixture.componentInstance.query()).toBe('Button');
     expect(fixture.componentInstance.open()).toBe(false);
+    expect(selected).toEqual([buttonResult]);
+
+    const clear = fixture.nativeElement.querySelector('.searchbox button') as HTMLButtonElement;
+    clear.focus();
+    clear.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.query()).toBe('');
+    expect(document.activeElement).toBe(input);
+    expect(input.getAttribute('aria-expanded')).toBe('false');
+    expect(input.hasAttribute('aria-controls')).toBe(false);
+  });
+
+  it('keeps global-search navigation bounded and validates its public data', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnGlobalSearch] }).compileComponents();
+    const empty = TestBed.createComponent(KrnGlobalSearch);
+    empty.componentInstance.activeIndex.set(4);
+    empty.componentInstance.query.set('missing');
+    empty.componentInstance.open.set(true);
+    empty.detectChanges();
+    await empty.whenStable();
+
+    const input = empty.nativeElement.querySelector('input') as HTMLInputElement;
+    const arrow = new KeyboardEvent('keydown', {
+      key: 'ArrowDown',
+      bubbles: true,
+      cancelable: true,
+    });
+    input.dispatchEvent(arrow);
+    expect(empty.componentInstance.activeIndex()).toBe(0);
+    expect(arrow.defaultPrevented).toBe(false);
+
+    empty.componentRef.setInput('results', [
+      { id: 'first', label: 'Item one' },
+      { id: 'second', label: 'Item two' },
+    ]);
+    empty.componentInstance.query.set('item');
+    empty.componentInstance.activeIndex.set(Number.NaN);
+    empty.detectChanges();
+    await empty.whenStable();
+    expect(empty.componentInstance.activeIndex()).toBe(0);
+    empty.componentInstance.activeIndex.set(1.8);
+    empty.detectChanges();
+    await empty.whenStable();
+    expect(empty.componentInstance.activeIndex()).toBe(1);
+
+    input.dispatchEvent(
+      new FocusEvent('focusout', { bubbles: true, relatedTarget: document.body }),
+    );
+    expect(empty.componentInstance.open()).toBe(false);
+
+    const duplicate = TestBed.createComponent(KrnGlobalSearch);
+    duplicate.componentRef.setInput('results', [
+      { id: 'same', label: 'First' },
+      { id: ' same ', label: 'Second' },
+    ]);
+    expect(() => duplicate.detectChanges()).toThrowError(/non-empty unique result ids/);
+
+    const invalidMaximum = TestBed.createComponent(KrnGlobalSearch);
+    invalidMaximum.componentRef.setInput('maxResults', 0);
+    expect(() => invalidMaximum.detectChanges()).toThrowError(/positive safe integer/);
+
+    const invalidResultsId = TestBed.createComponent(KrnGlobalSearch);
+    invalidResultsId.componentRef.setInput('resultsId', 'search results');
+    expect(() => invalidResultsId.detectChanges()).toThrowError(
+      /single non-whitespace DOM id token/,
+    );
   });
 
   it('opens the user menu, moves focus to its first action, and closes on selection', async () => {

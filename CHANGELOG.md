@@ -59,6 +59,8 @@ contract or upgrade decision.
   state on `KrnLineChart`, `KrnBarChart`, and `KrnDonutChart`.
 - Strengthened Notification Center identity and content validation, semantic heading and live-count
   structure, and added optional `KrnNotification.dateTime` for machine-readable timestamps.
+- Strengthened Global Search result identity, bounded keyboard navigation, combobox popup semantics,
+  focus lifecycle, and positive `maxResults` validation.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned
