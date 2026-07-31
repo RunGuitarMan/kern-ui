@@ -10,7 +10,7 @@ import {
   model,
   signal,
 } from '@angular/core';
-import { KRN_PLATFORM, type KrnScheduledHandle } from '@kern-ui/angular/cdk';
+import { KRN_PLATFORM, KrnIdService, type KrnScheduledHandle } from '@kern-ui/angular/cdk';
 import {
   KRN_ENGLISH_TRANSLATIONS,
   KRN_LOCALE,
@@ -84,7 +84,7 @@ interface KrnTooltipPosition {
   selector: 'krn-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[attr.data-type]': 'type()',
+    '[attr.data-type]': 'resolvedType()',
   },
   template: `
     <figure>
@@ -93,7 +93,7 @@ interface KrnTooltipPosition {
           @if (eyebrow()) {
             <small>{{ eyebrow() }}</small>
           }
-          <strong>{{ title() }}</strong>
+          <strong>{{ resolvedTitle() }}</strong>
           @if (description()) {
             <span>{{ description() }}</span>
           }
@@ -102,6 +102,7 @@ interface KrnTooltipPosition {
           type="button"
           class="data-toggle"
           [attr.aria-expanded]="tableVisible()"
+          [attr.aria-controls]="tableVisible() ? tableId : null"
           (click)="tableVisible.update(toggle)"
         >
           {{ tableVisible() ? resolvedLabels().hideData : resolvedLabels().viewData }}
@@ -111,7 +112,7 @@ interface KrnTooltipPosition {
       <div class="plot" [class.has-active]="activeIndex() !== null">
         @if (!validatedData().length) {
           <p class="empty-chart" role="status">{{ resolvedLabels().empty }}</p>
-        } @else if (type() === 'line') {
+        } @else if (resolvedType() === 'line') {
           <svg viewBox="0 0 640 280" role="group" [attr.aria-label]="accessibleSummary()">
             <g class="grid" aria-hidden="true">
               @for (line of gridLines; track line) {
@@ -153,7 +154,7 @@ interface KrnTooltipPosition {
               </g>
             }
           </svg>
-        } @else if (type() === 'bar') {
+        } @else if (resolvedType() === 'bar') {
           <svg viewBox="0 0 640 280" role="group" [attr.aria-label]="accessibleSummary()">
             <g class="grid" aria-hidden="true">
               @for (line of gridLines; track line) {
@@ -285,11 +286,11 @@ interface KrnTooltipPosition {
       </div>
 
       @if (tableVisible()) {
-        <div class="table-scroll">
+        <div class="table-scroll" [id]="tableId">
           <table>
             <caption>
               {{
-                resolvedLabels().sourceDataCaption(title(), resolvedLabels().sourceData)
+                resolvedLabels().sourceDataCaption(resolvedTitle(), resolvedLabels().sourceData)
               }}
             </caption>
             <thead>
@@ -322,6 +323,9 @@ interface KrnTooltipPosition {
       container: krn-chart / inline-size;
       color: var(--krn-color-text, #252932);
       font: var(--krn-font-body-sm, 500 0.8125rem/1.25rem sans-serif);
+    }
+    :host([hidden]) {
+      display: none;
     }
     figure {
       display: grid;
@@ -653,6 +657,12 @@ interface KrnTooltipPosition {
         transform: none;
       }
     }
+    @media (pointer: coarse) {
+      .data-toggle,
+      .legend button {
+        min-block-size: 2.75rem;
+      }
+    }
     @media (prefers-reduced-motion: reduce) {
       :host-context(html:not([data-krn-motion='full'])) .dot,
       :host-context(html:not([data-krn-motion='full'])) .bar rect,
@@ -685,6 +695,7 @@ export class KrnChart {
   private readonly platform = inject(KRN_PLATFORM);
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected readonly tableId = inject(KrnIdService).next('chart-data');
   private hideTimer:
     { readonly handle: KrnScheduledHandle; readonly key: KrnChartDatumKey } | undefined;
 
@@ -725,6 +736,28 @@ export class KrnChart {
     'var(--krn-chart-4, #b58633)',
   ]);
 
+  protected readonly resolvedType = computed<KrnChartType>(() => {
+    const type = this.type();
+    if (type !== 'line' && type !== 'bar' && type !== 'donut') {
+      throw new Error(
+        `KrnChart type must be "line", "bar", or "donut"; received "${String(type)}".`,
+      );
+    }
+    return type;
+  });
+  protected readonly resolvedTitle = computed(() => {
+    const inputTitle = this.title();
+    const title = typeof inputTitle === 'string' ? inputTitle.trim() : '';
+    if (!title) throw new Error('KrnChart requires a non-empty title.');
+    return title;
+  });
+  private readonly resolvedPalette = computed(() => {
+    const colors = this.palette().filter(
+      (color): color is string => typeof color === 'string' && color.trim().length > 0,
+    );
+    return colors.length ? colors : ['var(--krn-chart-1, #4f6feb)'];
+  });
+
   protected readonly resolvedLabels = computed<KrnResolvedChartLabels>(() => {
     const overrides = this.labels();
     return {
@@ -760,7 +793,8 @@ export class KrnChart {
   protected readonly validatedData = computed<readonly KrnNormalizedDatum[]>(() => {
     const identities = new Map<KrnChartDatumKey, number>();
     return this.data().map((datum, index) => {
-      if (!datum.label.trim()) {
+      const label = typeof datum.label === 'string' ? datum.label.trim() : '';
+      if (!label) {
         throw new Error(`KrnChart datum at index ${index} must have a non-empty label.`);
       }
       if (!Number.isFinite(datum.value)) {
@@ -772,7 +806,11 @@ export class KrnChart {
         );
       }
       const key = this.datumIdentity()(datum, index);
-      if ((typeof key !== 'string' && typeof key !== 'number') || key === '') {
+      if (
+        (typeof key !== 'string' && typeof key !== 'number') ||
+        (typeof key === 'string' && !key.trim()) ||
+        (typeof key === 'number' && !Number.isFinite(key))
+      ) {
         throw new TypeError(`KrnChart datum "${datum.label}" resolved to an invalid identity.`);
       }
       const previousIndex = identities.get(key);
@@ -782,7 +820,13 @@ export class KrnChart {
         );
       }
       identities.set(key, index);
-      return { ...datum, key, value: Math.max(0, datum.value) };
+      return {
+        ...datum,
+        key,
+        label,
+        description: datum.description?.trim() || undefined,
+        value: Math.max(0, datum.value),
+      };
     });
   });
   protected readonly total = computed(() =>
@@ -848,13 +892,13 @@ export class KrnChart {
   protected readonly tooltipPosition = computed<KrnTooltipPosition>(() => {
     const index = this.activeIndex();
     if (index === null) return { x: 50, y: 50 };
-    if (this.type() === 'line') {
+    if (this.resolvedType() === 'line') {
       const point = this.linePoints()[index];
       return point
         ? { x: clamp((point.x / 640) * 100, 13, 87), y: clamp((point.y / 280) * 100, 24, 86) }
         : { x: 50, y: 50 };
     }
-    if (this.type() === 'bar') {
+    if (this.resolvedType() === 'bar') {
       const bar = this.bars()[index];
       return bar
         ? {
@@ -875,7 +919,7 @@ export class KrnChart {
     const items = data.slice(0, limit).map((datum) => this.accessibleDatumLabel(datum));
     const remaining = data.length - items.length;
     if (remaining > 0) items.push(this.resolvedLabels().additionalItems(remaining));
-    return this.resolvedLabels().summary(this.title(), items);
+    return this.resolvedLabels().summary(this.resolvedTitle(), items);
   });
 
   constructor() {
@@ -914,7 +958,7 @@ export class KrnChart {
   }
 
   protected color(index: number): string {
-    const palette = this.palette();
+    const palette = this.resolvedPalette();
     return palette[index % palette.length] ?? 'var(--krn-chart-1, #4f6feb)';
   }
 
@@ -1061,11 +1105,17 @@ export class KrnChart {
   }
 
   protected formattedValue(value: number): string {
-    return this.valueFormatter()?.(value) ?? this.numberFormatter().format(value);
+    const formatted = this.valueFormatter()?.(value);
+    return typeof formatted === 'string' && formatted.trim()
+      ? formatted
+      : this.numberFormatter().format(value);
   }
 
   protected formattedPercent(value: number): string {
-    return this.percentFormatter()?.(value) ?? this.percentageNumberFormatter().format(value / 100);
+    const formatted = this.percentFormatter()?.(value);
+    return typeof formatted === 'string' && formatted.trim()
+      ? formatted
+      : this.percentageNumberFormatter().format(value / 100);
   }
 
   protected percentOfTotal(value: number): string {

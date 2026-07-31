@@ -33,6 +33,38 @@ describe('KrnChart', () => {
     expect(element.querySelectorAll('tbody tr')).toHaveLength(3);
   });
 
+  it('normalizes visible copy and links the data disclosure to its table', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnChart] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnChart);
+    fixture.componentRef.setInput('title', '  Revenue  ');
+    fixture.componentRef.setInput('type', 'donut');
+    fixture.componentRef.setInput('palette', ['', 'rebeccapurple']);
+    fixture.componentRef.setInput('valueFormatter', () => '   ');
+    fixture.componentRef.setInput('percentFormatter', () => '');
+    fixture.componentRef.setInput('data', [
+      { id: 'jan', label: '  January  ', value: 12, description: '   ' },
+    ]);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('figcaption strong')?.textContent?.trim()).toBe('Revenue');
+    expect(element.querySelector('.legend span')?.textContent?.trim()).toBe('January');
+    expect(element.querySelector('.legend strong')?.textContent?.trim()).toBe('100%');
+    expect(
+      (element.querySelector('.legend i') as HTMLElement).style.getPropertyValue('--_series-color'),
+    ).toBe('rebeccapurple');
+
+    const toggle = element.querySelector<HTMLButtonElement>('.data-toggle');
+    expect(toggle?.hasAttribute('aria-controls')).toBe(false);
+    toggle?.click();
+    fixture.detectChanges();
+    const controlledId = toggle?.getAttribute('aria-controls');
+    expect(controlledId).toBeTruthy();
+    expect(element.querySelector('.table-scroll')?.id).toBe(controlledId);
+    expect(element.querySelector('caption')?.textContent).toContain('Revenue');
+  });
+
   it('calculates donut shares without mutating data', async () => {
     await TestBed.configureTestingModule({ imports: [KrnChart] }).compileComponents();
     const fixture = TestBed.createComponent(KrnChart);
@@ -253,6 +285,25 @@ describe('KrnChart', () => {
     negative.componentRef.setInput('negativeValuePolicy', 'reject');
     negative.componentRef.setInput('data', [{ label: 'A', value: -1 }]);
     expect(() => negative.detectChanges()).toThrowError(/negativeValuePolicy is "reject"/);
+
+    for (const identity of [Number.NaN, Number.POSITIVE_INFINITY, '   ']) {
+      const invalidIdentity = TestBed.createComponent(KrnChart);
+      invalidIdentity.componentRef.setInput('title', 'Invalid');
+      invalidIdentity.componentRef.setInput('datumIdentity', () => identity);
+      invalidIdentity.componentRef.setInput('data', [{ label: 'A', value: 1 }]);
+      expect(() => invalidIdentity.detectChanges()).toThrowError(/invalid identity/);
+    }
+
+    const invalidTitle = TestBed.createComponent(KrnChart);
+    invalidTitle.componentRef.setInput('title', '   ');
+    invalidTitle.componentRef.setInput('data', [{ label: 'A', value: 1 }]);
+    expect(() => invalidTitle.detectChanges()).toThrowError(/non-empty title/);
+
+    const invalidType = TestBed.createComponent(KrnChart);
+    invalidType.componentRef.setInput('title', 'Invalid');
+    invalidType.componentRef.setInput('type', 'pie');
+    invalidType.componentRef.setInput('data', [{ label: 'A', value: 1 }]);
+    expect(() => invalidType.detectChanges()).toThrowError(/type must be/);
   });
 
   it('clamps negative values without mutating the consumer data', async () => {
