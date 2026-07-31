@@ -25,8 +25,15 @@ export type KrnContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
   styles: `
     :host {
       display: block;
-      inline-size: min(calc(100% - 2 * var(--krn-container-gutter)), var(--krn-container-max));
+      box-sizing: border-box;
+      inline-size: 100%;
+      max-inline-size: var(--krn-container-max);
       min-inline-size: 0;
+      padding-inline: var(--krn-container-gutter);
+    }
+
+    :host([hidden]) {
+      display: none;
     }
 
     :host([data-align='center']) {
@@ -44,13 +51,15 @@ export type KrnContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 })
 export class KrnContainer {
   readonly size = input<KrnContainerSize>('lg');
-  readonly maxWidth = input<string | null>(null);
+  readonly maxWidth = input<KrnLayoutSpace | null>(null);
   readonly gutter = input<KrnLayoutSpace>('4');
   readonly align = input<'start' | 'center' | 'end'>('center');
 
   protected readonly resolvedMaxWidth = computed(() => {
+    const size = this.size();
+    const fallback = size === 'full' ? '100%' : `var(--krn-container-${size})`;
     const explicit = this.maxWidth();
-    return explicit ?? (this.size() === 'full' ? '100%' : `var(--krn-container-${this.size()})`);
+    return explicit === null ? fallback : krnCssLength(explicit, fallback);
   });
   protected readonly resolvedGutter = computed(() =>
     krnCssLength(this.gutter(), 'var(--krn-space-4)'),

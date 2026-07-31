@@ -70,6 +70,8 @@ contract or upgrade decision.
 - Strengthened Navigation Rail with composed native navigation naming, semantic header/footer
   projection, automatic App Shell side alignment, explicit expansion methods, and contained
   scrolling.
+- Reworked Container gutters as logical border-box padding, normalized numeric/token max widths,
+  restored size fallback for empty overrides, and preserved native hidden semantics.
 - Removed duplicate state-change outputs where signal models already provide the canonical event.
 - Rebuilt Form Field as a control-owned label/description coordinator: registered controls now
   supply identity and Angular state, full control events drive pending/valid/disabled presentation,
