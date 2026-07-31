@@ -7,6 +7,7 @@ import { KrnDrawer } from '@kern-ui/angular/kit';
 
 import { KrnLoginForm, KrnMultiStepForm, KrnProfileForm } from './form-patterns';
 import {
+  KrnCrudToolbar,
   KrnFilterBar,
   KrnGlobalSearch,
   type KrnNotification,
@@ -226,6 +227,40 @@ describe('Kern product patterns', () => {
     const fixture = TestBed.createComponent(KrnPageHeader);
     fixture.componentRef.setInput('heading', '   ');
     expect(() => fixture.detectChanges()).toThrowError(/non-empty heading/);
+  });
+
+  it('announces crud-toolbar selection changes from a persistent status region', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnCrudToolbar] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnCrudToolbar);
+    fixture.componentRef.setInput('ariaLabel', '   ');
+    fixture.componentRef.setInput('selectedLabel', () => '   ');
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const status = element.querySelector('.selection-status') as HTMLElement;
+    expect(element.getAttribute('role')).toBe('toolbar');
+    expect(element.getAttribute('aria-orientation')).toBe('horizontal');
+    expect(element.getAttribute('aria-label')?.trim()).toBeTruthy();
+    expect(status.getAttribute('aria-live')).toBe('polite');
+    expect(status.textContent?.trim()).toContain('0');
+
+    fixture.componentRef.setInput('selectedCount', 2);
+    fixture.detectChanges();
+    expect(element.hasAttribute('data-bulk')).toBe(true);
+    expect(status.textContent?.trim()).toBeTruthy();
+    expect(element.querySelector('strong')?.getAttribute('aria-hidden')).toBe('true');
+
+    fixture.componentRef.setInput('selectedCount', 0);
+    fixture.detectChanges();
+    expect(element.hasAttribute('data-bulk')).toBe(false);
+    expect(status.textContent?.trim()).toContain('0');
+  });
+
+  it('rejects an invalid crud-toolbar selected count', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnCrudToolbar] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnCrudToolbar);
+    fixture.componentRef.setInput('selectedCount', -1);
+    expect(() => fixture.detectChanges()).toThrowError(/non-negative safe integer/);
   });
 
   it('opens the user menu, moves focus to its first action, and closes on selection', async () => {

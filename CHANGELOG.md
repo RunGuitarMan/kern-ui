@@ -67,6 +67,8 @@ contract or upgrade decision.
   associations, required heading validation, and normalized optional copy.
 - Opened Settings Panel focus and dismissal policies through `initialFocus`, `closeOnEscape`, and
   `closeOnOutside`, added typed `closed` reasons, and normalized accessible labels.
+- Strengthened CRUD Toolbar and Bulk Actions with selected-count validation, persistent live
+  selection announcements, normalized labels, and wrap-safe high-contrast states.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned
