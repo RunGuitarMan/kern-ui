@@ -79,13 +79,20 @@ export class KrnContainer {
   styles: `
     :host {
       display: block;
-      box-sizing: content-box;
+      box-sizing: border-box;
+      inline-size: 100%;
       max-inline-size: var(--krn-center-max);
+      min-inline-size: 0;
       margin-inline: auto;
       padding-inline: var(--krn-center-gutter);
     }
 
+    :host([hidden]) {
+      display: none;
+    }
+
     .krn-center__inner {
+      inline-size: 100%;
       min-inline-size: 0;
     }
 
@@ -97,12 +104,18 @@ export class KrnContainer {
   `,
 })
 export class KrnCenter {
+  /** Maximum outer inline size as a container token, CSS length, or `full`. */
   readonly maxWidth = input<KrnLayoutSpace>('md');
+  /** Logical inline padding kept inside the maximum width. */
   readonly gutters = input<KrnLayoutSpace>('4');
+  /** Centers projected children on the inline axis without changing text alignment. */
   readonly intrinsic = input(false, { transform: booleanAttribute });
 
   protected readonly resolvedMaxWidth = computed(() => {
     const max = this.maxWidth();
+    if (max === 'full') {
+      return '100%';
+    }
     if (typeof max === 'string' && ['sm', 'md', 'lg', 'xl'].includes(max)) {
       return `var(--krn-container-${max})`;
     }
