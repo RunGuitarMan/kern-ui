@@ -10,6 +10,7 @@ import {
   KrnGlobalSearch,
   type KrnNotification,
   KrnNotificationCenter,
+  KrnPageHeader,
   KrnSettingsPanel,
   KrnUserMenu,
 } from './product-patterns';
@@ -189,6 +190,41 @@ describe('Kern product patterns', () => {
     ]);
     invalidValue.componentInstance.values.set({ status: 'missing' });
     expect(() => invalidValue.detectChanges()).toThrowError(/is not an option/);
+  });
+
+  it('renders a semantically labelled page header with normalized copy', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnPageHeader] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnPageHeader);
+    fixture.componentRef.setInput('heading', '  Account overview  ');
+    fixture.componentRef.setInput('eyebrow', '   ');
+    fixture.componentRef.setInput('description', '  Current balances and activity.  ');
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const header = element.querySelector('header') as HTMLElement;
+    const heading = element.querySelector('h1') as HTMLHeadingElement;
+    const description = element.querySelector('p') as HTMLParagraphElement;
+    const index = element.querySelector('.index') as HTMLElement;
+    expect(heading.textContent).toBe('Account overview');
+    expect(header.getAttribute('aria-labelledby')).toBe(heading.id);
+    expect(header.getAttribute('aria-describedby')).toBe(description.id);
+    expect(description.textContent).toBe('Current balances and activity.');
+    expect(element.querySelector('.eyebrow')).toBeNull();
+    expect(index.getAttribute('aria-hidden')).toBe('true');
+    expect(header.hasAttribute('data-index')).toBe(true);
+    const componentStyles = (
+      KrnPageHeader as unknown as { ɵcmp: { styles: readonly string[] } }
+    ).ɵcmp.styles.join('\n');
+    expect(componentStyles).toMatch(
+      /@container \(max-width: 42rem\) \{[\s\S]*?\.frame\[data-index\][^{]*\{\s*grid-template-columns: 1fr;/,
+    );
+  });
+
+  it('rejects a blank page-header heading', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnPageHeader] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnPageHeader);
+    fixture.componentRef.setInput('heading', '   ');
+    expect(() => fixture.detectChanges()).toThrowError(/non-empty heading/);
   });
 
   it('opens the user menu, moves focus to its first action, and closes on selection', async () => {

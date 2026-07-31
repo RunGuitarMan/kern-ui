@@ -63,6 +63,8 @@ contract or upgrade decision.
   focus lifecycle, and positive `maxResults` validation.
 - Strengthened Filter Bar definition and controlled-value validation, canonical clearing semantics,
   live active-count labels, and post-clear focus restoration.
+- Strengthened Page Header with native header semantics, stable heading and description
+  associations, required heading validation, and normalized optional copy.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned

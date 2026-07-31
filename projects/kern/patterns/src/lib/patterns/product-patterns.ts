@@ -1356,34 +1356,47 @@ export class KrnFilterBar {
   selector: 'krn-page-header',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="frame">
-      <div class="index">{{ index() }}</div>
+    <header
+      class="frame"
+      [attr.data-index]="resolvedIndex() ? '' : null"
+      [attr.aria-labelledby]="headingId"
+      [attr.aria-describedby]="resolvedDescription() ? descriptionId : null"
+    >
+      @if (resolvedIndex()) {
+        <div class="index" aria-hidden="true">{{ resolvedIndex() }}</div>
+      }
       <div class="copy">
-        @if (eyebrow()) {
-          <span class="eyebrow">{{ eyebrow() }}</span>
+        @if (resolvedEyebrow()) {
+          <span class="eyebrow">{{ resolvedEyebrow() }}</span>
         }
-        <h1>{{ heading() }}</h1>
-        @if (description()) {
-          <p>{{ description() }}</p>
+        <h1 [id]="headingId">{{ resolvedHeading() }}</h1>
+        @if (resolvedDescription()) {
+          <p [id]="descriptionId">{{ resolvedDescription() }}</p>
         }
         <ng-content select="[krnPageHeaderMeta]" />
       </div>
       <div class="actions"><ng-content /></div>
-    </div>
+    </header>
   `,
   styles: `
     :host {
       display: block;
       container-type: inline-size;
     }
+    :host([hidden]) {
+      display: none;
+    }
     .frame {
       display: grid;
-      grid-template-columns: 2rem minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: var(--krn-space-4, 1rem);
       align-items: center;
       padding-block: var(--krn-space-8, 2rem);
       border-block-end: 1px solid var(--krn-color-border-subtle, #e0e3e7);
       color: var(--krn-color-text, #252932);
+    }
+    .frame[data-index] {
+      grid-template-columns: 2rem minmax(0, 1fr) auto;
     }
     .index {
       align-self: start;
@@ -1396,6 +1409,7 @@ export class KrnFilterBar {
     }
     .copy {
       display: grid;
+      min-inline-size: 0;
       max-inline-size: 52rem;
       gap: 0.375rem;
     }
@@ -1415,6 +1429,7 @@ export class KrnFilterBar {
       font-weight: 600;
       letter-spacing: -0.045em;
       line-height: 1.08;
+      overflow-wrap: anywhere;
     }
     p {
       max-inline-size: 65ch;
@@ -1424,12 +1439,14 @@ export class KrnFilterBar {
     }
     .actions {
       display: flex;
+      min-inline-size: 0;
       flex-wrap: wrap;
       gap: 0.5rem;
       justify-content: end;
     }
     @container (max-width: 42rem) {
-      .frame {
+      .frame,
+      .frame[data-index] {
         grid-template-columns: 1fr;
       }
       .index {
@@ -1439,13 +1456,35 @@ export class KrnFilterBar {
         justify-content: start;
       }
     }
+    @media (forced-colors: active) {
+      .frame {
+        border-color: CanvasText;
+      }
+    }
   `,
 })
 export class KrnPageHeader {
+  private readonly ids = inject(KrnIdService);
+  protected readonly headingId = this.ids.next('page-heading');
+  protected readonly descriptionId = this.ids.fromKey(this.headingId, 'description');
   readonly index = input('01');
   readonly eyebrow = input('');
   readonly heading = input.required<string>();
   readonly description = input('');
+  protected readonly resolvedIndex = computed(() => this.optionalText(this.index()));
+  protected readonly resolvedEyebrow = computed(() => this.optionalText(this.eyebrow()));
+  protected readonly resolvedHeading = computed(() => {
+    const heading = this.optionalText(this.heading());
+    if (!heading) {
+      throw new Error('KrnPageHeader requires a non-empty heading.');
+    }
+    return heading;
+  });
+  protected readonly resolvedDescription = computed(() => this.optionalText(this.description()));
+
+  private optionalText(value: string): string {
+    return typeof value === 'string' ? value.trim() : '';
+  }
 }
 
 @Component({
