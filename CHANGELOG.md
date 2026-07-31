@@ -63,6 +63,9 @@ contract or upgrade decision.
 - Strengthened Text Input with deterministic standalone `value` ownership, IME-safe and
   duplicate-free updates, composable ARIA references, validated length constraints, and public
   native focus, blur, and selection methods.
+- Strengthened Textarea with deterministic standalone `value` ownership, IME-safe updates,
+  non-destructive length validation, reactive auto-resizing, composable ARIA references, and
+  public native focus, blur, and selection methods.
 
 ### Deprecated
 

@@ -1,5 +1,6 @@
 import type { ElementRef } from '@angular/core';
 import {
+  afterRenderEffect,
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
@@ -35,6 +36,12 @@ const optionalTextLength = (value: unknown): number | undefined => {
   return length !== undefined && Number.isFinite(length) && length >= 0
     ? Math.trunc(length)
     : undefined;
+};
+
+const textareaRows = (value: unknown): number => {
+  const rows = optionalTextLength(value);
+
+  return rows !== undefined && rows > 0 ? rows : 4;
 };
 
 const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string | null => {
@@ -238,15 +245,21 @@ export class KrnTextInput extends KrnValueAccessor<string> {
       [attr.data-disabled]="isDisabled()"
       [attr.data-invalid]="a11y.invalid()"
       [attr.data-readonly]="a11y.readOnly()"
+      (pointerdown)="focusFromShell($event)"
     >
       <textarea
+        #textareaElement
         class="krn-textarea"
-        [attr.aria-describedby]="a11y.describedBy()"
+        [attr.aria-describedby]="describedBy()"
         [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="ariaLabel() || null"
+        [attr.aria-label]="labelledBy() ? null : ariaLabel() || null"
+        [attr.aria-labelledby]="labelledBy()"
         [attr.autocomplete]="autocomplete() || null"
         [attr.maxlength]="maxLength() ?? null"
+        [attr.minlength]="minLength() ?? null"
         [attr.name]="name() || null"
+        [attr.spellcheck]="spellcheck()"
+        [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
         [disabled]="isDisabled()"
         [id]="a11y.id()"
         [placeholder]="placeholder()"
@@ -255,13 +268,13 @@ export class KrnTextInput extends KrnValueAccessor<string> {
         [rows]="rows()"
         [value]="controlValue()"
         (blur)="touch()"
+        (compositionend)="endComposition($event)"
+        (compositionstart)="startComposition()"
         (input)="updateText($event)"
       ></textarea>
       @if (showCount() && maxLength() !== undefined) {
         <span class="krn-textarea-footer">
-          <span class="krn-textarea-count" aria-live="polite">
-            {{ controlValue().length }} / {{ maxLength() }}
-          </span>
+          <span class="krn-textarea-count"> {{ controlValue().length }} / {{ maxLength() }} </span>
         </span>
       }
     </span>
@@ -269,16 +282,27 @@ export class KrnTextInput extends KrnValueAccessor<string> {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnTextarea extends KrnValueAccessor<string> {
+  private readonly textareaElement = viewChild<ElementRef<HTMLTextAreaElement>>('textareaElement');
+  private angularOwnsValue = false;
+  private composing = false;
+
   readonly id = input('');
   readonly name = input('');
   readonly placeholder = input('');
   readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
   readonly autocomplete = input('');
   readonly size = input<KrnControlSize>('md');
-  readonly rows = input(4, { transform: numberAttribute });
-  readonly maxLength = input<number | undefined>(undefined, {
-    transform: optionalNumber,
+  readonly rows = input(4, { transform: textareaRows });
+  readonly value = input<string | undefined>(undefined);
+  readonly minLength = input<number | undefined>(undefined, {
+    transform: optionalTextLength,
   });
+  readonly maxLength = input<number | undefined>(undefined, {
+    transform: optionalTextLength,
+  });
+  readonly spellcheck = input(true, { transform: booleanAttribute });
   readonly showCount = input(false, { transform: booleanAttribute });
   readonly autoResize = input(false, { transform: booleanAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
@@ -295,34 +319,148 @@ export class KrnTextarea extends KrnValueAccessor<string> {
     readOnly: this.readOnly,
     required: this.required,
   });
+  protected readonly labelledBy = computed(() =>
+    mergeAriaIds(
+      this.ariaLabelledBy(),
+      (
+        this.a11y as typeof this.a11y & {
+          readonly labelledBy?: () => string | null;
+        }
+      ).labelledBy?.(),
+    ),
+  );
+  protected readonly describedBy = computed(() =>
+    mergeAriaIds(this.ariaDescribedBy(), this.a11y.describedBy()),
+  );
+  protected readonly isFormFieldControl = computed(
+    () =>
+      (
+        this.a11y as typeof this.a11y & {
+          readonly isFormFieldControl?: () => boolean;
+        }
+      ).isFormFieldControl?.() ?? false,
+  );
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
 
   constructor() {
     super('');
-    this.watchValidationInputs(this.required, this.a11y.required, this.maxLength);
+    effect(() => {
+      const value = this.value();
+      if (value !== undefined && !this.angularOwnsValue) {
+        this.controlValue.set(this.normalizeIncomingValue(value));
+      }
+    });
+    afterRenderEffect(() => {
+      const autoResize = this.autoResize();
+      if (autoResize) {
+        this.controlValue();
+        this.rows();
+      }
+      this.resizeToContent(autoResize);
+    });
+    afterRenderEffect((onCleanup) => {
+      const textarea = this.textareaElement()?.nativeElement;
+      const ResizeObserverConstructor = textarea?.ownerDocument.defaultView?.ResizeObserver;
+      if (!this.autoResize() || !textarea || !ResizeObserverConstructor) {
+        return;
+      }
+
+      let lastInlineSize: number | undefined;
+      const observer = new ResizeObserverConstructor((entries) => {
+        const inlineSize = entries.find((entry) => entry.target === textarea)?.contentRect.width;
+        if (inlineSize === undefined || Object.is(inlineSize, lastInlineSize)) {
+          return;
+        }
+
+        lastInlineSize = inlineSize;
+        this.resizeToContent(true);
+      });
+      observer.observe(textarea);
+      onCleanup(() => observer.disconnect());
+    });
+    this.watchValidationInputs(this.required, this.a11y.required, this.minLength, this.maxLength);
+  }
+
+  override writeValue(value: unknown): void {
+    this.angularOwnsValue = true;
+    super.writeValue(value);
+  }
+
+  override registerOnChange(fn: (value: string) => void): void {
+    this.angularOwnsValue = true;
+    super.registerOnChange(fn);
+  }
+
+  focus(options?: FocusOptions): void {
+    this.textareaElement()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    this.textareaElement()?.nativeElement.blur();
+  }
+
+  select(): void {
+    this.textareaElement()?.nativeElement.select();
   }
 
   protected override validateValue(value: unknown) {
     return mergeValidationErrors(
       requiredError(value, this.a11y.required()),
+      minLengthError(value, this.minLength()),
       maxLengthError(value, this.maxLength()),
     );
   }
 
   protected updateText(event: Event): void {
-    const textarea = event.target as HTMLTextAreaElement;
-    const maxLength = this.maxLength();
-    const value =
-      maxLength === undefined ? textarea.value : textarea.value.slice(0, Math.max(0, maxLength));
-    if (textarea.value !== value) {
-      textarea.value = value;
+    if (this.composing) {
+      return;
     }
-    if (this.autoResize()) {
-      textarea.style.height = 'auto';
-      textarea.style.height = `${textarea.scrollHeight}px`;
+
+    const textarea = event.target as HTMLTextAreaElement;
+    const value = textarea.value;
+    if (Object.is(this.controlValue(), value)) {
+      return;
     }
     this.commitValue(value);
     this.valueChange.emit(value);
+  }
+
+  protected startComposition(): void {
+    this.composing = true;
+  }
+
+  protected endComposition(event: Event): void {
+    this.composing = false;
+    this.updateText(event);
+  }
+
+  protected focusFromShell(event: PointerEvent): void {
+    const target = event.target;
+
+    if (
+      event.button !== 0 ||
+      !(target instanceof Element) ||
+      target.closest('input,button,a,select,textarea,[contenteditable],[tabindex]')
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    this.focus();
+  }
+
+  private resizeToContent(autoResize: boolean): void {
+    const textarea = this.textareaElement()?.nativeElement;
+    if (!textarea) {
+      return;
+    }
+    if (!autoResize) {
+      textarea.style.removeProperty('height');
+      return;
+    }
+
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
   }
 }
 

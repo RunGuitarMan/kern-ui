@@ -266,7 +266,7 @@ describe('Kern form controls', () => {
     expect(input.disabled).toBe(true);
   });
 
-  it('enforces an explicit textarea limit and keeps its counter in sync', async () => {
+  it('exposes an explicit textarea limit and keeps its counter in sync', async () => {
     const fixture = TestBed.createComponent(KrnTextarea);
     expect(fixture.componentInstance.showCount()).toBe(false);
     fixture.componentRef.setInput('id', 'change-summary');
@@ -293,10 +293,10 @@ describe('Kern form controls', () => {
     textarea.dispatchEvent(new Event('input'));
     await fixture.whenStable();
 
-    expect(textarea.value).toHaveLength(280);
-    expect(change).toHaveBeenLastCalledWith('x'.repeat(280));
+    expect(textarea.value).toHaveLength(300);
+    expect(change).toHaveBeenLastCalledWith('x'.repeat(300));
     expect(fixture.nativeElement.querySelector('.krn-textarea-count')?.textContent).toContain(
-      '280 / 280',
+      '300 / 280',
     );
   });
 
