@@ -679,20 +679,27 @@ export class KrnPasswordInput extends KrnValueAccessor<string> {
   template: `
     <span
       class="krn-control-shell"
-      role="search"
       [attr.data-disabled]="isDisabled()"
       [attr.data-invalid]="a11y.invalid()"
       [attr.data-readonly]="a11y.readOnly()"
+      (pointerdown)="focusFromShell($event)"
     >
       <span class="krn-control-affix" aria-hidden="true">⌕</span>
       <input
+        #inputElement
         class="krn-input"
         type="search"
-        [attr.aria-describedby]="a11y.describedBy()"
+        [attr.aria-describedby]="describedBy()"
         [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="ariaLabel()"
-        [attr.autocomplete]="autocomplete()"
+        [attr.aria-label]="labelledBy() ? null : ariaLabel() || null"
+        [attr.aria-labelledby]="labelledBy()"
+        [attr.autocomplete]="autocomplete() || null"
+        [attr.enterkeyhint]="enterKeyHint() || null"
+        [attr.maxlength]="maxLength() ?? null"
+        [attr.minlength]="minLength() ?? null"
         [attr.name]="name() || null"
+        [attr.spellcheck]="spellcheck()"
+        [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
         [disabled]="isDisabled()"
         [id]="a11y.id()"
         [placeholder]="placeholder()"
@@ -700,16 +707,21 @@ export class KrnPasswordInput extends KrnValueAccessor<string> {
         [required]="a11y.required()"
         [value]="controlValue()"
         (blur)="touch()"
+        (compositionend)="endComposition($event)"
+        (compositionstart)="startComposition()"
         (input)="updateSearch($event)"
-        (keydown.enter)="submitSearch()"
+        (keydown.enter)="submitSearch($event)"
       />
       @if (controlValue() && !a11y.readOnly()) {
         <button
           class="krn-inline-action"
           type="button"
+          tabindex="-1"
+          [attr.aria-controls]="a11y.id()"
           [attr.aria-label]="clearLabel()"
           [disabled]="isDisabled()"
           (click)="clear()"
+          (pointerdown)="retainInputFocus($event)"
         >
           ×
         </button>
@@ -720,17 +732,33 @@ export class KrnPasswordInput extends KrnValueAccessor<string> {
 })
 export class KrnSearchInput extends KrnValueAccessor<string> {
   private readonly translations = inject(KRN_TRANSLATIONS);
+  private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('inputElement');
+  private angularOwnsValue = false;
+  private composing = false;
+
   readonly id = input('');
   readonly name = input('');
   readonly placeholder = input(this.translations.forms.search);
   readonly ariaLabel = input(this.translations.forms.search);
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
   readonly clearLabel = input(this.translations.forms.clearSearch);
   readonly autocomplete = input('off');
+  readonly enterKeyHint = input('search');
+  readonly value = input<string | undefined>(undefined);
+  readonly minLength = input<number | undefined>(undefined, {
+    transform: optionalTextLength,
+  });
+  readonly maxLength = input<number | undefined>(undefined, {
+    transform: optionalTextLength,
+  });
+  readonly spellcheck = input(true, { transform: booleanAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false, {
     alias: 'readonly',
     transform: booleanAttribute,
   });
+  readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly valueChange = output<string>();
   readonly searchSubmitted = output<string>();
@@ -738,20 +766,81 @@ export class KrnSearchInput extends KrnValueAccessor<string> {
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'search', {
     disabled: this.disabled,
     readOnly: this.readOnly,
+    required: this.required,
   });
+  protected readonly labelledBy = computed(() =>
+    mergeAriaIds(
+      this.ariaLabelledBy(),
+      (
+        this.a11y as typeof this.a11y & {
+          readonly labelledBy?: () => string | null;
+        }
+      ).labelledBy?.(),
+    ),
+  );
+  protected readonly describedBy = computed(() =>
+    mergeAriaIds(this.ariaDescribedBy(), this.a11y.describedBy()),
+  );
+  protected readonly isFormFieldControl = computed(
+    () =>
+      (
+        this.a11y as typeof this.a11y & {
+          readonly isFormFieldControl?: () => boolean;
+        }
+      ).isFormFieldControl?.() ?? false,
+  );
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
 
   constructor() {
     super('');
-    this.watchValidationInputs(this.a11y.required);
+    effect(() => {
+      const value = this.value();
+      if (value !== undefined && !this.angularOwnsValue) {
+        this.controlValue.set(this.normalizeIncomingValue(value));
+      }
+    });
+    this.watchValidationInputs(this.required, this.a11y.required, this.minLength, this.maxLength);
+  }
+
+  override writeValue(value: unknown): void {
+    this.angularOwnsValue = true;
+    super.writeValue(value);
+  }
+
+  override registerOnChange(fn: (value: string) => void): void {
+    this.angularOwnsValue = true;
+    super.registerOnChange(fn);
+  }
+
+  focus(options?: FocusOptions): void {
+    this.inputElement()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    this.inputElement()?.nativeElement.blur();
+  }
+
+  select(): void {
+    this.inputElement()?.nativeElement.select();
   }
 
   protected override validateValue(value: unknown) {
-    return requiredError(value, this.a11y.required());
+    return mergeValidationErrors(
+      requiredError(value, this.a11y.required()),
+      minLengthError(value, this.minLength()),
+      maxLengthError(value, this.maxLength()),
+    );
   }
 
   protected updateSearch(event: Event): void {
+    if (this.composing) {
+      return;
+    }
+
     const value = (event.target as HTMLInputElement).value;
+    if (Object.is(this.controlValue(), value)) {
+      return;
+    }
     this.commitValue(value);
     this.valueChange.emit(value);
   }
@@ -759,11 +848,48 @@ export class KrnSearchInput extends KrnValueAccessor<string> {
   protected clear(): void {
     this.commitValue('');
     this.valueChange.emit('');
-    this.searchSubmitted.emit('');
+    this.focus();
   }
 
-  protected submitSearch(): void {
+  protected submitSearch(event: Event): void {
+    if (this.composing || (event as KeyboardEvent).isComposing) {
+      return;
+    }
+
     this.searchSubmitted.emit(this.controlValue());
+  }
+
+  protected startComposition(): void {
+    this.composing = true;
+  }
+
+  protected endComposition(event: Event): void {
+    this.composing = false;
+    this.updateSearch(event);
+  }
+
+  protected focusFromShell(event: PointerEvent): void {
+    const target = event.target;
+
+    if (
+      event.button !== 0 ||
+      !(target instanceof Element) ||
+      target.closest('input,button,a,select,textarea,[contenteditable],[tabindex]')
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    this.focus();
+  }
+
+  protected retainInputFocus(event: PointerEvent): void {
+    if (event.button !== 0) {
+      return;
+    }
+
+    event.preventDefault();
+    this.focus();
   }
 }
 

@@ -69,6 +69,10 @@ contract or upgrade decision.
 - Strengthened Password Input with deterministic standalone `value` ownership, IME-safe updates,
   non-destructive length validation, composable ARIA references, password-safe native defaults,
   focus-retaining visibility controls, and public native focus, blur, and selection methods.
+- Strengthened Search Input with deterministic standalone `value` ownership, IME-safe submission,
+  non-destructive length validation, composable ARIA references, a focus-retaining single-tab-stop
+  cleaner, and public native focus, blur, and selection methods. Clearing no longer emits
+  `searchSubmitted`; that output now exclusively represents an explicit Enter submission.
 
 ### Deprecated
 
