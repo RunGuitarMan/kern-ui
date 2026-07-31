@@ -9,6 +9,7 @@ import {
   afterEveryRender,
   booleanAttribute,
   computed,
+  effect,
   inject,
   input,
   model,
@@ -190,7 +191,7 @@ const GRID_CELL_ACTION_SELECTOR = [
                       [disabled]="isColumnVisible(column.key) && visibleColumns().length === 1"
                       (change)="setColumnVisible(column.key, $event)"
                     />
-                    <span>{{ column.label }}</span>
+                    <span>{{ columnLabel(column) }}</span>
                   </label>
                 }
               </div>
@@ -298,7 +299,7 @@ const GRID_CELL_ACTION_SELECTOR = [
                         [ngTemplateOutletContext]="headerContext(column, columnIndex)"
                       />
                     } @else {
-                      {{ column.label }}
+                      {{ columnLabel(column) }}
                     }
                     <span aria-hidden="true">{{ sortMark(column) }}</span>
                   </button>
@@ -309,7 +310,7 @@ const GRID_CELL_ACTION_SELECTOR = [
                       [ngTemplateOutletContext]="headerContext(column, columnIndex)"
                     />
                   } @else {
-                    {{ column.label }}
+                    {{ columnLabel(column) }}
                   }
                 }
                 @if (resizable()) {
@@ -318,9 +319,9 @@ const GRID_CELL_ACTION_SELECTOR = [
                     role="separator"
                     data-grid-action
                     aria-orientation="vertical"
-                    [attr.aria-label]="copy().resizeColumn(column.label)"
-                    [attr.aria-valuemin]="column.minWidth ?? 96"
-                    [attr.aria-valuemax]="column.maxWidth ?? 960"
+                    [attr.aria-label]="copy().resizeColumn(columnLabel(column))"
+                    [attr.aria-valuemin]="columnMinWidth(column)"
+                    [attr.aria-valuemax]="columnMaxWidth(column)"
                     [attr.aria-valuenow]="columnWidth(column)"
                     [attr.aria-valuetext]="copy().widthInPixels(columnWidth(column))"
                     [attr.tabindex]="isActionCell(-1, dataColumnOffset() + columnIndex) ? 0 : -1"
@@ -338,7 +339,7 @@ const GRID_CELL_ACTION_SELECTOR = [
             tabindex="-1"
             [itemSize]="rowHeight()"
             [attr.data-item-size]="rowHeight()"
-            [style.block-size.px]="viewportHeight()"
+            [style.block-size.px]="normalizedViewportHeight()"
             [minBufferPx]="rowHeight() * 5"
             [maxBufferPx]="rowHeight() * 10"
           >
@@ -540,7 +541,7 @@ const GRID_CELL_ACTION_SELECTOR = [
                             [ngTemplateOutletContext]="headerContext(column, columnIndex)"
                           />
                         } @else {
-                          {{ column.label }}
+                          {{ columnLabel(column) }}
                         }
                         <span aria-hidden="true">{{ sortMark(column) }}</span>
                       </button>
@@ -551,7 +552,7 @@ const GRID_CELL_ACTION_SELECTOR = [
                           [ngTemplateOutletContext]="headerContext(column, columnIndex)"
                         />
                       } @else {
-                        {{ column.label }}
+                        {{ columnLabel(column) }}
                       }
                     }
                     @if (resizable()) {
@@ -560,9 +561,9 @@ const GRID_CELL_ACTION_SELECTOR = [
                         role="separator"
                         data-grid-action
                         aria-orientation="vertical"
-                        [attr.aria-label]="copy().resizeColumn(column.label)"
-                        [attr.aria-valuemin]="column.minWidth ?? 96"
-                        [attr.aria-valuemax]="column.maxWidth ?? 960"
+                        [attr.aria-label]="copy().resizeColumn(columnLabel(column))"
+                        [attr.aria-valuemin]="columnMinWidth(column)"
+                        [attr.aria-valuemax]="columnMaxWidth(column)"
                         [attr.aria-valuenow]="columnWidth(column)"
                         [attr.aria-valuetext]="copy().widthInPixels(columnWidth(column))"
                         [attr.tabindex]="
@@ -728,10 +729,18 @@ const GRID_CELL_ACTION_SELECTOR = [
         <div class="pagination" [attr.aria-label]="copy().pagination">
           <span>{{ copy().pageRange(pageStart(), pageEnd(), totalRowCount()) }}</span>
           <div>
-            <button type="button" [disabled]="page() === 1" (click)="goToPage(page() - 1)">
+            <button
+              type="button"
+              [disabled]="currentPage() === 1"
+              (click)="goToPage(currentPage() - 1)"
+            >
               {{ copy().previousPage }}
             </button>
-            <button type="button" [disabled]="page() >= pageCount()" (click)="goToPage(page() + 1)">
+            <button
+              type="button"
+              [disabled]="currentPage() >= pageCount()"
+              (click)="goToPage(currentPage() + 1)"
+            >
               {{ copy().nextPage }}
             </button>
           </div>
@@ -748,6 +757,9 @@ const GRID_CELL_ACTION_SELECTOR = [
       container: krn-data-grid / inline-size;
       color: var(--krn-color-text, #252932);
       font: var(--krn-font-body-sm, 500 0.8125rem/1.25rem sans-serif);
+    }
+    :host([hidden]) {
+      display: none;
     }
     :host([data-compact]) {
       --krn-data-row-size: 2.25rem;
@@ -1075,6 +1087,34 @@ const GRID_CELL_ACTION_SELECTOR = [
         animation: none;
       }
     }
+    @media (forced-colors: active) {
+      .grid-shell,
+      .column-chooser summary,
+      .column-chooser > div,
+      .pagination button,
+      th,
+      td,
+      .virtual-header > *,
+      .virtual-row > * {
+        border-color: CanvasText;
+      }
+      button:focus-visible,
+      [role='columnheader']:focus-visible,
+      [role='gridcell']:focus-visible,
+      td:focus-visible,
+      [data-cell][data-action-mode] {
+        outline-color: Highlight;
+      }
+      tr[data-selected] td,
+      .virtual-row[aria-selected='true'] {
+        outline: var(--krn-border-width-1, 1px) solid Highlight;
+        outline-offset: -1px;
+      }
+      .loading span {
+        background: Canvas;
+        animation: none;
+      }
+    }
     @container krn-data-grid (max-width: 28rem) {
       .toolbar,
       .pagination {
@@ -1141,7 +1181,13 @@ export class KrnDataGrid<T> implements AfterViewChecked {
   });
   private readonly validatedColumns = computed(() => {
     const keys = new Set<string>();
+    if (this.columns().length === 0) {
+      throw new Error('KrnDataGrid requires at least one column.');
+    }
     for (const column of this.columns()) {
+      if (typeof column.key !== 'string' || column.key.trim().length === 0) {
+        throw new Error('KrnDataGrid requires every column to have a non-empty string key.');
+      }
       if (keys.has(column.key)) {
         throw new Error(`KrnDataGrid requires unique column keys; received "${column.key}" twice.`);
       }
@@ -1182,13 +1228,21 @@ export class KrnDataGrid<T> implements AfterViewChecked {
   readonly viewportHeight = input(360, { transform: numberAttribute });
   readonly pageSize = input(10, { transform: numberAttribute });
   readonly columnChooser = input(false, { transform: booleanAttribute });
-  protected readonly copy = computed(() => ({
-    ...this.translations.dataGrid,
-    ariaLabel: this.ariaLabel(),
-    empty: this.emptyLabel(),
-    filterPlaceholder: this.filterPlaceholder(),
-    ...this.labels(),
-  }));
+  protected readonly copy = computed(() => {
+    const fallback = this.translations.dataGrid;
+    const copy = {
+      ...fallback,
+      ariaLabel: this.ariaLabel(),
+      empty: this.emptyLabel(),
+      filterPlaceholder: this.filterPlaceholder(),
+      ...this.labels(),
+    };
+    return {
+      ...copy,
+      ariaLabel: copy.ariaLabel?.trim() || fallback.ariaLabel,
+      empty: copy.empty?.trim() || fallback.empty,
+    };
+  });
 
   readonly filter = model('');
   readonly page = model(1);
@@ -1205,14 +1259,25 @@ export class KrnDataGrid<T> implements AfterViewChecked {
   protected readonly rowHeight = computed(
     () => this.measuredVirtualRowHeight() ?? (this.compact() ? 36 : 44),
   );
+  protected readonly normalizedViewportHeight = computed(() =>
+    this.positiveInteger(this.viewportHeight(), 360),
+  );
+  protected readonly normalizedPageSize = computed(() => this.positiveInteger(this.pageSize(), 10));
   protected readonly isVirtual = computed(() => this.effectiveMode().kind === 'virtual');
   protected readonly isControlled = computed(() => this.effectiveMode().kind === 'controlled');
   protected readonly usesPagination = computed(() => {
     const mode = this.effectiveMode();
     return mode.kind === 'controlled' || (mode.kind === 'client' && (mode.pagination ?? true));
   });
+  private readonly normalizedHiddenColumnKeys = computed(() => {
+    const columns = this.validatedColumns();
+    const knownKeys = new Set(columns.map((column) => column.key));
+    const hidden = new Set([...this.hiddenColumnKeys()].filter((key) => knownKeys.has(key)));
+    if (hidden.size === columns.length) hidden.delete(columns[0]!.key);
+    return hidden;
+  });
   protected readonly visibleColumns = computed(() => {
-    const hidden = this.hiddenColumnKeys();
+    const hidden = this.normalizedHiddenColumnKeys();
     const visible = this.validatedColumns().filter((column) => !hidden.has(column.key));
     return [
       ...visible.filter((column) => column.pinned === 'start'),
@@ -1301,18 +1366,24 @@ export class KrnDataGrid<T> implements AfterViewChecked {
 
   protected readonly totalRowCount = computed(() => {
     const mode = this.effectiveMode();
-    return mode.kind === 'controlled' ? Math.max(0, mode.totalRows) : this.processed().length;
+    return mode.kind === 'controlled'
+      ? Math.max(0, Number.isFinite(mode.totalRows) ? Math.floor(mode.totalRows) : 0)
+      : this.processed().length;
   });
   protected readonly pageCount = computed(() =>
-    Math.max(1, Math.ceil(this.totalRowCount() / Math.max(1, this.pageSize()))),
+    Math.max(1, Math.ceil(this.totalRowCount() / this.normalizedPageSize())),
   );
+  protected readonly currentPage = computed(() => {
+    const page = Number.isFinite(this.page()) ? Math.floor(this.page()) : 1;
+    return Math.max(1, Math.min(page, this.pageCount()));
+  });
   protected readonly rowOffset = computed(
-    () => (Math.min(Math.max(1, this.page()), this.pageCount()) - 1) * Math.max(1, this.pageSize()),
+    () => (this.currentPage() - 1) * this.normalizedPageSize(),
   );
   protected readonly pageRows = computed(() => {
     if (this.isControlled()) return this.processed();
     return this.usesPagination()
-      ? this.processed().slice(this.rowOffset(), this.rowOffset() + Math.max(1, this.pageSize()))
+      ? this.processed().slice(this.rowOffset(), this.rowOffset() + this.normalizedPageSize())
       : this.processed();
   });
   protected readonly visibleRows = computed(() =>
@@ -1355,6 +1426,19 @@ export class KrnDataGrid<T> implements AfterViewChecked {
     | undefined;
 
   constructor() {
+    effect(() => {
+      const page = this.currentPage();
+      if (!Object.is(this.page(), page)) this.page.set(page);
+
+      const hidden = this.hiddenColumnKeys();
+      const normalizedHidden = this.normalizedHiddenColumnKeys();
+      if (
+        hidden.size !== normalizedHidden.size ||
+        [...hidden].some((key) => !normalizedHidden.has(key))
+      ) {
+        this.hiddenColumnKeys.set(new Set(normalizedHidden));
+      }
+    });
     afterEveryRender({
       mixedReadWrite: () => {
         this.syncVirtualRowMeasurement();
@@ -1384,6 +1468,10 @@ export class KrnDataGrid<T> implements AfterViewChecked {
     return column.format
       ? (column.format as (cellValue: unknown, currentRow: T) => string)(value, row)
       : String(value ?? '—');
+  }
+
+  protected columnLabel(column: KrnDataColumn<T>): string {
+    return column.label?.trim() || column.key;
   }
 
   protected resolveCellTemplate(
@@ -1477,13 +1565,13 @@ export class KrnDataGrid<T> implements AfterViewChecked {
   }
 
   protected isColumnVisible(key: string): boolean {
-    return !this.hiddenColumnKeys().has(key);
+    return !this.normalizedHiddenColumnKeys().has(key);
   }
 
   protected setColumnVisible(key: string, event: Event): void {
     const visible = (event.currentTarget as HTMLInputElement).checked;
     if (!visible && this.visibleColumns().length === 1) return;
-    const hidden = new Set(this.hiddenColumnKeys());
+    const hidden = new Set(this.normalizedHiddenColumnKeys());
     if (visible) hidden.delete(key);
     else hidden.add(key);
     this.hiddenColumnKeys.set(hidden);
@@ -1494,7 +1582,19 @@ export class KrnDataGrid<T> implements AfterViewChecked {
   }
 
   protected columnWidth(column: KrnDataColumn<T>): number {
-    return this.widths()[column.key] ?? column.width ?? 180;
+    const minimum = this.columnMinWidth(column);
+    const maximum = this.columnMaxWidth(column);
+    const requested = this.widths()[column.key] ?? column.width ?? 180;
+    const width = Number.isFinite(requested) ? requested : 180;
+    return Math.min(maximum, Math.max(minimum, Math.round(width)));
+  }
+
+  protected columnMinWidth(column: KrnDataColumn<T>): number {
+    return this.positiveInteger(column.minWidth, 96);
+  }
+
+  protected columnMaxWidth(column: KrnDataColumn<T>): number {
+    return Math.max(this.columnMinWidth(column), this.positiveInteger(column.maxWidth, 960));
   }
 
   private pinnedColumnWidth(column: KrnDataColumn<T>): number {
@@ -1619,14 +1719,15 @@ export class KrnDataGrid<T> implements AfterViewChecked {
 
     let nextRow = row;
     let nextColumn = column;
-    if (event.key === 'ArrowRight') nextColumn += 1;
-    else if (event.key === 'ArrowLeft') nextColumn -= 1;
+    const horizontalDirection = this.isRtl() ? -1 : 1;
+    if (event.key === 'ArrowRight') nextColumn += horizontalDirection;
+    else if (event.key === 'ArrowLeft') nextColumn -= horizontalDirection;
     else if (event.key === 'ArrowDown') nextRow += 1;
     else if (event.key === 'ArrowUp') nextRow -= 1;
     else if (event.key === 'PageDown')
-      nextRow += Math.max(1, Math.floor(this.viewportHeight() / this.rowHeight()));
+      nextRow += Math.max(1, Math.floor(this.normalizedViewportHeight() / this.rowHeight()));
     else if (event.key === 'PageUp')
-      nextRow -= Math.max(1, Math.floor(this.viewportHeight() / this.rowHeight()));
+      nextRow -= Math.max(1, Math.floor(this.normalizedViewportHeight() / this.rowHeight()));
     else if (event.key === 'Home' && event.ctrlKey) {
       nextRow = -1;
       nextColumn = 0;
@@ -1955,16 +2056,16 @@ export class KrnDataGrid<T> implements AfterViewChecked {
   private emitQuery(): void {
     this.queryChange.emit({
       filter: this.filter(),
-      page: this.page(),
-      pageSize: Math.max(1, this.pageSize()),
+      page: this.currentPage(),
+      pageSize: this.normalizedPageSize(),
       sortKey: this.sortKey(),
       sortDirection: this.sortDirection(),
     });
   }
 
   private setColumnWidth(column: KrnDataColumn<T>, width: number): void {
-    const minimum = column.minWidth ?? 96;
-    const maximum = Math.max(minimum, column.maxWidth ?? 960);
+    const minimum = this.columnMinWidth(column);
+    const maximum = this.columnMaxWidth(column);
     const nextWidth = Math.min(maximum, Math.max(minimum, Math.round(width)));
     this.widths.update((current) => ({ ...current, [column.key]: nextWidth }));
   }
@@ -1972,6 +2073,12 @@ export class KrnDataGrid<T> implements AfterViewChecked {
   private isRtl(): boolean {
     const element = this.host.nativeElement;
     return this.platform.window?.getComputedStyle(element).direction === 'rtl';
+  }
+
+  private positiveInteger(value: number | undefined, fallback: number): number {
+    return typeof value === 'number' && Number.isFinite(value) && value > 0
+      ? Math.max(1, Math.floor(value))
+      : fallback;
   }
 
   private toggleSet(

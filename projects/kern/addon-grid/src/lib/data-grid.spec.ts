@@ -539,6 +539,79 @@ describe('KrnDataGrid', () => {
     );
   });
 
+  it('rejects missing and blank column identities', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnDataGrid] }).compileComponents();
+    const createFixture = (gridColumns: readonly KrnDataColumn<DemoRow>[]) => {
+      const fixture = TestBed.createComponent(KrnDataGrid<DemoRow>);
+      fixture.componentRef.setInput('data', rows);
+      fixture.componentRef.setInput('columns', gridColumns);
+      fixture.componentRef.setInput('rowIdentity', (row: DemoRow) => row.id);
+      return fixture;
+    };
+
+    expect(() => createFixture([]).detectChanges()).toThrowError(/requires at least one column/);
+    expect(() =>
+      createFixture([{ key: '   ', label: 'Blank' } as KrnDataColumn<DemoRow>]).detectChanges(),
+    ).toThrowError(/non-empty string key/);
+  });
+
+  it('normalizes unsafe external paging, visibility, labels, and width bounds', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnDataGrid] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnDataGrid<DemoRow>);
+    fixture.componentRef.setInput('data', rows);
+    fixture.componentRef.setInput('columns', [
+      { key: 'name', label: '   ', width: 20, minWidth: 120, maxWidth: 80 },
+      columns[1]!,
+    ]);
+    fixture.componentRef.setInput('rowIdentity', (row: DemoRow) => row.id);
+    fixture.componentRef.setInput('pageSize', 1);
+    fixture.componentRef.setInput('page', 99);
+    fixture.componentRef.setInput('ariaLabel', '   ');
+    fixture.componentRef.setInput('hiddenColumnKeys', new Set(['name', 'amount', 'missing']));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const root = fixture.nativeElement as HTMLElement;
+    const header = root.querySelector<HTMLElement>('thead [data-column-key]')!;
+    const separator = header.querySelector<HTMLElement>('[role="separator"]')!;
+    const paginationButtons = root.querySelectorAll<HTMLButtonElement>('.pagination button');
+
+    expect(fixture.componentInstance.page()).toBe(3);
+    expect([...fixture.componentInstance.hiddenColumnKeys()]).toEqual(['amount']);
+    expect(root.querySelector('.grid-shell')?.getAttribute('aria-label')).toBeTruthy();
+    expect(header.dataset['columnKey']).toBe('name');
+    expect(header.textContent).toContain('name');
+    expect(header.style.inlineSize).toBe('120px');
+    expect(separator.getAttribute('aria-valuemin')).toBe('120');
+    expect(separator.getAttribute('aria-valuemax')).toBe('120');
+    expect(separator.getAttribute('aria-valuenow')).toBe('120');
+    expect(paginationButtons[1]?.disabled).toBe(true);
+  });
+
+  it('moves grid focus by physical arrow direction in RTL', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnDataGrid] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnDataGrid<DemoRow>);
+    fixture.componentRef.setInput('data', rows);
+    fixture.componentRef.setInput('columns', columns);
+    fixture.componentRef.setInput('rowIdentity', (row: DemoRow) => row.id);
+    fixture.componentRef.setInput('mode', { kind: 'client', pagination: false });
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const root = fixture.nativeElement as HTMLElement;
+    root.style.direction = 'rtl';
+    const first = root.querySelector<HTMLElement>('[data-cell="0-0"]')!;
+    const second = root.querySelector<HTMLElement>('[data-cell="0-1"]')!;
+    first.focus();
+    first.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true }),
+    );
+    await Promise.resolve();
+
+    expect(document.activeElement).toBe(second);
+  });
+
   it('renders typed default cell templates', async () => {
     await TestBed.configureTestingModule({ imports: [TemplateGridHost] }).compileComponents();
     const fixture = TestBed.createComponent(TemplateGridHost);
