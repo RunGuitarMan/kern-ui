@@ -85,6 +85,9 @@ contract or upgrade decision.
 - Strengthened Radio with deterministic standalone `checked` ownership, native name-based
   exclusivity, readonly-safe group selection, composable visible/external names and descriptions,
   native-only tab order, blur-driven group touched state, and public native focus and blur methods.
+- Strengthened Radio Group with deterministic standalone `value` ownership, Angular Forms
+  precedence, duplicate-free selection outputs, composable legend/external/Form Field naming,
+  merged descriptions, and selected-first native focus delegation.
 
 ### Deprecated
 

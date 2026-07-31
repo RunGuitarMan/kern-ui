@@ -439,18 +439,22 @@ const RADIO_GROUP_PROVIDER: Provider = {
   providers: [RADIO_GROUP_PROVIDER, ...provideKrnFormControl(() => KrnRadioGroup)],
   template: `
     <fieldset
+      #fieldset
       class="krn-choice-group"
       role="radiogroup"
-      [attr.aria-describedby]="describedBy() || a11y.describedBy()"
+      [attr.aria-describedby]="effectiveDescribedBy()"
       [attr.aria-invalid]="a11y.invalid()"
+      [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
+      [attr.aria-labelledby]="effectiveLabelledBy()"
       [attr.aria-readonly]="isReadOnly()"
       [attr.aria-required]="a11y.required()"
+      [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
       [attr.data-orientation]="orientation()"
       [disabled]="isDisabled()"
       [id]="a11y.id()"
     >
-      @if (label()) {
-        <legend class="krn-label">{{ label() }}</legend>
+      @if (label() && !formFieldLabelledBy()) {
+        <legend class="krn-label" [id]="legendId()">{{ label() }}</legend>
       }
       <div class="krn-choice-group__options">
         <ng-content />
@@ -464,11 +468,17 @@ export class KrnRadioGroup
   implements KrnRadioGroupController
 {
   private readonly generatedName = createKrnId('radio-group');
+  private readonly fieldset = viewChild<ElementRef<HTMLFieldSetElement>>('fieldset');
+  private angularOwnsValue = false;
 
   readonly id = input('');
   readonly label = input('');
+  readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
   readonly customName = input('', { alias: 'name' });
   readonly orientation = input<KrnOrientation>('vertical');
+  readonly value = input<string | null | undefined>(undefined);
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false, {
     alias: 'readonly',
@@ -482,15 +492,59 @@ export class KrnRadioGroup
   readonly name = computed(() => this.customName() || this.generatedName);
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'radio-group', {
     disabled: this.disabled,
+    labelStrategy: 'group',
     readOnly: this.readOnly,
     required: this.required,
-  });
+  } as KrnControlStateInputs & { readonly labelStrategy: 'group' });
   readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
   readonly isReadOnly = computed(() => this.a11y.readOnly());
+  protected readonly formFieldLabelledBy = computed(
+    () =>
+      (
+        this.a11y as typeof this.a11y & {
+          readonly labelledBy?: () => string | null;
+        }
+      ).labelledBy?.() ?? null,
+  );
+  protected readonly legendId = computed(() => `${this.a11y.id()}-legend`);
+  protected readonly effectiveLabelledBy = computed(() =>
+    mergeAriaIds(
+      this.ariaLabelledBy(),
+      this.formFieldLabelledBy(),
+      this.label() && !this.formFieldLabelledBy() ? this.legendId() : null,
+    ),
+  );
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(this.describedBy(), this.ariaDescribedBy(), this.a11y.describedBy()),
+  );
+  protected readonly isFormFieldControl = computed(
+    () =>
+      (
+        this.a11y as typeof this.a11y & {
+          readonly isFormFieldControl?: () => boolean;
+        }
+      ).isFormFieldControl?.() ?? false,
+  );
 
   constructor() {
     super(null);
+    effect(() => {
+      const value = this.value();
+      if (value !== undefined && !this.angularOwnsValue) {
+        this.controlValue.set(this.normalizeIncomingValue(value));
+      }
+    });
     this.watchValidationInputs(this.required, this.a11y.required);
+  }
+
+  override writeValue(value: unknown): void {
+    this.angularOwnsValue = true;
+    super.writeValue(value);
+  }
+
+  override registerOnChange(fn: (value: string | null) => void): void {
+    this.angularOwnsValue = true;
+    super.registerOnChange(fn);
   }
 
   protected override normalizeIncomingValue(value: unknown): string | null {
@@ -506,7 +560,7 @@ export class KrnRadioGroup
   }
 
   select(value: string): void {
-    if (this.isDisabled() || this.isReadOnly()) {
+    if (this.isDisabled() || this.isReadOnly() || this.isSelected(value)) {
       return;
     }
     this.commitValue(value);
@@ -515,6 +569,14 @@ export class KrnRadioGroup
 
   markTouched(): void {
     this.touch();
+  }
+
+  focus(options?: FocusOptions): void {
+    const fieldset = this.fieldset()?.nativeElement;
+    const target =
+      fieldset?.querySelector<HTMLInputElement>('input[type="radio"]:checked:not(:disabled)') ??
+      fieldset?.querySelector<HTMLInputElement>('input[type="radio"]:not(:disabled)');
+    target?.focus(options);
   }
 }
 
