@@ -492,6 +492,92 @@ describe('Kern navigation', () => {
     expect(fixture.componentInstance.open()).toBe(false);
   });
 
+  it('connects an externally opened menu and repairs focus after item changes', async () => {
+    const fixture = await create(KrnMenu, {
+      items: [
+        { id: 'duplicate', label: 'Disabled', disabled: true },
+        { id: 'duplicate', label: 'Overview' },
+        { id: 'reports', label: 'Reports' },
+      ],
+      open: true,
+      triggerLabel: '   ',
+      triggerAriaLabel: '   ',
+      menuAriaLabel: '   ',
+    });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    const trigger = fixture.nativeElement.querySelector('.trigger') as HTMLButtonElement;
+    const panelId = trigger.getAttribute('aria-controls');
+    const panel = panelId ? document.getElementById(panelId) : null;
+    expect(trigger.textContent?.trim()).toBeTruthy();
+    expect(trigger.getAttribute('aria-label')).toBeTruthy();
+    expect(panel?.getAttribute('role')).toBe('menu');
+    expect(panel?.getAttribute('aria-label')).toBeTruthy();
+    expect(document.activeElement?.textContent?.trim()).toBe('Overview');
+
+    fixture.componentRef.setInput('items', [
+      { id: 'first', label: 'First' },
+      { id: 'overview', label: 'Overview', disabled: true },
+      { id: 'reports', label: 'Reports' },
+    ]);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(document.activeElement?.textContent?.trim()).toBe('First');
+
+    const reports = panel?.querySelectorAll<HTMLElement>('[role="menuitem"]')[2];
+    reports?.dispatchEvent(new Event('pointerenter'));
+    fixture.detectChanges();
+    expect(document.activeElement).toBe(reports);
+  });
+
+  it('focuses and closes empty or fully disabled menus with Escape', async () => {
+    const fixture = await create(KrnMenu, {
+      items: [],
+      open: true,
+      emptyLabel: '   ',
+    });
+    const closed = vi.fn();
+    const subscription = fixture.componentInstance.closed.subscribe(closed);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    let panel = document.querySelector<HTMLElement>('.menu-panel');
+    const empty = panel?.querySelector<HTMLElement>('.empty');
+    expect(empty?.getAttribute('role')).toBe('menuitem');
+    expect(empty?.getAttribute('aria-disabled')).toBe('true');
+    expect(empty?.textContent?.trim()).toBeTruthy();
+    expect(document.activeElement).toBe(panel);
+
+    panel?.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+    );
+    fixture.detectChanges();
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(closed).toHaveBeenLastCalledWith('escape');
+    expect(document.activeElement).toBe(
+      (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.trigger'),
+    );
+
+    fixture.componentRef.setInput('items', [{ id: 'disabled', label: 'Disabled', disabled: true }]);
+    fixture.componentInstance.open.set(true);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+    panel = document.querySelector<HTMLElement>('.menu-panel');
+    expect(document.activeElement).toBe(panel);
+    panel?.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+    );
+    fixture.detectChanges();
+    expect(closed).toHaveBeenCalledTimes(2);
+    expect(closed).toHaveBeenLastCalledWith('escape');
+    subscription.unsubscribe();
+  });
+
   it('keeps table-of-contents and skip-link anchors on the current route', async () => {
     const originalUrl = `${location.pathname}${location.search}${location.hash}`;
     history.pushState({}, '', '/components/table-of-contents?theme=dark');

@@ -7,6 +7,7 @@ import {
   booleanAttribute,
   computed,
   contentChild,
+  effect,
   inject,
   input,
   model,
@@ -41,15 +42,16 @@ export class KrnMenuTrigger {}
       cdkOverlayOrigin
       type="button"
       class="trigger"
-      [attr.aria-label]="triggerAriaLabel()"
+      [attr.aria-label]="resolvedTriggerAriaLabel()"
       aria-haspopup="menu"
       [attr.aria-expanded]="open()"
+      [attr.aria-controls]="open() ? panelId() : null"
       (click)="toggle()"
       (keydown)="onTriggerKeydown($event)"
     >
       <ng-content select="[krnMenuTrigger]" />
       @if (showDefaultTrigger()) {
-        <span>{{ triggerLabel() }}</span>
+        <span>{{ resolvedTriggerLabel() }}</span>
         <span class="trigger-chevron" aria-hidden="true"></span>
       }
     </button>
@@ -70,17 +72,20 @@ export class KrnMenuTrigger {}
       [cdkConnectedOverlayViewportMargin]="8"
       cdkConnectedOverlayUsePopover="inline"
       cdkConnectedOverlayTransformOriginOn=".menu-panel"
-      (attach)="registerOverlay(connectedOverlay, origin.elementRef.nativeElement)"
+      (attach)="onAttach(connectedOverlay, origin.elementRef.nativeElement)"
       (backdropClick)="close('outside')"
-      (detach)="close('detach')"
+      (detach)="onDetach()"
     >
       <div
+        #menuPanel
         class="menu-panel"
         role="menu"
-        [attr.aria-label]="menuAriaLabel()"
+        [id]="panelId()"
+        [attr.tabindex]="hasEnabledItems() ? null : -1"
+        [attr.aria-label]="resolvedMenuAriaLabel()"
         (keydown)="onMenuKeydown($event)"
       >
-        @for (item of items(); track item.id; let index = $index) {
+        @for (item of items(); track $index; let index = $index) {
           @if (item.href && !item.disabled) {
             <a
               #menuItem
@@ -88,7 +93,7 @@ export class KrnMenuTrigger {}
               [href]="item.href"
               [attr.tabindex]="index === activeIndex() ? 0 : -1"
               (click)="activate(item)"
-              (pointerenter)="activeIndex.set(index)"
+              (pointerenter)="focusIndex(index)"
             >
               <span>{{ item.label }}</span>
               @if (item.shortcut) {
@@ -103,7 +108,7 @@ export class KrnMenuTrigger {}
               [disabled]="item.disabled"
               [attr.tabindex]="index === activeIndex() ? 0 : -1"
               (click)="activate(item)"
-              (pointerenter)="!item.disabled && activeIndex.set(index)"
+              (pointerenter)="focusIndex(index)"
             >
               <span>{{ item.label }}</span>
               @if (item.shortcut) {
@@ -112,7 +117,7 @@ export class KrnMenuTrigger {}
             </button>
           }
         } @empty {
-          <p class="empty">{{ emptyLabel() }}</p>
+          <p class="empty" role="menuitem" aria-disabled="true">{{ resolvedEmptyLabel() }}</p>
         }
       </div>
     </ng-template>
@@ -120,6 +125,9 @@ export class KrnMenuTrigger {}
   styles: `
     :host {
       display: inline-block;
+    }
+    :host([hidden]) {
+      display: none;
     }
     .trigger {
       display: inline-flex;
@@ -155,6 +163,7 @@ export class KrnMenuTrigger {}
       rotate: 225deg;
     }
     .trigger:focus-visible,
+    .menu-panel:focus-visible,
     .menu-panel :is(a, button):focus-visible {
       outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
       outline-offset: var(--krn-focus-ring-offset);
@@ -215,6 +224,20 @@ export class KrnMenuTrigger {}
         transition: none;
       }
     }
+    @media (forced-colors: active) {
+      .trigger,
+      .menu-panel {
+        border-color: CanvasText;
+      }
+      .trigger:focus-visible,
+      .menu-panel:focus-visible,
+      .menu-panel :is(a, button):focus-visible {
+        outline-color: Highlight;
+      }
+      .menu-panel :is(a, button)[tabindex='0'] {
+        outline: var(--krn-border-width-1) solid Highlight;
+      }
+    }
   `,
 })
 export class KrnMenu {
@@ -222,6 +245,7 @@ export class KrnMenu {
   private readonly platform = inject(KRN_PLATFORM);
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
+  private readonly menuPanel = viewChild<ElementRef<HTMLElement>>('menuPanel');
   private readonly menuItems = viewChildren<ElementRef<HTMLElement>>('menuItem');
   private readonly projectedTrigger = contentChild(KrnMenuTrigger);
   readonly items = input<readonly (KrnNavigationItem & { readonly shortcut?: string })[]>([]);
@@ -237,8 +261,22 @@ export class KrnMenu {
   readonly itemSelected = output<KrnNavigationItem>();
   readonly closed = output<'escape' | 'outside' | 'detach' | 'selection'>();
   protected readonly activeIndex = signal(0);
+  protected readonly panelId = signal<string | null>(null);
+  protected readonly hasEnabledItems = computed(() => this.items().some((item) => !item.disabled));
   protected readonly showDefaultTrigger = computed(
     () => !this.hasProjectedTrigger() && !this.projectedTrigger(),
+  );
+  protected readonly resolvedTriggerLabel = computed(
+    () => this.triggerLabel()?.trim() || this.translations.navigation.actions.trim(),
+  );
+  protected readonly resolvedTriggerAriaLabel = computed(
+    () => this.triggerAriaLabel()?.trim() || this.translations.navigation.openMenu.trim() || null,
+  );
+  protected readonly resolvedMenuAriaLabel = computed(
+    () => this.menuAriaLabel()?.trim() || this.translations.navigation.actions.trim() || null,
+  );
+  protected readonly resolvedEmptyLabel = computed(
+    () => this.emptyLabel()?.trim() || this.translations.navigation.menuEmpty.trim(),
   );
   protected readonly positions = [
     {
@@ -257,17 +295,39 @@ export class KrnMenu {
     },
   ];
 
+  constructor() {
+    effect(() => {
+      if (!this.open()) return;
+      const active = this.activeIndex();
+      if (this.items()[active] && !this.items()[active]?.disabled) {
+        this.focusActive();
+        return;
+      }
+      const next = this.findEnabledIndex(0, 1);
+      this.activeIndex.set(next);
+      this.focusActive();
+    });
+  }
+
   protected toggle(): void {
     this.open.update((value) => !value);
     if (this.open()) this.focusFirst();
   }
 
-  protected registerOverlay(overlay: CdkConnectedOverlay, origin: HTMLElement): void {
+  protected onAttach(overlay: CdkConnectedOverlay, origin: HTMLElement): void {
+    const overlayElement = overlay.overlayRef.overlayElement;
+    this.panelId.set(overlayElement.id ? `${overlayElement.id}-menu` : null);
     this.overlayCoordinator.registerOverlayOwnership(
       origin,
-      overlay.overlayRef.overlayElement,
+      overlayElement,
       overlay.overlayRef.backdropElement,
     );
+    this.focusActive();
+  }
+
+  protected onDetach(): void {
+    this.close('detach');
+    this.panelId.set(null);
   }
 
   protected close(reason: 'escape' | 'outside' | 'detach' | 'selection'): void {
@@ -283,7 +343,19 @@ export class KrnMenu {
     this.close('selection');
   }
 
+  protected focusIndex(index: number): void {
+    if (this.items()[index]?.disabled) return;
+    this.activeIndex.set(index);
+    this.menuItems()[index]?.nativeElement.focus({ preventScroll: true });
+  }
+
   protected onTriggerKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape' && this.open() && !event.defaultPrevented) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.close('escape');
+      return;
+    }
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
     event.preventDefault();
     this.open.set(true);
@@ -344,7 +416,10 @@ export class KrnMenu {
   }
 
   private focusActive(): void {
-    this.schedule(() => this.menuItems()[this.activeIndex()]?.nativeElement.focus());
+    this.schedule(() => {
+      const item = this.menuItems()[this.activeIndex()]?.nativeElement;
+      (item ?? this.menuPanel()?.nativeElement)?.focus();
+    });
   }
 
   private schedule(callback: () => void): void {
