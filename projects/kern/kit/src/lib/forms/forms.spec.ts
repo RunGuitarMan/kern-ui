@@ -601,9 +601,10 @@ describe('Kern form controls', () => {
       fixture.detectChanges();
       expect(select.selectedIndex).toBe(index + 1);
 
-      select.selectedIndex = index + 1;
+      const nextIndex = (index + 1) % options.length;
+      select.selectedIndex = nextIndex + 1;
       select.dispatchEvent(new Event('change'));
-      expect(change).toHaveBeenLastCalledWith(option.value);
+      expect(change).toHaveBeenLastCalledWith(options[nextIndex]?.value);
     }
 
     select.selectedIndex = 0;

@@ -95,6 +95,10 @@ contract or upgrade decision.
   duplicate-free changes, canonical enabled-option commits, non-interactive popup invariants,
   composable external/Form Field ARIA references, configurable tab order, and public trigger
   focus.
+- Strengthened Native Select with deterministic standalone `value` ownership, identity-based
+  duplicate-free changes, canonical enabled-option commits, readonly-safe native interaction,
+  composable external/Form Field ARIA references, native-only tab order, and public focus and blur
+  methods.
 
 ### Deprecated
 

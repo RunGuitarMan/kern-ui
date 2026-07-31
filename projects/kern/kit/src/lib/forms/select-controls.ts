@@ -73,6 +73,7 @@ const focusStayedWithin = (event: FocusEvent): boolean => {
   host: {
     class: 'krn-select-host',
     '[attr.id]': 'null',
+    '[attr.tabindex]': 'null',
   },
   providers: [...provideKrnFormControl(() => KrnNativeSelect)],
   template: `
@@ -83,18 +84,25 @@ const focusStayedWithin = (event: FocusEvent): boolean => {
       [attr.data-readonly]="a11y.readOnly()"
     >
       <select
+        #select
         class="krn-select-native"
-        [attr.aria-describedby]="a11y.describedBy()"
+        [attr.aria-describedby]="effectiveDescribedBy()"
         [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="ariaLabel() || null"
-        [attr.aria-readonly]="a11y.readOnly()"
+        [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
+        [attr.aria-labelledby]="effectiveLabelledBy()"
+        [attr.aria-readonly]="isReadOnly()"
+        [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
         [disabled]="isDisabled()"
         [id]="a11y.id()"
         [name]="name()"
         [required]="a11y.required()"
+        [tabindex]="isDisabled() ? -1 : tabIndex()"
         [value]="selectedNativeKey()"
         (blur)="touch()"
         (change)="selectNative($event)"
+        (click)="protectReadOnlyInteraction($event)"
+        (keydown)="protectReadOnlyInteraction($event)"
+        (pointerdown)="protectReadOnlyInteraction($event)"
       >
         <option
           value="__krn-native-select-placeholder__"
@@ -122,10 +130,13 @@ const focusStayedWithin = (event: FocusEvent): boolean => {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
+  private readonly select = viewChild<ElementRef<HTMLSelectElement>>('select');
   readonly id = input('');
   readonly name = input('');
   readonly placeholder = input('');
   readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
   readonly options = input.required<readonly KrnSelectOption<T>[]>();
   readonly identityMatcher = input<KrnIdentityMatcher<T>>(Object.is);
   readonly trackBy = input<KrnOptionTrackBy<T>>((option) => option.value);
@@ -140,6 +151,8 @@ export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
   });
   readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
+  readonly value = input<T | null | undefined>(undefined);
   readonly valueChange = output<T | null>();
 
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'native-select', {
@@ -148,6 +161,13 @@ export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
     required: this.required,
   });
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
+  protected readonly isReadOnly = computed(() => this.a11y.readOnly());
+  protected readonly effectiveLabelledBy = computed(() =>
+    mergeAriaIds(this.ariaLabelledBy(), this.a11y.labelledBy()),
+  );
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(this.ariaDescribedBy(), this.a11y.describedBy()),
+  );
   protected readonly selectedNativeKey = computed(() => {
     const value = this.controlValue();
     if (value === null) {
@@ -160,6 +180,7 @@ export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
 
   constructor() {
     super(null);
+    this.bindStandaloneValue(this.value);
     this.watchValidationInputs(this.required, this.a11y.required);
   }
 
@@ -171,23 +192,85 @@ export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
     return requiredError(value, this.a11y.required());
   }
 
+  protected override valuesEqual(current: T | null, next: T | null): boolean {
+    return current === null || next === null
+      ? current === next
+      : this.identityMatcher()(current, next);
+  }
+
   protected optionKey(_option: KrnSelectOption<T>, index: number): string {
     return `__krn-native-select-option-${index}__`;
   }
 
   protected selectNative(event: Event): void {
     const select = event.target as HTMLSelectElement;
-    if (this.a11y.readOnly()) {
+    if (this.isDisabled() || this.isReadOnly()) {
       select.value = this.selectedNativeKey();
       return;
     }
+    const cleared = select.value === nativeSelectPlaceholderKey;
     const optionIndex = this.options().findIndex(
       (candidate, index) => this.optionKey(candidate, index) === select.value,
     );
     const option = optionIndex >= 0 ? this.options()[optionIndex] : undefined;
-    const value = option ? option.value : null;
-    this.commitValue(value);
-    this.valueChange.emit(value);
+    if (
+      (!cleared && !option) ||
+      (cleared && this.a11y.required()) ||
+      (option && this.disabledHandler()(option))
+    ) {
+      select.value = this.selectedNativeKey();
+      return;
+    }
+    const value = option?.value ?? null;
+    if (this.commitUserValue(value)) {
+      this.valueChange.emit(value);
+    }
+  }
+
+  protected protectReadOnlyInteraction(event: Event): void {
+    if (!this.isReadOnly()) {
+      return;
+    }
+    if (event.type === 'keydown') {
+      const keyboardEvent = event as KeyboardEvent;
+      const passThroughShortcut =
+        keyboardEvent.ctrlKey ||
+        keyboardEvent.metaKey ||
+        (keyboardEvent.altKey && !['ArrowDown', 'ArrowUp'].includes(keyboardEvent.key));
+      const mutatesSelection =
+        keyboardEvent.key.length === 1 ||
+        [
+          'ArrowDown',
+          'ArrowLeft',
+          'ArrowRight',
+          'ArrowUp',
+          'End',
+          'Enter',
+          'F4',
+          'Home',
+          'PageDown',
+          'PageUp',
+        ].includes(keyboardEvent.key);
+      if (passThroughShortcut || !mutatesSelection) {
+        return;
+      }
+    }
+    event.preventDefault();
+    const select = this.select()?.nativeElement;
+    if (select) {
+      select.value = this.selectedNativeKey();
+      if (event.type === 'pointerdown') {
+        select.focus({ preventScroll: true });
+      }
+    }
+  }
+
+  focus(options?: FocusOptions): void {
+    this.select()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    this.select()?.nativeElement.blur();
   }
 }
 
