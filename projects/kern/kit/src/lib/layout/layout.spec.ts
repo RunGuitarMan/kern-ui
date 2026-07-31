@@ -42,14 +42,37 @@ function pointerEvent(type: string, clientX: number): PointerEvent {
 }
 
 describe('Kern layout primitives', () => {
-  it('maps spacing tokens to CSS custom properties', () => {
+  it('normalizes spacing and remains shrinkable inside nested layouts', () => {
     const fixture = TestBed.createComponent(KrnStack);
-    fixture.componentRef.setInput('gap', '6');
+    fixture.componentRef.setInput('gap', 12);
+    fixture.componentRef.setInput('align', 'center');
+    fixture.componentRef.setInput('justify', 'space-between');
     fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const style = getComputedStyle(host);
 
-    expect((fixture.nativeElement as HTMLElement).style.getPropertyValue('--krn-stack-gap')).toBe(
-      'var(--krn-space-6)',
-    );
+    expect(host.style.getPropertyValue('--krn-stack-gap')).toBe('12px');
+    expect(host.getAttribute('data-align')).toBe('center');
+    expect(host.getAttribute('data-justify')).toBe('space-between');
+    expect(style.boxSizing).toBe('border-box');
+    expect(style.maxInlineSize).toBe('100%');
+    expect(style.minInlineSize).toBe('0px');
+    expect(style.minBlockSize).toBe('0px');
+    expect(style.flexDirection).toBe('column');
+    expect(style.getPropertyValue('--krn-stack-align')).toBe('center');
+    expect(style.getPropertyValue('--krn-stack-justify')).toBe('space-between');
+  });
+
+  it('falls back to the default gap and preserves native hidden semantics', () => {
+    const fixture = TestBed.createComponent(KrnStack);
+    fixture.componentRef.setInput('gap', '');
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+
+    expect(host.style.getPropertyValue('--krn-stack-gap')).toBe('var(--krn-space-4)');
+
+    host.hidden = true;
+    expect(getComputedStyle(host).display).toBe('none');
   });
 
   it('uses its own inline-size as the responsive grid boundary', () => {

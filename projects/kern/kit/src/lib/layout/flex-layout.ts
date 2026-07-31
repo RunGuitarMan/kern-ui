@@ -22,11 +22,18 @@ import { krnCssLength } from './layout.types';
   styles: `
     :host {
       display: flex;
+      box-sizing: border-box;
+      max-inline-size: 100%;
       min-inline-size: 0;
+      min-block-size: 0;
       flex-direction: column;
       gap: var(--krn-stack-gap);
       align-items: var(--krn-stack-align, stretch);
       justify-content: var(--krn-stack-justify, flex-start);
+    }
+
+    :host([hidden]) {
+      display: none;
     }
 
     :host([data-align='start']) {
@@ -65,8 +72,11 @@ import { krnCssLength } from './layout.types';
   `,
 })
 export class KrnStack {
+  /** Logical spacing between adjacent projected children. */
   readonly gap = input<KrnLayoutSpace>('4');
+  /** Cross-axis alignment of projected children. */
   readonly align = input<KrnLayoutAlignment>('stretch');
+  /** Distribution of projected children along the block axis. */
   readonly justify = input<KrnLayoutJustification>('start');
 
   protected readonly resolvedGap = computed(() => krnCssLength(this.gap(), 'var(--krn-space-4)'));
