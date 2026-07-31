@@ -723,6 +723,7 @@ export class KrnRadio {
   selector: 'krn-switch',
   host: {
     '[attr.id]': 'null',
+    '[attr.tabindex]': 'null',
   },
   providers: [...provideKrnFormControl(() => KrnSwitch)],
   template: `
@@ -730,29 +731,36 @@ export class KrnRadio {
       class="krn-choice krn-switch"
       [attr.data-disabled]="isDisabled()"
       [attr.data-invalid]="a11y.invalid()"
-      [attr.data-readonly]="a11y.readOnly()"
+      [attr.data-readonly]="isReadOnly()"
     >
       <input
+        #input
         class="krn-choice__native"
         type="checkbox"
         role="switch"
-        [attr.aria-describedby]="a11y.describedBy()"
+        [attr.aria-describedby]="effectiveDescribedBy()"
         [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="ariaLabel() || null"
-        [attr.aria-disabled]="a11y.readOnly() || null"
-        [checked]="controlValue()"
+        [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
+        [attr.aria-labelledby]="effectiveLabelledBy()"
+        [attr.aria-disabled]="isReadOnly() || null"
+        [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
+        [checked]="renderedChecked()"
         [disabled]="isDisabled()"
         [id]="a11y.id()"
         [name]="name()"
         [required]="a11y.required()"
+        [tabIndex]="tabIndex()"
         (blur)="touch()"
+        (click)="preventReadonly($event)"
         (change)="changeValue($event)"
       />
       <span class="krn-choice__mark" aria-hidden="true"></span>
       <span class="krn-choice__text">
-        <span><ng-content /></span>
+        <span [id]="labelId()"><ng-content /></span>
         @if (description()) {
-          <span class="krn-choice__description">{{ description() }}</span>
+          <span class="krn-choice__description" [id]="descriptionId()">
+            {{ description() }}
+          </span>
         }
       </span>
     </label>
@@ -760,9 +768,15 @@ export class KrnRadio {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnSwitch extends KrnValueAccessor<boolean> {
+  private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('input');
+  private angularOwnsChecked = false;
+
   readonly id = input('');
   readonly name = input('');
+  readonly checked = input<boolean | undefined>(undefined, { transform: booleanAttribute });
   readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
   readonly description = input('');
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false, {
@@ -771,7 +785,8 @@ export class KrnSwitch extends KrnValueAccessor<boolean> {
   });
   readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
-  readonly valueChange = output<boolean>();
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
+  readonly checkedChange = output<boolean>();
 
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'switch', {
     disabled: this.disabled,
@@ -779,10 +794,60 @@ export class KrnSwitch extends KrnValueAccessor<boolean> {
     required: this.required,
   });
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
+  protected readonly isReadOnly = computed(() => this.a11y.readOnly());
+  protected readonly labelId = computed(() => `${this.a11y.id()}-label`);
+  protected readonly descriptionId = computed(() => `${this.a11y.id()}-description`);
+  protected readonly effectiveLabelledBy = computed(() => {
+    const external = mergeAriaIds(
+      this.ariaLabelledBy(),
+      (
+        this.a11y as typeof this.a11y & {
+          readonly labelledBy?: () => string | null;
+        }
+      ).labelledBy?.(),
+    );
+    return external
+      ? mergeAriaIds(external, this.labelId())
+      : this.ariaLabel()
+        ? null
+        : this.labelId();
+  });
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(
+      this.ariaDescribedBy(),
+      this.a11y.describedBy(),
+      this.description() ? this.descriptionId() : null,
+    ),
+  );
+  protected readonly renderedChecked = computed(() => this.controlValue());
+  protected readonly isFormFieldControl = computed(
+    () =>
+      (
+        this.a11y as typeof this.a11y & {
+          readonly isFormFieldControl?: () => boolean;
+        }
+      ).isFormFieldControl?.() ?? false,
+  );
 
   constructor() {
     super(false);
+    effect(() => {
+      const checked = this.checked();
+      if (checked !== undefined && !this.angularOwnsChecked) {
+        this.controlValue.set(this.normalizeIncomingValue(checked));
+      }
+    });
     this.watchValidationInputs(this.required, this.a11y.required);
+  }
+
+  override writeValue(value: unknown): void {
+    this.angularOwnsChecked = true;
+    super.writeValue(value);
+  }
+
+  override registerOnChange(fn: (value: boolean) => void): void {
+    this.angularOwnsChecked = true;
+    super.registerOnChange(fn);
   }
 
   protected override normalizeIncomingValue(value: unknown): boolean {
@@ -795,13 +860,30 @@ export class KrnSwitch extends KrnValueAccessor<boolean> {
 
   protected changeValue(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (this.a11y.readOnly()) {
-      input.checked = this.controlValue();
+    if (this.isReadOnly()) {
+      input.checked = this.renderedChecked();
       return;
     }
-    const value = input.checked;
-    this.commitValue(value);
-    this.valueChange.emit(value);
+    const checked = input.checked;
+    if (checked === this.renderedChecked()) {
+      return;
+    }
+    this.commitValue(checked);
+    this.checkedChange.emit(checked);
+  }
+
+  protected preventReadonly(event: Event): void {
+    if (this.isReadOnly()) {
+      event.preventDefault();
+    }
+  }
+
+  focus(options?: FocusOptions): void {
+    this.inputElement()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    this.inputElement()?.nativeElement.blur();
   }
 }
 

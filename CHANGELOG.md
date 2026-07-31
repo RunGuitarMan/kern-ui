@@ -88,6 +88,9 @@ contract or upgrade decision.
 - Strengthened Radio Group with deterministic standalone `value` ownership, Angular Forms
   precedence, duplicate-free selection outputs, composable legend/external/Form Field naming,
   merged descriptions, and selected-first native focus delegation.
+- Strengthened Switch with deterministic standalone `checked` ownership, duplicate-free accepted
+  changes, readonly-safe native interaction, composable visible/external names and descriptions,
+  native-only tab order, and public native focus and blur methods.
 
 ### Deprecated
 
@@ -96,6 +99,9 @@ contract or upgrade decision.
 - `KrnMenu.hasProjectedTrigger`; apply `KrnMenuTrigger` to the projected trigger instead.
 
 ### Removed
+
+- Removed the pre-1.0 `KrnSwitch.valueChange` output; use `(checkedChange)` or `[(checked)]`
+  through the `switch-checked-output` migration recipe.
 
 ### Fixed
 

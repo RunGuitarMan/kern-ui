@@ -10,6 +10,16 @@
     "automatic": true
   },
   {
+    "id": "switch-checked-output",
+    "from": "KrnSwitch.valueChange",
+    "to": "KrnSwitch.checkedChange with checked/checkedChange two-way binding, or Angular Forms",
+    "summary": "Name Switch state after the native checked property. Use checkedChange for standalone state, or keep formControl/ngModel as the single owner when Angular Forms is present.",
+    "components": ["switch"],
+    "before": "<krn-switch (valueChange)=\"enabled = $event\">Notifications</krn-switch>",
+    "after": "<krn-switch [(checked)]=\"enabled\">Notifications</krn-switch>",
+    "automatic": false
+  },
+  {
     "id": "data-grid-pagination-mode",
     "from": "KrnDataGrid.pagination",
     "to": "KrnDataGrid.mode",
