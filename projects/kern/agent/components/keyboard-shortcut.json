@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-keyboard-shortcut",
   "selectors": ["krn-keyboard-shortcut"],
+  "selectorDeprecations": [],
   "symbol": "KrnKeyboardShortcut",
   "canonicalSymbol": "KrnKeyboardShortcut",
   "canonicalId": "keyboard-shortcut",

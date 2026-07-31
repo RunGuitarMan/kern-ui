@@ -56,23 +56,32 @@ void bootstrapApplication(KernDateRangePickerAgentExample);
 
 ## API
 
-| Name           | Kind   | Type                           | Required | Default                                    | Description                                                                 |
-| -------------- | ------ | ------------------------------ | -------- | ------------------------------------------ | --------------------------------------------------------------------------- |
-| `id`           | input  | `string`                       | no       | `''`                                       | Stable identifier value used by the id contract.                            |
-| `ariaLabel`    | input  | `string`                       | no       | `''`                                       | Accessible name used when visible content is not sufficient.                |
-| `locale`       | input  | `string`                       | no       | `inject(KRN_LOCALE)`                       | Locale identifier used for collation, formatting, and component-owned copy. |
-| `today`        | input  | `string`                       | no       | `toIsoDate(new Date(this.platform.now()))` | Deterministic plain date treated as today on both server and client.        |
-| `weekStartsOn` | input  | `number`                       | no       | `0`                                        | Zero-based weekday used as the first calendar column.                       |
-| `labels`       | input  | `Partial<KrnDatePickerLabels>` | no       | `{}`                                       | Localized copy overrides for the component-owned interface text.            |
-| `startLabel`   | input  | `string`                       | no       | `this.translations.datePicker.startDate`   | Human-readable copy for the start state or control.                         |
-| `endLabel`     | input  | `string`                       | no       | `this.translations.datePicker.endDate`     | Human-readable copy for the end state or control.                           |
-| `min`          | input  | `string`                       | no       | `''`                                       | Smallest accepted numeric or temporal value.                                |
-| `max`          | input  | `string`                       | no       | `''`                                       | Largest accepted numeric or temporal value.                                 |
-| `disabled`     | input  | `boolean`                      | no       | `false`                                    | Prevents user interaction and participates in the disabled-state contract.  |
-| `readonly`     | input  | `boolean`                      | no       | `false`                                    | Keeps the value perceivable while preventing user edits.                    |
-| `required`     | input  | `boolean`                      | no       | `false`                                    | Marks the value as required and participates in Angular Forms validation.   |
-| `invalid`      | input  | `boolean`                      | no       | `false`                                    | Exposes an externally controlled invalid presentation state.                |
-| `valueChange`  | output | `KrnDateRangeValue`            | no       | `undefined`                                | Notifies the consumer after the value change interaction completes.         |
+| Name              | Kind   | Type                             | Required | Default                                    | Description                                                                                      |
+| ----------------- | ------ | -------------------------------- | -------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`                         | no       | `''`                                       | Stable identifier value used by the id contract.                                                 |
+| `ariaLabel`       | input  | `string`                         | no       | `''`                                       | Accessible name used when visible content is not sufficient.                                     |
+| `ariaLabelledBy`  | input  | `string`                         | no       | `''`                                       | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`                         | no       | `''`                                       | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `locale`          | input  | `string`                         | no       | `inject(KRN_LOCALE)`                       | Locale identifier used for collation, formatting, and component-owned copy.                      |
+| `today`           | input  | `string`                         | no       | `toIsoDate(new Date(this.platform.now()))` | Deterministic plain date treated as today on both server and client.                             |
+| `weekStartsOn`    | input  | `number`                         | no       | `0`                                        | Zero-based weekday used as the first calendar column.                                            |
+| `labels`          | input  | `Partial<KrnDatePickerLabels>`   | no       | `{}`                                       | Localized copy overrides for the component-owned interface text.                                 |
+| `startLabel`      | input  | `string`                         | no       | `this.translations.datePicker.startDate`   | Human-readable copy for the start state or control.                                              |
+| `endLabel`        | input  | `string`                         | no       | `this.translations.datePicker.endDate`     | Human-readable copy for the end state or control.                                                |
+| `min`             | input  | `string`                         | no       | `''`                                       | Smallest accepted numeric or temporal value.                                                     |
+| `max`             | input  | `string`                         | no       | `''`                                       | Largest accepted numeric or temporal value.                                                      |
+| `disabled`        | input  | `boolean`                        | no       | `false`                                    | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean`                        | no       | `false`                                    | Keeps the value perceivable while preventing user edits.                                         |
+| `required`        | input  | `boolean`                        | no       | `false`                                    | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`         | input  | `boolean`                        | no       | `false`                                    | Exposes an externally controlled invalid presentation state.                                     |
+| `tabindex`        | input  | `number`                         | no       | `0`                                        | Native sequential-focus order forwarded to the owned interactive element.                        |
+| `value`           | input  | `KrnDateRangeValue \| undefined` | no       | `undefined`                                | Controlled component value.                                                                      |
+| `open`            | model  | `boolean`                        | no       | `false`                                    | Controls whether the disclosure or overlay surface is visible.                                   |
+| `valueChange`     | output | `KrnDateRangeValue`              | no       | `undefined`                                | Notifies the consumer after the value change interaction completes.                              |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -120,10 +129,10 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - readonly
 - required
 - invalid
-- minimum
-- maximum
 - closed
 - open
+- minimum
+- maximum
 - empty results
 - async loading
 
@@ -132,8 +141,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/date-range-picker`
 
 Scenarios: `default`.
-Public API coverage: 9/14
-directly controlled; 5 exact exclusions; 0 unclassified.
+Public API coverage: 11/19
+directly controlled; 8 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -148,18 +157,23 @@ component inputs or models.
 | `id`           | text    | `""`           | `"Alternate value"` | input `id` (property)           | Configures the component id contract.             |
 | `max`          | text    | `""`           | `"2026-11-30"`      | input `max` (property)          | Configures the component max contract.            |
 | `min`          | text    | `""`           | `"2026-02-01"`      | input `min` (property)          | Configures the component min contract.            |
+| `open`         | boolean | `false`        | `true`              | model `open`                    | Controlled disclosure or overlay state.           |
+| `tabindex`     | number  | `0`            | `1`                 | input `tabindex` (property)     | Configures the component tabindex contract.       |
 | `today`        | text    | `"2026-07-30"` | `"2026-08-15"`      | input `today` (property)        | Configures the component today contract.          |
 | `weekStartsOn` | number  | `0`            | `1`                 | input `weekStartsOn` (property) | Configures the component weekStartsOn contract.   |
 
 Exact API exclusions:
 
-| Public API   | Category           | Evidence                                                       | Reason                                                                                                                                                              |
-| ------------ | ------------------ | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#date-range-picker` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `endLabel`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#date-range-picker` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `labels`     | translation-object | `locale-preview:preview/date-range-picker?locale=ru-RU`        | Structured translation overrides are exercised through locale providers, not lossy scalar controls.                                                                 |
-| `locale`     | locale-environment | `locale-preview:preview/date-range-picker?locale=ru-RU`        | Locale is owned by the playground environment selector so every locale-sensitive component changes consistently.                                                    |
-| `startLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#date-range-picker` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| Public API        | Category           | Evidence                                                       | Reason                                                                                                                                                               |
+| ----------------- | ------------------ | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#date-range-picker` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `ariaLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#date-range-picker` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `ariaLabelledBy`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#date-range-picker` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `endLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#date-range-picker` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `labels`          | translation-object | `locale-preview:preview/date-range-picker?locale=ru-RU`        | Structured translation overrides are exercised through locale providers, not lossy scalar controls.                                                                  |
+| `locale`          | locale-environment | `locale-preview:preview/date-range-picker?locale=ru-RU`        | Locale is owned by the playground environment selector so every locale-sensitive component changes consistently.                                                     |
+| `startLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#date-range-picker` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `value`           | complex-data       | `specimen-fixture:preview/date-range-picker?state=default`     | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                     |
 
 Presets:
 
@@ -180,10 +194,10 @@ Presets:
 - `readonly` — Readonly; scenario `default`; `readOnly=true`.
 - `required` — Required; scenario `default`; `required=true`.
 - `invalid` — Invalid; scenario `default`; `invalid=true`.
+- `closed` — closed; scenario `default`; `open=false`; fixture effect `status/neutral` — closed: The fixture exposes the closed status without claiming a public component input..
+- `open` — Open; scenario `default`; `open=true`.
 - `minimum` — minimum; scenario `default`; fixture effect `status/neutral` — minimum: The fixture exposes the minimum status without claiming a public component input..
 - `maximum` — maximum; scenario `default`; fixture effect `status/neutral` — maximum: The fixture exposes the maximum status without claiming a public component input..
-- `closed` — closed; scenario `default`; fixture effect `status/neutral` — closed: The fixture exposes the closed status without claiming a public component input..
-- `open` — open; scenario `default`; fixture effect `status/info` — open: The fixture exposes the open status without claiming a public component input..
 - `empty-results` — empty results; scenario `default`; fixture effect `data/empty` — empty results: The fixture data source returned no records..
 - `async-loading` — async loading; scenario `default`; fixture effect `status/info` — async loading: The fixture exposes the async loading status without claiming a public component input..
 

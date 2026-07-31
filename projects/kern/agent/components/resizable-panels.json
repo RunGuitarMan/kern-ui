@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-resizable-panels",
   "selectors": ["krn-resizable-panels"],
+  "selectorDeprecations": [],
   "symbol": "KrnResizablePanels",
   "canonicalSymbol": "KrnResizablePanels",
   "canonicalId": "resizable-panels",
@@ -229,7 +230,7 @@
         "kind": "select",
         "defaultValue": "horizontal",
         "testValue": "vertical",
-        "description": "Configures the component orientation contract.",
+        "description": "Logical axis exposed by the component; behavior follows its documented keyboard contract.",
         "binding": {
           "kind": "input",
           "publicName": "orientation",

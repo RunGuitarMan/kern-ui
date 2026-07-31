@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-menu",
   "selectors": ["krn-menu"],
+  "selectorDeprecations": [],
   "symbol": "KrnMenu",
   "canonicalSymbol": "KrnMenu",
   "canonicalId": "menu",
@@ -138,7 +139,7 @@
       "name": "closed",
       "property": "closed",
       "kind": "output",
-      "type": "\"selection\" | \"escape\" | \"outside\" | \"detach\"",
+      "type": "\"detach\" | \"escape\" | \"outside\" | \"selection\"",
       "required": false,
       "defaultValue": "undefined",
       "description": "Notifies the consumer after the closed interaction completes.",
@@ -150,7 +151,7 @@
       "name": "krnMenuTrigger",
       "selector": "[krnMenuTrigger]",
       "required": false,
-      "description": "Optional non-interactive label content projected into the Menu-owned trigger button; omit it to use triggerLabel and never project a button, link, form control, or krn-button."
+      "description": "Optional non-interactive label content projected into the Menu-owned trigger button; omit it to use triggerLabel and never project a button, link, form control, or button[krnButton]."
     }
   ],
   "forms": {
@@ -448,7 +449,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#menu"
@@ -496,7 +497,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#menu"

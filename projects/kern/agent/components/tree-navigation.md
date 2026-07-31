@@ -76,6 +76,10 @@ void bootstrapApplication(KernTreeNavigationAgentExample);
 | `itemSelected` | output | `KrnTreeNavigationItem`                | no       | `undefined`                                   | Notifies the consumer after the item selected interaction completes.                  |
 | `loadChildren` | output | `KrnTreeNavigationItem`                | no       | `undefined`                                   | Requests children when an unloaded item is expanded or its failed request is retried. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._

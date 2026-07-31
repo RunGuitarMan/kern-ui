@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-divider",
   "selectors": ["krn-divider"],
+  "selectorDeprecations": [],
   "symbol": "KrnDivider",
   "canonicalSymbol": "KrnDivider",
   "canonicalId": "divider",

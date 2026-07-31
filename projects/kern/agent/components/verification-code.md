@@ -48,18 +48,27 @@ void bootstrapApplication(KernVerificationCodeAgentExample);
 
 ## API
 
-| Name          | Kind   | Type      | Required | Default                                    | Description                                                                |
-| ------------- | ------ | --------- | -------- | ------------------------------------------ | -------------------------------------------------------------------------- |
-| `id`          | input  | `string`  | no       | `''`                                       | Stable identifier value used by the id contract.                           |
-| `label`       | input  | `string`  | no       | `this.translations.forms.verificationCode` | Visible text that names the control or data value.                         |
-| `length`      | input  | `number`  | no       | `6`                                        | Required number of editable positions in the verification-code control.    |
-| `numericOnly` | input  | `boolean` | no       | `true`                                     | Restricts verification-code entry to decimal digits.                       |
-| `disabled`    | input  | `boolean` | no       | `false`                                    | Prevents user interaction and participates in the disabled-state contract. |
-| `readonly`    | input  | `boolean` | no       | `false`                                    | Keeps the value perceivable while preventing user edits.                   |
-| `required`    | input  | `boolean` | no       | `false`                                    | Marks the value as required and participates in Angular Forms validation.  |
-| `invalid`     | input  | `boolean` | no       | `false`                                    | Exposes an externally controlled invalid presentation state.               |
-| `valueChange` | output | `string`  | no       | `undefined`                                | Notifies the consumer after the value change interaction completes.        |
-| `completed`   | output | `string`  | no       | `undefined`                                | Notifies the consumer after the completed interaction completes.           |
+| Name              | Kind   | Type                  | Required | Default                                    | Description                                                                                      |
+| ----------------- | ------ | --------------------- | -------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`              | no       | `''`                                       | Stable identifier value used by the id contract.                                                 |
+| `label`           | input  | `string`              | no       | `this.translations.forms.verificationCode` | Visible text that names the control or data value.                                               |
+| `length`          | input  | `number`              | no       | `6`                                        | Required number of editable positions in the verification-code control.                          |
+| `numericOnly`     | input  | `boolean`             | no       | `true`                                     | Restricts verification-code entry to decimal digits.                                             |
+| `autocomplete`    | input  | `string`              | no       | `'one-time-code'`                          | Native autocomplete purpose forwarded to the editable control.                                   |
+| `ariaLabelledBy`  | input  | `string`              | no       | `''`                                       | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`              | no       | `''`                                       | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `tabindex`        | input  | `number`              | no       | `0`                                        | Native sequential-focus order forwarded to the owned interactive element.                        |
+| `disabled`        | input  | `boolean`             | no       | `false`                                    | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean`             | no       | `false`                                    | Keeps the value perceivable while preventing user edits.                                         |
+| `required`        | input  | `boolean`             | no       | `false`                                    | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`         | input  | `boolean`             | no       | `false`                                    | Exposes an externally controlled invalid presentation state.                                     |
+| `value`           | input  | `string \| undefined` | no       | `undefined`                                | Controlled component value.                                                                      |
+| `valueChange`     | output | `string`              | no       | `undefined`                                | Notifies the consumer after the value change interaction completes.                              |
+| `completed`       | output | `string`              | no       | `undefined`                                | Notifies the consumer after the completed interaction completes.                                 |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -84,7 +93,6 @@ Manual assistive-technology validation remains required in the consuming applica
 
 - KERN avoids ambient browser globals in reusable runtime infrastructure.
 - Validate the consuming SSR/hydration route, locale, ids and overlay host.
-- Browser capabilities are nullable or become available only after hydration.
 
 Hydration evidence scope: `library-docs-route-smoke`; status:
 `consumer-validation-required`.
@@ -114,27 +122,33 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/verification-code`
 
 Scenarios: `default`.
-Public API coverage: 8/8
-directly controlled; 0 exact exclusions; 0 unclassified.
+Public API coverage: 11/13
+directly controlled; 2 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default                                 | Test value                                          | Binding                        | Description                                                               |
-| ------------- | ------- | --------------------------------------- | --------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------- |
-| `length`      | number  | `6`                                     | `7`                                                 | input `length` (property)      | Changes the number of verification cells.                                 |
-| `disabled`    | boolean | `false`                                 | `true`                                              | input `disabled` (property)    | Prevents interaction and participates in the component disabled contract. |
-| `id`          | text    | `""`                                    | `"Alternate value"`                                 | input `id` (property)          | Configures the component id contract.                                     |
-| `invalid`     | boolean | `false`                                 | `true`                                              | input `invalid` (property)     | Exposes an externally controlled invalid presentation state.              |
-| `label`       | text    | `"Enter the 6-digit verification code"` | `"Enter the 6-digit verification code · alternate"` | input `label` (property)       | Configures the component label contract.                                  |
-| `numericOnly` | boolean | `true`                                  | `false`                                             | input `numericOnly` (property) | Configures the component numericOnly contract.                            |
-| `readonly`    | boolean | `false`                                 | `true`                                              | input `readonly` (property)    | Configures the component readonly contract.                               |
-| `required`    | boolean | `false`                                 | `true`                                              | input `required` (property)    | Marks the value as required and participates in Angular Forms validation. |
+| Argument       | Control | Default                                 | Test value                                          | Binding                         | Description                                                               |
+| -------------- | ------- | --------------------------------------- | --------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------- |
+| `length`       | number  | `6`                                     | `7`                                                 | input `length` (property)       | Changes the number of verification cells.                                 |
+| `autocomplete` | text    | `"one-time-code"`                       | `"one-time-code · alternate"`                       | input `autocomplete` (property) | Configures the component autocomplete contract.                           |
+| `disabled`     | boolean | `false`                                 | `true`                                              | input `disabled` (property)     | Prevents interaction and participates in the component disabled contract. |
+| `id`           | text    | `""`                                    | `"Alternate value"`                                 | input `id` (property)           | Configures the component id contract.                                     |
+| `invalid`      | boolean | `false`                                 | `true`                                              | input `invalid` (property)      | Exposes an externally controlled invalid presentation state.              |
+| `label`        | text    | `"Enter the 6-digit verification code"` | `"Enter the 6-digit verification code · alternate"` | input `label` (property)        | Configures the component label contract.                                  |
+| `numericOnly`  | boolean | `true`                                  | `false`                                             | input `numericOnly` (property)  | Configures the component numericOnly contract.                            |
+| `readonly`     | boolean | `false`                                 | `true`                                              | input `readonly` (property)     | Configures the component readonly contract.                               |
+| `required`     | boolean | `false`                                 | `true`                                              | input `required` (property)     | Marks the value as required and participates in Angular Forms validation. |
+| `tabindex`     | number  | `0`                                     | `1`                                                 | input `tabindex` (property)     | Configures the component tabindex contract.                               |
+| `value`        | text    | `""`                                    | `"Alternate value"`                                 | input `value` (property)        | Controlled component value.                                               |
 
 Exact API exclusions:
 
-_No excluded public API members._
+| Public API        | Category           | Evidence                                                       | Reason                                                                                                                  |
+| ----------------- | ------------------ | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#verification-code` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabelledBy`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#verification-code` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 
 Presets:
 

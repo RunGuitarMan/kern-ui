@@ -124,6 +124,10 @@ void bootstrapApplication(KernDataGridAgentExample);
 | `sortDirection`         | model  | `KrnDataSortDirection`                         | no       | `'asc'`                                        | Current ascending, descending, or unsorted direction.                                  |
 | `queryChange`           | output | `KrnDataGridQuery`                             | no       | `undefined`                                    | Notifies the consumer after the query change interaction completes.                    |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._
@@ -213,23 +217,23 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API              | Category           | Evidence                                                        | Reason                                                                                                                                                              |
-| ----------------------- | ------------------ | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel`             | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#data-grid`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `columns`               | complex-data       | `specimen-fixture:preview/data-grid?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
-| `data`                  | complex-data       | `specimen-fixture:preview/data-grid?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
-| `defaultCellTemplate`   | template           | `component-example:agent/components/data-grid.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.                                                          |
-| `defaultHeaderTemplate` | template           | `component-example:agent/components/data-grid.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.                                                          |
-| `emptyLabel`            | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#data-grid`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `expanded`              | complex-data       | `specimen-fixture:preview/data-grid?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
-| `expandedContent`       | callback           | `component-example:agent/components/data-grid.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
-| `expandedTemplate`      | template           | `component-example:agent/components/data-grid.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.                                                          |
-| `filterPredicate`       | callback           | `component-example:agent/components/data-grid.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
-| `hiddenColumnKeys`      | complex-data       | `specimen-fixture:preview/data-grid?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
-| `labels`                | translation-object | `locale-preview:preview/data-grid?locale=ru-RU`                 | Structured translation overrides are exercised through locale providers, not lossy scalar controls.                                                                 |
-| `mode`                  | complex-data       | `specimen-fixture:preview/data-grid?state=default`              | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                    |
-| `rowIdentity`           | callback           | `component-example:agent/components/data-grid.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
-| `selected`              | complex-data       | `specimen-fixture:preview/data-grid?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+| Public API              | Category           | Evidence                                                        | Reason                                                                                                                                                               |
+| ----------------------- | ------------------ | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`             | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#data-grid`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `columns`               | complex-data       | `specimen-fixture:preview/data-grid?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
+| `data`                  | complex-data       | `specimen-fixture:preview/data-grid?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
+| `defaultCellTemplate`   | template           | `component-example:agent/components/data-grid.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.                                                           |
+| `defaultHeaderTemplate` | template           | `component-example:agent/components/data-grid.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.                                                           |
+| `emptyLabel`            | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#data-grid`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `expanded`              | complex-data       | `specimen-fixture:preview/data-grid?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
+| `expandedContent`       | callback           | `component-example:agent/components/data-grid.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                   |
+| `expandedTemplate`      | template           | `component-example:agent/components/data-grid.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.                                                           |
+| `filterPredicate`       | callback           | `component-example:agent/components/data-grid.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                   |
+| `hiddenColumnKeys`      | complex-data       | `specimen-fixture:preview/data-grid?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
+| `labels`                | translation-object | `locale-preview:preview/data-grid?locale=ru-RU`                 | Structured translation overrides are exercised through locale providers, not lossy scalar controls.                                                                  |
+| `mode`                  | complex-data       | `specimen-fixture:preview/data-grid?state=default`              | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                     |
+| `rowIdentity`           | callback           | `component-example:agent/components/data-grid.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                   |
+| `selected`              | complex-data       | `specimen-fixture:preview/data-grid?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
 
 Presets:
 

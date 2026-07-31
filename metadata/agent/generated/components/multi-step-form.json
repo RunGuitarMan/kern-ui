@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-multi-step-form",
   "selectors": ["krn-multi-step-form"],
+  "selectorDeprecations": [],
   "symbol": "KrnMultiStepForm",
   "canonicalSymbol": "KrnMultiStepForm",
   "canonicalId": "multi-step-form",
@@ -324,7 +325,7 @@
         "kind": "select",
         "defaultValue": "horizontal",
         "testValue": "vertical",
-        "description": "Configures the component orientation contract.",
+        "description": "Logical axis exposed by the component; behavior follows its documented keyboard contract.",
         "binding": {
           "kind": "input",
           "publicName": "orientation",
@@ -492,7 +493,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#multi-step-form"
@@ -504,7 +505,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#multi-step-form"
@@ -516,7 +517,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#multi-step-form"
@@ -528,7 +529,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#multi-step-form"
@@ -540,7 +541,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#multi-step-form"

@@ -58,6 +58,10 @@ void bootstrapApplication(KernUserMenuAgentExample);
 | `menuAriaLabel` | input | `string`  | no       | `this.translations.patterns.userActions` | Human-readable copy for the menu aria state or control.                   |
 | `open`          | model | `boolean` | no       | `false`                                  | Controls whether the disclosure or overlay surface is visible.            |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `[krnUserAvatar]` — Projects content matching [krnUserAvatar].

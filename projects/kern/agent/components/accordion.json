@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-accordion",
   "selectors": ["krn-accordion"],
+  "selectorDeprecations": [],
   "symbol": "KrnAccordion",
   "canonicalSymbol": "KrnAccordion",
   "canonicalId": "accordion",

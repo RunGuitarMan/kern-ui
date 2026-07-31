@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-crud-toolbar",
   "selectors": ["krn-crud-toolbar", "krn-bulk-actions"],
+  "selectorDeprecations": [],
   "symbol": "KrnCrudToolbar",
   "canonicalSymbol": "KrnCrudToolbar",
   "canonicalId": "crud-toolbar",

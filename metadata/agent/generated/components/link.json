@@ -2,9 +2,10 @@
   "id": "link",
   "name": "Link",
   "category": "Actions",
-  "kind": "component",
-  "selector": "krn-link",
-  "selectors": ["krn-link"],
+  "kind": "directive",
+  "selector": "a[krnLink]",
+  "selectors": ["a[krnLink]"],
+  "selectorDeprecations": [],
   "symbol": "KrnLink",
   "canonicalSymbol": "KrnLink",
   "canonicalId": "link",
@@ -15,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Link. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.",
+  "summary": "Link. Enhances one native navigation anchor with KERN inline presentation while the browser or Angular Router owns its destination, relationships, focus, and activation.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -27,8 +28,7 @@
     "mobile",
     "hover",
     "focus-visible",
-    "active",
-    "disabled"
+    "active"
   ],
   "lifecycle": {
     "status": "stable",
@@ -48,102 +48,28 @@
     "promotionCriteria": [],
     "replacement": null
   },
-  "api": [
-    {
-      "name": "href",
-      "property": "href",
-      "kind": "input",
-      "type": "string",
-      "required": true,
-      "defaultValue": "required",
-      "description": "Required destination URL used by the semantic link element.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "target",
-      "property": "target",
-      "kind": "input",
-      "type": "KrnLinkTarget",
-      "required": false,
-      "defaultValue": "'_self'",
-      "description": "Native browsing-context target used when activating the link.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "rel",
-      "property": "rel",
-      "kind": "input",
-      "type": "string",
-      "required": false,
-      "defaultValue": "''",
-      "description": "Native link relationship tokens applied to the destination.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "download",
-      "property": "download",
-      "kind": "input",
-      "type": "string",
-      "required": false,
-      "defaultValue": "''",
-      "description": "Enables native download behavior and optionally provides the downloaded filename.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "ariaLabel",
-      "property": "ariaLabel",
-      "kind": "input",
-      "type": "string",
-      "required": false,
-      "defaultValue": "''",
-      "description": "Accessible name used when visible content is not sufficient.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "disabled",
-      "property": "disabled",
-      "kind": "input",
-      "type": "boolean",
-      "required": false,
-      "defaultValue": "false",
-      "description": "Prevents user interaction and participates in the disabled-state contract.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "activated",
-      "property": "activated",
-      "kind": "output",
-      "type": "MouseEvent",
-      "required": false,
-      "defaultValue": "undefined",
-      "description": "Notifies the consumer after the activated interaction completes.",
-      "descriptionSource": "inferred"
-    }
-  ],
-  "slots": [
-    {
-      "name": "default",
-      "selector": "*",
-      "required": false,
-      "description": "Projects default component content."
-    }
-  ],
+  "api": [],
+  "slots": [],
   "forms": {
     "controlValueAccessor": false,
     "validator": false,
     "valueType": null,
     "reactiveForms": false,
     "templateDrivenForms": false,
-    "stateInputs": ["disabled"],
+    "stateInputs": [],
     "notes": []
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Enter / Space activates", "Tab follows document order"],
+    "keyboard": [
+      "Tab follows native document order when the anchor has href or RouterLink",
+      "Enter follows the native anchor destination",
+      "An anchor without a destination remains a non-navigation placeholder and is not made artificially disabled"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "href or RouterLink, target, rel, referrerpolicy, download, accessible naming, descriptions, focus, and click stay on the native anchor.",
+      "Visible anchor text normally supplies the accessible name; native aria-label or aria-labelledby remains available when context requires it.",
+      "KrnLink does not rewrite relationship tokens or referrer policy; external privacy requirements stay explicit at the call site."
     ],
     "manualValidationRequired": true
   },
@@ -162,35 +88,44 @@
       "title": "External audit documentation link",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * External audit documentation link\n *\n * Render a semantic link with safe external navigation metadata.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnLink } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-link-agent-example',\n  standalone: true,\n  imports: [KrnLink],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-link href=\"https://example.com/audit-policy\" target=\"_blank\" rel=\"noopener noreferrer\">\n      Audit policy\n    </krn-link>\n  `,\n})\nexport class KernLinkAgentExample {}\n\nvoid bootstrapApplication(KernLinkAgentExample);\n",
+      "code": "/**\n * External audit documentation link\n *\n * Render a semantic link with safe external navigation metadata.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnLink } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-link-agent-example',\n  standalone: true,\n  imports: [KrnLink],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <a krnLink href=\"https://example.com/audit-policy\" target=\"_blank\" rel=\"noopener noreferrer\">\n      Audit policy\n    </a>\n  `,\n})\nexport class KernLinkAgentExample {}\n\nvoid bootstrapApplication(KernLinkAgentExample);\n",
       "verification": "compiled",
       "source": "examples/link.ts"
     }
   ],
-  "related": ["button", "icon-button", "button-group", "split-button"],
+  "related": [
+    "button",
+    "breadcrumbs",
+    "back-button",
+    "skip-link",
+    "icon-button",
+    "button-group",
+    "split-button"
+  ],
   "keywords": [
     "link",
     "Link",
     "Actions",
-    "krn-link",
+    "a[krnLink]",
     "KrnLink",
-    "href",
-    "target",
-    "rel",
-    "download",
-    "ariaLabel",
-    "disabled",
-    "activated"
+    "native anchor",
+    "navigation",
+    "RouterLink",
+    "external destination",
+    "browser-owned attributes"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use <a krnLink> for navigation and keep href or RouterLink plus all native anchor semantics on that host.",
+    "avoidWhen": "Do not simulate disabled navigation or use Link for an action in the current context; omit unavailable navigation or use a native Button."
   },
   "commonMistakes": [
-    "Do not omit required inputs: `href`.",
     "Importing from an undeclared family path or a source implementation file.",
     "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
-    "Assuming the documentation SSR build replaces validation of the consuming application."
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Use a[krnLink] for navigation and keep href or RouterLink, target, rel, download, referrerpolicy, ARIA relationships, and click on that native anchor.",
+    "Do not simulate a disabled link. Omit the unavailable navigation control or render non-interactive text; use a native button component for an action in the current context.",
+    "For a privacy-hardened new browsing context, set target=\"_blank\" and explicit rel=\"noopener noreferrer\"; KrnLink never rewrites consumer-owned relationship or referrer policy.",
+    "Named browsing contexts are valid native targets; do not narrow target to the former KrnLinkTarget alias."
   ],
   "checklist": [
     "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
@@ -210,87 +145,17 @@
     "scenarios": ["default"],
     "controls": [
       {
-        "key": "disabled",
-        "label": "Disabled",
+        "key": "externalDestination",
+        "label": "External destination",
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Prevents user interaction.",
+        "description": "Switches the fixture from internal navigation to an explicit privacy-hardened external link.",
         "binding": {
-          "kind": "input",
-          "publicName": "disabled",
-          "syntax": "property"
+          "kind": "fixture",
+          "target": "data",
+          "description": "Changes native href, target, and rel attributes; it is not a KrnLink input."
         }
-      },
-      {
-        "key": "download",
-        "label": "Download",
-        "kind": "text",
-        "defaultValue": "",
-        "testValue": "Alternate value",
-        "description": "Configures the component download contract.",
-        "binding": {
-          "kind": "input",
-          "publicName": "download",
-          "syntax": "property"
-        }
-      },
-      {
-        "key": "href",
-        "label": "Href",
-        "kind": "text",
-        "defaultValue": "/foundations",
-        "testValue": "#specimen-overview",
-        "description": "Configures the component href contract.",
-        "binding": {
-          "kind": "input",
-          "publicName": "href",
-          "syntax": "property"
-        }
-      },
-      {
-        "key": "rel",
-        "label": "Rel",
-        "kind": "text",
-        "defaultValue": "",
-        "testValue": "Alternate value",
-        "description": "Configures the component rel contract.",
-        "binding": {
-          "kind": "input",
-          "publicName": "rel",
-          "syntax": "property"
-        }
-      },
-      {
-        "key": "target",
-        "label": "Target",
-        "kind": "select",
-        "defaultValue": "_self",
-        "testValue": "_blank",
-        "description": "Configures the component target contract.",
-        "binding": {
-          "kind": "input",
-          "publicName": "target",
-          "syntax": "property"
-        },
-        "options": [
-          {
-            "label": "_self",
-            "value": "_self"
-          },
-          {
-            "label": "_blank",
-            "value": "_blank"
-          },
-          {
-            "label": "_parent",
-            "value": "_parent"
-          },
-          {
-            "label": "_top",
-            "value": "_top"
-          }
-        ]
       }
     ],
     "presets": [
@@ -389,35 +254,14 @@
         "scenario": "default",
         "visualPseudoState": "active",
         "args": {}
-      },
-      {
-        "id": "disabled",
-        "label": "Disabled",
-        "scenario": "default",
-        "args": {
-          "disabled": true
-        }
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 6,
-      "controlled": 5,
-      "excluded": 1,
+      "publicInputsAndModels": 0,
+      "controlled": 0,
+      "excluded": 0,
       "unclassified": 0
     },
-    "exclusions": [
-      {
-        "componentId": "link",
-        "publicName": "ariaLabel",
-        "kind": "input",
-        "type": "string",
-        "code": "accessibility-copy",
-        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
-        "evidence": {
-          "category": "a11y-test",
-          "pointer": "tests/a11y/accessibility.spec.ts#link"
-        }
-      }
-    ]
+    "exclusions": []
   }
 }

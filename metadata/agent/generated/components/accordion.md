@@ -58,6 +58,10 @@ void bootstrapApplication(KernAccordionAgentExample);
 | ----------- | ----- | -------- | -------- | ----------------------------------------- | ------------------------------------------------------------ |
 | `ariaLabel` | input | `string` | no       | `this.translations.dataDisplay.accordion` | Accessible name used when visible content is not sufficient. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

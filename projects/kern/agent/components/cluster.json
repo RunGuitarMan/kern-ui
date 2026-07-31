@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-cluster",
   "selectors": ["krn-cluster"],
+  "selectorDeprecations": [],
   "symbol": "KrnCluster",
   "canonicalSymbol": "KrnCluster",
   "canonicalId": "cluster",

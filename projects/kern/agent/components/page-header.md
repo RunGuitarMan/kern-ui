@@ -59,6 +59,10 @@ void bootstrapApplication(KernPageHeaderAgentExample);
 | `heading`     | input | `string` | yes      | `required` | Human-readable copy for the heading state or control.                  |
 | `description` | input | `string` | no       | `''`       | Visible supporting description for the component content.              |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `[krnPageHeaderMeta]` — Projects content matching [krnPageHeaderMeta].

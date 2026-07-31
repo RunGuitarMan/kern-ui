@@ -49,8 +49,12 @@ void bootstrapApplication(KernAspectRatioAgentExample);
 
 | Name    | Kind  | Type                                       | Required | Default   | Description                                                             |
 | ------- | ----- | ------------------------------------------ | -------- | --------- | ----------------------------------------------------------------------- |
-| `ratio` | input | `string \| number`                         | no       | `16 / 9`  | Required width-to-height ratio maintained by the layout.                |
-| `fit`   | input | `"none" \| "fill" \| "cover" \| "contain"` | no       | `'cover'` | Media fitting strategy used when intrinsic and container ratios differ. |
+| `ratio` | input | `number \| string`                         | no       | `16 / 9`  | Required width-to-height ratio maintained by the layout.                |
+| `fit`   | input | `"contain" \| "cover" \| "fill" \| "none"` | no       | `'cover'` | Media fitting strategy used when intrinsic and container ratios differ. |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 

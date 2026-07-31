@@ -49,6 +49,10 @@ void bootstrapApplication(KernDividerAgentExample);
 | `inset`       | input | `KrnLayoutSpace`             | no       | `'0'`          | Aligns the divider or content edge with surrounding inset content. |
 | `label`       | input | `string \| null`             | no       | `null`         | Visible text that names the control or data value.                 |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._

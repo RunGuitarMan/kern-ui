@@ -6,7 +6,7 @@
  */
 
 import * as i0 from '@angular/core';
-import { TemplateRef, Type, InjectionToken } from '@angular/core';
+import { TemplateRef, Type, InjectionToken, FactoryProvider } from '@angular/core';
 
 /**
  * Application-scoped, SSR-safe ID generation.
@@ -45,6 +45,49 @@ declare function isKrnTemplateContent<TContext>(
 declare function isKrnComponentContent<TComponent extends object>(
   content: KrnContent<unknown, TComponent>,
 ): content is Type<TComponent>;
+
+/**
+ * Creates a hierarchical immutable options contract.
+ *
+ * Defaults, inherited provider values, and provider patches must be plain
+ * records at runtime: objects with the ordinary `Object.prototype` (including
+ * cross-realm objects) or a null prototype. Arrays, functions, class instances,
+ * and built-in collection or asynchronous objects are rejected rather than
+ * silently losing their type. Only enumerable own data properties are accepted;
+ * non-enumerable properties and accessors, including symbol properties, are
+ * rejected without invoking getters.
+ *
+ * Providers merge their defined properties over the nearest parent scope.
+ * Component instance inputs can then apply their own final overrides without
+ * mutating the shared provider value.
+ *
+ * Immutability is deliberately shallow and top-level: each resolved record is
+ * cloned and frozen, while nested values retain their original identities and
+ * must be treated as immutable by their owners.
+ *
+ * @experimental This foundation remains experimental until it has been proven
+ * across multiple component families and their SSR and override contracts.
+ */
+declare function createKrnOptions<T extends object>(
+  description: string,
+  defaults: T,
+): readonly [
+  InjectionToken<Readonly<T>>,
+  (patch: Partial<T> | (() => Partial<T>)) => FactoryProvider,
+];
+
+/**
+ * Replaceable boundary for writing plain text to the system clipboard.
+ *
+ * The default writer prefers the asynchronous Clipboard API and only uses the
+ * Angular CDK fallback when that modern API is absent. Consumers can replace
+ * this token in tests or constrained rendering environments.
+ */
+interface KrnClipboardWriter {
+  writeText(value: string): Promise<void>;
+}
+/** Application-replaceable clipboard writer used by KERN copy affordances. */
+declare const KRN_CLIPBOARD_WRITER: InjectionToken<KrnClipboardWriter>;
 
 type KrnScheduledHandle = ReturnType<typeof globalThis.setTimeout>;
 /**
@@ -124,6 +167,14 @@ declare class KrnOverlayCoordinator {
     pane: HTMLElement,
     backdrop?: HTMLElement | null,
   ): void;
+  /**
+   * Returns whether an event/focus target belongs to an overlay opened from
+   * `owner`, including recursively nested overlay branches.
+   *
+   * This is the active-zone boundary used by non-modal connected overlays:
+   * moving focus or a pointer into a child dropdown must not close its parent.
+   */
+  isOwnedBy(owner: HTMLElement, target: EventTarget | null): boolean;
   focusInitial(panel: HTMLElement, initialFocus: KrnOverlayInitialFocus): void;
   private firstTabbable;
   private resolveRestoreFocus;
@@ -140,10 +191,12 @@ declare class KrnOverlayCoordinator {
 }
 
 export {
+  KRN_CLIPBOARD_WRITER,
   KRN_OVERLAY_HOST,
   KRN_PLATFORM,
   KrnIdService,
   KrnOverlayCoordinator,
+  createKrnOptions,
   isKrnComponentContent,
   isKrnTemplateContent,
   krnIsElement,
@@ -153,6 +206,7 @@ export {
   krnPrefersReducedMotion,
 };
 export type {
+  KrnClipboardWriter,
   KrnContent,
   KrnItemContentContext,
   KrnOverlayHostResolver,

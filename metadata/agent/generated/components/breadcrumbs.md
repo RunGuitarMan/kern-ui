@@ -58,6 +58,10 @@ void bootstrapApplication(KernBreadcrumbsAgentExample);
 | `showAllLabel`  | input  | `string`                           | no       | `this.translations.navigation.breadcrumbShowAll` | Human-readable copy for the show all state or control.                |
 | `itemActivated` | output | `KrnBreadcrumbItem`                | no       | `undefined`                                      | Notifies the consumer after the item activated interaction completes. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._
@@ -120,12 +124,12 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API     | Category           | Evidence                                                 | Reason                                                                                                                                                              |
-| -------------- | ------------------ | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#breadcrumbs` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `items`        | complex-data       | `specimen-fixture:preview/breadcrumbs?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
-| `moreLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#breadcrumbs` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `showAllLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#breadcrumbs` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| Public API     | Category           | Evidence                                                 | Reason                                                                                                                                                               |
+| -------------- | ------------------ | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#breadcrumbs` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `items`        | complex-data       | `specimen-fixture:preview/breadcrumbs?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
+| `moreLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#breadcrumbs` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `showAllLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#breadcrumbs` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 

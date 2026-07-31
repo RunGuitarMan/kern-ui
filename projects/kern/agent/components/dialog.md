@@ -71,6 +71,10 @@ void bootstrapApplication(KernDialogAgentExample);
 | `actionsTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`                              | Template used to render product-owned actions in the designated slot.    |
 | `closed`          | output | `KrnOverlayCloseReason`        | no       | `undefined`                         | Notifies the consumer after the closed interaction completes.            |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._
@@ -137,13 +141,13 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API        | Category           | Evidence                                                     | Reason                                                                                                                                                              |
-| ----------------- | ------------------ | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `actionsTemplate` | template           | `component-example:agent/components/dialog.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.                                                          |
-| `ariaLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#dialog`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `closeLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#dialog`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `contentTemplate` | template           | `component-example:agent/components/dialog.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.                                                          |
-| `initialFocus`    | dom-wiring         | `a11y-test:tests/a11y/accessibility.spec.ts#dialog`          | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.                                                       |
+| Public API        | Category           | Evidence                                                     | Reason                                                                                                                                                               |
+| ----------------- | ------------------ | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `actionsTemplate` | template           | `component-example:agent/components/dialog.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.                                                           |
+| `ariaLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#dialog`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `closeLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#dialog`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `contentTemplate` | template           | `component-example:agent/components/dialog.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.                                                           |
+| `initialFocus`    | dom-wiring         | `a11y-test:tests/a11y/accessibility.spec.ts#dialog`          | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.                                                        |
 
 Presets:
 

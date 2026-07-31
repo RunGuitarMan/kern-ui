@@ -55,19 +55,26 @@ void bootstrapApplication(KernRangeSliderAgentExample);
 
 ## API
 
-| Name          | Kind   | Type            | Required | Default                                | Description                                                                |
-| ------------- | ------ | --------------- | -------- | -------------------------------------- | -------------------------------------------------------------------------- |
-| `id`          | input  | `string`        | no       | `''`                                   | Stable identifier value used by the id contract.                           |
-| `label`       | input  | `string`        | no       | `this.translations.forms.range`        | Visible text that names the control or data value.                         |
-| `startLabel`  | input  | `string`        | no       | `this.translations.forms.minimumValue` | Human-readable copy for the start state or control.                        |
-| `endLabel`    | input  | `string`        | no       | `this.translations.forms.maximumValue` | Human-readable copy for the end state or control.                          |
-| `min`         | input  | `number`        | no       | `0`                                    | Smallest accepted numeric or temporal value.                               |
-| `max`         | input  | `number`        | no       | `100`                                  | Largest accepted numeric or temporal value.                                |
-| `step`        | input  | `number`        | no       | `1`                                    | Increment applied by keyboard and pointer value adjustments.               |
-| `disabled`    | input  | `boolean`       | no       | `false`                                | Prevents user interaction and participates in the disabled-state contract. |
-| `readonly`    | input  | `boolean`       | no       | `false`                                | Keeps the value perceivable while preventing user edits.                   |
-| `invalid`     | input  | `boolean`       | no       | `false`                                | Exposes an externally controlled invalid presentation state.               |
-| `valueChange` | output | `KrnRangeValue` | no       | `undefined`                            | Notifies the consumer after the value change interaction completes.        |
+| Name             | Kind   | Type                                       | Required | Default                                | Description                                                                |
+| ---------------- | ------ | ------------------------------------------ | -------- | -------------------------------------- | -------------------------------------------------------------------------- |
+| `id`             | input  | `string`                                   | no       | `''`                                   | Stable identifier value used by the id contract.                           |
+| `label`          | input  | `string`                                   | no       | `this.translations.forms.range`        | Visible text that names the control or data value.                         |
+| `startLabel`     | input  | `string`                                   | no       | `this.translations.forms.minimumValue` | Human-readable copy for the start state or control.                        |
+| `endLabel`       | input  | `string`                                   | no       | `this.translations.forms.maximumValue` | Human-readable copy for the end state or control.                          |
+| `min`            | input  | `number`                                   | no       | `0`                                    | Smallest accepted numeric or temporal value.                               |
+| `max`            | input  | `number`                                   | no       | `100`                                  | Largest accepted numeric or temporal value.                                |
+| `step`           | input  | `number`                                   | no       | `1`                                    | Increment applied by keyboard and pointer value adjustments.               |
+| `disabled`       | input  | `boolean`                                  | no       | `false`                                | Prevents user interaction and participates in the disabled-state contract. |
+| `readonly`       | input  | `boolean`                                  | no       | `false`                                | Keeps the value perceivable while preventing user edits.                   |
+| `invalid`        | input  | `boolean`                                  | no       | `false`                                | Exposes an externally controlled invalid presentation state.               |
+| `tabindex`       | input  | `number`                                   | no       | `0`                                    | Native sequential-focus order forwarded to the owned interactive element.  |
+| `value`          | input  | `KrnRangeValue \| undefined`               | no       | `undefined`                            | Controlled component value.                                                |
+| `valueFormatter` | input  | `((value: number) => string) \| undefined` | no       | `undefined`                            | Formats a domain value for visible and accessible presentation.            |
+| `valueChange`    | output | `KrnRangeValue`                            | no       | `undefined`                            | Notifies the consumer after the value change interaction completes.        |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -122,8 +129,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/range-slider`
 
 Scenarios: `default`.
-Public API coverage: 8/10
-directly controlled; 2 exact exclusions; 0 unclassified.
+Public API coverage: 9/13
+directly controlled; 4 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -139,13 +146,16 @@ component inputs or models.
 | `invalid`  | boolean | `false`         | `true`                      | input `invalid` (property)  | Exposes the invalid visual and ARIA state.        |
 | `id`       | text    | `""`            | `"Alternate value"`         | input `id` (property)       | Configures the component id contract.             |
 | `label`    | text    | `"Usage range"` | `"Usage range · alternate"` | input `label` (property)    | Configures the component label contract.          |
+| `tabindex` | number  | `0`             | `1`                         | input `tabindex` (property) | Configures the component tabindex contract.       |
 
 Exact API exclusions:
 
-| Public API   | Category           | Evidence                                                  | Reason                                                                                                                                                              |
-| ------------ | ------------------ | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `endLabel`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#range-slider` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `startLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#range-slider` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| Public API       | Category           | Evidence                                                           | Reason                                                                                                                                                               |
+| ---------------- | ------------------ | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `endLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#range-slider`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `startLabel`     | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#range-slider`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `value`          | complex-data       | `specimen-fixture:preview/range-slider?state=default`              | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                     |
+| `valueFormatter` | callback           | `component-example:agent/components/range-slider.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                   |
 
 Presets:
 

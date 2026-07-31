@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-copy-button",
   "selectors": ["krn-copy-button"],
+  "selectorDeprecations": [],
   "symbol": "KrnCopyButton",
   "canonicalSymbol": "KrnCopyButton",
   "canonicalId": "copy-button",
@@ -15,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Copy Button. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.",
+  "summary": "Copy Button. Copies one explicit string through an injectable clipboard capability and exposes deterministic pending, copied, and error feedback without removing its native button from focus order.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -28,6 +29,10 @@
     "hover",
     "focus-visible",
     "active",
+    "idle",
+    "pending",
+    "copied",
+    "error",
     "disabled"
   ],
   "lifecycle": {
@@ -56,8 +61,8 @@
       "type": "string",
       "required": true,
       "defaultValue": "required",
-      "description": "Controlled component value.",
-      "descriptionSource": "inferred"
+      "description": "Exact text captured once at activation and written to the clipboard.",
+      "descriptionSource": "source"
     },
     {
       "name": "ariaLabel",
@@ -65,9 +70,29 @@
       "kind": "input",
       "type": "string",
       "required": false,
-      "defaultValue": "this.translations.actions.copyToClipboard",
-      "description": "Accessible name used when visible content is not sufficient.",
-      "descriptionSource": "inferred"
+      "defaultValue": "''",
+      "description": "Optional accessible-name override for the inner native button.\n\nLeave empty to derive the name from the visible action label. When set,\ninclude that visible label in the override.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "copyLabel",
+      "property": "copyLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.labels.copy",
+      "description": "Localized visible fallback used only when no action label is projected.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "copyingLabel",
+      "property": "copyingLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.labels.copying",
+      "description": "Loading announcement while the asynchronous write is in flight.",
+      "descriptionSource": "source"
     },
     {
       "name": "copiedLabel",
@@ -75,9 +100,9 @@
       "kind": "input",
       "type": "string",
       "required": false,
-      "defaultValue": "this.translations.actions.copied",
-      "description": "Human-readable copy for the copied state or control.",
-      "descriptionSource": "inferred"
+      "defaultValue": "this.labels.copied",
+      "description": "Success announcement paired with the visible success indicator.",
+      "descriptionSource": "source"
     },
     {
       "name": "errorLabel",
@@ -85,9 +110,9 @@
       "kind": "input",
       "type": "string",
       "required": false,
-      "defaultValue": "this.translations.actions.copyFailed",
-      "description": "Human-readable copy for the error state or control.",
-      "descriptionSource": "inferred"
+      "defaultValue": "this.labels.failed",
+      "description": "Failure announcement paired with the visible error indicator.",
+      "descriptionSource": "source"
     },
     {
       "name": "size",
@@ -95,9 +120,39 @@
       "kind": "input",
       "type": "KrnSize",
       "required": false,
-      "defaultValue": "'md'",
+      "defaultValue": "this.options.size",
       "description": "Named semantic size resolved through KERN density and sizing tokens.",
       "descriptionSource": "inferred"
+    },
+    {
+      "name": "variant",
+      "property": "variant",
+      "kind": "input",
+      "type": "KrnActionVariant",
+      "required": false,
+      "defaultValue": "this.options.variant",
+      "description": "Named visual hierarchy treatment that preserves the component semantics.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "tone",
+      "property": "tone",
+      "kind": "input",
+      "type": "KrnTone",
+      "required": false,
+      "defaultValue": "this.options.tone",
+      "description": "Semantic intent that selects coordinated text, icon, border, and surface tokens.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "feedbackDuration",
+      "property": "feedbackDuration",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "this.options.feedbackDuration",
+      "description": "Milliseconds before settled feedback returns to idle.\n\nInvalid or negative values fall back to the library default.",
+      "descriptionSource": "source"
     },
     {
       "name": "disabled",
@@ -116,8 +171,8 @@
       "type": "string",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Notifies the consumer after the copied interaction completes.",
-      "descriptionSource": "inferred"
+      "description": "Emits the exact captured value only after the clipboard writer confirms success.",
+      "descriptionSource": "source"
     },
     {
       "name": "copyError",
@@ -126,8 +181,8 @@
       "type": "unknown",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Notifies the consumer after the copy error interaction completes.",
-      "descriptionSource": "inferred"
+      "description": "Emits the original writer failure without masking or replacing its identity.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [
@@ -149,11 +204,15 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Enter / Space activates", "Tab follows document order"],
+    "keyboard": [
+      "Tab focuses the inner native button",
+      "Enter and Space start one clipboard operation",
+      "A pending operation retains focus and suppresses duplicate activation"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The visible action label supplies a stable accessible name; an explicit ariaLabel override must include that visible label.",
+      "One persistent polite sibling status announces pending, copied, and error copy without relying on descendants of the native button.",
+      "The inner native button defaults to type=\"button\" and disabled uses native button semantics."
     ],
     "manualValidationRequired": true
   },
@@ -173,36 +232,51 @@
       "title": "Copy immutable record id",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Copy immutable record id\n *\n * Copy a visible domain identifier with explicit accessible feedback.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCopyButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-copy-button-agent-example',\n  standalone: true,\n  imports: [KrnCopyButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-copy-button value=\"CUS-2048\" ariaLabel=\"Copy customer id\"> CUS-2048 </krn-copy-button>\n  `,\n})\nexport class KernCopyButtonAgentExample {}\n\nvoid bootstrapApplication(KernCopyButtonAgentExample);\n",
+      "code": "/**\n * Copy immutable record id\n *\n * Copy an explicit domain identifier, localize its accessible context, and consume confirmed outcomes.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCopyButton, provideKrnCopyButtonOptions } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-copy-button-agent-example',\n  standalone: true,\n  imports: [KrnCopyButton],\n  providers: [\n    provideKrnCopyButtonOptions({\n      size: 'sm',\n      feedbackDuration: 2400,\n    }),\n  ],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-copy-button\n      [value]=\"customerId\"\n      (copied)=\"lastResult = 'Copied ' + $event\"\n      (copyError)=\"lastResult = 'Customer id copy failed'\"\n    >\n      Copy customer id {{ customerId }}\n    </krn-copy-button>\n    <output>{{ lastResult }}</output>\n  `,\n})\nexport class KernCopyButtonAgentExample {\n  readonly customerId = 'CUS-2048';\n\n  lastResult = '';\n}\n\nvoid bootstrapApplication(KernCopyButtonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/copy-button.ts"
     }
   ],
-  "related": ["button", "icon-button", "button-group", "split-button"],
+  "related": ["button", "icon-button", "code-block", "button-group", "split-button"],
   "keywords": [
     "copy-button",
     "Copy Button",
     "Actions",
     "krn-copy-button",
     "KrnCopyButton",
+    "clipboard action",
+    "copy feedback",
+    "deterministic async state",
+    "scoped options",
+    "localized status",
     "value",
     "ariaLabel",
+    "copyLabel",
+    "copyingLabel",
     "copiedLabel",
     "errorLabel",
     "size",
+    "variant",
+    "tone",
+    "feedbackDuration",
     "disabled",
     "copied",
     "copyError"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Pass the exact value, provide a context-specific visible action label, and handle copied or copyError when product behavior depends on the result.",
+    "avoidWhen": "Do not scrape projected DOM text, mutate navigator.clipboard in tests, or trigger another operation while data-pending=\"true\"."
   },
   "commonMistakes": [
     "Do not omit required inputs: `value`.",
     "Importing from an undeclared family path or a source implementation file.",
     "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
-    "Assuming the documentation SSR build replaces validation of the consuming application."
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Pass the exact immutable value to copy; do not derive clipboard data from formatted or visually hidden DOM text.",
+    "Let the visible action label provide the accessible name. If ariaLabel is necessary, keep the complete visible label inside that override.",
+    "Treat copied and copyError as terminal operation results. While data-pending=\"true\", Copy Button retains focus and suppresses duplicate activation.",
+    "Use provideKrnCopyButtonOptions for inheritable visual and feedback-duration defaults, and use KRN_COPY_LABELS only for a narrow locale boundary.",
+    "Override KRN_CLIPBOARD_WRITER for tests or a platform bridge; do not mutate navigator.clipboard or add document-wide copy listeners."
   ],
   "checklist": [
     "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
@@ -222,17 +296,74 @@
     "scenarios": ["default"],
     "controls": [
       {
-        "key": "disabled",
-        "label": "Disabled",
-        "kind": "boolean",
-        "defaultValue": false,
-        "testValue": true,
-        "description": "Prevents user interaction.",
+        "key": "variant",
+        "label": "Variant",
+        "kind": "select",
+        "defaultValue": "outline",
+        "testValue": "solid",
+        "description": "Changes visual emphasis without changing clipboard behavior.",
         "binding": {
           "kind": "input",
-          "publicName": "disabled",
+          "publicName": "variant",
           "syntax": "property"
-        }
+        },
+        "options": [
+          {
+            "label": "solid",
+            "value": "solid"
+          },
+          {
+            "label": "soft",
+            "value": "soft"
+          },
+          {
+            "label": "outline",
+            "value": "outline"
+          },
+          {
+            "label": "ghost",
+            "value": "ghost"
+          }
+        ]
+      },
+      {
+        "key": "tone",
+        "label": "Tone",
+        "kind": "select",
+        "defaultValue": "neutral",
+        "testValue": "brand",
+        "description": "Changes semantic action emphasis without becoming copy-result feedback.",
+        "binding": {
+          "kind": "input",
+          "publicName": "tone",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "neutral",
+            "value": "neutral"
+          },
+          {
+            "label": "brand",
+            "value": "brand"
+          },
+          {
+            "label": "info",
+            "value": "info"
+          },
+          {
+            "label": "success",
+            "value": "success"
+          },
+          {
+            "label": "warning",
+            "value": "warning"
+          },
+          {
+            "label": "danger",
+            "value": "danger"
+          }
+        ]
       },
       {
         "key": "size",
@@ -240,7 +371,7 @@
         "kind": "select",
         "defaultValue": "md",
         "testValue": "sm",
-        "description": "Semantic component size.",
+        "description": "Changes the action target and label size.",
         "binding": {
           "kind": "input",
           "publicName": "size",
@@ -262,17 +393,81 @@
         ]
       },
       {
+        "key": "feedbackDuration",
+        "label": "Feedback duration",
+        "kind": "number",
+        "defaultValue": 1800,
+        "testValue": 1900,
+        "description": "Keeps copied or error feedback visible for this many milliseconds.",
+        "binding": {
+          "kind": "input",
+          "publicName": "feedbackDuration",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 60000,
+        "step": 100
+      },
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Prevents user interaction.",
+        "binding": {
+          "kind": "input",
+          "publicName": "disabled",
+          "syntax": "property"
+        }
+      },
+      {
         "key": "value",
         "label": "Value",
         "kind": "text",
         "defaultValue": "npm i @kern-ui/angular",
         "testValue": "npm i @kern-ui/angular · alternate",
-        "description": "Controlled component value.",
+        "description": "Supplies the exact immutable string sent to the clipboard writer.",
         "binding": {
           "kind": "input",
           "publicName": "value",
           "syntax": "property"
         }
+      },
+      {
+        "key": "copyState",
+        "label": "Operation state",
+        "kind": "select",
+        "defaultValue": "live",
+        "testValue": "idle",
+        "description": "Uses the live clipboard by default or a deterministic specimen writer for async states.",
+        "binding": {
+          "kind": "fixture",
+          "target": "interaction",
+          "description": "Selects a deterministic clipboard-writer outcome; it is not a component input."
+        },
+        "options": [
+          {
+            "label": "live",
+            "value": "live"
+          },
+          {
+            "label": "idle",
+            "value": "idle"
+          },
+          {
+            "label": "pending",
+            "value": "pending"
+          },
+          {
+            "label": "copied",
+            "value": "copied"
+          },
+          {
+            "label": "error",
+            "value": "error"
+          }
+        ]
       }
     ],
     "presets": [
@@ -373,6 +568,40 @@
         "args": {}
       },
       {
+        "id": "idle",
+        "label": "Idle",
+        "scenario": "default",
+        "args": {
+          "copyState": "idle"
+        }
+      },
+      {
+        "id": "pending",
+        "label": "Pending",
+        "scenario": "default",
+        "args": {
+          "copyState": "pending"
+        }
+      },
+      {
+        "id": "copied",
+        "label": "Copied",
+        "scenario": "default",
+        "args": {
+          "copyState": "copied",
+          "feedbackDuration": 60000
+        }
+      },
+      {
+        "id": "error",
+        "label": "Error",
+        "scenario": "default",
+        "args": {
+          "copyState": "error",
+          "feedbackDuration": 60000
+        }
+      },
+      {
         "id": "disabled",
         "label": "Disabled",
         "scenario": "default",
@@ -382,9 +611,9 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 6,
-      "controlled": 3,
-      "excluded": 3,
+      "publicInputsAndModels": 11,
+      "controlled": 6,
+      "excluded": 5,
       "unclassified": 0
     },
     "exclusions": [
@@ -406,7 +635,31 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#copy-button"
+        }
+      },
+      {
+        "componentId": "copy-button",
+        "publicName": "copyingLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#copy-button"
+        }
+      },
+      {
+        "componentId": "copy-button",
+        "publicName": "copyLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#copy-button"
@@ -418,7 +671,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#copy-button"

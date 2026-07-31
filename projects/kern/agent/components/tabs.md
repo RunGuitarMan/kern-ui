@@ -62,6 +62,10 @@ void bootstrapApplication(KernTabsAgentExample);
 | `orientation` | input | `KrnNavigationOrientation`  | no       | `this.host.nativeElement.localName === 'krn-vertical-tabs' ? 'vertical' : 'horizontal'` | Defines the logical axis used by layout and keyboard navigation. |
 | `ariaLabel`   | input | `string`                    | no       | `this.translations.navigation.sections`                                                 | Accessible name used when visible content is not sufficient.     |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-color-picker",
   "selectors": ["krn-color-picker"],
+  "selectorDeprecations": [],
   "symbol": "KrnColorPicker",
   "canonicalSymbol": "KrnColorPicker",
   "canonicalId": "color-picker",
@@ -110,6 +111,26 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "ariaLabelledBy",
+      "property": "ariaLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that provide the accessible name and take precedence over ariaLabel.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaDescribedBy",
+      "property": "ariaDescribedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids composed with Form Field hints and validation descriptions.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "disabled",
       "property": "disabled",
       "kind": "input",
@@ -137,6 +158,36 @@
       "required": false,
       "defaultValue": "false",
       "description": "Exposes an externally controlled invalid presentation state.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "tabindex",
+      "property": "tabIndex",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Native sequential-focus order forwarded to the owned interactive element.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "value",
+      "property": "value",
+      "kind": "input",
+      "type": "string | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controlled component value.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "open",
+      "property": "open",
+      "kind": "model",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controls whether the disclosure or overlay surface is visible.",
       "descriptionSource": "inferred"
     },
     {
@@ -208,9 +259,14 @@
     "labels",
     "pickerLabel",
     "textLabel",
+    "ariaLabelledBy",
+    "ariaDescribedBy",
     "disabled",
     "readonly",
     "invalid",
+    "tabindex",
+    "value",
+    "open",
     "valueChange"
   ],
   "guidance": {
@@ -281,6 +337,18 @@
         }
       },
       {
+        "key": "open",
+        "label": "Open",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Controlled disclosure or overlay state.",
+        "binding": {
+          "kind": "model",
+          "publicName": "open"
+        }
+      },
+      {
         "key": "readonly",
         "label": "Readonly",
         "kind": "boolean",
@@ -290,6 +358,35 @@
         "binding": {
           "kind": "input",
           "publicName": "readonly",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "tabindex",
+        "label": "Tabindex",
+        "kind": "number",
+        "defaultValue": 0,
+        "testValue": 1,
+        "description": "Configures the component tabindex contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "tabindex",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 10000,
+        "step": 1
+      },
+      {
+        "key": "value",
+        "label": "Value",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Controlled component value.",
+        "binding": {
+          "kind": "input",
+          "publicName": "value",
           "syntax": "property"
         }
       }
@@ -447,7 +544,9 @@
         "id": "closed",
         "label": "closed",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "open": false
+        },
         "fixtureEffect": {
           "kind": "status",
           "mode": "neutral",
@@ -457,14 +556,10 @@
       },
       {
         "id": "open",
-        "label": "open",
+        "label": "Open",
         "scenario": "default",
-        "args": {},
-        "fixtureEffect": {
-          "kind": "status",
-          "mode": "info",
-          "label": "open",
-          "description": "The fixture exposes the open status without claiming a public component input."
+        "args": {
+          "open": true
         }
       },
       {
@@ -493,12 +588,36 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 7,
-      "controlled": 4,
-      "excluded": 3,
+      "publicInputsAndModels": 12,
+      "controlled": 7,
+      "excluded": 5,
       "unclassified": 0
     },
     "exclusions": [
+      {
+        "componentId": "color-picker",
+        "publicName": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#color-picker"
+        }
+      },
+      {
+        "componentId": "color-picker",
+        "publicName": "ariaLabelledBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#color-picker"
+        }
+      },
       {
         "componentId": "color-picker",
         "publicName": "labels",
@@ -517,7 +636,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#color-picker"
@@ -529,7 +648,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#color-picker"

@@ -11,6 +11,7 @@
       "owns": ["lib/cdk"],
       "dependencies": [],
       "identityExports": [
+        "KRN_CLIPBOARD_WRITER",
         "KRN_OVERLAY_HOST",
         "KRN_PLATFORM",
         "KrnIdService",
@@ -18,12 +19,21 @@
       ]
     },
     {
+      "name": "i18n",
+      "subpath": "./i18n",
+      "sourceRoot": "projects/kern/i18n/src",
+      "publicApi": "projects/kern/i18n/src/public-api.ts",
+      "owns": ["lib/copy-labels.ts", "lib/loading-label.ts", "lib/more-actions-label.ts"],
+      "dependencies": [],
+      "identityExports": ["KRN_COPY_LABELS", "KRN_LOADING_LABEL", "KRN_MORE_ACTIONS_LABEL"]
+    },
+    {
       "name": "core",
       "subpath": "./core",
       "sourceRoot": "projects/kern/core/src",
       "publicApi": "projects/kern/core/src/public-api.ts",
       "owns": ["lib/core", "lib/foundations"],
-      "dependencies": ["cdk"],
+      "dependencies": ["cdk", "i18n"],
       "identityExports": [
         "KRN_CONFIG",
         "KRN_DIRECTION",
@@ -48,7 +58,7 @@
         "lib/layout",
         "lib/navigation"
       ],
-      "dependencies": ["cdk", "core"],
+      "dependencies": ["cdk", "core", "i18n"],
       "identityExports": ["KrnButton", "KrnCard", "KrnFormField", "KrnSelect", "KrnToastService"]
     },
     {

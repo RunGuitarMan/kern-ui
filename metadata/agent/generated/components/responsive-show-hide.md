@@ -53,6 +53,10 @@ void bootstrapApplication(KernResponsiveShowHideAgentExample);
 | `until`   | input | `KrnResponsiveBreakpoint` | no       | `'none'`  | Ending boundary of the represented range or interval.          |
 | `display` | input | `KrnResponsiveDisplay`    | no       | `'block'` | Named presentation strategy used to render the supplied value. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

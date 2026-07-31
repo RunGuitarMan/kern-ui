@@ -55,6 +55,10 @@ void bootstrapApplication(KernHeaderAgentExample);
 | `sticky`   | input | `boolean`        | no       | `true`   | Keeps the surface attached to its scrolling boundary while content moves.     |
 | `elevated` | input | `boolean`        | no       | `false`  | Adds semantic surface elevation for content that sits above its surroundings. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `[krnHeaderStart]` — Projects content matching [krnHeaderStart].

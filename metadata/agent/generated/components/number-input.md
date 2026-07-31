@@ -54,23 +54,32 @@ void bootstrapApplication(KernNumberInputAgentExample);
 
 ## API
 
-| Name            | Kind   | Type                  | Required | Default                                 | Description                                                                |
-| --------------- | ------ | --------------------- | -------- | --------------------------------------- | -------------------------------------------------------------------------- |
-| `id`            | input  | `string`              | no       | `''`                                    | Stable identifier value used by the id contract.                           |
-| `name`          | input  | `string`              | no       | `''`                                    | Required human-readable name for the represented person, item, or action.  |
-| `placeholder`   | input  | `string`              | no       | `''`                                    | Short input hint shown only while no value is present.                     |
-| `ariaLabel`     | input  | `string`              | no       | `''`                                    | Accessible name used when visible content is not sufficient.               |
-| `increaseLabel` | input  | `string`              | no       | `this.translations.forms.increaseValue` | Human-readable copy for the increase state or control.                     |
-| `decreaseLabel` | input  | `string`              | no       | `this.translations.forms.decreaseValue` | Human-readable copy for the decrease state or control.                     |
-| `min`           | input  | `number \| undefined` | no       | `undefined`                             | Smallest accepted numeric or temporal value.                               |
-| `max`           | input  | `number \| undefined` | no       | `undefined`                             | Largest accepted numeric or temporal value.                                |
-| `step`          | input  | `number`              | no       | `1`                                     | Increment applied by keyboard and pointer value adjustments.               |
-| `showSteppers`  | input  | `boolean`             | no       | `true`                                  | Controls whether the component applies the show steppers behavior.         |
-| `disabled`      | input  | `boolean`             | no       | `false`                                 | Prevents user interaction and participates in the disabled-state contract. |
-| `readonly`      | input  | `boolean`             | no       | `false`                                 | Keeps the value perceivable while preventing user edits.                   |
-| `required`      | input  | `boolean`             | no       | `false`                                 | Marks the value as required and participates in Angular Forms validation.  |
-| `invalid`       | input  | `boolean`             | no       | `false`                                 | Exposes an externally controlled invalid presentation state.               |
-| `valueChange`   | output | `number \| null`      | no       | `undefined`                             | Notifies the consumer after the value change interaction completes.        |
+| Name              | Kind   | Type                          | Required | Default                                 | Description                                                                                      |
+| ----------------- | ------ | ----------------------------- | -------- | --------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`                      | no       | `''`                                    | Stable identifier value used by the id contract.                                                 |
+| `name`            | input  | `string`                      | no       | `''`                                    | Required human-readable name for the represented person, item, or action.                        |
+| `placeholder`     | input  | `string`                      | no       | `''`                                    | Short input hint shown only while no value is present.                                           |
+| `ariaLabel`       | input  | `string`                      | no       | `''`                                    | Accessible name used when visible content is not sufficient.                                     |
+| `ariaLabelledBy`  | input  | `string`                      | no       | `''`                                    | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`                      | no       | `''`                                    | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `autocomplete`    | input  | `string`                      | no       | `'off'`                                 | Native autocomplete purpose forwarded to the editable control.                                   |
+| `inputMode`       | input  | `KrnInputMode`                | no       | `'decimal'`                             | Virtual-keyboard hint forwarded to the editable control.                                         |
+| `value`           | input  | `number \| null \| undefined` | no       | `undefined`                             | Controlled component value.                                                                      |
+| `increaseLabel`   | input  | `string`                      | no       | `this.translations.forms.increaseValue` | Human-readable copy for the increase state or control.                                           |
+| `decreaseLabel`   | input  | `string`                      | no       | `this.translations.forms.decreaseValue` | Human-readable copy for the decrease state or control.                                           |
+| `min`             | input  | `number \| undefined`         | no       | `undefined`                             | Smallest accepted numeric or temporal value.                                                     |
+| `max`             | input  | `number \| undefined`         | no       | `undefined`                             | Largest accepted numeric or temporal value.                                                      |
+| `step`            | input  | `number`                      | no       | `1`                                     | Increment applied by keyboard and pointer value adjustments.                                     |
+| `showSteppers`    | input  | `boolean`                     | no       | `true`                                  | Controls whether the component applies the show steppers behavior.                               |
+| `disabled`        | input  | `boolean`                     | no       | `false`                                 | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean`                     | no       | `false`                                 | Keeps the value perceivable while preventing user edits.                                         |
+| `required`        | input  | `boolean`                     | no       | `false`                                 | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`         | input  | `boolean`                     | no       | `false`                                 | Exposes an externally controlled invalid presentation state.                                     |
+| `valueChange`     | output | `number \| null`              | no       | `undefined`                             | Notifies the consumer after the value change interaction completes.                              |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -126,34 +135,39 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/number-input`
 
 Scenarios: `default`.
-Public API coverage: 10/14
-directly controlled; 4 exact exclusions; 0 unclassified.
+Public API coverage: 12/19
+directly controlled; 7 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument       | Control | Default | Test value          | Binding                         | Description                                       |
-| -------------- | ------- | ------- | ------------------- | ------------------------------- | ------------------------------------------------- |
-| `min`          | number  | `1`     | `2`                 | input `min` (property)          | Sets the lowest accepted value.                   |
-| `max`          | number  | `500`   | `501`               | input `max` (property)          | Sets the highest accepted value.                  |
-| `step`         | number  | `5`     | `6`                 | input `step` (property)         | Sets the keyboard and stepper increment.          |
-| `showSteppers` | boolean | `true`  | `false`             | input `showSteppers` (property) | Shows increment and decrement actions.            |
-| `disabled`     | boolean | `false` | `true`              | input `disabled` (property)     | Prevents user interaction.                        |
-| `readOnly`     | boolean | `false` | `true`              | input `readonly` (property)     | Keeps the value focusable while preventing edits. |
-| `required`     | boolean | `false` | `true`              | input `required` (property)     | Marks the control as required.                    |
-| `invalid`      | boolean | `false` | `true`              | input `invalid` (property)      | Exposes the invalid visual and ARIA state.        |
-| `id`           | text    | `""`    | `"Alternate value"` | input `id` (property)           | Configures the component id contract.             |
-| `placeholder`  | text    | `""`    | `"Alternate value"` | input `placeholder` (property)  | Configures the component placeholder contract.    |
+| Argument       | Control | Default     | Test value          | Binding                         | Description                                       |
+| -------------- | ------- | ----------- | ------------------- | ------------------------------- | ------------------------------------------------- |
+| `min`          | number  | `1`         | `2`                 | input `min` (property)          | Sets the lowest accepted value.                   |
+| `max`          | number  | `500`       | `501`               | input `max` (property)          | Sets the highest accepted value.                  |
+| `step`         | number  | `5`         | `6`                 | input `step` (property)         | Sets the keyboard and stepper increment.          |
+| `showSteppers` | boolean | `true`      | `false`             | input `showSteppers` (property) | Shows increment and decrement actions.            |
+| `disabled`     | boolean | `false`     | `true`              | input `disabled` (property)     | Prevents user interaction.                        |
+| `readOnly`     | boolean | `false`     | `true`              | input `readonly` (property)     | Keeps the value focusable while preventing edits. |
+| `required`     | boolean | `false`     | `true`              | input `required` (property)     | Marks the control as required.                    |
+| `invalid`      | boolean | `false`     | `true`              | input `invalid` (property)      | Exposes the invalid visual and ARIA state.        |
+| `autocomplete` | text    | `"off"`     | `"off · alternate"` | input `autocomplete` (property) | Configures the component autocomplete contract.   |
+| `id`           | text    | `""`        | `"Alternate value"` | input `id` (property)           | Configures the component id contract.             |
+| `inputMode`    | select  | `"decimal"` | `"none"`            | input `inputMode` (property)    | Configures the component inputMode contract.      |
+| `placeholder`  | text    | `""`        | `"Alternate value"` | input `placeholder` (property)  | Configures the component placeholder contract.    |
 
 Exact API exclusions:
 
-| Public API      | Category           | Evidence                                                                 | Reason                                                                                                                                                              |
-| --------------- | ------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel`     | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#number-input`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `decreaseLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#number-input`                | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `increaseLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#number-input`                | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `name`          | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#number-input` | Form submission field names do not alter the rendered component and are covered by forms integration tests.                                                         |
+| Public API        | Category           | Evidence                                                                 | Reason                                                                                                                                                               |
+| ----------------- | ------------------ | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#number-input`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `ariaLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#number-input`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `ariaLabelledBy`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#number-input`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `decreaseLabel`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#number-input`                | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `increaseLabel`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#number-input`                | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `name`            | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#number-input` | Form submission field names do not alter the rendered component and are covered by forms integration tests.                                                          |
+| `value`           | complex-data       | `specimen-fixture:preview/number-input?state=default`                    | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                     |
 
 Presets:
 

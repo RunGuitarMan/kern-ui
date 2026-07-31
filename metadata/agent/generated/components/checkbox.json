@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-checkbox",
   "selectors": ["krn-checkbox"],
+  "selectorDeprecations": [],
   "symbol": "KrnCheckbox",
   "canonicalSymbol": "KrnCheckbox",
   "canonicalId": "checkbox",
@@ -87,6 +88,16 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "checked",
+      "property": "checked",
+      "kind": "input",
+      "type": "boolean | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controlled checked state rendered by the native choice control.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "ariaLabel",
       "property": "ariaLabel",
       "kind": "input",
@@ -94,6 +105,26 @@
       "required": false,
       "defaultValue": "''",
       "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabelledBy",
+      "property": "ariaLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that provide the accessible name and take precedence over ariaLabel.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaDescribedBy",
+      "property": "ariaDescribedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids composed with Form Field hints and validation descriptions.",
       "descriptionSource": "inferred"
     },
     {
@@ -157,6 +188,16 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "tabindex",
+      "property": "tabIndex",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Native sequential-focus order forwarded to the owned interactive element.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "checkedChange",
       "property": "checkedChange",
       "kind": "output",
@@ -164,6 +205,16 @@
       "required": false,
       "defaultValue": "undefined",
       "description": "Notifies the consumer after the checked change interaction completes.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "indeterminateChange",
+      "property": "indeterminateChange",
+      "kind": "output",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Notifies the consumer after the indeterminate change interaction completes.",
       "descriptionSource": "inferred"
     }
   ],
@@ -178,7 +229,7 @@
   "forms": {
     "controlValueAccessor": true,
     "validator": true,
-    "valueType": "boolean",
+    "valueType": "boolean | null",
     "reactiveForms": true,
     "templateDrivenForms": true,
     "stateInputs": ["disabled", "readonly", "required", "invalid"],
@@ -231,14 +282,19 @@
     "id",
     "name",
     "value",
+    "checked",
     "ariaLabel",
+    "ariaLabelledBy",
+    "ariaDescribedBy",
     "description",
     "disabled",
     "readonly",
     "required",
     "invalid",
     "indeterminate",
-    "checkedChange"
+    "tabindex",
+    "checkedChange",
+    "indeterminateChange"
   ],
   "guidance": {
     "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
@@ -347,6 +403,19 @@
         }
       },
       {
+        "key": "checked",
+        "label": "Checked",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Configures the component checked contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "checked",
+          "syntax": "property"
+        }
+      },
+      {
         "key": "description",
         "label": "Description",
         "kind": "text",
@@ -371,6 +440,22 @@
           "publicName": "id",
           "syntax": "property"
         }
+      },
+      {
+        "key": "tabindex",
+        "label": "Tabindex",
+        "kind": "number",
+        "defaultValue": 0,
+        "testValue": 1,
+        "description": "Configures the component tabindex contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "tabindex",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 10000,
+        "step": 1
       },
       {
         "key": "value",
@@ -571,15 +656,39 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 10,
-      "controlled": 8,
-      "excluded": 2,
+      "publicInputsAndModels": 14,
+      "controlled": 10,
+      "excluded": 4,
       "unclassified": 0
     },
     "exclusions": [
       {
         "componentId": "checkbox",
+        "publicName": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#checkbox"
+        }
+      },
+      {
+        "componentId": "checkbox",
         "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#checkbox"
+        }
+      },
+      {
+        "componentId": "checkbox",
+        "publicName": "ariaLabelledBy",
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",

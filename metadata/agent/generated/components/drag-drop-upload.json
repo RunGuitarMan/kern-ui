@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-drag-drop-upload",
   "selectors": ["krn-drop-upload", "krn-drag-drop-upload"],
+  "selectorDeprecations": [],
   "symbol": "KrnDragDropUpload",
   "canonicalSymbol": "KrnDropUpload",
   "canonicalId": "drag-drop-upload",
@@ -203,6 +204,46 @@
       "defaultValue": "this.translations.forms.dropFilesHere",
       "description": "Human-readable copy for the drop state or control.",
       "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabelledBy",
+      "property": "ariaLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that provide the accessible name and take precedence over ariaLabel.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaDescribedBy",
+      "property": "ariaDescribedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids composed with Form Field hints and validation descriptions.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "tabindex",
+      "property": "tabIndex",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Native sequential-focus order forwarded to the owned interactive element.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "value",
+      "property": "value",
+      "kind": "input",
+      "type": "ReadonlyArray<File> | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controlled component value.",
+      "descriptionSource": "inferred"
     }
   ],
   "slots": [],
@@ -238,7 +279,8 @@
     "evidenceScope": "library-docs-route-smoke",
     "notes": [
       "KERN avoids ambient browser globals in reusable runtime infrastructure.",
-      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+      "Browser capabilities are nullable or become available only after hydration."
     ]
   },
   "examples": [
@@ -274,7 +316,11 @@
     "invalid",
     "filesChange",
     "rejected",
-    "dropLabel"
+    "dropLabel",
+    "ariaLabelledBy",
+    "ariaDescribedBy",
+    "tabindex",
+    "value"
   ],
   "guidance": {
     "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
@@ -452,6 +498,22 @@
           "publicName": "required",
           "syntax": "property"
         }
+      },
+      {
+        "key": "tabindex",
+        "label": "Tabindex",
+        "kind": "number",
+        "defaultValue": 0,
+        "testValue": 1,
+        "description": "Configures the component tabindex contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "tabindex",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 10000,
+        "step": 1
       }
     ],
     "presets": [
@@ -613,19 +675,43 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 13,
-      "controlled": 11,
-      "excluded": 2,
+      "publicInputsAndModels": 17,
+      "controlled": 12,
+      "excluded": 5,
       "unclassified": 0
     },
     "exclusions": [
+      {
+        "componentId": "drag-drop-upload",
+        "publicName": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#drag-drop-upload"
+        }
+      },
+      {
+        "componentId": "drag-drop-upload",
+        "publicName": "ariaLabelledBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#drag-drop-upload"
+        }
+      },
       {
         "componentId": "drag-drop-upload",
         "publicName": "dropLabel",
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#drag-drop-upload"
@@ -641,6 +727,18 @@
         "evidence": {
           "category": "locale-preview",
           "pointer": "preview/drag-drop-upload?locale=ru-RU"
+        }
+      },
+      {
+        "componentId": "drag-drop-upload",
+        "publicName": "value",
+        "kind": "input",
+        "type": "ReadonlyArray<File> | undefined",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/drag-drop-upload?state=default"
         }
       }
     ]

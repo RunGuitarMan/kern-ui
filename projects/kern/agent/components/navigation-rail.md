@@ -57,7 +57,11 @@ void bootstrapApplication(KernNavigationRailAgentExample);
 | `width`         | input | `KrnLayoutSpace`   | no       | `'var(--krn-shell-rail-width, 3.5rem)'`      | Explicit inline size of the rendered surface.                       |
 | `expandedWidth` | input | `KrnLayoutSpace`   | no       | `'14rem'`                                    | Controls whether the component applies the expanded width behavior. |
 | `ariaLabel`     | input | `string`           | no       | `this.translations.layout.primaryNavigation` | Accessible name used when visible content is not sufficient.        |
-| `side`          | input | `"start" \| "end"` | no       | `'start'`                                    | Logical side on which the anchored or modal surface is placed.      |
+| `side`          | input | `"end" \| "start"` | no       | `'start'`                                    | Logical side on which the anchored or modal surface is placed.      |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 

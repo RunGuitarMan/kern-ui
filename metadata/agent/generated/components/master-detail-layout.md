@@ -65,6 +65,10 @@ void bootstrapApplication(KernMasterDetailLayoutAgentExample);
 | `detailLabel` | input | `string`  | no       | `this.translations.patterns.detail`     | Human-readable copy for the detail state or control.                      |
 | `detailOpen`  | model | `boolean` | no       | `false`                                 | Controlled detail open state with a matching Angular model-change output. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `[krnMaster]` — Projects content matching [krnMaster].
@@ -124,10 +128,10 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API    | Category           | Evidence                                                          | Reason                                                                                                                                                              |
-| ------------- | ------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `detailLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#master-detail-layout` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `masterLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#master-detail-layout` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| Public API    | Category           | Evidence                                                          | Reason                                                                                                                                                               |
+| ------------- | ------------------ | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `detailLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#master-detail-layout` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `masterLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#master-detail-layout` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 

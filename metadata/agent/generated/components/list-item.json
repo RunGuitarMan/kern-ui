@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-list-item",
   "selectors": ["krn-list-item"],
+  "selectorDeprecations": [],
   "symbol": "KrnListItem",
   "canonicalSymbol": "KrnListItem",
   "canonicalId": "list-item",

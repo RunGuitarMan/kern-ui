@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-skip-link",
   "selectors": ["krn-skip-link"],
+  "selectorDeprecations": [],
   "symbol": "KrnSkipLink",
   "canonicalSymbol": "KrnSkipLink",
   "canonicalId": "skip-link",

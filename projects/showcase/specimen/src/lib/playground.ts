@@ -423,7 +423,6 @@ const chartSummaryLimit = number(
 const PUBLIC_API_SELECT_OPTIONS: Readonly<Record<string, readonly string[]>> = Object.freeze({
   KrnActionVariant: ['solid', 'soft', 'outline', 'ghost'],
   KrnAutocompleteMode: ['list', 'both', 'inline', 'none'],
-  KrnButtonType: ['button', 'submit', 'reset'],
   KrnChartNegativeValuePolicy: ['clamp', 'reject'],
   KrnContainerSize: ['sm', 'md', 'lg', 'xl', 'full'],
   KrnDataSortDirection: ['asc', 'desc'],
@@ -440,7 +439,7 @@ const PUBLIC_API_SELECT_OPTIONS: Readonly<Record<string, readonly string[]>> = O
     'space-around',
     'space-evenly',
   ],
-  KrnLinkTarget: ['_self', '_blank', '_parent', '_top'],
+  KrnMenuAlignment: ['start', 'end'],
   KrnNavigationOrientation: ['horizontal', 'vertical'],
   KrnOptionsState: ['ready', 'loading', 'error'],
   KrnOrientation: ['horizontal', 'vertical'],
@@ -644,6 +643,16 @@ function publicApiExclusion(
     type: normalizedType,
   } as const;
 
+  if (item.id === 'button-group' && api.name === 'ariaLabel') {
+    return Object.freeze({
+      ...base,
+      code: 'accessibility-copy',
+      reason:
+        'Deprecated compatibility input; the canonical div[krnButtonGroup] host uses native aria-label or aria-labelledby.',
+      evidence: exclusionEvidence(item.id, 'accessibility-copy'),
+    });
+  }
+
   if (/TemplateRef</.test(type)) {
     return Object.freeze({
       ...base,
@@ -722,7 +731,7 @@ function publicApiExclusion(
       ...base,
       code: 'accessibility-copy',
       reason:
-        'This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.',
+        'This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.',
       evidence: exclusionEvidence(item.id, 'accessibility-copy'),
     });
   }
@@ -1010,20 +1019,107 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
       'orientation',
       'Orientation',
       'horizontal',
-      'Changes the group layout and keyboard axis.',
+      'Changes only the visual layout; native actions keep document-order keyboard navigation.',
       ['horizontal', 'vertical'],
+    ),
+    boolean(
+      'connected',
+      'Connected',
+      false,
+      'Joins adjacent action borders without changing their semantics or keyboard order.',
     ),
   ],
   'split-button': [
     boolean('open', 'Open', false, 'Opens the secondary action menu.', modelBinding('open')),
+    select(
+      'menuAlign',
+      'Menu alignment',
+      'end',
+      'Aligns the connected menu to the logical start or end edge of the trigger.',
+      ['start', 'end'],
+    ),
   ],
   'toggle-group': [
+    select(
+      'orientation',
+      'Orientation',
+      'horizontal',
+      'Changes the visual layout and Arrow-key axis exposed by the toolbar.',
+      ['horizontal', 'vertical'],
+    ),
     boolean('multiple', 'Multiple', false, 'Allows more than one toggle to be selected.'),
+    boolean(
+      'disabled',
+      'Disabled',
+      false,
+      'Disables every native toggle button while preserving perceivable toolbar semantics.',
+    ),
   ],
-  'copy-button': [disabled],
-  link: [disabled],
+  'copy-button': [
+    select(
+      'variant',
+      'Variant',
+      'outline',
+      'Changes visual emphasis without changing clipboard behavior.',
+      ['solid', 'soft', 'outline', 'ghost'],
+    ),
+    select(
+      'tone',
+      'Tone',
+      'neutral',
+      'Changes semantic action emphasis without becoming copy-result feedback.',
+      ['neutral', 'brand', 'info', 'success', 'warning', 'danger'],
+    ),
+    actionSize,
+    number(
+      'feedbackDuration',
+      'Feedback duration',
+      1_800,
+      'Keeps copied or error feedback visible for this many milliseconds.',
+      0,
+      60_000,
+      100,
+    ),
+    disabled,
+    text(
+      'value',
+      'Value',
+      'npm i @kern-ui/angular',
+      'Supplies the exact immutable string sent to the clipboard writer.',
+    ),
+    select(
+      'copyState',
+      'Operation state',
+      'live',
+      'Uses the live clipboard by default or a deterministic specimen writer for async states.',
+      ['live', 'idle', 'pending', 'copied', 'error'],
+      fixtureBinding(
+        'interaction',
+        'Selects a deterministic clipboard-writer outcome; it is not a component input.',
+      ),
+    ),
+  ],
+  link: [
+    boolean(
+      'externalDestination',
+      'External destination',
+      false,
+      'Switches the fixture from internal navigation to an explicit privacy-hardened external link.',
+      fixtureBinding(
+        'data',
+        'Changes native href, target, and rel attributes; it is not a KrnLink input.',
+      ),
+    ),
+  ],
   'dropdown-button': [
     boolean('open', 'Open', false, 'Opens the dropdown action menu.', modelBinding('open')),
+    select(
+      'menuAlign',
+      'Menu alignment',
+      'end',
+      'Aligns the connected menu to the logical start or end edge of the trigger.',
+      ['start', 'end'],
+    ),
   ],
 
   // Forms
@@ -1032,10 +1128,44 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
       'state',
       'State',
       'default',
-      'Shows default, valid, pending, or invalid field feedback.',
+      'Drives a real projected FormControl through default, valid, pending, or invalid state.',
       ['default', 'valid', 'pending', 'invalid'],
+      fixtureBinding(
+        'interaction',
+        'Updates the projected FormControl; state is derived rather than written to Form Field.',
+      ),
     ),
     text('label', 'Label', '', 'Changes the visible field label.'),
+    boolean(
+      'disabled',
+      'Disabled',
+      false,
+      'Disables the projected FormControl.',
+      fixtureBinding(
+        'interaction',
+        'Calls disable or enable on the projected FormControl; it is not a Form Field input.',
+      ),
+    ),
+    boolean(
+      'readonly',
+      'Read only',
+      false,
+      'Keeps the projected control focusable while preventing edits.',
+      fixtureBinding(
+        'interaction',
+        'Binds readonly on the projected control; it is not a Form Field input.',
+      ),
+    ),
+    boolean(
+      'required',
+      'Required',
+      true,
+      'Marks the projected control as required.',
+      fixtureBinding(
+        'interaction',
+        'Binds required on the projected control; it is not a Form Field input.',
+      ),
+    ),
   ],
   label: [required],
   hint: [
@@ -1455,14 +1585,7 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
     ),
   ],
 
-  button: [
-    actionVariant,
-    actionTone,
-    actionSize,
-    loading,
-    disabled,
-    boolean('pressed', 'Pressed', false, 'Exposes the toggle-button pressed state.'),
-  ],
+  button: [actionVariant, actionTone, actionSize, loading],
   'icon-button': [
     select('variant', 'Variant', 'ghost', 'Changes icon-action emphasis.', [
       'solid',
@@ -1480,8 +1603,16 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
     ]),
     actionSize,
     loading,
-    disabled,
-    boolean('pressed', 'Pressed', false, 'Exposes the pressed state to assistive technology.'),
+    boolean(
+      'disabled',
+      'Disabled',
+      false,
+      'Binds the native disabled attribute and prevents user interaction.',
+      fixtureBinding(
+        'interaction',
+        'Binds disabled directly to the native icon-button host; it is not a component input.',
+      ),
+    ),
   ],
   'floating-action-button': [
     actionVariant,
@@ -1489,7 +1620,16 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
     select('size', 'Size', 'lg', 'Changes the action target and label size.', ['sm', 'md', 'lg']),
     boolean('extended', 'Extended', true, 'Shows or hides the text label.'),
     loading,
-    disabled,
+    boolean(
+      'disabled',
+      'Disabled',
+      false,
+      'Binds the native disabled attribute and prevents user interaction.',
+      fixtureBinding(
+        'interaction',
+        'Binds disabled directly to the native floating-action host; it is not a component input.',
+      ),
+    ),
   ],
   'toggle-button': [
     disabled,
@@ -2076,9 +2216,17 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
 const SPECIMEN_CONTROL_DEFAULTS: Readonly<
   Record<string, Readonly<Record<string, KernPlaygroundValue>>>
 > = {
-  'toggle-button': { value: 'watch' },
+  'split-button': { menuOffset: 8, size: 'md', tone: 'brand' },
+  'toggle-button': {
+    pressedTone: 'brand',
+    pressedVariant: 'soft',
+    size: 'md',
+    unpressedTone: 'neutral',
+    unpressedVariant: 'ghost',
+    value: 'watch',
+  },
   'copy-button': { value: 'npm i @kern-ui/angular' },
-  link: { href: '/foundations' },
+  'dropdown-button': { menuOffset: 8, size: 'md', tone: 'brand' },
   'form-field': { hint: 'Required enterprise value.', required: true },
   label: { required: true },
   'text-input': { autocomplete: 'organization' },
@@ -2241,6 +2389,8 @@ const ENVIRONMENT_PRESETS: readonly KernPlaygroundStatePreset[] = Object.freeze(
 ]);
 
 function supportsVisualPseudoStates(item: (typeof KERN_CATALOG)[number]): boolean {
+  if (item.id === 'button-group') return false;
+
   return (
     item.category === 'Actions' ||
     item.category === 'Navigation' ||
@@ -2330,6 +2480,16 @@ function acceptanceArgsFor(
         return { [key]: stateValue };
       }
     }
+  }
+
+  const stateControl = controls.find(
+    (candidate) =>
+      candidate.key === 'state' &&
+      candidate.kind === 'select' &&
+      candidate.options?.some(({ value }) => value === stateId),
+  );
+  if (stateControl) {
+    return { state: stateId };
   }
 
   return {};
@@ -2584,6 +2744,23 @@ function functionalPresets(
   add(changedBooleanPreset(controls, 'compact', 'compact-rows', 'comfortable-rows'));
   add(changedBooleanPreset(controls, 'status', 'status-marker', 'plain'));
   add(changedBooleanPreset(controls, 'active', 'active-overlay', 'inactive-overlay'));
+  add(changedBooleanPreset(controls, 'connected', 'connected', 'separated'));
+
+  if (id === 'copy-button') {
+    for (const state of ['idle', 'pending', 'copied', 'error'] as const) {
+      result.push(
+        createPreset({
+          id: state,
+          label: titleCase(state),
+          scenario: 'default',
+          args: {
+            copyState: state,
+            ...(state === 'copied' || state === 'error' ? { feedbackDuration: 60_000 } : {}),
+          },
+        }),
+      );
+    }
+  }
 
   result.push(
     ...optionStatePresets(controls, 'optionsState'),

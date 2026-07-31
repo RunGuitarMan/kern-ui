@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-card",
   "selectors": ["krn-card"],
+  "selectorDeprecations": [],
   "symbol": "KrnCard",
   "canonicalSymbol": "KrnCard",
   "canonicalId": "card",

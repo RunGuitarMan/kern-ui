@@ -62,6 +62,10 @@ void bootstrapApplication(KernConfirmationPatternAgentExample);
 | `confirmed`    | output | `void`    | no       | `undefined`                                | Notifies the consumer after the confirmed interaction completes.         |
 | `cancelled`    | output | `void`    | no       | `undefined`                                | Notifies the consumer after the cancelled interaction completes.         |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._
@@ -118,11 +122,11 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API     | Category           | Evidence                                                          | Reason                                                                                                                                                              |
-| -------------- | ------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `cancelLabel`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#confirmation-pattern` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `confirmLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#confirmation-pattern` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `requestLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#confirmation-pattern` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| Public API     | Category           | Evidence                                                          | Reason                                                                                                                                                               |
+| -------------- | ------------------ | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `cancelLabel`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#confirmation-pattern` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `confirmLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#confirmation-pattern` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `requestLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#confirmation-pattern` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 

@@ -62,13 +62,17 @@ void bootstrapApplication(KernLineChartAgentExample);
 | `description`         | input | `string`                         | no       | `''`                                                     | Visible supporting description for the component content.                                 |
 | `data`                | input | `ReadonlyArray<KrnChartDatum>`   | yes      | `required`                                               | Immutable data supplied by the consumer.                                                  |
 | `palette`             | input | `ReadonlyArray<string>`          | no       | `['var(--krn-chart-1, #4f6feb)']`                        | Ordered semantic color values available to the color control.                             |
-| `locale`              | input | `string \| Array<string>`        | no       | `inject(KRN_LOCALE)`                                     | Locale identifier used for collation, formatting, and component-owned copy.               |
+| `locale`              | input | `Array<string> \| string`        | no       | `inject(KRN_LOCALE)`                                     | Locale identifier used for collation, formatting, and component-owned copy.               |
 | `labels`              | input | `Partial<KrnChartLabels>`        | no       | `{}`                                                     | Localized copy overrides for the component-owned interface text.                          |
 | `valueFormatter`      | input | `KrnChartValueFormatter \| null` | no       | `null`                                                   | Formats a domain value for visible and accessible presentation.                           |
 | `percentFormatter`    | input | `KrnChartValueFormatter \| null` | no       | `null`                                                   | Formats a normalized value for visible and accessible percentage copy.                    |
 | `datumIdentity`       | input | `KrnChartDatumIdentity`          | no       | `(datum, index) => datum.id ?? (datum.label \|\| index)` | Returns a stable unique key used to preserve DOM and active state across data reordering. |
 | `negativeValuePolicy` | input | `KrnChartNegativeValuePolicy`    | no       | `'clamp'`                                                | Clamps negative values to zero by default or rejects them with a validation error.        |
 | `summaryItemLimit`    | input | `number`                         | no       | `12`                                                     | Limits the accessible text summary while the full data table remains available.           |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 

@@ -1,19 +1,19 @@
 # Toggle Group
 
 - ID: `toggle-group`
-- Selector: `krn-toggle-group`
+- Selector: `div[krnToggleGroup]`
 - Import: `import { KrnToggleGroup } from '@kern-ui/angular/kit';`
 - Canonical symbol: `KrnToggleGroup`
 - Lifecycle: **stable**
 - Category: Actions
 
-Toggle Group. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.
+Toggle Group. Coordinates stable pressed values across native toggle buttons in a labelled, orientation-aware action toolbar.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use <div krnToggleGroup aria-label="Formatting"> with direct native Toggle Button children and stable unique values.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not use Toggle Group as an Angular form radio control or project arbitrary links and labels; use Radio Group or Segmented Control for a mandatory exclusive choice.
 
 ## Compile-verified standalone Angular example
 
@@ -35,14 +35,15 @@ import { KrnToggleButton, KrnToggleGroup } from '@kern-ui/angular/kit';
   imports: [KrnToggleGroup, KrnToggleButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <krn-toggle-group
-      ariaLabel="Visible dashboard layers"
+    <div
+      krnToggleGroup
+      aria-label="Visible dashboard layers"
       [multiple]="true"
       [(values)]="visibleLayers"
     >
-      <krn-toggle-button value="targets">Targets</krn-toggle-button>
-      <krn-toggle-button value="forecast">Forecast</krn-toggle-button>
-    </krn-toggle-group>
+      <button krnToggleButton value="targets">Targets</button>
+      <button krnToggleButton value="forecast">Forecast</button>
+    </div>
   `,
 })
 export class KernToggleGroupAgentExample {
@@ -54,13 +55,17 @@ void bootstrapApplication(KernToggleGroupAgentExample);
 
 ## API
 
-| Name          | Kind  | Type                    | Required | Default        | Description                                                                |
-| ------------- | ----- | ----------------------- | -------- | -------------- | -------------------------------------------------------------------------- |
-| `ariaLabel`   | input | `string`                | yes      | `required`     | Accessible name used when visible content is not sufficient.               |
-| `orientation` | input | `KrnOrientation`        | no       | `'horizontal'` | Defines the logical axis used by layout and keyboard navigation.           |
-| `multiple`    | input | `boolean`               | no       | `false`        | Allows more than one value or file to be selected in one interaction.      |
-| `disabled`    | input | `boolean`               | no       | `false`        | Prevents user interaction and participates in the disabled-state contract. |
-| `values`      | model | `ReadonlyArray<string>` | no       | `[]`           | Controlled values state with a matching Angular model-change output.       |
+| Name          | Kind  | Type                          | Required | Default                    | Description                                                                         |
+| ------------- | ----- | ----------------------------- | -------- | -------------------------- | ----------------------------------------------------------------------------------- |
+| `orientation` | input | `KrnOrientation`              | no       | `this.options.orientation` | Defines both the visual layout axis and the toolbar Arrow-key axis.                 |
+| `multiple`    | input | `boolean`                     | no       | `this.options.multiple`    | Allows multiple pressed values; false exposes at most one effective pressed value.  |
+| `disabled`    | input | `boolean`                     | no       | `false`                    | Disables every registered native toggle and all group-owned value transitions.      |
+| `values`      | model | `ReadonlyArray<string>`       | no       | `[]`                       | Controlled stable string values; user transitions always emit a fresh frozen array. |
+| `ariaLabel`   | input | `string \| null \| undefined` | no       | `undefined`                | Deprecated compatibility bridge for native accessible-name attributes.              |
+
+## Deprecated selectors
+
+- `krn-toggle-group` — remove in `0.2.0`; replace with `div[krnToggleGroup]`. Replace <krn-toggle-group> with <div krnToggleGroup> and replace its closing tag with </div>; keep direct native Toggle Button children and stable values unchanged. Documentation: `docs/DEPRECATIONS.md#krn-toggle-group-element-selector`.
 
 ## Content slots
 
@@ -72,11 +77,14 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Enter / Space activates
-- Tab follows document order
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab enters or leaves the toolbar through one remembered roving tab stop
+- Arrow keys move focus on the configured axis without changing pressed state
+- Home and End move focus to the first or last enabled toggle; navigation wraps and respects RTL
+- Enter and Space activate only the focused native toggle button
+- The canonical <div krnToggleGroup> host exposes role="toolbar", aria-orientation, and a native aria-label or aria-labelledby.
+- Each direct <button krnToggleButton> retains its native accessible name, aria-pressed state, focus, and activation behavior.
+- Group disabled state is reflected as aria-disabled on the toolbar and native disabled on every toggle button.
+- Single mode exposes at most one effective pressed value; duplicate controlled values are canonicalized on the next user transition.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -117,11 +125,11 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default        | Test value   | Binding                        | Description                                                               |
-| ------------- | ------- | -------------- | ------------ | ------------------------------ | ------------------------------------------------------------------------- |
-| `multiple`    | boolean | `false`        | `true`       | input `multiple` (property)    | Allows more than one toggle to be selected.                               |
-| `disabled`    | boolean | `false`        | `true`       | input `disabled` (property)    | Prevents interaction and participates in the component disabled contract. |
-| `orientation` | select  | `"horizontal"` | `"vertical"` | input `orientation` (property) | Configures the component orientation contract.                            |
+| Argument      | Control | Default        | Test value   | Binding                        | Description                                                                         |
+| ------------- | ------- | -------------- | ------------ | ------------------------------ | ----------------------------------------------------------------------------------- |
+| `orientation` | select  | `"horizontal"` | `"vertical"` | input `orientation` (property) | Changes the visual layout and Arrow-key axis exposed by the toolbar.                |
+| `multiple`    | boolean | `false`        | `true`       | input `multiple` (property)    | Allows more than one toggle to be selected.                                         |
+| `disabled`    | boolean | `false`        | `true`       | input `disabled` (property)    | Disables every native toggle button while preserving perceivable toolbar semantics. |
 
 Exact API exclusions:
 
@@ -149,17 +157,23 @@ Presets:
 
 ## Related
 
+- `toggle-button`
+- `button-group`
+- `radio-group`
+- `segmented-control`
 - `button`
 - `icon-button`
-- `button-group`
 - `split-button`
 
 ## Common mistakes
 
-- Do not omit required inputs: `ariaLabel`.
 - Importing from an undeclared family path or a source implementation file.
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
+- Use div[krnToggleGroup] with a native aria-label or aria-labelledby and direct button[krnToggleButton] children whose values are stable and unique.
+- Arrow, Home, and End move focus without changing selection; activate the focused native button with Enter or Space.
+- Use provideKrnToggleGroupOptions only for inheritable orientation and multiple defaults. Keep disabled and controlled values explicit at the instance.
+- Use Radio Group or Segmented Control instead when an Angular form requires exactly one selected value.
 
 ## Ship checklist
 

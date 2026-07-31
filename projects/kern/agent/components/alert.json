@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-alert",
   "selectors": ["krn-alert"],
+  "selectorDeprecations": [],
   "symbol": "KrnAlert",
   "canonicalSymbol": "KrnAlert",
   "canonicalId": "alert",
@@ -359,7 +360,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#alert"

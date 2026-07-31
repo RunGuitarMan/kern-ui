@@ -57,7 +57,11 @@ void bootstrapApplication(KernSplitLayoutAgentExample);
 | `gap`              | input | `KrnLayoutSpace`                            | no       | `'6'`     | Logical spacing inserted between adjacent layout children.          |
 | `collapseAt`       | input | `KrnResponsiveBreakpoint`                   | no       | `'md'`    | Controls whether the component applies the collapse at behavior.    |
 | `reverseCollapsed` | input | `boolean`                                   | no       | `false`   | Collapses the logical end panel instead of the logical start panel. |
-| `align`            | input | `"center" \| "start" \| "end" \| "stretch"` | no       | `'start'` | Logical cross-axis alignment applied to children by the layout.     |
+| `align`            | input | `"center" \| "end" \| "start" \| "stretch"` | no       | `'start'` | Logical cross-axis alignment applied to children by the layout.     |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 

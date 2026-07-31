@@ -52,7 +52,11 @@ void bootstrapApplication(KernSkeletonAgentExample);
 | -------- | ----- | ----------------------------------- | -------- | ---------------------- | ---------------------------------------------------------------- |
 | `width`  | input | `string`                            | no       | `'100%'`               | Explicit inline size of the rendered surface.                    |
 | `height` | input | `string`                            | no       | `'var(--krn-space-4)'` | Explicit block size of the rendered surface or virtual viewport. |
-| `shape`  | input | `"circle" \| "text" \| "rectangle"` | no       | `'text'`               | Named geometry applied to the avatar or media boundary.          |
+| `shape`  | input | `"circle" \| "rectangle" \| "text"` | no       | `'text'`               | Named geometry applied to the avatar or media boundary.          |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 

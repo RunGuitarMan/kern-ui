@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-dashboard-widget",
   "selectors": ["krn-dashboard-widget"],
+  "selectorDeprecations": [],
   "symbol": "KrnDashboardWidget",
   "canonicalSymbol": "KrnDashboardWidget",
   "canonicalId": "dashboard-widget",

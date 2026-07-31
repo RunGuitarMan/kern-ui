@@ -57,6 +57,10 @@ void bootstrapApplication(KernSettingsPanelAgentExample);
 | `closeLabel` | input | `string`  | no       | `this.translations.patterns.closeSettings` | Human-readable copy for the close state or control.            |
 | `open`       | model | `boolean` | no       | `false`                                    | Controls whether the disclosure or overlay surface is visible. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.
@@ -119,9 +123,9 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API   | Category           | Evidence                                                    | Reason                                                                                                                                                              |
-| ------------ | ------------------ | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `closeLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#settings-panel` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| Public API   | Category           | Evidence                                                    | Reason                                                                                                                                                               |
+| ------------ | ------------------ | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `closeLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#settings-panel` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 

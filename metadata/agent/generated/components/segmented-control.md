@@ -58,20 +58,29 @@ void bootstrapApplication(KernSegmentedControlAgentExample);
 
 ## API
 
-| Name              | Kind   | Type                                              | Required | Default                                | Description                                                                 |
-| ----------------- | ------ | ------------------------------------------------- | -------- | -------------------------------------- | --------------------------------------------------------------------------- |
-| `id`              | input  | `string`                                          | no       | `''`                                   | Stable identifier value used by the id contract.                            |
-| `options`         | input  | `ReadonlyArray<KrnSegmentOption<T>>`              | yes      | `required`                             | Authoritative option collection presented by the selection control.         |
-| `identityMatcher` | input  | `KrnIdentityMatcher<T>`                           | no       | `Object.is`                            | Compares option values when object identity is not stable across refreshes. |
-| `trackBy`         | input  | `KrnSegmentTrackBy<T>`                            | no       | `(option) => option.value`             | Returns the stable identity used to retain rendered items across updates.   |
-| `disabledHandler` | input  | `KrnSegmentDisabledHandler<T>`                    | no       | `(option) => option.disabled ?? false` | Determines whether an individual option or item is unavailable.             |
-| `optionTemplate`  | input  | `TemplateRef<KrnSegmentOptionContext<T>> \| null` | no       | `null`                                 | Template used to render one option with its typed context.                  |
-| `ariaLabel`       | input  | `string`                                          | no       | `this.translations.forms.chooseOption` | Accessible name used when visible content is not sufficient.                |
-| `disabled`        | input  | `boolean`                                         | no       | `false`                                | Prevents user interaction and participates in the disabled-state contract.  |
-| `readonly`        | input  | `boolean`                                         | no       | `false`                                | Keeps the value perceivable while preventing user edits.                    |
-| `required`        | input  | `boolean`                                         | no       | `false`                                | Marks the value as required and participates in Angular Forms validation.   |
-| `invalid`         | input  | `boolean`                                         | no       | `false`                                | Exposes an externally controlled invalid presentation state.                |
-| `valueChange`     | output | `T \| null`                                       | no       | `undefined`                            | Notifies the consumer after the value change interaction completes.         |
+| Name              | Kind   | Type                                              | Required | Default                                | Description                                                                                      |
+| ----------------- | ------ | ------------------------------------------------- | -------- | -------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`                                          | no       | `''`                                   | Stable identifier value used by the id contract.                                                 |
+| `options`         | input  | `ReadonlyArray<KrnSegmentOption<T>>`              | yes      | `required`                             | Authoritative option collection presented by the selection control.                              |
+| `identityMatcher` | input  | `KrnIdentityMatcher<T>`                           | no       | `Object.is`                            | Compares option values when object identity is not stable across refreshes.                      |
+| `trackBy`         | input  | `KrnSegmentTrackBy<T>`                            | no       | `(option) => option.value`             | Returns the stable identity used to retain rendered items across updates.                        |
+| `disabledHandler` | input  | `KrnSegmentDisabledHandler<T>`                    | no       | `(option) => option.disabled ?? false` | Determines whether an individual option or item is unavailable.                                  |
+| `optionTemplate`  | input  | `TemplateRef<KrnSegmentOptionContext<T>> \| null` | no       | `null`                                 | Template used to render one option with its typed context.                                       |
+| `ariaLabel`       | input  | `string`                                          | no       | `this.translations.forms.chooseOption` | Accessible name used when visible content is not sufficient.                                     |
+| `ariaLabelledBy`  | input  | `string`                                          | no       | `''`                                   | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`                                          | no       | `''`                                   | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `orientation`     | input  | `KrnOrientation`                                  | no       | `'horizontal'`                         | Defines the logical axis used by layout and keyboard navigation.                                 |
+| `disabled`        | input  | `boolean`                                         | no       | `false`                                | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean`                                         | no       | `false`                                | Keeps the value perceivable while preventing user edits.                                         |
+| `required`        | input  | `boolean`                                         | no       | `false`                                | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`         | input  | `boolean`                                         | no       | `false`                                | Exposes an externally controlled invalid presentation state.                                     |
+| `tabindex`        | input  | `number`                                          | no       | `0`                                    | Native sequential-focus order forwarded to the owned interactive element.                        |
+| `value`           | input  | `T \| null \| undefined`                          | no       | `undefined`                            | Controlled component value.                                                                      |
+| `valueChange`     | output | `T \| null`                                       | no       | `undefined`                            | Notifies the consumer after the value change interaction completes.                              |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -125,31 +134,36 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/segmented-control`
 
 Scenarios: `default`.
-Public API coverage: 5/11
-directly controlled; 6 exact exclusions; 0 unclassified.
+Public API coverage: 7/16
+directly controlled; 9 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument   | Control | Default | Test value          | Binding                     | Description                                       |
-| ---------- | ------- | ------- | ------------------- | --------------------------- | ------------------------------------------------- |
-| `disabled` | boolean | `false` | `true`              | input `disabled` (property) | Prevents user interaction.                        |
-| `readOnly` | boolean | `false` | `true`              | input `readonly` (property) | Keeps the value focusable while preventing edits. |
-| `required` | boolean | `false` | `true`              | input `required` (property) | Marks the control as required.                    |
-| `invalid`  | boolean | `false` | `true`              | input `invalid` (property)  | Exposes the invalid visual and ARIA state.        |
-| `id`       | text    | `""`    | `"Alternate value"` | input `id` (property)       | Configures the component id contract.             |
+| Argument      | Control | Default        | Test value          | Binding                        | Description                                                                               |
+| ------------- | ------- | -------------- | ------------------- | ------------------------------ | ----------------------------------------------------------------------------------------- |
+| `disabled`    | boolean | `false`        | `true`              | input `disabled` (property)    | Prevents user interaction.                                                                |
+| `readOnly`    | boolean | `false`        | `true`              | input `readonly` (property)    | Keeps the value focusable while preventing edits.                                         |
+| `required`    | boolean | `false`        | `true`              | input `required` (property)    | Marks the control as required.                                                            |
+| `invalid`     | boolean | `false`        | `true`              | input `invalid` (property)     | Exposes the invalid visual and ARIA state.                                                |
+| `id`          | text    | `""`           | `"Alternate value"` | input `id` (property)          | Configures the component id contract.                                                     |
+| `orientation` | select  | `"horizontal"` | `"vertical"`        | input `orientation` (property) | Logical axis exposed by the component; behavior follows its documented keyboard contract. |
+| `tabindex`    | number  | `0`            | `1`                 | input `tabindex` (property)    | Configures the component tabindex contract.                                               |
 
 Exact API exclusions:
 
 | Public API        | Category           | Evidence                                                                | Reason                                                                                                                  |
 | ----------------- | ------------------ | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#segmented-control`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 | `ariaLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#segmented-control`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabelledBy`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#segmented-control`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 | `disabledHandler` | callback           | `component-example:agent/components/segmented-control.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                      |
 | `identityMatcher` | callback           | `component-example:agent/components/segmented-control.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                      |
 | `options`         | complex-data       | `specimen-fixture:preview/segmented-control?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
 | `optionTemplate`  | template           | `component-example:agent/components/segmented-control.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.              |
 | `trackBy`         | callback           | `component-example:agent/components/segmented-control.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                      |
+| `value`           | complex-data       | `specimen-fixture:preview/segmented-control?state=default`              | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                        |
 
 Presets:
 

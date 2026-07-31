@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-back-button",
   "selectors": ["krn-back-button"],
+  "selectorDeprecations": [],
   "symbol": "KrnBackButton",
   "canonicalSymbol": "KrnBackButton",
   "canonicalId": "back-button",

@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-dropdown-button",
   "selectors": ["krn-dropdown-button"],
+  "selectorDeprecations": [],
   "symbol": "KrnDropdownButton",
   "canonicalSymbol": "KrnDropdownButton",
   "canonicalId": "dropdown-button",
@@ -60,7 +61,7 @@
       "kind": "input",
       "type": "KrnSize",
       "required": false,
-      "defaultValue": "'md'",
+      "defaultValue": "this.options.size",
       "description": "Named semantic size resolved through KERN density and sizing tokens.",
       "descriptionSource": "inferred"
     },
@@ -70,7 +71,7 @@
       "kind": "input",
       "type": "KrnActionVariant",
       "required": false,
-      "defaultValue": "'solid'",
+      "defaultValue": "this.options.variant",
       "description": "Named visual hierarchy treatment that preserves the component semantics.",
       "descriptionSource": "inferred"
     },
@@ -80,7 +81,7 @@
       "kind": "input",
       "type": "KrnTone",
       "required": false,
-      "defaultValue": "'brand'",
+      "defaultValue": "this.options.tone",
       "description": "Semantic intent that selects coordinated text, icon, border, and surface tokens.",
       "descriptionSource": "inferred"
     },
@@ -113,6 +114,46 @@
       "defaultValue": "false",
       "description": "Controls whether the disclosure or overlay surface is visible.",
       "descriptionSource": "inferred"
+    },
+    {
+      "name": "menuAlign",
+      "property": "menuAlign",
+      "kind": "input",
+      "type": "KrnMenuAlignment",
+      "required": false,
+      "defaultValue": "this.options.menuAlign",
+      "description": "Logical horizontal alignment used before the CDK collision fallbacks.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "menuOffset",
+      "property": "menuOffset",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "this.options.menuOffset",
+      "description": "Non-negative logical gap in CSS pixels between the trigger and menu.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "matchTriggerWidth",
+      "property": "matchTriggerWidth",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "this.options.matchTriggerWidth",
+      "description": "Makes the connected overlay exactly as wide as the complete trigger origin.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "closeOnSelection",
+      "property": "closeOnSelection",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Closes after an enabled menu item activates; use the keep-open marker for one item.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [
@@ -163,7 +204,7 @@
       "title": "Controlled bulk-action menu",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled bulk-action menu\n *\n * Expose secondary actions while retaining owned open state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDropdownButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-dropdown-button-agent-example',\n  standalone: true,\n  imports: [KrnDropdownButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-dropdown-button [(open)]=\"open\">\n      <span krnLabel>Bulk actions</span>\n      <div krnMenu>\n        <button type=\"button\">Assign owner</button>\n        <button type=\"button\">Archive</button>\n      </div>\n    </krn-dropdown-button>\n  `,\n})\nexport class KernDropdownButtonAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernDropdownButtonAgentExample);\n",
+      "code": "/**\n * Controlled bulk-action menu\n *\n * Expose keyboard-operable secondary actions with controlled state and scoped placement.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDropdownButton, provideKrnMenuButtonOptions } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-dropdown-button-agent-example',\n  standalone: true,\n  imports: [KrnDropdownButton],\n  providers: [\n    provideKrnMenuButtonOptions({\n      menuAlign: 'start',\n      matchTriggerWidth: true,\n    }),\n  ],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-dropdown-button [(open)]=\"open\">\n      <span krnLabel>Bulk actions</span>\n      <button krnMenu type=\"button\">Assign owner</button>\n      <button krnMenu type=\"button\">Archive</button>\n    </krn-dropdown-button>\n  `,\n})\nexport class KernDropdownButtonAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernDropdownButtonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/dropdown-button.ts"
     }
@@ -180,7 +221,11 @@
     "tone",
     "disabled",
     "loading",
-    "open"
+    "open",
+    "menuAlign",
+    "menuOffset",
+    "matchTriggerWidth",
+    "closeOnSelection"
   ],
   "guidance": {
     "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
@@ -221,6 +266,42 @@
         }
       },
       {
+        "key": "menuAlign",
+        "label": "Menu alignment",
+        "kind": "select",
+        "defaultValue": "end",
+        "testValue": "start",
+        "description": "Aligns the connected menu to the logical start or end edge of the trigger.",
+        "binding": {
+          "kind": "input",
+          "publicName": "menuAlign",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "start",
+            "value": "start"
+          },
+          {
+            "label": "end",
+            "value": "end"
+          }
+        ]
+      },
+      {
+        "key": "closeOnSelection",
+        "label": "Close On Selection",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Configures the component closeOnSelection contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "closeOnSelection",
+          "syntax": "property"
+        }
+      },
+      {
         "key": "disabled",
         "label": "Disabled",
         "kind": "boolean",
@@ -245,6 +326,35 @@
           "publicName": "loading",
           "syntax": "property"
         }
+      },
+      {
+        "key": "matchTriggerWidth",
+        "label": "Match Trigger Width",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Configures the component matchTriggerWidth contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "matchTriggerWidth",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "menuOffset",
+        "label": "Menu Offset",
+        "kind": "number",
+        "defaultValue": 8,
+        "testValue": 9,
+        "description": "Configures the component menuOffset contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "menuOffset",
+          "syntax": "property"
+        },
+        "min": -1000,
+        "max": 1000,
+        "step": 1
       },
       {
         "key": "size",
@@ -507,8 +617,8 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 6,
-      "controlled": 6,
+      "publicInputsAndModels": 10,
+      "controlled": 10,
       "excluded": 0,
       "unclassified": 0
     },

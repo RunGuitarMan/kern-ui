@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-progress-bar",
   "selectors": ["krn-progress-bar"],
+  "selectorDeprecations": [],
   "symbol": "KrnProgressBar",
   "canonicalSymbol": "KrnProgressBar",
   "canonicalId": "progress-bar",

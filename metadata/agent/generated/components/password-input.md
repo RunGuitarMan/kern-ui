@@ -53,22 +53,31 @@ void bootstrapApplication(KernPasswordInputAgentExample);
 
 ## API
 
-| Name           | Kind   | Type      | Required | Default                                | Description                                                                |
-| -------------- | ------ | --------- | -------- | -------------------------------------- | -------------------------------------------------------------------------- |
-| `id`           | input  | `string`  | no       | `''`                                   | Stable identifier value used by the id contract.                           |
-| `name`         | input  | `string`  | no       | `''`                                   | Required human-readable name for the represented person, item, or action.  |
-| `placeholder`  | input  | `string`  | no       | `''`                                   | Short input hint shown only while no value is present.                     |
-| `ariaLabel`    | input  | `string`  | no       | `''`                                   | Accessible name used when visible content is not sufficient.               |
-| `autocomplete` | input  | `string`  | no       | `'current-password'`                   | Controls whether the component applies the autocomplete behavior.          |
-| `showLabel`    | input  | `string`  | no       | `this.translations.forms.showPassword` | Human-readable copy for the show state or control.                         |
-| `hideLabel`    | input  | `string`  | no       | `this.translations.forms.hidePassword` | Human-readable copy for the hide state or control.                         |
-| `showText`     | input  | `string`  | no       | `this.translations.forms.show`         | Human-readable copy for the show state or control.                         |
-| `hideText`     | input  | `string`  | no       | `this.translations.forms.hide`         | Human-readable copy for the hide state or control.                         |
-| `disabled`     | input  | `boolean` | no       | `false`                                | Prevents user interaction and participates in the disabled-state contract. |
-| `readonly`     | input  | `boolean` | no       | `false`                                | Keeps the value perceivable while preventing user edits.                   |
-| `required`     | input  | `boolean` | no       | `false`                                | Marks the value as required and participates in Angular Forms validation.  |
-| `invalid`      | input  | `boolean` | no       | `false`                                | Exposes an externally controlled invalid presentation state.               |
-| `valueChange`  | output | `string`  | no       | `undefined`                            | Notifies the consumer after the value change interaction completes.        |
+| Name              | Kind   | Type                  | Required | Default                                | Description                                                                                      |
+| ----------------- | ------ | --------------------- | -------- | -------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`              | no       | `''`                                   | Stable identifier value used by the id contract.                                                 |
+| `name`            | input  | `string`              | no       | `''`                                   | Required human-readable name for the represented person, item, or action.                        |
+| `placeholder`     | input  | `string`              | no       | `''`                                   | Short input hint shown only while no value is present.                                           |
+| `ariaLabel`       | input  | `string`              | no       | `''`                                   | Accessible name used when visible content is not sufficient.                                     |
+| `ariaLabelledBy`  | input  | `string`              | no       | `''`                                   | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`              | no       | `''`                                   | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `autocomplete`    | input  | `string`              | no       | `'current-password'`                   | Native autocomplete purpose forwarded to the editable control.                                   |
+| `value`           | input  | `string \| undefined` | no       | `undefined`                            | Controlled component value.                                                                      |
+| `minLength`       | input  | `number \| undefined` | no       | `undefined`                            | Upper or lower bound applied to the length value.                                                |
+| `maxLength`       | input  | `number \| undefined` | no       | `undefined`                            | Upper or lower bound applied to the length value.                                                |
+| `showLabel`       | input  | `string`              | no       | `this.translations.forms.showPassword` | Human-readable copy for the show state or control.                                               |
+| `hideLabel`       | input  | `string`              | no       | `this.translations.forms.hidePassword` | Human-readable copy for the hide state or control.                                               |
+| `showText`        | input  | `string`              | no       | `this.translations.forms.show`         | Human-readable copy for the show state or control.                                               |
+| `hideText`        | input  | `string`              | no       | `this.translations.forms.hide`         | Human-readable copy for the hide state or control.                                               |
+| `disabled`        | input  | `boolean`             | no       | `false`                                | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean`             | no       | `false`                                | Keeps the value perceivable while preventing user edits.                                         |
+| `required`        | input  | `boolean`             | no       | `false`                                | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`         | input  | `boolean`             | no       | `false`                                | Exposes an externally controlled invalid presentation state.                                     |
+| `valueChange`     | output | `string`              | no       | `undefined`                            | Notifies the consumer after the value change interaction completes.                              |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -122,8 +131,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/password-input`
 
 Scenarios: `default`.
-Public API coverage: 9/13
-directly controlled; 4 exact exclusions; 0 unclassified.
+Public API coverage: 12/18
+directly controlled; 6 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -140,15 +149,20 @@ component inputs or models.
 | `invalid`      | boolean | `false`              | `true`                           | input `invalid` (property)      | Exposes the invalid visual and ARIA state.                       |
 | `autocomplete` | text    | `"current-password"` | `"current-password · alternate"` | input `autocomplete` (property) | Configures the component autocomplete contract.                  |
 | `id`           | text    | `""`                 | `"Alternate value"`              | input `id` (property)           | Configures the component id contract.                            |
+| `maxLength`    | number  | `100`                | `101`                            | input `maxLength` (property)    | Configures the component maxLength contract.                     |
+| `minLength`    | number  | `0`                  | `1`                              | input `minLength` (property)    | Configures the component minLength contract.                     |
+| `value`        | text    | `""`                 | `"Alternate value"`              | input `value` (property)        | Controlled component value.                                      |
 
 Exact API exclusions:
 
-| Public API  | Category           | Evidence                                                                   | Reason                                                                                                                                                              |
-| ----------- | ------------------ | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#password-input`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `hideLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#password-input`                | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `name`      | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#password-input` | Form submission field names do not alter the rendered component and are covered by forms integration tests.                                                         |
-| `showLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#password-input`                | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| Public API        | Category           | Evidence                                                                   | Reason                                                                                                                                                               |
+| ----------------- | ------------------ | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#password-input`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `ariaLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#password-input`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `ariaLabelledBy`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#password-input`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `hideLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#password-input`                | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `name`            | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#password-input` | Form submission field names do not alter the rendered component and are covered by forms integration tests.                                                          |
+| `showLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#password-input`                | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 

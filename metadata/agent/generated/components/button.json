@@ -3,8 +3,9 @@
   "name": "Button",
   "category": "Actions",
   "kind": "component",
-  "selector": "krn-button",
-  "selectors": ["krn-button"],
+  "selector": "button[krnButton]",
+  "selectors": ["button[krnButton]"],
+  "selectorDeprecations": [],
   "symbol": "KrnButton",
   "canonicalSymbol": "KrnButton",
   "canonicalId": "button",
@@ -15,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Button. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.",
+  "summary": "Button. Enhances a native button with Kern hierarchy, visual defaults, and a focus-preserving loading state.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -56,7 +57,7 @@
       "kind": "input",
       "type": "KrnSize",
       "required": false,
-      "defaultValue": "'md'",
+      "defaultValue": "this.options.size",
       "description": "Named semantic size resolved through KERN density and sizing tokens.",
       "descriptionSource": "inferred"
     },
@@ -66,7 +67,7 @@
       "kind": "input",
       "type": "KrnActionVariant",
       "required": false,
-      "defaultValue": "'solid'",
+      "defaultValue": "this.options.variant",
       "description": "Named visual hierarchy treatment that preserves the component semantics.",
       "descriptionSource": "inferred"
     },
@@ -76,48 +77,8 @@
       "kind": "input",
       "type": "KrnTone",
       "required": false,
-      "defaultValue": "'brand'",
+      "defaultValue": "this.options.tone",
       "description": "Semantic intent that selects coordinated text, icon, border, and surface tokens.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "type",
-      "property": "type",
-      "kind": "input",
-      "type": "KrnButtonType",
-      "required": false,
-      "defaultValue": "'button'",
-      "description": "Native action or input type forwarded to the owned interactive element.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "name",
-      "property": "name",
-      "kind": "input",
-      "type": "string",
-      "required": false,
-      "defaultValue": "''",
-      "description": "Required human-readable name for the represented person, item, or action.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "value",
-      "property": "value",
-      "kind": "input",
-      "type": "string",
-      "required": false,
-      "defaultValue": "''",
-      "description": "Controlled component value.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "ariaLabel",
-      "property": "ariaLabel",
-      "kind": "input",
-      "type": "string",
-      "required": false,
-      "defaultValue": "''",
-      "description": "Accessible name used when visible content is not sufficient.",
       "descriptionSource": "inferred"
     },
     {
@@ -127,38 +88,18 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Prevents duplicate actions and exposes accessible busy state.",
-      "descriptionSource": "inferred"
+      "description": "Suppresses duplicate activation, owns `aria-disabled`, and updates the\npersistent polite status. Use native `disabled` for ordinary unavailability.",
+      "descriptionSource": "source"
     },
     {
-      "name": "disabled",
-      "property": "disabled",
+      "name": "loadingLabel",
+      "property": "loadingLabel",
       "kind": "input",
-      "type": "boolean",
+      "type": "string",
       "required": false,
-      "defaultValue": "false",
-      "description": "Prevents user interaction and participates in the disabled-state contract.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "pressed",
-      "property": "pressed",
-      "kind": "input",
-      "type": "boolean | undefined",
-      "required": false,
-      "defaultValue": "undefined",
-      "description": "Controlled toggle-button pressed state exposed through native button semantics.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "activated",
-      "property": "activated",
-      "kind": "output",
-      "type": "MouseEvent",
-      "required": false,
-      "defaultValue": "undefined",
-      "description": "Notifies the consumer after the activated interaction completes.",
-      "descriptionSource": "inferred"
+      "defaultValue": "this.defaultLoadingLabel",
+      "description": "Accessible loading copy; defaults to the application or closest scoped option.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [
@@ -187,16 +128,21 @@
     "valueType": null,
     "reactiveForms": false,
     "templateDrivenForms": false,
-    "stateInputs": ["disabled"],
+    "stateInputs": [],
     "notes": []
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Enter / Space activates", "Tab follows document order"],
+    "keyboard": [
+      "Tab focuses the native button",
+      "Enter and Space dispatch the native click behavior",
+      "A loading button retains focus but suppresses click and form submission"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Native type, disabled, name, value, form, accessible naming, descriptions, and pressed state stay on the host button.",
+      "Loading uses a persistent polite status and aria-disabled without removing the action from focus order.",
+      "aria-disabled is reserved for the derived loading state; use native disabled for ordinary unavailability.",
+      "Visible text supplies the accessible name unless the consumer provides a native aria-label."
     ],
     "manualValidationRequired": true
   },
@@ -215,7 +161,7 @@
       "title": "Primary save action",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Primary save action\n *\n * Render an explicit form action with semantic hierarchy.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-button-agent-example',\n  standalone: true,\n  imports: [KrnButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-button type=\"submit\" variant=\"solid\" tone=\"brand\">Save changes</krn-button> `,\n})\nexport class KernButtonAgentExample {}\n\nvoid bootstrapApplication(KernButtonAgentExample);\n",
+      "code": "/**\n * Primary save action\n *\n * Render an explicit form action with scoped visual and loading-copy defaults.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnButton, provideKrnButtonOptions } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-button-agent-example',\n  standalone: true,\n  imports: [KrnButton],\n  providers: [\n    provideKrnButtonOptions({\n      size: 'lg',\n      loadingLabel: 'Saving workspace…',\n    }),\n  ],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <form (submit)=\"saving = true; $event.preventDefault()\">\n      <button krnButton type=\"submit\" [loading]=\"saving\">Save changes</button>\n    </form>\n  `,\n})\nexport class KernButtonAgentExample {\n  saving = false;\n}\n\nvoid bootstrapApplication(KernButtonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/button.ts"
     }
@@ -225,28 +171,28 @@
     "button",
     "Button",
     "Actions",
-    "krn-button",
+    "button[krnButton]",
     "KrnButton",
+    "native button",
+    "form action",
+    "scoped options",
+    "loading announcement",
     "size",
     "variant",
     "tone",
-    "type",
-    "name",
-    "value",
-    "ariaLabel",
     "loading",
-    "disabled",
-    "pressed",
-    "activated"
+    "loadingLabel"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use <button krnButton> and keep native form and event semantics explicit at the call site.",
+    "avoidWhen": "Do not add role=\"button\", proxy click through a custom output, or use Button as a pressed-state toggle."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
     "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
-    "Assuming the documentation SSR build replaces validation of the consuming application."
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Configure inheritable visual defaults with provideKrnButtonOptions; keep type, disabled, name, value, form, and ARIA attributes on the native host.",
+    "Use provideKrn translations for application-wide loading copy, a scoped loadingLabel option for a subtree, and the input only for a one-off override."
   ],
   "checklist": [
     "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
@@ -374,72 +320,6 @@
           "publicName": "loading",
           "syntax": "property"
         }
-      },
-      {
-        "key": "disabled",
-        "label": "Disabled",
-        "kind": "boolean",
-        "defaultValue": false,
-        "testValue": true,
-        "description": "Prevents user interaction.",
-        "binding": {
-          "kind": "input",
-          "publicName": "disabled",
-          "syntax": "property"
-        }
-      },
-      {
-        "key": "pressed",
-        "label": "Pressed",
-        "kind": "boolean",
-        "defaultValue": false,
-        "testValue": true,
-        "description": "Exposes the toggle-button pressed state.",
-        "binding": {
-          "kind": "input",
-          "publicName": "pressed",
-          "syntax": "property"
-        }
-      },
-      {
-        "key": "type",
-        "label": "Type",
-        "kind": "select",
-        "defaultValue": "button",
-        "testValue": "submit",
-        "description": "Configures the component type contract.",
-        "binding": {
-          "kind": "input",
-          "publicName": "type",
-          "syntax": "property"
-        },
-        "options": [
-          {
-            "label": "button",
-            "value": "button"
-          },
-          {
-            "label": "submit",
-            "value": "submit"
-          },
-          {
-            "label": "reset",
-            "value": "reset"
-          }
-        ]
-      },
-      {
-        "key": "value",
-        "label": "Value",
-        "kind": "text",
-        "defaultValue": "",
-        "testValue": "Alternate value",
-        "description": "Controlled component value.",
-        "binding": {
-          "kind": "input",
-          "publicName": "value",
-          "syntax": "property"
-        }
       }
     ],
     "presets": [
@@ -541,10 +421,14 @@
       },
       {
         "id": "disabled",
-        "label": "Disabled",
+        "label": "disabled",
         "scenario": "default",
-        "args": {
-          "disabled": true
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "disabled",
+          "description": "The fixture exposes the disabled status without claiming a public component input."
         }
       },
       {
@@ -554,45 +438,25 @@
         "args": {
           "loading": true
         }
-      },
-      {
-        "id": "pressed",
-        "label": "Pressed",
-        "scenario": "default",
-        "args": {
-          "pressed": true
-        }
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 10,
-      "controlled": 8,
-      "excluded": 2,
+      "publicInputsAndModels": 5,
+      "controlled": 4,
+      "excluded": 1,
       "unclassified": 0
     },
     "exclusions": [
       {
         "componentId": "button",
-        "publicName": "ariaLabel",
+        "publicName": "loadingLabel",
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#button"
-        }
-      },
-      {
-        "componentId": "button",
-        "publicName": "name",
-        "kind": "input",
-        "type": "string",
-        "code": "form-serialization",
-        "reason": "Form submission field names do not alter the rendered component and are covered by forms integration tests.",
-        "evidence": {
-          "category": "forms-integration",
-          "pointer": "tests/e2e/enterprise-acceptance.spec.ts#button"
         }
       }
     ]

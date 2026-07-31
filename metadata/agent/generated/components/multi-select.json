@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-multi-select",
   "selectors": ["krn-multi-select"],
+  "selectorDeprecations": [],
   "symbol": "KrnMultiSelect",
   "canonicalSymbol": "KrnMultiSelect",
   "canonicalId": "multi-select",
@@ -128,6 +129,26 @@
       "required": false,
       "defaultValue": "''",
       "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabelledBy",
+      "property": "ariaLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that provide the accessible name and take precedence over ariaLabel.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaDescribedBy",
+      "property": "ariaDescribedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids composed with Form Field hints and validation descriptions.",
       "descriptionSource": "inferred"
     },
     {
@@ -261,6 +282,26 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "tabindex",
+      "property": "tabIndex",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Native sequential-focus order forwarded to the owned interactive element.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "value",
+      "property": "value",
+      "kind": "input",
+      "type": "ReadonlyArray<T> | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controlled component value.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "open",
       "property": "open",
       "kind": "model",
@@ -353,6 +394,8 @@
     "loadingText",
     "errorText",
     "ariaLabel",
+    "ariaLabelledBy",
+    "ariaDescribedBy",
     "options",
     "optionsState",
     "identityMatcher",
@@ -366,6 +409,8 @@
     "readonly",
     "required",
     "invalid",
+    "tabindex",
+    "value",
     "open",
     "valueChange"
   ],
@@ -570,6 +615,22 @@
         },
         "min": 0,
         "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "tabindex",
+        "label": "Tabindex",
+        "kind": "number",
+        "defaultValue": 0,
+        "testValue": 1,
+        "description": "Configures the component tabindex contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "tabindex",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 10000,
         "step": 1
       }
     ],
@@ -784,15 +845,39 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 20,
-      "controlled": 12,
-      "excluded": 8,
+      "publicInputsAndModels": 24,
+      "controlled": 13,
+      "excluded": 11,
       "unclassified": 0
     },
     "exclusions": [
       {
         "componentId": "multi-select",
+        "publicName": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#multi-select"
+        }
+      },
+      {
+        "componentId": "multi-select",
         "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#multi-select"
+        }
+      },
+      {
+        "componentId": "multi-select",
+        "publicName": "ariaLabelledBy",
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
@@ -884,6 +969,18 @@
         "evidence": {
           "category": "component-example",
           "pointer": "agent/components/multi-select.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "multi-select",
+        "publicName": "value",
+        "kind": "input",
+        "type": "ReadonlyArray<T> | undefined",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/multi-select?state=default"
         }
       }
     ]

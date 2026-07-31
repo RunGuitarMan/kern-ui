@@ -21,6 +21,10 @@
       "baseline": "core.api.d.ts"
     },
     {
+      "subpath": "./i18n",
+      "baseline": "i18n.api.d.ts"
+    },
+    {
       "subpath": "./kit",
       "baseline": "kit.api.d.ts"
     },

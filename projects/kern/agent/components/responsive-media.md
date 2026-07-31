@@ -51,6 +51,10 @@ void bootstrapApplication(KernResponsiveMediaAgentExample);
 | ------------- | ----- | -------- | -------- | ---------- | --------------------------------------------------------------- |
 | `aspectRatio` | input | `string` | no       | `'16 / 9'` | Required width-to-height ratio maintained by the media surface. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

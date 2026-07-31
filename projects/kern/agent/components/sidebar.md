@@ -58,7 +58,11 @@ void bootstrapApplication(KernSidebarAgentExample);
 | `width`          | input | `KrnLayoutSpace`      | no       | `'var(--krn-shell-sidebar-width, 17rem)'`      | Explicit inline size of the rendered surface.                           |
 | `collapsedWidth` | input | `KrnLayoutSpace`      | no       | `'4rem'`                                       | Controls whether the component applies the collapsed width behavior.    |
 | `ariaLabel`      | input | `string`              | no       | `this.translations.layout.secondaryNavigation` | Accessible name used when visible content is not sufficient.            |
-| `side`           | input | `"start" \| "end"`    | no       | `'start'`                                      | Logical side on which the anchored or modal surface is placed.          |
+| `side`           | input | `"end" \| "start"`    | no       | `'start'`                                      | Logical side on which the anchored or modal surface is placed.          |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 

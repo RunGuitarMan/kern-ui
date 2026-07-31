@@ -65,6 +65,10 @@ void bootstrapApplication(KernContextMenuAgentExample);
 | `ariaLabel`    | input  | `string`                            | no       | `this.translations.navigation.contextActions` | Accessible name used when visible content is not sufficient.         |
 | `itemSelected` | output | `KrnContextMenuItem`                | no       | `undefined`                                   | Notifies the consumer after the item selected interaction completes. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

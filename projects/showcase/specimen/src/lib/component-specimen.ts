@@ -6,12 +6,14 @@ import {
   ElementRef,
   effect,
   inject,
+  Injectable,
   input,
   signal,
   viewChild,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { KRN_CLIPBOARD_WRITER, type KrnClipboardWriter } from '@kern-ui/angular/cdk';
 import type { KernCatalogItem } from '@kern-ui/showcase';
 import {
   KERN_PLAYGROUND_DEFINITIONS,
@@ -204,10 +206,10 @@ export const KERN_SPECIMEN_CURATED_RENDERER_CONTROLS = Object.freeze({
   'scroll-area': rendererControls('axis'),
   'responsive-show-hide': rendererControls('display'),
   'resizable-panels': rendererControls('disabled'),
-  button: rendererControls('variant', 'tone', 'size', 'loading', 'disabled', 'pressed'),
-  'icon-button': rendererControls('variant', 'tone', 'size', 'loading', 'disabled', 'pressed'),
-  'button-group': rendererControls('orientation'),
-  'split-button': rendererControls('open'),
+  button: rendererControls('variant', 'tone', 'size', 'loading'),
+  'icon-button': rendererControls('variant', 'tone', 'size', 'loading', 'disabled'),
+  'button-group': rendererControls('orientation', 'connected'),
+  'split-button': rendererControls('open', 'menuAlign'),
   'floating-action-button': rendererControls(
     'variant',
     'tone',
@@ -216,12 +218,29 @@ export const KERN_SPECIMEN_CURATED_RENDERER_CONTROLS = Object.freeze({
     'loading',
     'disabled',
   ),
-  'toggle-button': rendererControls('disabled', 'selected'),
-  'toggle-group': rendererControls('multiple'),
-  'copy-button': rendererControls('disabled'),
-  link: rendererControls('disabled'),
-  'dropdown-button': rendererControls('open'),
-  'form-field': rendererControls('state'),
+  'toggle-button': rendererControls(
+    'size',
+    'pressedVariant',
+    'pressedTone',
+    'unpressedVariant',
+    'unpressedTone',
+    'disabled',
+    'selected',
+    'value',
+  ),
+  'toggle-group': rendererControls('orientation', 'multiple', 'disabled'),
+  'copy-button': rendererControls(
+    'variant',
+    'tone',
+    'size',
+    'feedbackDuration',
+    'disabled',
+    'value',
+    'copyState',
+  ),
+  link: rendererControls('externalDestination'),
+  'dropdown-button': rendererControls('open', 'menuAlign'),
+  'form-field': rendererControls('state', 'disabled', 'readonly', 'required'),
   label: rendererControls('required'),
   hint: rendererControls('content'),
   'validation-message': rendererControls('content'),
@@ -470,6 +489,27 @@ export function resolveKernSpecimenShortcutKeys(platform: string): readonly stri
   return platform === 'Windows' ? ['Ctrl', 'K'] : ['⌘', 'K'];
 }
 
+type KernCopyFixtureState = 'live' | 'idle' | 'pending' | 'copied' | 'error';
+
+@Injectable()
+class KernSpecimenClipboardWriter implements KrnClipboardWriter {
+  private readonly liveWriter = inject(KRN_CLIPBOARD_WRITER, { skipSelf: true });
+  readonly fixtureState = signal<KernCopyFixtureState>('live');
+
+  writeText(value: string): Promise<void> {
+    switch (this.fixtureState()) {
+      case 'live':
+        return this.liveWriter.writeText(value);
+      case 'pending':
+        return new Promise<void>(() => undefined);
+      case 'error':
+        return Promise.reject(new Error('KERN_SPECIMEN_COPY_FAILED'));
+      default:
+        return Promise.resolve();
+    }
+  }
+}
+
 @Component({
   selector: 'kshow-component-specimen',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -605,7 +645,15 @@ export function resolveKernSpecimenShortcutKeys(platform: string): readonly stri
     KrnUserMenu,
     KrnValidationMessage,
     FormsModule,
+    ReactiveFormsModule,
     RouterLink,
+  ],
+  providers: [
+    KernSpecimenClipboardWriter,
+    {
+      provide: KRN_CLIPBOARD_WRITER,
+      useExisting: KernSpecimenClipboardWriter,
+    },
   ],
   templateUrl: './component-specimen.html',
   styleUrl: './component-specimen.css',
@@ -667,8 +715,19 @@ export class KernComponentSpecimen {
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly toasts = inject(KrnToastService);
+  private readonly clipboardWriter = inject(KernSpecimenClipboardWriter);
   protected readonly translations = inject(KRN_TRANSLATIONS);
   private readonly contextMenuTarget = viewChild<ElementRef<HTMLElement>>('contextMenuTarget');
+  private readonly copyButtonTarget = viewChild<ElementRef<HTMLElement>>('copyButtonTarget');
+  protected readonly copyFixtureState = computed<KernCopyFixtureState>(() => {
+    const state = this.stringArgument<KernCopyFixtureState>('copyState', 'live');
+    return state === 'idle' || state === 'pending' || state === 'copied' || state === 'error'
+      ? state
+      : 'live';
+  });
+  protected readonly copyFixtureKey = computed(
+    () => `${this.copyFixtureState()}:${this.resetRevision()}`,
+  );
   protected readonly surfaceOpen = signal(false);
   protected readonly selectOpen = signal(false);
   protected readonly actionMenuOpen = signal(false);
@@ -696,8 +755,13 @@ export class KernComponentSpecimen {
   protected readonly formStep = signal(1);
   protected readonly workspaceName = signal('');
   protected readonly workspaceNameTouched = signal(false);
+  protected readonly formFieldControl = new FormControl('Northstar', {
+    nonNullable: true,
+    validators: [Validators.required, Validators.minLength(3)],
+  });
   protected readonly paginationPage = signal(1);
   protected readonly togglePressed = signal(false);
+  protected readonly toggleValues = signal<readonly string[]>(['list']);
   protected readonly chipSelected = signal(true);
   protected readonly tagSelected = signal(false);
   protected readonly checkboxValue = signal(false);
@@ -742,9 +806,46 @@ export class KernComponentSpecimen {
     const length = this.workspaceName().trim().length;
     return length >= 3 && length <= 48 ? '' : 'Use 3–48 characters.';
   });
+  protected readonly formFieldError = computed(() =>
+    this.stringArgument<'default' | 'valid' | 'pending' | 'invalid'>('state', 'default') ===
+    'invalid'
+      ? 'Use 3–48 characters.'
+      : this.workspaceNameError(),
+  );
   private lastItemId = '';
   private lastResetRevision = 0;
   private readonly synchronizedArguments = new Map<string, KernPlaygroundValue>();
+  private readonly synchronizeFormFieldControl = effect(() => {
+    if (this.item().id !== 'form-field') return;
+
+    const state = this.stringArgument<'default' | 'valid' | 'pending' | 'invalid'>(
+      'state',
+      'default',
+    );
+    const disabled = this.booleanArgument('disabled', false);
+
+    if (disabled && this.formFieldControl.enabled) {
+      this.formFieldControl.disable();
+    } else if (!disabled && this.formFieldControl.disabled) {
+      this.formFieldControl.enable();
+    }
+
+    if (state === 'invalid') {
+      this.formFieldControl.setValue('');
+      this.formFieldControl.markAsTouched();
+    } else if (state === 'valid') {
+      this.formFieldControl.setValue('Northstar');
+      this.formFieldControl.markAsTouched();
+    } else if (state === 'pending') {
+      this.formFieldControl.setValue('Northstar');
+      this.formFieldControl.markAsPending();
+    } else {
+      this.formFieldControl.setValue('Northstar');
+      this.formFieldControl.markAsPristine();
+      this.formFieldControl.markAsUntouched();
+      this.formFieldControl.updateValueAndValidity();
+    }
+  });
   private readonly synchronizeControlledState = effect(() => {
     const id = this.item().id;
     const resetRevision = this.resetRevision();
@@ -1247,7 +1348,7 @@ export class KernComponentSpecimen {
 
 @Component({
   imports: [KrnButton],
-  template: \`<krn-button>Publish</krn-button>\`,
+  template: \`<button krnButton>Publish</button>\`,
 })
 export class Toolbar {}`;
 
@@ -1256,6 +1357,23 @@ export class Toolbar {}`;
     `${row.workspace} is owned by ${row.owner}.`;
 
   private contextMenuControlApplied = false;
+  private lastCopyFixtureHost: HTMLElement | null = null;
+  private readonly synchronizeCopyFixture = afterRenderEffect(() => {
+    if (this.item().id !== 'copy-button') {
+      this.lastCopyFixtureHost = null;
+      return;
+    }
+
+    const state = this.copyFixtureState();
+    this.clipboardWriter.fixtureState.set(state);
+    const host = this.copyButtonTarget()?.nativeElement;
+    if (!host || host === this.lastCopyFixtureHost) return;
+
+    this.lastCopyFixtureHost = host;
+    if (state === 'pending' || state === 'copied' || state === 'error') {
+      host.querySelector<HTMLButtonElement>('button')?.click();
+    }
+  });
   private readonly synchronizeContextMenu = afterRenderEffect(() => {
     const requested = this.item().id === 'context-menu' && this.openArgument(false);
     const target = this.contextMenuTarget()?.nativeElement;
@@ -1321,6 +1439,7 @@ export class Toolbar {}`;
     this.workspaceNameTouched.set(false);
     this.paginationPage.set(1);
     this.togglePressed.set(false);
+    this.toggleValues.set(['list']);
     this.chipSelected.set(true);
     this.tagSelected.set(false);
     this.checkboxValue.set(false);

@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-responsive-application-shell",
   "selectors": ["krn-responsive-application-shell"],
+  "selectorDeprecations": [],
   "symbol": "KrnResponsiveApplicationShell",
   "canonicalSymbol": "KrnResponsiveApplicationShell",
   "canonicalId": "responsive-application-shell",

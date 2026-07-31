@@ -51,17 +51,25 @@ void bootstrapApplication(KernCheckboxGroupAgentExample);
 
 ## API
 
-| Name          | Kind   | Type                    | Required | Default      | Description                                                                |
-| ------------- | ------ | ----------------------- | -------- | ------------ | -------------------------------------------------------------------------- |
-| `id`          | input  | `string`                | no       | `''`         | Stable identifier value used by the id contract.                           |
-| `label`       | input  | `string`                | no       | `''`         | Visible text that names the control or data value.                         |
-| `orientation` | input  | `KrnOrientation`        | no       | `'vertical'` | Defines the logical axis used by layout and keyboard navigation.           |
-| `disabled`    | input  | `boolean`               | no       | `false`      | Prevents user interaction and participates in the disabled-state contract. |
-| `readonly`    | input  | `boolean`               | no       | `false`      | Keeps the value perceivable while preventing user edits.                   |
-| `required`    | input  | `boolean`               | no       | `false`      | Marks the value as required and participates in Angular Forms validation.  |
-| `invalid`     | input  | `boolean`               | no       | `false`      | Exposes an externally controlled invalid presentation state.               |
-| `describedBy` | input  | `string`                | no       | `''`         | Space-separated element ids that provide the accessible description.       |
-| `valueChange` | output | `ReadonlyArray<string>` | no       | `undefined`  | Notifies the consumer after the value change interaction completes.        |
+| Name              | Kind   | Type                                 | Required | Default      | Description                                                                                      |
+| ----------------- | ------ | ------------------------------------ | -------- | ------------ | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`                             | no       | `''`         | Stable identifier value used by the id contract.                                                 |
+| `label`           | input  | `string`                             | no       | `''`         | Visible text that names the control or data value.                                               |
+| `ariaLabel`       | input  | `string`                             | no       | `''`         | Accessible name used when visible content is not sufficient.                                     |
+| `ariaLabelledBy`  | input  | `string`                             | no       | `''`         | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`                             | no       | `''`         | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `orientation`     | input  | `KrnOrientation`                     | no       | `'vertical'` | Defines the logical axis used by layout and keyboard navigation.                                 |
+| `value`           | input  | `ReadonlyArray<string> \| undefined` | no       | `undefined`  | Controlled component value.                                                                      |
+| `disabled`        | input  | `boolean`                            | no       | `false`      | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean`                            | no       | `false`      | Keeps the value perceivable while preventing user edits.                                         |
+| `required`        | input  | `boolean`                            | no       | `false`      | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`         | input  | `boolean`                            | no       | `false`      | Exposes an externally controlled invalid presentation state.                                     |
+| `describedBy`     | input  | `string`                             | no       | `''`         | Space-separated element ids that provide the accessible description.                             |
+| `valueChange`     | output | `ReadonlyArray<string>`              | no       | `undefined`  | Notifies the consumer after the value change interaction completes.                              |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -115,28 +123,32 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/checkbox-group`
 
 Scenarios: `default`.
-Public API coverage: 7/8
-directly controlled; 1 exact exclusions; 0 unclassified.
+Public API coverage: 7/12
+directly controlled; 5 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default             | Test value                      | Binding                        | Description                                                               |
-| ------------- | ------- | ------------------- | ------------------------------- | ------------------------------ | ------------------------------------------------------------------------- |
-| `disabled`    | boolean | `false`             | `true`                          | input `disabled` (property)    | Prevents user interaction.                                                |
-| `label`       | text    | `"Included events"` | `"Included events · alternate"` | input `label` (property)       | Names the checkbox group.                                                 |
-| `id`          | text    | `""`                | `"Alternate value"`             | input `id` (property)          | Configures the component id contract.                                     |
-| `invalid`     | boolean | `false`             | `true`                          | input `invalid` (property)     | Exposes an externally controlled invalid presentation state.              |
-| `orientation` | select  | `"vertical"`        | `"horizontal"`                  | input `orientation` (property) | Configures the component orientation contract.                            |
-| `readonly`    | boolean | `false`             | `true`                          | input `readonly` (property)    | Configures the component readonly contract.                               |
-| `required`    | boolean | `false`             | `true`                          | input `required` (property)    | Marks the value as required and participates in Angular Forms validation. |
+| Argument      | Control | Default             | Test value                      | Binding                        | Description                                                                               |
+| ------------- | ------- | ------------------- | ------------------------------- | ------------------------------ | ----------------------------------------------------------------------------------------- |
+| `disabled`    | boolean | `false`             | `true`                          | input `disabled` (property)    | Prevents user interaction.                                                                |
+| `label`       | text    | `"Included events"` | `"Included events · alternate"` | input `label` (property)       | Names the checkbox group.                                                                 |
+| `id`          | text    | `""`                | `"Alternate value"`             | input `id` (property)          | Configures the component id contract.                                                     |
+| `invalid`     | boolean | `false`             | `true`                          | input `invalid` (property)     | Exposes an externally controlled invalid presentation state.                              |
+| `orientation` | select  | `"vertical"`        | `"horizontal"`                  | input `orientation` (property) | Logical axis exposed by the component; behavior follows its documented keyboard contract. |
+| `readonly`    | boolean | `false`             | `true`                          | input `readonly` (property)    | Configures the component readonly contract.                                               |
+| `required`    | boolean | `false`             | `true`                          | input `required` (property)    | Marks the value as required and participates in Angular Forms validation.                 |
 
 Exact API exclusions:
 
-| Public API    | Category   | Evidence                                                    | Reason                                                                                                        |
-| ------------- | ---------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `describedBy` | dom-wiring | `a11y-test:tests/a11y/accessibility.spec.ts#checkbox-group` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid. |
+| Public API        | Category           | Evidence                                                    | Reason                                                                                                                  |
+| ----------------- | ------------------ | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#checkbox-group` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#checkbox-group` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabelledBy`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#checkbox-group` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `describedBy`     | dom-wiring         | `a11y-test:tests/a11y/accessibility.spec.ts#checkbox-group` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.           |
+| `value`           | complex-data       | `specimen-fixture:preview/checkbox-group?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
 
 Presets:
 

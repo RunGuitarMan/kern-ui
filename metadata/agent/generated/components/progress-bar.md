@@ -62,6 +62,10 @@ void bootstrapApplication(KernProgressBarAgentExample);
 | `ariaLabel`     | input | `string`  | no       | `this.translations.feedback.progress` | Accessible name used when visible content is not sufficient.     |
 | `valueText`     | input | `string`  | no       | `''`                                  | Human-readable copy for the value state or control.              |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._

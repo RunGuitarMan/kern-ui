@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-stack",
   "selectors": ["krn-stack"],
+  "selectorDeprecations": [],
   "symbol": "KrnStack",
   "canonicalSymbol": "KrnStack",
   "canonicalId": "stack",

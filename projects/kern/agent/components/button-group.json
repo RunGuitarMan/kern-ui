@@ -3,8 +3,20 @@
   "name": "Button Group",
   "category": "Actions",
   "kind": "component",
-  "selector": "krn-button-group",
-  "selectors": ["krn-button-group"],
+  "selector": "div[krnButtonGroup]",
+  "selectors": ["div[krnButtonGroup]", "krn-button-group"],
+  "selectorDeprecations": [
+    {
+      "id": "krn-button-group-element-selector",
+      "selector": "krn-button-group",
+      "status": "active",
+      "introducedIn": "0.1.0",
+      "removeIn": "0.2.0",
+      "replacement": "div[krnButtonGroup]",
+      "migration": "Replace <krn-button-group> with <div krnButtonGroup> and replace its closing tag with </div>; keep each child action and its native semantics unchanged.",
+      "documentation": "docs/DEPRECATIONS.md#krn-button-group-element-selector"
+    }
+  ],
   "symbol": "KrnButtonGroup",
   "canonicalSymbol": "KrnButtonGroup",
   "canonicalId": "button-group",
@@ -12,10 +24,10 @@
   "importPath": "@kern-ui/angular/kit",
   "aliases": {
     "symbols": [],
-    "selectors": [],
+    "selectors": ["krn-button-group"],
     "componentIds": []
   },
-  "summary": "Button Group. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.",
+  "summary": "Button Group. Labels and arranges independent native actions without owning their focus, activation, disabled, loading, or selection state.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -25,10 +37,7 @@
     "compact",
     "RTL",
     "mobile",
-    "hover",
-    "focus-visible",
-    "active",
-    "disabled"
+    "connected"
   ],
   "lifecycle": {
     "status": "stable",
@@ -50,24 +59,34 @@
   },
   "api": [
     {
-      "name": "ariaLabel",
-      "property": "ariaLabel",
-      "kind": "input",
-      "type": "string",
-      "required": false,
-      "defaultValue": "''",
-      "description": "Accessible name used when visible content is not sufficient.",
-      "descriptionSource": "inferred"
-    },
-    {
       "name": "orientation",
       "property": "orientation",
       "kind": "input",
       "type": "KrnOrientation",
       "required": false,
-      "defaultValue": "'horizontal'",
-      "description": "Defines the logical axis used by layout and keyboard navigation.",
-      "descriptionSource": "inferred"
+      "defaultValue": "this.options.orientation",
+      "description": "Changes the visual layout axis without altering native document-order keyboard behavior.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "connected",
+      "property": "connected",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "this.options.connected",
+      "description": "Joins adjacent action borders and radii without coordinating child state or activation.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string | null | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Deprecated compatibility bridge for a native accessible-name attribute.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [
@@ -89,11 +108,15 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Enter / Space activates", "Tab follows document order"],
+    "keyboard": [
+      "Tab visits each enabled native action in document order",
+      "Enter and Space activate the focused native button",
+      "Orientation and connected styling do not add Arrow-key navigation or a roving tab stop"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The canonical <div krnButtonGroup> host exposes role=\"group\" and uses native aria-label or aria-labelledby for its accessible name.",
+      "Each child action owns its native accessible name, disabled, loading, form, and activation semantics.",
+      "Button Group does not expose selection; use Toggle Group or Segmented Control for a managed choice."
     ],
     "manualValidationRequired": true
   },
@@ -112,29 +135,45 @@
       "title": "Grouped review actions",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Grouped review actions\n *\n * Present closely related actions as one labeled control group.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnButton, KrnButtonGroup } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-button-group-agent-example',\n  standalone: true,\n  imports: [KrnButtonGroup, KrnButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-button-group ariaLabel=\"Review actions\">\n      <krn-button variant=\"outline\">Request changes</krn-button>\n      <krn-button>Approve</krn-button>\n    </krn-button-group>\n  `,\n})\nexport class KernButtonGroupAgentExample {}\n\nvoid bootstrapApplication(KernButtonGroupAgentExample);\n",
+      "code": "/**\n * Grouped review actions\n *\n * Present independent native actions as one labeled visual group.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnButton, KrnButtonGroup } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-button-group-agent-example',\n  standalone: true,\n  imports: [KrnButtonGroup, KrnButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <div krnButtonGroup aria-label=\"Review actions\">\n      <button krnButton type=\"button\" variant=\"outline\">Request changes</button>\n      <button krnButton type=\"button\">Approve</button>\n    </div>\n  `,\n})\nexport class KernButtonGroupAgentExample {}\n\nvoid bootstrapApplication(KernButtonGroupAgentExample);\n",
       "verification": "compiled",
       "source": "examples/button-group.ts"
     }
   ],
-  "related": ["button", "icon-button", "split-button", "floating-action-button"],
+  "related": [
+    "button",
+    "icon-button",
+    "toggle-group",
+    "segmented-control",
+    "split-button",
+    "floating-action-button"
+  ],
   "keywords": [
     "button-group",
     "Button Group",
     "Actions",
-    "krn-button-group",
+    "div[krnButtonGroup]",
     "KrnButtonGroup",
-    "ariaLabel",
-    "orientation"
+    "native action group",
+    "independent actions",
+    "document-order keyboard",
+    "connected layout",
+    "scoped layout defaults",
+    "orientation",
+    "connected",
+    "ariaLabel"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use <div krnButtonGroup aria-label=\"Review actions\"> for a small set of related, independent native actions.",
+    "avoidWhen": "Do not add Arrow-key navigation, selected state, or group-level disabled/loading behavior; use Toggle Group or Segmented Control when the group must own a choice."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
     "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
-    "Assuming the documentation SSR build replaces validation of the consuming application."
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Use div[krnButtonGroup] with a native aria-label or aria-labelledby; orientation and connected change layout only, while each child action keeps its own native semantics and Tab stop.",
+    "Do not add group-level disabled, loading, selection, or Arrow-key behavior; use Toggle Group or Segmented Control when the composition must own a managed choice.",
+    "Use provideKrnButtonGroupOptions for inheritable orientation or connected defaults; keep accessible naming and child interaction state explicit at the call site."
   ],
   "checklist": [
     "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
@@ -159,7 +198,7 @@
         "kind": "select",
         "defaultValue": "horizontal",
         "testValue": "vertical",
-        "description": "Changes the group layout and keyboard axis.",
+        "description": "Changes only the visual layout; native actions keep document-order keyboard navigation.",
         "binding": {
           "kind": "input",
           "publicName": "orientation",
@@ -175,6 +214,19 @@
             "value": "vertical"
           }
         ]
+      },
+      {
+        "key": "connected",
+        "label": "Connected",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Joins adjacent action borders without changing their semantics or keyboard order.",
+        "binding": {
+          "kind": "input",
+          "publicName": "connected",
+          "syntax": "property"
+        }
       }
     ],
     "presets": [
@@ -254,42 +306,17 @@
         "args": {}
       },
       {
-        "id": "hover",
-        "label": "Hover",
+        "id": "connected",
+        "label": "Connected",
         "scenario": "default",
-        "visualPseudoState": "hover",
-        "args": {}
-      },
-      {
-        "id": "focus-visible",
-        "label": "Focus visible",
-        "scenario": "default",
-        "visualPseudoState": "focus-visible",
-        "args": {}
-      },
-      {
-        "id": "active",
-        "label": "Active",
-        "scenario": "default",
-        "visualPseudoState": "active",
-        "args": {}
-      },
-      {
-        "id": "disabled",
-        "label": "disabled",
-        "scenario": "default",
-        "args": {},
-        "fixtureEffect": {
-          "kind": "status",
-          "mode": "neutral",
-          "label": "disabled",
-          "description": "The fixture exposes the disabled status without claiming a public component input."
+        "args": {
+          "connected": true
         }
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 2,
-      "controlled": 1,
+      "publicInputsAndModels": 3,
+      "controlled": 2,
       "excluded": 1,
       "unclassified": 0
     },
@@ -298,9 +325,9 @@
         "componentId": "button-group",
         "publicName": "ariaLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | null | undefined",
         "code": "accessibility-copy",
-        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "reason": "Deprecated compatibility input; the canonical div[krnButtonGroup] host uses native aria-label or aria-labelledby.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#button-group"

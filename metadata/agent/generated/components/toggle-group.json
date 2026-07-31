@@ -3,8 +3,20 @@
   "name": "Toggle Group",
   "category": "Actions",
   "kind": "component",
-  "selector": "krn-toggle-group",
-  "selectors": ["krn-toggle-group"],
+  "selector": "div[krnToggleGroup]",
+  "selectors": ["div[krnToggleGroup]", "krn-toggle-group"],
+  "selectorDeprecations": [
+    {
+      "id": "krn-toggle-group-element-selector",
+      "selector": "krn-toggle-group",
+      "status": "active",
+      "introducedIn": "0.1.0",
+      "removeIn": "0.2.0",
+      "replacement": "div[krnToggleGroup]",
+      "migration": "Replace <krn-toggle-group> with <div krnToggleGroup> and replace its closing tag with </div>; keep direct native Toggle Button children and stable values unchanged.",
+      "documentation": "docs/DEPRECATIONS.md#krn-toggle-group-element-selector"
+    }
+  ],
   "symbol": "KrnToggleGroup",
   "canonicalSymbol": "KrnToggleGroup",
   "canonicalId": "toggle-group",
@@ -12,10 +24,10 @@
   "importPath": "@kern-ui/angular/kit",
   "aliases": {
     "symbols": [],
-    "selectors": [],
+    "selectors": ["krn-toggle-group"],
     "componentIds": []
   },
-  "summary": "Toggle Group. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.",
+  "summary": "Toggle Group. Coordinates stable pressed values across native toggle buttons in a labelled, orientation-aware action toolbar.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -52,24 +64,14 @@
   },
   "api": [
     {
-      "name": "ariaLabel",
-      "property": "ariaLabel",
-      "kind": "input",
-      "type": "string",
-      "required": true,
-      "defaultValue": "required",
-      "description": "Accessible name used when visible content is not sufficient.",
-      "descriptionSource": "inferred"
-    },
-    {
       "name": "orientation",
       "property": "orientation",
       "kind": "input",
       "type": "KrnOrientation",
       "required": false,
-      "defaultValue": "'horizontal'",
-      "description": "Defines the logical axis used by layout and keyboard navigation.",
-      "descriptionSource": "inferred"
+      "defaultValue": "this.options.orientation",
+      "description": "Defines both the visual layout axis and the toolbar Arrow-key axis.",
+      "descriptionSource": "source"
     },
     {
       "name": "multiple",
@@ -77,9 +79,9 @@
       "kind": "input",
       "type": "boolean",
       "required": false,
-      "defaultValue": "false",
-      "description": "Allows more than one value or file to be selected in one interaction.",
-      "descriptionSource": "inferred"
+      "defaultValue": "this.options.multiple",
+      "description": "Allows multiple pressed values; false exposes at most one effective pressed value.",
+      "descriptionSource": "source"
     },
     {
       "name": "disabled",
@@ -88,8 +90,8 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Prevents user interaction and participates in the disabled-state contract.",
-      "descriptionSource": "inferred"
+      "description": "Disables every registered native toggle and all group-owned value transitions.",
+      "descriptionSource": "source"
     },
     {
       "name": "values",
@@ -98,8 +100,18 @@
       "type": "ReadonlyArray<string>",
       "required": false,
       "defaultValue": "[]",
-      "description": "Controlled values state with a matching Angular model-change output.",
-      "descriptionSource": "inferred"
+      "description": "Controlled stable string values; user transitions always emit a fresh frozen array.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string | null | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Deprecated compatibility bridge for native accessible-name attributes.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [
@@ -121,11 +133,17 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Enter / Space activates", "Tab follows document order"],
+    "keyboard": [
+      "Tab enters or leaves the toolbar through one remembered roving tab stop",
+      "Arrow keys move focus on the configured axis without changing pressed state",
+      "Home and End move focus to the first or last enabled toggle; navigation wraps and respects RTL",
+      "Enter and Space activate only the focused native toggle button"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The canonical <div krnToggleGroup> host exposes role=\"toolbar\", aria-orientation, and a native aria-label or aria-labelledby.",
+      "Each direct <button krnToggleButton> retains its native accessible name, aria-pressed state, focus, and activation behavior.",
+      "Group disabled state is reflected as aria-disabled on the toolbar and native disabled on every toggle button.",
+      "Single mode exposes at most one effective pressed value; duplicate controlled values are canonicalized on the next user transition."
     ],
     "manualValidationRequired": true
   },
@@ -144,33 +162,49 @@
       "title": "Multi-select view controls",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Multi-select view controls\n *\n * Control a set of pressed view options by stable string values.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnToggleButton, KrnToggleGroup } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-toggle-group-agent-example',\n  standalone: true,\n  imports: [KrnToggleGroup, KrnToggleButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-toggle-group\n      ariaLabel=\"Visible dashboard layers\"\n      [multiple]=\"true\"\n      [(values)]=\"visibleLayers\"\n    >\n      <krn-toggle-button value=\"targets\">Targets</krn-toggle-button>\n      <krn-toggle-button value=\"forecast\">Forecast</krn-toggle-button>\n    </krn-toggle-group>\n  `,\n})\nexport class KernToggleGroupAgentExample {\n  visibleLayers: readonly string[] = ['targets'];\n}\n\nvoid bootstrapApplication(KernToggleGroupAgentExample);\n",
+      "code": "/**\n * Multi-select view controls\n *\n * Control a set of pressed view options by stable string values.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnToggleButton, KrnToggleGroup } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-toggle-group-agent-example',\n  standalone: true,\n  imports: [KrnToggleGroup, KrnToggleButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <div\n      krnToggleGroup\n      aria-label=\"Visible dashboard layers\"\n      [multiple]=\"true\"\n      [(values)]=\"visibleLayers\"\n    >\n      <button krnToggleButton value=\"targets\">Targets</button>\n      <button krnToggleButton value=\"forecast\">Forecast</button>\n    </div>\n  `,\n})\nexport class KernToggleGroupAgentExample {\n  visibleLayers: readonly string[] = ['targets'];\n}\n\nvoid bootstrapApplication(KernToggleGroupAgentExample);\n",
       "verification": "compiled",
       "source": "examples/toggle-group.ts"
     }
   ],
-  "related": ["button", "icon-button", "button-group", "split-button"],
+  "related": [
+    "toggle-button",
+    "button-group",
+    "radio-group",
+    "segmented-control",
+    "button",
+    "icon-button",
+    "split-button"
+  ],
   "keywords": [
     "toggle-group",
     "Toggle Group",
     "Actions",
-    "krn-toggle-group",
+    "div[krnToggleGroup]",
     "KrnToggleGroup",
-    "ariaLabel",
+    "toggle toolbar",
+    "roving tabindex",
+    "aria-pressed collection",
+    "controlled string values",
+    "scoped group defaults",
     "orientation",
     "multiple",
     "disabled",
-    "values"
+    "values",
+    "ariaLabel"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use <div krnToggleGroup aria-label=\"Formatting\"> with direct native Toggle Button children and stable unique values.",
+    "avoidWhen": "Do not use Toggle Group as an Angular form radio control or project arbitrary links and labels; use Radio Group or Segmented Control for a mandatory exclusive choice."
   },
   "commonMistakes": [
-    "Do not omit required inputs: `ariaLabel`.",
     "Importing from an undeclared family path or a source implementation file.",
     "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
-    "Assuming the documentation SSR build replaces validation of the consuming application."
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Use div[krnToggleGroup] with a native aria-label or aria-labelledby and direct button[krnToggleButton] children whose values are stable and unique.",
+    "Arrow, Home, and End move focus without changing selection; activate the focused native button with Enter or Space.",
+    "Use provideKrnToggleGroupOptions only for inheritable orientation and multiple defaults. Keep disabled and controlled values explicit at the instance.",
+    "Use Radio Group or Segmented Control instead when an Angular form requires exactly one selected value."
   ],
   "checklist": [
     "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
@@ -190,6 +224,29 @@
     "scenarios": ["default"],
     "controls": [
       {
+        "key": "orientation",
+        "label": "Orientation",
+        "kind": "select",
+        "defaultValue": "horizontal",
+        "testValue": "vertical",
+        "description": "Changes the visual layout and Arrow-key axis exposed by the toolbar.",
+        "binding": {
+          "kind": "input",
+          "publicName": "orientation",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "horizontal",
+            "value": "horizontal"
+          },
+          {
+            "label": "vertical",
+            "value": "vertical"
+          }
+        ]
+      },
+      {
         "key": "multiple",
         "label": "Multiple",
         "kind": "boolean",
@@ -208,35 +265,12 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Prevents interaction and participates in the component disabled contract.",
+        "description": "Disables every native toggle button while preserving perceivable toolbar semantics.",
         "binding": {
           "kind": "input",
           "publicName": "disabled",
           "syntax": "property"
         }
-      },
-      {
-        "key": "orientation",
-        "label": "Orientation",
-        "kind": "select",
-        "defaultValue": "horizontal",
-        "testValue": "vertical",
-        "description": "Configures the component orientation contract.",
-        "binding": {
-          "kind": "input",
-          "publicName": "orientation",
-          "syntax": "property"
-        },
-        "options": [
-          {
-            "label": "horizontal",
-            "value": "horizontal"
-          },
-          {
-            "label": "vertical",
-            "value": "vertical"
-          }
-        ]
       }
     ],
     "presets": [
@@ -380,7 +414,7 @@
         "componentId": "toggle-group",
         "publicName": "ariaLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | null | undefined",
         "code": "accessibility-copy",
         "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
         "evidence": {

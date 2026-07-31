@@ -1,19 +1,19 @@
 # Link
 
 - ID: `link`
-- Selector: `krn-link`
+- Selector: `a[krnLink]`
 - Import: `import { KrnLink } from '@kern-ui/angular/kit';`
 - Canonical symbol: `KrnLink`
 - Lifecycle: **stable**
 - Category: Actions
 
-Link. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.
+Link. Enhances one native navigation anchor with KERN inline presentation while the browser or Angular Router owns its destination, relationships, focus, and activation.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use <a krnLink> for navigation and keep href or RouterLink plus all native anchor semantics on that host.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not simulate disabled navigation or use Link for an action in the current context; omit unavailable navigation or use a native Button.
 
 ## Compile-verified standalone Angular example
 
@@ -35,9 +35,9 @@ import { KrnLink } from '@kern-ui/angular/kit';
   imports: [KrnLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <krn-link href="https://example.com/audit-policy" target="_blank" rel="noopener noreferrer">
+    <a krnLink href="https://example.com/audit-policy" target="_blank" rel="noopener noreferrer">
       Audit policy
-    </krn-link>
+    </a>
   `,
 })
 export class KernLinkAgentExample {}
@@ -47,19 +47,15 @@ void bootstrapApplication(KernLinkAgentExample);
 
 ## API
 
-| Name        | Kind   | Type            | Required | Default     | Description                                                                       |
-| ----------- | ------ | --------------- | -------- | ----------- | --------------------------------------------------------------------------------- |
-| `href`      | input  | `string`        | yes      | `required`  | Required destination URL used by the semantic link element.                       |
-| `target`    | input  | `KrnLinkTarget` | no       | `'_self'`   | Native browsing-context target used when activating the link.                     |
-| `rel`       | input  | `string`        | no       | `''`        | Native link relationship tokens applied to the destination.                       |
-| `download`  | input  | `string`        | no       | `''`        | Enables native download behavior and optionally provides the downloaded filename. |
-| `ariaLabel` | input  | `string`        | no       | `''`        | Accessible name used when visible content is not sufficient.                      |
-| `disabled`  | input  | `boolean`       | no       | `false`     | Prevents user interaction and participates in the disabled-state contract.        |
-| `activated` | output | `MouseEvent`    | no       | `undefined` | Notifies the consumer after the activated interaction completes.                  |
+_No signal inputs, models, or outputs._
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
-- `*` — Projects default component content.
+_No projected content slots._
 
 ## Angular Forms
 
@@ -67,11 +63,12 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Enter / Space activates
-- Tab follows document order
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab follows native document order when the anchor has href or RouterLink
+- Enter follows the native anchor destination
+- An anchor without a destination remains a non-navigation placeholder and is not made artificially disabled
+- href or RouterLink, target, rel, referrerpolicy, download, accessible naming, descriptions, focus, and click stay on the native anchor.
+- Visible anchor text normally supplies the accessible name; native aria-label or aria-labelledby remains available when context requires it.
+- KrnLink does not rewrite relationship tokens or referrer policy; external privacy requirements stay explicit at the call site.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -96,33 +93,26 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - hover
 - focus-visible
 - active
-- disabled
 
 ## Interactive playground
 
 Route: `preview/link`
 
 Scenarios: `default`.
-Public API coverage: 5/6
-directly controlled; 1 exact exclusions; 0 unclassified.
+Public API coverage: 0/0
+directly controlled; 0 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument   | Control | Default          | Test value             | Binding                     | Description                                 |
-| ---------- | ------- | ---------------- | ---------------------- | --------------------------- | ------------------------------------------- |
-| `disabled` | boolean | `false`          | `true`                 | input `disabled` (property) | Prevents user interaction.                  |
-| `download` | text    | `""`             | `"Alternate value"`    | input `download` (property) | Configures the component download contract. |
-| `href`     | text    | `"/foundations"` | `"#specimen-overview"` | input `href` (property)     | Configures the component href contract.     |
-| `rel`      | text    | `""`             | `"Alternate value"`    | input `rel` (property)      | Configures the component rel contract.      |
-| `target`   | select  | `"_self"`        | `"_blank"`             | input `target` (property)   | Configures the component target contract.   |
+| Argument              | Control | Default | Test value | Binding      | Description                                                                                  |
+| --------------------- | ------- | ------- | ---------- | ------------ | -------------------------------------------------------------------------------------------- |
+| `externalDestination` | boolean | `false` | `true`     | fixture data | Switches the fixture from internal navigation to an explicit privacy-hardened external link. |
 
 Exact API exclusions:
 
-| Public API  | Category           | Evidence                                          | Reason                                                                                                                  |
-| ----------- | ------------------ | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#link` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+_No excluded public API members._
 
 Presets:
 
@@ -137,21 +127,26 @@ Presets:
 - `hover` — Hover; scenario `default`; visual state `hover`.
 - `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
 - `active` — Active; scenario `default`; visual state `active`.
-- `disabled` — Disabled; scenario `default`; `disabled=true`.
 
 ## Related
 
 - `button`
+- `breadcrumbs`
+- `back-button`
+- `skip-link`
 - `icon-button`
 - `button-group`
 - `split-button`
 
 ## Common mistakes
 
-- Do not omit required inputs: `href`.
 - Importing from an undeclared family path or a source implementation file.
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
+- Use a[krnLink] for navigation and keep href or RouterLink, target, rel, download, referrerpolicy, ARIA relationships, and click on that native anchor.
+- Do not simulate a disabled link. Omit the unavailable navigation control or render non-interactive text; use a native button component for an action in the current context.
+- For a privacy-hardened new browsing context, set target="_blank" and explicit rel="noopener noreferrer"; KrnLink never rewrites consumer-owned relationship or referrer policy.
+- Named browsing contexts are valid native targets; do not narrow target to the former KrnLinkTarget alias.
 
 ## Ship checklist
 

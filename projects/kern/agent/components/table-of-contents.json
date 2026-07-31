@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-table-of-contents",
   "selectors": ["krn-table-of-contents"],
+  "selectorDeprecations": [],
   "symbol": "KrnTableOfContents",
   "canonicalSymbol": "KrnTableOfContents",
   "canonicalId": "table-of-contents",

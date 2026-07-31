@@ -78,6 +78,10 @@ void bootstrapApplication(KernMultiStepFormAgentExample);
 | `stepCounterLabel`    | input  | `(current: number, total: number) => string` | no       | `this.translations.patterns.stepCounter`  | Human-readable copy for the step counter state or control.                  |
 | `completed`           | output | `void`                                       | no       | `undefined`                               | Notifies the consumer after the completed interaction completes.            |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.
@@ -131,25 +135,25 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument              | Control | Default        | Test value   | Binding                                | Description                                            |
-| --------------------- | ------- | -------------- | ------------ | -------------------------------------- | ------------------------------------------------------ |
-| `current`             | number  | `0`            | `1`          | model `current`                        | Changes the current form step.                         |
-| `furthestStep`        | number  | `0`            | `1`          | model `furthestStep`                   | Changes the furthest completed or visited step.        |
-| `allowStepNavigation` | boolean | `true`         | `false`      | input `allowStepNavigation` (property) | Configures the component allowStepNavigation contract. |
-| `orientation`         | select  | `"horizontal"` | `"vertical"` | input `orientation` (property)         | Configures the component orientation contract.         |
+| Argument              | Control | Default        | Test value   | Binding                                | Description                                                                               |
+| --------------------- | ------- | -------------- | ------------ | -------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `current`             | number  | `0`            | `1`          | model `current`                        | Changes the current form step.                                                            |
+| `furthestStep`        | number  | `0`            | `1`          | model `furthestStep`                   | Changes the furthest completed or visited step.                                           |
+| `allowStepNavigation` | boolean | `true`         | `false`      | input `allowStepNavigation` (property) | Configures the component allowStepNavigation contract.                                    |
+| `orientation`         | select  | `"horizontal"` | `"vertical"` | input `orientation` (property)         | Logical axis exposed by the component; behavior follows its documented keyboard contract. |
 
 Exact API exclusions:
 
-| Public API         | Category           | Evidence                                                              | Reason                                                                                                                                                              |
-| ------------------ | ------------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `backLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `completeLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `continueLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `emptyStepLabel`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `optionalLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `stepCounterLabel` | callback           | `component-example:agent/components/multi-step-form.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
-| `steps`            | complex-data       | `specimen-fixture:preview/multi-step-form?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+| Public API         | Category           | Evidence                                                              | Reason                                                                                                                                                               |
+| ------------------ | ------------------ | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `backLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `completeLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `continueLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `emptyStepLabel`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `optionalLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `stepCounterLabel` | callback           | `component-example:agent/components/multi-step-form.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                   |
+| `steps`            | complex-data       | `specimen-fixture:preview/multi-step-form?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
 
 Presets:
 

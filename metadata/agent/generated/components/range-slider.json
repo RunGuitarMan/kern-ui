@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-range-slider",
   "selectors": ["krn-range-slider"],
+  "selectorDeprecations": [],
   "symbol": "KrnRangeSlider",
   "canonicalSymbol": "KrnRangeSlider",
   "canonicalId": "range-slider",
@@ -156,6 +157,36 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "tabindex",
+      "property": "tabIndex",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Native sequential-focus order forwarded to the owned interactive element.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "value",
+      "property": "value",
+      "kind": "input",
+      "type": "KrnRangeValue | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controlled component value.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "valueFormatter",
+      "property": "valueFormatter",
+      "kind": "input",
+      "type": "((value: number) => string) | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Formats a domain value for visible and accessible presentation.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "valueChange",
       "property": "valueChange",
       "kind": "output",
@@ -230,6 +261,9 @@
     "disabled",
     "readonly",
     "invalid",
+    "tabindex",
+    "value",
+    "valueFormatter",
     "valueChange"
   ],
   "guidance": {
@@ -372,6 +406,22 @@
           "publicName": "label",
           "syntax": "property"
         }
+      },
+      {
+        "key": "tabindex",
+        "label": "Tabindex",
+        "kind": "number",
+        "defaultValue": 0,
+        "testValue": 1,
+        "description": "Configures the component tabindex contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "tabindex",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 10000,
+        "step": 1
       }
     ],
     "presets": [
@@ -545,9 +595,9 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 10,
-      "controlled": 8,
-      "excluded": 2,
+      "publicInputsAndModels": 13,
+      "controlled": 9,
+      "excluded": 4,
       "unclassified": 0
     },
     "exclusions": [
@@ -557,7 +607,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#range-slider"
@@ -569,10 +619,34 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#range-slider"
+        }
+      },
+      {
+        "componentId": "range-slider",
+        "publicName": "value",
+        "kind": "input",
+        "type": "KrnRangeValue | undefined",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/range-slider?state=default"
+        }
+      },
+      {
+        "componentId": "range-slider",
+        "publicName": "valueFormatter",
+        "kind": "input",
+        "type": "((value: number) => string) | undefined",
+        "code": "callback",
+        "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/range-slider.json#/examples/0"
         }
       }
     ]

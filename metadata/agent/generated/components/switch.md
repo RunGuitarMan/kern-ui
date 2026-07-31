@@ -48,17 +48,25 @@ void bootstrapApplication(KernSwitchAgentExample);
 
 ## API
 
-| Name          | Kind   | Type      | Required | Default     | Description                                                                |
-| ------------- | ------ | --------- | -------- | ----------- | -------------------------------------------------------------------------- |
-| `id`          | input  | `string`  | no       | `''`        | Stable identifier value used by the id contract.                           |
-| `name`        | input  | `string`  | no       | `''`        | Required human-readable name for the represented person, item, or action.  |
-| `ariaLabel`   | input  | `string`  | no       | `''`        | Accessible name used when visible content is not sufficient.               |
-| `description` | input  | `string`  | no       | `''`        | Visible supporting description for the component content.                  |
-| `disabled`    | input  | `boolean` | no       | `false`     | Prevents user interaction and participates in the disabled-state contract. |
-| `readonly`    | input  | `boolean` | no       | `false`     | Keeps the value perceivable while preventing user edits.                   |
-| `required`    | input  | `boolean` | no       | `false`     | Marks the value as required and participates in Angular Forms validation.  |
-| `invalid`     | input  | `boolean` | no       | `false`     | Exposes an externally controlled invalid presentation state.               |
-| `valueChange` | output | `boolean` | no       | `undefined` | Notifies the consumer after the value change interaction completes.        |
+| Name              | Kind   | Type                   | Required | Default     | Description                                                                                      |
+| ----------------- | ------ | ---------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`               | no       | `''`        | Stable identifier value used by the id contract.                                                 |
+| `name`            | input  | `string`               | no       | `''`        | Required human-readable name for the represented person, item, or action.                        |
+| `checked`         | input  | `boolean \| undefined` | no       | `undefined` | Controlled checked state rendered by the native choice control.                                  |
+| `ariaLabel`       | input  | `string`               | no       | `''`        | Accessible name used when visible content is not sufficient.                                     |
+| `ariaLabelledBy`  | input  | `string`               | no       | `''`        | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`               | no       | `''`        | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `description`     | input  | `string`               | no       | `''`        | Visible supporting description for the component content.                                        |
+| `disabled`        | input  | `boolean`              | no       | `false`     | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean`              | no       | `false`     | Keeps the value perceivable while preventing user edits.                                         |
+| `required`        | input  | `boolean`              | no       | `false`     | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`         | input  | `boolean`              | no       | `false`     | Exposes an externally controlled invalid presentation state.                                     |
+| `tabindex`        | input  | `number`               | no       | `0`         | Native sequential-focus order forwarded to the owned interactive element.                        |
+| `checkedChange`   | output | `boolean`              | no       | `undefined` | Notifies the consumer after the checked change interaction completes.                            |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -114,8 +122,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/switch`
 
 Scenarios: `default`.
-Public API coverage: 6/8
-directly controlled; 2 exact exclusions; 0 unclassified.
+Public API coverage: 8/12
+directly controlled; 4 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -128,15 +136,19 @@ component inputs or models.
 | `readOnly`    | boolean | `false`                                                       | `true`                                                                    | input `readonly` (property)    | Keeps the value focusable while preventing edits. |
 | `required`    | boolean | `false`                                                       | `true`                                                                    | input `required` (property)    | Marks the control as required.                    |
 | `invalid`     | boolean | `false`                                                       | `true`                                                                    | input `invalid` (property)     | Exposes the invalid visual and ARIA state.        |
+| `checked`     | boolean | `false`                                                       | `true`                                                                    | input `checked` (property)     | Configures the component checked contract.        |
 | `description` | text    | `"Members will authenticate through your identity provider."` | `"Members will authenticate through your identity provider. · alternate"` | input `description` (property) | Configures the component description contract.    |
 | `id`          | text    | `""`                                                          | `"Alternate value"`                                                       | input `id` (property)          | Configures the component id contract.             |
+| `tabindex`    | number  | `0`                                                           | `1`                                                                       | input `tabindex` (property)    | Configures the component tabindex contract.       |
 
 Exact API exclusions:
 
-| Public API  | Category           | Evidence                                                           | Reason                                                                                                                  |
-| ----------- | ------------------ | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#switch`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
-| `name`      | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#switch` | Form submission field names do not alter the rendered component and are covered by forms integration tests.             |
+| Public API        | Category           | Evidence                                                           | Reason                                                                                                                  |
+| ----------------- | ------------------ | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#switch`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#switch`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabelledBy`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#switch`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `name`            | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#switch` | Form submission field names do not alter the rendered component and are covered by forms integration tests.             |
 
 Presets:
 

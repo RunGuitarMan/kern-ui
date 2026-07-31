@@ -53,6 +53,10 @@ void bootstrapApplication(KernRatingAgentExample);
 | `readonly`  | input | `boolean` | no       | `false`                                | Keeps the value perceivable while preventing user edits.                   |
 | `ariaLabel` | input | `string`  | no       | `this.translations.dataDisplay.rating` | Accessible name used when visible content is not sufficient.               |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._

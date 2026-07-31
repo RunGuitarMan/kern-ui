@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-avatar-group",
   "selectors": ["krn-avatar-group"],
+  "selectorDeprecations": [],
   "symbol": "KrnAvatarGroup",
   "canonicalSymbol": "KrnAvatarGroup",
   "canonicalId": "avatar-group",

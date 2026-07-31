@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-tree-navigation",
   "selectors": ["krn-tree-navigation"],
+  "selectorDeprecations": [],
   "symbol": "KrnTreeNavigation",
   "canonicalSymbol": "KrnTreeNavigation",
   "canonicalId": "tree-navigation",

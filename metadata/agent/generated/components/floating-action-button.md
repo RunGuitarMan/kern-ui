@@ -1,19 +1,19 @@
 # Floating Action Button
 
 - ID: `floating-action-button`
-- Selector: `krn-floating-action-button`
+- Selector: `button[krnFab]`
 - Import: `import { KrnFloatingActionButton } from '@kern-ui/angular/kit';`
 - Canonical symbol: `KrnFloatingActionButton`
 - Lifecycle: **stable**
 - Category: Actions
 
-Floating Action Button. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.
+Floating Action Button. Exposes one high-priority contextual action on a native button with extended or compact geometry.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Reserve <button krnFab> for one high-priority contextual action and keep its visible label meaningful.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not use Floating Action Button for navigation, multiple equal-priority actions, or consumer-owned aria-disabled state.
 
 ## Compile-verified standalone Angular example
 
@@ -35,10 +35,10 @@ import { KrnFloatingActionButton } from '@kern-ui/angular/kit';
   imports: [KrnFloatingActionButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <krn-floating-action-button ariaLabel="Create customer" [extended]="true">
-      <span krnFabIcon aria-hidden="true">+</span>
+    <button krnFab type="button">
+      <span krnFabIcon>+</span>
       Create customer
-    </krn-floating-action-button>
+    </button>
   `,
 })
 export class KernFloatingActionButtonAgentExample {}
@@ -48,16 +48,18 @@ void bootstrapApplication(KernFloatingActionButtonAgentExample);
 
 ## API
 
-| Name        | Kind   | Type               | Required | Default     | Description                                                                      |
-| ----------- | ------ | ------------------ | -------- | ----------- | -------------------------------------------------------------------------------- |
-| `ariaLabel` | input  | `string`           | yes      | `required`  | Accessible name used when visible content is not sufficient.                     |
-| `size`      | input  | `KrnSize`          | no       | `'lg'`      | Named semantic size resolved through KERN density and sizing tokens.             |
-| `variant`   | input  | `KrnActionVariant` | no       | `'solid'`   | Named visual hierarchy treatment that preserves the component semantics.         |
-| `tone`      | input  | `KrnTone`          | no       | `'brand'`   | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
-| `extended`  | input  | `boolean`          | no       | `true`      | Displays the floating action label in addition to its icon.                      |
-| `loading`   | input  | `boolean`          | no       | `false`     | Prevents duplicate actions and exposes accessible busy state.                    |
-| `disabled`  | input  | `boolean`          | no       | `false`     | Prevents user interaction and participates in the disabled-state contract.       |
-| `activated` | output | `MouseEvent`       | no       | `undefined` | Notifies the consumer after the activated interaction completes.                 |
+| Name           | Kind  | Type               | Required | Default                    | Description                                                                                                                        |
+| -------------- | ----- | ------------------ | -------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `size`         | input | `KrnSize`          | no       | `this.options.size`        | Named semantic size resolved through KERN density and sizing tokens.                                                               |
+| `variant`      | input | `KrnActionVariant` | no       | `this.options.variant`     | Named visual hierarchy treatment that preserves the component semantics.                                                           |
+| `tone`         | input | `KrnTone`          | no       | `this.options.tone`        | Semantic intent that selects coordinated text, icon, border, and surface tokens.                                                   |
+| `extended`     | input | `boolean`          | no       | `this.options.extended`    | Displays the floating action label in addition to its icon.                                                                        |
+| `loading`      | input | `boolean`          | no       | `false`                    | Suppresses duplicate activation and owns `aria-disabled` while retaining focus. Use native `disabled` for ordinary unavailability. |
+| `loadingLabel` | input | `string`           | no       | `this.defaultLoadingLabel` | Accessible loading copy; defaults to the application or closest scoped option.                                                     |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -70,11 +72,12 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Enter / Space activates
-- Tab follows document order
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab focuses the native floating action
+- Enter and Space dispatch the native click behavior
+- A loading floating action retains focus but suppresses click and form submission
+- The projected label remains the accessible name in both extended and visually compact modes.
+- Native type, disabled, form, accessible naming, and description relationships stay on the host button.
+- Loading owns aria-disabled and a persistent polite status; use native disabled for ordinary unavailability.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -107,7 +110,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/floating-action-button`
 
 Scenarios: `default`.
-Public API coverage: 6/7
+Public API coverage: 5/6
 directly controlled; 1 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -121,13 +124,13 @@ component inputs or models.
 | `size`     | select  | `"lg"`    | `"sm"`      | input `size` (property)     | Changes the action target and label size.                            |
 | `extended` | boolean | `true`    | `false`     | input `extended` (property) | Shows or hides the text label.                                       |
 | `loading`  | boolean | `false`   | `true`      | input `loading` (property)  | Shows progress and disables activation.                              |
-| `disabled` | boolean | `false`   | `true`      | input `disabled` (property) | Prevents user interaction.                                           |
+| `disabled` | boolean | `false`   | `true`      | fixture interaction         | Binds the native disabled attribute and prevents user interaction.   |
 
 Exact API exclusions:
 
-| Public API  | Category           | Evidence                                                            | Reason                                                                                                                  |
-| ----------- | ------------------ | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#floating-action-button` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| Public API     | Category           | Evidence                                                            | Reason                                                                                                                                                               |
+| -------------- | ------------------ | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `loadingLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#floating-action-button` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 
@@ -154,10 +157,12 @@ Presets:
 
 ## Common mistakes
 
-- Do not omit required inputs: `ariaLabel`.
 - Importing from an undeclared family path or a source implementation file.
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
+- Use button[krnFab] with a persistent visible label; compact mode hides that label visually but keeps it as the native accessible name.
+- Keep type, disabled, name, value, form, ARIA relationships, and click on the native host instead of recreating component proxy inputs or outputs.
+- Use provideKrnFloatingActionButtonOptions for inheritable visual, extended, and loading-copy defaults; reserve a floating action for one high-priority contextual action.
 
 ## Ship checklist
 

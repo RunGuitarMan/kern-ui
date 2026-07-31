@@ -76,10 +76,14 @@ void bootstrapApplication(KernCommandPaletteAgentExample);
 | `placeholder`   | input  | `string`                               | no       | `this.translations.navigation.searchCommandsPlaceholder` | Short input hint shown only while no value is present.                      |
 | `resultsLabel`  | input  | `string`                               | no       | `this.translations.navigation.commands`                  | Human-readable copy for the results state or control.                       |
 | `closeShortcut` | input  | `string`                               | no       | `this.translations.navigation.escapeShortcut`            | Controls whether the component applies the close shortcut behavior.         |
-| `locale`        | input  | `string \| Array<string>`              | no       | `inject(KRN_LOCALE)`                                     | Locale identifier used for collation, formatting, and component-owned copy. |
+| `locale`        | input  | `Array<string> \| string`              | no       | `inject(KRN_LOCALE)`                                     | Locale identifier used for collation, formatting, and component-owned copy. |
 | `labels`        | input  | `Partial<KrnCommandPaletteLabels>`     | no       | `{}`                                                     | Localized copy overrides for the component-owned interface text.            |
 | `selected`      | output | `KrnCommandItem`                       | no       | `undefined`                                              | Controlled selected state, distinct from keyboard focus.                    |
-| `closed`        | output | `"selection" \| "escape" \| "outside"` | no       | `undefined`                                              | Notifies the consumer after the closed interaction completes.               |
+| `closed`        | output | `"escape" \| "outside" \| "selection"` | no       | `undefined`                                              | Notifies the consumer after the closed interaction completes.               |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -154,12 +158,12 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API     | Category           | Evidence                                                     | Reason                                                                                                                                                              |
-| -------------- | ------------------ | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `items`        | complex-data       | `specimen-fixture:preview/command-palette?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
-| `labels`       | translation-object | `locale-preview:preview/command-palette?locale=ru-RU`        | Structured translation overrides are exercised through locale providers, not lossy scalar controls.                                                                 |
-| `locale`       | complex-data       | `specimen-fixture:preview/command-palette?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
-| `resultsLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#command-palette` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| Public API     | Category           | Evidence                                                     | Reason                                                                                                                                                               |
+| -------------- | ------------------ | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `items`        | complex-data       | `specimen-fixture:preview/command-palette?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
+| `labels`       | translation-object | `locale-preview:preview/command-palette?locale=ru-RU`        | Structured translation overrides are exercised through locale providers, not lossy scalar controls.                                                                  |
+| `locale`       | complex-data       | `specimen-fixture:preview/command-palette?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
+| `resultsLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#command-palette` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 

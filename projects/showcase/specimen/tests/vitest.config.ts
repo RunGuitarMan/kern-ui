@@ -7,6 +7,9 @@ export default defineConfig({
       '@kern-ui/angular/cdk': fileURLToPath(
         new URL('../../../../dist/kern/fesm2022/kern-ui-angular-cdk.mjs', import.meta.url),
       ),
+      '@kern-ui/angular/i18n': fileURLToPath(
+        new URL('../../../../dist/kern/fesm2022/kern-ui-angular-i18n.mjs', import.meta.url),
+      ),
       '@kern-ui/angular/core': fileURLToPath(
         new URL('../../../../dist/kern/fesm2022/kern-ui-angular-core.mjs', import.meta.url),
       ),

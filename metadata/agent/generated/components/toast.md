@@ -63,6 +63,10 @@ void bootstrapApplication(KernToastAgentExample);
 | `ariaLabel`   | input | `string`                        | no       | `this.translations.toast.ariaLabel` | Accessible name used when visible content is not sufficient.       |
 | `expanded`    | model | `boolean`                       | no       | `false`                             | Controlled expanded state for a disclosure or hierarchical item.   |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._

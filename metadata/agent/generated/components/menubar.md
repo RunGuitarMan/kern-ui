@@ -54,6 +54,10 @@ void bootstrapApplication(KernMenubarAgentExample);
 | `ariaLabel`    | input  | `string`                           | no       | `this.translations.navigation.applicationMenu` | Accessible name used when visible content is not sufficient.         |
 | `itemSelected` | output | `KrnNavigationItem`                | no       | `undefined`                                    | Notifies the consumer after the item selected interaction completes. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._

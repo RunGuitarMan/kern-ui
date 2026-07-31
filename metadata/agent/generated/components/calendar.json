@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-calendar",
   "selectors": ["krn-calendar"],
+  "selectorDeprecations": [],
   "symbol": "KrnCalendar",
   "canonicalSymbol": "KrnCalendar",
   "canonicalId": "calendar",

@@ -50,6 +50,10 @@ void bootstrapApplication(KernDescriptionListAgentExample);
 
 _No signal inputs, models, or outputs._
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

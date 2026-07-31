@@ -1,19 +1,19 @@
 # Button
 
 - ID: `button`
-- Selector: `krn-button`
+- Selector: `button[krnButton]`
 - Import: `import { KrnButton } from '@kern-ui/angular/kit';`
 - Canonical symbol: `KrnButton`
 - Lifecycle: **stable**
 - Category: Actions
 
-Button. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.
+Button. Enhances a native button with Kern hierarchy, visual defaults, and a focus-preserving loading state.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use <button krnButton> and keep native form and event semantics explicit at the call site.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not add role="button", proxy click through a custom output, or use Button as a pressed-state toggle.
 
 ## Compile-verified standalone Angular example
 
@@ -21,41 +21,51 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 /**
  * Primary save action
  *
- * Render an explicit form action with semantic hierarchy.
+ * Render an explicit form action with scoped visual and loading-copy defaults.
  *
  * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnButton } from '@kern-ui/angular/kit';
+import { KrnButton, provideKrnButtonOptions } from '@kern-ui/angular/kit';
 
 @Component({
   selector: 'app-kern-button-agent-example',
   standalone: true,
   imports: [KrnButton],
+  providers: [
+    provideKrnButtonOptions({
+      size: 'lg',
+      loadingLabel: 'Saving workspace…',
+    }),
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <krn-button type="submit" variant="solid" tone="brand">Save changes</krn-button> `,
+  template: `
+    <form (submit)="saving = true; $event.preventDefault()">
+      <button krnButton type="submit" [loading]="saving">Save changes</button>
+    </form>
+  `,
 })
-export class KernButtonAgentExample {}
+export class KernButtonAgentExample {
+  saving = false;
+}
 
 void bootstrapApplication(KernButtonAgentExample);
 ```
 
 ## API
 
-| Name        | Kind   | Type                   | Required | Default     | Description                                                                      |
-| ----------- | ------ | ---------------------- | -------- | ----------- | -------------------------------------------------------------------------------- |
-| `size`      | input  | `KrnSize`              | no       | `'md'`      | Named semantic size resolved through KERN density and sizing tokens.             |
-| `variant`   | input  | `KrnActionVariant`     | no       | `'solid'`   | Named visual hierarchy treatment that preserves the component semantics.         |
-| `tone`      | input  | `KrnTone`              | no       | `'brand'`   | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
-| `type`      | input  | `KrnButtonType`        | no       | `'button'`  | Native action or input type forwarded to the owned interactive element.          |
-| `name`      | input  | `string`               | no       | `''`        | Required human-readable name for the represented person, item, or action.        |
-| `value`     | input  | `string`               | no       | `''`        | Controlled component value.                                                      |
-| `ariaLabel` | input  | `string`               | no       | `''`        | Accessible name used when visible content is not sufficient.                     |
-| `loading`   | input  | `boolean`              | no       | `false`     | Prevents duplicate actions and exposes accessible busy state.                    |
-| `disabled`  | input  | `boolean`              | no       | `false`     | Prevents user interaction and participates in the disabled-state contract.       |
-| `pressed`   | input  | `boolean \| undefined` | no       | `undefined` | Controlled toggle-button pressed state exposed through native button semantics.  |
-| `activated` | output | `MouseEvent`           | no       | `undefined` | Notifies the consumer after the activated interaction completes.                 |
+| Name           | Kind  | Type               | Required | Default                    | Description                                                                                                                                         |
+| -------------- | ----- | ------------------ | -------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `size`         | input | `KrnSize`          | no       | `this.options.size`        | Named semantic size resolved through KERN density and sizing tokens.                                                                                |
+| `variant`      | input | `KrnActionVariant` | no       | `this.options.variant`     | Named visual hierarchy treatment that preserves the component semantics.                                                                            |
+| `tone`         | input | `KrnTone`          | no       | `this.options.tone`        | Semantic intent that selects coordinated text, icon, border, and surface tokens.                                                                    |
+| `loading`      | input | `boolean`          | no       | `false`                    | Suppresses duplicate activation, owns `aria-disabled`, and updates the persistent polite status. Use native `disabled` for ordinary unavailability. |
+| `loadingLabel` | input | `string`           | no       | `this.defaultLoadingLabel` | Accessible loading copy; defaults to the application or closest scoped option.                                                                      |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -69,11 +79,13 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Enter / Space activates
-- Tab follows document order
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab focuses the native button
+- Enter and Space dispatch the native click behavior
+- A loading button retains focus but suppresses click and form submission
+- Native type, disabled, name, value, form, accessible naming, descriptions, and pressed state stay on the host button.
+- Loading uses a persistent polite status and aria-disabled without removing the action from focus order.
+- aria-disabled is reserved for the derived loading state; use native disabled for ordinary unavailability.
+- Visible text supplies the accessible name unless the consumer provides a native aria-label.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -106,30 +118,25 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/button`
 
 Scenarios: `default`.
-Public API coverage: 8/10
-directly controlled; 2 exact exclusions; 0 unclassified.
+Public API coverage: 4/5
+directly controlled; 1 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument   | Control | Default    | Test value          | Binding                     | Description                                                          |
-| ---------- | ------- | ---------- | ------------------- | --------------------------- | -------------------------------------------------------------------- |
-| `variant`  | select  | `"solid"`  | `"soft"`            | input `variant` (property)  | Changes action emphasis without changing its semantics.              |
-| `tone`     | select  | `"brand"`  | `"neutral"`         | input `tone` (property)     | Communicates neutral, branded, informational, or destructive intent. |
-| `size`     | select  | `"md"`     | `"sm"`              | input `size` (property)     | Changes the action target and label size.                            |
-| `loading`  | boolean | `false`    | `true`              | input `loading` (property)  | Shows progress and disables activation.                              |
-| `disabled` | boolean | `false`    | `true`              | input `disabled` (property) | Prevents user interaction.                                           |
-| `pressed`  | boolean | `false`    | `true`              | input `pressed` (property)  | Exposes the toggle-button pressed state.                             |
-| `type`     | select  | `"button"` | `"submit"`          | input `type` (property)     | Configures the component type contract.                              |
-| `value`    | text    | `""`       | `"Alternate value"` | input `value` (property)    | Controlled component value.                                          |
+| Argument  | Control | Default   | Test value  | Binding                    | Description                                                          |
+| --------- | ------- | --------- | ----------- | -------------------------- | -------------------------------------------------------------------- |
+| `variant` | select  | `"solid"` | `"soft"`    | input `variant` (property) | Changes action emphasis without changing its semantics.              |
+| `tone`    | select  | `"brand"` | `"neutral"` | input `tone` (property)    | Communicates neutral, branded, informational, or destructive intent. |
+| `size`    | select  | `"md"`    | `"sm"`      | input `size` (property)    | Changes the action target and label size.                            |
+| `loading` | boolean | `false`   | `true`      | input `loading` (property) | Shows progress and disables activation.                              |
 
 Exact API exclusions:
 
-| Public API  | Category           | Evidence                                                           | Reason                                                                                                                  |
-| ----------- | ------------------ | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#button`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
-| `name`      | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#button` | Form submission field names do not alter the rendered component and are covered by forms integration tests.             |
+| Public API     | Category           | Evidence                                            | Reason                                                                                                                                                               |
+| -------------- | ------------------ | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `loadingLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#button` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 
@@ -144,9 +151,8 @@ Presets:
 - `hover` — Hover; scenario `default`; visual state `hover`.
 - `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
 - `active` — Active; scenario `default`; visual state `active`.
-- `disabled` — Disabled; scenario `default`; `disabled=true`.
+- `disabled` — disabled; scenario `default`; fixture effect `status/neutral` — disabled: The fixture exposes the disabled status without claiming a public component input..
 - `loading` — Loading; scenario `default`; `loading=true`.
-- `pressed` — Pressed; scenario `default`; `pressed=true`.
 
 ## Related
 
@@ -160,6 +166,8 @@ Presets:
 - Importing from an undeclared family path or a source implementation file.
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
+- Configure inheritable visual defaults with provideKrnButtonOptions; keep type, disabled, name, value, form, and ARIA attributes on the native host.
+- Use provideKrn translations for application-wide loading copy, a scoped loadingLabel option for a subtree, and the input only for a one-off override.
 
 ## Ship checklist
 

@@ -248,44 +248,44 @@
     {
       "id": "button",
       "title": "Primary save action",
-      "scenario": "Render an explicit form action with semantic hierarchy.",
-      "selector": "krn-button",
+      "scenario": "Render an explicit form action with scoped visual and loading-copy defaults.",
+      "selector": "button[krnButton]",
       "symbol": "KrnButton",
       "importPath": "@kern-ui/angular/kit",
       "className": "KernButtonAgentExample",
       "source": "button.ts",
       "verification": "packed-package-aot",
-      "riskTags": [],
-      "assertions": [],
-      "sourceDigest": "sha256-24468bcf3b0ac131135a14196f5ffa25296670c009f332649f99d1b4a40e6f94"
+      "riskTags": ["forms", "controlled-state", "scoped-options", "accessibility-copy"],
+      "assertions": ["provideKrnButtonOptions", "loadingLabel", "[loading]=\"saving\""],
+      "sourceDigest": "sha256-faab46c8e4ebc1e9bbb1fd1de966b2121ebb6594ada51cfd8da2f2fafbe0a0c8"
     },
     {
       "id": "icon-button",
       "title": "Accessible icon-only action",
-      "scenario": "Provide a stable accessible name for an icon-only control.",
-      "selector": "krn-icon-button",
+      "scenario": "Keep the accessible name and native action semantics on the icon-only button host.",
+      "selector": "button[krnIconButton]",
       "symbol": "KrnIconButton",
       "importPath": "@kern-ui/angular/kit",
       "className": "KernIconButtonAgentExample",
       "source": "icon-button.ts",
       "verification": "packed-package-aot",
       "riskTags": [],
-      "assertions": ["ariaLabel=\"Add team member\""],
-      "sourceDigest": "sha256-3e40f98f1d9d4b1c7bc057510c91b92c2f16acf31a1ef3133de44f8ce4d7fe76"
+      "assertions": ["button krnIconButton", "type=\"button\"", "aria-label=\"Add team member\""],
+      "sourceDigest": "sha256-7deb2d850fb86eb784da7a655da1191e818d6cf1304f92b7ab8d046bcd045a8a"
     },
     {
       "id": "button-group",
       "title": "Grouped review actions",
-      "scenario": "Present closely related actions as one labeled control group.",
-      "selector": "krn-button-group",
+      "scenario": "Present independent native actions as one labeled visual group.",
+      "selector": "div[krnButtonGroup]",
       "symbol": "KrnButtonGroup",
       "importPath": "@kern-ui/angular/kit",
       "className": "KernButtonGroupAgentExample",
       "source": "button-group.ts",
       "verification": "packed-package-aot",
-      "riskTags": [],
-      "assertions": [],
-      "sourceDigest": "sha256-a09d8ae5c267e14844985450f31eab1fde30bfb272d83ead59beb0ee4e0e81d4"
+      "riskTags": ["compound-component", "accessibility-copy"],
+      "assertions": ["div krnButtonGroup", "aria-label=\"Review actions\"", "type=\"button\""],
+      "sourceDigest": "sha256-f0306cd2b35ef000052dd03188126b357ed9f54b07c2c25e972d93c9b24d908d"
     },
     {
       "id": "split-button",
@@ -305,63 +305,74 @@
       "id": "floating-action-button",
       "title": "Create-record floating action",
       "scenario": "Expose a single high-priority creation action on compact layouts.",
-      "selector": "krn-floating-action-button",
+      "selector": "button[krnFab]",
       "symbol": "KrnFloatingActionButton",
       "importPath": "@kern-ui/angular/kit",
       "className": "KernFloatingActionButtonAgentExample",
       "source": "floating-action-button.ts",
       "verification": "packed-package-aot",
       "riskTags": [],
-      "assertions": [],
-      "sourceDigest": "sha256-39646271b401b3d7de5f61fc22ed4c7dd7689e1d68bd22a862903266939d1aba"
+      "assertions": ["button krnFab", "type=\"button\"", "Create customer"],
+      "sourceDigest": "sha256-c5d1bb59cfa05d7c6f62ae48ec170d7cd03f7b218f2d6639145a5cbac058979a"
     },
     {
       "id": "toggle-button",
       "title": "Controlled formatting toggle",
-      "scenario": "Keep the pressed state in application-owned state.",
-      "selector": "krn-toggle-button",
+      "scenario": "Keep formatting state controlled while native button semantics remain intact.",
+      "selector": "button[krnToggleButton]",
       "symbol": "KrnToggleButton",
       "importPath": "@kern-ui/angular/kit",
       "className": "KernToggleButtonAgentExample",
       "source": "toggle-button.ts",
       "verification": "packed-package-aot",
       "riskTags": [],
-      "assertions": ["value=\"bold\"", "[(pressed)]=\"boldEnabled\""],
-      "sourceDigest": "sha256-31cf4b3bf4468369ad402ac0318a24e411a6ea1a954fc90c3be87c1c9cb9cab9"
+      "assertions": ["button", "krnToggleButton", "value=\"bold\"", "[(pressed)]=\"boldEnabled\""],
+      "sourceDigest": "sha256-2b0181f2cbe2a52a4f477325e1fcc2dda609ee2b65b68a3fcbc2344081ae7ac4"
     },
     {
       "id": "toggle-group",
       "title": "Multi-select view controls",
       "scenario": "Control a set of pressed view options by stable string values.",
-      "selector": "krn-toggle-group",
+      "selector": "div[krnToggleGroup]",
       "symbol": "KrnToggleGroup",
       "importPath": "@kern-ui/angular/kit",
       "className": "KernToggleGroupAgentExample",
       "source": "toggle-group.ts",
       "verification": "packed-package-aot",
       "riskTags": ["controlled-state", "compound-component"],
-      "assertions": ["[(values)]=\"visibleLayers\"", "readonly string[]"],
-      "sourceDigest": "sha256-b2322a4c1b324387ac221f99eb7d2d793bfbdbb256ae7c80ac412faa7e269eb1"
+      "assertions": [
+        "div",
+        "krnToggleGroup",
+        "aria-label",
+        "[(values)]=\"visibleLayers\"",
+        "readonly string[]"
+      ],
+      "sourceDigest": "sha256-c818180d952ab2e51456376d1d3be5cd6f2fc5aff8301944916c8c2f202d5f62"
     },
     {
       "id": "copy-button",
       "title": "Copy immutable record id",
-      "scenario": "Copy a visible domain identifier with explicit accessible feedback.",
+      "scenario": "Copy an explicit domain identifier, localize its accessible context, and consume confirmed outcomes.",
       "selector": "krn-copy-button",
       "symbol": "KrnCopyButton",
       "importPath": "@kern-ui/angular/kit",
       "className": "KernCopyButtonAgentExample",
       "source": "copy-button.ts",
       "verification": "packed-package-aot",
-      "riskTags": [],
-      "assertions": [],
-      "sourceDigest": "sha256-fa102d9dbad7a28a78cb9324e69feeb98f8340c061a138dcb9a6da725c5a85af"
+      "riskTags": ["async", "typed-output", "scoped-options", "accessibility-copy"],
+      "assertions": [
+        "provideKrnCopyButtonOptions",
+        "[value]=\"customerId\"",
+        "(copied)=\"lastResult",
+        "(copyError)=\"lastResult"
+      ],
+      "sourceDigest": "sha256-ffa507694adaba65e201cecf016538b09d3fabedd26c64eb86c5ba224cdc14ea"
     },
     {
       "id": "link",
       "title": "External audit documentation link",
       "scenario": "Render a semantic link with safe external navigation metadata.",
-      "selector": "krn-link",
+      "selector": "a[krnLink]",
       "symbol": "KrnLink",
       "importPath": "@kern-ui/angular/kit",
       "className": "KernLinkAgentExample",
@@ -369,21 +380,26 @@
       "verification": "packed-package-aot",
       "riskTags": [],
       "assertions": [],
-      "sourceDigest": "sha256-4d0807cf120113dff33cb30eccb962927ee516b73402871467f467a6f162a85f"
+      "sourceDigest": "sha256-71110ccaedcd72052d23de27fad90f848c2341563cf279b30afe8b1c4457402f"
     },
     {
       "id": "dropdown-button",
       "title": "Controlled bulk-action menu",
-      "scenario": "Expose secondary actions while retaining owned open state.",
+      "scenario": "Expose keyboard-operable secondary actions with controlled state and scoped placement.",
       "selector": "krn-dropdown-button",
       "symbol": "KrnDropdownButton",
       "importPath": "@kern-ui/angular/kit",
       "className": "KernDropdownButtonAgentExample",
       "source": "dropdown-button.ts",
       "verification": "packed-package-aot",
-      "riskTags": ["overlay", "controlled-state"],
-      "assertions": ["[(open)]=\"open\""],
-      "sourceDigest": "sha256-b6d878e8d173df61439f2dcdc7b9abc1fa25ae9c54eabc0f5584ea2781e21543"
+      "riskTags": ["overlay", "controlled-state", "scoped-options", "keyboard-navigation"],
+      "assertions": [
+        "[(open)]=\"open\"",
+        "button krnMenu",
+        "provideKrnMenuButtonOptions",
+        "matchTriggerWidth"
+      ],
+      "sourceDigest": "sha256-1b40d406b9320ea56d6fe96005e066f10e3b9a6341f56bb53562b64a26a41f85"
     },
     {
       "id": "form-field",
@@ -397,7 +413,7 @@
       "verification": "packed-package-aot",
       "riskTags": ["forms", "compound-component"],
       "assertions": ["[formControl]=\"control\"", "FormControl<string>"],
-      "sourceDigest": "sha256-96e47286aa18be00d37491eeaa3f8c50e04126c7035117392c48199297a57e79"
+      "sourceDigest": "sha256-8ad441aa413f563b1b3a724068d4405ad8b15cdbe9f0fba5744246b165b8cbeb"
     },
     {
       "id": "label",

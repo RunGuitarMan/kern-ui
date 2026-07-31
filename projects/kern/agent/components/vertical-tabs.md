@@ -61,6 +61,10 @@ void bootstrapApplication(KernVerticalTabsAgentExample);
 | `orientation` | input | `KrnNavigationOrientation`  | no       | `this.host.nativeElement.localName === 'krn-vertical-tabs' ? 'vertical' : 'horizontal'` | Defines the logical axis used by layout and keyboard navigation. |
 | `ariaLabel`   | input | `string`                    | no       | `this.translations.navigation.sections`                                                 | Accessible name used when visible content is not sufficient.     |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.
@@ -117,10 +121,10 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default      | Test value     | Binding                        | Description                                    |
-| ------------- | ------- | ------------ | -------------- | ------------------------------ | ---------------------------------------------- |
-| `selected`    | select  | `"overview"` | `"activity"`   | model `value`                  | Chooses the active tab panel.                  |
-| `orientation` | select  | `"vertical"` | `"horizontal"` | input `orientation` (property) | Configures the component orientation contract. |
+| Argument      | Control | Default      | Test value     | Binding                        | Description                                                                               |
+| ------------- | ------- | ------------ | -------------- | ------------------------------ | ----------------------------------------------------------------------------------------- |
+| `selected`    | select  | `"overview"` | `"activity"`   | model `value`                  | Chooses the active tab panel.                                                             |
+| `orientation` | select  | `"vertical"` | `"horizontal"` | input `orientation` (property) | Logical axis exposed by the component; behavior follows its documented keyboard contract. |
 
 Exact API exclusions:
 

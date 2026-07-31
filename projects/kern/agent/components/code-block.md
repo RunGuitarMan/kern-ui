@@ -61,6 +61,10 @@ void bootstrapApplication(KernCodeBlockAgentExample);
 | `languageLabel` | input | `string`  | no       | `''`       | Human-readable copy for the language state or control.                        |
 | `copied`        | model | `boolean` | no       | `false`    | Controlled copied state with a matching Angular model-change output.          |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._
@@ -119,9 +123,9 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API      | Category           | Evidence                                                | Reason                                                                                                                                                              |
-| --------------- | ------------------ | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `languageLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#code-block` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| Public API      | Category           | Evidence                                                | Reason                                                                                                                                                               |
+| --------------- | ------------------ | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `languageLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#code-block` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 

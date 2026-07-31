@@ -1,19 +1,19 @@
 # Button Group
 
 - ID: `button-group`
-- Selector: `krn-button-group`
+- Selector: `div[krnButtonGroup]`
 - Import: `import { KrnButtonGroup } from '@kern-ui/angular/kit';`
 - Canonical symbol: `KrnButtonGroup`
 - Lifecycle: **stable**
 - Category: Actions
 
-Button Group. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.
+Button Group. Labels and arranges independent native actions without owning their focus, activation, disabled, loading, or selection state.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use <div krnButtonGroup aria-label="Review actions"> for a small set of related, independent native actions.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not add Arrow-key navigation, selected state, or group-level disabled/loading behavior; use Toggle Group or Segmented Control when the group must own a choice.
 
 ## Compile-verified standalone Angular example
 
@@ -21,7 +21,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 /**
  * Grouped review actions
  *
- * Present closely related actions as one labeled control group.
+ * Present independent native actions as one labeled visual group.
  *
  * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.
  */
@@ -35,10 +35,10 @@ import { KrnButton, KrnButtonGroup } from '@kern-ui/angular/kit';
   imports: [KrnButtonGroup, KrnButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <krn-button-group ariaLabel="Review actions">
-      <krn-button variant="outline">Request changes</krn-button>
-      <krn-button>Approve</krn-button>
-    </krn-button-group>
+    <div krnButtonGroup aria-label="Review actions">
+      <button krnButton type="button" variant="outline">Request changes</button>
+      <button krnButton type="button">Approve</button>
+    </div>
   `,
 })
 export class KernButtonGroupAgentExample {}
@@ -48,10 +48,15 @@ void bootstrapApplication(KernButtonGroupAgentExample);
 
 ## API
 
-| Name          | Kind  | Type             | Required | Default        | Description                                                      |
-| ------------- | ----- | ---------------- | -------- | -------------- | ---------------------------------------------------------------- |
-| `ariaLabel`   | input | `string`         | no       | `''`           | Accessible name used when visible content is not sufficient.     |
-| `orientation` | input | `KrnOrientation` | no       | `'horizontal'` | Defines the logical axis used by layout and keyboard navigation. |
+| Name          | Kind  | Type                          | Required | Default                    | Description                                                                              |
+| ------------- | ----- | ----------------------------- | -------- | -------------------------- | ---------------------------------------------------------------------------------------- |
+| `orientation` | input | `KrnOrientation`              | no       | `this.options.orientation` | Changes the visual layout axis without altering native document-order keyboard behavior. |
+| `connected`   | input | `boolean`                     | no       | `this.options.connected`   | Joins adjacent action borders and radii without coordinating child state or activation.  |
+| `ariaLabel`   | input | `string \| null \| undefined` | no       | `undefined`                | Deprecated compatibility bridge for a native accessible-name attribute.                  |
+
+## Deprecated selectors
+
+- `krn-button-group` — remove in `0.2.0`; replace with `div[krnButtonGroup]`. Replace <krn-button-group> with <div krnButtonGroup> and replace its closing tag with </div>; keep each child action and its native semantics unchanged. Documentation: `docs/DEPRECATIONS.md#krn-button-group-element-selector`.
 
 ## Content slots
 
@@ -63,11 +68,12 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Enter / Space activates
-- Tab follows document order
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab visits each enabled native action in document order
+- Enter and Space activate the focused native button
+- Orientation and connected styling do not add Arrow-key navigation or a roving tab stop
+- The canonical <div krnButtonGroup> host exposes role="group" and uses native aria-label or aria-labelledby for its accessible name.
+- Each child action owns its native accessible name, disabled, loading, form, and activation semantics.
+- Button Group does not expose selection; use Toggle Group or Segmented Control for a managed choice.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -89,32 +95,30 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - compact
 - RTL
 - mobile
-- hover
-- focus-visible
-- active
-- disabled
+- connected
 
 ## Interactive playground
 
 Route: `preview/button-group`
 
 Scenarios: `default`.
-Public API coverage: 1/2
+Public API coverage: 2/3
 directly controlled; 1 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default        | Test value   | Binding                        | Description                                 |
-| ------------- | ------- | -------------- | ------------ | ------------------------------ | ------------------------------------------- |
-| `orientation` | select  | `"horizontal"` | `"vertical"` | input `orientation` (property) | Changes the group layout and keyboard axis. |
+| Argument      | Control | Default        | Test value   | Binding                        | Description                                                                             |
+| ------------- | ------- | -------------- | ------------ | ------------------------------ | --------------------------------------------------------------------------------------- |
+| `orientation` | select  | `"horizontal"` | `"vertical"` | input `orientation` (property) | Changes only the visual layout; native actions keep document-order keyboard navigation. |
+| `connected`   | boolean | `false`        | `true`       | input `connected` (property)   | Joins adjacent action borders without changing their semantics or keyboard order.       |
 
 Exact API exclusions:
 
-| Public API  | Category           | Evidence                                                  | Reason                                                                                                                  |
-| ----------- | ------------------ | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#button-group` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| Public API  | Category           | Evidence                                                  | Reason                                                                                                            |
+| ----------- | ------------------ | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#button-group` | Deprecated compatibility input; the canonical div[krnButtonGroup] host uses native aria-label or aria-labelledby. |
 
 Presets:
 
@@ -126,15 +130,14 @@ Presets:
 - `compact` — Compact; scenario `default`; density `compact`.
 - `rtl` — RTL; scenario `default`; direction `rtl`.
 - `mobile` — Mobile; scenario `default`; viewport `phone`.
-- `hover` — Hover; scenario `default`; visual state `hover`.
-- `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
-- `active` — Active; scenario `default`; visual state `active`.
-- `disabled` — disabled; scenario `default`; fixture effect `status/neutral` — disabled: The fixture exposes the disabled status without claiming a public component input..
+- `connected` — Connected; scenario `default`; `connected=true`.
 
 ## Related
 
 - `button`
 - `icon-button`
+- `toggle-group`
+- `segmented-control`
 - `split-button`
 - `floating-action-button`
 
@@ -143,6 +146,9 @@ Presets:
 - Importing from an undeclared family path or a source implementation file.
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
+- Use div[krnButtonGroup] with a native aria-label or aria-labelledby; orientation and connected change layout only, while each child action keeps its own native semantics and Tab stop.
+- Do not add group-level disabled, loading, selection, or Arrow-key behavior; use Toggle Group or Segmented Control when the composition must own a managed choice.
+- Use provideKrnButtonGroupOptions for inheritable orientation or connected defaults; keep accessible naming and child interaction state explicit at the call site.
 
 ## Ship checklist
 

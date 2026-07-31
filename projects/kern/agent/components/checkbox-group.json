@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-checkbox-group",
   "selectors": ["krn-checkbox-group"],
+  "selectorDeprecations": [],
   "symbol": "KrnCheckboxGroup",
   "canonicalSymbol": "KrnCheckboxGroup",
   "canonicalId": "checkbox-group",
@@ -75,6 +76,36 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabelledBy",
+      "property": "ariaLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that provide the accessible name and take precedence over ariaLabel.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaDescribedBy",
+      "property": "ariaDescribedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids composed with Form Field hints and validation descriptions.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "orientation",
       "property": "orientation",
       "kind": "input",
@@ -82,6 +113,16 @@
       "required": false,
       "defaultValue": "'vertical'",
       "description": "Defines the logical axis used by layout and keyboard navigation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "value",
+      "property": "value",
+      "kind": "input",
+      "type": "ReadonlyArray<string> | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controlled component value.",
       "descriptionSource": "inferred"
     },
     {
@@ -208,7 +249,11 @@
     "KrnCheckboxGroup",
     "id",
     "label",
+    "ariaLabel",
+    "ariaLabelledBy",
+    "ariaDescribedBy",
     "orientation",
+    "value",
     "disabled",
     "readonly",
     "required",
@@ -302,7 +347,7 @@
         "kind": "select",
         "defaultValue": "vertical",
         "testValue": "horizontal",
-        "description": "Configures the component orientation contract.",
+        "description": "Logical axis exposed by the component; behavior follows its documented keyboard contract.",
         "binding": {
           "kind": "input",
           "publicName": "orientation",
@@ -505,12 +550,48 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 8,
+      "publicInputsAndModels": 12,
       "controlled": 7,
-      "excluded": 1,
+      "excluded": 5,
       "unclassified": 0
     },
     "exclusions": [
+      {
+        "componentId": "checkbox-group",
+        "publicName": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#checkbox-group"
+        }
+      },
+      {
+        "componentId": "checkbox-group",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#checkbox-group"
+        }
+      },
+      {
+        "componentId": "checkbox-group",
+        "publicName": "ariaLabelledBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#checkbox-group"
+        }
+      },
       {
         "componentId": "checkbox-group",
         "publicName": "describedBy",
@@ -521,6 +602,18 @@
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#checkbox-group"
+        }
+      },
+      {
+        "componentId": "checkbox-group",
+        "publicName": "value",
+        "kind": "input",
+        "type": "ReadonlyArray<string> | undefined",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/checkbox-group?state=default"
         }
       }
     ]

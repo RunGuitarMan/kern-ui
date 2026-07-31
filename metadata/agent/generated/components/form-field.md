@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Forms
 
-Form Field. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Form Field. Coordinates one projected control with its visible label, optional copy, hints, errors, and Angular state without owning the control value.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Keep identity and state on the projected control, and disable reactive controls through their FormControl.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not project multiple controls or proxy id, required, disabled, readonly, or state through Form Field.
 
 ## Compile-verified standalone Angular example
 
@@ -38,7 +38,7 @@ import { KrnFormField, KrnHint, KrnLabel, KrnTextInput } from '@kern-ui/angular/
   template: `
     <krn-form-field>
       <krn-label for="account-name">Account name</krn-label>
-      <krn-text-input id="account-name" [formControl]="control" ariaLabel="Account name" />
+      <krn-text-input id="account-name" [formControl]="control" />
       <krn-hint>Use the legal customer name.</krn-hint>
     </krn-form-field>
   `,
@@ -52,17 +52,16 @@ void bootstrapApplication(KernFormFieldAgentExample);
 
 ## API
 
-| Name           | Kind  | Type                                             | Required | Default     | Description                                                                         |
-| -------------- | ----- | ------------------------------------------------ | -------- | ----------- | ----------------------------------------------------------------------------------- |
-| `id`           | input | `string`                                         | no       | `''`        | Stable identifier value used by the id contract.                                    |
-| `label`        | input | `string`                                         | no       | `''`        | Visible text that names the control or data value.                                  |
-| `hint`         | input | `string`                                         | no       | `''`        | Supporting guidance displayed with a form control or product action.                |
-| `error`        | input | `string`                                         | no       | `''`        | Current failure message or error state exposed by asynchronous content.             |
-| `optionalText` | input | `string`                                         | no       | `''`        | Human-readable copy for the optional state or control.                              |
-| `required`     | input | `boolean`                                        | no       | `false`     | Marks the value as required and participates in Angular Forms validation.           |
-| `disabled`     | input | `boolean`                                        | no       | `false`     | Prevents user interaction and participates in the disabled-state contract.          |
-| `readonly`     | input | `boolean`                                        | no       | `false`     | Keeps the value perceivable while preventing user edits.                            |
-| `state`        | input | `"invalid" \| "default" \| "valid" \| "pending"` | no       | `'default'` | Current semantic state used to choose copy, iconography, and announcement behavior. |
+| Name           | Kind  | Type     | Required | Default | Description                                                             |
+| -------------- | ----- | -------- | -------- | ------- | ----------------------------------------------------------------------- |
+| `label`        | input | `string` | no       | `''`    | Visible text that names the control or data value.                      |
+| `hint`         | input | `string` | no       | `''`    | Supporting guidance displayed with a form control or product action.    |
+| `error`        | input | `string` | no       | `''`    | Current failure message or error state exposed by asynchronous content. |
+| `optionalText` | input | `string` | no       | `''`    | Human-readable copy for the optional state or control.                  |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -76,12 +75,13 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The projected control owns focus and keyboard behavior
+- Clicking the associated visible label moves focus to the projected control
+- Form Field itself does not add a tab stop or intercept control events
+- Exactly one registered control supplies the field identity and required, disabled, readonly, pending, valid, and invalid state.
+- A projected KrnLabel replaces the shorthand label so the field never renders two competing visible labels.
+- aria-describedby references only hints and errors that are currently mounted in the DOM.
+- Inline errors use a polite live region; the projected control remains the source of truth for Angular Forms state.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -103,33 +103,29 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - compact
 - RTL
 - mobile
-- disabled
-- readonly
-- required
 
 ## Interactive playground
 
 Route: `preview/form-field`
 
 Scenarios: `default`, `stress`.
-Public API coverage: 9/9
+Public API coverage: 4/4
 directly controlled; 0 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument       | Control | Default                        | Test value                                 | Binding                         | Description                                                               |
-| -------------- | ------- | ------------------------------ | ------------------------------------------ | ------------------------------- | ------------------------------------------------------------------------- |
-| `state`        | select  | `"default"`                    | `"valid"`                                  | input `state` (property)        | Shows default, valid, pending, or invalid field feedback.                 |
-| `label`        | text    | `""`                           | `"Alternate value"`                        | input `label` (property)        | Changes the visible field label.                                          |
-| `disabled`     | boolean | `false`                        | `true`                                     | input `disabled` (property)     | Prevents interaction and participates in the component disabled contract. |
-| `error`        | text    | `""`                           | `"Alternate value"`                        | input `error` (property)        | Configures the component error contract.                                  |
-| `hint`         | text    | `"Required enterprise value."` | `"Required enterprise value. · alternate"` | input `hint` (property)         | Configures the component hint contract.                                   |
-| `id`           | text    | `""`                           | `"Alternate value"`                        | input `id` (property)           | Configures the component id contract.                                     |
-| `optionalText` | text    | `""`                           | `"Alternate value"`                        | input `optionalText` (property) | Configures the component optionalText contract.                           |
-| `readonly`     | boolean | `false`                        | `true`                                     | input `readonly` (property)     | Configures the component readonly contract.                               |
-| `required`     | boolean | `true`                         | `false`                                    | input `required` (property)     | Marks the value as required and participates in Angular Forms validation. |
+| Argument       | Control | Default                        | Test value                                 | Binding                         | Description                                                                            |
+| -------------- | ------- | ------------------------------ | ------------------------------------------ | ------------------------------- | -------------------------------------------------------------------------------------- |
+| `state`        | select  | `"default"`                    | `"valid"`                                  | fixture interaction             | Drives a real projected FormControl through default, valid, pending, or invalid state. |
+| `label`        | text    | `""`                           | `"Alternate value"`                        | input `label` (property)        | Changes the visible field label.                                                       |
+| `disabled`     | boolean | `false`                        | `true`                                     | fixture interaction             | Disables the projected FormControl.                                                    |
+| `readonly`     | boolean | `false`                        | `true`                                     | fixture interaction             | Keeps the projected control focusable while preventing edits.                          |
+| `required`     | boolean | `true`                         | `false`                                    | fixture interaction             | Marks the projected control as required.                                               |
+| `error`        | text    | `""`                           | `"Alternate value"`                        | input `error` (property)        | Configures the component error contract.                                               |
+| `hint`         | text    | `"Required enterprise value."` | `"Required enterprise value. · alternate"` | input `hint` (property)         | Configures the component hint contract.                                                |
+| `optionalText` | text    | `""`                           | `"Alternate value"`                        | input `optionalText` (property) | Configures the component optionalText contract.                                        |
 
 Exact API exclusions:
 
@@ -146,8 +142,6 @@ Presets:
 - `rtl` — RTL; scenario `default`; direction `rtl`.
 - `mobile` — Mobile; scenario `default`; viewport `phone`.
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
-- `readonly` — readonly; scenario `default`; fixture effect `status/neutral` — readonly: The fixture exposes the readonly status without claiming a public component input..
-- `required` — required; scenario `default`; `required=true`; fixture effect `status/neutral` — required: The fixture exposes the required status without claiming a public component input..
 - `optional` — Optional; scenario `default`; `required=false`.
 - `stress` — Stress data; scenario `stress`.
 
@@ -163,6 +157,12 @@ Presets:
 - Importing from an undeclared family path or a source implementation file.
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
+- Keep id, required, disabled, readonly, and Angular Forms bindings on the projected control. Form Field derives presentation and relationships from that control instead of proxying its state.
+- Disable a reactive control through FormControl.disable(); do not create a DOM-disabled control whose Angular model remains enabled.
+- Use either the label input or one projected KrnLabel. A projected label is the canonical rich-content option and replaces the shorthand label instead of creating a second label.
+- Register exactly one control per Form Field. For Checkbox Group, Radio Group, Segmented Control, Verification Code, or Range Slider, project the group component itself; Form Field names its composite root with aria-labelledby and delegates label clicks to its first enabled member.
+- Angular validation becomes visually invalid only after the control is touched or dirty. Use mounted error content when a server or cross-field error must be announced before local interaction.
+- Use the error input for one inline message or project KrnValidationMessage for controlled validation content. Form Field only references description ids that are mounted in the DOM.
 
 ## Ship checklist
 

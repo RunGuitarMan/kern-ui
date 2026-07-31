@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-timeline",
   "selectors": ["krn-timeline"],
+  "selectorDeprecations": [],
   "symbol": "KrnTimeline",
   "canonicalSymbol": "KrnTimeline",
   "canonicalId": "timeline",

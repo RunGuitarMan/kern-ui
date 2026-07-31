@@ -3,8 +3,9 @@
   "name": "Toggle Button",
   "category": "Actions",
   "kind": "component",
-  "selector": "krn-toggle-button",
-  "selectors": ["krn-toggle-button"],
+  "selector": "button[krnToggleButton]",
+  "selectors": ["button[krnToggleButton]"],
+  "selectorDeprecations": [],
   "symbol": "KrnToggleButton",
   "canonicalSymbol": "KrnToggleButton",
   "canonicalId": "toggle-button",
@@ -15,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Toggle Button. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.",
+  "summary": "Toggle Button. Enhances one native button with controlled pressed state, deterministic aria-pressed semantics, and scoped state appearances.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -58,8 +59,8 @@
       "type": "string",
       "required": true,
       "defaultValue": "required",
-      "description": "Controlled component value.",
-      "descriptionSource": "inferred"
+      "description": "Stable native value used by `KrnToggleGroup` as the selection identity.\n\nIt remains required because group selection is represented by serializable\nstring values rather than child indices or component identities.",
+      "descriptionSource": "source"
     },
     {
       "name": "size",
@@ -67,8 +68,48 @@
       "kind": "input",
       "type": "KrnSize",
       "required": false,
-      "defaultValue": "'md'",
+      "defaultValue": "this.options.size",
       "description": "Named semantic size resolved through KERN density and sizing tokens.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "pressedVariant",
+      "property": "pressedVariant",
+      "kind": "input",
+      "type": "KrnActionVariant",
+      "required": false,
+      "defaultValue": "this.options.pressedVariant",
+      "description": "Visual emphasis rendered while Toggle Button is pressed.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "pressedTone",
+      "property": "pressedTone",
+      "kind": "input",
+      "type": "KrnTone",
+      "required": false,
+      "defaultValue": "this.options.pressedTone",
+      "description": "Semantic tone rendered while Toggle Button is pressed.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "unpressedVariant",
+      "property": "unpressedVariant",
+      "kind": "input",
+      "type": "KrnActionVariant",
+      "required": false,
+      "defaultValue": "this.options.unpressedVariant",
+      "description": "Visual emphasis rendered while Toggle Button is not pressed.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "unpressedTone",
+      "property": "unpressedTone",
+      "kind": "input",
+      "type": "KrnTone",
+      "required": false,
+      "defaultValue": "this.options.unpressedTone",
+      "description": "Semantic tone rendered while Toggle Button is not pressed.",
       "descriptionSource": "inferred"
     },
     {
@@ -88,16 +129,28 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Controlled toggle-button pressed state exposed through native button semantics.",
-      "descriptionSource": "inferred"
+      "description": "Standalone state model. Inside a Toggle Group, the group values are authoritative.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [
     {
-      "name": "default",
+      "name": "krnLeadingIcon",
+      "selector": "[krnLeadingIcon]",
+      "required": false,
+      "description": "Projects content matching [krnLeadingIcon]."
+    },
+    {
+      "name": "default-2",
       "selector": "*",
       "required": false,
       "description": "Projects default component content."
+    },
+    {
+      "name": "krnTrailingIcon",
+      "selector": "[krnTrailingIcon]",
+      "required": false,
+      "description": "Projects content matching [krnTrailingIcon]."
     }
   ],
   "forms": {
@@ -111,11 +164,16 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Enter / Space activates", "Tab follows document order"],
+    "keyboard": [
+      "Tab focuses the native button",
+      "Enter and Space dispatch the native click behavior",
+      "Activation toggles standalone pressed state or delegates to the owning Toggle Group"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The native button retains form ownership, accessible naming, descriptions, focus, and click behavior.",
+      "aria-pressed is always derived from effective standalone or group state and must not be consumer-authored.",
+      "Native disabled state prevents activation; visible text supplies the accessible name unless native ARIA naming is provided.",
+      "Pressed state is communicated through aria-pressed and appearance, not color alone."
     ],
     "manualValidationRequired": true
   },
@@ -134,32 +192,50 @@
       "title": "Controlled formatting toggle",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled formatting toggle\n *\n * Keep the pressed state in application-owned state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnToggleButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-toggle-button-agent-example',\n  standalone: true,\n  imports: [KrnToggleButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-toggle-button value=\"bold\" [(pressed)]=\"boldEnabled\">Bold</krn-toggle-button> `,\n})\nexport class KernToggleButtonAgentExample {\n  boldEnabled = false;\n}\n\nvoid bootstrapApplication(KernToggleButtonAgentExample);\n",
+      "code": "/**\n * Controlled formatting toggle\n *\n * Keep formatting state controlled while native button semantics remain intact.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnToggleButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-toggle-button-agent-example',\n  standalone: true,\n  imports: [KrnToggleButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button krnToggleButton type=\"button\" value=\"bold\" [(pressed)]=\"boldEnabled\">Bold</button>\n  `,\n})\nexport class KernToggleButtonAgentExample {\n  boldEnabled = false;\n}\n\nvoid bootstrapApplication(KernToggleButtonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/toggle-button.ts"
     }
   ],
-  "related": ["button", "icon-button", "button-group", "split-button"],
+  "related": [
+    "button",
+    "icon-button",
+    "toggle-group",
+    "segmented-control",
+    "button-group",
+    "split-button"
+  ],
   "keywords": [
     "toggle-button",
     "Toggle Button",
     "Actions",
-    "krn-toggle-button",
+    "button[krnToggleButton]",
     "KrnToggleButton",
+    "native toggle button",
+    "aria-pressed",
+    "controlled pressed state",
+    "scoped state appearance",
     "value",
     "size",
+    "pressedVariant",
+    "pressedTone",
+    "unpressedVariant",
+    "unpressedTone",
     "disabled",
     "pressed"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use <button krnToggleButton> with a stable value and bind [(pressed)] for standalone controlled state.",
+    "avoidWhen": "Do not nest a button, link, or other interactive control inside Toggle Button, and do not bind aria-pressed independently."
   },
   "commonMistakes": [
     "Do not omit required inputs: `value`.",
     "Importing from an undeclared family path or a source implementation file.",
     "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
-    "Assuming the documentation SSR build replaces validation of the consuming application."
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Use button[krnToggleButton] with a stable value and visible or native ARIA accessible name; do not nest another interactive element inside it.",
+    "Treat aria-pressed as component-owned derived state. Bind [(pressed)] for standalone controlled state and bind [(values)] on KrnToggleGroup for grouped state.",
+    "Use provideKrnToggleButtonOptions for inheritable pressed and unpressed appearance defaults; use native form, name, description, and click attributes on the same button."
   ],
   "checklist": [
     "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
@@ -204,6 +280,76 @@
         }
       },
       {
+        "key": "pressedTone",
+        "label": "Pressed Tone",
+        "kind": "select",
+        "defaultValue": "brand",
+        "testValue": "neutral",
+        "description": "Semantic tone used while the toggle is pressed.",
+        "binding": {
+          "kind": "input",
+          "publicName": "pressedTone",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "neutral",
+            "value": "neutral"
+          },
+          {
+            "label": "brand",
+            "value": "brand"
+          },
+          {
+            "label": "info",
+            "value": "info"
+          },
+          {
+            "label": "success",
+            "value": "success"
+          },
+          {
+            "label": "warning",
+            "value": "warning"
+          },
+          {
+            "label": "danger",
+            "value": "danger"
+          }
+        ]
+      },
+      {
+        "key": "pressedVariant",
+        "label": "Pressed Variant",
+        "kind": "select",
+        "defaultValue": "soft",
+        "testValue": "solid",
+        "description": "Visual emphasis used while the toggle is pressed.",
+        "binding": {
+          "kind": "input",
+          "publicName": "pressedVariant",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "solid",
+            "value": "solid"
+          },
+          {
+            "label": "soft",
+            "value": "soft"
+          },
+          {
+            "label": "outline",
+            "value": "outline"
+          },
+          {
+            "label": "ghost",
+            "value": "ghost"
+          }
+        ]
+      },
+      {
         "key": "size",
         "label": "Size",
         "kind": "select",
@@ -227,6 +373,76 @@
           {
             "label": "lg",
             "value": "lg"
+          }
+        ]
+      },
+      {
+        "key": "unpressedTone",
+        "label": "Unpressed Tone",
+        "kind": "select",
+        "defaultValue": "neutral",
+        "testValue": "brand",
+        "description": "Semantic tone used while the toggle is not pressed.",
+        "binding": {
+          "kind": "input",
+          "publicName": "unpressedTone",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "neutral",
+            "value": "neutral"
+          },
+          {
+            "label": "brand",
+            "value": "brand"
+          },
+          {
+            "label": "info",
+            "value": "info"
+          },
+          {
+            "label": "success",
+            "value": "success"
+          },
+          {
+            "label": "warning",
+            "value": "warning"
+          },
+          {
+            "label": "danger",
+            "value": "danger"
+          }
+        ]
+      },
+      {
+        "key": "unpressedVariant",
+        "label": "Unpressed Variant",
+        "kind": "select",
+        "defaultValue": "ghost",
+        "testValue": "solid",
+        "description": "Visual emphasis used while the toggle is not pressed.",
+        "binding": {
+          "kind": "input",
+          "publicName": "unpressedVariant",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "solid",
+            "value": "solid"
+          },
+          {
+            "label": "soft",
+            "value": "soft"
+          },
+          {
+            "label": "outline",
+            "value": "outline"
+          },
+          {
+            "label": "ghost",
+            "value": "ghost"
           }
         ]
       },
@@ -373,8 +589,8 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 4,
-      "controlled": 4,
+      "publicInputsAndModels": 8,
+      "controlled": 8,
       "excluded": 0,
       "unclassified": 0
     },

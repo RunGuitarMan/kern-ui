@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-spacer",
   "selectors": ["krn-spacer"],
+  "selectorDeprecations": [],
   "symbol": "KrnSpacer",
   "canonicalSymbol": "KrnSpacer",
   "canonicalId": "spacer",

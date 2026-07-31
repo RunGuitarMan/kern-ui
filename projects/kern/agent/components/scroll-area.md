@@ -58,12 +58,16 @@ void bootstrapApplication(KernScrollAreaAgentExample);
 
 | Name                 | Kind  | Type                                   | Required | Default                                      | Description                                                                    |
 | -------------------- | ----- | -------------------------------------- | -------- | -------------------------------------------- | ------------------------------------------------------------------------------ |
-| `axis`               | input | `"horizontal" \| "vertical" \| "both"` | no       | `'vertical'`                                 | Chart axis represented by the data series and keyboard movement.               |
+| `axis`               | input | `"both" \| "horizontal" \| "vertical"` | no       | `'vertical'`                                 | Chart axis represented by the data series and keyboard movement.               |
 | `maxBlockSize`       | input | `KrnLayoutSpace`                       | no       | `'100%'`                                     | Upper or lower bound applied to the block size value.                          |
 | `maxInlineSize`      | input | `KrnLayoutSpace`                       | no       | `'100%'`                                     | Upper or lower bound applied to the inline size value.                         |
 | `keyboardAccessible` | input | `boolean`                              | no       | `true`                                       | Confirms that the custom rendered action participates in keyboard interaction. |
 | `ariaLabel`          | input | `string \| null`                       | no       | `this.translations.layout.scrollableContent` | Accessible name used when visible content is not sufficient.                   |
-| `scrollbar`          | input | `"hidden" \| "auto" \| "stable"`       | no       | `'auto'`                                     | Controls whether the scroll area uses native or visually hidden scrollbars.    |
+| `scrollbar`          | input | `"auto" \| "hidden" \| "stable"`       | no       | `'auto'`                                     | Controls whether the scroll area uses native or visually hidden scrollbars.    |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 

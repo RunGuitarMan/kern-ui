@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-responsive-media",
   "selectors": ["krn-responsive-media"],
+  "selectorDeprecations": [],
   "symbol": "KrnResponsiveMedia",
   "canonicalSymbol": "KrnResponsiveMedia",
   "canonicalId": "responsive-media",

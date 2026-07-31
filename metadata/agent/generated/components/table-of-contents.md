@@ -67,6 +67,10 @@ void bootstrapApplication(KernTableOfContentsAgentExample);
 | `ariaLabel`     | input  | `string`                    | no       | `this.translations.navigation.tableOfContents`      | Accessible name used when visible content is not sufficient.             |
 | `itemActivated` | output | `KrnTocItem`                | no       | `undefined`                                         | Notifies the consumer after the item activated interaction completes.    |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._

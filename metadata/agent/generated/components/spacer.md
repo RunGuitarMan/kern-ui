@@ -52,6 +52,10 @@ void bootstrapApplication(KernSpacerAgentExample);
 | `size` | input | `KrnLayoutSpace`             | no       | `'4'`        | Named semantic size resolved through KERN density and sizing tokens. |
 | `axis` | input | `"horizontal" \| "vertical"` | no       | `'vertical'` | Chart axis represented by the data series and keyboard movement.     |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._

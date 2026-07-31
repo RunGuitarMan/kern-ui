@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-user-menu",
   "selectors": ["krn-user-menu"],
+  "selectorDeprecations": [],
   "symbol": "KrnUserMenu",
   "canonicalSymbol": "KrnUserMenu",
   "canonicalId": "user-menu",

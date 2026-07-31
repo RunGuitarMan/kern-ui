@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-command-palette",
   "selectors": ["krn-command-palette"],
+  "selectorDeprecations": [],
   "symbol": "KrnCommandPalette",
   "canonicalSymbol": "KrnCommandPalette",
   "canonicalId": "command-palette",
@@ -152,7 +153,7 @@
       "name": "locale",
       "property": "locale",
       "kind": "input",
-      "type": "string | Array<string>",
+      "type": "Array<string> | string",
       "required": false,
       "defaultValue": "inject(KRN_LOCALE)",
       "description": "Locale identifier used for collation, formatting, and component-owned copy.",
@@ -182,7 +183,7 @@
       "name": "closed",
       "property": "closed",
       "kind": "output",
-      "type": "\"selection\" | \"escape\" | \"outside\"",
+      "type": "\"escape\" | \"outside\" | \"selection\"",
       "required": false,
       "defaultValue": "undefined",
       "description": "Notifies the consumer after the closed interaction completes.",
@@ -586,7 +587,7 @@
         "componentId": "command-palette",
         "publicName": "locale",
         "kind": "input",
-        "type": "string | Array<string>",
+        "type": "Array<string> | string",
         "code": "complex-data",
         "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
         "evidence": {
@@ -600,7 +601,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#command-palette"

@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-responsive-show-hide",
   "selectors": ["krn-show", "krn-responsive-show-hide"],
+  "selectorDeprecations": [],
   "symbol": "KrnResponsiveShowHide",
   "canonicalSymbol": "KrnShow",
   "canonicalId": "responsive-show-hide",

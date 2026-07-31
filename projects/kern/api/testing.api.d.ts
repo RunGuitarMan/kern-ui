@@ -6,10 +6,10 @@
  */
 
 import {
-  ComponentHarness,
   BaseHarnessFilters,
-  HarnessPredicate,
+  ComponentHarness,
   TestElement,
+  HarnessPredicate,
   TestKey,
   ComponentHarnessConstructor,
   ContentContainerComponentHarness,
@@ -22,25 +22,60 @@ interface KrnButtonHarnessFilters extends BaseHarnessFilters {
   readonly text?: KrnHarnessText;
   /** Matches the accessible label exposed by the native button. */
   readonly ariaLabel?: KrnHarnessText;
+  /** Matches the native `aria-labelledby` reference list. */
+  readonly ariaLabelledBy?: KrnHarnessText;
   readonly variant?: string;
   readonly tone?: string;
+  readonly size?: string;
   readonly disabled?: boolean;
   readonly loading?: boolean;
-  readonly pressed?: boolean | null;
 }
-/**
- * Harness for `krn-button`.
- *
- * Consumers should prefer this API over querying KERN's internal DOM or CSS classes.
- *
- * @publicApi
- */
-declare class KrnButtonHarness extends ComponentHarness {
-  static readonly hostSelector = 'krn-button';
-  static with(options?: KrnButtonHarnessFilters): HarnessPredicate<KrnButtonHarness>;
-  private readonly button;
-  getText(): Promise<string>;
+interface KrnIconButtonHarnessFilters extends BaseHarnessFilters {
+  /** Matches the accessible label exposed by the native icon button. */
+  readonly ariaLabel?: KrnHarnessText;
+  /** Matches the native `aria-labelledby` reference list. */
+  readonly ariaLabelledBy?: KrnHarnessText;
+  /** Matches the name resolved from `aria-labelledby` or `aria-label`. */
+  readonly accessibleName?: KrnHarnessText;
+  readonly variant?: string;
+  readonly tone?: string;
+  readonly size?: string;
+  readonly disabled?: boolean;
+  readonly loading?: boolean;
+}
+interface KrnFloatingActionButtonHarnessFilters extends BaseHarnessFilters {
+  /** Matches the projected action label in both extended and compact modes. */
+  readonly text?: KrnHarnessText;
+  /** Matches the accessible label exposed by the native floating action. */
+  readonly ariaLabel?: KrnHarnessText;
+  /** Matches the native `aria-labelledby` reference list. */
+  readonly ariaLabelledBy?: KrnHarnessText;
+  /** Matches the name resolved from ARIA or the persistent projected label. */
+  readonly accessibleName?: KrnHarnessText;
+  readonly variant?: string;
+  readonly tone?: string;
+  readonly size?: string;
+  readonly disabled?: boolean;
+  readonly loading?: boolean;
+  readonly extended?: boolean;
+}
+interface KrnToggleButtonHarnessFilters extends BaseHarnessFilters {
+  /** Matches the projected toggle label. */
+  readonly text?: KrnHarnessText;
+  /** Matches the accessible label exposed by the native toggle button. */
+  readonly ariaLabel?: KrnHarnessText;
+  /** Matches the native `aria-labelledby` reference list. */
+  readonly ariaLabelledBy?: KrnHarnessText;
+  readonly value?: string;
+  readonly pressed?: boolean;
+  readonly variant?: string;
+  readonly tone?: string;
+  readonly size?: string;
+  readonly disabled?: boolean;
+}
+declare abstract class KrnNativeActionHarness extends ComponentHarness {
   getAriaLabel(): Promise<string | null>;
+  getAriaLabelledBy(): Promise<string | null>;
   getVariant(): Promise<string | null>;
   getTone(): Promise<string | null>;
   getSize(): Promise<string | null>;
@@ -49,11 +84,98 @@ declare class KrnButtonHarness extends ComponentHarness {
   getValue(): Promise<string>;
   isDisabled(): Promise<boolean>;
   isLoading(): Promise<boolean>;
-  isPressed(): Promise<boolean | null>;
   click(): Promise<void>;
   focus(): Promise<void>;
   isFocused(): Promise<boolean>;
   getNativeButton(): Promise<TestElement>;
+  protected getAriaLabelledByText(): Promise<string>;
+}
+/**
+ * Harness for the native `button[krnButton]` host.
+ *
+ * Consumers should prefer this API over querying KERN's internal DOM or CSS classes.
+ *
+ * @publicApi
+ */
+declare class KrnButtonHarness extends KrnNativeActionHarness {
+  static readonly hostSelector = 'button[krnButton]';
+  static with(options?: KrnButtonHarnessFilters): HarnessPredicate<KrnButtonHarness>;
+  getText(): Promise<string>;
+}
+/**
+ * Harness for the native `button[krnFab]` host.
+ *
+ * The projected label remains queryable in compact mode because visual collapse
+ * must not remove the native button's accessible name.
+ *
+ * @publicApi
+ */
+declare class KrnFloatingActionButtonHarness extends KrnNativeActionHarness {
+  static readonly hostSelector = 'button[krnFab]';
+  static with(
+    options?: KrnFloatingActionButtonHarnessFilters,
+  ): HarnessPredicate<KrnFloatingActionButtonHarness>;
+  getText(): Promise<string>;
+  getAccessibleName(): Promise<string>;
+  isExtended(): Promise<boolean>;
+}
+/**
+ * Harness for the native `button[krnToggleButton]` host.
+ *
+ * It exposes the effective standalone or group-owned pressed state without
+ * coupling tests to KERN's projected label DOM.
+ *
+ * @publicApi
+ */
+declare class KrnToggleButtonHarness extends KrnNativeActionHarness {
+  static readonly hostSelector = 'button[krnToggleButton]';
+  static with(options?: KrnToggleButtonHarnessFilters): HarnessPredicate<KrnToggleButtonHarness>;
+  getText(): Promise<string>;
+  isPressed(): Promise<boolean>;
+}
+/**
+ * Harness for the native `button[krnIconButton]` host.
+ *
+ * It intentionally exposes native button state instead of relying on KERN's internal icon DOM.
+ *
+ * @publicApi
+ */
+declare class KrnIconButtonHarness extends KrnNativeActionHarness {
+  static readonly hostSelector = 'button[krnIconButton]';
+  static with(options?: KrnIconButtonHarnessFilters): HarnessPredicate<KrnIconButtonHarness>;
+  getAccessibleName(): Promise<string>;
+}
+
+interface KrnButtonGroupHarnessFilters extends BaseHarnessFilters {
+  /** Matches the native `aria-label` value on the group host. */
+  readonly ariaLabel?: KrnHarnessText;
+  /** Matches the native `aria-labelledby` reference list on the group host. */
+  readonly ariaLabelledBy?: KrnHarnessText;
+  /** Matches the name resolved from `aria-labelledby` or `aria-label`. */
+  readonly accessibleName?: KrnHarnessText;
+  readonly orientation?: string;
+  readonly connected?: boolean;
+}
+/**
+ * Harness for the canonical `div[krnButtonGroup]` host and its legacy element alias.
+ *
+ * Button Group is a stateless semantic and layout container. Selection belongs
+ * to Toggle Group or Segmented Control, so this harness intentionally exposes
+ * no value, pressed, or selection API.
+ *
+ * @publicApi
+ */
+declare class KrnButtonGroupHarness extends ComponentHarness {
+  static readonly hostSelector = 'div[krnButtonGroup], krn-button-group';
+  static with(options?: KrnButtonGroupHarnessFilters): HarnessPredicate<KrnButtonGroupHarness>;
+  getAriaLabel(): Promise<string | null>;
+  getAriaLabelledBy(): Promise<string | null>;
+  getAccessibleName(): Promise<string>;
+  getOrientation(): Promise<string | null>;
+  isConnected(): Promise<boolean>;
+  getButtons(filters?: KrnButtonHarnessFilters): Promise<readonly KrnButtonHarness[]>;
+  getIconButtons(filters?: KrnIconButtonHarnessFilters): Promise<readonly KrnIconButtonHarness[]>;
+  private getAriaLabelledByText;
 }
 
 interface KrnChartHarnessFilters extends BaseHarnessFilters {
@@ -179,6 +301,7 @@ declare class KrnColorPickerHarness extends ComponentHarness {
   private readonly textInput;
   private readonly hueInput;
   private readonly saturationInput;
+  private readonly lightnessInput;
   private readonly status;
   private readonly doneButton;
   getValueText(): Promise<string>;
@@ -197,6 +320,8 @@ declare class KrnColorPickerHarness extends ComponentHarness {
   setHue(value: number): Promise<void>;
   getSaturation(): Promise<number>;
   setSaturation(value: number): Promise<void>;
+  getLightness(): Promise<number>;
+  setLightness(value: number): Promise<void>;
   getStatusText(): Promise<string | null>;
   finish(): Promise<void>;
   focus(): Promise<void>;
@@ -267,6 +392,47 @@ declare class KrnCommandPaletteHarness extends ComponentHarness {
   close(): Promise<void>;
   getSearchInput(): Promise<TestElement>;
   private requireSearch;
+}
+
+interface KrnCopyButtonHarnessFilters extends BaseHarnessFilters {
+  /** Matches the accessible name exposed by the inner native button. */
+  readonly accessibleName?: KrnHarnessText;
+  /** Matches the visible label of the inner native button. */
+  readonly text?: KrnHarnessText;
+  readonly state?: string;
+  readonly size?: string;
+  readonly variant?: string;
+  readonly tone?: string;
+  readonly disabled?: boolean;
+  readonly pending?: boolean;
+}
+/**
+ * Harness for `krn-copy-button`.
+ *
+ * State and appearance are read from the custom-element host while focus and
+ * activation are delegated to its inner native button.
+ *
+ * @publicApi
+ */
+declare class KrnCopyButtonHarness extends ComponentHarness {
+  static readonly hostSelector = 'krn-copy-button';
+  static with(options?: KrnCopyButtonHarnessFilters): HarnessPredicate<KrnCopyButtonHarness>;
+  private readonly nativeButton;
+  private readonly feedback;
+  getAccessibleName(): Promise<string>;
+  getText(): Promise<string>;
+  getState(): Promise<string | null>;
+  getFeedbackText(): Promise<string>;
+  getSize(): Promise<string | null>;
+  getVariant(): Promise<string | null>;
+  getTone(): Promise<string | null>;
+  isDisabled(): Promise<boolean>;
+  isPending(): Promise<boolean>;
+  click(): Promise<void>;
+  focus(): Promise<void>;
+  isFocused(): Promise<boolean>;
+  getNativeButton(): Promise<TestElement>;
+  private getAriaLabelledByText;
 }
 
 interface KrnPickerHarnessFilters extends BaseHarnessFilters {
@@ -422,6 +588,62 @@ declare class KrnDataGridHarness extends ComponentHarness {
   getFilterInput(): Promise<TestElement | null>;
 }
 
+interface KrnDropdownButtonHarnessFilters extends BaseHarnessFilters {
+  readonly accessibleName?: KrnHarnessText;
+  readonly text?: KrnHarnessText;
+  readonly open?: boolean;
+  readonly disabled?: boolean;
+  readonly loading?: boolean;
+  readonly size?: string;
+  readonly variant?: string;
+  readonly tone?: string;
+  readonly menuAlign?: string;
+}
+/**
+ * Harness for `krn-dropdown-button` and its connected ARIA menu.
+ *
+ * The trigger lives under the component host while the menu is rendered in a
+ * document-level CDK overlay, so menu lookup follows the public
+ * `aria-controls` relationship instead of relying on overlay DOM order.
+ *
+ * @publicApi
+ */
+declare class KrnDropdownButtonHarness extends ComponentHarness {
+  static readonly hostSelector = 'krn-dropdown-button';
+  static with(
+    options?: KrnDropdownButtonHarnessFilters,
+  ): HarnessPredicate<KrnDropdownButtonHarness>;
+  private readonly trigger;
+  getAccessibleName(): Promise<string>;
+  getText(): Promise<string>;
+  getMenuId(): Promise<string>;
+  isOpen(): Promise<boolean>;
+  isDisabled(): Promise<boolean>;
+  isLoading(): Promise<boolean>;
+  getSize(): Promise<string | null>;
+  getVariant(): Promise<string | null>;
+  getTone(): Promise<string | null>;
+  getMenuAlign(): Promise<string | null>;
+  getMenu(): Promise<TestElement | null>;
+  getMenuItems(): Promise<readonly TestElement[]>;
+  open(): Promise<void>;
+  close(): Promise<void>;
+  clickItem(index: number): Promise<void>;
+  focus(): Promise<void>;
+  isFocused(): Promise<boolean>;
+  getTrigger(): Promise<TestElement>;
+}
+
+interface KrnFileUploadHarnessFilters extends BaseHarnessFilters {
+  readonly label?: KrnHarnessText;
+  readonly accept?: KrnHarnessText;
+  readonly multiple?: boolean;
+  readonly disabled?: boolean;
+  readonly readonly?: boolean;
+}
+interface KrnDropUploadHarnessFilters extends KrnFileUploadHarnessFilters {
+  readonly dropLabel?: KrnHarnessText;
+}
 /** Harness for `krn-toast-viewport`. */
 declare class KrnToastViewportHarness extends ComponentHarness {
   static readonly hostSelector = 'krn-toast, krn-toast-viewport, krn-snackbar';
@@ -434,6 +656,7 @@ declare class KrnToastViewportHarness extends ComponentHarness {
 }
 /** Shared harness contract for file upload controls. */
 declare abstract class KrnUploadHarness extends ComponentHarness {
+  private readonly root;
   private readonly input;
   private readonly button;
   private readonly files;
@@ -441,17 +664,23 @@ declare abstract class KrnUploadHarness extends ComponentHarness {
   getAccept(): Promise<string | null>;
   isMultiple(): Promise<boolean>;
   isDisabled(): Promise<boolean>;
+  isReadonly(): Promise<boolean>;
   getFileNames(): Promise<readonly string[]>;
   removeFile(index?: number): Promise<void>;
   getNativeInput(): Promise<TestElement>;
+  focus(): Promise<void>;
+  isFocused(): Promise<boolean>;
 }
 /** Harness for `krn-file-upload`. */
 declare class KrnFileUploadHarness extends KrnUploadHarness {
   static readonly hostSelector = 'krn-file-upload';
+  static with(options?: KrnFileUploadHarnessFilters): HarnessPredicate<KrnFileUploadHarness>;
 }
 /** Harness for `krn-drop-upload` and its documented alias. */
 declare class KrnDropUploadHarness extends KrnUploadHarness {
   static readonly hostSelector = 'krn-drop-upload, krn-drag-drop-upload';
+  static with(options?: KrnDropUploadHarnessFilters): HarnessPredicate<KrnDropUploadHarness>;
+  getDropLabel(): Promise<string>;
 }
 
 interface KrnFormControlHarnessFilters extends BaseHarnessFilters {
@@ -530,6 +759,45 @@ declare class KrnFormFieldHarness extends ContentContainerComponentHarness {
   getControl(): Promise<TestElement | null>;
   getControlId(): Promise<string | null>;
   getControlDescribedBy(): Promise<readonly string[]>;
+}
+
+interface KrnLinkHarnessFilters extends BaseHarnessFilters {
+  /** Matches the native anchor text. */
+  readonly text?: KrnHarnessText;
+  /** Matches the accessible label exposed by the native anchor. */
+  readonly ariaLabel?: KrnHarnessText;
+  /** Matches the native `aria-labelledby` reference list. */
+  readonly ariaLabelledBy?: KrnHarnessText;
+  /** Matches the serialized native href rather than an absolute DOM property URL. */
+  readonly href?: KrnHarnessText;
+  readonly target?: KrnHarnessText;
+  readonly rel?: KrnHarnessText;
+  readonly download?: KrnHarnessText;
+  readonly hasHref?: boolean;
+}
+/**
+ * Harness for the native `a[krnLink]` host.
+ *
+ * Consumers should prefer this API over querying KERN presentation classes.
+ *
+ * @publicApi
+ */
+declare class KrnLinkHarness extends ComponentHarness {
+  static readonly hostSelector = 'a[krnLink]';
+  static with(options?: KrnLinkHarnessFilters): HarnessPredicate<KrnLinkHarness>;
+  getText(): Promise<string>;
+  getAriaLabel(): Promise<string | null>;
+  getAriaLabelledBy(): Promise<string | null>;
+  getHref(): Promise<string | null>;
+  hasHref(): Promise<boolean>;
+  getTarget(): Promise<string | null>;
+  getRel(): Promise<string | null>;
+  getDownload(): Promise<string | null>;
+  getReferrerPolicy(): Promise<string | null>;
+  click(): Promise<void>;
+  focus(): Promise<void>;
+  isFocused(): Promise<boolean>;
+  getNativeLink(): Promise<TestElement>;
 }
 
 interface KrnCompositeItemHarnessFilters extends BaseHarnessFilters {
@@ -809,11 +1077,97 @@ declare class KrnAutocompleteHarness extends KrnEditableComboboxHarness {
   ): HarnessPredicate<KrnAutocompleteHarness>;
 }
 
+interface KrnSplitButtonHarnessFilters extends BaseHarnessFilters {
+  readonly primaryText?: KrnHarnessText;
+  readonly menuAccessibleName?: KrnHarnessText;
+  readonly open?: boolean;
+  readonly disabled?: boolean;
+  readonly loading?: boolean;
+  readonly size?: string;
+  readonly variant?: string;
+  readonly tone?: string;
+  readonly menuAlign?: string;
+}
+/**
+ * Harness for both native action segments of `krn-split-button` and its connected ARIA menu.
+ *
+ * Overlay lookup follows the menu trigger's public `aria-controls` relationship, so tests do not
+ * depend on CDK overlay DOM order.
+ *
+ * @publicApi
+ */
+declare class KrnSplitButtonHarness extends ComponentHarness {
+  static readonly hostSelector = 'krn-split-button';
+  static with(options?: KrnSplitButtonHarnessFilters): HarnessPredicate<KrnSplitButtonHarness>;
+  private readonly primary;
+  private readonly menuTrigger;
+  getPrimaryText(): Promise<string>;
+  getPrimaryAccessibleName(): Promise<string>;
+  getMenuAccessibleName(): Promise<string>;
+  getMenuId(): Promise<string>;
+  isOpen(): Promise<boolean>;
+  isDisabled(): Promise<boolean>;
+  isMenuDisabled(): Promise<boolean>;
+  isLoading(): Promise<boolean>;
+  getSize(): Promise<string | null>;
+  getVariant(): Promise<string | null>;
+  getTone(): Promise<string | null>;
+  getMenuAlign(): Promise<string | null>;
+  getMenu(): Promise<TestElement | null>;
+  getMenuItems(): Promise<readonly TestElement[]>;
+  clickPrimary(): Promise<void>;
+  open(): Promise<void>;
+  close(): Promise<void>;
+  clickItem(index: number): Promise<void>;
+  focusPrimary(): Promise<void>;
+  isPrimaryFocused(): Promise<boolean>;
+  focusMenuTrigger(): Promise<void>;
+  isMenuTriggerFocused(): Promise<boolean>;
+  getPrimary(): Promise<TestElement>;
+  getMenuTrigger(): Promise<TestElement>;
+}
+
+interface KrnToggleGroupHarnessFilters extends BaseHarnessFilters {
+  /** Matches the native `aria-label` value on the toolbar host. */
+  readonly ariaLabel?: KrnHarnessText;
+  /** Matches the native `aria-labelledby` reference list on the toolbar host. */
+  readonly ariaLabelledBy?: KrnHarnessText;
+  /** Matches the name resolved from `aria-labelledby` or `aria-label`. */
+  readonly accessibleName?: KrnHarnessText;
+  readonly orientation?: string;
+  readonly multiple?: boolean;
+  readonly disabled?: boolean;
+}
+/**
+ * Harness for the canonical `div[krnToggleGroup]` toolbar and its legacy element alias.
+ *
+ * It exposes effective pressed values and direct native toggle children without
+ * coupling tests to the private item-registration or roving-focus implementation.
+ *
+ * @publicApi
+ */
+declare class KrnToggleGroupHarness extends ComponentHarness {
+  static readonly hostSelector = 'div[krnToggleGroup], krn-toggle-group';
+  static with(options?: KrnToggleGroupHarnessFilters): HarnessPredicate<KrnToggleGroupHarness>;
+  getAriaLabel(): Promise<string | null>;
+  getAriaLabelledBy(): Promise<string | null>;
+  getAccessibleName(): Promise<string>;
+  getOrientation(): Promise<string | null>;
+  isMultiple(): Promise<boolean>;
+  isDisabled(): Promise<boolean>;
+  getToggleButtons(
+    filters?: KrnToggleButtonHarnessFilters,
+  ): Promise<readonly KrnToggleButtonHarness[]>;
+  getValues(): Promise<readonly string[]>;
+  private getAriaLabelledByText;
+}
+
 export {
   KrnAlertDialogHarness,
   KrnAutocompleteHarness,
   KrnBarChartHarness,
   KrnBottomSheetHarness,
+  KrnButtonGroupHarness,
   KrnButtonHarness,
   KrnCalendarCellHarness,
   KrnCalendarHarness,
@@ -825,6 +1179,7 @@ export {
   KrnComboboxHarness,
   KrnCommandPaletteHarness,
   KrnCommandPaletteOptionHarness,
+  KrnCopyButtonHarness,
   KrnDataGridHarness,
   KrnDataGridHeaderHarness,
   KrnDataGridRowHarness,
@@ -834,11 +1189,15 @@ export {
   KrnDonutChartHarness,
   KrnDrawerHarness,
   KrnDropUploadHarness,
+  KrnDropdownButtonHarness,
   KrnEditableComboboxHarness,
   KrnFileUploadHarness,
+  KrnFloatingActionButtonHarness,
   KrnFormControlHarness,
   KrnFormFieldHarness,
+  KrnIconButtonHarness,
   KrnLineChartHarness,
+  KrnLinkHarness,
   KrnMenuHarness,
   KrnMultiSelectHarness,
   KrnOverlayHarness,
@@ -848,15 +1207,19 @@ export {
   KrnResizeHandleHarness,
   KrnSelectHarness,
   KrnSelectOptionHarness,
+  KrnSplitButtonHarness,
   KrnTabsHarness,
   KrnTimePickerHarness,
   KrnToastViewportHarness,
+  KrnToggleButtonHarness,
+  KrnToggleGroupHarness,
   KrnTreeHarness,
   KrnTreeItemHarness,
   KrnTreeNavigationHarness,
   KrnUploadHarness,
 };
 export type {
+  KrnButtonGroupHarnessFilters,
   KrnButtonHarnessFilters,
   KrnCalendarCellHarnessFilters,
   KrnChartDatumHarnessFilters,
@@ -866,13 +1229,20 @@ export type {
   KrnCommandPaletteHarnessFilters,
   KrnCommandPaletteOptionHarnessFilters,
   KrnCompositeItemHarnessFilters,
+  KrnCopyButtonHarnessFilters,
   KrnDataGridHarnessFilters,
   KrnDataGridHeaderHarnessFilters,
   KrnDataGridRowHarnessFilters,
+  KrnDropUploadHarnessFilters,
+  KrnDropdownButtonHarnessFilters,
   KrnEditableComboboxHarnessFilters,
+  KrnFileUploadHarnessFilters,
+  KrnFloatingActionButtonHarnessFilters,
   KrnFormControlHarnessFilters,
   KrnFormFieldHarnessFilters,
   KrnHarnessText,
+  KrnIconButtonHarnessFilters,
+  KrnLinkHarnessFilters,
   KrnOverlayHarnessFilters,
   KrnPickerHarnessFilters,
   KrnResizablePanelHarnessFilters,
@@ -880,4 +1250,7 @@ export type {
   KrnResizeHandleHarnessFilters,
   KrnSelectHarnessFilters,
   KrnSelectOptionHarnessFilters,
+  KrnSplitButtonHarnessFilters,
+  KrnToggleButtonHarnessFilters,
+  KrnToggleGroupHarnessFilters,
 };

@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-data-grid",
   "selectors": ["krn-data-grid", "krn-data-table"],
+  "selectorDeprecations": [],
   "symbol": "KrnDataGrid",
   "canonicalSymbol": "KrnDataGrid",
   "canonicalId": "data-grid",
@@ -1117,7 +1118,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#data-grid"

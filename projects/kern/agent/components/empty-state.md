@@ -56,6 +56,10 @@ void bootstrapApplication(KernEmptyStateAgentExample);
 | `description` | input | `string`          | no       | `''`                                         | Visible supporting description for the component content.                        |
 | `tone`        | input | `KrnFeedbackTone` | no       | `'neutral'`                                  | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._

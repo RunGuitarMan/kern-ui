@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-number-input",
   "selectors": ["krn-number-input"],
+  "selectorDeprecations": [],
   "symbol": "KrnNumberInput",
   "canonicalSymbol": "KrnNumberInput",
   "canonicalId": "number-input",
@@ -94,6 +95,56 @@
       "required": false,
       "defaultValue": "''",
       "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabelledBy",
+      "property": "ariaLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that provide the accessible name and take precedence over ariaLabel.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaDescribedBy",
+      "property": "ariaDescribedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids composed with Form Field hints and validation descriptions.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "autocomplete",
+      "property": "autocomplete",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "'off'",
+      "description": "Native autocomplete purpose forwarded to the editable control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "inputMode",
+      "property": "inputMode",
+      "kind": "input",
+      "type": "KrnInputMode",
+      "required": false,
+      "defaultValue": "'decimal'",
+      "description": "Virtual-keyboard hint forwarded to the editable control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "value",
+      "property": "value",
+      "kind": "input",
+      "type": "number | null | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controlled component value.",
       "descriptionSource": "inferred"
     },
     {
@@ -265,6 +316,11 @@
     "name",
     "placeholder",
     "ariaLabel",
+    "ariaLabelledBy",
+    "ariaDescribedBy",
+    "autocomplete",
+    "inputMode",
+    "value",
     "increaseLabel",
     "decreaseLabel",
     "min",
@@ -419,6 +475,19 @@
         }
       },
       {
+        "key": "autocomplete",
+        "label": "Autocomplete",
+        "kind": "text",
+        "defaultValue": "off",
+        "testValue": "off · alternate",
+        "description": "Configures the component autocomplete contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "autocomplete",
+          "syntax": "property"
+        }
+      },
+      {
         "key": "id",
         "label": "Id",
         "kind": "text",
@@ -430,6 +499,53 @@
           "publicName": "id",
           "syntax": "property"
         }
+      },
+      {
+        "key": "inputMode",
+        "label": "Input Mode",
+        "kind": "select",
+        "defaultValue": "decimal",
+        "testValue": "none",
+        "description": "Configures the component inputMode contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "inputMode",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "none",
+            "value": "none"
+          },
+          {
+            "label": "text",
+            "value": "text"
+          },
+          {
+            "label": "tel",
+            "value": "tel"
+          },
+          {
+            "label": "url",
+            "value": "url"
+          },
+          {
+            "label": "email",
+            "value": "email"
+          },
+          {
+            "label": "numeric",
+            "value": "numeric"
+          },
+          {
+            "label": "decimal",
+            "value": "decimal"
+          },
+          {
+            "label": "search",
+            "value": "search"
+          }
+        ]
       },
       {
         "key": "placeholder",
@@ -624,15 +740,39 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 14,
-      "controlled": 10,
-      "excluded": 4,
+      "publicInputsAndModels": 19,
+      "controlled": 12,
+      "excluded": 7,
       "unclassified": 0
     },
     "exclusions": [
       {
         "componentId": "number-input",
+        "publicName": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#number-input"
+        }
+      },
+      {
+        "componentId": "number-input",
         "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#number-input"
+        }
+      },
+      {
+        "componentId": "number-input",
+        "publicName": "ariaLabelledBy",
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
@@ -648,7 +788,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#number-input"
@@ -660,7 +800,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#number-input"
@@ -676,6 +816,18 @@
         "evidence": {
           "category": "forms-integration",
           "pointer": "tests/e2e/enterprise-acceptance.spec.ts#number-input"
+        }
+      },
+      {
+        "componentId": "number-input",
+        "publicName": "value",
+        "kind": "input",
+        "type": "number | null | undefined",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/number-input?state=default"
         }
       }
     ]

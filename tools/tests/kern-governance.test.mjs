@@ -1,18 +1,36 @@
 import assert from 'node:assert/strict';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 
+import ts from 'typescript';
+
+import {
+  extractCatalogFromSource,
+  exportedClasses,
+  isRuntimeValueExport,
+  normalizeRepositoryPath,
+} from '../../scripts/generate-component-contract.mjs';
+import { stableTypeText } from '../../scripts/lib/stable-type-text.mjs';
+import {
+  componentStatusIssues,
+  discoverLifecycleCatalogFromSource,
+} from '../verify-kern-lifecycle.mjs';
 import './kern-release-identity.test.mjs';
 import './kern-versioned-docs.test.mjs';
 
 const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const lifecycleScript = resolve(workspaceRoot, 'tools/verify-kern-lifecycle.mjs');
+const componentInventoryScript = resolve(
+  workspaceRoot,
+  'tools/verify-kern-component-inventory.mjs',
+);
 const accessibilityScript = resolve(workspaceRoot, 'tools/verify-kern-accessibility-evidence.mjs');
 const packagePolicyScript = resolve(workspaceRoot, 'tools/verify-kern-package-policy.mjs');
+const componentInventoryPath = resolve(workspaceRoot, 'projects/kern/api/component-inventory.json');
 const agentRoot = resolve(workspaceRoot, 'projects/kern/agent');
 const docsReleaseIdentityPath = resolve(workspaceRoot, 'projects/docs/src/app/release-identity.ts');
 
@@ -24,6 +42,29 @@ function run(script, ...arguments_) {
   });
 }
 
+function runNx(...arguments_) {
+  return spawnSync(resolve(workspaceRoot, 'node_modules/.bin/nx'), arguments_, {
+    cwd: workspaceRoot,
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      NX_DAEMON: 'false',
+    },
+    maxBuffer: 2 * 1024 * 1024,
+  });
+}
+
+function isAngularProject(project) {
+  return Object.values(project.targets ?? {}).some((target) => {
+    const executor = target?.executor ?? target?.builder ?? '';
+    return (
+      executor.startsWith('@angular/') ||
+      executor.startsWith('@angular-devkit/build-angular:') ||
+      executor.startsWith('@nx/angular:')
+    );
+  });
+}
+
 async function temporaryJson(name, value) {
   const directory = await mkdtemp(join(tmpdir(), 'kern-governance-'));
   const path = join(directory, name);
@@ -31,10 +72,333 @@ async function temporaryJson(name, value) {
   return { directory, path };
 }
 
+test('catalog selector literals support attribute selectors without generator inference', () => {
+  const catalog = extractCatalogFromSource(`
+    const GROUPS = { Actions: ['Button'] } as const;
+    const VARIANT_OF = {} as const;
+    const SELECTOR_BY_ID = { button: 'button[krnButton]' } as const;
+  `);
+  assert.equal(catalog.length, 1);
+  assert.equal(catalog[0].selector, 'button[krnButton]');
+});
+
+test('lifecycle component matching consumes the shared attribute selector registry', () => {
+  const catalog = discoverLifecycleCatalogFromSource(`
+    const GROUPS = { Actions: ['Button'] } as const;
+    const VARIANT_OF = {} as const;
+    const SELECTOR_BY_ID = { button: 'button[krnButton]' } as const;
+    const COMPONENT_OVERRIDES = {} as const;
+    const BETA_COMPONENTS = new Set([]);
+    const EXPERIMENTAL_COMPONENTS = new Set([]);
+  `);
+  const issues = componentStatusIssues(
+    catalog,
+    new Map([['button[krnButton]', 'FixtureButton']]),
+    new Map([
+      [
+        './kit:FixtureButton',
+        {
+          entrypoint: './kit',
+          name: 'FixtureButton',
+          status: 'stable',
+        },
+      ],
+    ]),
+  );
+  assert.deepEqual(issues, []);
+});
+
+test('catalog documentation overrides cannot bypass the selector literal registry', () => {
+  assert.throws(
+    () =>
+      extractCatalogFromSource(`
+        const GROUPS = { Actions: ['Button'] } as const;
+        const VARIANT_OF = {} as const;
+        const SELECTOR_BY_ID = {} as const;
+        const COMPONENT_OVERRIDES = {
+          button: { selector: 'button[krnButton]' },
+        } as const;
+      `),
+    /COMPONENT_OVERRIDES\.button cannot override structural field "selector"/,
+  );
+});
+
+test('generated repository paths normalize Windows separators to POSIX', () => {
+  assert.equal(
+    normalizeRepositoryPath(String.raw`projects\kern\kit\src\lib\actions\button.ts`),
+    'projects/kern/kit/src/lib/actions/button.ts',
+  );
+});
+
+test('runtime export discovery excludes decorated classes re-exported only as types', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'kern-export-fixture-'));
+  const implementationPath = join(directory, 'implementation.ts');
+  const intermediatePath = join(directory, 'intermediate.ts');
+  const publicApiPath = join(directory, 'public-api.ts');
+  const typeStarPath = join(directory, 'type-star.ts');
+  const publicTypeStarPath = join(directory, 'public-type-star.ts');
+  const localTypePath = join(directory, 'local-type.ts');
+  const publicLocalTypePath = join(directory, 'public-local-type.ts');
+  try {
+    await Promise.all([
+      writeFile(
+        implementationPath,
+        `
+          declare function Component(metadata: { selector: string }): ClassDecorator;
+          @Component({ selector: 'fixture-only-type' })
+          export class FixtureOnlyType {}
+          @Component({ selector: 'fixture-runtime-value' })
+          export class FixtureRuntimeValue {}
+        `,
+        'utf8',
+      ),
+      writeFile(
+        intermediatePath,
+        `export { type FixtureOnlyType, FixtureRuntimeValue } from './implementation';`,
+        'utf8',
+      ),
+      writeFile(publicApiPath, `export * from './intermediate';`, 'utf8'),
+      writeFile(typeStarPath, `export type * from './implementation';`, 'utf8'),
+      writeFile(publicTypeStarPath, `export * from './type-star';`, 'utf8'),
+      writeFile(
+        localTypePath,
+        `
+          import type { FixtureOnlyType } from './implementation';
+          export { FixtureOnlyType };
+        `,
+        'utf8',
+      ),
+      writeFile(publicLocalTypePath, `export * from './local-type';`, 'utf8'),
+    ]);
+
+    const program = ts.createProgram({
+      rootNames: [publicApiPath, publicTypeStarPath, publicLocalTypePath],
+      options: {
+        experimentalDecorators: true,
+        module: ts.ModuleKind.ESNext,
+        moduleResolution: ts.ModuleResolutionKind.Bundler,
+        noEmit: true,
+        skipLibCheck: true,
+        target: ts.ScriptTarget.ES2022,
+      },
+    });
+    const diagnostics = ts
+      .getPreEmitDiagnostics(program)
+      .filter((diagnostic) => diagnostic.category === ts.DiagnosticCategory.Error);
+    assert.equal(
+      diagnostics.length,
+      0,
+      ts.formatDiagnostics(diagnostics, {
+        getCanonicalFileName: (path) => path,
+        getCurrentDirectory: () => directory,
+        getNewLine: () => '\n',
+      }),
+    );
+    const checker = program.getTypeChecker();
+    const exportsOf = (path) => {
+      const sourceFile = program.getSourceFile(path);
+      assert.ok(sourceFile, `${path} must be in the fixture program`);
+      const moduleSymbol = checker.getSymbolAtLocation(sourceFile) ?? sourceFile.symbol;
+      assert.ok(moduleSymbol, `${path} must have a module symbol`);
+      return checker.getExportsOfModule(moduleSymbol);
+    };
+
+    const publicExports = exportsOf(publicApiPath);
+    const onlyType = publicExports.find((symbol) => symbol.getName() === 'FixtureOnlyType');
+    const runtimeValue = publicExports.find((symbol) => symbol.getName() === 'FixtureRuntimeValue');
+    assert.ok(onlyType);
+    assert.ok(runtimeValue);
+    assert.equal(
+      isRuntimeValueExport(onlyType, checker, program.getSourceFile(publicApiPath)),
+      false,
+    );
+    assert.equal(
+      isRuntimeValueExport(runtimeValue, checker, program.getSourceFile(publicApiPath)),
+      true,
+    );
+
+    const typeStarExports = exportsOf(publicTypeStarPath);
+    const typeStarClass = typeStarExports.find((symbol) => symbol.getName() === 'FixtureOnlyType');
+    assert.ok(typeStarClass);
+    assert.equal(
+      isRuntimeValueExport(typeStarClass, checker, program.getSourceFile(publicTypeStarPath)),
+      false,
+    );
+
+    const localTypeExports = exportsOf(publicLocalTypePath);
+    const localTypeClass = localTypeExports.find(
+      (symbol) => symbol.getName() === 'FixtureOnlyType',
+    );
+    assert.ok(localTypeClass);
+    assert.equal(
+      isRuntimeValueExport(localTypeClass, checker, program.getSourceFile(publicLocalTypePath)),
+      false,
+    );
+
+    const implementationSource = program.getSourceFile(implementationPath);
+    assert.ok(implementationSource);
+    const classes = implementationSource.statements
+      .filter((statement) => ts.isClassDeclaration(statement) && statement.name)
+      .map((statement) => ({
+        decorated: { kind: 'component' },
+        name: statement.name.text,
+        selectors: [`fixture-${statement.name.text}`],
+        source: normalizeRepositoryPath(relative(workspaceRoot, implementationPath)),
+        symbol: checker.getSymbolAtLocation(statement.name),
+      }));
+    assert.ok(classes.every((definition) => definition.symbol));
+    const exported = exportedClasses(
+      {
+        checker,
+        classes,
+        program,
+      },
+      {
+        packageName: '@fixture/angular',
+        entrypoints: [
+          {
+            name: 'fixture',
+            publicApi: publicApiPath,
+            subpath: './fixture',
+          },
+        ],
+      },
+    );
+    assert.deepEqual(
+      [...exported.values()].flatMap((records) => records.map((record) => record.name)),
+      ['FixtureRuntimeValue'],
+    );
+
+    const locallyReexported = exportedClasses(
+      {
+        checker,
+        classes,
+        program,
+      },
+      {
+        packageName: '@fixture/angular',
+        entrypoints: [
+          {
+            name: 'fixture',
+            publicApi: publicLocalTypePath,
+            subpath: './fixture',
+          },
+        ],
+      },
+    );
+    assert.equal(locallyReexported.size, 0);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+test('runtime contract union types are stable across source and program ordering', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'kern-union-fixture-'));
+  const firstPath = join(directory, 'first.ts');
+  const secondPath = join(directory, 'second.ts');
+  try {
+    await Promise.all([
+      writeFile(
+        firstPath,
+        `
+          export declare const fit: undefined | 'none' | null | 'fill' | 'cover' | 'contain';
+          export declare const promised: Promise<undefined | 'b' | 'a'>;
+          export declare const record: { state: null | 'Data display' | 'Actions' };
+          export declare const handler:
+            (value: 'b' | 'a') => undefined | 'd' | 'c';
+          export declare const tuple:
+            readonly [Promise<'b' | 'a'>, undefined | 'd' | 'c'];
+        `,
+        'utf8',
+      ),
+      writeFile(
+        secondPath,
+        `
+          export declare const fit: 'contain' | 'cover' | 'fill' | null | 'none' | undefined;
+          export declare const promised: Promise<'a' | 'b' | undefined>;
+          export declare const record: { state: 'Actions' | 'Data display' | null };
+          export declare const handler:
+            (value: 'a' | 'b') => 'c' | 'd' | undefined;
+          export declare const tuple:
+            readonly [Promise<'a' | 'b'>, 'c' | 'd' | undefined];
+        `,
+        'utf8',
+      ),
+    ]);
+
+    const render = (rootNames, path) => {
+      const program = ts.createProgram({
+        rootNames,
+        options: {
+          module: ts.ModuleKind.ESNext,
+          moduleResolution: ts.ModuleResolutionKind.Bundler,
+          noEmit: true,
+          strictNullChecks: true,
+          target: ts.ScriptTarget.ES2022,
+        },
+      });
+      const sourceFile = program.getSourceFile(path);
+      assert.ok(sourceFile, `${path} must be in the union fixture program`);
+      const checker = program.getTypeChecker();
+      return Object.fromEntries(
+        sourceFile.statements
+          .filter((statement) => ts.isVariableStatement(statement))
+          .flatMap((statement) => statement.declarationList.declarations)
+          .map((declaration) => [
+            declaration.name.getText(sourceFile),
+            stableTypeText(checker, checker.getTypeAtLocation(declaration.name), declaration),
+          ]),
+      );
+    };
+
+    const first = render([firstPath, secondPath], firstPath);
+    const second = render([secondPath, firstPath], secondPath);
+    assert.deepEqual(first, second);
+    assert.deepEqual(first, {
+      fit: '"contain" | "cover" | "fill" | "none" | null | undefined',
+      handler: '(value: "a" | "b") => "c" | "d" | undefined',
+      promised: 'Promise<"a" | "b" | undefined>',
+      record: '{ state: "Actions" | "Data display" | null; }',
+      tuple: 'readonly [Promise<"a" | "b">, "c" | "d" | undefined]',
+    });
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+test('component and agent generators share the stable type serializer', async () => {
+  const [componentGenerator, agentGenerator] = await Promise.all([
+    readFile(resolve(workspaceRoot, 'scripts/generate-component-contract.mjs'), 'utf8'),
+    readFile(resolve(workspaceRoot, 'scripts/generate-agent-contract.mjs'), 'utf8'),
+  ]);
+  for (const [name, source] of [
+    ['component', componentGenerator],
+    ['agent', agentGenerator],
+  ]) {
+    assert.match(
+      source,
+      /import \{ stableTypeText \} from '\.\/lib\/stable-type-text\.mjs';/,
+      `${name} generator must import the shared serializer`,
+    );
+    assert.doesNotMatch(
+      source,
+      /checker\.typeToString/,
+      `${name} generator must not bypass the shared serializer`,
+    );
+  }
+});
+
 test('committed lifecycle and manual evidence registries verify', () => {
   const lifecycle = run(lifecycleScript);
   assert.equal(lifecycle.status, 0, lifecycle.stderr);
-  assert.match(lifecycle.stdout, /131 catalog entries, 404 public symbols/);
+  assert.match(lifecycle.stdout, /131 catalog entries, 466 public symbols/);
+
+  const componentInventory = run(componentInventoryScript);
+  assert.equal(componentInventory.status, 0, componentInventory.stderr);
+  assert.match(
+    componentInventory.stdout,
+    /135 public review units \(126 catalog \+ 9 supporting\), 2 internal, 150 selectors/,
+  );
 
   const accessibility = run(accessibilityScript);
   assert.equal(accessibility.status, 0, accessibility.stderr);
@@ -44,6 +408,130 @@ test('committed lifecycle and manual evidence registries verify', () => {
   const packagePolicy = run(packagePolicyScript);
   assert.equal(packagePolicy.status, 0, packagePolicy.stderr);
   assert.match(packagePolicy.stdout, /package policy verified/);
+});
+
+test('component inventory rejects a public review unit marked as internal', async () => {
+  const inventory = JSON.parse(await readFile(componentInventoryPath, 'utf8'));
+  const supporting = inventory.units.find((unit) => unit.role === 'supporting');
+  assert.ok(supporting, 'fixture requires one supporting review unit');
+  supporting.role = 'internal';
+  const temporary = await temporaryJson('component-inventory.json', inventory);
+  try {
+    const result = run(componentInventoryScript, `--inventory=${temporary.path}`);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /a public unit cannot have role "internal"/);
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('component inventory rejects an alias omitted from its canonical review unit', async () => {
+  const inventory = JSON.parse(await readFile(componentInventoryPath, 'utf8'));
+  const aliased = inventory.units.find((unit) => unit.aliases.selectors.length > 0);
+  assert.ok(aliased, 'fixture requires one selector alias');
+  aliased.aliases.selectors.shift();
+  const temporary = await temporaryJson('component-inventory.json', inventory);
+  try {
+    const result = run(componentInventoryScript, `--inventory=${temporary.path}`);
+    assert.notEqual(result.status, 0);
+    assert.match(
+      result.stderr,
+      /aliases\.selectors must contain every non-canonical selector exactly once/,
+    );
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('component inventory rejects an ambiguous canonical catalog id', async () => {
+  const inventory = JSON.parse(await readFile(componentInventoryPath, 'utf8'));
+  const aliased = inventory.units.find((unit) =>
+    unit.catalog.some((item) => item.variantOf !== null),
+  );
+  assert.ok(aliased, 'fixture requires one catalog alias');
+  const catalogAlias = aliased.catalog.find((item) => item.variantOf !== null);
+  catalogAlias.variantOf = null;
+  const temporary = await temporaryJson('component-inventory.json', inventory);
+  try {
+    const result = run(componentInventoryScript, `--inventory=${temporary.path}`);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /must own exactly one canonical catalog id, found 2/);
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('component inventory schema rejects an incomplete review unit', async () => {
+  const inventory = JSON.parse(await readFile(componentInventoryPath, 'utf8'));
+  delete inventory.units[0].source;
+  const temporary = await temporaryJson('component-inventory.json', inventory);
+  try {
+    const result = run(componentInventoryScript, `--inventory=${temporary.path}`);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /does not satisfy its JSON Schema/);
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('component inventory requires explicit review ownership for internal units', async () => {
+  const inventory = JSON.parse(await readFile(componentInventoryPath, 'utf8'));
+  const internal = inventory.units.find((unit) => unit.visibility === 'internal');
+  assert.ok(internal, 'fixture requires one internal review unit');
+  internal.reviewWith = null;
+  const temporary = await temporaryJson('component-inventory.json', inventory);
+  try {
+    const result = run(componentInventoryScript, `--inventory=${temporary.path}`);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /an internal unit requires reviewWith/);
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('component inventory rejects a missing internal review target', async () => {
+  const inventory = JSON.parse(await readFile(componentInventoryPath, 'utf8'));
+  const internal = inventory.units.find((unit) => unit.visibility === 'internal');
+  assert.ok(internal, 'fixture requires one internal review unit');
+  internal.reviewWith = `${internal.entrypoint}:KrnMissingReviewTarget`;
+  const temporary = await temporaryJson('component-inventory.json', inventory);
+  try {
+    const result = run(componentInventoryScript, `--inventory=${temporary.path}`);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /references missing kit:KrnMissingReviewTarget/);
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('component inventory rejects an internal review target outside its behavior family', async () => {
+  const inventory = JSON.parse(await readFile(componentInventoryPath, 'utf8'));
+  const internal = inventory.units.find((unit) => unit.visibility === 'internal');
+  assert.ok(internal, 'fixture requires one internal review unit');
+  internal.reviewWith = 'kit:KrnButton';
+  const temporary = await temporaryJson('component-inventory.json', inventory);
+  try {
+    const result = run(componentInventoryScript, `--inventory=${temporary.path}`);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /same entrypoint and behavior family/);
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('component inventory rejects an internal review target that is not public', async () => {
+  const inventory = JSON.parse(await readFile(componentInventoryPath, 'utf8'));
+  const internal = inventory.units.find((unit) => unit.visibility === 'internal');
+  assert.ok(internal, 'fixture requires one internal review unit');
+  internal.reviewWith = internal.reviewUnit;
+  const temporary = await temporaryJson('component-inventory.json', inventory);
+  try {
+    const result = run(componentInventoryScript, `--inventory=${temporary.path}`);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /must review with a public review unit/);
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
 });
 
 test('lifecycle verification rejects an unregistered public symbol', async () => {
@@ -61,16 +549,106 @@ test('lifecycle verification rejects an unregistered public symbol', async () =>
   }
 });
 
+test('Angular projects disable the Angular CLI persistent cache under Nx', async () => {
+  const projectsResult = runNx('show', 'projects', '--json');
+  assert.equal(projectsResult.status, 0, projectsResult.stderr);
+  const projectNames = JSON.parse(projectsResult.stdout);
+  assert.ok(projectNames.length > 0, 'Nx must discover at least one project');
+
+  const angularProjects = [];
+  for (const name of projectNames) {
+    const projectResult = runNx('show', 'project', name, '--json');
+    assert.equal(projectResult.status, 0, projectResult.stderr);
+    const resolvedProject = JSON.parse(projectResult.stdout);
+    if (!isAngularProject(resolvedProject)) continue;
+    angularProjects.push(name);
+    const path = `${resolvedProject.root}/project.json`;
+    const project = JSON.parse(await readFile(resolve(workspaceRoot, path), 'utf8'));
+    assert.equal(
+      project.cli?.cache?.enabled,
+      false,
+      `${path} must leave Nx as the sole persistent task-cache owner`,
+    );
+  }
+  assert.ok(angularProjects.length > 0, 'Nx must discover at least one Angular project');
+});
+
 test('lifecycle verification rejects an undocumented API deprecation', async () => {
   const registry = JSON.parse(
     await readFile(resolve(workspaceRoot, 'projects/kern/api/deprecations.json'), 'utf8'),
   );
-  registry.entries.shift();
+  const deprecatedMember = registry.entries.findIndex((entry) => entry.kind !== 'selector');
+  assert.notEqual(deprecatedMember, -1, 'fixture requires a deprecated API member');
+  registry.entries.splice(deprecatedMember, 1);
   const temporary = await temporaryJson('deprecations.json', registry);
   try {
     const result = run(lifecycleScript, `--deprecations=${temporary.path}`);
     assert.notEqual(result.status, 0);
     assert.match(result.stderr, /is missing from deprecations\.json/);
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('lifecycle verification rejects an active selector deprecation missing from runtime metadata', async () => {
+  const registry = JSON.parse(
+    await readFile(resolve(workspaceRoot, 'projects/kern/api/deprecations.json'), 'utf8'),
+  );
+  const selector = registry.entries.find((entry) => entry.kind === 'selector');
+  assert.ok(selector, 'fixture requires an active selector deprecation');
+  selector.selector = 'krn-missing-selector';
+  const temporary = await temporaryJson('deprecations.json', registry);
+  try {
+    const result = run(lifecycleScript, `--deprecations=${temporary.path}`);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /does not exist on a public component or directive/);
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('lifecycle verification rejects a deprecated selector assigned to the wrong public symbol', async () => {
+  const registry = JSON.parse(
+    await readFile(resolve(workspaceRoot, 'projects/kern/api/deprecations.json'), 'utf8'),
+  );
+  const selector = registry.entries.find((entry) => entry.kind === 'selector');
+  assert.ok(selector, 'fixture requires an active selector deprecation');
+  selector.symbol = 'KrnButton';
+  const temporary = await temporaryJson('deprecations.json', registry);
+  try {
+    const result = run(lifecycleScript, `--deprecations=${temporary.path}`);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /belongs to KrnButtonGroup, not public symbol/);
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('component inventory schema rejects incomplete selector deprecation metadata', async () => {
+  const inventory = JSON.parse(await readFile(componentInventoryPath, 'utf8'));
+  const unit = inventory.units.find((candidate) => candidate.selectorDeprecations?.length);
+  assert.ok(unit, 'fixture requires generated selector deprecation metadata');
+  delete unit.selectorDeprecations[0].replacement;
+  const temporary = await temporaryJson('component-inventory.json', inventory);
+  try {
+    const result = run(componentInventoryScript, `--inventory=${temporary.path}`);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /does not satisfy its JSON Schema/);
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('component inventory rejects selector deprecation drift from the lifecycle registry', async () => {
+  const inventory = JSON.parse(await readFile(componentInventoryPath, 'utf8'));
+  const unit = inventory.units.find((candidate) => candidate.selectorDeprecations?.length);
+  assert.ok(unit, 'fixture requires generated selector deprecation metadata');
+  unit.selectorDeprecations[0].migration = 'Use an unregistered migration instead.';
+  const temporary = await temporaryJson('component-inventory.json', inventory);
+  try {
+    const result = run(componentInventoryScript, `--inventory=${temporary.path}`);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /differs from the active deprecation registry/);
   } finally {
     await rm(temporary.directory, { recursive: true, force: true });
   }

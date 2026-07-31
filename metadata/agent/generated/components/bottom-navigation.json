@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-bottom-navigation",
   "selectors": ["krn-bottom-navigation"],
+  "selectorDeprecations": [],
   "symbol": "KrnBottomNavigation",
   "canonicalSymbol": "KrnBottomNavigation",
   "canonicalId": "bottom-navigation",

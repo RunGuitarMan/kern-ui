@@ -54,6 +54,10 @@ void bootstrapApplication(KernListItemAgentExample);
 | `heading`  | input | `string`  | no       | `''`    | Human-readable copy for the heading state or control.    |
 | `selected` | input | `boolean` | no       | `false` | Controlled selected state, distinct from keyboard focus. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `[krnListLeading]` — Projects content matching [krnListLeading].

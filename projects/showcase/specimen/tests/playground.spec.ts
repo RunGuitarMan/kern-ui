@@ -281,10 +281,6 @@ describe('KERN playground registry', () => {
       tone: 'danger',
       size: 'lg',
       loading: false,
-      disabled: true,
-      pressed: false,
-      type: 'button',
-      value: '',
     });
     expect('unknown' in normalized).toBe(false);
     expect(Object.isFrozen(normalized)).toBe(true);
@@ -366,7 +362,7 @@ describe('KERN playground registry', () => {
   });
 
   it('gives preset effects deterministic precedence without discarding unrelated args', () => {
-    const button = resolveKernPlaygroundState(definition('button'), {
+    const button = resolveKernPlaygroundState(definition('icon-button'), {
       state: 'disabled',
       scenario: 'virtual',
       args: {
@@ -392,6 +388,114 @@ describe('KERN playground registry', () => {
     });
     expect(unknown.preset.id).toBe('default');
     expect(unknown.args['tone']).toBe('danger');
+  });
+
+  it('keeps native Icon Button state outside the component input contract', () => {
+    const iconButton = definition('icon-button');
+
+    expect(
+      iconButton.controls.find((control) => control.key === 'disabled')?.binding,
+    ).toMatchObject({
+      kind: 'fixture',
+      target: 'interaction',
+    });
+    expect(iconButton.controls.some((control) => control.key === 'pressed')).toBe(false);
+    expect(
+      KERN_CATALOG.find(({ id }) => id === 'icon-button')?.api.map(({ name }) => name),
+    ).not.toEqual(expect.arrayContaining(['disabled', 'pressed', 'type', 'ariaLabel']));
+  });
+
+  it('keeps Button Group controls limited to layout and child-native keyboard behavior', () => {
+    const buttonGroup = definition('button-group');
+    const orientation = buttonGroup.controls.find(({ key }) => key === 'orientation');
+    const connected = buttonGroup.controls.find(({ key }) => key === 'connected');
+
+    expect(buttonGroup.controls.map(({ key }) => key)).toEqual(['orientation', 'connected']);
+    expect(orientation?.description).toContain('only the visual layout');
+    expect(orientation?.description).toContain('document-order keyboard navigation');
+    expect(connected).toMatchObject({
+      kind: 'boolean',
+      defaultValue: false,
+      binding: { kind: 'input', publicName: 'connected' },
+    });
+    expect(connected?.description).toContain('without changing their semantics or keyboard order');
+    expect(buttonGroup.presets.find(({ id }) => id === 'connected')?.args).toEqual({
+      connected: true,
+    });
+    expect(buttonGroup.presets.map(({ id }) => id)).not.toEqual(
+      expect.arrayContaining(['hover', 'focus-visible', 'active', 'disabled', 'loading']),
+    );
+    expect(
+      KERN_PLAYGROUND_API_EXCLUSIONS.find(
+        ({ componentId, publicName }) =>
+          componentId === 'button-group' && publicName === 'ariaLabel',
+      )?.reason,
+    ).toContain('Deprecated compatibility input');
+    expect(KERN_SPECIMEN_RENDERER_CONTROLS['button-group']).toEqual(['orientation', 'connected']);
+  });
+
+  it('models Copy Button async outcomes with deterministic fixture state', () => {
+    const copyButton = definition('copy-button');
+    const feedbackDuration = copyButton.controls.find(({ key }) => key === 'feedbackDuration');
+    const copyState = copyButton.controls.find(({ key }) => key === 'copyState');
+
+    expect(copyButton.controls.map(({ key }) => key)).toEqual([
+      'variant',
+      'tone',
+      'size',
+      'feedbackDuration',
+      'disabled',
+      'value',
+      'copyState',
+    ]);
+    expect(feedbackDuration).toMatchObject({
+      kind: 'number',
+      defaultValue: 1_800,
+      min: 0,
+      max: 60_000,
+      binding: { kind: 'input', publicName: 'feedbackDuration' },
+    });
+    expect(copyState).toMatchObject({
+      kind: 'select',
+      defaultValue: 'live',
+      binding: { kind: 'fixture', target: 'interaction' },
+    });
+    expect(copyState?.options?.map(({ value }) => value)).toEqual([
+      'live',
+      'idle',
+      'pending',
+      'copied',
+      'error',
+    ]);
+    expect(copyButton.presets.find(({ id }) => id === 'idle')?.args).toEqual({
+      copyState: 'idle',
+    });
+    expect(copyButton.presets.find(({ id }) => id === 'pending')?.args).toEqual({
+      copyState: 'pending',
+    });
+    expect(copyButton.presets.find(({ id }) => id === 'copied')?.args).toEqual({
+      copyState: 'copied',
+      feedbackDuration: 60_000,
+    });
+    expect(copyButton.presets.find(({ id }) => id === 'error')?.args).toEqual({
+      copyState: 'error',
+      feedbackDuration: 60_000,
+    });
+    expect(
+      KERN_PLAYGROUND_API_EXCLUSIONS.find(
+        ({ componentId, publicName }) =>
+          componentId === 'copy-button' && publicName === 'copyingLabel',
+      )?.evidence.pointer,
+    ).toBe('tests/a11y/accessibility.spec.ts#copy-button');
+    expect(KERN_SPECIMEN_RENDERER_CONTROLS['copy-button']).toEqual([
+      'variant',
+      'tone',
+      'size',
+      'feedbackDuration',
+      'disabled',
+      'value',
+      'copyState',
+    ]);
   });
 
   it('keeps fixture-only and composition controls explicit for code generation', () => {
@@ -456,12 +560,12 @@ describe('KERN playground registry', () => {
 
   it('classifies every public input/model as one real control or one exact exclusion', () => {
     expect(KERN_PLAYGROUND_API_COVERAGE).toEqual({
-      publicInputsAndModels: 963,
-      controlled: 621,
-      excluded: 342,
+      publicInputsAndModels: 1007,
+      controlled: 642,
+      excluded: 365,
       unclassified: 0,
     });
-    expect(KERN_PLAYGROUND_API_EXCLUSIONS).toHaveLength(342);
+    expect(KERN_PLAYGROUND_API_EXCLUSIONS).toHaveLength(365);
     expect(Object.values(KERN_PLAYGROUND_AUTO_CONTROL_KEYS).flat().length).toBeGreaterThan(0);
 
     for (const item of KERN_CATALOG) {

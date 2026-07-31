@@ -53,6 +53,10 @@ void bootstrapApplication(KernDashboardWidgetAgentExample);
 | `eyebrow` | input | `string` | no       | `''`       | Human-readable copy for the eyebrow state or control. |
 | `heading` | input | `string` | yes      | `required` | Human-readable copy for the heading state or control. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

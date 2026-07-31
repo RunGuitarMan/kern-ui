@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-disclosure",
   "selectors": ["krn-disclosure"],
+  "selectorDeprecations": [],
   "symbol": "KrnDisclosure",
   "canonicalSymbol": "KrnDisclosure",
   "canonicalId": "disclosure",

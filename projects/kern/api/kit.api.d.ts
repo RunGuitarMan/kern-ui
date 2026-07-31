@@ -6,7 +6,7 @@
  */
 
 import * as _angular_core from '@angular/core';
-import { Signal, WritableSignal, ElementRef, TemplateRef } from '@angular/core';
+import { OnInit, Signal, WritableSignal, TemplateRef, ElementRef } from '@angular/core';
 import * as _kern_ui_angular_core from '@kern-ui/angular/core';
 import {
   KrnSpace,
@@ -599,107 +599,80 @@ declare class KrnSplitLayout {
 type KrnSize = 'sm' | 'md' | 'lg';
 type KrnActionVariant = 'solid' | 'soft' | 'outline' | 'ghost';
 type KrnTone = 'neutral' | 'brand' | 'info' | 'success' | 'warning' | 'danger';
-type KrnButtonType = 'button' | 'submit' | 'reset';
 type KrnOrientation = 'horizontal' | 'vertical';
 
 declare class KrnButton {
+  private readonly elementRef;
+  private readonly renderer;
+  private readonly destroyRef;
+  private readonly options;
+  private readonly defaultLoadingLabel;
+  private readonly syncLoadingAriaDisabled;
   readonly size: _angular_core.InputSignal<KrnSize>;
   readonly variant: _angular_core.InputSignal<KrnActionVariant>;
   readonly tone: _angular_core.InputSignal<KrnTone>;
-  readonly type: _angular_core.InputSignal<KrnButtonType>;
-  readonly name: _angular_core.InputSignal<string>;
-  readonly value: _angular_core.InputSignal<string>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  /**
+   * Suppresses duplicate activation, owns `aria-disabled`, and updates the
+   * persistent polite status. Use native `disabled` for ordinary unavailability.
+   */
   readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly pressed: _angular_core.InputSignalWithTransform<boolean | undefined, unknown>;
-  readonly activated: _angular_core.OutputEmitterRef<MouseEvent>;
-  protected readonly isDisabled: _angular_core.Signal<boolean>;
-  protected activate(event: MouseEvent): void;
+  /** Accessible loading copy; defaults to the application or closest scoped option. */
+  readonly loadingLabel: _angular_core.InputSignal<string>;
+  constructor();
+  protected ngDoCheck(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnButton, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnButton,
-    'krn-button',
+    'button[krnButton]',
     never,
     {
       size: { alias: 'size'; required: false; isSignal: true };
       variant: { alias: 'variant'; required: false; isSignal: true };
       tone: { alias: 'tone'; required: false; isSignal: true };
-      type: { alias: 'type'; required: false; isSignal: true };
-      name: { alias: 'name'; required: false; isSignal: true };
-      value: { alias: 'value'; required: false; isSignal: true };
-      ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
       loading: { alias: 'loading'; required: false; isSignal: true };
-      disabled: { alias: 'disabled'; required: false; isSignal: true };
-      pressed: { alias: 'pressed'; required: false; isSignal: true };
+      loadingLabel: { alias: 'loadingLabel'; required: false; isSignal: true };
     },
-    { activated: 'activated' },
+    {},
     never,
     ['[krnLeadingIcon]', '*', '[krnTrailingIcon]'],
     true,
     never
   >;
 }
-declare class KrnIconButton {
-  readonly ariaLabel: _angular_core.InputSignal<string>;
-  readonly size: _angular_core.InputSignal<KrnSize>;
-  readonly variant: _angular_core.InputSignal<KrnActionVariant>;
-  readonly tone: _angular_core.InputSignal<KrnTone>;
-  readonly type: _angular_core.InputSignal<KrnButtonType>;
-  readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly pressed: _angular_core.InputSignalWithTransform<boolean | undefined, unknown>;
-  readonly activated: _angular_core.OutputEmitterRef<MouseEvent>;
-  protected readonly isDisabled: _angular_core.Signal<boolean>;
-  protected activate(event: MouseEvent): void;
-  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnIconButton, never>;
-  static ɵcmp: _angular_core.ɵɵComponentDeclaration<
-    KrnIconButton,
-    'krn-icon-button',
-    never,
-    {
-      ariaLabel: { alias: 'ariaLabel'; required: true; isSignal: true };
-      size: { alias: 'size'; required: false; isSignal: true };
-      variant: { alias: 'variant'; required: false; isSignal: true };
-      tone: { alias: 'tone'; required: false; isSignal: true };
-      type: { alias: 'type'; required: false; isSignal: true };
-      loading: { alias: 'loading'; required: false; isSignal: true };
-      disabled: { alias: 'disabled'; required: false; isSignal: true };
-      pressed: { alias: 'pressed'; required: false; isSignal: true };
-    },
-    { activated: 'activated' },
-    never,
-    ['*'],
-    true,
-    never
-  >;
-}
 declare class KrnFloatingActionButton {
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  private readonly elementRef;
+  private readonly renderer;
+  private readonly destroyRef;
+  private readonly options;
+  private readonly defaultLoadingLabel;
+  private readonly syncLoadingAriaDisabled;
   readonly size: _angular_core.InputSignal<KrnSize>;
   readonly variant: _angular_core.InputSignal<KrnActionVariant>;
   readonly tone: _angular_core.InputSignal<KrnTone>;
   readonly extended: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /**
+   * Suppresses duplicate activation and owns `aria-disabled` while retaining
+   * focus. Use native `disabled` for ordinary unavailability.
+   */
   readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly activated: _angular_core.OutputEmitterRef<MouseEvent>;
-  protected readonly isDisabled: _angular_core.Signal<boolean>;
-  protected activate(event: MouseEvent): void;
+  /** Accessible loading copy; defaults to the application or closest scoped option. */
+  readonly loadingLabel: _angular_core.InputSignal<string>;
+  constructor();
+  protected ngDoCheck(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnFloatingActionButton, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnFloatingActionButton,
-    'krn-floating-action-button',
+    'button[krnFab]',
     never,
     {
-      ariaLabel: { alias: 'ariaLabel'; required: true; isSignal: true };
       size: { alias: 'size'; required: false; isSignal: true };
       variant: { alias: 'variant'; required: false; isSignal: true };
       tone: { alias: 'tone'; required: false; isSignal: true };
       extended: { alias: 'extended'; required: false; isSignal: true };
       loading: { alias: 'loading'; required: false; isSignal: true };
-      disabled: { alias: 'disabled'; required: false; isSignal: true };
+      loadingLabel: { alias: 'loadingLabel'; required: false; isSignal: true };
     },
-    { activated: 'activated' },
+    {},
     never,
     ['[krnFabIcon]', '*'],
     true,
@@ -707,22 +680,96 @@ declare class KrnFloatingActionButton {
   >;
 }
 
-interface KrnToggleGroupController {
-  isSelected(value: string): boolean;
-  toggle(value: string): void;
-  readonly disabled: () => boolean;
+/**
+ * Inheritable defaults for `KrnButton`.
+ *
+ * Native button semantics such as `type`, `disabled`, `name`, `value`, and
+ * form ownership intentionally stay on the host element and are never
+ * configured through this options contract.
+ */
+interface KrnButtonOptions {
+  readonly size: KrnSize;
+  readonly variant: KrnActionVariant;
+  readonly tone: KrnTone;
+  /**
+   * Optional loading announcement for a scoped subtree.
+   *
+   * Omit it to inherit the application-wide copy configured through
+   * `provideKrn({translations})`.
+   */
+  readonly loadingLabel?: string;
 }
-declare class KrnButtonGroup {
-  readonly ariaLabel: _angular_core.InputSignal<string>;
-  readonly orientation: _angular_core.InputSignal<KrnOrientation>;
-  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnButtonGroup, never>;
+declare const KRN_BUTTON_DEFAULT_OPTIONS: Readonly<KrnButtonOptions>;
+/**
+ * Scoped button defaults. Provide a partial patch at any injector boundary;
+ * descendants inherit the closest merged, immutable value.
+ */
+declare const KRN_BUTTON_OPTIONS: _angular_core.InjectionToken<Readonly<KrnButtonOptions>>;
+declare const provideKrnButtonOptions: (
+  patch: Partial<KrnButtonOptions> | (() => Partial<KrnButtonOptions>),
+) => _angular_core.FactoryProvider;
+
+/**
+ * Inheritable visual and loading-copy defaults for `KrnFloatingActionButton`.
+ *
+ * Native button semantics such as `type`, `disabled`, form ownership, and
+ * accessible-name relationships intentionally remain on the host element.
+ */
+interface KrnFloatingActionButtonOptions {
+  readonly size: KrnSize;
+  readonly variant: KrnActionVariant;
+  readonly tone: KrnTone;
+  readonly extended: boolean;
+  /**
+   * Optional loading announcement for a scoped subtree.
+   *
+   * Omit it to inherit the application-wide copy configured through
+   * `provideKrn({translations})`.
+   */
+  readonly loadingLabel?: string;
+}
+declare const KRN_FLOATING_ACTION_BUTTON_DEFAULT_OPTIONS: Readonly<KrnFloatingActionButtonOptions>;
+/**
+ * Scoped floating-action defaults. Each provider supplies a partial immutable
+ * patch that is merged with the closest ancestor configuration.
+ */
+declare const KRN_FLOATING_ACTION_BUTTON_OPTIONS: _angular_core.InjectionToken<
+  Readonly<KrnFloatingActionButtonOptions>
+>;
+declare const provideKrnFloatingActionButtonOptions: (
+  patch: Partial<KrnFloatingActionButtonOptions> | (() => Partial<KrnFloatingActionButtonOptions>),
+) => _angular_core.FactoryProvider;
+
+declare class KrnIconButton {
+  private readonly elementRef;
+  private readonly renderer;
+  private readonly destroyRef;
+  private readonly options;
+  private readonly defaultLoadingLabel;
+  private readonly syncLoadingAriaDisabled;
+  readonly size: _angular_core.InputSignal<KrnSize>;
+  readonly variant: _angular_core.InputSignal<KrnActionVariant>;
+  readonly tone: _angular_core.InputSignal<KrnTone>;
+  /**
+   * Suppresses duplicate activation and owns `aria-disabled` while retaining
+   * focus. Use native `disabled` for ordinary unavailability.
+   */
+  readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Accessible loading copy; defaults to the application or closest scoped option. */
+  readonly loadingLabel: _angular_core.InputSignal<string>;
+  constructor();
+  protected ngDoCheck(): void;
+  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnIconButton, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
-    KrnButtonGroup,
-    'krn-button-group',
+    KrnIconButton,
+    'button[krnIconButton]',
     never,
     {
-      ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
-      orientation: { alias: 'orientation'; required: false; isSignal: true };
+      size: { alias: 'size'; required: false; isSignal: true };
+      variant: { alias: 'variant'; required: false; isSignal: true };
+      tone: { alias: 'tone'; required: false; isSignal: true };
+      loading: { alias: 'loading'; required: false; isSignal: true };
+      loadingLabel: { alias: 'loadingLabel'; required: false; isSignal: true };
     },
     {},
     never,
@@ -731,25 +778,223 @@ declare class KrnButtonGroup {
     never
   >;
 }
-declare class KrnToggleGroup implements KrnToggleGroupController {
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+
+/**
+ * Inheritable visual and loading-copy defaults for `KrnIconButton`.
+ *
+ * Native button semantics such as `type`, `disabled`, form ownership, and
+ * accessible-name attributes intentionally remain on the host element.
+ */
+interface KrnIconButtonOptions {
+  readonly size: KrnSize;
+  readonly variant: KrnActionVariant;
+  readonly tone: KrnTone;
+  /**
+   * Optional loading announcement for a scoped subtree.
+   *
+   * Omit it to inherit the application-wide copy configured through
+   * `provideKrn({translations})`.
+   */
+  readonly loadingLabel?: string;
+}
+declare const KRN_ICON_BUTTON_DEFAULT_OPTIONS: Readonly<KrnIconButtonOptions>;
+/**
+ * Scoped icon-button defaults. Each provider supplies a partial immutable
+ * patch that is merged with the closest ancestor configuration.
+ */
+declare const KRN_ICON_BUTTON_OPTIONS: _angular_core.InjectionToken<Readonly<KrnIconButtonOptions>>;
+declare const provideKrnIconButtonOptions: (
+  patch: Partial<KrnIconButtonOptions> | (() => Partial<KrnIconButtonOptions>),
+) => _angular_core.FactoryProvider;
+
+declare class KrnButtonGroup {
+  private readonly elementRef;
+  private readonly options;
+  private readonly renderer;
+  private legacyAriaLabelOwned;
+  /** Changes the visual layout axis without altering native document-order keyboard behavior. */
   readonly orientation: _angular_core.InputSignal<KrnOrientation>;
-  readonly multiple: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Joins adjacent action borders and radii without coordinating child state or activation. */
+  readonly connected: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /**
+   * Deprecated compatibility bridge for a native accessible-name attribute.
+   *
+   * @deprecated Set native `aria-label` or `aria-labelledby` on the group host.
+   * This bridge exists only for the legacy `<krn-button-group>` API.
+   */
+  readonly ariaLabel: _angular_core.InputSignal<string | null | undefined>;
+  private readonly syncLegacyAriaLabel;
+  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnButtonGroup, never>;
+  static ɵcmp: _angular_core.ɵɵComponentDeclaration<
+    KrnButtonGroup,
+    'div[krnButtonGroup], krn-button-group',
+    never,
+    {
+      orientation: { alias: 'orientation'; required: false; isSignal: true };
+      connected: { alias: 'connected'; required: false; isSignal: true };
+      ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+    },
+    {},
+    never,
+    ['*'],
+    true,
+    never
+  >;
+}
+
+/**
+ * Inheritable layout defaults for `KrnButtonGroup`.
+ *
+ * Accessible naming, focus, activation, loading, disabled, and form semantics
+ * intentionally remain native concerns of the group host and its child actions.
+ */
+interface KrnButtonGroupOptions {
+  readonly orientation: KrnOrientation;
+  readonly connected: boolean;
+}
+declare const KRN_BUTTON_GROUP_DEFAULT_OPTIONS: Readonly<KrnButtonGroupOptions>;
+/**
+ * Scoped button-group defaults. Each provider merges a partial immutable patch
+ * with the closest ancestor configuration.
+ */
+declare const KRN_BUTTON_GROUP_OPTIONS: _angular_core.InjectionToken<
+  Readonly<KrnButtonGroupOptions>
+>;
+declare const provideKrnButtonGroupOptions: (
+  patch: Partial<KrnButtonGroupOptions> | (() => Partial<KrnButtonGroupOptions>),
+) => _angular_core.FactoryProvider;
+
+declare class KrnToggleButton implements OnInit {
+  private readonly elementRef;
+  private readonly group;
+  private readonly options;
+  private readonly renderer;
+  /**
+   * Stable native value used by `KrnToggleGroup` as the selection identity.
+   *
+   * It remains required because group selection is represented by serializable
+   * string values rather than child indices or component identities.
+   */
+  readonly value: _angular_core.InputSignal<string>;
+  readonly size: _angular_core.InputSignal<KrnSize>;
+  readonly pressedVariant: _angular_core.InputSignal<KrnActionVariant>;
+  readonly pressedTone: _angular_core.InputSignal<KrnTone>;
+  readonly unpressedVariant: _angular_core.InputSignal<KrnActionVariant>;
+  readonly unpressedTone: _angular_core.InputSignal<KrnTone>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Standalone state model. Inside a Toggle Group, the group values are authoritative. */
+  readonly pressed: _angular_core.ModelSignal<boolean>;
+  protected readonly isPressed: _angular_core.Signal<boolean>;
+  protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly variant: _angular_core.Signal<KrnActionVariant>;
+  protected readonly tone: _angular_core.Signal<KrnTone>;
+  private readonly groupItem;
+  private unregisterFromGroup;
+  constructor();
+  ngOnInit(): void;
+  protected tabIndex(): 0 | -1 | null;
+  protected notifyGroupFocus(): void;
+  protected toggle(): void;
+  /**
+   * `aria-pressed` is component-owned derived state. Reassert it during every
+   * browser and server check so a competing consumer attribute cannot leave
+   * visual state, model state, and accessibility state out of sync.
+   */
+  protected ngDoCheck(): void;
+  private syncAriaPressed;
+  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnToggleButton, never>;
+  static ɵcmp: _angular_core.ɵɵComponentDeclaration<
+    KrnToggleButton,
+    'button[krnToggleButton]',
+    never,
+    {
+      value: { alias: 'value'; required: true; isSignal: true };
+      size: { alias: 'size'; required: false; isSignal: true };
+      pressedVariant: { alias: 'pressedVariant'; required: false; isSignal: true };
+      pressedTone: { alias: 'pressedTone'; required: false; isSignal: true };
+      unpressedVariant: { alias: 'unpressedVariant'; required: false; isSignal: true };
+      unpressedTone: { alias: 'unpressedTone'; required: false; isSignal: true };
+      disabled: { alias: 'disabled'; required: false; isSignal: true };
+      pressed: { alias: 'pressed'; required: false; isSignal: true };
+    },
+    { pressed: 'pressedChange' },
+    never,
+    ['[krnLeadingIcon]', '*', '[krnTrailingIcon]'],
+    true,
+    never
+  >;
+}
+
+/**
+ * Inheritable visual defaults for `KrnToggleButton`.
+ *
+ * The two appearance pairs intentionally describe effective pressed state;
+ * `aria-pressed` and interaction state remain owned by the component.
+ */
+interface KrnToggleButtonOptions {
+  readonly size: KrnSize;
+  readonly pressedVariant: KrnActionVariant;
+  readonly pressedTone: KrnTone;
+  readonly unpressedVariant: KrnActionVariant;
+  readonly unpressedTone: KrnTone;
+}
+declare const KRN_TOGGLE_BUTTON_DEFAULT_OPTIONS: Readonly<KrnToggleButtonOptions>;
+/**
+ * Scoped Toggle Button defaults. Each provider supplies a partial immutable
+ * patch that is merged with the closest ancestor configuration.
+ */
+declare const KRN_TOGGLE_BUTTON_OPTIONS: _angular_core.InjectionToken<
+  Readonly<KrnToggleButtonOptions>
+>;
+declare const provideKrnToggleButtonOptions: (
+  patch: Partial<KrnToggleButtonOptions> | (() => Partial<KrnToggleButtonOptions>),
+) => _angular_core.FactoryProvider;
+
+declare class KrnToggleGroup {
+  private readonly elementRef;
+  private readonly options;
+  private readonly platform;
+  private readonly renderer;
+  private readonly activeItem;
+  private readonly itemVersion;
+  private items;
+  private legacyAriaLabelOwned;
+  /** Defines both the visual layout axis and the toolbar Arrow-key axis. */
+  readonly orientation: _angular_core.InputSignal<KrnOrientation>;
+  /** Allows multiple pressed values; false exposes at most one effective pressed value. */
+  readonly multiple: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Disables every registered native toggle and all group-owned value transitions. */
+  readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Controlled stable string values; user transitions always emit a fresh frozen array. */
   readonly values: _angular_core.ModelSignal<readonly string[]>;
-  isSelected(value: string): boolean;
-  toggle(value: string): void;
+  /**
+   * Deprecated compatibility bridge for native accessible-name attributes.
+   *
+   * @deprecated Set native `aria-label` or `aria-labelledby` on the group host.
+   * Server rendering expects a stable migration input; change it only after hydration.
+   */
+  readonly ariaLabel: _angular_core.InputSignal<string | null | undefined>;
+  private readonly effectiveValues;
+  private readonly syncLegacyAriaLabel;
+  private isSelected;
+  private toggle;
+  private register;
+  private tabIndexFor;
+  private notifyFocus;
+  protected navigate(event: KeyboardEvent): void;
+  private entryItem;
+  private orderedItems;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnToggleGroup, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnToggleGroup,
-    'krn-toggle-group',
+    'div[krnToggleGroup], krn-toggle-group',
     never,
     {
-      ariaLabel: { alias: 'ariaLabel'; required: true; isSignal: true };
       orientation: { alias: 'orientation'; required: false; isSignal: true };
       multiple: { alias: 'multiple'; required: false; isSignal: true };
       disabled: { alias: 'disabled'; required: false; isSignal: true };
       values: { alias: 'values'; required: false; isSignal: true };
+      ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
     },
     { values: 'valuesChange' },
     never,
@@ -758,52 +1003,85 @@ declare class KrnToggleGroup implements KrnToggleGroupController {
     never
   >;
 }
-declare class KrnToggleButton {
-  private readonly group;
-  readonly value: _angular_core.InputSignal<string>;
-  readonly size: _angular_core.InputSignal<KrnSize>;
-  readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly pressed: _angular_core.ModelSignal<boolean>;
-  protected readonly isPressed: _angular_core.Signal<boolean>;
-  protected readonly isDisabled: _angular_core.Signal<boolean>;
-  protected toggle(): void;
-  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnToggleButton, never>;
-  static ɵcmp: _angular_core.ɵɵComponentDeclaration<
-    KrnToggleButton,
-    'krn-toggle-button',
-    never,
-    {
-      value: { alias: 'value'; required: true; isSignal: true };
-      size: { alias: 'size'; required: false; isSignal: true };
-      disabled: { alias: 'disabled'; required: false; isSignal: true };
-      pressed: { alias: 'pressed'; required: false; isSignal: true };
-    },
-    { pressed: 'pressedChange' },
-    never,
-    ['*'],
-    true,
-    never
-  >;
-}
 
+/**
+ * Inheritable interaction defaults for `KrnToggleGroup`.
+ *
+ * Controlled values and disabled state intentionally remain instance state:
+ * application defaults must not silently select or disable a toolbar.
+ */
+interface KrnToggleGroupOptions {
+  readonly orientation: KrnOrientation;
+  readonly multiple: boolean;
+}
+declare const KRN_TOGGLE_GROUP_DEFAULT_OPTIONS: Readonly<KrnToggleGroupOptions>;
+/**
+ * Scoped Toggle Group defaults. Each provider merges an immutable partial
+ * patch with the closest ancestor configuration.
+ */
+declare const KRN_TOGGLE_GROUP_OPTIONS: _angular_core.InjectionToken<
+  Readonly<KrnToggleGroupOptions>
+>;
+declare const provideKrnToggleGroupOptions: (
+  patch: Partial<KrnToggleGroupOptions> | (() => Partial<KrnToggleGroupOptions>),
+) => _angular_core.FactoryProvider;
+
+/**
+ * Settled visual feedback exposed by `KrnCopyButton`.
+ *
+ * Pending work intentionally remains a separate boolean so this published
+ * union stays backward compatible.
+ */
 type KrnCopyState = 'idle' | 'copied' | 'error';
 declare class KrnCopyButton {
+  private readonly clipboard;
   private readonly platform;
   private readonly destroyRef;
-  private readonly translations;
+  private readonly options;
+  private readonly labels;
   private resetTimer;
+  private activeAttempt;
+  /** Exact text captured once at activation and written to the clipboard. */
   readonly value: _angular_core.InputSignal<string>;
+  /**
+   * Optional accessible-name override for the inner native button.
+   *
+   * Leave empty to derive the name from the visible action label. When set,
+   * include that visible label in the override.
+   */
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  /** Localized visible fallback used only when no action label is projected. */
+  readonly copyLabel: _angular_core.InputSignal<string>;
+  /** Loading announcement while the asynchronous write is in flight. */
+  readonly copyingLabel: _angular_core.InputSignal<string>;
+  /** Success announcement paired with the visible success indicator. */
   readonly copiedLabel: _angular_core.InputSignal<string>;
+  /** Failure announcement paired with the visible error indicator. */
   readonly errorLabel: _angular_core.InputSignal<string>;
   readonly size: _angular_core.InputSignal<KrnSize>;
+  readonly variant: _angular_core.InputSignal<KrnActionVariant>;
+  readonly tone: _angular_core.InputSignal<KrnTone>;
+  /**
+   * Milliseconds before settled feedback returns to idle.
+   *
+   * Invalid or negative values fall back to the library default.
+   */
+  readonly feedbackDuration: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Emits the exact captured value only after the clipboard writer confirms success. */
   readonly copied: _angular_core.OutputEmitterRef<string>;
+  /** Emits the original writer failure without masking or replacing its identity. */
   readonly copyError: _angular_core.OutputEmitterRef<unknown>;
   protected readonly state: _angular_core.WritableSignal<KrnCopyState>;
+  protected readonly pending: _angular_core.WritableSignal<boolean>;
   constructor();
+  /**
+   * Starts one copy attempt. While it is pending, repeated mouse or keyboard
+   * activations are ignored and the native button remains focusable.
+   */
   protected copy(): Promise<void>;
-  private writeClipboard;
+  private isCurrentAttempt;
+  private cancelReset;
   private scheduleReset;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnCopyButton, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
@@ -813,9 +1091,14 @@ declare class KrnCopyButton {
     {
       value: { alias: 'value'; required: true; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      copyLabel: { alias: 'copyLabel'; required: false; isSignal: true };
+      copyingLabel: { alias: 'copyingLabel'; required: false; isSignal: true };
       copiedLabel: { alias: 'copiedLabel'; required: false; isSignal: true };
       errorLabel: { alias: 'errorLabel'; required: false; isSignal: true };
       size: { alias: 'size'; required: false; isSignal: true };
+      variant: { alias: 'variant'; required: false; isSignal: true };
+      tone: { alias: 'tone'; required: false; isSignal: true };
+      feedbackDuration: { alias: 'feedbackDuration'; required: false; isSignal: true };
       disabled: { alias: 'disabled'; required: false; isSignal: true };
     },
     { copied: 'copied'; copyError: 'copyError' },
@@ -826,60 +1109,153 @@ declare class KrnCopyButton {
   >;
 }
 
+/**
+ * Inheritable appearance and feedback defaults for `KrnCopyButton`.
+ *
+ * Clipboard values, accessible labels, disabled state, and outputs remain
+ * instance concerns and are intentionally excluded from this contract.
+ */
+interface KrnCopyButtonOptions {
+  readonly size: KrnSize;
+  readonly variant: KrnActionVariant;
+  readonly tone: KrnTone;
+  /** Time in milliseconds before copied/error feedback returns to idle. */
+  readonly feedbackDuration: number;
+}
+declare const KRN_COPY_BUTTON_DEFAULT_OPTIONS: Readonly<KrnCopyButtonOptions>;
+/**
+ * Scoped Copy Button defaults. Each provider merges a partial immutable patch
+ * with the closest ancestor configuration.
+ */
+declare const KRN_COPY_BUTTON_OPTIONS: _angular_core.InjectionToken<Readonly<KrnCopyButtonOptions>>;
+declare const provideKrnCopyButtonOptions: (
+  patch: Partial<KrnCopyButtonOptions> | (() => Partial<KrnCopyButtonOptions>),
+) => _angular_core.FactoryProvider;
+
+type KrnMenuAlignment = 'start' | 'end';
+/**
+ * Inheritable appearance and positioning defaults for menu-button components.
+ *
+ * Menu content, controlled open state, disabled/loading state and selection
+ * behavior remain instance concerns.
+ */
+interface KrnMenuButtonOptions {
+  readonly size: KrnSize;
+  readonly variant: KrnActionVariant;
+  readonly tone: KrnTone;
+  readonly menuAlign: KrnMenuAlignment;
+  /** Logical gap in CSS pixels between the trigger and its connected menu. */
+  readonly menuOffset: number;
+  /** Makes the connected menu exactly as wide as its trigger. */
+  readonly matchTriggerWidth: boolean;
+}
+declare const KRN_MENU_BUTTON_DEFAULT_OPTIONS: Readonly<KrnMenuButtonOptions>;
+/**
+ * Scoped defaults shared by Dropdown Button and Split Button.
+ *
+ * Each provider merges a partial immutable patch with the closest ancestor
+ * configuration.
+ */
+declare const KRN_MENU_BUTTON_OPTIONS: _angular_core.InjectionToken<Readonly<KrnMenuButtonOptions>>;
+declare const provideKrnMenuButtonOptions: (
+  patch: Partial<KrnMenuButtonOptions> | (() => Partial<KrnMenuButtonOptions>),
+) => _angular_core.FactoryProvider;
+
 declare abstract class KrnMenuButtonBase {
   private readonly platform;
   private readonly overlayCoordinator;
   private readonly host;
-  private readonly injector;
+  private readonly ids;
+  private readonly destroyRef;
+  private readonly renderer;
+  private readonly options;
   private readonly menuPanel;
-  protected readonly translations: Readonly<_kern_ui_angular_core.KrnTranslations>;
+  private readonly capturedPanelClickItems;
+  private requestedFocus;
+  private typeaheadBuffer;
+  private typeaheadTimer;
+  private menuObserver;
+  private menuHadFocus;
+  private lastFocusedItemIndex;
+  private stopPanelActivationGuard;
   readonly size: _angular_core.InputSignal<KrnSize>;
   readonly variant: _angular_core.InputSignal<KrnActionVariant>;
   readonly tone: _angular_core.InputSignal<KrnTone>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly open: _angular_core.ModelSignal<boolean>;
+  /** Logical horizontal alignment used before the CDK collision fallbacks. */
+  readonly menuAlign: _angular_core.InputSignal<KrnMenuAlignment>;
+  /** Non-negative logical gap in CSS pixels between the trigger and menu. */
+  readonly menuOffset: _angular_core.InputSignalWithTransform<number, unknown>;
+  /** Makes the connected overlay exactly as wide as the complete trigger origin. */
+  readonly matchTriggerWidth: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Closes after an enabled menu item activates; use the keep-open marker for one item. */
+  readonly closeOnSelection: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  protected readonly triggerId: string;
+  protected readonly menuId: string;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
-  protected readonly menuPositions: (
-    | {
-        originX: 'end';
-        originY: 'bottom';
-        overlayX: 'end';
-        overlayY: 'top';
-        offsetY: number;
-      }
-    | {
-        originX: 'end';
-        originY: 'top';
-        overlayX: 'end';
-        overlayY: 'bottom';
-        offsetY: number;
-      }
-    | {
-        originX: 'start';
-        originY: 'bottom';
-        overlayX: 'start';
-        overlayY: 'top';
-        offsetY: number;
-      }
-    | {
-        originX: 'start';
-        originY: 'top';
-        overlayX: 'start';
-        overlayY: 'bottom';
-        offsetY: number;
-      }
-  )[];
-  protected setOpen(open: boolean): void;
+  protected readonly effectiveOpen: _angular_core.Signal<boolean>;
+  protected readonly menuPositions: _angular_core.Signal<
+    (
+      | {
+          originX: KrnMenuAlignment;
+          originY: 'bottom';
+          overlayX: KrnMenuAlignment;
+          overlayY: 'top';
+          offsetY: number;
+        }
+      | {
+          originX: KrnMenuAlignment;
+          originY: 'top';
+          overlayX: KrnMenuAlignment;
+          overlayY: 'bottom';
+          offsetY: number;
+        }
+    )[]
+  >;
+  constructor();
   protected toggleMenu(): void;
   protected registerOverlay(overlay: CdkConnectedOverlay, origin: HTMLElement): void;
+  protected onOverlayDetached(): void;
+  protected onOverlayOutsideClick(event: MouseEvent): void;
   protected closeFromMenu(event: MouseEvent): void;
   protected onTriggerKeydown(event: KeyboardEvent): void;
   protected onMenuKeydown(event: KeyboardEvent): void;
   protected closeOnFocusOut(event: FocusEvent): void;
-  protected closeOnOutsidePointer(event: PointerEvent): void;
-  private menuItems;
+  /**
+   * Focus destination after a menu-owned loading transition.
+   *
+   * Compound variants can preserve a different focusable action while their menu trigger
+   * becomes disabled.
+   */
+  protected getFocusReturnTarget(): HTMLButtonElement | null;
+  private openMenu;
+  private closeMenu;
+  private synchronizeMenuItems;
+  private isNavigableItem;
+  private closestMenuItem;
+  private hasKeepOpenMarker;
   private focusMenuItem;
+  private focusItem;
+  private isTypeaheadKey;
+  private isActivationKey;
+  private isDisabledItem;
+  private usesNativeKeyboardActivation;
+  private focusTypeaheadMatch;
+  private findTypeaheadMatch;
+  private clearTypeahead;
+  private cancelTypeaheadTimer;
+  private hasInertAncestor;
+  private installPanelActivationGuard;
+  private observeMenu;
+  private stopObservingMenu;
+  private recordMenuFocus;
+  private recoverMenuFocus;
+  private removePanelActivationGuard;
+  private menuButtonOwnsFocus;
+  private focusTriggerImmediately;
+  private findMenuTrigger;
   private focusTrigger;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnMenuButtonBase, never>;
   static ɵdir: _angular_core.ɵɵDirectiveDeclaration<
@@ -893,6 +1269,10 @@ declare abstract class KrnMenuButtonBase {
       disabled: { alias: 'disabled'; required: false; isSignal: true };
       loading: { alias: 'loading'; required: false; isSignal: true };
       open: { alias: 'open'; required: false; isSignal: true };
+      menuAlign: { alias: 'menuAlign'; required: false; isSignal: true };
+      menuOffset: { alias: 'menuOffset'; required: false; isSignal: true };
+      matchTriggerWidth: { alias: 'matchTriggerWidth'; required: false; isSignal: true };
+      closeOnSelection: { alias: 'closeOnSelection'; required: false; isSignal: true };
     },
     { open: 'openChange' },
     never,
@@ -916,8 +1296,10 @@ declare class KrnDropdownButton extends KrnMenuButtonBase {
   >;
 }
 declare class KrnSplitButton extends KrnMenuButtonBase {
+  private readonly splitHost;
   readonly menuLabel: _angular_core.InputSignal<string>;
   readonly primaryAction: _angular_core.OutputEmitterRef<MouseEvent>;
+  protected getFocusReturnTarget(): HTMLButtonElement | null;
   protected activatePrimary(event: MouseEvent): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnSplitButton, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
@@ -933,33 +1315,25 @@ declare class KrnSplitButton extends KrnMenuButtonBase {
   >;
 }
 
-type KrnLinkTarget = '_self' | '_blank' | '_parent' | '_top';
+/**
+ * Applies KERN link presentation to a native navigation anchor.
+ *
+ * The browser or Angular Router owns the destination, browsing context,
+ * relationship tokens, accessibility relationships, focus, and activation.
+ * Use a native button component for actions that do not navigate.
+ *
+ * @publicApi
+ */
 declare class KrnLink {
-  readonly href: _angular_core.InputSignal<string>;
-  readonly target: _angular_core.InputSignal<KrnLinkTarget>;
-  readonly rel: _angular_core.InputSignal<string>;
-  readonly download: _angular_core.InputSignal<string>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
-  readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly activated: _angular_core.OutputEmitterRef<MouseEvent>;
-  protected safeRel(): string | null;
-  protected activate(event: MouseEvent): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnLink, never>;
-  static ɵcmp: _angular_core.ɵɵComponentDeclaration<
+  static ɵdir: _angular_core.ɵɵDirectiveDeclaration<
     KrnLink,
-    'krn-link',
+    'a[krnLink]',
     never,
-    {
-      href: { alias: 'href'; required: true; isSignal: true };
-      target: { alias: 'target'; required: false; isSignal: true };
-      rel: { alias: 'rel'; required: false; isSignal: true };
-      download: { alias: 'download'; required: false; isSignal: true };
-      ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
-      disabled: { alias: 'disabled'; required: false; isSignal: true };
-    },
-    { activated: 'activated' },
+    {},
+    {},
     never,
-    ['*'],
+    never,
     true,
     never
   >;
@@ -1508,6 +1882,8 @@ declare class KrnTimePicker extends KrnValueAccessor<string> {
   readonly id: _angular_core.InputSignal<string>;
   readonly labels: _angular_core.InputSignal<Partial<KrnTimePickerTranslations>>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly min: _angular_core.InputSignal<string>;
   readonly max: _angular_core.InputSignal<string>;
   readonly step: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -1515,8 +1891,10 @@ declare class KrnTimePicker extends KrnValueAccessor<string> {
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly value: _angular_core.InputSignal<string | undefined>;
+  readonly open: _angular_core.ModelSignal<boolean>;
   readonly valueChange: _angular_core.OutputEmitterRef<string>;
-  protected readonly open: _angular_core.WritableSignal<boolean>;
   protected readonly hourDraft: _angular_core.WritableSignal<string>;
   protected readonly minuteDraft: _angular_core.WritableSignal<string>;
   protected readonly copy: _angular_core.Signal<{
@@ -1533,11 +1911,14 @@ declare class KrnTimePicker extends KrnValueAccessor<string> {
     clear: string;
     apply: string;
   }>;
+  protected readonly pickerAriaLabel: _angular_core.Signal<string>;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
   protected readonly panelId: _angular_core.Signal<string>;
   protected readonly displayTime: _angular_core.Signal<string>;
-  protected readonly minutes: _angular_core.Signal<number[]>;
+  protected readonly stepSeconds: _angular_core.Signal<number>;
   protected readonly availableTimes: _angular_core.Signal<string[]>;
   protected readonly draftHourNumber: _angular_core.Signal<number | null>;
   protected readonly draftMinuteNumber: _angular_core.Signal<number | null>;
@@ -1545,7 +1926,12 @@ declare class KrnTimePicker extends KrnValueAccessor<string> {
   protected readonly timePresets: _angular_core.Signal<string[]>;
   private readonly trigger;
   private readonly panel;
+  private readonly hourInput;
+  private focusGeneration;
+  private lastObservedOpen;
+  private readonly initializeControlledOpen;
   private readonly syncPanel;
+  private readonly focusDraftOnOpen;
   private readonly closeWhenBlocked;
   constructor();
   protected normalizeIncomingValue(value: unknown): string;
@@ -1563,12 +1949,16 @@ declare class KrnTimePicker extends KrnValueAccessor<string> {
   protected applyDraft(): void;
   protected clear(): void;
   private emitTime;
+  focus(options?: FocusOptions): void;
+  blur(): void;
   private seedDraft;
   private setDraft;
   private partSignal;
   private parseDraftPart;
   private nudgePart;
   private minuteCandidates;
+  private setOpen;
+  private restoreTriggerFocus;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnTimePicker, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnTimePicker,
@@ -1578,6 +1968,8 @@ declare class KrnTimePicker extends KrnValueAccessor<string> {
       id: { alias: 'id'; required: false; isSignal: true };
       labels: { alias: 'labels'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       min: { alias: 'min'; required: false; isSignal: true };
       max: { alias: 'max'; required: false; isSignal: true };
       step: { alias: 'step'; required: false; isSignal: true };
@@ -1585,8 +1977,11 @@ declare class KrnTimePicker extends KrnValueAccessor<string> {
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       required: { alias: 'required'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
+      open: { alias: 'open'; required: false; isSignal: true };
     },
-    { valueChange: 'valueChange' },
+    { open: 'openChange'; valueChange: 'valueChange' },
     never,
     never,
     true,
@@ -1600,11 +1995,15 @@ declare class KrnColorPicker extends KrnValueAccessor<string> {
   readonly labels: _angular_core.InputSignal<Partial<KrnColorPickerTranslations>>;
   readonly pickerLabel: _angular_core.InputSignal<string>;
   readonly textLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly value: _angular_core.InputSignal<string | undefined>;
+  readonly open: _angular_core.ModelSignal<boolean>;
   readonly valueChange: _angular_core.OutputEmitterRef<string>;
-  protected readonly open: _angular_core.WritableSignal<boolean>;
   protected readonly hue: _angular_core.WritableSignal<number>;
   protected readonly saturation: _angular_core.WritableSignal<number>;
   protected readonly lightness: _angular_core.WritableSignal<number>;
@@ -1614,6 +2013,7 @@ declare class KrnColorPicker extends KrnValueAccessor<string> {
     suggestedColors: string;
     hue: string;
     saturation: string;
+    lightness: string;
     colorValue: string;
     validColor: string;
     invalidColor: string;
@@ -1632,17 +2032,25 @@ declare class KrnColorPicker extends KrnValueAccessor<string> {
   ];
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
   protected readonly panelId: _angular_core.Signal<string>;
   protected readonly validColor: _angular_core.Signal<boolean>;
   protected readonly normalizedColor: _angular_core.Signal<string>;
   protected readonly saturationBackground: _angular_core.Signal<string>;
-  protected readonly previewTextColor: _angular_core.Signal<'#111318' | '#ffffff'>;
+  protected readonly lightnessBackground: _angular_core.Signal<string>;
+  protected readonly previewTextColor: _angular_core.Signal<'#000000' | '#ffffff'>;
   private readonly trigger;
   private readonly panel;
+  private readonly colorText;
+  private focusGeneration;
+  private lastObservedOpen;
+  private readonly observeControlledOpen;
+  private readonly syncColorState;
   private readonly syncPanel;
+  private readonly focusColorTextOnOpen;
   private readonly closeWhenBlocked;
   constructor();
-  writeValue(value: unknown): void;
   protected normalizeIncomingValue(value: unknown): string;
   protected validateValue(value: unknown): {
     color: boolean;
@@ -1653,11 +2061,16 @@ declare class KrnColorPicker extends KrnValueAccessor<string> {
   protected closeOnFocusOut(event: FocusEvent): void;
   protected updateHue(event: Event): void;
   protected updateSaturation(event: Event): void;
+  protected updateLightness(event: Event): void;
   protected selectColor(value: string): void;
   protected updateText(event: Event): void;
   private emitHslColor;
   private emitColor;
+  focus(options?: FocusOptions): void;
+  blur(): void;
   private syncHsl;
+  private setOpen;
+  private restoreTriggerFocus;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnColorPicker, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnColorPicker,
@@ -1668,11 +2081,16 @@ declare class KrnColorPicker extends KrnValueAccessor<string> {
       labels: { alias: 'labels'; required: false; isSignal: true };
       pickerLabel: { alias: 'pickerLabel'; required: false; isSignal: true };
       textLabel: { alias: 'textLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       disabled: { alias: 'disabled'; required: false; isSignal: true };
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
+      open: { alias: 'open'; required: false; isSignal: true };
     },
-    { valueChange: 'valueChange' },
+    { open: 'openChange'; valueChange: 'valueChange' },
     never,
     never,
     true,
@@ -1686,39 +2104,45 @@ interface KrnTagFeedback {
   readonly text: string;
 }
 declare class KrnOtpInput extends KrnValueAccessor<string> {
-  private readonly platform;
   private readonly translations;
-  protected readonly inputs: _angular_core.Signal<readonly ElementRef<HTMLInputElement>[]>;
-  private readonly slotValues;
+  private readonly inputElement;
+  private readonly slotElements;
   readonly id: _angular_core.InputSignal<string>;
   readonly label: _angular_core.InputSignal<string>;
   readonly length: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly numericOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly autocomplete: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly value: _angular_core.InputSignal<string | undefined>;
   readonly valueChange: _angular_core.OutputEmitterRef<string>;
   readonly completed: _angular_core.OutputEmitterRef<string>;
+  protected readonly focused: _angular_core.WritableSignal<boolean>;
+  protected readonly activeIndex: _angular_core.WritableSignal<number>;
   protected readonly safeLength: _angular_core.Signal<number>;
   protected readonly slots: _angular_core.Signal<number[]>;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly internalLabelId: _angular_core.Signal<string>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
   constructor();
-  writeValue(value: unknown): void;
   protected normalizeIncomingValue(value: unknown): string;
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
   protected characterAt(index: number): string;
-  protected digitLabel(index: number): string;
-  protected inputCharacter(index: number, event: Event): void;
-  protected blockInvalidInput(event: InputEvent): void;
-  protected selectInput(event: FocusEvent): void;
-  protected navigate(index: number, event: KeyboardEvent): void;
-  protected pasteCode(event: ClipboardEvent): void;
-  private insertAt;
+  protected inputCode(event: Event): void;
   private sanitize;
-  private emitSlots;
-  private focus;
+  protected handleFocus(): void;
+  protected handleBlur(): void;
+  protected selectSlot(event: PointerEvent): void;
+  protected syncSelection(): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnOtpInput, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnOtpInput,
@@ -1729,10 +2153,15 @@ declare class KrnOtpInput extends KrnValueAccessor<string> {
       label: { alias: 'label'; required: false; isSignal: true };
       length: { alias: 'length'; required: false; isSignal: true };
       numericOnly: { alias: 'numericOnly'; required: false; isSignal: true };
+      autocomplete: { alias: 'autocomplete'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
       disabled: { alias: 'disabled'; required: false; isSignal: true };
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       required: { alias: 'required'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
     },
     { valueChange: 'valueChange'; completed: 'completed' },
     never,
@@ -3156,6 +3585,7 @@ declare abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
   protected constructor();
   protected normalizeIncomingValue(value: unknown): readonly File[];
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  protected valuesEqual(current: readonly File[], next: readonly File[]): boolean;
   protected openPicker(): void;
   protected selectFromInput(event: Event): void;
   protected acceptFiles(incoming: readonly File[]): void;
@@ -3191,13 +3621,30 @@ declare abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
   >;
 }
 declare class KrnFileUpload extends KrnUploadBase {
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly value: _angular_core.InputSignal<readonly File[] | undefined>;
+  protected readonly nativeInputId: _angular_core.Signal<string>;
+  protected readonly descriptionId: _angular_core.Signal<string>;
+  protected readonly requiredDescriptionId: _angular_core.Signal<string>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
+  private readonly action;
   constructor();
+  focus(options?: FocusOptions): void;
+  blur(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnFileUpload, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnFileUpload,
     'krn-file-upload',
     never,
-    {},
+    {
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
+    },
     {},
     never,
     never,
@@ -3207,17 +3654,37 @@ declare class KrnFileUpload extends KrnUploadBase {
 }
 declare class KrnDropUpload extends KrnUploadBase {
   readonly dropLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly value: _angular_core.InputSignal<readonly File[] | undefined>;
   protected readonly dragging: _angular_core.WritableSignal<boolean>;
+  protected readonly nativeInputId: _angular_core.Signal<string>;
+  protected readonly dropLabelId: _angular_core.Signal<string>;
+  protected readonly descriptionId: _angular_core.Signal<string>;
+  protected readonly requiredDescriptionId: _angular_core.Signal<string>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
+  private readonly action;
+  private readonly resetDraggingWhenBlocked;
   constructor();
   protected enterDrag(event: DragEvent): void;
   protected leaveDrag(event: DragEvent): void;
   protected dropFiles(event: DragEvent): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDropUpload, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnDropUpload,
     'krn-drop-upload, krn-drag-drop-upload',
     never,
-    { dropLabel: { alias: 'dropLabel'; required: false; isSignal: true } },
+    {
+      dropLabel: { alias: 'dropLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
+    },
     {},
     never,
     never,
@@ -5063,6 +5530,22 @@ declare class KrnResponsiveMedia {
 }
 
 export {
+  KRN_BUTTON_DEFAULT_OPTIONS,
+  KRN_BUTTON_GROUP_DEFAULT_OPTIONS,
+  KRN_BUTTON_GROUP_OPTIONS,
+  KRN_BUTTON_OPTIONS,
+  KRN_COPY_BUTTON_DEFAULT_OPTIONS,
+  KRN_COPY_BUTTON_OPTIONS,
+  KRN_FLOATING_ACTION_BUTTON_DEFAULT_OPTIONS,
+  KRN_FLOATING_ACTION_BUTTON_OPTIONS,
+  KRN_ICON_BUTTON_DEFAULT_OPTIONS,
+  KRN_ICON_BUTTON_OPTIONS,
+  KRN_MENU_BUTTON_DEFAULT_OPTIONS,
+  KRN_MENU_BUTTON_OPTIONS,
+  KRN_TOGGLE_BUTTON_DEFAULT_OPTIONS,
+  KRN_TOGGLE_BUTTON_OPTIONS,
+  KRN_TOGGLE_GROUP_DEFAULT_OPTIONS,
+  KRN_TOGGLE_GROUP_OPTIONS,
   KrnAccordion,
   KrnAlert,
   KrnAlertDialog,
@@ -5193,12 +5676,21 @@ export {
   KrnOtpInput as KrnVerificationCode,
   KrnTabs as KrnVerticalTabs,
   krnCssLength,
+  provideKrnButtonGroupOptions,
+  provideKrnButtonOptions,
+  provideKrnCopyButtonOptions,
+  provideKrnFloatingActionButtonOptions,
+  provideKrnIconButtonOptions,
+  provideKrnMenuButtonOptions,
+  provideKrnToggleButtonOptions,
+  provideKrnToggleGroupOptions,
 };
 export type {
   KrnActionVariant,
   KrnAutocompleteMode,
   KrnBreadcrumbItem,
-  KrnButtonType,
+  KrnButtonGroupOptions,
+  KrnButtonOptions,
   KrnCalendarDay,
   KrnCommandItem,
   KrnCommandPaletteLabels,
@@ -5206,18 +5698,22 @@ export type {
   KrnContextMenuItem,
   KrnControlSize,
   KrnControlState,
+  KrnCopyButtonOptions,
   KrnCopyState,
   KrnDatePickerLabels,
   KrnDateRangeValue,
   KrnDisplayTone,
   KrnFeedbackTone,
+  KrnFloatingActionButtonOptions,
+  KrnIconButtonOptions,
   KrnIdentityMatcher,
   KrnInputMode,
   KrnLayoutAlignment,
   KrnLayoutAxis,
   KrnLayoutJustification,
   KrnLayoutSpace,
-  KrnLinkTarget,
+  KrnMenuAlignment,
+  KrnMenuButtonOptions,
   KrnNavigationItem,
   KrnNavigationOrientation,
   KrnOptionDisabledHandler,
@@ -5246,6 +5742,8 @@ export type {
   KrnToastPosition,
   KrnToastRecord,
   KrnTocItem,
+  KrnToggleButtonOptions,
+  KrnToggleGroupOptions,
   KrnTone,
   KrnTreeChildrenState,
   KrnTreeNavigationItem,

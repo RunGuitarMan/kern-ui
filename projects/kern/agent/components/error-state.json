@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-error-state",
   "selectors": ["krn-error-state"],
+  "selectorDeprecations": [],
   "symbol": "KrnErrorState",
   "canonicalSymbol": "KrnErrorState",
   "canonicalId": "error-state",

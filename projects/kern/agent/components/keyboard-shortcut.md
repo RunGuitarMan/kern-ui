@@ -49,6 +49,10 @@ void bootstrapApplication(KernKeyboardShortcutAgentExample);
 | ------ | ----- | ----------------------- | -------- | ---------- | -------------------------------------------------- |
 | `keys` | input | `ReadonlyArray<string>` | yes      | `required` | Stable identifier value used by the keys contract. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._

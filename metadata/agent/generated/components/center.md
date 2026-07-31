@@ -54,6 +54,10 @@ void bootstrapApplication(KernCenterAgentExample);
 | `gutters`   | input | `KrnLayoutSpace` | no       | `'4'`   | Enables the container-owned logical inline page gutters.               |
 | `intrinsic` | input | `boolean`        | no       | `false` | Preserves the media element’s intrinsic dimensions when space permits. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

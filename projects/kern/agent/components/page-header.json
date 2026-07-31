@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-page-header",
   "selectors": ["krn-page-header"],
+  "selectorDeprecations": [],
   "symbol": "KrnPageHeader",
   "canonicalSymbol": "KrnPageHeader",
   "canonicalId": "page-header",

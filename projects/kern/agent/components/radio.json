@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-radio",
   "selectors": ["krn-radio"],
+  "selectorDeprecations": [],
   "symbol": "KrnRadio",
   "canonicalSymbol": "KrnRadio",
   "canonicalId": "radio",
@@ -55,6 +56,16 @@
   },
   "api": [
     {
+      "name": "id",
+      "property": "id",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Stable identifier value used by the id contract.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "value",
       "property": "value",
       "kind": "input",
@@ -70,8 +81,18 @@
       "kind": "input",
       "type": "string",
       "required": false,
-      "defaultValue": "createKrnId('radio')",
+      "defaultValue": "this.generatedId",
       "description": "Required human-readable name for the represented person, item, or action.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "checked",
+      "property": "checked",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Controlled checked state rendered by the native choice control.",
       "descriptionSource": "inferred"
     },
     {
@@ -82,6 +103,26 @@
       "required": false,
       "defaultValue": "''",
       "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabelledBy",
+      "property": "ariaLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that provide the accessible name and take precedence over ariaLabel.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaDescribedBy",
+      "property": "ariaDescribedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids composed with Form Field hints and validation descriptions.",
       "descriptionSource": "inferred"
     },
     {
@@ -112,6 +153,16 @@
       "required": false,
       "defaultValue": "false",
       "description": "Keeps the value perceivable while preventing user edits.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "tabindex",
+      "property": "tabIndex",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Native sequential-focus order forwarded to the owned interactive element.",
       "descriptionSource": "inferred"
     },
     {
@@ -183,12 +234,17 @@
     "Forms",
     "krn-radio",
     "KrnRadio",
+    "id",
     "value",
     "name",
+    "checked",
     "ariaLabel",
+    "ariaLabelledBy",
+    "ariaDescribedBy",
     "description",
     "disabled",
     "readonly",
+    "tabindex",
     "selected"
   ],
   "guidance": {
@@ -258,6 +314,19 @@
         }
       },
       {
+        "key": "checked",
+        "label": "Checked",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Configures the component checked contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "checked",
+          "syntax": "property"
+        }
+      },
+      {
         "key": "description",
         "label": "Description",
         "kind": "text",
@@ -269,6 +338,35 @@
           "publicName": "description",
           "syntax": "property"
         }
+      },
+      {
+        "key": "id",
+        "label": "Id",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Configures the component id contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "id",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "tabindex",
+        "label": "Tabindex",
+        "kind": "number",
+        "defaultValue": 0,
+        "testValue": 1,
+        "description": "Configures the component tabindex contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "tabindex",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 10000,
+        "step": 1
       },
       {
         "key": "value",
@@ -445,15 +543,39 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 6,
-      "controlled": 4,
-      "excluded": 2,
+      "publicInputsAndModels": 11,
+      "controlled": 7,
+      "excluded": 4,
       "unclassified": 0
     },
     "exclusions": [
       {
         "componentId": "radio",
+        "publicName": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#radio"
+        }
+      },
+      {
+        "componentId": "radio",
         "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#radio"
+        }
+      },
+      {
+        "componentId": "radio",
+        "publicName": "ariaLabelledBy",
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",

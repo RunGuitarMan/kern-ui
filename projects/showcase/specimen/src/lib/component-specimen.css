@@ -860,7 +860,7 @@ krn-resizable-panels {
   color: var(--krn-color-text-muted);
 }
 
-.fab-stage krn-floating-action-button {
+.fab-stage button[krnFab] {
   position: absolute;
   inset-block-end: 1.5rem;
   inset-inline-end: 1.5rem;

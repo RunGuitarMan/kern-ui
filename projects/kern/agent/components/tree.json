@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-tree",
   "selectors": ["krn-tree"],
+  "selectorDeprecations": [],
   "symbol": "KrnTree",
   "canonicalSymbol": "KrnTree",
   "canonicalId": "tree",

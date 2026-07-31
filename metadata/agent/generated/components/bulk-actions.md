@@ -57,6 +57,10 @@ void bootstrapApplication(KernBulkActionsAgentExample);
 | `selectedCount` | input | `number`                    | no       | `0`                                        | Number of selected records summarized by the surrounding pattern. |
 | `selectedLabel` | input | `(count: number) => string` | no       | `this.translations.patterns.selectedCount` | Human-readable copy for the selected state or control.            |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `[krnToolbarTitle]` — Projects content matching [krnToolbarTitle].

@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-popover",
   "selectors": ["krn-popover"],
+  "selectorDeprecations": [],
   "symbol": "KrnPopover",
   "canonicalSymbol": "KrnPopover",
   "canonicalId": "popover",
@@ -83,7 +84,7 @@
       "name": "closed",
       "property": "closed",
       "kind": "output",
-      "type": "\"escape\" | \"outside\" | \"api\"",
+      "type": "\"api\" | \"escape\" | \"outside\"",
       "required": false,
       "defaultValue": "undefined",
       "description": "Notifies the consumer after the closed interaction completes.",
@@ -95,7 +96,7 @@
       "name": "krnPopoverTrigger",
       "selector": "[krnPopoverTrigger]",
       "required": true,
-      "description": "Required non-interactive label content projected into the Popover-owned trigger button; do not project a button, link, form control, or krn-button."
+      "description": "Required non-interactive label content projected into the Popover-owned trigger button; do not project a button, link, form control, or button[krnButton]."
     },
     {
       "name": "default-2",

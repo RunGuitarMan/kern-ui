@@ -68,6 +68,10 @@ void bootstrapApplication(KernTagsInputAgentExample);
 | `tagAdded`        | output | `string`                | no       | `undefined`                                 | Notifies the consumer after the tag added interaction completes.           |
 | `tagRemoved`      | output | `string`                | no       | `undefined`                                 | Notifies the consumer after the tag removed interaction completes.         |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._
@@ -141,11 +145,11 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API      | Category           | Evidence                                                | Reason                                                                                                                                                              |
-| --------------- | ------------------ | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel`     | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#tags-input` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `inputLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#tags-input` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `separatorKeys` | complex-data       | `specimen-fixture:preview/tags-input?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+| Public API      | Category           | Evidence                                                | Reason                                                                                                                                                               |
+| --------------- | ------------------ | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`     | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#tags-input` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `inputLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#tags-input` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `separatorKeys` | complex-data       | `specimen-fixture:preview/tags-input?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
 
 Presets:
 

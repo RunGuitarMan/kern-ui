@@ -6,6 +6,58 @@
   },
   "entries": [
     {
+      "id": "krn-button-group-element-selector",
+      "entrypoint": "./kit",
+      "symbol": "KrnButtonGroup",
+      "selector": "krn-button-group",
+      "kind": "selector",
+      "status": "active",
+      "introducedIn": "0.1.0",
+      "removeIn": "0.2.0",
+      "replacement": "div[krnButtonGroup]",
+      "migration": "Replace <krn-button-group> with <div krnButtonGroup> and replace its closing tag with </div>; keep each child action and its native semantics unchanged.",
+      "documentation": "docs/DEPRECATIONS.md#krn-button-group-element-selector"
+    },
+    {
+      "id": "krn-button-group-aria-label",
+      "entrypoint": "./kit",
+      "symbol": "KrnButtonGroup",
+      "member": "ariaLabel",
+      "kind": "input",
+      "status": "active",
+      "introducedIn": "0.1.0",
+      "removeIn": "0.2.0",
+      "replacement": "Native aria-label or aria-labelledby on div[krnButtonGroup]",
+      "migration": "Replace the legacy custom element with div[krnButtonGroup], static ariaLabel with aria-label, and bound ariaLabel with attr.aria-label.",
+      "documentation": "docs/DEPRECATIONS.md#krn-button-group-aria-label"
+    },
+    {
+      "id": "krn-toggle-group-element-selector",
+      "entrypoint": "./kit",
+      "symbol": "KrnToggleGroup",
+      "selector": "krn-toggle-group",
+      "kind": "selector",
+      "status": "active",
+      "introducedIn": "0.1.0",
+      "removeIn": "0.2.0",
+      "replacement": "div[krnToggleGroup]",
+      "migration": "Replace <krn-toggle-group> with <div krnToggleGroup> and replace its closing tag with </div>; keep direct native Toggle Button children and stable values unchanged.",
+      "documentation": "docs/DEPRECATIONS.md#krn-toggle-group-element-selector"
+    },
+    {
+      "id": "krn-toggle-group-aria-label",
+      "entrypoint": "./kit",
+      "symbol": "KrnToggleGroup",
+      "member": "ariaLabel",
+      "kind": "input",
+      "status": "active",
+      "introducedIn": "0.1.0",
+      "removeIn": "0.2.0",
+      "replacement": "Native aria-label or aria-labelledby on div[krnToggleGroup]",
+      "migration": "Replace the legacy custom element with div[krnToggleGroup], static ariaLabel with aria-label, and bound ariaLabel with attr.aria-label.",
+      "documentation": "docs/DEPRECATIONS.md#krn-toggle-group-aria-label"
+    },
+    {
       "id": "krn-data-grid-pagination",
       "entrypoint": "./addon-grid",
       "symbol": "KrnDataGrid",

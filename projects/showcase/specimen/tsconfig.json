@@ -9,6 +9,7 @@
       "@kern-ui/angular/addon-grid": ["../../kern/addon-grid/src/public-api.ts"],
       "@kern-ui/angular/cdk": ["../../kern/cdk/src/public-api.ts"],
       "@kern-ui/angular/core": ["../../kern/core/src/public-api.ts"],
+      "@kern-ui/angular/i18n": ["../../kern/i18n/src/public-api.ts"],
       "@kern-ui/angular/kit": ["../../kern/kit/src/public-api.ts"],
       "@kern-ui/angular/patterns": ["../../kern/patterns/src/public-api.ts"],
       "@kern-ui/showcase": ["../src/public-api.ts"]

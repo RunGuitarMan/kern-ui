@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-menubar",
   "selectors": ["krn-menubar"],
+  "selectorDeprecations": [],
   "symbol": "KrnMenubar",
   "canonicalSymbol": "KrnMenubar",
   "canonicalId": "menubar",

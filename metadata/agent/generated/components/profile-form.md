@@ -85,6 +85,10 @@ void bootstrapApplication(KernProfileFormAgentExample);
 | `saveLabel`      | input  | `string`                                                             | no       | `this.translations.patterns.saveProfile`           | Human-readable copy for the save state or control.                   |
 | `saved`          | output | `KrnProfileValue`                                                    | no       | `undefined`                                        | Notifies the consumer after the saved interaction completes.         |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._
@@ -146,17 +150,17 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API       | Category           | Evidence                                                  | Reason                                                                                                                                                              |
-| ---------------- | ------------------ | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `bioLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `nameErrorLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `nameLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `roleLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `saveLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `savingLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `timezoneLabel`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `timezones`      | complex-data       | `specimen-fixture:preview/profile-form?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
-| `value`          | complex-data       | `specimen-fixture:preview/profile-form?state=default`     | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                    |
+| Public API       | Category           | Evidence                                                  | Reason                                                                                                                                                               |
+| ---------------- | ------------------ | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bioLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `nameErrorLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `nameLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `roleLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `saveLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `savingLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `timezoneLabel`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `timezones`      | complex-data       | `specimen-fixture:preview/profile-form?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
+| `value`          | complex-data       | `specimen-fixture:preview/profile-form?state=default`     | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                     |
 
 Presets:
 

@@ -63,33 +63,37 @@ void bootstrapApplication(KernMultiSelectAgentExample);
 
 ## API
 
-| Name          | Kind  | Type     | Required | Default                                                                                         | Description                                                       |
-| ------------- | ----- | -------- | -------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| `id`          | input | `string` | no       | `''`                                                                                            | Stable identifier value used by the id contract.                  |
-| `placeholder` | input | `string` | no       | `this.translations.forms.selectOptions`                                                         | Short input hint shown only while no value is present.            |
-| `emptyText`   | input | `string` | no       | `this.translations.forms.noOptions`                                                             | Visible and announced copy when the data collection has no items. |
-| `loadingText` | input | `string` | no       | `this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? ''` | Visible and announced copy while asynchronous data is loading.    |
-| `errorText`   | input | `string` | no       | `this.translations.forms.optionsLoadFailed ??                                                   |
+| Name               | Kind   | Type                                             | Required | Default                                                                                               | Description                                                                                      |
+| ------------------ | ------ | ------------------------------------------------ | -------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `id`               | input  | `string`                                         | no       | `''`                                                                                                  | Stable identifier value used by the id contract.                                                 |
+| `placeholder`      | input  | `string`                                         | no       | `this.translations.forms.selectOptions`                                                               | Short input hint shown only while no value is present.                                           |
+| `emptyText`        | input  | `string`                                         | no       | `this.translations.forms.noOptions`                                                                   | Visible and announced copy when the data collection has no items.                                |
+| `loadingText`      | input  | `string`                                         | no       | `this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? ''`       | Visible and announced copy while asynchronous data is loading.                                   |
+| `errorText`        | input  | `string`                                         | no       | `this.translations.forms.optionsLoadFailed ?? KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ?? ''` | Visible and announced copy when loading the data collection fails.                               |
+| `ariaLabel`        | input  | `string`                                         | no       | `''`                                                                                                  | Accessible name used when visible content is not sufficient.                                     |
+| `ariaLabelledBy`   | input  | `string`                                         | no       | `''`                                                                                                  | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy`  | input  | `string`                                         | no       | `''`                                                                                                  | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `options`          | input  | `ReadonlyArray<KrnSelectOption<T>>`              | yes      | `required`                                                                                            | Authoritative option collection presented by the selection control.                              |
+| `optionsState`     | input  | `KrnOptionsState`                                | no       | `'ready'`                                                                                             | Controls whether options are interactive or replaced by an announced loading/error state.        |
+| `identityMatcher`  | input  | `KrnIdentityMatcher<T>`                          | no       | `Object.is`                                                                                           | Compares option values when object identity is not stable across refreshes.                      |
+| `trackBy`          | input  | `KrnOptionTrackBy<T>`                            | no       | `(option) => option.value`                                                                            | Returns the stable identity used to retain rendered items across updates.                        |
+| `stringify`        | input  | `KrnOptionStringifier<T>`                        | no       | `(option) => option.label`                                                                            | Converts a domain value into the human-readable label shown to users.                            |
+| `disabledHandler`  | input  | `KrnOptionDisabledHandler<T>`                    | no       | `(option) => option.disabled ?? false`                                                                | Determines whether an individual option or item is unavailable.                                  |
+| `optionTemplate`   | input  | `TemplateRef<KrnSelectOptionContext<T>> \| null` | no       | `null`                                                                                                | Template used to render one option with its typed context.                                       |
+| `selectedTemplate` | input  | `TemplateRef<KrnSelectOptionContext<T>> \| null` | no       | `null`                                                                                                | Template used to render the committed selection.                                                 |
+| `maxVisible`       | input  | `number`                                         | no       | `2`                                                                                                   | Upper or lower bound applied to the visible value.                                               |
+| `disabled`         | input  | `boolean`                                        | no       | `false`                                                                                               | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`         | input  | `boolean`                                        | no       | `false`                                                                                               | Keeps the value perceivable while preventing user edits.                                         |
+| `required`         | input  | `boolean`                                        | no       | `false`                                                                                               | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`          | input  | `boolean`                                        | no       | `false`                                                                                               | Exposes an externally controlled invalid presentation state.                                     |
+| `tabindex`         | input  | `number`                                         | no       | `0`                                                                                                   | Native sequential-focus order forwarded to the owned interactive element.                        |
+| `value`            | input  | `ReadonlyArray<T> \| undefined`                  | no       | `undefined`                                                                                           | Controlled component value.                                                                      |
+| `open`             | model  | `boolean`                                        | no       | `false`                                                                                               | Controls whether the disclosure or overlay surface is visible.                                   |
+| `valueChange`      | output | `ReadonlyArray<T>`                               | no       | `undefined`                                                                                           | Notifies the consumer after the value change interaction completes.                              |
 
-      KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??
-      ''` | Visible and announced copy when loading the data collection fails. |
+## Deprecated selectors
 
-| `ariaLabel` | input | `string` | no | `''` | Accessible name used when visible content is not sufficient. |
-| `options` | input | `ReadonlyArray<KrnSelectOption<T>>` | yes | `required` | Authoritative option collection presented by the selection control. |
-| `optionsState` | input | `KrnOptionsState` | no | `'ready'` | Controls whether options are interactive or replaced by an announced loading/error state. |
-| `identityMatcher` | input | `KrnIdentityMatcher<T>` | no | `Object.is` | Compares option values when object identity is not stable across refreshes. |
-| `trackBy` | input | `KrnOptionTrackBy<T>` | no | `(option) => option.value` | Returns the stable identity used to retain rendered items across updates. |
-| `stringify` | input | `KrnOptionStringifier<T>` | no | `(option) => option.label` | Converts a domain value into the human-readable label shown to users. |
-| `disabledHandler` | input | `KrnOptionDisabledHandler<T>` | no | `(option) => option.disabled ?? false` | Determines whether an individual option or item is unavailable. |
-| `optionTemplate` | input | `TemplateRef<KrnSelectOptionContext<T>> \| null` | no | `null` | Template used to render one option with its typed context. |
-| `selectedTemplate` | input | `TemplateRef<KrnSelectOptionContext<T>> \| null` | no | `null` | Template used to render the committed selection. |
-| `maxVisible` | input | `number` | no | `2` | Upper or lower bound applied to the visible value. |
-| `disabled` | input | `boolean` | no | `false` | Prevents user interaction and participates in the disabled-state contract. |
-| `readonly` | input | `boolean` | no | `false` | Keeps the value perceivable while preventing user edits. |
-| `required` | input | `boolean` | no | `false` | Marks the value as required and participates in Angular Forms validation. |
-| `invalid` | input | `boolean` | no | `false` | Exposes an externally controlled invalid presentation state. |
-| `open` | model | `boolean` | no | `false` | Controls whether the disclosure or overlay surface is visible. |
-| `valueChange` | output | `ReadonlyArray<T>` | no | `undefined` | Notifies the consumer after the value change interaction completes. |
+_No deprecated selectors._
 
 ## Content slots
 
@@ -147,8 +151,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/multi-select`
 
 Scenarios: `default`, `stress`.
-Public API coverage: 12/20
-directly controlled; 8 exact exclusions; 0 unclassified.
+Public API coverage: 13/24
+directly controlled; 11 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -168,12 +172,15 @@ component inputs or models.
 | `invalid`      | boolean | `false`                    | `true`                                 | input `invalid` (property)      | Exposes the invalid visual and ARIA state.                           |
 | `id`           | text    | `""`                       | `"Alternate value"`                    | input `id` (property)           | Configures the component id contract.                                |
 | `maxVisible`   | number  | `2`                        | `3`                                    | input `maxVisible` (property)   | Configures the component maxVisible contract.                        |
+| `tabindex`     | number  | `0`                        | `1`                                    | input `tabindex` (property)     | Configures the component tabindex contract.                          |
 
 Exact API exclusions:
 
 | Public API         | Category           | Evidence                                                           | Reason                                                                                                                  |
 | ------------------ | ------------------ | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaDescribedBy`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-select`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 | `ariaLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-select`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabelledBy`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-select`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
 | `disabledHandler`  | callback           | `component-example:agent/components/multi-select.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                      |
 | `identityMatcher`  | callback           | `component-example:agent/components/multi-select.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                      |
 | `options`          | complex-data       | `specimen-fixture:preview/multi-select?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
@@ -181,6 +188,7 @@ Exact API exclusions:
 | `selectedTemplate` | template           | `component-example:agent/components/multi-select.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.              |
 | `stringify`        | complex-data       | `specimen-fixture:preview/multi-select?state=default`              | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                        |
 | `trackBy`          | callback           | `component-example:agent/components/multi-select.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                      |
+| `value`            | complex-data       | `specimen-fixture:preview/multi-select?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
 
 Presets:
 

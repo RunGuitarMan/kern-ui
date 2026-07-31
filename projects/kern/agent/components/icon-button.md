@@ -1,19 +1,19 @@
 # Icon Button
 
 - ID: `icon-button`
-- Selector: `krn-icon-button`
+- Selector: `button[krnIconButton]`
 - Import: `import { KrnIconButton } from '@kern-ui/angular/kit';`
 - Canonical symbol: `KrnIconButton`
 - Lifecycle: **stable**
 - Category: Actions
 
-Icon Button. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.
+Icon Button. Enhances a native button with a compact square action target, visual defaults, and a focus-preserving loading state.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use <button krnIconButton type="button"> with a native accessible name and native events or form attributes.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not add role="button", proxy native attributes through component inputs, or use Icon Button for managed toggle state; use Toggle Button.
 
 ## Compile-verified standalone Angular example
 
@@ -21,7 +21,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 /**
  * Accessible icon-only action
  *
- * Provide a stable accessible name for an icon-only control.
+ * Keep the accessible name and native action semantics on the icon-only button host.
  *
  * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.
  */
@@ -34,7 +34,7 @@ import { KrnIconButton } from '@kern-ui/angular/kit';
   standalone: true,
   imports: [KrnIconButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <krn-icon-button ariaLabel="Add team member">+</krn-icon-button> `,
+  template: ` <button krnIconButton type="button" aria-label="Add team member">+</button> `,
 })
 export class KernIconButtonAgentExample {}
 
@@ -43,17 +43,17 @@ void bootstrapApplication(KernIconButtonAgentExample);
 
 ## API
 
-| Name        | Kind   | Type                   | Required | Default     | Description                                                                      |
-| ----------- | ------ | ---------------------- | -------- | ----------- | -------------------------------------------------------------------------------- |
-| `ariaLabel` | input  | `string`               | yes      | `required`  | Accessible name used when visible content is not sufficient.                     |
-| `size`      | input  | `KrnSize`              | no       | `'md'`      | Named semantic size resolved through KERN density and sizing tokens.             |
-| `variant`   | input  | `KrnActionVariant`     | no       | `'ghost'`   | Named visual hierarchy treatment that preserves the component semantics.         |
-| `tone`      | input  | `KrnTone`              | no       | `'neutral'` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
-| `type`      | input  | `KrnButtonType`        | no       | `'button'`  | Native action or input type forwarded to the owned interactive element.          |
-| `loading`   | input  | `boolean`              | no       | `false`     | Prevents duplicate actions and exposes accessible busy state.                    |
-| `disabled`  | input  | `boolean`              | no       | `false`     | Prevents user interaction and participates in the disabled-state contract.       |
-| `pressed`   | input  | `boolean \| undefined` | no       | `undefined` | Controlled toggle-button pressed state exposed through native button semantics.  |
-| `activated` | output | `MouseEvent`           | no       | `undefined` | Notifies the consumer after the activated interaction completes.                 |
+| Name           | Kind  | Type               | Required | Default                    | Description                                                                                                                        |
+| -------------- | ----- | ------------------ | -------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `size`         | input | `KrnSize`          | no       | `this.options.size`        | Named semantic size resolved through KERN density and sizing tokens.                                                               |
+| `variant`      | input | `KrnActionVariant` | no       | `this.options.variant`     | Named visual hierarchy treatment that preserves the component semantics.                                                           |
+| `tone`         | input | `KrnTone`          | no       | `this.options.tone`        | Semantic intent that selects coordinated text, icon, border, and surface tokens.                                                   |
+| `loading`      | input | `boolean`          | no       | `false`                    | Suppresses duplicate activation and owns `aria-disabled` while retaining focus. Use native `disabled` for ordinary unavailability. |
+| `loadingLabel` | input | `string`           | no       | `this.defaultLoadingLabel` | Accessible loading copy; defaults to the application or closest scoped option.                                                     |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -65,11 +65,13 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Enter / Space activates
-- Tab follows document order
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab focuses the native button
+- Enter and Space dispatch the native click behavior
+- A loading icon button retains focus but suppresses click and form submission
+- Every icon-only action has a native aria-label or aria-labelledby on the host button.
+- Native type, disabled, name, value, form, and aria-describedby relationships stay on the host button.
+- Loading uses a persistent polite status and aria-disabled without removing the action from focus order.
+- aria-disabled is reserved for the derived loading state; use native disabled for ordinary unavailability.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -102,28 +104,26 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/icon-button`
 
 Scenarios: `default`.
-Public API coverage: 7/8
+Public API coverage: 4/5
 directly controlled; 1 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument   | Control | Default     | Test value | Binding                     | Description                                        |
-| ---------- | ------- | ----------- | ---------- | --------------------------- | -------------------------------------------------- |
-| `variant`  | select  | `"ghost"`   | `"solid"`  | input `variant` (property)  | Changes icon-action emphasis.                      |
-| `tone`     | select  | `"neutral"` | `"brand"`  | input `tone` (property)     | Changes the semantic action tone.                  |
-| `size`     | select  | `"md"`      | `"sm"`     | input `size` (property)     | Changes the action target and label size.          |
-| `loading`  | boolean | `false`     | `true`     | input `loading` (property)  | Shows progress and disables activation.            |
-| `disabled` | boolean | `false`     | `true`     | input `disabled` (property) | Prevents user interaction.                         |
-| `pressed`  | boolean | `false`     | `true`     | input `pressed` (property)  | Exposes the pressed state to assistive technology. |
-| `type`     | select  | `"button"`  | `"submit"` | input `type` (property)     | Configures the component type contract.            |
+| Argument   | Control | Default     | Test value | Binding                    | Description                                                        |
+| ---------- | ------- | ----------- | ---------- | -------------------------- | ------------------------------------------------------------------ |
+| `variant`  | select  | `"ghost"`   | `"solid"`  | input `variant` (property) | Changes icon-action emphasis.                                      |
+| `tone`     | select  | `"neutral"` | `"brand"`  | input `tone` (property)    | Changes the semantic action tone.                                  |
+| `size`     | select  | `"md"`      | `"sm"`     | input `size` (property)    | Changes the action target and label size.                          |
+| `loading`  | boolean | `false`     | `true`     | input `loading` (property) | Shows progress and disables activation.                            |
+| `disabled` | boolean | `false`     | `true`     | fixture interaction        | Binds the native disabled attribute and prevents user interaction. |
 
 Exact API exclusions:
 
-| Public API  | Category           | Evidence                                                 | Reason                                                                                                                  |
-| ----------- | ------------------ | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#icon-button` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| Public API     | Category           | Evidence                                                 | Reason                                                                                                                                                               |
+| -------------- | ------------------ | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `loadingLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#icon-button` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 
@@ -140,21 +140,22 @@ Presets:
 - `active` — Active; scenario `default`; visual state `active`.
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
 - `loading` — Loading; scenario `default`; `loading=true`.
-- `pressed` — Pressed; scenario `default`; `pressed=true`.
 
 ## Related
 
 - `button`
+- `toggle-button`
 - `button-group`
-- `split-button`
 - `floating-action-button`
+- `split-button`
 
 ## Common mistakes
 
-- Do not omit required inputs: `ariaLabel`.
 - Importing from an undeclared family path or a source implementation file.
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
+- Use button[krnIconButton] with a native aria-label or aria-labelledby; keep type, disabled, name, value, form, aria-describedby relationships, and click on the native host.
+- Use provideKrnIconButtonOptions for inheritable visual and loading-copy defaults, and prefer Toggle Button when the component must own managed pressed state.
 
 ## Ship checklist
 

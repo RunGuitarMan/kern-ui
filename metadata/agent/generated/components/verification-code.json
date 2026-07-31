@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-verification-code",
   "selectors": ["krn-otp-input", "krn-verification-code"],
+  "selectorDeprecations": [],
   "symbol": "KrnVerificationCode",
   "canonicalSymbol": "KrnOtpInput",
   "canonicalId": "verification-code",
@@ -95,6 +96,46 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "autocomplete",
+      "property": "autocomplete",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "'one-time-code'",
+      "description": "Native autocomplete purpose forwarded to the editable control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabelledBy",
+      "property": "ariaLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that provide the accessible name and take precedence over ariaLabel.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaDescribedBy",
+      "property": "ariaDescribedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids composed with Form Field hints and validation descriptions.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "tabindex",
+      "property": "tabIndex",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Native sequential-focus order forwarded to the owned interactive element.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "disabled",
       "property": "disabled",
       "kind": "input",
@@ -132,6 +173,16 @@
       "required": false,
       "defaultValue": "false",
       "description": "Exposes an externally controlled invalid presentation state.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "value",
+      "property": "value",
+      "kind": "input",
+      "type": "string | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controlled component value.",
       "descriptionSource": "inferred"
     },
     {
@@ -188,8 +239,7 @@
     "evidenceScope": "library-docs-route-smoke",
     "notes": [
       "KERN avoids ambient browser globals in reusable runtime infrastructure.",
-      "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
-      "Browser capabilities are nullable or become available only after hydration."
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
     ]
   },
   "examples": [
@@ -215,10 +265,15 @@
     "label",
     "length",
     "numericOnly",
+    "autocomplete",
+    "ariaLabelledBy",
+    "ariaDescribedBy",
+    "tabindex",
     "disabled",
     "readonly",
     "required",
     "invalid",
+    "value",
     "valueChange",
     "completed"
   ],
@@ -265,6 +320,19 @@
         "min": 4,
         "max": 12,
         "step": 1
+      },
+      {
+        "key": "autocomplete",
+        "label": "Autocomplete",
+        "kind": "text",
+        "defaultValue": "one-time-code",
+        "testValue": "one-time-code · alternate",
+        "description": "Configures the component autocomplete contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "autocomplete",
+          "syntax": "property"
+        }
       },
       {
         "key": "disabled",
@@ -354,6 +422,35 @@
         "binding": {
           "kind": "input",
           "publicName": "required",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "tabindex",
+        "label": "Tabindex",
+        "kind": "number",
+        "defaultValue": 0,
+        "testValue": 1,
+        "description": "Configures the component tabindex contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "tabindex",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 10000,
+        "step": 1
+      },
+      {
+        "key": "value",
+        "label": "Value",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Controlled component value.",
+        "binding": {
+          "kind": "input",
+          "publicName": "value",
           "syntax": "property"
         }
       }
@@ -517,11 +614,36 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 8,
-      "controlled": 8,
-      "excluded": 0,
+      "publicInputsAndModels": 13,
+      "controlled": 11,
+      "excluded": 2,
       "unclassified": 0
     },
-    "exclusions": []
+    "exclusions": [
+      {
+        "componentId": "verification-code",
+        "publicName": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#verification-code"
+        }
+      },
+      {
+        "componentId": "verification-code",
+        "publicName": "ariaLabelledBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#verification-code"
+        }
+      }
+    ]
   }
 }

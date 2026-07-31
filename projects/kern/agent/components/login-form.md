@@ -74,6 +74,10 @@ void bootstrapApplication(KernLoginFormAgentExample);
 | `minimumPasswordLength` | input  | `number`                            | no       | `8`                                                | Upper or lower bound applied to the password length value.       |
 | `submitted`             | output | `KrnLoginCredentials`               | no       | `undefined`                                        | Notifies the consumer after the submitted interaction completes. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._
@@ -136,16 +140,16 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API           | Category           | Evidence                                                         | Reason                                                                                                                                                              |
-| -------------------- | ------------------ | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `emailErrorLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `emailLabel`         | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `loadingLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `passwordErrorLabel` | callback           | `component-example:agent/components/login-form.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
-| `passwordLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `recoveryLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `rememberLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `submitLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| Public API           | Category           | Evidence                                                         | Reason                                                                                                                                                               |
+| -------------------- | ------------------ | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `emailErrorLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `emailLabel`         | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `loadingLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `passwordErrorLabel` | callback           | `component-example:agent/components/login-form.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                   |
+| `passwordLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `recoveryLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `rememberLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `submitLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#login-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 

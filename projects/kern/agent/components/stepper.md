@@ -71,6 +71,10 @@ void bootstrapApplication(KernStepperAgentExample);
 | `ariaLabel`      | input | `string`                     | no       | `this.translations.navigation.progress` | Accessible name used when visible content is not sufficient.              |
 | `optionalLabel`  | input | `string`                     | no       | `this.translations.navigation.optional` | Human-readable copy for the optional state or control.                    |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.
@@ -126,20 +130,20 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default        | Test value   | Binding                        | Description                                    |
-| ------------- | ------- | -------------- | ------------ | ------------------------------ | ---------------------------------------------- |
-| `activeStep`  | number  | `1`            | `2`          | model `activeStep`             | Changes the currently active step.             |
-| `linear`      | boolean | `false`        | `true`       | input `linear` (property)      | Configures the component linear contract.      |
-| `orientation` | select  | `"horizontal"` | `"vertical"` | input `orientation` (property) | Configures the component orientation contract. |
+| Argument      | Control | Default        | Test value   | Binding                        | Description                                                                               |
+| ------------- | ------- | -------------- | ------------ | ------------------------------ | ----------------------------------------------------------------------------------------- |
+| `activeStep`  | number  | `1`            | `2`          | model `activeStep`             | Changes the currently active step.                                                        |
+| `linear`      | boolean | `false`        | `true`       | input `linear` (property)      | Configures the component linear contract.                                                 |
+| `orientation` | select  | `"horizontal"` | `"vertical"` | input `orientation` (property) | Logical axis exposed by the component; behavior follows its documented keyboard contract. |
 
 Exact API exclusions:
 
-| Public API       | Category           | Evidence                                             | Reason                                                                                                                                                              |
-| ---------------- | ------------------ | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#stepper` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `completedSteps` | complex-data       | `specimen-fixture:preview/stepper?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
-| `optionalLabel`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#stepper` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `steps`          | complex-data       | `specimen-fixture:preview/stepper?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+| Public API       | Category           | Evidence                                             | Reason                                                                                                                                                               |
+| ---------------- | ------------------ | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#stepper` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `completedSteps` | complex-data       | `specimen-fixture:preview/stepper?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
+| `optionalLabel`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#stepper` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `steps`          | complex-data       | `specimen-fixture:preview/stepper?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
 
 Presets:
 

@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-spinner",
   "selectors": ["krn-spinner"],
+  "selectorDeprecations": [],
   "symbol": "KrnSpinner",
   "canonicalSymbol": "KrnSpinner",
   "canonicalId": "spinner",

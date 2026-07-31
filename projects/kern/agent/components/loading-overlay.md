@@ -58,6 +58,10 @@ void bootstrapApplication(KernLoadingOverlayAgentExample);
 | `blocking` | input | `boolean` | no       | `true`                                         | Marks feedback as requiring attention before the workflow can continue.      |
 | `label`    | input | `string`  | no       | `this.translations.feedback.loadingInProgress` | Visible text that names the control or data value.                           |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

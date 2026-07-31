@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-loading-overlay",
   "selectors": ["krn-loading-overlay"],
+  "selectorDeprecations": [],
   "symbol": "KrnLoadingOverlay",
   "canonicalSymbol": "KrnLoadingOverlay",
   "canonicalId": "loading-overlay",

@@ -47,7 +47,7 @@ void bootstrapApplication(KernMeterAgentExample);
 
 | Name      | Kind  | Type                      | Required | Default              | Description                                                                 |
 | --------- | ----- | ------------------------- | -------- | -------------------- | --------------------------------------------------------------------------- |
-| `locale`  | input | `string \| Array<string>` | no       | `inject(KRN_LOCALE)` | Locale identifier used for collation, formatting, and component-owned copy. |
+| `locale`  | input | `Array<string> \| string` | no       | `inject(KRN_LOCALE)` | Locale identifier used for collation, formatting, and component-owned copy. |
 | `label`   | input | `string`                  | yes      | `required`           | Visible text that names the control or data value.                          |
 | `value`   | input | `number`                  | yes      | `required`           | Controlled component value.                                                 |
 | `min`     | input | `number`                  | no       | `0`                  | Smallest accepted numeric or temporal value.                                |
@@ -55,6 +55,10 @@ void bootstrapApplication(KernMeterAgentExample);
 | `low`     | input | `number`                  | no       | `25`                 | Threshold below which a meter value is considered low.                      |
 | `high`    | input | `number`                  | no       | `75`                 | Threshold above which a meter value is considered high.                     |
 | `optimum` | input | `number`                  | no       | `100`                | Meter value considered optimal for interpreting low and high ranges.        |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 

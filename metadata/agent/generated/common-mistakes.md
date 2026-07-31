@@ -4,19 +4,39 @@
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
 
-## Icon Button
+## Button
 
-- Do not omit required inputs: `ariaLabel`.
 - Importing from an undeclared family path or a source implementation file.
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
+- Configure inheritable visual defaults with provideKrnButtonOptions; keep type, disabled, name, value, form, and ARIA attributes on the native host.
+- Use provideKrn translations for application-wide loading copy, a scoped loadingLabel option for a subtree, and the input only for a one-off override.
+
+## Icon Button
+
+- Importing from an undeclared family path or a source implementation file.
+- Loading only tokens.css instead of the complete styles/kern.css component bundle.
+- Assuming the documentation SSR build replaces validation of the consuming application.
+- Use button[krnIconButton] with a native aria-label or aria-labelledby; keep type, disabled, name, value, form, aria-describedby relationships, and click on the native host.
+- Use provideKrnIconButtonOptions for inheritable visual and loading-copy defaults, and prefer Toggle Button when the component must own managed pressed state.
+
+## Button Group
+
+- Importing from an undeclared family path or a source implementation file.
+- Loading only tokens.css instead of the complete styles/kern.css component bundle.
+- Assuming the documentation SSR build replaces validation of the consuming application.
+- Use div[krnButtonGroup] with a native aria-label or aria-labelledby; orientation and connected change layout only, while each child action keeps its own native semantics and Tab stop.
+- Do not add group-level disabled, loading, selection, or Arrow-key behavior; use Toggle Group or Segmented Control when the composition must own a managed choice.
+- Use provideKrnButtonGroupOptions for inheritable orientation or connected defaults; keep accessible naming and child interaction state explicit at the call site.
 
 ## Floating Action Button
 
-- Do not omit required inputs: `ariaLabel`.
 - Importing from an undeclared family path or a source implementation file.
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
+- Use button[krnFab] with a persistent visible label; compact mode hides that label visually but keeps it as the native accessible name.
+- Keep type, disabled, name, value, form, ARIA relationships, and click on the native host instead of recreating component proxy inputs or outputs.
+- Use provideKrnFloatingActionButtonOptions for inheritable visual, extended, and loading-copy defaults; reserve a floating action for one high-priority contextual action.
 
 ## Toggle Button
 
@@ -24,13 +44,19 @@
 - Importing from an undeclared family path or a source implementation file.
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
+- Use button[krnToggleButton] with a stable value and visible or native ARIA accessible name; do not nest another interactive element inside it.
+- Treat aria-pressed as component-owned derived state. Bind [(pressed)] for standalone controlled state and bind [(values)] on KrnToggleGroup for grouped state.
+- Use provideKrnToggleButtonOptions for inheritable pressed and unpressed appearance defaults; use native form, name, description, and click attributes on the same button.
 
 ## Toggle Group
 
-- Do not omit required inputs: `ariaLabel`.
 - Importing from an undeclared family path or a source implementation file.
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
+- Use div[krnToggleGroup] with a native aria-label or aria-labelledby and direct button[krnToggleButton] children whose values are stable and unique.
+- Arrow, Home, and End move focus without changing selection; activate the focused native button with Enter or Space.
+- Use provideKrnToggleGroupOptions only for inheritable orientation and multiple defaults. Keep disabled and controlled values explicit at the instance.
+- Use Radio Group or Segmented Control instead when an Angular form requires exactly one selected value.
 
 ## Copy Button
 
@@ -38,13 +64,33 @@
 - Importing from an undeclared family path or a source implementation file.
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
+- Pass the exact immutable value to copy; do not derive clipboard data from formatted or visually hidden DOM text.
+- Let the visible action label provide the accessible name. If ariaLabel is necessary, keep the complete visible label inside that override.
+- Treat copied and copyError as terminal operation results. While data-pending="true", Copy Button retains focus and suppresses duplicate activation.
+- Use provideKrnCopyButtonOptions for inheritable visual and feedback-duration defaults, and use KRN_COPY_LABELS only for a narrow locale boundary.
+- Override KRN_CLIPBOARD_WRITER for tests or a platform bridge; do not mutate navigator.clipboard or add document-wide copy listeners.
 
 ## Link
 
-- Do not omit required inputs: `href`.
 - Importing from an undeclared family path or a source implementation file.
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
+- Use a[krnLink] for navigation and keep href or RouterLink, target, rel, download, referrerpolicy, ARIA relationships, and click on that native anchor.
+- Do not simulate a disabled link. Omit the unavailable navigation control or render non-interactive text; use a native button component for an action in the current context.
+- For a privacy-hardened new browsing context, set target="_blank" and explicit rel="noopener noreferrer"; KrnLink never rewrites consumer-owned relationship or referrer policy.
+- Named browsing contexts are valid native targets; do not narrow target to the former KrnLinkTarget alias.
+
+## Form Field
+
+- Importing from an undeclared family path or a source implementation file.
+- Loading only tokens.css instead of the complete styles/kern.css component bundle.
+- Assuming the documentation SSR build replaces validation of the consuming application.
+- Keep id, required, disabled, readonly, and Angular Forms bindings on the projected control. Form Field derives presentation and relationships from that control instead of proxying its state.
+- Disable a reactive control through FormControl.disable(); do not create a DOM-disabled control whose Angular model remains enabled.
+- Use either the label input or one projected KrnLabel. A projected label is the canonical rich-content option and replaces the shorthand label instead of creating a second label.
+- Register exactly one control per Form Field. For Checkbox Group, Radio Group, Segmented Control, Verification Code, or Range Slider, project the group component itself; Form Field names its composite root with aria-labelledby and delegates label clicks to its first enabled member.
+- Angular validation becomes visually invalid only after the control is touched or dirty. Use mounted error content when a server or cross-field error must be announced before local interaction.
+- Use the error input for one inline message or project KrnValidationMessage for controlled validation content. Form Field only references description ids that are mounted in the DOM.
 
 ## Text Input
 

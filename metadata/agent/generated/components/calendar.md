@@ -76,6 +76,10 @@ void bootstrapApplication(KernCalendarAgentExample);
 | `dateSelected`    | output | `string`                           | no       | `undefined`          | Notifies the consumer after the date selected interaction completes.        |
 | `focusedDate`     | model  | `string`                           | no       | `''`                 | Controlled focused date state with a matching Angular model-change output.  |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._

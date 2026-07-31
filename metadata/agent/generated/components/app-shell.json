@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-app-shell",
   "selectors": ["krn-app-shell"],
+  "selectorDeprecations": [],
   "symbol": "KrnAppShell",
   "canonicalSymbol": "KrnAppShell",
   "canonicalId": "app-shell",
@@ -79,7 +80,7 @@
       "name": "sidebarPosition",
       "property": "sidebarPosition",
       "kind": "input",
-      "type": "\"start\" | \"end\"",
+      "type": "\"end\" | \"start\"",
       "required": false,
       "defaultValue": "'start'",
       "description": "Logical start or end placement of the application sidebar.",
@@ -89,7 +90,7 @@
       "name": "mobileNavigation",
       "property": "mobileNavigation",
       "kind": "input",
-      "type": "\"hidden\" | \"auto\" | \"sidebar\" | \"rail\"",
+      "type": "\"auto\" | \"hidden\" | \"rail\" | \"sidebar\"",
       "required": false,
       "defaultValue": "'auto'",
       "description": "Template rendered as the application’s narrow-viewport navigation.",
@@ -463,7 +464,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#app-shell"
@@ -499,7 +500,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#app-shell"
@@ -511,7 +512,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#app-shell"

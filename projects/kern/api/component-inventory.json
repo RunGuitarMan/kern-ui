@@ -1,0 +1,5182 @@
+{
+  "$schema": "./component-inventory.schema.json",
+  "schemaVersion": "1.1.0",
+  "library": {
+    "name": "@kern-ui/angular",
+    "version": "0.1.0"
+  },
+  "generatedBy": "scripts/generate-component-contract.mjs",
+  "generatedFrom": [
+    "projects/kern/*/src",
+    "projects/kern/api/runtime-entrypoints.json",
+    "projects/kern/api/lifecycle.json",
+    "projects/kern/api/deprecations.json",
+    "projects/showcase/src/lib/catalog.ts"
+  ],
+  "summary": {
+    "selectorCount": 150,
+    "implementationCount": 137,
+    "componentCount": 132,
+    "directiveCount": 5,
+    "catalogEntryCount": 131,
+    "catalogReviewUnitCount": 126,
+    "catalogAliasEntryCount": 5,
+    "publicReviewUnitCount": 135,
+    "supportingReviewUnitCount": 9,
+    "internalImplementationCount": 2,
+    "selectorAliasCount": 13
+  },
+  "units": [
+    {
+      "reviewUnit": "core:KrnThemeDirective",
+      "symbol": "KrnThemeDirective",
+      "kind": "directive",
+      "entrypoint": "core",
+      "importPath": "@kern-ui/angular/core",
+      "family": "core",
+      "source": "projects/kern/core/src/lib/core/theme.ts",
+      "visibility": "public",
+      "role": "supporting",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/core"
+      },
+      "canonicalPublicSymbol": "KrnThemeDirective",
+      "canonicalSelector": "[krnTheme]",
+      "publicSymbols": ["KrnThemeDirective"],
+      "selectors": ["[krnTheme]"],
+      "selectorDeprecations": [],
+      "catalog": [],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "core:KrnIcon",
+      "symbol": "KrnIcon",
+      "kind": "component",
+      "entrypoint": "core",
+      "importPath": "@kern-ui/angular/core",
+      "family": "foundations",
+      "source": "projects/kern/core/src/lib/foundations/icon.ts",
+      "visibility": "public",
+      "role": "supporting",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/core"
+      },
+      "canonicalPublicSymbol": "KrnIcon",
+      "canonicalSelector": "krn-icon",
+      "publicSymbols": ["KrnIcon"],
+      "selectors": ["krn-icon"],
+      "selectorDeprecations": [],
+      "catalog": [],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnButton",
+      "symbol": "KrnButton",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "actions",
+      "source": "projects/kern/kit/src/lib/actions/button.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnButton",
+      "canonicalSelector": "button[krnButton]",
+      "publicSymbols": ["KrnButton"],
+      "selectors": ["button[krnButton]"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "button",
+          "name": "Button",
+          "category": "Actions",
+          "selector": "button[krnButton]",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/actions",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnIconButton",
+      "symbol": "KrnIconButton",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "actions",
+      "source": "projects/kern/kit/src/lib/actions/icon-button.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnIconButton",
+      "canonicalSelector": "button[krnIconButton]",
+      "publicSymbols": ["KrnIconButton"],
+      "selectors": ["button[krnIconButton]"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "icon-button",
+          "name": "Icon Button",
+          "category": "Actions",
+          "selector": "button[krnIconButton]",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/actions",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnButtonGroup",
+      "symbol": "KrnButtonGroup",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "actions",
+      "source": "projects/kern/kit/src/lib/actions/button-group.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnButtonGroup",
+      "canonicalSelector": "div[krnButtonGroup]",
+      "publicSymbols": ["KrnButtonGroup"],
+      "selectors": ["div[krnButtonGroup]", "krn-button-group"],
+      "selectorDeprecations": [
+        {
+          "id": "krn-button-group-element-selector",
+          "selector": "krn-button-group",
+          "status": "active",
+          "introducedIn": "0.1.0",
+          "removeIn": "0.2.0",
+          "replacement": "div[krnButtonGroup]",
+          "migration": "Replace <krn-button-group> with <div krnButtonGroup> and replace its closing tag with </div>; keep each child action and its native semantics unchanged.",
+          "documentation": "docs/DEPRECATIONS.md#krn-button-group-element-selector"
+        }
+      ],
+      "catalog": [
+        {
+          "id": "button-group",
+          "name": "Button Group",
+          "category": "Actions",
+          "selector": "div[krnButtonGroup]",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/actions",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": ["krn-button-group"],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnSplitButton",
+      "symbol": "KrnSplitButton",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "actions",
+      "source": "projects/kern/kit/src/lib/actions/dropdown-button.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnSplitButton",
+      "canonicalSelector": "krn-split-button",
+      "publicSymbols": ["KrnSplitButton"],
+      "selectors": ["krn-split-button"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "split-button",
+          "name": "Split Button",
+          "category": "Actions",
+          "selector": "krn-split-button",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/actions",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnFloatingActionButton",
+      "symbol": "KrnFloatingActionButton",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "actions",
+      "source": "projects/kern/kit/src/lib/actions/button.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnFloatingActionButton",
+      "canonicalSelector": "button[krnFab]",
+      "publicSymbols": ["KrnFloatingActionButton"],
+      "selectors": ["button[krnFab]"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "floating-action-button",
+          "name": "Floating Action Button",
+          "category": "Actions",
+          "selector": "button[krnFab]",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/actions",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnToggleButton",
+      "symbol": "KrnToggleButton",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "actions",
+      "source": "projects/kern/kit/src/lib/actions/toggle-button.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnToggleButton",
+      "canonicalSelector": "button[krnToggleButton]",
+      "publicSymbols": ["KrnToggleButton"],
+      "selectors": ["button[krnToggleButton]"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "toggle-button",
+          "name": "Toggle Button",
+          "category": "Actions",
+          "selector": "button[krnToggleButton]",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/actions",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnToggleGroup",
+      "symbol": "KrnToggleGroup",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "actions",
+      "source": "projects/kern/kit/src/lib/actions/toggle-group.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnToggleGroup",
+      "canonicalSelector": "div[krnToggleGroup]",
+      "publicSymbols": ["KrnToggleGroup"],
+      "selectors": ["div[krnToggleGroup]", "krn-toggle-group"],
+      "selectorDeprecations": [
+        {
+          "id": "krn-toggle-group-element-selector",
+          "selector": "krn-toggle-group",
+          "status": "active",
+          "introducedIn": "0.1.0",
+          "removeIn": "0.2.0",
+          "replacement": "div[krnToggleGroup]",
+          "migration": "Replace <krn-toggle-group> with <div krnToggleGroup> and replace its closing tag with </div>; keep direct native Toggle Button children and stable values unchanged.",
+          "documentation": "docs/DEPRECATIONS.md#krn-toggle-group-element-selector"
+        }
+      ],
+      "catalog": [
+        {
+          "id": "toggle-group",
+          "name": "Toggle Group",
+          "category": "Actions",
+          "selector": "div[krnToggleGroup]",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/actions",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": ["krn-toggle-group"],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnCopyButton",
+      "symbol": "KrnCopyButton",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "actions",
+      "source": "projects/kern/kit/src/lib/actions/copy-button.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnCopyButton",
+      "canonicalSelector": "krn-copy-button",
+      "publicSymbols": ["KrnCopyButton"],
+      "selectors": ["krn-copy-button"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "copy-button",
+          "name": "Copy Button",
+          "category": "Actions",
+          "selector": "krn-copy-button",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/actions",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnLink",
+      "symbol": "KrnLink",
+      "kind": "directive",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "actions",
+      "source": "projects/kern/kit/src/lib/actions/link.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnLink",
+      "canonicalSelector": "a[krnLink]",
+      "publicSymbols": ["KrnLink"],
+      "selectors": ["a[krnLink]"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "link",
+          "name": "Link",
+          "category": "Actions",
+          "selector": "a[krnLink]",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/actions",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnDropdownButton",
+      "symbol": "KrnDropdownButton",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "actions",
+      "source": "projects/kern/kit/src/lib/actions/dropdown-button.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnDropdownButton",
+      "canonicalSelector": "krn-dropdown-button",
+      "publicSymbols": ["KrnDropdownButton"],
+      "selectors": ["krn-dropdown-button"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "dropdown-button",
+          "name": "Dropdown Button",
+          "category": "Actions",
+          "selector": "krn-dropdown-button",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/actions",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnBadge",
+      "symbol": "KrnBadge",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnBadge",
+      "canonicalSelector": "krn-badge",
+      "publicSymbols": ["KrnBadge", "KrnStatusBadge"],
+      "selectors": ["krn-badge", "krn-status-badge"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "badge",
+          "name": "Badge",
+          "category": "Data display",
+          "selector": "krn-badge",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        },
+        {
+          "id": "status-badge",
+          "name": "Status Badge",
+          "category": "Data display",
+          "selector": "krn-status-badge",
+          "variantOf": "badge",
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": ["KrnStatusBadge"],
+        "selectors": ["krn-status-badge"],
+        "catalogIds": ["status-badge"]
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnChip",
+      "symbol": "KrnChip",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnChip",
+      "canonicalSelector": "krn-chip",
+      "publicSymbols": ["KrnChip", "KrnTag"],
+      "selectors": ["krn-chip", "krn-tag"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "chip",
+          "name": "Chip",
+          "category": "Data display",
+          "selector": "krn-chip",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        },
+        {
+          "id": "tag",
+          "name": "Tag",
+          "category": "Data display",
+          "selector": "krn-tag",
+          "variantOf": "chip",
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": ["KrnTag"],
+        "selectors": ["krn-tag"],
+        "catalogIds": ["tag"]
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnAvatar",
+      "symbol": "KrnAvatar",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnAvatar",
+      "canonicalSelector": "krn-avatar",
+      "publicSymbols": ["KrnAvatar"],
+      "selectors": ["krn-avatar"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "avatar",
+          "name": "Avatar",
+          "category": "Data display",
+          "selector": "krn-avatar",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnAvatarGroup",
+      "symbol": "KrnAvatarGroup",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnAvatarGroup",
+      "canonicalSelector": "krn-avatar-group",
+      "publicSymbols": ["KrnAvatarGroup"],
+      "selectors": ["krn-avatar-group"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "avatar-group",
+          "name": "Avatar Group",
+          "category": "Data display",
+          "selector": "krn-avatar-group",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnCard",
+      "symbol": "KrnCard",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnCard",
+      "canonicalSelector": "krn-card",
+      "publicSymbols": ["KrnCard"],
+      "selectors": ["krn-card"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "card",
+          "name": "Card",
+          "category": "Data display",
+          "selector": "krn-card",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnStat",
+      "symbol": "KrnStat",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnStat",
+      "canonicalSelector": "krn-stat",
+      "publicSymbols": ["KrnStat"],
+      "selectors": ["krn-stat"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "stat",
+          "name": "Stat",
+          "category": "Data display",
+          "selector": "krn-stat",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnDescriptionList",
+      "symbol": "KrnDescriptionList",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnDescriptionList",
+      "canonicalSelector": "krn-description-list",
+      "publicSymbols": ["KrnDescriptionList"],
+      "selectors": ["krn-description-list"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "description-list",
+          "name": "Description List",
+          "category": "Data display",
+          "selector": "krn-description-list",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnList",
+      "symbol": "KrnList",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnList",
+      "canonicalSelector": "krn-list",
+      "publicSymbols": ["KrnList"],
+      "selectors": ["krn-list"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "list",
+          "name": "List",
+          "category": "Data display",
+          "selector": "krn-list",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnListItem",
+      "symbol": "KrnListItem",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnListItem",
+      "canonicalSelector": "krn-list-item",
+      "publicSymbols": ["KrnListItem"],
+      "selectors": ["krn-list-item"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "list-item",
+          "name": "List Item",
+          "category": "Data display",
+          "selector": "krn-list-item",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnAccordion",
+      "symbol": "KrnAccordion",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnAccordion",
+      "canonicalSelector": "krn-accordion",
+      "publicSymbols": ["KrnAccordion"],
+      "selectors": ["krn-accordion"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "accordion",
+          "name": "Accordion",
+          "category": "Data display",
+          "selector": "krn-accordion",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnDisclosure",
+      "symbol": "KrnDisclosure",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnDisclosure",
+      "canonicalSelector": "krn-disclosure",
+      "publicSymbols": ["KrnDisclosure"],
+      "selectors": ["krn-disclosure"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "disclosure",
+          "name": "Disclosure",
+          "category": "Data display",
+          "selector": "krn-disclosure",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnTimeline",
+      "symbol": "KrnTimeline",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnTimeline",
+      "canonicalSelector": "krn-timeline",
+      "publicSymbols": ["KrnTimeline"],
+      "selectors": ["krn-timeline"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "timeline",
+          "name": "Timeline",
+          "category": "Data display",
+          "selector": "krn-timeline",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnTree",
+      "symbol": "KrnTree",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnTree",
+      "canonicalSelector": "krn-tree",
+      "publicSymbols": ["KrnTree"],
+      "selectors": ["krn-tree"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "tree",
+          "name": "Tree",
+          "category": "Data display",
+          "selector": "krn-tree",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/data-display",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnCalendar",
+      "symbol": "KrnCalendar",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/calendar.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnCalendar",
+      "canonicalSelector": "krn-calendar",
+      "publicSymbols": ["KrnCalendar"],
+      "selectors": ["krn-calendar"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "calendar",
+          "name": "Calendar",
+          "category": "Data display",
+          "selector": "krn-calendar",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnCodeBlock",
+      "symbol": "KrnCodeBlock",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnCodeBlock",
+      "canonicalSelector": "krn-code-block",
+      "publicSymbols": ["KrnCodeBlock"],
+      "selectors": ["krn-code-block"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "code-block",
+          "name": "Code Block",
+          "category": "Data display",
+          "selector": "krn-code-block",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnKeyboardShortcut",
+      "symbol": "KrnKeyboardShortcut",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnKeyboardShortcut",
+      "canonicalSelector": "krn-keyboard-shortcut",
+      "publicSymbols": ["KrnKeyboardShortcut"],
+      "selectors": ["krn-keyboard-shortcut"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "keyboard-shortcut",
+          "name": "Keyboard Shortcut",
+          "category": "Data display",
+          "selector": "krn-keyboard-shortcut",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnMeter",
+      "symbol": "KrnMeter",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnMeter",
+      "canonicalSelector": "krn-meter",
+      "publicSymbols": ["KrnMeter"],
+      "selectors": ["krn-meter"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "meter",
+          "name": "Meter",
+          "category": "Data display",
+          "selector": "krn-meter",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnRating",
+      "symbol": "KrnRating",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnRating",
+      "canonicalSelector": "krn-rating",
+      "publicSymbols": ["KrnRating"],
+      "selectors": ["krn-rating"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "rating",
+          "name": "Rating",
+          "category": "Data display",
+          "selector": "krn-rating",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnResponsiveMedia",
+      "symbol": "KrnResponsiveMedia",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnResponsiveMedia",
+      "canonicalSelector": "krn-responsive-media",
+      "publicSymbols": ["KrnResponsiveMedia"],
+      "selectors": ["krn-responsive-media"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "responsive-media",
+          "name": "Responsive Media",
+          "category": "Data display",
+          "selector": "krn-responsive-media",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/data-display",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnDescriptionItem",
+      "symbol": "KrnDescriptionItem",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "supporting",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnDescriptionItem",
+      "canonicalSelector": "krn-description-item",
+      "publicSymbols": ["KrnDescriptionItem"],
+      "selectors": ["krn-description-item"],
+      "selectorDeprecations": [],
+      "catalog": [],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnTimelineItem",
+      "symbol": "KrnTimelineItem",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "visibility": "public",
+      "role": "supporting",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnTimelineItem",
+      "canonicalSelector": "krn-timeline-item",
+      "publicSymbols": ["KrnTimelineItem"],
+      "selectors": ["krn-timeline-item"],
+      "selectorDeprecations": [],
+      "catalog": [],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnAlert",
+      "symbol": "KrnAlert",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/alert.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnAlert",
+      "canonicalSelector": "krn-alert",
+      "publicSymbols": ["KrnAlert"],
+      "selectors": ["krn-alert"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "alert",
+          "name": "Alert",
+          "category": "Feedback",
+          "selector": "krn-alert",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/feedback",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnBanner",
+      "symbol": "KrnBanner",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/alert.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnBanner",
+      "canonicalSelector": "krn-banner",
+      "publicSymbols": ["KrnBanner"],
+      "selectors": ["krn-banner"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "banner",
+          "name": "Banner",
+          "category": "Feedback",
+          "selector": "krn-banner",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/feedback",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnToastViewport",
+      "symbol": "KrnToastViewport",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/toast.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnToastViewport",
+      "canonicalSelector": "krn-toast",
+      "publicSymbols": ["KrnToastViewport", "KrnSnackbar", "KrnToast"],
+      "selectors": ["krn-toast", "krn-snackbar", "krn-toast-viewport"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "toast",
+          "name": "Toast",
+          "category": "Feedback",
+          "selector": "krn-toast",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/feedback",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": ["KrnSnackbar", "KrnToast"],
+        "selectors": ["krn-snackbar", "krn-toast-viewport"],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnTooltip",
+      "symbol": "KrnTooltip",
+      "kind": "directive",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/hint-overlays.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnTooltip",
+      "canonicalSelector": "[krnTooltip]",
+      "publicSymbols": ["KrnTooltip"],
+      "selectors": ["[krnTooltip]"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "tooltip",
+          "name": "Tooltip",
+          "category": "Feedback",
+          "selector": "[krnTooltip]",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/feedback",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnPopover",
+      "symbol": "KrnPopover",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/hint-overlays.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnPopover",
+      "canonicalSelector": "krn-popover",
+      "publicSymbols": ["KrnPopover"],
+      "selectors": ["krn-popover"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "popover",
+          "name": "Popover",
+          "category": "Feedback",
+          "selector": "krn-popover",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/feedback",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnHoverCard",
+      "symbol": "KrnHoverCard",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/hint-overlays.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnHoverCard",
+      "canonicalSelector": "krn-hover-card",
+      "publicSymbols": ["KrnHoverCard"],
+      "selectors": ["krn-hover-card"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "hover-card",
+          "name": "Hover Card",
+          "category": "Feedback",
+          "selector": "krn-hover-card",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/feedback",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnDialog",
+      "symbol": "KrnDialog",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnDialog",
+      "canonicalSelector": "krn-dialog",
+      "publicSymbols": ["KrnDialog"],
+      "selectors": ["krn-dialog"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "dialog",
+          "name": "Dialog",
+          "category": "Feedback",
+          "selector": "krn-dialog",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/feedback",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnAlertDialog",
+      "symbol": "KrnAlertDialog",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnAlertDialog",
+      "canonicalSelector": "krn-alert-dialog",
+      "publicSymbols": ["KrnAlertDialog"],
+      "selectors": ["krn-alert-dialog"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "alert-dialog",
+          "name": "Alert Dialog",
+          "category": "Feedback",
+          "selector": "krn-alert-dialog",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/feedback",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnDrawer",
+      "symbol": "KrnDrawer",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnDrawer",
+      "canonicalSelector": "krn-drawer",
+      "publicSymbols": ["KrnDrawer"],
+      "selectors": ["krn-drawer"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "drawer",
+          "name": "Drawer",
+          "category": "Feedback",
+          "selector": "krn-drawer",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/feedback",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnBottomSheet",
+      "symbol": "KrnBottomSheet",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnBottomSheet",
+      "canonicalSelector": "krn-bottom-sheet",
+      "publicSymbols": ["KrnBottomSheet"],
+      "selectors": ["krn-bottom-sheet"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "bottom-sheet",
+          "name": "Bottom Sheet",
+          "category": "Feedback",
+          "selector": "krn-bottom-sheet",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/feedback",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnLoadingOverlay",
+      "symbol": "KrnLoadingOverlay",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/progress.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnLoadingOverlay",
+      "canonicalSelector": "krn-loading-overlay",
+      "publicSymbols": ["KrnLoadingOverlay"],
+      "selectors": ["krn-loading-overlay"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "loading-overlay",
+          "name": "Loading Overlay",
+          "category": "Feedback",
+          "selector": "krn-loading-overlay",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/feedback",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnProgressBar",
+      "symbol": "KrnProgressBar",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/progress.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnProgressBar",
+      "canonicalSelector": "krn-progress-bar",
+      "publicSymbols": ["KrnProgressBar"],
+      "selectors": ["krn-progress-bar"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "progress-bar",
+          "name": "Progress Bar",
+          "category": "Feedback",
+          "selector": "krn-progress-bar",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/feedback",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnCircularProgress",
+      "symbol": "KrnCircularProgress",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/progress.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnCircularProgress",
+      "canonicalSelector": "krn-circular-progress",
+      "publicSymbols": ["KrnCircularProgress"],
+      "selectors": ["krn-circular-progress"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "circular-progress",
+          "name": "Circular Progress",
+          "category": "Feedback",
+          "selector": "krn-circular-progress",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/feedback",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnSpinner",
+      "symbol": "KrnSpinner",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/progress.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnSpinner",
+      "canonicalSelector": "krn-spinner",
+      "publicSymbols": ["KrnSpinner"],
+      "selectors": ["krn-spinner"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "spinner",
+          "name": "Spinner",
+          "category": "Feedback",
+          "selector": "krn-spinner",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/feedback",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnSkeleton",
+      "symbol": "KrnSkeleton",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/progress.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnSkeleton",
+      "canonicalSelector": "krn-skeleton",
+      "publicSymbols": ["KrnSkeleton"],
+      "selectors": ["krn-skeleton"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "skeleton",
+          "name": "Skeleton",
+          "category": "Feedback",
+          "selector": "krn-skeleton",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/feedback",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnEmptyState",
+      "symbol": "KrnEmptyState",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/states.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnEmptyState",
+      "canonicalSelector": "krn-empty-state",
+      "publicSymbols": ["KrnEmptyState"],
+      "selectors": ["krn-empty-state"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "empty-state",
+          "name": "Empty State",
+          "category": "Feedback",
+          "selector": "krn-empty-state",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/feedback",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnErrorState",
+      "symbol": "KrnErrorState",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/states.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnErrorState",
+      "canonicalSelector": "krn-error-state",
+      "publicSymbols": ["KrnErrorState"],
+      "selectors": ["krn-error-state"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "error-state",
+          "name": "Error State",
+          "category": "Feedback",
+          "selector": "krn-error-state",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/feedback",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnSuccessState",
+      "symbol": "KrnSuccessState",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/states.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnSuccessState",
+      "canonicalSelector": "krn-success-state",
+      "publicSymbols": ["KrnSuccessState"],
+      "selectors": ["krn-success-state"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "success-state",
+          "name": "Success State",
+          "category": "Feedback",
+          "selector": "krn-success-state",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/feedback",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnConfirmation",
+      "symbol": "KrnConfirmation",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/states.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnConfirmation",
+      "canonicalSelector": "krn-confirmation-pattern",
+      "publicSymbols": ["KrnConfirmation", "KrnConfirmationPattern"],
+      "selectors": ["krn-confirmation-pattern", "krn-confirmation"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "confirmation-pattern",
+          "name": "Confirmation Pattern",
+          "category": "Feedback",
+          "selector": "krn-confirmation-pattern",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/feedback",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": ["KrnConfirmationPattern"],
+        "selectors": ["krn-confirmation"],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnTooltipSurface",
+      "symbol": "KrnTooltipSurface",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": null,
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/hint-overlays.ts",
+      "visibility": "internal",
+      "role": "internal",
+      "reviewWith": "kit:KrnTooltip",
+      "lifecycle": null,
+      "canonicalPublicSymbol": null,
+      "canonicalSelector": "krn-tooltip-surface",
+      "publicSymbols": [],
+      "selectors": ["krn-tooltip-surface"],
+      "selectorDeprecations": [],
+      "catalog": [],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnFormField",
+      "symbol": "KrnFormField",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/form-field.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnFormField",
+      "canonicalSelector": "krn-form-field",
+      "publicSymbols": ["KrnFormField"],
+      "selectors": ["krn-form-field"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "form-field",
+          "name": "Form Field",
+          "category": "Forms",
+          "selector": "krn-form-field",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnLabel",
+      "symbol": "KrnLabel",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/form-field.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnLabel",
+      "canonicalSelector": "krn-label",
+      "publicSymbols": ["KrnLabel"],
+      "selectors": ["krn-label"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "label",
+          "name": "Label",
+          "category": "Forms",
+          "selector": "krn-label",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnHint",
+      "symbol": "KrnHint",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/form-field.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnHint",
+      "canonicalSelector": "krn-hint",
+      "publicSymbols": ["KrnHint"],
+      "selectors": ["krn-hint"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "hint",
+          "name": "Hint",
+          "category": "Forms",
+          "selector": "krn-hint",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnValidationMessage",
+      "symbol": "KrnValidationMessage",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/form-field.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnValidationMessage",
+      "canonicalSelector": "krn-validation-message",
+      "publicSymbols": ["KrnValidationMessage"],
+      "selectors": ["krn-validation-message"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "validation-message",
+          "name": "Validation Message",
+          "category": "Forms",
+          "selector": "krn-validation-message",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnTextInput",
+      "symbol": "KrnTextInput",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/text-inputs.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnTextInput",
+      "canonicalSelector": "krn-text-input",
+      "publicSymbols": ["KrnTextInput"],
+      "selectors": ["krn-text-input"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "text-input",
+          "name": "Text Input",
+          "category": "Forms",
+          "selector": "krn-text-input",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnTextarea",
+      "symbol": "KrnTextarea",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/text-inputs.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnTextarea",
+      "canonicalSelector": "krn-textarea",
+      "publicSymbols": ["KrnTextarea"],
+      "selectors": ["krn-textarea"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "textarea",
+          "name": "Textarea",
+          "category": "Forms",
+          "selector": "krn-textarea",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnPasswordInput",
+      "symbol": "KrnPasswordInput",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/text-inputs.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnPasswordInput",
+      "canonicalSelector": "krn-password-input",
+      "publicSymbols": ["KrnPasswordInput"],
+      "selectors": ["krn-password-input"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "password-input",
+          "name": "Password Input",
+          "category": "Forms",
+          "selector": "krn-password-input",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnSearchInput",
+      "symbol": "KrnSearchInput",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/text-inputs.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnSearchInput",
+      "canonicalSelector": "krn-search-input",
+      "publicSymbols": ["KrnSearchInput"],
+      "selectors": ["krn-search-input"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "search-input",
+          "name": "Search Input",
+          "category": "Forms",
+          "selector": "krn-search-input",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnNumberInput",
+      "symbol": "KrnNumberInput",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/text-inputs.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnNumberInput",
+      "canonicalSelector": "krn-number-input",
+      "publicSymbols": ["KrnNumberInput"],
+      "selectors": ["krn-number-input"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "number-input",
+          "name": "Number Input",
+          "category": "Forms",
+          "selector": "krn-number-input",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnCheckbox",
+      "symbol": "KrnCheckbox",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnCheckbox",
+      "canonicalSelector": "krn-checkbox",
+      "publicSymbols": ["KrnCheckbox"],
+      "selectors": ["krn-checkbox"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "checkbox",
+          "name": "Checkbox",
+          "category": "Forms",
+          "selector": "krn-checkbox",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnCheckboxGroup",
+      "symbol": "KrnCheckboxGroup",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnCheckboxGroup",
+      "canonicalSelector": "krn-checkbox-group",
+      "publicSymbols": ["KrnCheckboxGroup"],
+      "selectors": ["krn-checkbox-group"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "checkbox-group",
+          "name": "Checkbox Group",
+          "category": "Forms",
+          "selector": "krn-checkbox-group",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnRadio",
+      "symbol": "KrnRadio",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnRadio",
+      "canonicalSelector": "krn-radio",
+      "publicSymbols": ["KrnRadio"],
+      "selectors": ["krn-radio"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "radio",
+          "name": "Radio",
+          "category": "Forms",
+          "selector": "krn-radio",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnRadioGroup",
+      "symbol": "KrnRadioGroup",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnRadioGroup",
+      "canonicalSelector": "krn-radio-group",
+      "publicSymbols": ["KrnRadioGroup"],
+      "selectors": ["krn-radio-group"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "radio-group",
+          "name": "Radio Group",
+          "category": "Forms",
+          "selector": "krn-radio-group",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnSwitch",
+      "symbol": "KrnSwitch",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnSwitch",
+      "canonicalSelector": "krn-switch",
+      "publicSymbols": ["KrnSwitch"],
+      "selectors": ["krn-switch"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "switch",
+          "name": "Switch",
+          "category": "Forms",
+          "selector": "krn-switch",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnSelect",
+      "symbol": "KrnSelect",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnSelect",
+      "canonicalSelector": "krn-select",
+      "publicSymbols": ["KrnSelect"],
+      "selectors": ["krn-select"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "select",
+          "name": "Select",
+          "category": "Forms",
+          "selector": "krn-select",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/forms",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnNativeSelect",
+      "symbol": "KrnNativeSelect",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnNativeSelect",
+      "canonicalSelector": "krn-native-select",
+      "publicSymbols": ["KrnNativeSelect"],
+      "selectors": ["krn-native-select"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "native-select",
+          "name": "Native Select",
+          "category": "Forms",
+          "selector": "krn-native-select",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnMultiSelect",
+      "symbol": "KrnMultiSelect",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnMultiSelect",
+      "canonicalSelector": "krn-multi-select",
+      "publicSymbols": ["KrnMultiSelect"],
+      "selectors": ["krn-multi-select"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "multi-select",
+          "name": "Multi Select",
+          "category": "Forms",
+          "selector": "krn-multi-select",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/forms",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnCombobox",
+      "symbol": "KrnCombobox",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnCombobox",
+      "canonicalSelector": "krn-combobox",
+      "publicSymbols": ["KrnCombobox"],
+      "selectors": ["krn-combobox"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "combobox",
+          "name": "Combobox",
+          "category": "Forms",
+          "selector": "krn-combobox",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/forms",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnAutocomplete",
+      "symbol": "KrnAutocomplete",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnAutocomplete",
+      "canonicalSelector": "krn-autocomplete",
+      "publicSymbols": ["KrnAutocomplete"],
+      "selectors": ["krn-autocomplete"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "autocomplete",
+          "name": "Autocomplete",
+          "category": "Forms",
+          "selector": "krn-autocomplete",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/forms",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnSlider",
+      "symbol": "KrnSlider",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/range-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnSlider",
+      "canonicalSelector": "krn-slider",
+      "publicSymbols": ["KrnSlider"],
+      "selectors": ["krn-slider"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "slider",
+          "name": "Slider",
+          "category": "Forms",
+          "selector": "krn-slider",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnRangeSlider",
+      "symbol": "KrnRangeSlider",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/range-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnRangeSlider",
+      "canonicalSelector": "krn-range-slider",
+      "publicSymbols": ["KrnRangeSlider"],
+      "selectors": ["krn-range-slider"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "range-slider",
+          "name": "Range Slider",
+          "category": "Forms",
+          "selector": "krn-range-slider",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnSegmentedControl",
+      "symbol": "KrnSegmentedControl",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnSegmentedControl",
+      "canonicalSelector": "krn-segmented-control",
+      "publicSymbols": ["KrnSegmentedControl"],
+      "selectors": ["krn-segmented-control"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "segmented-control",
+          "name": "Segmented Control",
+          "category": "Forms",
+          "selector": "krn-segmented-control",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnDatePicker",
+      "symbol": "KrnDatePicker",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/date-time-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnDatePicker",
+      "canonicalSelector": "krn-date-picker",
+      "publicSymbols": ["KrnDatePicker"],
+      "selectors": ["krn-date-picker"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "date-picker",
+          "name": "Date Picker",
+          "category": "Forms",
+          "selector": "krn-date-picker",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/forms",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnDateRangePicker",
+      "symbol": "KrnDateRangePicker",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/date-time-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnDateRangePicker",
+      "canonicalSelector": "krn-date-range-picker",
+      "publicSymbols": ["KrnDateRangePicker"],
+      "selectors": ["krn-date-range-picker"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "date-range-picker",
+          "name": "Date Range Picker",
+          "category": "Forms",
+          "selector": "krn-date-range-picker",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/forms",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnTimePicker",
+      "symbol": "KrnTimePicker",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/date-time-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnTimePicker",
+      "canonicalSelector": "krn-time-picker",
+      "publicSymbols": ["KrnTimePicker"],
+      "selectors": ["krn-time-picker"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "time-picker",
+          "name": "Time Picker",
+          "category": "Forms",
+          "selector": "krn-time-picker",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/forms",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnColorPicker",
+      "symbol": "KrnColorPicker",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/date-time-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnColorPicker",
+      "canonicalSelector": "krn-color-picker",
+      "publicSymbols": ["KrnColorPicker"],
+      "selectors": ["krn-color-picker"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "color-picker",
+          "name": "Color Picker",
+          "category": "Forms",
+          "selector": "krn-color-picker",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/forms",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnFileUpload",
+      "symbol": "KrnFileUpload",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/upload-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnFileUpload",
+      "canonicalSelector": "krn-file-upload",
+      "publicSymbols": ["KrnFileUpload"],
+      "selectors": ["krn-file-upload"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "file-upload",
+          "name": "File Upload",
+          "category": "Forms",
+          "selector": "krn-file-upload",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnDropUpload",
+      "symbol": "KrnDropUpload",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/upload-controls.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnDropUpload",
+      "canonicalSelector": "krn-drag-drop-upload",
+      "publicSymbols": ["KrnDropUpload", "KrnDragDropUpload"],
+      "selectors": ["krn-drag-drop-upload", "krn-drop-upload"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "drag-drop-upload",
+          "name": "Drag Drop Upload",
+          "category": "Forms",
+          "selector": "krn-drag-drop-upload",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": ["KrnDragDropUpload"],
+        "selectors": ["krn-drop-upload"],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnOtpInput",
+      "symbol": "KrnOtpInput",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/otp-tags.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnOtpInput",
+      "canonicalSelector": "krn-verification-code",
+      "publicSymbols": ["KrnOtpInput", "KrnVerificationCode"],
+      "selectors": ["krn-verification-code", "krn-otp-input"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "verification-code",
+          "name": "Verification Code",
+          "category": "Forms",
+          "selector": "krn-verification-code",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": ["KrnVerificationCode"],
+        "selectors": ["krn-otp-input"],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnTagsInput",
+      "symbol": "KrnTagsInput",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/otp-tags.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnTagsInput",
+      "canonicalSelector": "krn-tags-input",
+      "publicSymbols": ["KrnTagsInput"],
+      "selectors": ["krn-tags-input"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "tags-input",
+          "name": "Tags Input",
+          "category": "Forms",
+          "selector": "krn-tags-input",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/forms",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnEditableComboboxSemantics",
+      "symbol": "KrnEditableComboboxSemantics",
+      "kind": "directive",
+      "entrypoint": "kit",
+      "importPath": null,
+      "family": "forms",
+      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
+      "visibility": "internal",
+      "role": "internal",
+      "reviewWith": "kit:KrnAutocomplete",
+      "lifecycle": null,
+      "canonicalPublicSymbol": null,
+      "canonicalSelector": "input[krnEditableComboboxSemantics]",
+      "publicSymbols": [],
+      "selectors": ["input[krnEditableComboboxSemantics]"],
+      "selectorDeprecations": [],
+      "catalog": [],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnAppShell",
+      "symbol": "KrnAppShell",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/app-shell.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnAppShell",
+      "canonicalSelector": "krn-app-shell",
+      "publicSymbols": ["KrnAppShell"],
+      "selectors": ["krn-app-shell"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "app-shell",
+          "name": "App Shell",
+          "category": "Layout",
+          "selector": "krn-app-shell",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/layout",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnHeader",
+      "symbol": "KrnHeader",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/app-shell.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnHeader",
+      "canonicalSelector": "krn-header",
+      "publicSymbols": ["KrnHeader"],
+      "selectors": ["krn-header"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "header",
+          "name": "Header",
+          "category": "Layout",
+          "selector": "krn-header",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/layout",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnSidebar",
+      "symbol": "KrnSidebar",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/app-shell.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnSidebar",
+      "canonicalSelector": "krn-sidebar",
+      "publicSymbols": ["KrnSidebar"],
+      "selectors": ["krn-sidebar"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "sidebar",
+          "name": "Sidebar",
+          "category": "Layout",
+          "selector": "krn-sidebar",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/layout",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnNavigationRail",
+      "symbol": "KrnNavigationRail",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/app-shell.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnNavigationRail",
+      "canonicalSelector": "krn-navigation-rail",
+      "publicSymbols": ["KrnNavigationRail"],
+      "selectors": ["krn-navigation-rail"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "navigation-rail",
+          "name": "Navigation Rail",
+          "category": "Layout",
+          "selector": "krn-navigation-rail",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/layout",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnContainer",
+      "symbol": "KrnContainer",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/container.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnContainer",
+      "canonicalSelector": "krn-container",
+      "publicSymbols": ["KrnContainer"],
+      "selectors": ["krn-container"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "container",
+          "name": "Container",
+          "category": "Layout",
+          "selector": "krn-container",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/layout",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnStack",
+      "symbol": "KrnStack",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/flex-layout.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnStack",
+      "canonicalSelector": "krn-stack",
+      "publicSymbols": ["KrnStack"],
+      "selectors": ["krn-stack"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "stack",
+          "name": "Stack",
+          "category": "Layout",
+          "selector": "krn-stack",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/layout",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnInline",
+      "symbol": "KrnInline",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/flex-layout.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnInline",
+      "canonicalSelector": "krn-inline",
+      "publicSymbols": ["KrnInline"],
+      "selectors": ["krn-inline"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "inline",
+          "name": "Inline",
+          "category": "Layout",
+          "selector": "krn-inline",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/layout",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnCluster",
+      "symbol": "KrnCluster",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/flex-layout.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnCluster",
+      "canonicalSelector": "krn-cluster",
+      "publicSymbols": ["KrnCluster"],
+      "selectors": ["krn-cluster"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "cluster",
+          "name": "Cluster",
+          "category": "Layout",
+          "selector": "krn-cluster",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/layout",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnGrid",
+      "symbol": "KrnGrid",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/grid.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnGrid",
+      "canonicalSelector": "krn-grid",
+      "publicSymbols": ["KrnGrid"],
+      "selectors": ["krn-grid"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "grid",
+          "name": "Grid",
+          "category": "Layout",
+          "selector": "krn-grid",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/layout",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnSplitLayout",
+      "symbol": "KrnSplitLayout",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/split-layout.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnSplitLayout",
+      "canonicalSelector": "krn-split-layout",
+      "publicSymbols": ["KrnSplitLayout"],
+      "selectors": ["krn-split-layout"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "split-layout",
+          "name": "Split Layout",
+          "category": "Layout",
+          "selector": "krn-split-layout",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/layout",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnCenter",
+      "symbol": "KrnCenter",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/container.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnCenter",
+      "canonicalSelector": "krn-center",
+      "publicSymbols": ["KrnCenter"],
+      "selectors": ["krn-center"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "center",
+          "name": "Center",
+          "category": "Layout",
+          "selector": "krn-center",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/layout",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnSpacer",
+      "symbol": "KrnSpacer",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/flex-layout.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnSpacer",
+      "canonicalSelector": "krn-spacer",
+      "publicSymbols": ["KrnSpacer"],
+      "selectors": ["krn-spacer"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "spacer",
+          "name": "Spacer",
+          "category": "Layout",
+          "selector": "krn-spacer",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/layout",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnDivider",
+      "symbol": "KrnDivider",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/media-layout.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnDivider",
+      "canonicalSelector": "krn-divider",
+      "publicSymbols": ["KrnDivider"],
+      "selectors": ["krn-divider"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "divider",
+          "name": "Divider",
+          "category": "Layout",
+          "selector": "krn-divider",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/layout",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnAspectRatio",
+      "symbol": "KrnAspectRatio",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/media-layout.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnAspectRatio",
+      "canonicalSelector": "krn-aspect-ratio",
+      "publicSymbols": ["KrnAspectRatio"],
+      "selectors": ["krn-aspect-ratio"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "aspect-ratio",
+          "name": "Aspect Ratio",
+          "category": "Layout",
+          "selector": "krn-aspect-ratio",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/layout",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnScrollArea",
+      "symbol": "KrnScrollArea",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/media-layout.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnScrollArea",
+      "canonicalSelector": "krn-scroll-area",
+      "publicSymbols": ["KrnScrollArea"],
+      "selectors": ["krn-scroll-area"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "scroll-area",
+          "name": "Scroll Area",
+          "category": "Layout",
+          "selector": "krn-scroll-area",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/layout",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnShow",
+      "symbol": "KrnShow",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/media-layout.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnShow",
+      "canonicalSelector": "krn-responsive-show-hide",
+      "publicSymbols": ["KrnShow", "KrnResponsiveShowHide"],
+      "selectors": ["krn-responsive-show-hide", "krn-show"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "responsive-show-hide",
+          "name": "Responsive Show Hide",
+          "category": "Layout",
+          "selector": "krn-responsive-show-hide",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/layout",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": ["KrnResponsiveShowHide"],
+        "selectors": ["krn-show"],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnResizablePanels",
+      "symbol": "KrnResizablePanels",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/resizable-panels.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "experimental",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnResizablePanels",
+      "canonicalSelector": "krn-resizable-panels",
+      "publicSymbols": ["KrnResizablePanels"],
+      "selectors": ["krn-resizable-panels"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "resizable-panels",
+          "name": "Resizable Panels",
+          "category": "Layout",
+          "selector": "krn-resizable-panels",
+          "variantOf": null,
+          "status": "experimental",
+          "owner": "kern/layout",
+          "evidenceProfile": "experimental-incubation"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnHide",
+      "symbol": "KrnHide",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/media-layout.ts",
+      "visibility": "public",
+      "role": "supporting",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnHide",
+      "canonicalSelector": "krn-hide",
+      "publicSymbols": ["KrnHide"],
+      "selectors": ["krn-hide"],
+      "selectorDeprecations": [],
+      "catalog": [],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnResizablePanel",
+      "symbol": "KrnResizablePanel",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/resizable-panels.ts",
+      "visibility": "public",
+      "role": "supporting",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "experimental",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnResizablePanel",
+      "canonicalSelector": "krn-resizable-panel",
+      "publicSymbols": ["KrnResizablePanel"],
+      "selectors": ["krn-resizable-panel"],
+      "selectorDeprecations": [],
+      "catalog": [],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnResizeHandle",
+      "symbol": "KrnResizeHandle",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "layout",
+      "source": "projects/kern/kit/src/lib/layout/resizable-panels.ts",
+      "visibility": "public",
+      "role": "supporting",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "experimental",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnResizeHandle",
+      "canonicalSelector": "krn-resize-handle",
+      "publicSymbols": ["KrnResizeHandle"],
+      "selectors": ["krn-resize-handle"],
+      "selectorDeprecations": [],
+      "catalog": [],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnBreadcrumbs",
+      "symbol": "KrnBreadcrumbs",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "navigation",
+      "source": "projects/kern/kit/src/lib/navigation/breadcrumbs.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnBreadcrumbs",
+      "canonicalSelector": "krn-breadcrumbs",
+      "publicSymbols": ["KrnBreadcrumbs"],
+      "selectors": ["krn-breadcrumbs"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "breadcrumbs",
+          "name": "Breadcrumbs",
+          "category": "Navigation",
+          "selector": "krn-breadcrumbs",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/navigation",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnTabs",
+      "symbol": "KrnTabs",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "navigation",
+      "source": "projects/kern/kit/src/lib/navigation/tabs.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnTabs",
+      "canonicalSelector": "krn-tabs",
+      "publicSymbols": ["KrnTabs", "KrnVerticalTabs"],
+      "selectors": ["krn-tabs", "krn-vertical-tabs"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "tabs",
+          "name": "Tabs",
+          "category": "Navigation",
+          "selector": "krn-tabs",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/navigation",
+          "evidenceProfile": "stable-release"
+        },
+        {
+          "id": "vertical-tabs",
+          "name": "Vertical Tabs",
+          "category": "Navigation",
+          "selector": "krn-vertical-tabs",
+          "variantOf": "tabs",
+          "status": "stable",
+          "owner": "kern/navigation",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": ["KrnVerticalTabs"],
+        "selectors": ["krn-vertical-tabs"],
+        "catalogIds": ["vertical-tabs"]
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnPagination",
+      "symbol": "KrnPagination",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "navigation",
+      "source": "projects/kern/kit/src/lib/navigation/pagination.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnPagination",
+      "canonicalSelector": "krn-pagination",
+      "publicSymbols": ["KrnPagination"],
+      "selectors": ["krn-pagination"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "pagination",
+          "name": "Pagination",
+          "category": "Navigation",
+          "selector": "krn-pagination",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/navigation",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnStepper",
+      "symbol": "KrnStepper",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "navigation",
+      "source": "projects/kern/kit/src/lib/navigation/stepper.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnStepper",
+      "canonicalSelector": "krn-stepper",
+      "publicSymbols": ["KrnStepper"],
+      "selectors": ["krn-stepper"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "stepper",
+          "name": "Stepper",
+          "category": "Navigation",
+          "selector": "krn-stepper",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/navigation",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnMenu",
+      "symbol": "KrnMenu",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "navigation",
+      "source": "projects/kern/kit/src/lib/navigation/menu.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnMenu",
+      "canonicalSelector": "krn-menu",
+      "publicSymbols": ["KrnMenu"],
+      "selectors": ["krn-menu"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "menu",
+          "name": "Menu",
+          "category": "Navigation",
+          "selector": "krn-menu",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/navigation",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnMenubar",
+      "symbol": "KrnMenubar",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "navigation",
+      "source": "projects/kern/kit/src/lib/navigation/menu.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnMenubar",
+      "canonicalSelector": "krn-menubar",
+      "publicSymbols": ["KrnMenubar"],
+      "selectors": ["krn-menubar"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "menubar",
+          "name": "Menubar",
+          "category": "Navigation",
+          "selector": "krn-menubar",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/navigation",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnContextMenu",
+      "symbol": "KrnContextMenu",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "navigation",
+      "source": "projects/kern/kit/src/lib/navigation/menu.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnContextMenu",
+      "canonicalSelector": "krn-context-menu",
+      "publicSymbols": ["KrnContextMenu"],
+      "selectors": ["krn-context-menu"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "context-menu",
+          "name": "Context Menu",
+          "category": "Navigation",
+          "selector": "krn-context-menu",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/navigation",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnTreeNavigation",
+      "symbol": "KrnTreeNavigation",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "navigation",
+      "source": "projects/kern/kit/src/lib/navigation/tree-navigation.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnTreeNavigation",
+      "canonicalSelector": "krn-tree-navigation",
+      "publicSymbols": ["KrnTreeNavigation"],
+      "selectors": ["krn-tree-navigation"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "tree-navigation",
+          "name": "Tree Navigation",
+          "category": "Navigation",
+          "selector": "krn-tree-navigation",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/navigation",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnBottomNavigation",
+      "symbol": "KrnBottomNavigation",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "navigation",
+      "source": "projects/kern/kit/src/lib/navigation/navigation-extras.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnBottomNavigation",
+      "canonicalSelector": "krn-bottom-navigation",
+      "publicSymbols": ["KrnBottomNavigation"],
+      "selectors": ["krn-bottom-navigation"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "bottom-navigation",
+          "name": "Bottom Navigation",
+          "category": "Navigation",
+          "selector": "krn-bottom-navigation",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/navigation",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnCommandPalette",
+      "symbol": "KrnCommandPalette",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "navigation",
+      "source": "projects/kern/kit/src/lib/navigation/command-palette.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnCommandPalette",
+      "canonicalSelector": "krn-command-palette",
+      "publicSymbols": ["KrnCommandPalette"],
+      "selectors": ["krn-command-palette"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "command-palette",
+          "name": "Command Palette",
+          "category": "Navigation",
+          "selector": "krn-command-palette",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/navigation",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnTableOfContents",
+      "symbol": "KrnTableOfContents",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "navigation",
+      "source": "projects/kern/kit/src/lib/navigation/navigation-extras.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnTableOfContents",
+      "canonicalSelector": "krn-table-of-contents",
+      "publicSymbols": ["KrnTableOfContents"],
+      "selectors": ["krn-table-of-contents"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "table-of-contents",
+          "name": "Table of Contents",
+          "category": "Navigation",
+          "selector": "krn-table-of-contents",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/navigation",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnBackButton",
+      "symbol": "KrnBackButton",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "navigation",
+      "source": "projects/kern/kit/src/lib/navigation/navigation-extras.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnBackButton",
+      "canonicalSelector": "krn-back-button",
+      "publicSymbols": ["KrnBackButton"],
+      "selectors": ["krn-back-button"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "back-button",
+          "name": "Back Button",
+          "category": "Navigation",
+          "selector": "krn-back-button",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/navigation",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnSkipLink",
+      "symbol": "KrnSkipLink",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "navigation",
+      "source": "projects/kern/kit/src/lib/navigation/navigation-extras.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnSkipLink",
+      "canonicalSelector": "krn-skip-link",
+      "publicSymbols": ["KrnSkipLink"],
+      "selectors": ["krn-skip-link"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "skip-link",
+          "name": "Skip Link",
+          "category": "Navigation",
+          "selector": "krn-skip-link",
+          "variantOf": null,
+          "status": "stable",
+          "owner": "kern/navigation",
+          "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnMenuTrigger",
+      "symbol": "KrnMenuTrigger",
+      "kind": "directive",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "navigation",
+      "source": "projects/kern/kit/src/lib/navigation/menu.ts",
+      "visibility": "public",
+      "role": "supporting",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "stable",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnMenuTrigger",
+      "canonicalSelector": "[krnMenuTrigger]",
+      "publicSymbols": ["KrnMenuTrigger"],
+      "selectors": ["[krnMenuTrigger]"],
+      "selectorDeprecations": [],
+      "catalog": [],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "addon-grid:KrnDataGrid",
+      "symbol": "KrnDataGrid",
+      "kind": "component",
+      "entrypoint": "addon-grid",
+      "importPath": "@kern-ui/angular/addon-grid",
+      "family": "data-grid",
+      "source": "projects/kern/addon-grid/src/lib/data-grid.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/addon-grid"
+      },
+      "canonicalPublicSymbol": "KrnDataGrid",
+      "canonicalSelector": "krn-data-grid",
+      "publicSymbols": ["KrnDataGrid", "KrnDataTable"],
+      "selectors": ["krn-data-grid", "krn-data-table"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "data-table",
+          "name": "Data Table",
+          "category": "Data display",
+          "selector": "krn-data-table",
+          "variantOf": "data-grid",
+          "status": "beta",
+          "owner": "kern/data-display",
+          "evidenceProfile": "beta-promotion"
+        },
+        {
+          "id": "data-grid",
+          "name": "Data Grid",
+          "category": "Data display",
+          "selector": "krn-data-grid",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/data-display",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": ["KrnDataTable"],
+        "selectors": ["krn-data-table"],
+        "catalogIds": ["data-table"]
+      }
+    },
+    {
+      "reviewUnit": "addon-charts:KrnLineChart",
+      "symbol": "KrnLineChart",
+      "kind": "component",
+      "entrypoint": "addon-charts",
+      "importPath": "@kern-ui/angular/addon-charts",
+      "family": "charts",
+      "source": "projects/kern/addon-charts/src/lib/charts/charts.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/addon-charts"
+      },
+      "canonicalPublicSymbol": "KrnLineChart",
+      "canonicalSelector": "krn-line-chart",
+      "publicSymbols": ["KrnLineChart"],
+      "selectors": ["krn-line-chart"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "line-chart",
+          "name": "Line Chart",
+          "category": "Data display",
+          "selector": "krn-line-chart",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/data-display",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "addon-charts:KrnBarChart",
+      "symbol": "KrnBarChart",
+      "kind": "component",
+      "entrypoint": "addon-charts",
+      "importPath": "@kern-ui/angular/addon-charts",
+      "family": "charts",
+      "source": "projects/kern/addon-charts/src/lib/charts/charts.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/addon-charts"
+      },
+      "canonicalPublicSymbol": "KrnBarChart",
+      "canonicalSelector": "krn-bar-chart",
+      "publicSymbols": ["KrnBarChart"],
+      "selectors": ["krn-bar-chart"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "bar-chart",
+          "name": "Bar Chart",
+          "category": "Data display",
+          "selector": "krn-bar-chart",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/data-display",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "addon-charts:KrnDonutChart",
+      "symbol": "KrnDonutChart",
+      "kind": "component",
+      "entrypoint": "addon-charts",
+      "importPath": "@kern-ui/angular/addon-charts",
+      "family": "charts",
+      "source": "projects/kern/addon-charts/src/lib/charts/charts.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/addon-charts"
+      },
+      "canonicalPublicSymbol": "KrnDonutChart",
+      "canonicalSelector": "krn-donut-chart",
+      "publicSymbols": ["KrnDonutChart"],
+      "selectors": ["krn-donut-chart"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "donut-chart",
+          "name": "Donut Chart",
+          "category": "Data display",
+          "selector": "krn-donut-chart",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/data-display",
+          "evidenceProfile": "beta-promotion"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "addon-charts:KrnChart",
+      "symbol": "KrnChart",
+      "kind": "component",
+      "entrypoint": "addon-charts",
+      "importPath": "@kern-ui/angular/addon-charts",
+      "family": "charts",
+      "source": "projects/kern/addon-charts/src/lib/charts/charts.ts",
+      "visibility": "public",
+      "role": "supporting",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/addon-charts"
+      },
+      "canonicalPublicSymbol": "KrnChart",
+      "canonicalSelector": "krn-chart",
+      "publicSymbols": ["KrnChart"],
+      "selectors": ["krn-chart"],
+      "selectorDeprecations": [],
+      "catalog": [],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "patterns:KrnUserMenu",
+      "symbol": "KrnUserMenu",
+      "kind": "component",
+      "entrypoint": "patterns",
+      "importPath": "@kern-ui/angular/patterns",
+      "family": "patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "recipe",
+        "owner": "kern/patterns"
+      },
+      "canonicalPublicSymbol": "KrnUserMenu",
+      "canonicalSelector": "krn-user-menu",
+      "publicSymbols": ["KrnUserMenu"],
+      "selectors": ["krn-user-menu"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "user-menu",
+          "name": "User Menu",
+          "category": "Patterns",
+          "selector": "krn-user-menu",
+          "variantOf": null,
+          "status": "recipe",
+          "owner": "kern/patterns",
+          "evidenceProfile": "recipe-validation"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "patterns:KrnNotificationCenter",
+      "symbol": "KrnNotificationCenter",
+      "kind": "component",
+      "entrypoint": "patterns",
+      "importPath": "@kern-ui/angular/patterns",
+      "family": "patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "recipe",
+        "owner": "kern/patterns"
+      },
+      "canonicalPublicSymbol": "KrnNotificationCenter",
+      "canonicalSelector": "krn-notification-center",
+      "publicSymbols": ["KrnNotificationCenter"],
+      "selectors": ["krn-notification-center"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "notification-center",
+          "name": "Notification Center",
+          "category": "Patterns",
+          "selector": "krn-notification-center",
+          "variantOf": null,
+          "status": "recipe",
+          "owner": "kern/patterns",
+          "evidenceProfile": "recipe-validation"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "patterns:KrnGlobalSearch",
+      "symbol": "KrnGlobalSearch",
+      "kind": "component",
+      "entrypoint": "patterns",
+      "importPath": "@kern-ui/angular/patterns",
+      "family": "patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "recipe",
+        "owner": "kern/patterns"
+      },
+      "canonicalPublicSymbol": "KrnGlobalSearch",
+      "canonicalSelector": "krn-global-search",
+      "publicSymbols": ["KrnGlobalSearch"],
+      "selectors": ["krn-global-search"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "global-search",
+          "name": "Global Search",
+          "category": "Patterns",
+          "selector": "krn-global-search",
+          "variantOf": null,
+          "status": "recipe",
+          "owner": "kern/patterns",
+          "evidenceProfile": "recipe-validation"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "patterns:KrnFilterBar",
+      "symbol": "KrnFilterBar",
+      "kind": "component",
+      "entrypoint": "patterns",
+      "importPath": "@kern-ui/angular/patterns",
+      "family": "patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "recipe",
+        "owner": "kern/patterns"
+      },
+      "canonicalPublicSymbol": "KrnFilterBar",
+      "canonicalSelector": "krn-filter-bar",
+      "publicSymbols": ["KrnFilterBar"],
+      "selectors": ["krn-filter-bar"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "filter-bar",
+          "name": "Filter Bar",
+          "category": "Patterns",
+          "selector": "krn-filter-bar",
+          "variantOf": null,
+          "status": "recipe",
+          "owner": "kern/patterns",
+          "evidenceProfile": "recipe-validation"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "patterns:KrnPageHeader",
+      "symbol": "KrnPageHeader",
+      "kind": "component",
+      "entrypoint": "patterns",
+      "importPath": "@kern-ui/angular/patterns",
+      "family": "patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "recipe",
+        "owner": "kern/patterns"
+      },
+      "canonicalPublicSymbol": "KrnPageHeader",
+      "canonicalSelector": "krn-page-header",
+      "publicSymbols": ["KrnPageHeader"],
+      "selectors": ["krn-page-header"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "page-header",
+          "name": "Page Header",
+          "category": "Patterns",
+          "selector": "krn-page-header",
+          "variantOf": null,
+          "status": "recipe",
+          "owner": "kern/patterns",
+          "evidenceProfile": "recipe-validation"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "patterns:KrnSettingsPanel",
+      "symbol": "KrnSettingsPanel",
+      "kind": "component",
+      "entrypoint": "patterns",
+      "importPath": "@kern-ui/angular/patterns",
+      "family": "patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "recipe",
+        "owner": "kern/patterns"
+      },
+      "canonicalPublicSymbol": "KrnSettingsPanel",
+      "canonicalSelector": "krn-settings-panel",
+      "publicSymbols": ["KrnSettingsPanel"],
+      "selectors": ["krn-settings-panel"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "settings-panel",
+          "name": "Settings Panel",
+          "category": "Patterns",
+          "selector": "krn-settings-panel",
+          "variantOf": null,
+          "status": "recipe",
+          "owner": "kern/patterns",
+          "evidenceProfile": "recipe-validation"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "patterns:KrnCrudToolbar",
+      "symbol": "KrnCrudToolbar",
+      "kind": "component",
+      "entrypoint": "patterns",
+      "importPath": "@kern-ui/angular/patterns",
+      "family": "patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "recipe",
+        "owner": "kern/patterns"
+      },
+      "canonicalPublicSymbol": "KrnCrudToolbar",
+      "canonicalSelector": "krn-crud-toolbar",
+      "publicSymbols": ["KrnCrudToolbar", "KrnBulkActions", "KrnCRUDToolbar"],
+      "selectors": ["krn-crud-toolbar", "krn-bulk-actions"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "crud-toolbar",
+          "name": "CRUD Toolbar",
+          "category": "Patterns",
+          "selector": "krn-crud-toolbar",
+          "variantOf": null,
+          "status": "recipe",
+          "owner": "kern/patterns",
+          "evidenceProfile": "recipe-validation"
+        },
+        {
+          "id": "bulk-actions",
+          "name": "Bulk Actions",
+          "category": "Patterns",
+          "selector": "krn-bulk-actions",
+          "variantOf": "crud-toolbar",
+          "status": "recipe",
+          "owner": "kern/patterns",
+          "evidenceProfile": "recipe-validation"
+        }
+      ],
+      "aliases": {
+        "symbols": ["KrnBulkActions", "KrnCRUDToolbar"],
+        "selectors": ["krn-bulk-actions"],
+        "catalogIds": ["bulk-actions"]
+      }
+    },
+    {
+      "reviewUnit": "patterns:KrnMasterDetailLayout",
+      "symbol": "KrnMasterDetailLayout",
+      "kind": "component",
+      "entrypoint": "patterns",
+      "importPath": "@kern-ui/angular/patterns",
+      "family": "patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "recipe",
+        "owner": "kern/patterns"
+      },
+      "canonicalPublicSymbol": "KrnMasterDetailLayout",
+      "canonicalSelector": "krn-master-detail-layout",
+      "publicSymbols": ["KrnMasterDetailLayout"],
+      "selectors": ["krn-master-detail-layout"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "master-detail-layout",
+          "name": "Master Detail Layout",
+          "category": "Patterns",
+          "selector": "krn-master-detail-layout",
+          "variantOf": null,
+          "status": "recipe",
+          "owner": "kern/patterns",
+          "evidenceProfile": "recipe-validation"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "patterns:KrnDashboardWidget",
+      "symbol": "KrnDashboardWidget",
+      "kind": "component",
+      "entrypoint": "patterns",
+      "importPath": "@kern-ui/angular/patterns",
+      "family": "patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "recipe",
+        "owner": "kern/patterns"
+      },
+      "canonicalPublicSymbol": "KrnDashboardWidget",
+      "canonicalSelector": "krn-dashboard-widget",
+      "publicSymbols": ["KrnDashboardWidget"],
+      "selectors": ["krn-dashboard-widget"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "dashboard-widget",
+          "name": "Dashboard Widget",
+          "category": "Patterns",
+          "selector": "krn-dashboard-widget",
+          "variantOf": null,
+          "status": "recipe",
+          "owner": "kern/patterns",
+          "evidenceProfile": "recipe-validation"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "patterns:KrnLoginForm",
+      "symbol": "KrnLoginForm",
+      "kind": "component",
+      "entrypoint": "patterns",
+      "importPath": "@kern-ui/angular/patterns",
+      "family": "patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/form-patterns.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "recipe",
+        "owner": "kern/patterns"
+      },
+      "canonicalPublicSymbol": "KrnLoginForm",
+      "canonicalSelector": "krn-login-form",
+      "publicSymbols": ["KrnLoginForm"],
+      "selectors": ["krn-login-form"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "login-form",
+          "name": "Login Form",
+          "category": "Patterns",
+          "selector": "krn-login-form",
+          "variantOf": null,
+          "status": "recipe",
+          "owner": "kern/patterns",
+          "evidenceProfile": "recipe-validation"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "patterns:KrnProfileForm",
+      "symbol": "KrnProfileForm",
+      "kind": "component",
+      "entrypoint": "patterns",
+      "importPath": "@kern-ui/angular/patterns",
+      "family": "patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/form-patterns.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "recipe",
+        "owner": "kern/patterns"
+      },
+      "canonicalPublicSymbol": "KrnProfileForm",
+      "canonicalSelector": "krn-profile-form",
+      "publicSymbols": ["KrnProfileForm"],
+      "selectors": ["krn-profile-form"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "profile-form",
+          "name": "Profile Form",
+          "category": "Patterns",
+          "selector": "krn-profile-form",
+          "variantOf": null,
+          "status": "recipe",
+          "owner": "kern/patterns",
+          "evidenceProfile": "recipe-validation"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "patterns:KrnMultiStepForm",
+      "symbol": "KrnMultiStepForm",
+      "kind": "component",
+      "entrypoint": "patterns",
+      "importPath": "@kern-ui/angular/patterns",
+      "family": "patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/form-patterns.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "recipe",
+        "owner": "kern/patterns"
+      },
+      "canonicalPublicSymbol": "KrnMultiStepForm",
+      "canonicalSelector": "krn-multi-step-form",
+      "publicSymbols": ["KrnMultiStepForm"],
+      "selectors": ["krn-multi-step-form"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "multi-step-form",
+          "name": "Multi Step Form",
+          "category": "Patterns",
+          "selector": "krn-multi-step-form",
+          "variantOf": null,
+          "status": "recipe",
+          "owner": "kern/patterns",
+          "evidenceProfile": "recipe-validation"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "patterns:KrnMobileNavigation",
+      "symbol": "KrnMobileNavigation",
+      "kind": "component",
+      "entrypoint": "patterns",
+      "importPath": "@kern-ui/angular/patterns",
+      "family": "patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "recipe",
+        "owner": "kern/patterns"
+      },
+      "canonicalPublicSymbol": "KrnMobileNavigation",
+      "canonicalSelector": "krn-mobile-navigation",
+      "publicSymbols": ["KrnMobileNavigation"],
+      "selectors": ["krn-mobile-navigation"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "mobile-navigation",
+          "name": "Mobile Navigation",
+          "category": "Patterns",
+          "selector": "krn-mobile-navigation",
+          "variantOf": null,
+          "status": "recipe",
+          "owner": "kern/patterns",
+          "evidenceProfile": "recipe-validation"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "patterns:KrnResponsiveApplicationShell",
+      "symbol": "KrnResponsiveApplicationShell",
+      "kind": "component",
+      "entrypoint": "patterns",
+      "importPath": "@kern-ui/angular/patterns",
+      "family": "patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "recipe",
+        "owner": "kern/patterns"
+      },
+      "canonicalPublicSymbol": "KrnResponsiveApplicationShell",
+      "canonicalSelector": "krn-responsive-application-shell",
+      "publicSymbols": ["KrnResponsiveApplicationShell"],
+      "selectors": ["krn-responsive-application-shell"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "responsive-application-shell",
+          "name": "Responsive Application Shell",
+          "category": "Patterns",
+          "selector": "krn-responsive-application-shell",
+          "variantOf": null,
+          "status": "recipe",
+          "owner": "kern/patterns",
+          "evidenceProfile": "recipe-validation"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    }
+  ]
+}

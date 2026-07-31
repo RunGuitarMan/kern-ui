@@ -57,7 +57,11 @@ void bootstrapApplication(KernTooltipAgentExample);
 | `krnTooltip`          | input | `string`                                    | no       | `''`      | Human-readable copy for the text state or control.                 |
 | `krnTooltipShowDelay` | input | `number`                                    | no       | `400`     | Controls whether the component applies the show delay behavior.    |
 | `krnTooltipHideDelay` | input | `number`                                    | no       | `80`      | Controls whether the component applies the hide delay behavior.    |
-| `krnTooltipPosition`  | input | `"above" \| "below" \| "before" \| "after"` | no       | `'above'` | Logical placement of the component relative to its owning surface. |
+| `krnTooltipPosition`  | input | `"above" \| "after" \| "before" \| "below"` | no       | `'above'` | Logical placement of the component relative to its owning surface. |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 

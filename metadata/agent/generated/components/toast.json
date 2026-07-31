@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-toast",
   "selectors": ["krn-toast", "krn-toast-viewport", "krn-snackbar"],
+  "selectorDeprecations": [],
   "symbol": "KrnToast",
   "canonicalSymbol": "KrnToastViewport",
   "canonicalId": "toast",

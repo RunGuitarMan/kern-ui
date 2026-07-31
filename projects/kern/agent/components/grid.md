@@ -51,11 +51,15 @@ void bootstrapApplication(KernGridAgentExample);
 
 | Name             | Kind  | Type                 | Required | Default     | Description                                                           |
 | ---------------- | ----- | -------------------- | -------- | ----------- | --------------------------------------------------------------------- |
-| `columns`        | input | `number \| "auto"`   | no       | `'auto'`    | Typed column definitions with stable keys.                            |
+| `columns`        | input | `"auto" \| number`   | no       | `'auto'`    | Typed column definitions with stable keys.                            |
 | `minColumnWidth` | input | `KrnLayoutSpace`     | no       | `'16rem'`   | Upper or lower bound applied to the column width value.               |
 | `gap`            | input | `KrnLayoutSpace`     | no       | `'4'`       | Logical spacing inserted between adjacent layout children.            |
 | `align`          | input | `KrnLayoutAlignment` | no       | `'stretch'` | Logical cross-axis alignment applied to children by the layout.       |
 | `responsive`     | input | `boolean`            | no       | `true`      | Enables the component’s documented container-responsive presentation. |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 

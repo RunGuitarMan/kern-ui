@@ -55,7 +55,11 @@ void bootstrapApplication(KernStatAgentExample);
 | `label`  | input | `string`                   | yes      | `required` | Visible text that names the control or data value.                                  |
 | `value`  | input | `string`                   | yes      | `required` | Controlled component value.                                                         |
 | `detail` | input | `string`                   | no       | `''`       | Supporting detail text displayed with the primary content.                          |
-| `trend`  | input | `"flat" \| "up" \| "down"` | no       | `'flat'`   | Direction of change communicated by the statistic in addition to its numeric value. |
+| `trend`  | input | `"down" \| "flat" \| "up"` | no       | `'flat'`   | Direction of change communicated by the statistic in addition to its numeric value. |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 

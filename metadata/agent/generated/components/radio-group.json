@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-radio-group",
   "selectors": ["krn-radio-group"],
+  "selectorDeprecations": [],
   "symbol": "KrnRadioGroup",
   "canonicalSymbol": "KrnRadioGroup",
   "canonicalId": "radio-group",
@@ -75,6 +76,36 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabelledBy",
+      "property": "ariaLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that provide the accessible name and take precedence over ariaLabel.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaDescribedBy",
+      "property": "ariaDescribedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids composed with Form Field hints and validation descriptions.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "name",
       "property": "customName",
       "kind": "input",
@@ -92,6 +123,16 @@
       "required": false,
       "defaultValue": "'vertical'",
       "description": "Defines the logical axis used by layout and keyboard navigation.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "value",
+      "property": "value",
+      "kind": "input",
+      "type": "string | null | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controlled component value.",
       "descriptionSource": "inferred"
     },
     {
@@ -218,8 +259,12 @@
     "KrnRadioGroup",
     "id",
     "label",
+    "ariaLabel",
+    "ariaLabelledBy",
+    "ariaDescribedBy",
     "name",
     "orientation",
+    "value",
     "disabled",
     "readonly",
     "required",
@@ -353,6 +398,19 @@
         "binding": {
           "kind": "input",
           "publicName": "required",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "value",
+        "label": "Value",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Controlled component value.",
+        "binding": {
+          "kind": "input",
+          "publicName": "value",
           "syntax": "property"
         }
       }
@@ -516,12 +574,48 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 9,
-      "controlled": 7,
-      "excluded": 2,
+      "publicInputsAndModels": 13,
+      "controlled": 8,
+      "excluded": 5,
       "unclassified": 0
     },
     "exclusions": [
+      {
+        "componentId": "radio-group",
+        "publicName": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#radio-group"
+        }
+      },
+      {
+        "componentId": "radio-group",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#radio-group"
+        }
+      },
+      {
+        "componentId": "radio-group",
+        "publicName": "ariaLabelledBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#radio-group"
+        }
+      },
       {
         "componentId": "radio-group",
         "publicName": "describedBy",

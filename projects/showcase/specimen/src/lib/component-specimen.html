@@ -234,7 +234,7 @@
                 <krn-badge tone="brand">Design</krn-badge>
                 <krn-badge tone="info">Engineering</krn-badge>
                 <krn-badge tone="success">Released</krn-badge>
-                <krn-button size="sm">Add owner</krn-button>
+                <button krnButton size="sm">Add owner</button>
               </krn-inline>
             }
             @case ('cluster') {
@@ -248,8 +248,8 @@
               >
                 <strong>12 selected records</strong>
                 <krn-cluster gap="2">
-                  <krn-button size="sm" variant="outline" tone="neutral">Export</krn-button>
-                  <krn-button size="sm" tone="danger">Archive</krn-button>
+                  <button krnButton size="sm" variant="outline" tone="neutral">Export</button>
+                  <button krnButton size="sm" tone="danger">Archive</button>
                 </krn-cluster>
               </krn-cluster>
             }
@@ -300,17 +300,17 @@
                   Intrinsic centering keeps a small message visually anchored without stretching its
                   children.
                 </p>
-                <krn-button>Create workspace</krn-button>
+                <button krnButton>Create workspace</button>
               </krn-center>
             }
             @case ('spacer') {
               <div class="spacer-demo">
-                <krn-button variant="outline" tone="neutral">Cancel</krn-button>
+                <button krnButton variant="outline" tone="neutral">Cancel</button>
                 <krn-spacer
                   [axis]="stringArgument('axis', 'horizontal')"
                   [size]="stringArgument('size', '12')"
                 />
-                <krn-button>Save changes</krn-button>
+                <button krnButton>Save changes</button>
                 <span class="spacer-measure">3rem flexible separation</span>
               </div>
             }
@@ -456,62 +456,75 @@
           @switch (item().id) {
             @case ('button') {
               <div class="action-gallery">
-                <krn-button
+                <button
+                  krnButton
                   [variant]="stringArgument('variant', 'solid')"
                   [tone]="stringArgument('tone', 'brand')"
                   [size]="stringArgument('size', 'md')"
                   [loading]="booleanArgument('loading')"
-                  [disabled]="booleanArgument('disabled')"
-                  [pressed]="booleanArgument('pressed')"
-                  [type]="stringArgument('type', 'button')"
-                  [value]="stringArgument('value', '')"
-                  >Publish changes</krn-button
                 >
-                <krn-button variant="outline" tone="neutral">Preview</krn-button>
-                <krn-button variant="ghost" tone="danger">Delete</krn-button>
-                <krn-button loading>Publishing</krn-button>
-                <krn-button disabled>Unavailable</krn-button>
+                  Publish changes
+                </button>
+                <button krnButton variant="outline" tone="neutral">Preview</button>
+                <button krnButton variant="ghost" tone="danger">Delete</button>
+                <button krnButton loading>Publishing</button>
+                <button krnButton disabled>Unavailable</button>
               </div>
             }
             @case ('icon-button') {
               <div class="action-gallery icon-gallery">
-                <krn-icon-button
-                  ariaLabel="Create workspace"
+                <button
+                  krnIconButton
+                  type="button"
+                  aria-label="Create workspace"
                   [variant]="stringArgument('variant', 'ghost')"
                   [tone]="stringArgument('tone', 'neutral')"
                   [size]="stringArgument('size', 'md')"
                   [loading]="booleanArgument('loading')"
                   [disabled]="booleanArgument('disabled')"
-                  [pressed]="booleanArgument('pressed')"
-                  [type]="stringArgument('type', 'button')"
-                  >＋</krn-icon-button
                 >
-                <krn-icon-button ariaLabel="Duplicate workspace">⧉</krn-icon-button>
-                <krn-icon-button ariaLabel="More actions">•••</krn-icon-button>
-                <span>Each glyph keeps a programmatic name and 44px target.</span>
+                  ＋
+                </button>
+                <button krnIconButton type="button" aria-label="Duplicate workspace">⧉</button>
+                <button krnIconButton type="button" aria-label="More actions">•••</button>
+                <span>
+                  Each glyph keeps a programmatic name and a square target; coarse pointers expand
+                  it to 44px.
+                </span>
               </div>
             }
             @case ('button-group') {
-              <krn-button-group
-                ariaLabel="Text alignment"
+              <div
+                krnButtonGroup
+                aria-label="Review actions"
                 [orientation]="stringArgument('orientation', 'horizontal')"
+                [connected]="booleanArgument('connected')"
               >
-                <krn-button size="sm" variant="outline" tone="neutral" ariaLabel="Align start"
-                  >⇤</krn-button
+                <button krnButton type="button" size="sm" variant="outline" tone="neutral">
+                  Request changes
+                </button>
+                <button krnButton type="button" size="sm">Approve</button>
+                <button
+                  krnIconButton
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  tone="neutral"
+                  aria-label="More review actions"
                 >
-                <krn-button size="sm" variant="outline" tone="neutral" ariaLabel="Align center"
-                  >↔</krn-button
-                >
-                <krn-button size="sm" variant="outline" tone="neutral" ariaLabel="Align end"
-                  >⇥</krn-button
-                >
-              </krn-button-group>
+                  •••
+                </button>
+              </div>
             }
             @case ('split-button') {
               <krn-split-button
                 [(open)]="actionMenuOpen"
+                [menuAlign]="stringArgument('menuAlign', 'end')"
+                [closeOnSelection]="booleanArgument('closeOnSelection', true)"
                 [disabled]="booleanArgument('disabled', false)"
                 [loading]="booleanArgument('loading', false)"
+                [matchTriggerWidth]="booleanArgument('matchTriggerWidth', false)"
+                [menuOffset]="numberArgument('menuOffset', 8)"
                 [size]="stringArgument('size', 'md')"
                 [tone]="stringArgument('tone', 'brand')"
                 [variant]="stringArgument('variant', 'solid')"
@@ -525,74 +538,96 @@
             @case ('floating-action-button') {
               <div class="fab-stage">
                 <p>The primary creation action remains anchored above transient content.</p>
-                <krn-floating-action-button
-                  ariaLabel="Create workspace"
+                <button
+                  krnFab
+                  type="button"
                   [variant]="stringArgument('variant', 'solid')"
                   [tone]="stringArgument('tone', 'brand')"
                   [size]="stringArgument('size', 'lg')"
                   [extended]="booleanArgument('extended', true)"
                   [loading]="booleanArgument('loading')"
                   [disabled]="booleanArgument('disabled')"
-                  >＋ <span>Create workspace</span></krn-floating-action-button
                 >
+                  <span krnFabIcon>＋</span>
+                  Create workspace
+                </button>
               </div>
             }
             @case ('toggle-button') {
               <div class="action-gallery">
-                <krn-toggle-button
+                <button
+                  krnToggleButton
                   [(pressed)]="togglePressed"
                   [disabled]="booleanArgument('disabled')"
+                  [pressedTone]="stringArgument('pressedTone', 'brand')"
+                  [pressedVariant]="stringArgument('pressedVariant', 'soft')"
                   [size]="stringArgument('size', 'md')"
+                  [unpressedTone]="stringArgument('unpressedTone', 'neutral')"
+                  [unpressedVariant]="stringArgument('unpressedVariant', 'ghost')"
                   [value]="stringArgument('value', 'watch')"
-                  >Watch changes</krn-toggle-button
                 >
-                <krn-toggle-button value="pin" [disabled]="true"
-                  >Pinned by policy</krn-toggle-button
-                >
+                  Watch changes
+                </button>
+                <button krnToggleButton value="pin" [disabled]="true">Pinned by policy</button>
               </div>
             }
             @case ('toggle-group') {
-              <krn-toggle-group
-                ariaLabel="View mode"
+              <div
+                krnToggleGroup
+                aria-label="View mode"
                 [multiple]="booleanArgument('multiple')"
                 [disabled]="booleanArgument('disabled', false)"
                 [orientation]="stringArgument('orientation', 'horizontal')"
+                [(values)]="toggleValues"
               >
-                <krn-toggle-button value="list">List</krn-toggle-button>
-                <krn-toggle-button value="board">Board</krn-toggle-button>
-                <krn-toggle-button value="timeline">Timeline</krn-toggle-button>
-              </krn-toggle-group>
+                <button krnToggleButton value="list">List</button>
+                <button krnToggleButton value="board">Board</button>
+                <button krnToggleButton value="timeline">Timeline</button>
+              </div>
             }
             @case ('copy-button') {
               <div class="copy-demo">
                 <code>npm i &#64;kern-ui/angular</code>
-                <krn-copy-button
-                  [disabled]="booleanArgument('disabled')"
-                  [size]="stringArgument('size', 'md')"
-                  [value]="stringArgument('value', 'npm i @kern-ui/angular')"
-                  >Copy install command</krn-copy-button
-                >
+                @for (fixtureKey of [copyFixtureKey()]; track fixtureKey) {
+                  <krn-copy-button
+                    #copyButtonTarget
+                    [disabled]="booleanArgument('disabled')"
+                    [feedbackDuration]="numberArgument('feedbackDuration', 1800)"
+                    [size]="stringArgument('size', 'md')"
+                    [tone]="stringArgument('tone', 'neutral')"
+                    [value]="stringArgument('value', 'npm i @kern-ui/angular')"
+                    [variant]="stringArgument('variant', 'outline')"
+                    >Copy install command</krn-copy-button
+                  >
+                }
               </div>
             }
             @case ('link') {
               <div class="link-demo">
                 <p>Links move between locations; buttons perform actions in the current context.</p>
-                <krn-link
-                  [disabled]="booleanArgument('disabled')"
-                  [download]="stringArgument('download', '')"
-                  [href]="stringArgument('href', '/foundations')"
-                  [rel]="stringArgument('rel', '')"
-                  [target]="stringArgument('target', '_self')"
-                  >Read the foundations <span aria-hidden="true">↗</span></krn-link
+                <a
+                  krnLink
+                  [attr.href]="
+                    booleanArgument('externalDestination')
+                      ? 'https://example.com/foundations'
+                      : '/foundations'
+                  "
+                  [attr.rel]="booleanArgument('externalDestination') ? 'noopener noreferrer' : null"
+                  [attr.target]="booleanArgument('externalDestination') ? '_blank' : null"
+                  >Read the foundations <span aria-hidden="true">↗</span></a
                 >
-                <krn-link href="/changelog" target="_self">View release notes</krn-link>
+                <a krnLink href="/changelog">View release notes</a>
               </div>
             }
             @case ('dropdown-button') {
               <krn-dropdown-button
                 [(open)]="actionMenuOpen"
+                [menuAlign]="stringArgument('menuAlign', 'end')"
+                [closeOnSelection]="booleanArgument('closeOnSelection', true)"
                 [disabled]="booleanArgument('disabled', false)"
                 [loading]="booleanArgument('loading', false)"
+                [matchTriggerWidth]="booleanArgument('matchTriggerWidth', false)"
+                [menuOffset]="numberArgument('menuOffset', 8)"
                 [size]="stringArgument('size', 'md')"
                 [tone]="stringArgument('tone', 'brand')"
                 [variant]="stringArgument('variant', 'solid')"
@@ -618,21 +653,18 @@
                 <form class="form-surface stress-form" aria-label="Enterprise form stress fixture">
                   @for (field of stressFormFields; track field.id) {
                     <krn-form-field
-                      [state]="stringArgument('state', 'default')"
                       [label]="stringArgumentOverride('label', field.label)"
-                      [disabled]="booleanArgument('disabled', false)"
                       [error]="stringArgument('error', '')"
                       [hint]="stringArgument('hint', 'Required enterprise value.')"
-                      [id]="stringArgument('id', '')"
                       [optionalText]="stringArgument('optionalText', '')"
-                      [readonly]="booleanArgument('readonly', false)"
-                      [required]="booleanArgument('required', true)"
                     >
                       <krn-text-input
                         [id]="field.id"
                         [placeholder]="field.placeholder"
                         [minLength]="3"
-                        required
+                        [disabled]="booleanArgument('disabled', false)"
+                        [readonly]="booleanArgument('readonly', false)"
+                        [required]="booleanArgument('required', true)"
                       />
                     </krn-form-field>
                   }
@@ -642,19 +674,16 @@
                   <krn-form-field
                     [label]="stringArgumentOverride('label', 'Workspace name')"
                     [hint]="stringArgument('hint', 'Visible to every member.')"
-                    [error]="workspaceNameError()"
-                    [state]="stringArgument('state', 'default')"
-                    [disabled]="booleanArgument('disabled', false)"
-                    [id]="stringArgument('id', '')"
+                    [error]="formFieldError()"
                     [optionalText]="stringArgument('optionalText', '')"
-                    [readonly]="booleanArgument('readonly', false)"
-                    [required]="booleanArgument('required', true)"
                   >
                     <krn-text-input
+                      [id]="stringArgument('id', '')"
+                      [formControl]="formFieldControl"
                       placeholder="Northstar"
-                      [invalid]="!!workspaceNameError()"
                       [minLength]="3"
-                      required
+                      [readonly]="booleanArgument('readonly', false)"
+                      [required]="booleanArgument('required', true)"
                       (valueChange)="workspaceName.set($event); workspaceNameTouched.set(true)"
                     />
                   </krn-form-field>
@@ -714,6 +743,7 @@
                     [maxLength]="numberArgument('maxLength', 100)"
                     [minLength]="numberArgument('minLength', 0)"
                     [spellcheck]="booleanArgument('spellcheck', true)"
+                    [value]="stringArgument('value', '')"
                 /></krn-form-field>
               </div>
             }
@@ -733,6 +763,9 @@
                     [invalid]="booleanArgument('invalid')"
                     [autocomplete]="stringArgument('autocomplete', '')"
                     [id]="stringArgument('id', '')"
+                    [minLength]="numberArgument('minLength', 0)"
+                    [spellcheck]="booleanArgument('spellcheck', true)"
+                    [value]="stringArgument('value', '')"
                 /></krn-form-field>
               </div>
             }
@@ -749,6 +782,9 @@
                     [showText]="stringArgumentOverride('showText', translations.forms.show)"
                     [autocomplete]="stringArgument('autocomplete', 'current-password')"
                     [id]="stringArgument('id', '')"
+                    [maxLength]="numberArgument('maxLength', 100)"
+                    [minLength]="numberArgument('minLength', 0)"
+                    [value]="stringArgument('value', '')"
                 /></krn-form-field>
               </div>
             }
@@ -761,7 +797,13 @@
                   [readonly]="booleanArgument('readOnly')"
                   [invalid]="booleanArgument('invalid')"
                   [autocomplete]="stringArgument('autocomplete', 'off')"
+                  [enterKeyHint]="stringArgument('enterKeyHint', 'search')"
                   [id]="stringArgument('id', '')"
+                  [maxLength]="numberArgument('maxLength', 100)"
+                  [minLength]="numberArgument('minLength', 0)"
+                  [required]="booleanArgument('required', false)"
+                  [spellcheck]="booleanArgument('spellcheck', true)"
+                  [value]="stringArgument('value', '')"
                 />
               </div>
             }
@@ -778,7 +820,9 @@
                     [readonly]="booleanArgument('readOnly')"
                     [required]="booleanArgument('required')"
                     [invalid]="booleanArgument('invalid')"
+                    [autocomplete]="stringArgument('autocomplete', 'off')"
                     [id]="stringArgument('id', '')"
+                    [inputMode]="stringArgument('inputMode', 'decimal')"
                     [placeholder]="stringArgument('placeholder', '')"
                 /></krn-form-field>
               </div>
@@ -796,7 +840,9 @@
                   [description]="
                     stringArgument('description', 'Receive a summary every Monday at 09:00.')
                   "
+                  [checked]="booleanArgument('checked', false)"
                   [id]="stringArgument('id', '')"
+                  [tabindex]="numberArgument('tabindex', 0)"
                   [value]="stringArgument('value', 'Example value')"
                   >Weekly operations report</krn-checkbox
                 >
@@ -827,7 +873,10 @@
                   [disabled]="booleanArgument('disabled')"
                   [readonly]="booleanArgument('readOnly')"
                   ><krn-radio
+                    [checked]="booleanArgument('checked', false)"
                     [description]="stringArgument('description', 'Flexible, billed each month')"
+                    [id]="stringArgument('id', '')"
+                    [tabindex]="numberArgument('tabindex', 0)"
                     [value]="stringArgument('value', 'monthly')"
                     >Monthly</krn-radio
                   ><krn-radio value="annual" description="Save 18% with one invoice"
@@ -846,6 +895,7 @@
                   [invalid]="booleanArgument('invalid', false)"
                   [readonly]="booleanArgument('readonly', false)"
                   [required]="booleanArgument('required', false)"
+                  [value]="stringArgument('value', '')"
                   ><krn-radio value="private">Private</krn-radio
                   ><krn-radio value="team">Team</krn-radio
                   ><krn-radio value="public">Public</krn-radio></krn-radio-group
@@ -867,7 +917,9 @@
                       'Members will authenticate through your identity provider.'
                     )
                   "
+                  [checked]="booleanArgument('checked', false)"
                   [id]="stringArgument('id', '')"
+                  [tabindex]="numberArgument('tabindex', 0)"
                   >Require SSO for administrators</krn-switch
                 >
               </div>
@@ -903,6 +955,7 @@
                       )
                     "
                     [id]="stringArgument('id', '')"
+                    [tabindex]="numberArgument('tabindex', 0)"
                 /></krn-form-field>
               </div>
             }
@@ -922,6 +975,7 @@
                     [required]="booleanArgument('required')"
                     [invalid]="booleanArgument('invalid')"
                     [id]="stringArgument('id', '')"
+                    [tabindex]="numberArgument('tabindex', 0)"
                 /></krn-form-field>
               </div>
             }
@@ -957,6 +1011,7 @@
                     "
                     [id]="stringArgument('id', '')"
                     [maxVisible]="numberArgument('maxVisible', 2)"
+                    [tabindex]="numberArgument('tabindex', 0)"
                 /></krn-form-field>
               </div>
             }
@@ -992,8 +1047,11 @@
                         translations.forms.loadingOptions ?? 'Loading options…'
                       )
                     "
+                    [allowCustomValue]="booleanArgument('allowCustomValue', false)"
                     [filterLocally]="booleanArgument('filterLocally', true)"
                     [id]="stringArgument('id', '')"
+                    [tabindex]="numberArgument('tabindex', 0)"
+                    [value]="stringArgument('value', '')"
                 /></krn-form-field>
               </div>
             }
@@ -1029,8 +1087,11 @@
                         translations.forms.loadingOptions ?? 'Loading options…'
                       )
                     "
+                    [allowCustomValue]="booleanArgument('allowCustomValue', false)"
                     [filterLocally]="booleanArgument('filterLocally', true)"
                     [id]="stringArgument('id', '')"
+                    [tabindex]="numberArgument('tabindex', 0)"
+                    [value]="stringArgument('value', '')"
                 /></krn-form-field>
               </div>
             }
@@ -1046,6 +1107,8 @@
                   [invalid]="booleanArgument('invalid')"
                   [id]="stringArgument('id', '')"
                   [label]="stringArgument('label', 'Seat allocation')"
+                  [tabindex]="numberArgument('tabindex', 0)"
+                  [value]="numberArgument('value', 0)"
                 />
               </div>
             }
@@ -1062,6 +1125,7 @@
                   [invalid]="booleanArgument('invalid')"
                   [id]="stringArgument('id', '')"
                   [label]="stringArgument('label', 'Usage range')"
+                  [tabindex]="numberArgument('tabindex', 0)"
                 />
               </div>
             }
@@ -1077,6 +1141,8 @@
                   [required]="booleanArgument('required')"
                   [invalid]="booleanArgument('invalid')"
                   [id]="stringArgument('id', '')"
+                  [orientation]="stringArgument('orientation', 'horizontal')"
+                  [tabindex]="numberArgument('tabindex', 0)"
                 />
               </div>
             }
@@ -1093,7 +1159,10 @@
                     [required]="booleanArgument('required')"
                     [invalid]="booleanArgument('invalid')"
                     [id]="stringArgument('id', '')"
+                    [open]="booleanArgument('open', false)"
+                    [tabindex]="numberArgument('tabindex', 0)"
                     [today]="stringArgument('today', '2026-07-30')"
+                    [value]="stringArgument('value', '')"
                 /></krn-form-field>
               </div>
             }
@@ -1111,6 +1180,8 @@
                     [id]="stringArgument('id', '')"
                     [max]="stringArgument('max', '')"
                     [min]="stringArgument('min', '')"
+                    [open]="booleanArgument('open', false)"
+                    [tabindex]="numberArgument('tabindex', 0)"
                     [today]="stringArgument('today', '2026-07-30')"
                     [weekStartsOn]="numberArgument('weekStartsOn', 0)"
                 /></krn-form-field>
@@ -1129,6 +1200,9 @@
                     [required]="booleanArgument('required')"
                     [invalid]="booleanArgument('invalid')"
                     [id]="stringArgument('id', '')"
+                    [open]="booleanArgument('open', false)"
+                    [tabindex]="numberArgument('tabindex', 0)"
+                    [value]="stringArgument('value', '')"
                 /></krn-form-field>
               </div>
             }
@@ -1141,7 +1215,10 @@
                     [invalid]="booleanArgument('invalid')"
                     [disabled]="booleanArgument('disabled', false)"
                     [id]="stringArgument('id', '')"
+                    [open]="booleanArgument('open', false)"
                     [readonly]="booleanArgument('readonly', false)"
+                    [tabindex]="numberArgument('tabindex', 0)"
+                    [value]="stringArgument('value', '')"
                 /></krn-form-field>
               </div>
             }
@@ -1159,6 +1236,7 @@
                   [maxSize]="numberArgument('maxSize', 10485760)"
                   [readonly]="booleanArgument('readonly', false)"
                   [required]="booleanArgument('required', false)"
+                  [tabindex]="numberArgument('tabindex', 0)"
                 />
               </div>
             }
@@ -1177,6 +1255,7 @@
                   [maxSize]="numberArgument('maxSize', 5000000)"
                   [readonly]="booleanArgument('readonly', false)"
                   [required]="booleanArgument('required', false)"
+                  [tabindex]="numberArgument('tabindex', 0)"
                 />
               </div>
             }
@@ -1184,6 +1263,7 @@
               <div class="form-surface">
                 <krn-otp-input
                   [length]="numberArgument('length', 6)"
+                  [autocomplete]="stringArgument('autocomplete', 'one-time-code')"
                   [disabled]="booleanArgument('disabled', false)"
                   [id]="stringArgument('id', '')"
                   [invalid]="booleanArgument('invalid', false)"
@@ -1191,6 +1271,8 @@
                   [numericOnly]="booleanArgument('numericOnly', true)"
                   [readonly]="booleanArgument('readonly', false)"
                   [required]="booleanArgument('required', false)"
+                  [tabindex]="numberArgument('tabindex', 0)"
+                  [value]="stringArgument('value', '')"
                 />
               </div>
             }
@@ -1344,9 +1426,9 @@
             }
             @case ('command-palette') {
               <div class="navigation-surface compact-nav">
-                <krn-button (activated)="commandOpen.set(true)"
-                  >Open command palette <krn-keyboard-shortcut [keys]="['⌘', 'K']"
-                /></krn-button>
+                <button krnButton (click)="commandOpen.set(true)">
+                  Open command palette <krn-keyboard-shortcut [keys]="['⌘', 'K']" />
+                </button>
                 <p>Search, arrow through results, then press Enter.</p>
               </div>
               <krn-command-palette
@@ -1445,7 +1527,7 @@
             }
             @case ('toast') {
               <div class="feedback-trigger">
-                <krn-button (activated)="showToast()">Show success toast</krn-button>
+                <button krnButton (click)="showToast()">Show success toast</button>
                 <p>Add several notifications, then hover or focus the stack to review each one.</p>
               </div>
               <krn-toast-viewport
@@ -1458,14 +1540,17 @@
             }
             @case ('tooltip') {
               <div class="feedback-trigger">
-                <krn-icon-button
-                  ariaLabel="Copy public link"
+                <button
+                  krnIconButton
+                  type="button"
+                  aria-label="Copy public link"
                   [krnTooltip]="stringArgument('text', 'Copy public link')"
                   [krnTooltipPosition]="stringArgument('position', 'above')"
                   [krnTooltipShowDelay]="numberArgument('showDelay', 400)"
                   [krnTooltipHideDelay]="numberArgument('hideDelay', 80)"
-                  >↗</krn-icon-button
                 >
+                  ↗
+                </button>
                 <p>Hover or focus the icon to reveal concise help.</p>
               </div>
             }
@@ -1497,7 +1582,7 @@
             }
             @case ('dialog') {
               <div class="feedback-trigger">
-                <krn-button (activated)="surfaceOpen.set(true)">Edit workspace</krn-button>
+                <button krnButton (click)="surfaceOpen.set(true)">Edit workspace</button>
                 <p>Modal task with focus trap, Escape, and focus restoration.</p>
               </div>
               <krn-dialog
@@ -1511,22 +1596,24 @@
                 ><div class="overlay-copy">
                   <label>Workspace name <input value="Northstar" /></label>
                 </div>
-                <krn-button
+                <button
+                  krnButton
                   krnDialogAction
                   variant="outline"
                   tone="neutral"
-                  (activated)="surfaceOpen.set(false)"
-                  >Cancel</krn-button
-                ><krn-button krnDialogAction (activated)="surfaceOpen.set(false)"
-                  >Save</krn-button
-                ></krn-dialog
+                  (click)="surfaceOpen.set(false)"
+                >
+                  Cancel</button
+                ><button krnButton krnDialogAction (click)="surfaceOpen.set(false)">
+                  Save
+                </button></krn-dialog
               >
             }
             @case ('alert-dialog') {
               <div class="feedback-trigger">
-                <krn-button tone="danger" (activated)="surfaceOpen.set(true)"
-                  >Delete workspace</krn-button
-                >
+                <button krnButton tone="danger" (click)="surfaceOpen.set(true)">
+                  Delete workspace
+                </button>
                 <p>Destructive confirmation does not close on outside click.</p>
               </div>
               <krn-alert-dialog
@@ -1538,22 +1625,24 @@
                 [showClose]="booleanArgument('showClose', true)"
                 [title]="stringArgument('title', 'Delete Northstar?')"
                 ><p>18 automations and 42 reports will also be deleted.</p>
-                <krn-button
+                <button
+                  krnButton
                   krnDialogAction
                   variant="outline"
                   tone="neutral"
-                  (activated)="surfaceOpen.set(false)"
-                  >Cancel</krn-button
-                ><krn-button krnDialogAction tone="danger" (activated)="surfaceOpen.set(false)"
-                  >Delete</krn-button
-                ></krn-alert-dialog
+                  (click)="surfaceOpen.set(false)"
+                >
+                  Cancel</button
+                ><button krnButton krnDialogAction tone="danger" (click)="surfaceOpen.set(false)">
+                  Delete
+                </button></krn-alert-dialog
               >
             }
             @case ('drawer') {
               <div class="feedback-trigger">
-                <krn-button variant="outline" tone="neutral" (activated)="surfaceOpen.set(true)"
-                  >Open activity drawer</krn-button
-                >
+                <button krnButton variant="outline" tone="neutral" (click)="surfaceOpen.set(true)">
+                  Open activity drawer
+                </button>
                 <p>Edge-aligned context without leaving the underlying page.</p>
               </div>
               <krn-drawer
@@ -1575,9 +1664,9 @@
             }
             @case ('bottom-sheet') {
               <div class="feedback-trigger">
-                <krn-button variant="outline" tone="neutral" (activated)="surfaceOpen.set(true)"
-                  >Choose mobile action</krn-button
-                >
+                <button krnButton variant="outline" tone="neutral" (click)="surfaceOpen.set(true)">
+                  Choose mobile action
+                </button>
                 <p>A thumb-reachable transient surface for narrow viewports.</p>
               </div>
               <krn-bottom-sheet
@@ -1620,20 +1709,24 @@
                   "
                 />
                 <div class="progress-controls" role="group" aria-label="Adjust import progress">
-                  <krn-button
+                  <button
+                    krnButton
                     size="sm"
                     variant="outline"
                     tone="neutral"
-                    (activated)="adjustProgress(-10)"
-                    >−10</krn-button
+                    (click)="adjustProgress(-10)"
                   >
-                  <krn-button
+                    −10
+                  </button>
+                  <button
+                    krnButton
                     size="sm"
                     variant="outline"
                     tone="neutral"
-                    (activated)="adjustProgress(10)"
-                    >+10</krn-button
+                    (click)="adjustProgress(10)"
                   >
+                    +10
+                  </button>
                 </div>
               </div>
             }
@@ -1651,20 +1744,24 @@
                   ><small>{{ progressAvailable() }} GB available</small>
                 </div>
                 <div class="progress-controls" role="group" aria-label="Adjust storage progress">
-                  <krn-button
+                  <button
+                    krnButton
                     size="sm"
                     variant="outline"
                     tone="neutral"
-                    (activated)="adjustProgress(-10)"
-                    >−10</krn-button
+                    (click)="adjustProgress(-10)"
                   >
-                  <krn-button
+                    −10
+                  </button>
+                  <button
+                    krnButton
                     size="sm"
                     variant="outline"
                     tone="neutral"
-                    (activated)="adjustProgress(10)"
-                    >+10</krn-button
+                    (click)="adjustProgress(10)"
                   >
+                    +10
+                  </button>
                 </div>
               </div>
             }
@@ -1696,7 +1793,7 @@
                   )
                 "
                 [title]="stringArgument('title', 'No automations yet')"
-                ><krn-button krnStateAction>Create automation</krn-button></krn-empty-state
+                ><button krnButton krnStateAction>Create automation</button></krn-empty-state
               >
             }
             @case ('error-state') {
@@ -1709,9 +1806,9 @@
                   )
                 "
                 [title]="stringArgument('title', 'Could not load workspaces')"
-                ><krn-button krnStateAction variant="outline" tone="neutral"
-                  >Try again</krn-button
-                ></krn-error-state
+                ><button krnButton krnStateAction variant="outline" tone="neutral">
+                  Try again
+                </button></krn-error-state
               >
             }
             @case ('success-state') {
@@ -1721,7 +1818,7 @@
                   stringArgument('description', 'Northstar is ready for collaborators.')
                 "
                 [title]="stringArgument('title', 'Workspace created')"
-                ><krn-button krnStateAction>Invite people</krn-button></krn-success-state
+                ><button krnButton krnStateAction>Invite people</button></krn-success-state
               >
             }
             @case ('confirmation-pattern') {
@@ -1817,7 +1914,7 @@
                 ><p>Operations workspace · 18 active automations</p>
                 <div krnCardFooter>
                   <krn-badge status tone="success">Healthy</krn-badge
-                  ><krn-button size="sm" variant="ghost">Open</krn-button>
+                  ><button krnButton size="sm" variant="ghost">Open</button>
                 </div></krn-card
               >
             }
@@ -1881,9 +1978,9 @@
                   [selected]="booleanArgument('selected')"
                   [heading]="stringArgument('heading', 'Quarterly audit package')"
                   ><span>PDF · 18.4 MB · created 8 minutes ago</span
-                  ><krn-button size="sm" variant="outline" tone="neutral"
-                    >Download</krn-button
-                  ></krn-list-item
+                  ><button krnButton size="sm" variant="outline" tone="neutral">
+                    Download
+                  </button></krn-list-item
                 ></krn-list
               >
             }
@@ -2059,20 +2156,24 @@
                   [label]="stringArgument('label', 'Storage used')"
                 />
                 <div class="progress-controls" role="group" aria-label="Adjust storage meter">
-                  <krn-button
+                  <button
+                    krnButton
                     size="sm"
                     variant="outline"
                     tone="neutral"
-                    (activated)="adjustMeter(-10)"
-                    >−10</krn-button
+                    (click)="adjustMeter(-10)"
                   >
-                  <krn-button
+                    −10
+                  </button>
+                  <button
+                    krnButton
                     size="sm"
                     variant="outline"
                     tone="neutral"
-                    (activated)="adjustMeter(10)"
-                    >+10</krn-button
+                    (click)="adjustMeter(10)"
                   >
+                    +10
+                  </button>
                 </div>
               </div>
             }
@@ -2093,13 +2194,15 @@
             @case ('line-chart') {
               <div class="chart-stage">
                 @if (effectiveScenario() === 'states') {
-                  <krn-button
+                  <button
+                    krnButton
                     size="sm"
                     variant="outline"
                     tone="neutral"
-                    (activated)="reverseChartOrder()"
-                    >Reverse data order</krn-button
+                    (click)="reverseChartOrder()"
                   >
+                    Reverse data order
+                  </button>
                 }
                 <krn-line-chart
                   [title]="stringArgument('title', 'Weekly active users')"
@@ -2114,13 +2217,15 @@
             @case ('bar-chart') {
               <div class="chart-stage">
                 @if (effectiveScenario() === 'states') {
-                  <krn-button
+                  <button
+                    krnButton
                     size="sm"
                     variant="outline"
                     tone="neutral"
-                    (activated)="reverseChartOrder()"
-                    >Reverse data order</krn-button
+                    (click)="reverseChartOrder()"
                   >
+                    Reverse data order
+                  </button>
                 }
                 <krn-bar-chart
                   [title]="stringArgument('title', 'Runs by environment')"
@@ -2135,13 +2240,15 @@
             @case ('donut-chart') {
               <div class="chart-stage donut-stage">
                 @if (effectiveScenario() === 'states') {
-                  <krn-button
+                  <button
+                    krnButton
                     size="sm"
                     variant="outline"
                     tone="neutral"
-                    (activated)="reverseChartOrder()"
-                    >Reverse data order</krn-button
+                    (click)="reverseChartOrder()"
                   >
+                    Reverse data order
+                  </button>
                 }
                 <krn-donut-chart
                   [title]="stringArgument('title', 'Workspace plan mix')"
@@ -2241,15 +2348,15 @@
                   [eyebrow]="stringArgument('eyebrow', 'Workspace / Northstar')"
                   [index]="stringArgument('index', '07')"
                   ><krn-badge status tone="success">Systems nominal</krn-badge
-                  ><krn-button>New automation</krn-button></krn-page-header
+                  ><button krnButton>New automation</button></krn-page-header
                 >
               </div>
             }
             @case ('settings-panel') {
               <div class="feedback-trigger">
-                <krn-button variant="outline" tone="neutral" (activated)="settingsOpen.set(true)"
-                  >Open workspace settings</krn-button
-                >
+                <button krnButton variant="outline" tone="neutral" (click)="settingsOpen.set(true)">
+                  Open workspace settings
+                </button>
                 <p>Persistent product settings in an edge-aligned panel.</p>
               </div>
               <krn-settings-panel
@@ -2265,9 +2372,14 @@
                   >
                 </div>
                 <div krnSettingsActions>
-                  <krn-button variant="outline" tone="neutral" (activated)="settingsOpen.set(false)"
-                    >Cancel</krn-button
-                  ><krn-button (activated)="settingsOpen.set(false)">Save</krn-button>
+                  <button
+                    krnButton
+                    variant="outline"
+                    tone="neutral"
+                    (click)="settingsOpen.set(false)"
+                  >
+                    Cancel</button
+                  ><button krnButton (click)="settingsOpen.set(false)">Save</button>
                 </div></krn-settings-panel
               >
             }
@@ -2277,8 +2389,8 @@
                   ariaLabel="Workspace actions"
                   [selectedCount]="numberArgument('selectedCount', 0)"
                   ><strong krnToolbarTitle>Workspaces</strong
-                  ><krn-button variant="outline" tone="neutral">Export</krn-button
-                  ><krn-button>New workspace</krn-button></krn-crud-toolbar
+                  ><button krnButton variant="outline" tone="neutral">Export</button
+                  ><button krnButton>New workspace</button></krn-crud-toolbar
                 >
               </div>
             }
@@ -2287,11 +2399,11 @@
                 <krn-bulk-actions
                   ariaLabel="Selected workspace actions"
                   [selectedCount]="selectedCount()"
-                  ><krn-button variant="ghost" tone="danger" (activated)="selectedCount.set(0)"
-                    >Archive</krn-button
-                  ><krn-button variant="outline" tone="neutral"
-                    >Export</krn-button
-                  ></krn-bulk-actions
+                  ><button krnButton variant="ghost" tone="danger" (click)="selectedCount.set(0)">
+                    Archive</button
+                  ><button krnButton variant="outline" tone="neutral">
+                    Export
+                  </button></krn-bulk-actions
                 >
               </div>
             }
@@ -2323,7 +2435,7 @@
                   [eyebrow]="stringArgument('eyebrow', 'AUTOMATION')"
                   ><krn-bar-chart title="Last 24 hours" [data]="chartData.slice(0, 4)" />
                   <div krnWidgetFooter>
-                    <krn-link href="/patterns">View automation report</krn-link>
+                    <a krnLink href="/patterns">View automation report</a>
                   </div></krn-dashboard-widget
                 >
               </div>
@@ -2409,12 +2521,14 @@
                   [(navigationOpen)]="responsiveNavigationOpen"
                   ><div krnAppHeader class="responsive-shell-header">
                     <strong>NORTH / OPS</strong
-                    ><krn-button
+                    ><button
+                      krnButton
                       size="sm"
                       variant="ghost"
                       tone="neutral"
-                      (activated)="responsiveNavigationOpen.update((open) => !open)"
-                      >Navigation</krn-button
+                      (click)="responsiveNavigationOpen.update((open) => !open)"
+                    >
+                      Navigation</button
                     ><krn-badge status tone="success">Live</krn-badge>
                   </div>
                   <nav krnAppNavigation class="responsive-shell-nav">

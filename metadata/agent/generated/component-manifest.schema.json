@@ -11,7 +11,7 @@
       "type": "string"
     },
     "schemaVersion": {
-      "const": "1.2.0"
+      "const": "1.3.0"
     },
     "library": {
       "$ref": "#/$defs/library"
@@ -857,6 +857,7 @@
         "kind",
         "selector",
         "selectors",
+        "selectorDeprecations",
         "symbol",
         "canonicalSymbol",
         "canonicalId",
@@ -901,6 +902,12 @@
           "type": "array",
           "items": {
             "type": "string"
+          }
+        },
+        "selectorDeprecations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/selectorDeprecation"
           }
         },
         "symbol": {
@@ -1050,6 +1057,55 @@
           "$ref": "#/$defs/playground"
         }
       }
+    },
+    "selectorDeprecation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "selector",
+        "status",
+        "introducedIn",
+        "removeIn",
+        "replacement",
+        "migration",
+        "documentation"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "selector": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "const": "active"
+        },
+        "introducedIn": {
+          "$ref": "#/$defs/version"
+        },
+        "removeIn": {
+          "$ref": "#/$defs/version"
+        },
+        "replacement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "migration": {
+          "type": "string",
+          "minLength": 10
+        },
+        "documentation": {
+          "type": "string",
+          "pattern": "^docs/[^#]+#[a-z0-9-]+$"
+        }
+      }
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$"
     },
     "symbol": {
       "type": "object",

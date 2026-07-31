@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-center",
   "selectors": ["krn-center"],
+  "selectorDeprecations": [],
   "symbol": "KrnCenter",
   "canonicalSymbol": "KrnCenter",
   "canonicalId": "center",

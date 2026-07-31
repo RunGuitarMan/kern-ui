@@ -53,7 +53,11 @@ void bootstrapApplication(KernContainerAgentExample);
 | `size`     | input | `KrnContainerSize`             | no       | `'lg'`     | Named semantic size resolved through KERN density and sizing tokens. |
 | `maxWidth` | input | `string \| null`               | no       | `null`     | Upper or lower bound applied to the width value.                     |
 | `gutter`   | input | `KrnLayoutSpace`               | no       | `'4'`      | Outer or inter-column spacing applied by the layout.                 |
-| `align`    | input | `"center" \| "start" \| "end"` | no       | `'center'` | Logical cross-axis alignment applied to children by the layout.      |
+| `align`    | input | `"center" \| "end" \| "start"` | no       | `'center'` | Logical cross-axis alignment applied to children by the layout.      |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 

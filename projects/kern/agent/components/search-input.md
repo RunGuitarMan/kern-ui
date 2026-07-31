@@ -53,19 +53,31 @@ void bootstrapApplication(KernSearchInputAgentExample);
 
 ## API
 
-| Name              | Kind   | Type      | Required | Default                               | Description                                                                |
-| ----------------- | ------ | --------- | -------- | ------------------------------------- | -------------------------------------------------------------------------- |
-| `id`              | input  | `string`  | no       | `''`                                  | Stable identifier value used by the id contract.                           |
-| `name`            | input  | `string`  | no       | `''`                                  | Required human-readable name for the represented person, item, or action.  |
-| `placeholder`     | input  | `string`  | no       | `this.translations.forms.search`      | Short input hint shown only while no value is present.                     |
-| `ariaLabel`       | input  | `string`  | no       | `this.translations.forms.search`      | Accessible name used when visible content is not sufficient.               |
-| `clearLabel`      | input  | `string`  | no       | `this.translations.forms.clearSearch` | Human-readable copy for the clear state or control.                        |
-| `autocomplete`    | input  | `string`  | no       | `'off'`                               | Controls whether the component applies the autocomplete behavior.          |
-| `disabled`        | input  | `boolean` | no       | `false`                               | Prevents user interaction and participates in the disabled-state contract. |
-| `readonly`        | input  | `boolean` | no       | `false`                               | Keeps the value perceivable while preventing user edits.                   |
-| `invalid`         | input  | `boolean` | no       | `false`                               | Exposes an externally controlled invalid presentation state.               |
-| `valueChange`     | output | `string`  | no       | `undefined`                           | Notifies the consumer after the value change interaction completes.        |
-| `searchSubmitted` | output | `string`  | no       | `undefined`                           | Notifies the consumer after the search submitted interaction completes.    |
+| Name              | Kind   | Type                  | Required | Default                               | Description                                                                                      |
+| ----------------- | ------ | --------------------- | -------- | ------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`              | no       | `''`                                  | Stable identifier value used by the id contract.                                                 |
+| `name`            | input  | `string`              | no       | `''`                                  | Required human-readable name for the represented person, item, or action.                        |
+| `placeholder`     | input  | `string`              | no       | `this.translations.forms.search`      | Short input hint shown only while no value is present.                                           |
+| `ariaLabel`       | input  | `string`              | no       | `this.translations.forms.search`      | Accessible name used when visible content is not sufficient.                                     |
+| `ariaLabelledBy`  | input  | `string`              | no       | `''`                                  | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`              | no       | `''`                                  | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `clearLabel`      | input  | `string`              | no       | `this.translations.forms.clearSearch` | Human-readable copy for the clear state or control.                                              |
+| `autocomplete`    | input  | `string`              | no       | `'off'`                               | Native autocomplete purpose forwarded to the editable control.                                   |
+| `enterKeyHint`    | input  | `string`              | no       | `'search'`                            | Native virtual-keyboard action hint forwarded to the editable control.                           |
+| `value`           | input  | `string \| undefined` | no       | `undefined`                           | Controlled component value.                                                                      |
+| `minLength`       | input  | `number \| undefined` | no       | `undefined`                           | Upper or lower bound applied to the length value.                                                |
+| `maxLength`       | input  | `number \| undefined` | no       | `undefined`                           | Upper or lower bound applied to the length value.                                                |
+| `spellcheck`      | input  | `boolean`             | no       | `true`                                | Native spell-checking preference forwarded to the editable control.                              |
+| `disabled`        | input  | `boolean`             | no       | `false`                               | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean`             | no       | `false`                               | Keeps the value perceivable while preventing user edits.                                         |
+| `required`        | input  | `boolean`             | no       | `false`                               | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`         | input  | `boolean`             | no       | `false`                               | Exposes an externally controlled invalid presentation state.                                     |
+| `valueChange`     | output | `string`              | no       | `undefined`                           | Notifies the consumer after the value change interaction completes.                              |
+| `searchSubmitted` | output | `string`              | no       | `undefined`                           | Notifies the consumer after the search submitted interaction completes.                          |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -111,6 +123,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 - filled
 - empty
 - readonly
+- required
 - invalid
 
 ## Interactive playground
@@ -118,29 +131,37 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/search-input`
 
 Scenarios: `default`.
-Public API coverage: 6/9
-directly controlled; 3 exact exclusions; 0 unclassified.
+Public API coverage: 12/17
+directly controlled; 5 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument       | Control | Default                    | Test value                             | Binding                         | Description                                       |
-| -------------- | ------- | -------------------------- | -------------------------------------- | ------------------------------- | ------------------------------------------------- |
-| `placeholder`  | text    | `"Search 248 workspaces…"` | `"Search 248 workspaces… · alternate"` | input `placeholder` (property)  | Sets the empty search prompt.                     |
-| `disabled`     | boolean | `false`                    | `true`                                 | input `disabled` (property)     | Prevents user interaction.                        |
-| `readOnly`     | boolean | `false`                    | `true`                                 | input `readonly` (property)     | Keeps the value focusable while preventing edits. |
-| `invalid`      | boolean | `false`                    | `true`                                 | input `invalid` (property)      | Exposes the invalid visual and ARIA state.        |
-| `autocomplete` | text    | `"off"`                    | `"off · alternate"`                    | input `autocomplete` (property) | Configures the component autocomplete contract.   |
-| `id`           | text    | `""`                       | `"Alternate value"`                    | input `id` (property)           | Configures the component id contract.             |
+| Argument       | Control | Default                    | Test value                             | Binding                         | Description                                                               |
+| -------------- | ------- | -------------------------- | -------------------------------------- | ------------------------------- | ------------------------------------------------------------------------- |
+| `placeholder`  | text    | `"Search 248 workspaces…"` | `"Search 248 workspaces… · alternate"` | input `placeholder` (property)  | Sets the empty search prompt.                                             |
+| `disabled`     | boolean | `false`                    | `true`                                 | input `disabled` (property)     | Prevents user interaction.                                                |
+| `readOnly`     | boolean | `false`                    | `true`                                 | input `readonly` (property)     | Keeps the value focusable while preventing edits.                         |
+| `invalid`      | boolean | `false`                    | `true`                                 | input `invalid` (property)      | Exposes the invalid visual and ARIA state.                                |
+| `autocomplete` | text    | `"off"`                    | `"off · alternate"`                    | input `autocomplete` (property) | Configures the component autocomplete contract.                           |
+| `enterKeyHint` | text    | `"search"`                 | `"search · alternate"`                 | input `enterKeyHint` (property) | Configures the component enterKeyHint contract.                           |
+| `id`           | text    | `""`                       | `"Alternate value"`                    | input `id` (property)           | Configures the component id contract.                                     |
+| `maxLength`    | number  | `100`                      | `101`                                  | input `maxLength` (property)    | Configures the component maxLength contract.                              |
+| `minLength`    | number  | `0`                        | `1`                                    | input `minLength` (property)    | Configures the component minLength contract.                              |
+| `required`     | boolean | `false`                    | `true`                                 | input `required` (property)     | Marks the value as required and participates in Angular Forms validation. |
+| `spellcheck`   | boolean | `true`                     | `false`                                | input `spellcheck` (property)   | Configures the component spellcheck contract.                             |
+| `value`        | text    | `""`                       | `"Alternate value"`                    | input `value` (property)        | Controlled component value.                                               |
 
 Exact API exclusions:
 
-| Public API   | Category           | Evidence                                                                 | Reason                                                                                                                                                              |
-| ------------ | ------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#search-input`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `clearLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#search-input`                | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `name`       | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#search-input` | Form submission field names do not alter the rendered component and are covered by forms integration tests.                                                         |
+| Public API        | Category           | Evidence                                                                 | Reason                                                                                                                                                               |
+| ----------------- | ------------------ | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#search-input`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `ariaLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#search-input`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `ariaLabelledBy`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#search-input`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `clearLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#search-input`                | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `name`            | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#search-input` | Form submission field names do not alter the rendered component and are covered by forms integration tests.                                                          |
 
 Presets:
 
@@ -159,6 +180,7 @@ Presets:
 - `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
 - `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
 - `readonly` — Readonly; scenario `default`; `readOnly=true`.
+- `required` — Required; scenario `default`; `required=true`.
 - `invalid` — Invalid; scenario `default`; `invalid=true`.
 
 ## Related

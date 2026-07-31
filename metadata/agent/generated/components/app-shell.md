@@ -59,14 +59,18 @@ void bootstrapApplication(KernAppShellAgentExample);
 | `sidebarWidth`          | input | `KrnLayoutSpace`                            | no       | `'17rem'`                                   | Inline size reserved for the expanded application sidebar.                           |
 | `railWidth`             | input | `KrnLayoutSpace`                            | no       | `'3.5rem'`                                  | Inline size reserved for the application navigation rail.                            |
 | `mainMaxWidth`          | input | `KrnLayoutSpace`                            | no       | `'100%'`                                    | Maximum inline size allocated to the primary application content.                    |
-| `sidebarPosition`       | input | `"start" \| "end"`                          | no       | `'start'`                                   | Logical start or end placement of the application sidebar.                           |
-| `mobileNavigation`      | input | `"hidden" \| "auto" \| "sidebar" \| "rail"` | no       | `'auto'`                                    | Template rendered as the application’s narrow-viewport navigation.                   |
+| `sidebarPosition`       | input | `"end" \| "start"`                          | no       | `'start'`                                   | Logical start or end placement of the application sidebar.                           |
+| `mobileNavigation`      | input | `"auto" \| "hidden" \| "rail" \| "sidebar"` | no       | `'auto'`                                    | Template rendered as the application’s narrow-viewport navigation.                   |
 | `mobileNavigationOpen`  | model | `boolean`                                   | no       | `false`                                     | Controlled mobile navigation open state with a matching Angular model-change output. |
 | `mobileNavigationId`    | input | `string`                                    | no       | `this.ids.next('mobile-navigation')`        | Stable identifier value used by the mobile navigation contract.                      |
 | `mobileNavigationLabel` | input | `string`                                    | no       | `this.translations.layout.mobileNavigation` | Human-readable copy for the mobile navigation state or control.                      |
 | `openNavigationLabel`   | input | `string`                                    | no       | `this.translations.layout.openNavigation`   | Human-readable copy for the open navigation state or control.                        |
 | `closeNavigationLabel`  | input | `string`                                    | no       | `this.translations.layout.closeNavigation`  | Human-readable copy for the close navigation state or control.                       |
 | `mainId`                | input | `string`                                    | no       | `'main-content'`                            | Stable identifier value used by the main contract.                                   |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -131,13 +135,13 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API              | Category           | Evidence                                               | Reason                                                                                                                                                              |
-| ----------------------- | ------------------ | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `closeNavigationLabel`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `mainId`                | dom-wiring         | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.                                                       |
-| `mobileNavigationId`    | dom-wiring         | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.                                                       |
-| `mobileNavigationLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `openNavigationLabel`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| Public API              | Category           | Evidence                                               | Reason                                                                                                                                                               |
+| ----------------------- | ------------------ | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `closeNavigationLabel`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `mainId`                | dom-wiring         | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.                                                        |
+| `mobileNavigationId`    | dom-wiring         | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.                                                        |
+| `mobileNavigationLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `openNavigationLabel`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#app-shell` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 

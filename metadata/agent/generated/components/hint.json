@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-hint",
   "selectors": ["krn-hint"],
+  "selectorDeprecations": [],
   "symbol": "KrnHint",
   "canonicalSymbol": "KrnHint",
   "canonicalId": "hint",

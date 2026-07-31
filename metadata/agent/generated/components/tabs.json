@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-tabs",
   "selectors": ["krn-tabs", "krn-vertical-tabs"],
+  "selectorDeprecations": [],
   "symbol": "KrnTabs",
   "canonicalSymbol": "KrnTabs",
   "canonicalId": "tabs",

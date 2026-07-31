@@ -87,6 +87,10 @@ void bootstrapApplication(KernGlobalSearchAgentExample);
 | `activeIndex`       | model  | `number`                         | no       | `0`                                            | Zero-based index currently participating in managed keyboard focus.    |
 | `resultSelected`    | output | `KrnSearchResult`                | no       | `undefined`                                    | Notifies the consumer after the result selected interaction completes. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._
@@ -152,14 +156,14 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API          | Category           | Evidence                                                            | Reason                                                                                                                                                              |
-| ------------------- | ------------------ | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel`         | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#global-search`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `clearLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#global-search`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `emptyResultsLabel` | callback           | `component-example:agent/components/global-search.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
-| `results`           | complex-data       | `specimen-fixture:preview/global-search?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
-| `resultsId`         | dom-wiring         | `a11y-test:tests/a11y/accessibility.spec.ts#global-search`          | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.                                                       |
-| `resultsLabel`      | callback           | `component-example:agent/components/global-search.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
+| Public API          | Category           | Evidence                                                            | Reason                                                                                                                                                               |
+| ------------------- | ------------------ | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`         | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#global-search`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `clearLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#global-search`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `emptyResultsLabel` | callback           | `component-example:agent/components/global-search.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                   |
+| `results`           | complex-data       | `specimen-fixture:preview/global-search?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
+| `resultsId`         | dom-wiring         | `a11y-test:tests/a11y/accessibility.spec.ts#global-search`          | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.                                                        |
+| `resultsLabel`      | callback           | `component-example:agent/components/global-search.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                   |
 
 Presets:
 

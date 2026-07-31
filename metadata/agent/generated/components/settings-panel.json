@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-settings-panel",
   "selectors": ["krn-settings-panel"],
+  "selectorDeprecations": [],
   "symbol": "KrnSettingsPanel",
   "canonicalSymbol": "KrnSettingsPanel",
   "canonicalId": "settings-panel",
@@ -357,7 +358,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#settings-panel"

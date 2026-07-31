@@ -79,6 +79,10 @@ void bootstrapApplication(KernNotificationCenterAgentExample);
 | `markAllRead`          | output | `void`                           | no       | `undefined`                                     | Notifies the consumer after the mark all read interaction completes.         |
 | `notificationSelected` | output | `KrnNotification`                | no       | `undefined`                                     | Notifies the consumer after the notification selected interaction completes. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._
@@ -138,14 +142,14 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API         | Category           | Evidence                                                                  | Reason                                                                                                                                                              |
-| ------------------ | ------------------ | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#notification-center`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `emptyLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#notification-center`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `markAllReadLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#notification-center`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `notifications`    | complex-data       | `specimen-fixture:preview/notification-center?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
-| `unreadLabel`      | callback           | `component-example:agent/components/notification-center.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
-| `unreadStateLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#notification-center`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| Public API         | Category           | Evidence                                                                  | Reason                                                                                                                                                               |
+| ------------------ | ------------------ | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#notification-center`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `emptyLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#notification-center`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `markAllReadLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#notification-center`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `notifications`    | complex-data       | `specimen-fixture:preview/notification-center?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
+| `unreadLabel`      | callback           | `component-example:agent/components/notification-center.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                   |
+| `unreadStateLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#notification-center`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 

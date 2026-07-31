@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-status-badge",
   "selectors": ["krn-badge", "krn-status-badge"],
+  "selectorDeprecations": [],
   "symbol": "KrnStatusBadge",
   "canonicalSymbol": "KrnBadge",
   "canonicalId": "badge",

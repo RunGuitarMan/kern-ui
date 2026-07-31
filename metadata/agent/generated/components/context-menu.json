@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-context-menu",
   "selectors": ["krn-context-menu"],
+  "selectorDeprecations": [],
   "symbol": "KrnContextMenu",
   "canonicalSymbol": "KrnContextMenu",
   "canonicalId": "context-menu",

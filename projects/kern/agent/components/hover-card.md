@@ -55,9 +55,13 @@ void bootstrapApplication(KernHoverCardAgentExample);
 | `openDelay`  | input | `number` | no       | `350`                                | Delay in milliseconds before the transient surface becomes visible. |
 | `closeDelay` | input | `number` | no       | `120`                                | Controls whether the component applies the close delay behavior.    |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
-- `[krnHoverCardTrigger]` — Required non-interactive label content projected into the Hover Card-owned trigger button; do not project a button, link, form control, or krn-button.
+- `[krnHoverCardTrigger]` — Required non-interactive label content projected into the Hover Card-owned trigger button; do not project a button, link, form control, or button[krnButton].
 - `*` — Projects default component content.
 
 ## Angular Forms

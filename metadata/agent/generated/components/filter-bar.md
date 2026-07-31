@@ -75,6 +75,10 @@ void bootstrapApplication(KernFilterBarAgentExample);
 | `filters`       | input | `ReadonlyArray<KrnFilterDefinition>`        | no       | `[]`                                       | Ordered domain values supplied to the filter collection.             |
 | `values`        | model | `Readonly<Partial<Record<string, string>>>` | no       | `{}`                                       | Controlled values state with a matching Angular model-change output. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.
@@ -133,14 +137,14 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API      | Category           | Evidence                                                         | Reason                                                                                                                                                              |
-| --------------- | ------------------ | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `activeLabel`   | callback           | `component-example:agent/components/filter-bar.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
-| `allLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#filter-bar`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `ariaLabel`     | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#filter-bar`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `clearAllLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#filter-bar`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `filters`       | complex-data       | `specimen-fixture:preview/filter-bar?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
-| `values`        | complex-data       | `specimen-fixture:preview/filter-bar?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
+| Public API      | Category           | Evidence                                                         | Reason                                                                                                                                                               |
+| --------------- | ------------------ | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `activeLabel`   | callback           | `component-example:agent/components/filter-bar.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                   |
+| `allLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#filter-bar`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `ariaLabel`     | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#filter-bar`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `clearAllLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#filter-bar`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `filters`       | complex-data       | `specimen-fixture:preview/filter-bar?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
+| `values`        | complex-data       | `specimen-fixture:preview/filter-bar?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
 
 Presets:
 

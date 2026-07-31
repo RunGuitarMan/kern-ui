@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-select",
   "selectors": ["krn-select"],
+  "selectorDeprecations": [],
   "symbol": "KrnSelect",
   "canonicalSymbol": "KrnSelect",
   "canonicalId": "select",
@@ -131,6 +132,26 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "ariaLabelledBy",
+      "property": "ariaLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that provide the accessible name and take precedence over ariaLabel.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaDescribedBy",
+      "property": "ariaDescribedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids composed with Form Field hints and validation descriptions.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "options",
       "property": "options",
       "kind": "input",
@@ -251,6 +272,26 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "tabindex",
+      "property": "tabIndex",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Native sequential-focus order forwarded to the owned interactive element.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "value",
+      "property": "value",
+      "kind": "input",
+      "type": "T | null | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controlled component value.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "open",
       "property": "open",
       "kind": "model",
@@ -354,6 +395,8 @@
     "loadingText",
     "errorText",
     "ariaLabel",
+    "ariaLabelledBy",
+    "ariaDescribedBy",
     "options",
     "optionsState",
     "identityMatcher",
@@ -366,6 +409,8 @@
     "readonly",
     "required",
     "invalid",
+    "tabindex",
+    "value",
     "open",
     "valueChange",
     "selectionChange"
@@ -556,6 +601,22 @@
           "publicName": "id",
           "syntax": "property"
         }
+      },
+      {
+        "key": "tabindex",
+        "label": "Tabindex",
+        "kind": "number",
+        "defaultValue": 0,
+        "testValue": 1,
+        "description": "Configures the component tabindex contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "tabindex",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 10000,
+        "step": 1
       }
     ],
     "presets": [
@@ -769,15 +830,39 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 19,
-      "controlled": 11,
-      "excluded": 8,
+      "publicInputsAndModels": 23,
+      "controlled": 12,
+      "excluded": 11,
       "unclassified": 0
     },
     "exclusions": [
       {
         "componentId": "select",
+        "publicName": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#select"
+        }
+      },
+      {
+        "componentId": "select",
         "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#select"
+        }
+      },
+      {
+        "componentId": "select",
+        "publicName": "ariaLabelledBy",
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
@@ -869,6 +954,18 @@
         "evidence": {
           "category": "component-example",
           "pointer": "agent/components/select.json#/examples/0"
+        }
+      },
+      {
+        "componentId": "select",
+        "publicName": "value",
+        "kind": "input",
+        "type": "T | null | undefined",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/select?state=default"
         }
       }
     ]

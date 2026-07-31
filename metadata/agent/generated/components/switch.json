@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-switch",
   "selectors": ["krn-switch"],
+  "selectorDeprecations": [],
   "symbol": "KrnSwitch",
   "canonicalSymbol": "KrnSwitch",
   "canonicalId": "switch",
@@ -77,6 +78,16 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "checked",
+      "property": "checked",
+      "kind": "input",
+      "type": "boolean | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controlled checked state rendered by the native choice control.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "ariaLabel",
       "property": "ariaLabel",
       "kind": "input",
@@ -84,6 +95,26 @@
       "required": false,
       "defaultValue": "''",
       "description": "Accessible name used when visible content is not sufficient.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaLabelledBy",
+      "property": "ariaLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that provide the accessible name and take precedence over ariaLabel.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaDescribedBy",
+      "property": "ariaDescribedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids composed with Form Field hints and validation descriptions.",
       "descriptionSource": "inferred"
     },
     {
@@ -137,13 +168,23 @@
       "descriptionSource": "inferred"
     },
     {
-      "name": "valueChange",
-      "property": "valueChange",
+      "name": "tabindex",
+      "property": "tabIndex",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Native sequential-focus order forwarded to the owned interactive element.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "checkedChange",
+      "property": "checkedChange",
       "kind": "output",
       "type": "boolean",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Notifies the consumer after the value change interaction completes.",
+      "description": "Notifies the consumer after the checked change interaction completes.",
       "descriptionSource": "inferred"
     }
   ],
@@ -210,13 +251,17 @@
     "KrnSwitch",
     "id",
     "name",
+    "checked",
     "ariaLabel",
+    "ariaLabelledBy",
+    "ariaDescribedBy",
     "description",
     "disabled",
     "readonly",
     "required",
     "invalid",
-    "valueChange"
+    "tabindex",
+    "checkedChange"
   ],
   "guidance": {
     "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
@@ -312,6 +357,19 @@
         }
       },
       {
+        "key": "checked",
+        "label": "Checked",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Configures the component checked contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "checked",
+          "syntax": "property"
+        }
+      },
+      {
         "key": "description",
         "label": "Description",
         "kind": "text",
@@ -336,6 +394,22 @@
           "publicName": "id",
           "syntax": "property"
         }
+      },
+      {
+        "key": "tabindex",
+        "label": "Tabindex",
+        "kind": "number",
+        "defaultValue": 0,
+        "testValue": 1,
+        "description": "Configures the component tabindex contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "tabindex",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 10000,
+        "step": 1
       }
     ],
     "presets": [
@@ -515,15 +589,39 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 8,
-      "controlled": 6,
-      "excluded": 2,
+      "publicInputsAndModels": 12,
+      "controlled": 8,
+      "excluded": 4,
       "unclassified": 0
     },
     "exclusions": [
       {
         "componentId": "switch",
+        "publicName": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#switch"
+        }
+      },
+      {
+        "componentId": "switch",
         "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#switch"
+        }
+      },
+      {
+        "componentId": "switch",
+        "publicName": "ariaLabelledBy",
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",

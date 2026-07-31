@@ -51,6 +51,7 @@ void bootstrapApplication(KernSliderAgentExample);
 | Name             | Kind   | Type                                       | Required | Default                         | Description                                                                |
 | ---------------- | ------ | ------------------------------------------ | -------- | ------------------------------- | -------------------------------------------------------------------------- |
 | `id`             | input  | `string`                                   | no       | `''`                            | Stable identifier value used by the id contract.                           |
+| `name`           | input  | `string`                                   | no       | `''`                            | Required human-readable name for the represented person, item, or action.  |
 | `label`          | input  | `string`                                   | no       | `''`                            | Visible text that names the control or data value.                         |
 | `ariaLabel`      | input  | `string`                                   | no       | `this.translations.forms.value` | Accessible name used when visible content is not sufficient.               |
 | `min`            | input  | `number`                                   | no       | `0`                             | Smallest accepted numeric or temporal value.                               |
@@ -60,8 +61,14 @@ void bootstrapApplication(KernSliderAgentExample);
 | `readonly`       | input  | `boolean`                                  | no       | `false`                         | Keeps the value perceivable while preventing user edits.                   |
 | `invalid`        | input  | `boolean`                                  | no       | `false`                         | Exposes an externally controlled invalid presentation state.               |
 | `showValue`      | input  | `boolean`                                  | no       | `true`                          | Controls whether the component applies the show value behavior.            |
+| `tabindex`       | input  | `number`                                   | no       | `0`                             | Native sequential-focus order forwarded to the owned interactive element.  |
+| `value`          | input  | `number \| undefined`                      | no       | `undefined`                     | Controlled component value.                                                |
 | `valueFormatter` | input  | `((value: number) => string) \| undefined` | no       | `undefined`                     | Formats a domain value for visible and accessible presentation.            |
 | `valueChange`    | output | `number`                                   | no       | `undefined`                     | Notifies the consumer after the value change interaction completes.        |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -116,8 +123,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/slider`
 
 Scenarios: `default`.
-Public API coverage: 9/11
-directly controlled; 2 exact exclusions; 0 unclassified.
+Public API coverage: 11/14
+directly controlled; 3 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -134,13 +141,16 @@ component inputs or models.
 | `invalid`   | boolean | `false`             | `true`                          | input `invalid` (property)   | Exposes the invalid visual and ARIA state.        |
 | `id`        | text    | `""`                | `"Alternate value"`             | input `id` (property)        | Configures the component id contract.             |
 | `label`     | text    | `"Seat allocation"` | `"Seat allocation · alternate"` | input `label` (property)     | Configures the component label contract.          |
+| `tabindex`  | number  | `0`                 | `1`                             | input `tabindex` (property)  | Configures the component tabindex contract.       |
+| `value`     | number  | `0`                 | `1`                             | input `value` (property)     | Controlled component value.                       |
 
 Exact API exclusions:
 
-| Public API       | Category           | Evidence                                                     | Reason                                                                                                                  |
-| ---------------- | ------------------ | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#slider`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
-| `valueFormatter` | callback           | `component-example:agent/components/slider.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                      |
+| Public API       | Category           | Evidence                                                           | Reason                                                                                                                  |
+| ---------------- | ------------------ | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#slider`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `name`           | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#slider` | Form submission field names do not alter the rendered component and are covered by forms integration tests.             |
+| `valueFormatter` | callback           | `component-example:agent/components/slider.json#/examples/0`       | Callback inputs require executable application code and are covered by the typed specimen fixture.                      |
 
 Presets:
 

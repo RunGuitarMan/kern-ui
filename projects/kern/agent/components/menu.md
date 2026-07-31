@@ -60,11 +60,15 @@ void bootstrapApplication(KernMenuAgentExample);
 | `emptyLabel`          | input  | `string`                                                             | no       | `this.translations.navigation.menuEmpty` | Accessible copy that explains the empty state.                              |
 | `hasProjectedTrigger` | input  | `boolean`                                                            | no       | `false`                                  | Legacy signal indicating that trigger content is projected by the consumer. |
 | `itemSelected`        | output | `KrnNavigationItem`                                                  | no       | `undefined`                              | Notifies the consumer after the item selected interaction completes.        |
-| `closed`              | output | `"selection" \| "escape" \| "outside" \| "detach"`                   | no       | `undefined`                              | Notifies the consumer after the closed interaction completes.               |
+| `closed`              | output | `"detach" \| "escape" \| "outside" \| "selection"`                   | no       | `undefined`                              | Notifies the consumer after the closed interaction completes.               |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
-- `[krnMenuTrigger]` — Optional non-interactive label content projected into the Menu-owned trigger button; omit it to use triggerLabel and never project a button, link, form control, or krn-button.
+- `[krnMenuTrigger]` — Optional non-interactive label content projected into the Menu-owned trigger button; omit it to use triggerLabel and never project a button, link, form control, or button[krnButton].
 
 ## Angular Forms
 
@@ -128,13 +132,13 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API         | Category           | Evidence                                          | Reason                                                                                                                                                              |
-| ------------------ | ------------------ | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `emptyLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#menu` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `items`            | complex-data       | `specimen-fixture:preview/menu?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
-| `menuAriaLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#menu` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `triggerAriaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#menu` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `triggerLabel`     | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#menu` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| Public API         | Category           | Evidence                                          | Reason                                                                                                                                                               |
+| ------------------ | ------------------ | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `emptyLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#menu` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `items`            | complex-data       | `specimen-fixture:preview/menu?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
+| `menuAriaLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#menu` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `triggerAriaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#menu` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `triggerLabel`     | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#menu` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 

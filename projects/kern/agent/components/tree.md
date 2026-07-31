@@ -73,6 +73,10 @@ void bootstrapApplication(KernTreeAgentExample);
 | `expanded`     | model  | `ReadonlySet<string>`        | no       | `new Set<string>()`                 | Controlled expanded state for a disclosure or hierarchical item.                      |
 | `loadChildren` | output | `KrnTreeNode`                | no       | `undefined`                         | Requests children when an unloaded node is expanded or its failed request is retried. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._

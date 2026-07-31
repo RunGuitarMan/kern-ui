@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-success-state",
   "selectors": ["krn-success-state"],
+  "selectorDeprecations": [],
   "symbol": "KrnSuccessState",
   "canonicalSymbol": "KrnSuccessState",
   "canonicalId": "success-state",

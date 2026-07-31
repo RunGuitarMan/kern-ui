@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-combobox",
   "selectors": ["krn-combobox"],
+  "selectorDeprecations": [],
   "symbol": "KrnCombobox",
   "canonicalSymbol": "KrnCombobox",
   "canonicalId": "combobox",
@@ -71,6 +72,26 @@
   },
   "api": [
     {
+      "name": "autocompleteMode",
+      "property": "autocompleteModeInput",
+      "kind": "input",
+      "type": "KrnAutocompleteMode | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controls whether the component applies the autocomplete mode input behavior.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "allowCustomValue",
+      "property": "allowCustomValueInput",
+      "kind": "input",
+      "type": "boolean | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controls whether the component applies the allow custom value input behavior.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "id",
       "property": "id",
       "kind": "input",
@@ -131,6 +152,26 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "ariaLabelledBy",
+      "property": "ariaLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that provide the accessible name and take precedence over ariaLabel.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaDescribedBy",
+      "property": "ariaDescribedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids composed with Form Field hints and validation descriptions.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "toggleLabel",
       "property": "toggleLabel",
       "kind": "input",
@@ -138,6 +179,16 @@
       "required": false,
       "defaultValue": "this.translations.forms.showOptions",
       "description": "Human-readable copy for the toggle state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "name",
+      "property": "name",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Required human-readable name for the represented person, item, or action.",
       "descriptionSource": "inferred"
     },
     {
@@ -218,6 +269,26 @@
       "required": false,
       "defaultValue": "false",
       "description": "Exposes an externally controlled invalid presentation state.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "tabindex",
+      "property": "tabIndex",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Native sequential-focus order forwarded to the owned interactive element.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "value",
+      "property": "value",
+      "kind": "input",
+      "type": "string | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controlled component value.",
       "descriptionSource": "inferred"
     },
     {
@@ -326,13 +397,18 @@
     "constrained search",
     "authoritative options",
     "typeahead",
+    "autocompleteMode",
+    "allowCustomValue",
     "id",
     "placeholder",
     "emptyText",
     "loadingText",
     "errorText",
     "ariaLabel",
+    "ariaLabelledBy",
+    "ariaDescribedBy",
     "toggleLabel",
+    "name",
     "options",
     "optionsState",
     "filterLocally",
@@ -341,6 +417,8 @@
     "readonly",
     "required",
     "invalid",
+    "tabindex",
+    "value",
     "open",
     "valueChange",
     "queryChange",
@@ -521,6 +599,19 @@
         }
       },
       {
+        "key": "allowCustomValue",
+        "label": "Allow Custom Value",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Configures the component allowCustomValue contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "allowCustomValue",
+          "syntax": "property"
+        }
+      },
+      {
         "key": "filterLocally",
         "label": "Filter Locally",
         "kind": "boolean",
@@ -543,6 +634,35 @@
         "binding": {
           "kind": "input",
           "publicName": "id",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "tabindex",
+        "label": "Tabindex",
+        "kind": "number",
+        "defaultValue": 0,
+        "testValue": 1,
+        "description": "Configures the component tabindex contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "tabindex",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 10000,
+        "step": 1
+      },
+      {
+        "key": "value",
+        "label": "Value",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Controlled component value.",
+        "binding": {
+          "kind": "input",
+          "publicName": "value",
           "syntax": "property"
         }
       }
@@ -758,12 +878,24 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 16,
-      "controlled": 12,
-      "excluded": 4,
+      "publicInputsAndModels": 23,
+      "controlled": 15,
+      "excluded": 8,
       "unclassified": 0
     },
     "exclusions": [
+      {
+        "componentId": "combobox",
+        "publicName": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#combobox"
+        }
+      },
       {
         "componentId": "combobox",
         "publicName": "ariaLabel",
@@ -774,6 +906,42 @@
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#combobox"
+        }
+      },
+      {
+        "componentId": "combobox",
+        "publicName": "ariaLabelledBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#combobox"
+        }
+      },
+      {
+        "componentId": "combobox",
+        "publicName": "autocompleteMode",
+        "kind": "input",
+        "type": "KrnAutocompleteMode | undefined",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/combobox?state=default"
+        }
+      },
+      {
+        "componentId": "combobox",
+        "publicName": "name",
+        "kind": "input",
+        "type": "string",
+        "code": "form-serialization",
+        "reason": "Form submission field names do not alter the rendered component and are covered by forms integration tests.",
+        "evidence": {
+          "category": "forms-integration",
+          "pointer": "tests/e2e/enterprise-acceptance.spec.ts#combobox"
         }
       },
       {
@@ -806,7 +974,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#combobox"

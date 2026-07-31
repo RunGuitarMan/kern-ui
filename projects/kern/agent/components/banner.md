@@ -56,6 +56,10 @@ void bootstrapApplication(KernBannerAgentExample);
 | `dismissLabel` | input  | `string`          | no       | `this.translations.feedback.dismissMessage` | Human-readable copy for the dismiss state or control.                            |
 | `closed`       | output | `void`            | no       | `undefined`                                 | Notifies the consumer after the closed interaction completes.                    |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._
@@ -114,9 +118,9 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API     | Category           | Evidence                                            | Reason                                                                                                                                                              |
-| -------------- | ------------------ | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `dismissLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#banner` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| Public API     | Category           | Evidence                                            | Reason                                                                                                                                                               |
+| -------------- | ------------------ | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dismissLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#banner` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 

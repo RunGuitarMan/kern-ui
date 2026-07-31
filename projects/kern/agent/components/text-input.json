@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-text-input",
   "selectors": ["krn-text-input"],
+  "selectorDeprecations": [],
   "symbol": "KrnTextInput",
   "canonicalSymbol": "KrnTextInput",
   "canonicalId": "text-input",
@@ -95,13 +96,33 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "ariaLabelledBy",
+      "property": "ariaLabelledBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids that provide the accessible name and take precedence over ariaLabel.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "ariaDescribedBy",
+      "property": "ariaDescribedBy",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Space-separated element ids composed with Form Field hints and validation descriptions.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "autocomplete",
       "property": "autocomplete",
       "kind": "input",
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Controls whether the component applies the autocomplete behavior.",
+      "description": "Native autocomplete purpose forwarded to the editable control.",
       "descriptionSource": "inferred"
     },
     {
@@ -122,6 +143,16 @@
       "required": false,
       "defaultValue": "'md'",
       "description": "Named semantic size resolved through KERN density and sizing tokens.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "value",
+      "property": "value",
+      "kind": "input",
+      "type": "string | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controlled component value.",
       "descriptionSource": "inferred"
     },
     {
@@ -276,9 +307,12 @@
     "name",
     "placeholder",
     "ariaLabel",
+    "ariaLabelledBy",
+    "ariaDescribedBy",
     "autocomplete",
     "inputMode",
     "size",
+    "value",
     "maxLength",
     "minLength",
     "spellcheck",
@@ -525,6 +559,19 @@
           "publicName": "spellcheck",
           "syntax": "property"
         }
+      },
+      {
+        "key": "value",
+        "label": "Value",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Controlled component value.",
+        "binding": {
+          "kind": "input",
+          "publicName": "value",
+          "syntax": "property"
+        }
       }
     ],
     "presets": [
@@ -682,15 +729,39 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 14,
-      "controlled": 12,
-      "excluded": 2,
+      "publicInputsAndModels": 17,
+      "controlled": 13,
+      "excluded": 4,
       "unclassified": 0
     },
     "exclusions": [
       {
         "componentId": "text-input",
+        "publicName": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#text-input"
+        }
+      },
+      {
+        "componentId": "text-input",
         "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#text-input"
+        }
+      },
+      {
+        "componentId": "text-input",
+        "publicName": "ariaLabelledBy",
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",

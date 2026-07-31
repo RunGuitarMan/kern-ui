@@ -1,7 +1,7 @@
 /**
  * Grouped review actions
  *
- * Present closely related actions as one labeled control group.
+ * Present independent native actions as one labeled visual group.
  *
  * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.
  */
@@ -15,10 +15,10 @@ import { KrnButton, KrnButtonGroup } from '@kern-ui/angular/kit';
   imports: [KrnButtonGroup, KrnButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <krn-button-group ariaLabel="Review actions">
-      <krn-button variant="outline">Request changes</krn-button>
-      <krn-button>Approve</krn-button>
-    </krn-button-group>
+    <div krnButtonGroup aria-label="Review actions">
+      <button krnButton type="button" variant="outline">Request changes</button>
+      <button krnButton type="button">Approve</button>
+    </div>
   `,
 })
 export class KernButtonGroupAgentExample {}

@@ -57,6 +57,10 @@ void bootstrapApplication(KernClusterAgentExample);
 | `align`     | input | `KrnLayoutAlignment`     | no       | `'center'` | Logical cross-axis alignment applied to children by the layout. |
 | `justify`   | input | `KrnLayoutJustification` | no       | `'start'`  | Logical main-axis distribution applied to layout children.      |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

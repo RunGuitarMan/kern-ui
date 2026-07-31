@@ -711,6 +711,11 @@ type KrnResolvedTheme = Exclude<KrnTheme, 'system'>;
 
 interface KrnActionTranslations {
   readonly copyToClipboard: string;
+  /**
+   * Pending copy feedback. Optional so complete third-party dictionaries made
+   * for earlier Kern versions remain source-compatible.
+   */
+  readonly copying?: string;
   readonly copied: string;
   readonly copyFailed: string;
   readonly moreActions: string;
@@ -818,6 +823,7 @@ interface KrnColorPickerTranslations {
   readonly suggestedColors: string;
   readonly hue: string;
   readonly saturation: string;
+  readonly lightness: string;
   readonly colorValue: string;
   readonly validColor: string;
   readonly invalidColor: string;
@@ -885,6 +891,7 @@ interface KrnNavigationTranslations {
 }
 interface KrnFormTranslations {
   readonly chooseFiles: string;
+  readonly fileSelectionRequired: string;
   readonly dropFilesHere: string;
   readonly selectedFiles: string;
   readonly unlimited: string;
@@ -1075,6 +1082,9 @@ declare const KRN_MOTION: InjectionToken<KrnMotionPreference>;
  * Registers Kern's cross-cutting configuration as one environment provider.
  * Feature-level providers may still override individual tokens in a child
  * injector when an embedded application needs a different locale or direction.
+ * A child that provides the complete `KRN_TRANSLATIONS` registry directly must
+ * also install `provideKrnTranslationBridge()` so dependency-light leaf-copy
+ * tokens follow that registry.
  */
 declare function provideKrn(config?: KrnConfig): EnvironmentProviders;
 
@@ -1199,6 +1209,16 @@ declare class KrnThemeDirective {
   >;
 }
 
+/**
+ * Bridges the complete translation registry to the aggregate set of
+ * tree-shakable leaf-copy tokens.
+ *
+ * `provideKrn` installs this automatically. Add it explicitly at a nested
+ * injector boundary that provides `KRN_TRANSLATIONS` directly. The returned
+ * provider array is intentionally extensible as new leaf-copy tokens appear.
+ */
+declare function provideKrnTranslationBridge(): Provider[];
+
 export {
   KRN_BRAND_STEPS,
   KRN_BUILT_IN_ICONS,
@@ -1230,6 +1250,7 @@ export {
   provideKrn,
   provideKrnIcons,
   provideKrnTheme,
+  provideKrnTranslationBridge,
 };
 export type {
   KrnActionTranslations,

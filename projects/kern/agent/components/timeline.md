@@ -56,6 +56,10 @@ void bootstrapApplication(KernTimelineAgentExample);
 | ----------- | ----- | -------- | -------- | ---------------------------------------- | ------------------------------------------------------------ |
 | `ariaLabel` | input | `string` | no       | `this.translations.dataDisplay.timeline` | Accessible name used when visible content is not sufficient. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

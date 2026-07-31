@@ -51,9 +51,13 @@ void bootstrapApplication(KernAvatarAgentExample);
 | `src`         | input | `string \| undefined`                       | no       | `undefined`          | Required media source URL loaded by the component.                             |
 | `alt`         | input | `string`                                    | no       | `''`                 | Text alternative that communicates the meaning of visual media.                |
 | `name`        | input | `string`                                    | no       | `''`                 | Required human-readable name for the represented person, item, or action.      |
-| `size`        | input | `"sm" \| "md" \| "lg"`                      | no       | `'md'`               | Named semantic size resolved through KERN density and sizing tokens.           |
-| `status`      | input | `"online" \| "away" \| "busy" \| undefined` | no       | `undefined`          | Current domain status rendered as visible text and a non-color-only treatment. |
+| `size`        | input | `"lg" \| "md" \| "sm"`                      | no       | `'md'`               | Named semantic size resolved through KERN density and sizing tokens.           |
+| `status`      | input | `"away" \| "busy" \| "online" \| undefined` | no       | `undefined`          | Current domain status rendered as visible text and a non-color-only treatment. |
 | `imageFailed` | model | `boolean`                                   | no       | `false`              | Controlled image failed state with a matching Angular model-change output.     |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 

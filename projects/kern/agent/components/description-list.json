@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-description-list",
   "selectors": ["krn-description-list"],
+  "selectorDeprecations": [],
   "symbol": "KrnDescriptionList",
   "canonicalSymbol": "KrnDescriptionList",
   "canonicalId": "description-list",

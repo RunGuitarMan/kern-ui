@@ -54,6 +54,10 @@ void bootstrapApplication(KernDisclosureAgentExample);
 | `heading` | input | `string`  | yes      | `required` | Human-readable copy for the heading state or control.          |
 | `open`    | model | `boolean` | no       | `false`    | Controls whether the disclosure or overlay surface is visible. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

@@ -48,6 +48,10 @@ void bootstrapApplication(KernBadgeAgentExample);
 | `tone`   | input | `KrnDisplayTone` | no       | `'neutral'` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
 | `status` | input | `boolean`        | no       | `false`     | Current domain status rendered as visible text and a non-color-only treatment.   |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

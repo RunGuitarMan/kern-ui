@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-split-button",
   "selectors": ["krn-split-button"],
+  "selectorDeprecations": [],
   "symbol": "KrnSplitButton",
   "canonicalSymbol": "KrnSplitButton",
   "canonicalId": "split-button",
@@ -58,7 +59,7 @@
       "kind": "input",
       "type": "KrnSize",
       "required": false,
-      "defaultValue": "'md'",
+      "defaultValue": "this.options.size",
       "description": "Named semantic size resolved through KERN density and sizing tokens.",
       "descriptionSource": "inferred"
     },
@@ -68,7 +69,7 @@
       "kind": "input",
       "type": "KrnActionVariant",
       "required": false,
-      "defaultValue": "'solid'",
+      "defaultValue": "this.options.variant",
       "description": "Named visual hierarchy treatment that preserves the component semantics.",
       "descriptionSource": "inferred"
     },
@@ -78,7 +79,7 @@
       "kind": "input",
       "type": "KrnTone",
       "required": false,
-      "defaultValue": "'brand'",
+      "defaultValue": "this.options.tone",
       "description": "Semantic intent that selects coordinated text, icon, border, and surface tokens.",
       "descriptionSource": "inferred"
     },
@@ -113,12 +114,52 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "menuAlign",
+      "property": "menuAlign",
+      "kind": "input",
+      "type": "KrnMenuAlignment",
+      "required": false,
+      "defaultValue": "this.options.menuAlign",
+      "description": "Logical horizontal alignment used before the CDK collision fallbacks.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "menuOffset",
+      "property": "menuOffset",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "this.options.menuOffset",
+      "description": "Non-negative logical gap in CSS pixels between the trigger and menu.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "matchTriggerWidth",
+      "property": "matchTriggerWidth",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "this.options.matchTriggerWidth",
+      "description": "Makes the connected overlay exactly as wide as the complete trigger origin.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "closeOnSelection",
+      "property": "closeOnSelection",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Closes after an enabled menu item activates; use the keep-open marker for one item.",
+      "descriptionSource": "source"
+    },
+    {
       "name": "menuLabel",
       "property": "menuLabel",
       "kind": "input",
       "type": "string",
       "required": false,
-      "defaultValue": "this.translations.actions.moreActions",
+      "defaultValue": "inject(KRN_MORE_ACTIONS_LABEL)",
       "description": "Human-readable copy for the menu state or control.",
       "descriptionSource": "inferred"
     },
@@ -199,6 +240,10 @@
     "disabled",
     "loading",
     "open",
+    "menuAlign",
+    "menuOffset",
+    "matchTriggerWidth",
+    "closeOnSelection",
     "menuLabel",
     "primaryAction"
   ],
@@ -241,6 +286,42 @@
         }
       },
       {
+        "key": "menuAlign",
+        "label": "Menu alignment",
+        "kind": "select",
+        "defaultValue": "end",
+        "testValue": "start",
+        "description": "Aligns the connected menu to the logical start or end edge of the trigger.",
+        "binding": {
+          "kind": "input",
+          "publicName": "menuAlign",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "start",
+            "value": "start"
+          },
+          {
+            "label": "end",
+            "value": "end"
+          }
+        ]
+      },
+      {
+        "key": "closeOnSelection",
+        "label": "Close On Selection",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Configures the component closeOnSelection contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "closeOnSelection",
+          "syntax": "property"
+        }
+      },
+      {
         "key": "disabled",
         "label": "Disabled",
         "kind": "boolean",
@@ -265,6 +346,35 @@
           "publicName": "loading",
           "syntax": "property"
         }
+      },
+      {
+        "key": "matchTriggerWidth",
+        "label": "Match Trigger Width",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Configures the component matchTriggerWidth contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "matchTriggerWidth",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "menuOffset",
+        "label": "Menu Offset",
+        "kind": "number",
+        "defaultValue": 8,
+        "testValue": 9,
+        "description": "Configures the component menuOffset contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "menuOffset",
+          "syntax": "property"
+        },
+        "min": -1000,
+        "max": 1000,
+        "step": 1
       },
       {
         "key": "size",
@@ -501,8 +611,8 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 7,
-      "controlled": 6,
+      "publicInputsAndModels": 11,
+      "controlled": 10,
       "excluded": 1,
       "unclassified": 0
     },
@@ -513,7 +623,7 @@
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#split-button"

@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-label",
   "selectors": ["krn-label"],
+  "selectorDeprecations": [],
   "symbol": "KrnLabel",
   "canonicalSymbol": "KrnLabel",
   "canonicalId": "label",

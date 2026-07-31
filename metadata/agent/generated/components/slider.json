@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-slider",
   "selectors": ["krn-slider"],
+  "selectorDeprecations": [],
   "symbol": "KrnSlider",
   "canonicalSymbol": "KrnSlider",
   "canonicalId": "slider",
@@ -63,6 +64,16 @@
       "required": false,
       "defaultValue": "''",
       "description": "Stable identifier value used by the id contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "name",
+      "property": "name",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "''",
+      "description": "Required human-readable name for the represented person, item, or action.",
       "descriptionSource": "inferred"
     },
     {
@@ -156,6 +167,26 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "tabindex",
+      "property": "tabIndex",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "0",
+      "description": "Native sequential-focus order forwarded to the owned interactive element.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "value",
+      "property": "value",
+      "kind": "input",
+      "type": "number | undefined",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Controlled component value.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "valueFormatter",
       "property": "valueFormatter",
       "kind": "input",
@@ -231,6 +262,7 @@
     "krn-slider",
     "KrnSlider",
     "id",
+    "name",
     "label",
     "ariaLabel",
     "min",
@@ -240,6 +272,8 @@
     "readonly",
     "invalid",
     "showValue",
+    "tabindex",
+    "value",
     "valueFormatter",
     "valueChange"
   ],
@@ -396,6 +430,38 @@
           "publicName": "label",
           "syntax": "property"
         }
+      },
+      {
+        "key": "tabindex",
+        "label": "Tabindex",
+        "kind": "number",
+        "defaultValue": 0,
+        "testValue": 1,
+        "description": "Configures the component tabindex contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "tabindex",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 10000,
+        "step": 1
+      },
+      {
+        "key": "value",
+        "label": "Value",
+        "kind": "number",
+        "defaultValue": 0,
+        "testValue": 1,
+        "description": "Controlled component value.",
+        "binding": {
+          "kind": "input",
+          "publicName": "value",
+          "syntax": "property"
+        },
+        "min": -1000,
+        "max": 1000,
+        "step": 1
       }
     ],
     "presets": [
@@ -577,9 +643,9 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 11,
-      "controlled": 9,
-      "excluded": 2,
+      "publicInputsAndModels": 14,
+      "controlled": 11,
+      "excluded": 3,
       "unclassified": 0
     },
     "exclusions": [
@@ -593,6 +659,18 @@
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#slider"
+        }
+      },
+      {
+        "componentId": "slider",
+        "publicName": "name",
+        "kind": "input",
+        "type": "string",
+        "code": "form-serialization",
+        "reason": "Form submission field names do not alter the rendered component and are covered by forms integration tests.",
+        "evidence": {
+          "category": "forms-integration",
+          "pointer": "tests/e2e/enterprise-acceptance.spec.ts#slider"
         }
       },
       {

@@ -60,31 +60,38 @@ void bootstrapApplication(KernComboboxAgentExample);
 
 ## API
 
-| Name          | Kind  | Type     | Required | Default                                                                                         | Description                                                       |
-| ------------- | ----- | -------- | -------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| `id`          | input | `string` | no       | `''`                                                                                            | Stable identifier value used by the id contract.                  |
-| `placeholder` | input | `string` | no       | `this.translations.forms.startTyping`                                                           | Short input hint shown only while no value is present.            |
-| `emptyText`   | input | `string` | no       | `this.translations.forms.noMatches`                                                             | Visible and announced copy when the data collection has no items. |
-| `loadingText` | input | `string` | no       | `this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? ''` | Visible and announced copy while asynchronous data is loading.    |
-| `errorText`   | input | `string` | no       | `this.translations.forms.optionsLoadFailed ??                                                   |
+| Name               | Kind   | Type                                     | Required | Default                                                                                               | Description                                                                                      |
+| ------------------ | ------ | ---------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `autocompleteMode` | input  | `KrnAutocompleteMode \| undefined`       | no       | `undefined`                                                                                           | Controls whether the component applies the autocomplete mode input behavior.                     |
+| `allowCustomValue` | input  | `boolean \| undefined`                   | no       | `undefined`                                                                                           | Controls whether the component applies the allow custom value input behavior.                    |
+| `id`               | input  | `string`                                 | no       | `''`                                                                                                  | Stable identifier value used by the id contract.                                                 |
+| `placeholder`      | input  | `string`                                 | no       | `this.translations.forms.startTyping`                                                                 | Short input hint shown only while no value is present.                                           |
+| `emptyText`        | input  | `string`                                 | no       | `this.translations.forms.noMatches`                                                                   | Visible and announced copy when the data collection has no items.                                |
+| `loadingText`      | input  | `string`                                 | no       | `this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? ''`       | Visible and announced copy while asynchronous data is loading.                                   |
+| `errorText`        | input  | `string`                                 | no       | `this.translations.forms.optionsLoadFailed ?? KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ?? ''` | Visible and announced copy when loading the data collection fails.                               |
+| `ariaLabel`        | input  | `string`                                 | no       | `''`                                                                                                  | Accessible name used when visible content is not sufficient.                                     |
+| `ariaLabelledBy`   | input  | `string`                                 | no       | `''`                                                                                                  | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy`  | input  | `string`                                 | no       | `''`                                                                                                  | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `toggleLabel`      | input  | `string`                                 | no       | `this.translations.forms.showOptions`                                                                 | Human-readable copy for the toggle state or control.                                             |
+| `name`             | input  | `string`                                 | no       | `''`                                                                                                  | Required human-readable name for the represented person, item, or action.                        |
+| `options`          | input  | `ReadonlyArray<KrnSelectOption<string>>` | yes      | `required`                                                                                            | Authoritative option collection presented by the selection control.                              |
+| `optionsState`     | input  | `KrnOptionsState`                        | no       | `'ready'`                                                                                             | Controls whether options are interactive or replaced by an announced loading/error state.        |
+| `filterLocally`    | input  | `boolean`                                | no       | `true`                                                                                                | Set to false when the consumer filters options remotely in response to queryChange.              |
+| `optionFilter`     | input  | `KrnOptionFilter<string> \| null`        | no       | `null`                                                                                                | Overrides the default case-insensitive local option filter.                                      |
+| `disabled`         | input  | `boolean`                                | no       | `false`                                                                                               | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`         | input  | `boolean`                                | no       | `false`                                                                                               | Keeps the value perceivable while preventing user edits.                                         |
+| `required`         | input  | `boolean`                                | no       | `false`                                                                                               | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`          | input  | `boolean`                                | no       | `false`                                                                                               | Exposes an externally controlled invalid presentation state.                                     |
+| `tabindex`         | input  | `number`                                 | no       | `0`                                                                                                   | Native sequential-focus order forwarded to the owned interactive element.                        |
+| `value`            | input  | `string \| undefined`                    | no       | `undefined`                                                                                           | Controlled component value.                                                                      |
+| `open`             | model  | `boolean`                                | no       | `false`                                                                                               | Controls whether the disclosure or overlay surface is visible.                                   |
+| `valueChange`      | output | `string`                                 | no       | `undefined`                                                                                           | Notifies the consumer after the value change interaction completes.                              |
+| `queryChange`      | output | `string`                                 | no       | `undefined`                                                                                           | Emits every user query so remote option sources can load and replace options.                    |
+| `optionSelected`   | output | `KrnSelectOption<string>`                | no       | `undefined`                                                                                           | Notifies the consumer after the option selected interaction completes.                           |
 
-      KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??
-      ''` | Visible and announced copy when loading the data collection fails. |
+## Deprecated selectors
 
-| `ariaLabel` | input | `string` | no | `''` | Accessible name used when visible content is not sufficient. |
-| `toggleLabel` | input | `string` | no | `this.translations.forms.showOptions` | Human-readable copy for the toggle state or control. |
-| `options` | input | `ReadonlyArray<KrnSelectOption<string>>` | yes | `required` | Authoritative option collection presented by the selection control. |
-| `optionsState` | input | `KrnOptionsState` | no | `'ready'` | Controls whether options are interactive or replaced by an announced loading/error state. |
-| `filterLocally` | input | `boolean` | no | `true` | Set to false when the consumer filters options remotely in response to queryChange. |
-| `optionFilter` | input | `KrnOptionFilter<string> \| null` | no | `null` | Overrides the default case-insensitive local option filter. |
-| `disabled` | input | `boolean` | no | `false` | Prevents user interaction and participates in the disabled-state contract. |
-| `readonly` | input | `boolean` | no | `false` | Keeps the value perceivable while preventing user edits. |
-| `required` | input | `boolean` | no | `false` | Marks the value as required and participates in Angular Forms validation. |
-| `invalid` | input | `boolean` | no | `false` | Exposes an externally controlled invalid presentation state. |
-| `open` | model | `boolean` | no | `false` | Controls whether the disclosure or overlay surface is visible. |
-| `valueChange` | output | `string` | no | `undefined` | Notifies the consumer after the value change interaction completes. |
-| `queryChange` | output | `string` | no | `undefined` | Emits every user query so remote option sources can load and replace options. |
-| `optionSelected` | output | `KrnSelectOption<string>` | no | `undefined` | Notifies the consumer after the option selected interaction completes. |
+_No deprecated selectors._
 
 ## Content slots
 
@@ -142,36 +149,43 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/combobox`
 
 Scenarios: `default`, `stress`.
-Public API coverage: 12/16
-directly controlled; 4 exact exclusions; 0 unclassified.
+Public API coverage: 15/23
+directly controlled; 8 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument        | Control | Default                    | Test value                             | Binding                          | Description                                                          |
-| --------------- | ------- | -------------------------- | -------------------------------------- | -------------------------------- | -------------------------------------------------------------------- |
-| `placeholder`   | text    | `"Filter plans…"`          | `"Filter plans… · alternate"`          | input `placeholder` (property)   | Sets the empty input prompt.                                         |
-| `optionsState`  | select  | `"ready"`                  | `"loading"`                            | input `optionsState` (property)  | Shows ready, loading, or error option content.                       |
-| `emptyText`     | text    | `"No options"`             | `"No options · alternate"`             | input `emptyText` (property)     | Uses locale-aware empty-options copy until explicitly changed.       |
-| `errorText`     | text    | `"Could not load options"` | `"Could not load options · alternate"` | input `errorText` (property)     | Uses locale-aware option-load failure copy until explicitly changed. |
-| `loadingText`   | text    | `"Loading options…"`       | `"Loading options… · alternate"`       | input `loadingText` (property)   | Uses locale-aware loading copy until explicitly changed.             |
-| `open`          | boolean | `false`                    | `true`                                 | model `open`                     | Opens the filtered listbox.                                          |
-| `disabled`      | boolean | `false`                    | `true`                                 | input `disabled` (property)      | Prevents user interaction.                                           |
-| `readOnly`      | boolean | `false`                    | `true`                                 | input `readonly` (property)      | Keeps the value focusable while preventing edits.                    |
-| `required`      | boolean | `false`                    | `true`                                 | input `required` (property)      | Marks the control as required.                                       |
-| `invalid`       | boolean | `false`                    | `true`                                 | input `invalid` (property)       | Exposes the invalid visual and ARIA state.                           |
-| `filterLocally` | boolean | `true`                     | `false`                                | input `filterLocally` (property) | Configures the component filterLocally contract.                     |
-| `id`            | text    | `""`                       | `"Alternate value"`                    | input `id` (property)            | Configures the component id contract.                                |
+| Argument           | Control | Default                    | Test value                             | Binding                             | Description                                                          |
+| ------------------ | ------- | -------------------------- | -------------------------------------- | ----------------------------------- | -------------------------------------------------------------------- |
+| `placeholder`      | text    | `"Filter plans…"`          | `"Filter plans… · alternate"`          | input `placeholder` (property)      | Sets the empty input prompt.                                         |
+| `optionsState`     | select  | `"ready"`                  | `"loading"`                            | input `optionsState` (property)     | Shows ready, loading, or error option content.                       |
+| `emptyText`        | text    | `"No options"`             | `"No options · alternate"`             | input `emptyText` (property)        | Uses locale-aware empty-options copy until explicitly changed.       |
+| `errorText`        | text    | `"Could not load options"` | `"Could not load options · alternate"` | input `errorText` (property)        | Uses locale-aware option-load failure copy until explicitly changed. |
+| `loadingText`      | text    | `"Loading options…"`       | `"Loading options… · alternate"`       | input `loadingText` (property)      | Uses locale-aware loading copy until explicitly changed.             |
+| `open`             | boolean | `false`                    | `true`                                 | model `open`                        | Opens the filtered listbox.                                          |
+| `disabled`         | boolean | `false`                    | `true`                                 | input `disabled` (property)         | Prevents user interaction.                                           |
+| `readOnly`         | boolean | `false`                    | `true`                                 | input `readonly` (property)         | Keeps the value focusable while preventing edits.                    |
+| `required`         | boolean | `false`                    | `true`                                 | input `required` (property)         | Marks the control as required.                                       |
+| `invalid`          | boolean | `false`                    | `true`                                 | input `invalid` (property)          | Exposes the invalid visual and ARIA state.                           |
+| `allowCustomValue` | boolean | `false`                    | `true`                                 | input `allowCustomValue` (property) | Configures the component allowCustomValue contract.                  |
+| `filterLocally`    | boolean | `true`                     | `false`                                | input `filterLocally` (property)    | Configures the component filterLocally contract.                     |
+| `id`               | text    | `""`                       | `"Alternate value"`                    | input `id` (property)               | Configures the component id contract.                                |
+| `tabindex`         | number  | `0`                        | `1`                                    | input `tabindex` (property)         | Configures the component tabindex contract.                          |
+| `value`            | text    | `""`                       | `"Alternate value"`                    | input `value` (property)            | Controlled component value.                                          |
 
 Exact API exclusions:
 
-| Public API     | Category           | Evidence                                              | Reason                                                                                                                                                              |
-| -------------- | ------------------ | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#combobox` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `optionFilter` | complex-data       | `specimen-fixture:preview/combobox?state=default`     | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                    |
-| `options`      | complex-data       | `specimen-fixture:preview/combobox?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                             |
-| `toggleLabel`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#combobox` | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| Public API         | Category           | Evidence                                                             | Reason                                                                                                                                                               |
+| ------------------ | ------------------ | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaDescribedBy`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#combobox`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `ariaLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#combobox`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `ariaLabelledBy`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#combobox`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `autocompleteMode` | complex-data       | `specimen-fixture:preview/combobox?state=default`                    | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                     |
+| `name`             | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#combobox` | Form submission field names do not alter the rendered component and are covered by forms integration tests.                                                          |
+| `optionFilter`     | complex-data       | `specimen-fixture:preview/combobox?state=default`                    | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                     |
+| `options`          | complex-data       | `specimen-fixture:preview/combobox?state=default`                    | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
+| `toggleLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#combobox`                | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 

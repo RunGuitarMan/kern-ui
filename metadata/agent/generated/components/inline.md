@@ -55,6 +55,10 @@ void bootstrapApplication(KernInlineAgentExample);
 | `justify` | input | `KrnLayoutJustification` | no       | `'start'`  | Logical main-axis distribution applied to layout children.                             |
 | `wrap`    | input | `boolean`                | no       | `false`    | Controls whether layout children wrap onto additional lines when space is constrained. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

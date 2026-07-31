@@ -51,6 +51,10 @@ void bootstrapApplication(KernLabelAgentExample);
 | `for`      | input | `string`  | no       | `''`    | Id of the labelable control associated with this label.                   |
 | `required` | input | `boolean` | no       | `false` | Marks the value as required and participates in Angular Forms validation. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

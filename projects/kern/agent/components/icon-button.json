@@ -3,8 +3,9 @@
   "name": "Icon Button",
   "category": "Actions",
   "kind": "component",
-  "selector": "krn-icon-button",
-  "selectors": ["krn-icon-button"],
+  "selector": "button[krnIconButton]",
+  "selectors": ["button[krnIconButton]"],
+  "selectorDeprecations": [],
   "symbol": "KrnIconButton",
   "canonicalSymbol": "KrnIconButton",
   "canonicalId": "icon-button",
@@ -15,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Icon Button. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.",
+  "summary": "Icon Button. Enhances a native button with a compact square action target, visual defaults, and a focus-preserving loading state.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -51,22 +52,12 @@
   },
   "api": [
     {
-      "name": "ariaLabel",
-      "property": "ariaLabel",
-      "kind": "input",
-      "type": "string",
-      "required": true,
-      "defaultValue": "required",
-      "description": "Accessible name used when visible content is not sufficient.",
-      "descriptionSource": "inferred"
-    },
-    {
       "name": "size",
       "property": "size",
       "kind": "input",
       "type": "KrnSize",
       "required": false,
-      "defaultValue": "'md'",
+      "defaultValue": "this.options.size",
       "description": "Named semantic size resolved through KERN density and sizing tokens.",
       "descriptionSource": "inferred"
     },
@@ -76,7 +67,7 @@
       "kind": "input",
       "type": "KrnActionVariant",
       "required": false,
-      "defaultValue": "'ghost'",
+      "defaultValue": "this.options.variant",
       "description": "Named visual hierarchy treatment that preserves the component semantics.",
       "descriptionSource": "inferred"
     },
@@ -86,18 +77,8 @@
       "kind": "input",
       "type": "KrnTone",
       "required": false,
-      "defaultValue": "'neutral'",
+      "defaultValue": "this.options.tone",
       "description": "Semantic intent that selects coordinated text, icon, border, and surface tokens.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "type",
-      "property": "type",
-      "kind": "input",
-      "type": "KrnButtonType",
-      "required": false,
-      "defaultValue": "'button'",
-      "description": "Native action or input type forwarded to the owned interactive element.",
       "descriptionSource": "inferred"
     },
     {
@@ -107,38 +88,18 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Prevents duplicate actions and exposes accessible busy state.",
-      "descriptionSource": "inferred"
+      "description": "Suppresses duplicate activation and owns `aria-disabled` while retaining\nfocus. Use native `disabled` for ordinary unavailability.",
+      "descriptionSource": "source"
     },
     {
-      "name": "disabled",
-      "property": "disabled",
+      "name": "loadingLabel",
+      "property": "loadingLabel",
       "kind": "input",
-      "type": "boolean",
+      "type": "string",
       "required": false,
-      "defaultValue": "false",
-      "description": "Prevents user interaction and participates in the disabled-state contract.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "pressed",
-      "property": "pressed",
-      "kind": "input",
-      "type": "boolean | undefined",
-      "required": false,
-      "defaultValue": "undefined",
-      "description": "Controlled toggle-button pressed state exposed through native button semantics.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "activated",
-      "property": "activated",
-      "kind": "output",
-      "type": "MouseEvent",
-      "required": false,
-      "defaultValue": "undefined",
-      "description": "Notifies the consumer after the activated interaction completes.",
-      "descriptionSource": "inferred"
+      "defaultValue": "this.defaultLoadingLabel",
+      "description": "Accessible loading copy; defaults to the application or closest scoped option.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [
@@ -155,16 +116,21 @@
     "valueType": null,
     "reactiveForms": false,
     "templateDrivenForms": false,
-    "stateInputs": ["disabled"],
+    "stateInputs": [],
     "notes": []
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Enter / Space activates", "Tab follows document order"],
+    "keyboard": [
+      "Tab focuses the native button",
+      "Enter and Space dispatch the native click behavior",
+      "A loading icon button retains focus but suppresses click and form submission"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Every icon-only action has a native aria-label or aria-labelledby on the host button.",
+      "Native type, disabled, name, value, form, and aria-describedby relationships stay on the host button.",
+      "Loading uses a persistent polite status and aria-disabled without removing the action from focus order.",
+      "aria-disabled is reserved for the derived loading state; use native disabled for ordinary unavailability."
     ],
     "manualValidationRequired": true
   },
@@ -183,37 +149,39 @@
       "title": "Accessible icon-only action",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Accessible icon-only action\n *\n * Provide a stable accessible name for an icon-only control.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnIconButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-icon-button-agent-example',\n  standalone: true,\n  imports: [KrnIconButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-icon-button ariaLabel=\"Add team member\">+</krn-icon-button> `,\n})\nexport class KernIconButtonAgentExample {}\n\nvoid bootstrapApplication(KernIconButtonAgentExample);\n",
+      "code": "/**\n * Accessible icon-only action\n *\n * Keep the accessible name and native action semantics on the icon-only button host.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnIconButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-icon-button-agent-example',\n  standalone: true,\n  imports: [KrnIconButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <button krnIconButton type=\"button\" aria-label=\"Add team member\">+</button> `,\n})\nexport class KernIconButtonAgentExample {}\n\nvoid bootstrapApplication(KernIconButtonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/icon-button.ts"
     }
   ],
-  "related": ["button", "button-group", "split-button", "floating-action-button"],
+  "related": ["button", "toggle-button", "button-group", "floating-action-button", "split-button"],
   "keywords": [
     "icon-button",
     "Icon Button",
     "Actions",
-    "krn-icon-button",
+    "button[krnIconButton]",
     "KrnIconButton",
-    "ariaLabel",
+    "native button",
+    "icon-only action",
+    "accessible name",
+    "scoped options",
+    "loading announcement",
     "size",
     "variant",
     "tone",
-    "type",
     "loading",
-    "disabled",
-    "pressed",
-    "activated"
+    "loadingLabel"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use <button krnIconButton type=\"button\"> with a native accessible name and native events or form attributes.",
+    "avoidWhen": "Do not add role=\"button\", proxy native attributes through component inputs, or use Icon Button for managed toggle state; use Toggle Button."
   },
   "commonMistakes": [
-    "Do not omit required inputs: `ariaLabel`.",
     "Importing from an undeclared family path or a source implementation file.",
     "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
-    "Assuming the documentation SSR build replaces validation of the consuming application."
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Use button[krnIconButton] with a native aria-label or aria-labelledby; keep type, disabled, name, value, form, aria-describedby relationships, and click on the native host.",
+    "Use provideKrnIconButtonOptions for inheritable visual and loading-copy defaults, and prefer Toggle Button when the component must own managed pressed state."
   ],
   "checklist": [
     "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
@@ -348,52 +316,12 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Prevents user interaction.",
+        "description": "Binds the native disabled attribute and prevents user interaction.",
         "binding": {
-          "kind": "input",
-          "publicName": "disabled",
-          "syntax": "property"
+          "kind": "fixture",
+          "target": "interaction",
+          "description": "Binds disabled directly to the native icon-button host; it is not a component input."
         }
-      },
-      {
-        "key": "pressed",
-        "label": "Pressed",
-        "kind": "boolean",
-        "defaultValue": false,
-        "testValue": true,
-        "description": "Exposes the pressed state to assistive technology.",
-        "binding": {
-          "kind": "input",
-          "publicName": "pressed",
-          "syntax": "property"
-        }
-      },
-      {
-        "key": "type",
-        "label": "Type",
-        "kind": "select",
-        "defaultValue": "button",
-        "testValue": "submit",
-        "description": "Configures the component type contract.",
-        "binding": {
-          "kind": "input",
-          "publicName": "type",
-          "syntax": "property"
-        },
-        "options": [
-          {
-            "label": "button",
-            "value": "button"
-          },
-          {
-            "label": "submit",
-            "value": "submit"
-          },
-          {
-            "label": "reset",
-            "value": "reset"
-          }
-        ]
       }
     ],
     "presets": [
@@ -508,30 +436,22 @@
         "args": {
           "loading": true
         }
-      },
-      {
-        "id": "pressed",
-        "label": "Pressed",
-        "scenario": "default",
-        "args": {
-          "pressed": true
-        }
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 8,
-      "controlled": 7,
+      "publicInputsAndModels": 5,
+      "controlled": 4,
       "excluded": 1,
       "unclassified": 0
     },
     "exclusions": [
       {
         "componentId": "icon-button",
-        "publicName": "ariaLabel",
+        "publicName": "loadingLabel",
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",
-        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#icon-button"

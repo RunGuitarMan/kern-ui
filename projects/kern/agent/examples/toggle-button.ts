@@ -1,7 +1,7 @@
 /**
  * Controlled formatting toggle
  *
- * Keep the pressed state in application-owned state.
+ * Keep formatting state controlled while native button semantics remain intact.
  *
  * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.
  */
@@ -14,7 +14,9 @@ import { KrnToggleButton } from '@kern-ui/angular/kit';
   standalone: true,
   imports: [KrnToggleButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <krn-toggle-button value="bold" [(pressed)]="boldEnabled">Bold</krn-toggle-button> `,
+  template: `
+    <button krnToggleButton type="button" value="bold" [(pressed)]="boldEnabled">Bold</button>
+  `,
 })
 export class KernToggleButtonAgentExample {
   boldEnabled = false;

@@ -55,6 +55,10 @@ void bootstrapApplication(KernCardAgentExample);
 | `heading`     | input | `string`  | no       | `''`    | Human-readable copy for the heading state or control.                         |
 | `interactive` | input | `boolean` | no       | `false` | Enables the documented user interaction for an otherwise presentational item. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `[krnCardAction]` — Projects content matching [krnCardAction].

@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-mobile-navigation",
   "selectors": ["krn-mobile-navigation"],
+  "selectorDeprecations": [],
   "symbol": "KrnMobileNavigation",
   "canonicalSymbol": "KrnMobileNavigation",
   "canonicalId": "mobile-navigation",

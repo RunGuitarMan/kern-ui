@@ -64,6 +64,10 @@ void bootstrapApplication(KernResponsiveApplicationShellAgentExample);
 | `navigationOpen` | model | `boolean` | no       | `false`          | Controlled navigation open state with a matching Angular model-change output. |
 | `mainId`         | input | `string`  | no       | `'main-content'` | Stable identifier value used by the main contract.                            |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `[krnAppHeader]` — Projects content matching [krnAppHeader].

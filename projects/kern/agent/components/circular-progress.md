@@ -57,7 +57,11 @@ void bootstrapApplication(KernCircularProgressAgentExample);
 | `indeterminate` | input | `boolean`                 | no       | `false`                               | Represents an unknown progress value or a mixed selection state.            |
 | `showValue`     | input | `boolean`                 | no       | `false`                               | Controls whether the component applies the show value behavior.             |
 | `ariaLabel`     | input | `string`                  | no       | `this.translations.feedback.progress` | Accessible name used when visible content is not sufficient.                |
-| `locale`        | input | `string \| Array<string>` | no       | `inject(KRN_LOCALE)`                  | Locale identifier used for collation, formatting, and component-owned copy. |
+| `locale`        | input | `Array<string> \| string` | no       | `inject(KRN_LOCALE)`                  | Locale identifier used for collation, formatting, and component-owned copy. |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 

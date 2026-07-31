@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-rating",
   "selectors": ["krn-rating"],
+  "selectorDeprecations": [],
   "symbol": "KrnRating",
   "canonicalSymbol": "KrnRating",
   "canonicalId": "rating",

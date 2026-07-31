@@ -49,6 +49,10 @@ void bootstrapApplication(KernBackButtonAgentExample);
 | `label`     | input  | `string`         | no       | `this.translations.navigation.back` | Visible text that names the control or data value.               |
 | `activated` | output | `void`           | no       | `undefined`                         | Notifies the consumer after the activated interaction completes. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._

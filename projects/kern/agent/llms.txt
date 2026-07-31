@@ -40,15 +40,15 @@ KERN is a standalone Angular component library for enterprise product interfaces
 
 ## Actions
 
-- [Button](./components/button.md): `krn-button`, stable, import from `@kern-ui/angular/kit`.
-- [Icon Button](./components/icon-button.md): `krn-icon-button`, stable, import from `@kern-ui/angular/kit`.
-- [Button Group](./components/button-group.md): `krn-button-group`, stable, import from `@kern-ui/angular/kit`.
+- [Button](./components/button.md): `button[krnButton]`, stable, import from `@kern-ui/angular/kit`.
+- [Icon Button](./components/icon-button.md): `button[krnIconButton]`, stable, import from `@kern-ui/angular/kit`.
+- [Button Group](./components/button-group.md): `div[krnButtonGroup]`, stable, import from `@kern-ui/angular/kit`.
 - [Split Button](./components/split-button.md): `krn-split-button`, stable, import from `@kern-ui/angular/kit`.
-- [Floating Action Button](./components/floating-action-button.md): `krn-floating-action-button`, stable, import from `@kern-ui/angular/kit`.
-- [Toggle Button](./components/toggle-button.md): `krn-toggle-button`, stable, import from `@kern-ui/angular/kit`.
-- [Toggle Group](./components/toggle-group.md): `krn-toggle-group`, stable, import from `@kern-ui/angular/kit`.
+- [Floating Action Button](./components/floating-action-button.md): `button[krnFab]`, stable, import from `@kern-ui/angular/kit`.
+- [Toggle Button](./components/toggle-button.md): `button[krnToggleButton]`, stable, import from `@kern-ui/angular/kit`.
+- [Toggle Group](./components/toggle-group.md): `div[krnToggleGroup]`, stable, import from `@kern-ui/angular/kit`.
 - [Copy Button](./components/copy-button.md): `krn-copy-button`, stable, import from `@kern-ui/angular/kit`.
-- [Link](./components/link.md): `krn-link`, stable, import from `@kern-ui/angular/kit`.
+- [Link](./components/link.md): `a[krnLink]`, stable, import from `@kern-ui/angular/kit`.
 - [Dropdown Button](./components/dropdown-button.md): `krn-dropdown-button`, stable, import from `@kern-ui/angular/kit`.
 
 ## Forms

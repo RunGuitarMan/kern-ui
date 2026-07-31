@@ -1,0 +1,374 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://kern-ui.dev/schemas/component-inventory/1.1.0",
+  "title": "Kern component implementation inventory",
+  "description": "Generated review-unit inventory for every runtime Angular component and directive with a selector.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "library",
+    "generatedBy",
+    "generatedFrom",
+    "summary",
+    "units"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "./component-inventory.schema.json"
+    },
+    "schemaVersion": {
+      "const": "1.1.0"
+    },
+    "library": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {
+          "const": "@kern-ui/angular"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$"
+        }
+      }
+    },
+    "generatedBy": {
+      "const": "scripts/generate-component-contract.mjs"
+    },
+    "generatedFrom": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^[^\\\\]+$"
+      }
+    },
+    "summary": {
+      "$ref": "#/definitions/summary"
+    },
+    "units": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/unit"
+      }
+    }
+  },
+  "definitions": {
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selectorCount",
+        "implementationCount",
+        "componentCount",
+        "directiveCount",
+        "catalogEntryCount",
+        "catalogReviewUnitCount",
+        "catalogAliasEntryCount",
+        "publicReviewUnitCount",
+        "supportingReviewUnitCount",
+        "internalImplementationCount",
+        "selectorAliasCount"
+      ],
+      "properties": {
+        "selectorCount": {
+          "$ref": "#/definitions/count"
+        },
+        "implementationCount": {
+          "$ref": "#/definitions/count"
+        },
+        "componentCount": {
+          "$ref": "#/definitions/count"
+        },
+        "directiveCount": {
+          "$ref": "#/definitions/count"
+        },
+        "catalogEntryCount": {
+          "$ref": "#/definitions/count"
+        },
+        "catalogReviewUnitCount": {
+          "$ref": "#/definitions/count"
+        },
+        "catalogAliasEntryCount": {
+          "$ref": "#/definitions/count"
+        },
+        "publicReviewUnitCount": {
+          "$ref": "#/definitions/count"
+        },
+        "supportingReviewUnitCount": {
+          "$ref": "#/definitions/count"
+        },
+        "internalImplementationCount": {
+          "$ref": "#/definitions/count"
+        },
+        "selectorAliasCount": {
+          "$ref": "#/definitions/count"
+        }
+      }
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "unit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewUnit",
+        "symbol",
+        "kind",
+        "entrypoint",
+        "importPath",
+        "family",
+        "source",
+        "visibility",
+        "role",
+        "reviewWith",
+        "lifecycle",
+        "canonicalPublicSymbol",
+        "canonicalSelector",
+        "publicSymbols",
+        "selectors",
+        "selectorDeprecations",
+        "catalog",
+        "aliases"
+      ],
+      "properties": {
+        "reviewUnit": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+:Krn[A-Za-z0-9]+$"
+        },
+        "symbol": {
+          "type": "string",
+          "pattern": "^Krn[A-Za-z0-9]+$"
+        },
+        "kind": {
+          "enum": ["component", "directive"]
+        },
+        "entrypoint": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "importPath": {
+          "type": ["string", "null"],
+          "pattern": "^@kern-ui/angular(?:/[a-z0-9-]+)?$"
+        },
+        "family": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "source": {
+          "type": "string",
+          "pattern": "^projects/kern/[a-z0-9-]+/src/.+[.]ts$"
+        },
+        "visibility": {
+          "enum": ["public", "internal"]
+        },
+        "role": {
+          "enum": ["catalog", "supporting", "internal"]
+        },
+        "reviewWith": {
+          "description": "Explicit public review unit that owns an internal implementation's behavioral review; null for public units.",
+          "type": ["string", "null"],
+          "pattern": "^[a-z0-9-]+:Krn[A-Za-z0-9]+$"
+        },
+        "lifecycle": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/lifecycle"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "canonicalPublicSymbol": {
+          "type": ["string", "null"],
+          "pattern": "^Krn[A-Za-z0-9]+$"
+        },
+        "canonicalSelector": {
+          "type": "string",
+          "minLength": 1
+        },
+        "publicSymbols": {
+          "$ref": "#/definitions/stringSet"
+        },
+        "selectors": {
+          "$ref": "#/definitions/nonEmptyStringSet"
+        },
+        "selectorDeprecations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/selectorDeprecation"
+          }
+        },
+        "catalog": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/catalog"
+          }
+        },
+        "aliases": {
+          "$ref": "#/definitions/aliases"
+        }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "owner"],
+      "properties": {
+        "status": {
+          "enum": ["stable", "beta", "experimental", "recipe", "deprecated"]
+        },
+        "owner": {
+          "type": "string",
+          "pattern": "^kern/[a-z0-9-]+$"
+        }
+      }
+    },
+    "catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "category",
+        "selector",
+        "variantOf",
+        "status",
+        "owner",
+        "evidenceProfile"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "enum": [
+            "Layout",
+            "Actions",
+            "Forms",
+            "Navigation",
+            "Feedback",
+            "Data display",
+            "Patterns"
+          ]
+        },
+        "selector": {
+          "type": "string",
+          "minLength": 1
+        },
+        "variantOf": {
+          "type": ["string", "null"],
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "status": {
+          "enum": ["stable", "beta", "experimental", "recipe", "deprecated"]
+        },
+        "owner": {
+          "type": "string",
+          "pattern": "^kern/[a-z0-9-]+$"
+        },
+        "evidenceProfile": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        }
+      }
+    },
+    "aliases": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["symbols", "selectors", "catalogIds"],
+      "properties": {
+        "symbols": {
+          "$ref": "#/definitions/stringSet"
+        },
+        "selectors": {
+          "$ref": "#/definitions/stringSet"
+        },
+        "catalogIds": {
+          "$ref": "#/definitions/stringSet"
+        }
+      }
+    },
+    "selectorDeprecation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "selector",
+        "status",
+        "introducedIn",
+        "removeIn",
+        "replacement",
+        "migration",
+        "documentation"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "selector": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "const": "active"
+        },
+        "introducedIn": {
+          "$ref": "#/definitions/version"
+        },
+        "removeIn": {
+          "$ref": "#/definitions/version"
+        },
+        "replacement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "migration": {
+          "type": "string",
+          "minLength": 10
+        },
+        "documentation": {
+          "type": "string",
+          "pattern": "^docs/[^#]+#[a-z0-9-]+$"
+        }
+      }
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$"
+    },
+    "stringSet": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "nonEmptyStringSet": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/stringSet"
+        },
+        {
+          "minItems": 1
+        }
+      ]
+    }
+  }
+}

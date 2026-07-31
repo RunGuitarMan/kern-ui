@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-form-field",
   "selectors": ["krn-form-field"],
+  "selectorDeprecations": [],
   "symbol": "KrnFormField",
   "canonicalSymbol": "KrnFormField",
   "canonicalId": "form-field",
@@ -15,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Form Field. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Form Field. Coordinates one projected control with its visible label, optional copy, hints, errors, and Angular state without owning the control value.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -24,10 +25,7 @@
     "high contrast",
     "compact",
     "RTL",
-    "mobile",
-    "disabled",
-    "readonly",
-    "required"
+    "mobile"
   ],
   "lifecycle": {
     "status": "stable",
@@ -48,16 +46,6 @@
     "replacement": null
   },
   "api": [
-    {
-      "name": "id",
-      "property": "id",
-      "kind": "input",
-      "type": "string",
-      "required": false,
-      "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
-      "descriptionSource": "inferred"
-    },
     {
       "name": "label",
       "property": "label",
@@ -97,46 +85,6 @@
       "defaultValue": "''",
       "description": "Human-readable copy for the optional state or control.",
       "descriptionSource": "inferred"
-    },
-    {
-      "name": "required",
-      "property": "required",
-      "kind": "input",
-      "type": "boolean",
-      "required": false,
-      "defaultValue": "false",
-      "description": "Marks the value as required and participates in Angular Forms validation.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "disabled",
-      "property": "disabled",
-      "kind": "input",
-      "type": "boolean",
-      "required": false,
-      "defaultValue": "false",
-      "description": "Prevents user interaction and participates in the disabled-state contract.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "readonly",
-      "property": "readOnly",
-      "kind": "input",
-      "type": "boolean",
-      "required": false,
-      "defaultValue": "false",
-      "description": "Keeps the value perceivable while preventing user edits.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "state",
-      "property": "state",
-      "kind": "input",
-      "type": "\"invalid\" | \"default\" | \"valid\" | \"pending\"",
-      "required": false,
-      "defaultValue": "'default'",
-      "description": "Current semantic state used to choose copy, iconography, and announcement behavior.",
-      "descriptionSource": "inferred"
     }
   ],
   "slots": [
@@ -165,20 +113,21 @@
     "valueType": null,
     "reactiveForms": false,
     "templateDrivenForms": false,
-    "stateInputs": ["required", "disabled", "readonly"],
+    "stateInputs": [],
     "notes": []
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
     "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
+      "The projected control owns focus and keyboard behavior",
+      "Clicking the associated visible label moves focus to the projected control",
+      "Form Field itself does not add a tab stop or intercept control events"
     ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Exactly one registered control supplies the field identity and required, disabled, readonly, pending, valid, and invalid state.",
+      "A projected KrnLabel replaces the shorthand label so the field never renders two competing visible labels.",
+      "aria-describedby references only hints and errors that are currently mounted in the DOM.",
+      "Inline errors use a polite live region; the projected control remains the source of truth for Angular Forms state."
     ],
     "manualValidationRequired": true
   },
@@ -197,7 +146,7 @@
       "title": "Labeled reactive form field",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Labeled reactive form field\n *\n * Compose visible label, control and hint around one typed FormControl.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnFormField, KrnHint, KrnLabel, KrnTextInput } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-form-field-agent-example',\n  standalone: true,\n  imports: [KrnFormField, ReactiveFormsModule, KrnHint, KrnLabel, KrnTextInput],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-form-field>\n      <krn-label for=\"account-name\">Account name</krn-label>\n      <krn-text-input id=\"account-name\" [formControl]=\"control\" ariaLabel=\"Account name\" />\n      <krn-hint>Use the legal customer name.</krn-hint>\n    </krn-form-field>\n  `,\n})\nexport class KernFormFieldAgentExample {\n  readonly control = new FormControl<string>('Acme Europe', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernFormFieldAgentExample);\n",
+      "code": "/**\n * Labeled reactive form field\n *\n * Compose visible label, control and hint around one typed FormControl.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnFormField, KrnHint, KrnLabel, KrnTextInput } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-form-field-agent-example',\n  standalone: true,\n  imports: [KrnFormField, ReactiveFormsModule, KrnHint, KrnLabel, KrnTextInput],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-form-field>\n      <krn-label for=\"account-name\">Account name</krn-label>\n      <krn-text-input id=\"account-name\" [formControl]=\"control\" />\n      <krn-hint>Use the legal customer name.</krn-hint>\n    </krn-form-field>\n  `,\n})\nexport class KernFormFieldAgentExample {\n  readonly control = new FormControl<string>('Acme Europe', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernFormFieldAgentExample);\n",
       "verification": "compiled",
       "source": "examples/form-field.ts"
     }
@@ -209,24 +158,30 @@
     "Forms",
     "krn-form-field",
     "KrnFormField",
-    "id",
+    "field composition",
+    "control-owned state",
+    "label association",
+    "accessible descriptions",
+    "Angular Forms status",
     "label",
     "hint",
     "error",
-    "optionalText",
-    "required",
-    "disabled",
-    "readonly",
-    "state"
+    "optionalText"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Keep identity and state on the projected control, and disable reactive controls through their FormControl.",
+    "avoidWhen": "Do not project multiple controls or proxy id, required, disabled, readonly, or state through Form Field."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
     "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
-    "Assuming the documentation SSR build replaces validation of the consuming application."
+    "Assuming the documentation SSR build replaces validation of the consuming application.",
+    "Keep id, required, disabled, readonly, and Angular Forms bindings on the projected control. Form Field derives presentation and relationships from that control instead of proxying its state.",
+    "Disable a reactive control through FormControl.disable(); do not create a DOM-disabled control whose Angular model remains enabled.",
+    "Use either the label input or one projected KrnLabel. A projected label is the canonical rich-content option and replaces the shorthand label instead of creating a second label.",
+    "Register exactly one control per Form Field. For Checkbox Group, Radio Group, Segmented Control, Verification Code, or Range Slider, project the group component itself; Form Field names its composite root with aria-labelledby and delegates label clicks to its first enabled member.",
+    "Angular validation becomes visually invalid only after the control is touched or dirty. Use mounted error content when a server or cross-field error must be announced before local interaction.",
+    "Use the error input for one inline message or project KrnValidationMessage for controlled validation content. Form Field only references description ids that are mounted in the DOM."
   ],
   "checklist": [
     "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
@@ -251,11 +206,11 @@
         "kind": "select",
         "defaultValue": "default",
         "testValue": "valid",
-        "description": "Shows default, valid, pending, or invalid field feedback.",
+        "description": "Drives a real projected FormControl through default, valid, pending, or invalid state.",
         "binding": {
-          "kind": "input",
-          "publicName": "state",
-          "syntax": "property"
+          "kind": "fixture",
+          "target": "interaction",
+          "description": "Updates the projected FormControl; state is derived rather than written to Form Field."
         },
         "options": [
           {
@@ -295,11 +250,37 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Prevents interaction and participates in the component disabled contract.",
+        "description": "Disables the projected FormControl.",
         "binding": {
-          "kind": "input",
-          "publicName": "disabled",
-          "syntax": "property"
+          "kind": "fixture",
+          "target": "interaction",
+          "description": "Calls disable or enable on the projected FormControl; it is not a Form Field input."
+        }
+      },
+      {
+        "key": "readonly",
+        "label": "Read only",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Keeps the projected control focusable while preventing edits.",
+        "binding": {
+          "kind": "fixture",
+          "target": "interaction",
+          "description": "Binds readonly on the projected control; it is not a Form Field input."
+        }
+      },
+      {
+        "key": "required",
+        "label": "Required",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Marks the projected control as required.",
+        "binding": {
+          "kind": "fixture",
+          "target": "interaction",
+          "description": "Binds required on the projected control; it is not a Form Field input."
         }
       },
       {
@@ -329,19 +310,6 @@
         }
       },
       {
-        "key": "id",
-        "label": "Id",
-        "kind": "text",
-        "defaultValue": "",
-        "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
-        "binding": {
-          "kind": "input",
-          "publicName": "id",
-          "syntax": "property"
-        }
-      },
-      {
         "key": "optionalText",
         "label": "Optional Text",
         "kind": "text",
@@ -351,32 +319,6 @@
         "binding": {
           "kind": "input",
           "publicName": "optionalText",
-          "syntax": "property"
-        }
-      },
-      {
-        "key": "readonly",
-        "label": "Readonly",
-        "kind": "boolean",
-        "defaultValue": false,
-        "testValue": true,
-        "description": "Configures the component readonly contract.",
-        "binding": {
-          "kind": "input",
-          "publicName": "readonly",
-          "syntax": "property"
-        }
-      },
-      {
-        "key": "required",
-        "label": "Required",
-        "kind": "boolean",
-        "defaultValue": true,
-        "testValue": false,
-        "description": "Marks the value as required and participates in Angular Forms validation.",
-        "binding": {
-          "kind": "input",
-          "publicName": "required",
           "syntax": "property"
         }
       }
@@ -466,32 +408,6 @@
         }
       },
       {
-        "id": "readonly",
-        "label": "readonly",
-        "scenario": "default",
-        "args": {},
-        "fixtureEffect": {
-          "kind": "status",
-          "mode": "neutral",
-          "label": "readonly",
-          "description": "The fixture exposes the readonly status without claiming a public component input."
-        }
-      },
-      {
-        "id": "required",
-        "label": "required",
-        "scenario": "default",
-        "args": {
-          "required": true
-        },
-        "fixtureEffect": {
-          "kind": "status",
-          "mode": "neutral",
-          "label": "required",
-          "description": "The fixture exposes the required status without claiming a public component input."
-        }
-      },
-      {
         "id": "optional",
         "label": "Optional",
         "scenario": "default",
@@ -507,8 +423,8 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 9,
-      "controlled": 9,
+      "publicInputsAndModels": 4,
+      "controlled": 4,
       "excluded": 0,
       "unclassified": 0
     },

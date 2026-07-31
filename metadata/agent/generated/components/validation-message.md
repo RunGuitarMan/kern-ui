@@ -51,6 +51,10 @@ void bootstrapApplication(KernValidationMessageAgentExample);
 | ---- | ----- | -------- | -------- | ------- | ---------------------------------------------------- |
 | `id` | input | `string` | no       | `''`    | Stable identifier value used by the custom contract. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

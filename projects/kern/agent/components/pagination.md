@@ -62,6 +62,10 @@ void bootstrapApplication(KernPaginationAgentExample);
 | `rangeLabel`          | input | `string`                                                               | no       | `this.translations.navigation.resultRangeLabel` | Backward-compatible `{start}`, `{end}`, and `{total}` template.  |
 | `rangeLabelFormatter` | input | `((start: number, end: number, total: number) => string) \| undefined` | no       | `undefined`                                     | Typed alternative to `rangeLabel` for locale-specific grammar.   |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._
@@ -126,16 +130,16 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API            | Category           | Evidence                                                         | Reason                                                                                                                                                              |
-| --------------------- | ------------------ | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel`           | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                             |
-| `emptyLabel`          | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `nextLabel`           | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `pageLabel`           | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `pageLabelFormatter`  | callback           | `component-example:agent/components/pagination.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
-| `previousLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `rangeLabel`          | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | This translated action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `rangeLabelFormatter` | callback           | `component-example:agent/components/pagination.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                  |
+| Public API            | Category           | Evidence                                                         | Reason                                                                                                                                                               |
+| --------------------- | ------------------ | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`           | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.                                              |
+| `emptyLabel`          | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `nextLabel`           | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `pageLabel`           | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `pageLabelFormatter`  | callback           | `component-example:agent/components/pagination.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                   |
+| `previousLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `rangeLabel`          | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#pagination`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `rangeLabelFormatter` | callback           | `component-example:agent/components/pagination.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                   |
 
 Presets:
 

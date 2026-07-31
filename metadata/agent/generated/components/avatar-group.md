@@ -54,6 +54,10 @@ void bootstrapApplication(KernAvatarGroupAgentExample);
 | `ariaLabel` | input | `string` | no       | `this.translations.dataDisplay.people` | Accessible name used when visible content is not sufficient.               |
 | `overlap`   | input | `string` | no       | `'0.625rem'`                           | Allows the floating action surface to overlap its adjacent container edge. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 - `*` — Projects default component content.

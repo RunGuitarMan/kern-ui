@@ -47,6 +47,10 @@ void bootstrapApplication(KernSpinnerAgentExample);
 | ------- | ----- | -------- | -------- | ------------------------------------ | -------------------------------------------------- |
 | `label` | input | `string` | no       | `this.translations.feedback.loading` | Visible text that names the control or data value. |
 
+## Deprecated selectors
+
+_No deprecated selectors._
+
 ## Content slots
 
 _No projected content slots._

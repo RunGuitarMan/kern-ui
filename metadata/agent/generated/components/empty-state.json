@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-empty-state",
   "selectors": ["krn-empty-state"],
+  "selectorDeprecations": [],
   "symbol": "KrnEmptyState",
   "canonicalSymbol": "KrnEmptyState",
   "canonicalId": "empty-state",

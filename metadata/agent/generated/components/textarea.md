@@ -50,23 +50,32 @@ void bootstrapApplication(KernTextareaAgentExample);
 
 ## API
 
-| Name           | Kind   | Type                  | Required | Default     | Description                                                                |
-| -------------- | ------ | --------------------- | -------- | ----------- | -------------------------------------------------------------------------- |
-| `id`           | input  | `string`              | no       | `''`        | Stable identifier value used by the id contract.                           |
-| `name`         | input  | `string`              | no       | `''`        | Required human-readable name for the represented person, item, or action.  |
-| `placeholder`  | input  | `string`              | no       | `''`        | Short input hint shown only while no value is present.                     |
-| `ariaLabel`    | input  | `string`              | no       | `''`        | Accessible name used when visible content is not sufficient.               |
-| `autocomplete` | input  | `string`              | no       | `''`        | Controls whether the component applies the autocomplete behavior.          |
-| `size`         | input  | `KrnSize`             | no       | `'md'`      | Named semantic size resolved through KERN density and sizing tokens.       |
-| `rows`         | input  | `number`              | no       | `4`         | Ordered row collection rendered by the tabular view.                       |
-| `maxLength`    | input  | `number \| undefined` | no       | `undefined` | Upper or lower bound applied to the length value.                          |
-| `showCount`    | input  | `boolean`             | no       | `false`     | Controls whether the component applies the show count behavior.            |
-| `autoResize`   | input  | `boolean`             | no       | `false`     | Controls whether the component applies the auto resize behavior.           |
-| `disabled`     | input  | `boolean`             | no       | `false`     | Prevents user interaction and participates in the disabled-state contract. |
-| `readonly`     | input  | `boolean`             | no       | `false`     | Keeps the value perceivable while preventing user edits.                   |
-| `required`     | input  | `boolean`             | no       | `false`     | Marks the value as required and participates in Angular Forms validation.  |
-| `invalid`      | input  | `boolean`             | no       | `false`     | Exposes an externally controlled invalid presentation state.               |
-| `valueChange`  | output | `string`              | no       | `undefined` | Notifies the consumer after the value change interaction completes.        |
+| Name              | Kind   | Type                  | Required | Default     | Description                                                                                      |
+| ----------------- | ------ | --------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`              | no       | `''`        | Stable identifier value used by the id contract.                                                 |
+| `name`            | input  | `string`              | no       | `''`        | Required human-readable name for the represented person, item, or action.                        |
+| `placeholder`     | input  | `string`              | no       | `''`        | Short input hint shown only while no value is present.                                           |
+| `ariaLabel`       | input  | `string`              | no       | `''`        | Accessible name used when visible content is not sufficient.                                     |
+| `ariaLabelledBy`  | input  | `string`              | no       | `''`        | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`              | no       | `''`        | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `autocomplete`    | input  | `string`              | no       | `''`        | Native autocomplete purpose forwarded to the editable control.                                   |
+| `size`            | input  | `KrnSize`             | no       | `'md'`      | Named semantic size resolved through KERN density and sizing tokens.                             |
+| `rows`            | input  | `number`              | no       | `4`         | Ordered row collection rendered by the tabular view.                                             |
+| `value`           | input  | `string \| undefined` | no       | `undefined` | Controlled component value.                                                                      |
+| `minLength`       | input  | `number \| undefined` | no       | `undefined` | Upper or lower bound applied to the length value.                                                |
+| `maxLength`       | input  | `number \| undefined` | no       | `undefined` | Upper or lower bound applied to the length value.                                                |
+| `spellcheck`      | input  | `boolean`             | no       | `true`      | Native spell-checking preference forwarded to the editable control.                              |
+| `showCount`       | input  | `boolean`             | no       | `false`     | Controls whether the component applies the show count behavior.                                  |
+| `autoResize`      | input  | `boolean`             | no       | `false`     | Controls whether the component applies the auto resize behavior.                                 |
+| `disabled`        | input  | `boolean`             | no       | `false`     | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean`             | no       | `false`     | Keeps the value perceivable while preventing user edits.                                         |
+| `required`        | input  | `boolean`             | no       | `false`     | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`         | input  | `boolean`             | no       | `false`     | Exposes an externally controlled invalid presentation state.                                     |
+| `valueChange`     | output | `string`              | no       | `undefined` | Notifies the consumer after the value change interaction completes.                              |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -120,8 +129,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/textarea`
 
 Scenarios: `default`.
-Public API coverage: 12/14
-directly controlled; 2 exact exclusions; 0 unclassified.
+Public API coverage: 15/19
+directly controlled; 4 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -141,13 +150,18 @@ component inputs or models.
 | `invalid`      | boolean | `false`                           | `true`                                        | input `invalid` (property)      | Exposes the invalid visual and ARIA state.        |
 | `autocomplete` | text    | `""`                              | `"Alternate value"`                           | input `autocomplete` (property) | Configures the component autocomplete contract.   |
 | `id`           | text    | `""`                              | `"Alternate value"`                           | input `id` (property)           | Configures the component id contract.             |
+| `minLength`    | number  | `0`                               | `1`                                           | input `minLength` (property)    | Configures the component minLength contract.      |
+| `spellcheck`   | boolean | `true`                            | `false`                                       | input `spellcheck` (property)   | Configures the component spellcheck contract.     |
+| `value`        | text    | `""`                              | `"Alternate value"`                           | input `value` (property)        | Controlled component value.                       |
 
 Exact API exclusions:
 
-| Public API  | Category           | Evidence                                                             | Reason                                                                                                                  |
-| ----------- | ------------------ | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#textarea`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
-| `name`      | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#textarea` | Form submission field names do not alter the rendered component and are covered by forms integration tests.             |
+| Public API        | Category           | Evidence                                                             | Reason                                                                                                                  |
+| ----------------- | ------------------ | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#textarea`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#textarea`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabelledBy`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#textarea`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `name`            | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#textarea` | Form submission field names do not alter the rendered component and are covered by forms integration tests.             |
 
 Presets:
 

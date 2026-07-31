@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-hover-card",
   "selectors": ["krn-hover-card"],
+  "selectorDeprecations": [],
   "symbol": "KrnHoverCard",
   "canonicalSymbol": "KrnHoverCard",
   "canonicalId": "hover-card",
@@ -85,7 +86,7 @@
       "name": "krnHoverCardTrigger",
       "selector": "[krnHoverCardTrigger]",
       "required": true,
-      "description": "Required non-interactive label content projected into the Hover Card-owned trigger button; do not project a button, link, form control, or krn-button."
+      "description": "Required non-interactive label content projected into the Hover Card-owned trigger button; do not project a button, link, form control, or button[krnButton]."
     },
     {
       "name": "default-2",

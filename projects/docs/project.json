@@ -5,6 +5,11 @@
   "generators": {},
   "sourceRoot": "projects/docs/src",
   "prefix": "kdocs",
+  "cli": {
+    "cache": {
+      "enabled": false
+    }
+  },
   "implicitDependencies": ["kern", "showcase"],
   "tags": ["scope:docs", "type:application", "publishable:false"],
   "targets": {
@@ -46,7 +51,7 @@
             {
               "type": "initial",
               "maximumWarning": "1.32MB",
-              "maximumError": "1420kB"
+              "maximumError": "1430kB"
             },
             {
               "type": "anyComponentStyle",

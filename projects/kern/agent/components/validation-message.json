@@ -5,6 +5,7 @@
   "kind": "component",
   "selector": "krn-validation-message",
   "selectors": ["krn-validation-message"],
+  "selectorDeprecations": [],
   "symbol": "KrnValidationMessage",
   "canonicalSymbol": "KrnValidationMessage",
   "canonicalId": "validation-message",

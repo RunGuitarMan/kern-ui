@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.2.0",
+  "schemaVersion": "1.3.0",
   "package": "@kern-ui/angular",
   "components": {
     "app-shell": {
@@ -124,21 +124,21 @@
     "button": {
       "symbol": "KrnButton",
       "canonicalSymbol": "KrnButton",
-      "selector": "krn-button",
+      "selector": "button[krnButton]",
       "importPath": "@kern-ui/angular/kit",
       "lifecycle": "stable"
     },
     "icon-button": {
       "symbol": "KrnIconButton",
       "canonicalSymbol": "KrnIconButton",
-      "selector": "krn-icon-button",
+      "selector": "button[krnIconButton]",
       "importPath": "@kern-ui/angular/kit",
       "lifecycle": "stable"
     },
     "button-group": {
       "symbol": "KrnButtonGroup",
       "canonicalSymbol": "KrnButtonGroup",
-      "selector": "krn-button-group",
+      "selector": "div[krnButtonGroup]",
       "importPath": "@kern-ui/angular/kit",
       "lifecycle": "stable"
     },
@@ -152,21 +152,21 @@
     "floating-action-button": {
       "symbol": "KrnFloatingActionButton",
       "canonicalSymbol": "KrnFloatingActionButton",
-      "selector": "krn-floating-action-button",
+      "selector": "button[krnFab]",
       "importPath": "@kern-ui/angular/kit",
       "lifecycle": "stable"
     },
     "toggle-button": {
       "symbol": "KrnToggleButton",
       "canonicalSymbol": "KrnToggleButton",
-      "selector": "krn-toggle-button",
+      "selector": "button[krnToggleButton]",
       "importPath": "@kern-ui/angular/kit",
       "lifecycle": "stable"
     },
     "toggle-group": {
       "symbol": "KrnToggleGroup",
       "canonicalSymbol": "KrnToggleGroup",
-      "selector": "krn-toggle-group",
+      "selector": "div[krnToggleGroup]",
       "importPath": "@kern-ui/angular/kit",
       "lifecycle": "stable"
     },
@@ -180,7 +180,7 @@
     "link": {
       "symbol": "KrnLink",
       "canonicalSymbol": "KrnLink",
-      "selector": "krn-link",
+      "selector": "a[krnLink]",
       "importPath": "@kern-ui/angular/kit",
       "lifecycle": "stable"
     },
@@ -927,6 +927,12 @@
       "owner": "core",
       "kind": "function"
     },
+    "createKrnOptions": {
+      "canonicalSymbol": "createKrnOptions",
+      "importPath": "@kern-ui/angular/cdk",
+      "owner": "cdk",
+      "kind": "function"
+    },
     "createKrnTranslations": {
       "canonicalSymbol": "createKrnTranslations",
       "importPath": "@kern-ui/angular/core",
@@ -963,10 +969,76 @@
       "owner": "core",
       "kind": "constant"
     },
+    "KRN_BUTTON_DEFAULT_OPTIONS": {
+      "canonicalSymbol": "KRN_BUTTON_DEFAULT_OPTIONS",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "KRN_BUTTON_GROUP_DEFAULT_OPTIONS": {
+      "canonicalSymbol": "KRN_BUTTON_GROUP_DEFAULT_OPTIONS",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "KRN_BUTTON_GROUP_OPTIONS": {
+      "canonicalSymbol": "KRN_BUTTON_GROUP_OPTIONS",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "KRN_BUTTON_OPTIONS": {
+      "canonicalSymbol": "KRN_BUTTON_OPTIONS",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "KRN_CLIPBOARD_WRITER": {
+      "canonicalSymbol": "KRN_CLIPBOARD_WRITER",
+      "importPath": "@kern-ui/angular/cdk",
+      "owner": "cdk",
+      "kind": "constant"
+    },
     "KRN_CONFIG": {
       "canonicalSymbol": "KRN_CONFIG",
       "importPath": "@kern-ui/angular/core",
       "owner": "core",
+      "kind": "constant"
+    },
+    "KRN_COPY_BUTTON_DEFAULT_OPTIONS": {
+      "canonicalSymbol": "KRN_COPY_BUTTON_DEFAULT_OPTIONS",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "KRN_COPY_BUTTON_OPTIONS": {
+      "canonicalSymbol": "KRN_COPY_BUTTON_OPTIONS",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "KRN_COPY_LABELS": {
+      "canonicalSymbol": "KRN_COPY_LABELS",
+      "importPath": "@kern-ui/angular/i18n",
+      "owner": "i18n",
+      "kind": "constant"
+    },
+    "KRN_DEFAULT_COPY_LABELS": {
+      "canonicalSymbol": "KRN_DEFAULT_COPY_LABELS",
+      "importPath": "@kern-ui/angular/i18n",
+      "owner": "i18n",
+      "kind": "constant"
+    },
+    "KRN_DEFAULT_LOADING_LABEL": {
+      "canonicalSymbol": "KRN_DEFAULT_LOADING_LABEL",
+      "importPath": "@kern-ui/angular/i18n",
+      "owner": "i18n",
+      "kind": "constant"
+    },
+    "KRN_DEFAULT_MORE_ACTIONS_LABEL": {
+      "canonicalSymbol": "KRN_DEFAULT_MORE_ACTIONS_LABEL",
+      "importPath": "@kern-ui/angular/i18n",
+      "owner": "i18n",
       "kind": "constant"
     },
     "KRN_DIRECTION": {
@@ -987,10 +1059,40 @@
       "owner": "core",
       "kind": "constant"
     },
+    "KRN_FLOATING_ACTION_BUTTON_DEFAULT_OPTIONS": {
+      "canonicalSymbol": "KRN_FLOATING_ACTION_BUTTON_DEFAULT_OPTIONS",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "KRN_FLOATING_ACTION_BUTTON_OPTIONS": {
+      "canonicalSymbol": "KRN_FLOATING_ACTION_BUTTON_OPTIONS",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "KRN_ICON_BUTTON_DEFAULT_OPTIONS": {
+      "canonicalSymbol": "KRN_ICON_BUTTON_DEFAULT_OPTIONS",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "KRN_ICON_BUTTON_OPTIONS": {
+      "canonicalSymbol": "KRN_ICON_BUTTON_OPTIONS",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
     "KRN_ICONS": {
       "canonicalSymbol": "KRN_ICONS",
       "importPath": "@kern-ui/angular/core",
       "owner": "core",
+      "kind": "constant"
+    },
+    "KRN_LOADING_LABEL": {
+      "canonicalSymbol": "KRN_LOADING_LABEL",
+      "importPath": "@kern-ui/angular/i18n",
+      "owner": "i18n",
       "kind": "constant"
     },
     "KRN_LOCALE": {
@@ -1003,6 +1105,24 @@
       "canonicalSymbol": "KRN_LOCALE_PACKS",
       "importPath": "@kern-ui/angular/core",
       "owner": "core",
+      "kind": "constant"
+    },
+    "KRN_MENU_BUTTON_DEFAULT_OPTIONS": {
+      "canonicalSymbol": "KRN_MENU_BUTTON_DEFAULT_OPTIONS",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "KRN_MENU_BUTTON_OPTIONS": {
+      "canonicalSymbol": "KRN_MENU_BUTTON_OPTIONS",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "KRN_MORE_ACTIONS_LABEL": {
+      "canonicalSymbol": "KRN_MORE_ACTIONS_LABEL",
+      "importPath": "@kern-ui/angular/i18n",
+      "owner": "i18n",
       "kind": "constant"
     },
     "KRN_MOTION": {
@@ -1033,6 +1153,30 @@
       "canonicalSymbol": "KRN_THEME_CONFIG",
       "importPath": "@kern-ui/angular/core",
       "owner": "core",
+      "kind": "constant"
+    },
+    "KRN_TOGGLE_BUTTON_DEFAULT_OPTIONS": {
+      "canonicalSymbol": "KRN_TOGGLE_BUTTON_DEFAULT_OPTIONS",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "KRN_TOGGLE_BUTTON_OPTIONS": {
+      "canonicalSymbol": "KRN_TOGGLE_BUTTON_OPTIONS",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "KRN_TOGGLE_GROUP_DEFAULT_OPTIONS": {
+      "canonicalSymbol": "KRN_TOGGLE_GROUP_DEFAULT_OPTIONS",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "KRN_TOGGLE_GROUP_OPTIONS": {
+      "canonicalSymbol": "KRN_TOGGLE_GROUP_OPTIONS",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
       "kind": "constant"
     },
     "KRN_TOKEN_MANIFEST": {
@@ -1239,6 +1383,24 @@
       "owner": "kit",
       "kind": "class"
     },
+    "KrnButtonGroupHarness": {
+      "canonicalSymbol": "KrnButtonGroupHarness",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "class"
+    },
+    "KrnButtonGroupHarnessFilters": {
+      "canonicalSymbol": "KrnButtonGroupHarnessFilters",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "interface"
+    },
+    "KrnButtonGroupOptions": {
+      "canonicalSymbol": "KrnButtonGroupOptions",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "interface"
+    },
     "KrnButtonHarness": {
       "canonicalSymbol": "KrnButtonHarness",
       "importPath": "@kern-ui/angular/testing",
@@ -1251,11 +1413,11 @@
       "owner": "testing",
       "kind": "interface"
     },
-    "KrnButtonType": {
-      "canonicalSymbol": "KrnButtonType",
+    "KrnButtonOptions": {
+      "canonicalSymbol": "KrnButtonOptions",
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
-      "kind": "type"
+      "kind": "interface"
     },
     "KrnCalendar": {
       "canonicalSymbol": "KrnCalendar",
@@ -1412,6 +1574,12 @@
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "class"
+    },
+    "KrnClipboardWriter": {
+      "canonicalSymbol": "KrnClipboardWriter",
+      "importPath": "@kern-ui/angular/cdk",
+      "owner": "cdk",
+      "kind": "interface"
     },
     "KrnCluster": {
       "canonicalSymbol": "KrnCluster",
@@ -1586,6 +1754,30 @@
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "class"
+    },
+    "KrnCopyButtonHarness": {
+      "canonicalSymbol": "KrnCopyButtonHarness",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "class"
+    },
+    "KrnCopyButtonHarnessFilters": {
+      "canonicalSymbol": "KrnCopyButtonHarnessFilters",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "interface"
+    },
+    "KrnCopyButtonOptions": {
+      "canonicalSymbol": "KrnCopyButtonOptions",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "interface"
+    },
+    "KrnCopyLabels": {
+      "canonicalSymbol": "KrnCopyLabels",
+      "importPath": "@kern-ui/angular/i18n",
+      "owner": "i18n",
+      "kind": "interface"
     },
     "KrnCopyState": {
       "canonicalSymbol": "KrnCopyState",
@@ -1941,6 +2133,18 @@
       "owner": "kit",
       "kind": "class"
     },
+    "KrnDropdownButtonHarness": {
+      "canonicalSymbol": "KrnDropdownButtonHarness",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "class"
+    },
+    "KrnDropdownButtonHarnessFilters": {
+      "canonicalSymbol": "KrnDropdownButtonHarnessFilters",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "interface"
+    },
     "KrnDropUpload": {
       "canonicalSymbol": "KrnDropUpload",
       "importPath": "@kern-ui/angular/kit",
@@ -1952,6 +2156,12 @@
       "importPath": "@kern-ui/angular/testing",
       "owner": "testing",
       "kind": "class"
+    },
+    "KrnDropUploadHarnessFilters": {
+      "canonicalSymbol": "KrnDropUploadHarnessFilters",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "interface"
     },
     "KrnEditableComboboxBase": {
       "canonicalSymbol": "KrnEditableComboboxBase",
@@ -2013,6 +2223,12 @@
       "owner": "testing",
       "kind": "class"
     },
+    "KrnFileUploadHarnessFilters": {
+      "canonicalSymbol": "KrnFileUploadHarnessFilters",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "interface"
+    },
     "KrnFilterBar": {
       "canonicalSymbol": "KrnFilterBar",
       "importPath": "@kern-ui/angular/patterns",
@@ -2036,6 +2252,24 @@
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "class"
+    },
+    "KrnFloatingActionButtonHarness": {
+      "canonicalSymbol": "KrnFloatingActionButtonHarness",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "class"
+    },
+    "KrnFloatingActionButtonHarnessFilters": {
+      "canonicalSymbol": "KrnFloatingActionButtonHarnessFilters",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "interface"
+    },
+    "KrnFloatingActionButtonOptions": {
+      "canonicalSymbol": "KrnFloatingActionButtonOptions",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "interface"
     },
     "krnFormatTranslation": {
       "canonicalSymbol": "krnFormatTranslation",
@@ -2144,6 +2378,24 @@
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "class"
+    },
+    "KrnIconButtonHarness": {
+      "canonicalSymbol": "KrnIconButtonHarness",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "class"
+    },
+    "KrnIconButtonHarnessFilters": {
+      "canonicalSymbol": "KrnIconButtonHarnessFilters",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "interface"
+    },
+    "KrnIconButtonOptions": {
+      "canonicalSymbol": "KrnIconButtonOptions",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "interface"
     },
     "KrnIconDefinition": {
       "canonicalSymbol": "KrnIconDefinition",
@@ -2283,11 +2535,17 @@
       "owner": "kit",
       "kind": "class"
     },
-    "KrnLinkTarget": {
-      "canonicalSymbol": "KrnLinkTarget",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
-      "kind": "type"
+    "KrnLinkHarness": {
+      "canonicalSymbol": "KrnLinkHarness",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "class"
+    },
+    "KrnLinkHarnessFilters": {
+      "canonicalSymbol": "KrnLinkHarnessFilters",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "interface"
     },
     "KrnList": {
       "canonicalSymbol": "KrnList",
@@ -2349,6 +2607,12 @@
       "owner": "kit",
       "kind": "class"
     },
+    "KrnMenuAlignment": {
+      "canonicalSymbol": "KrnMenuAlignment",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "type"
+    },
     "KrnMenubar": {
       "canonicalSymbol": "KrnMenubar",
       "importPath": "@kern-ui/angular/kit",
@@ -2360,6 +2624,12 @@
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "class"
+    },
+    "KrnMenuButtonOptions": {
+      "canonicalSymbol": "KrnMenuButtonOptions",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "interface"
     },
     "KrnMenuHarness": {
       "canonicalSymbol": "KrnMenuHarness",
@@ -2937,6 +3207,18 @@
       "owner": "kit",
       "kind": "class"
     },
+    "KrnSplitButtonHarness": {
+      "canonicalSymbol": "KrnSplitButtonHarness",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "class"
+    },
+    "KrnSplitButtonHarnessFilters": {
+      "canonicalSymbol": "KrnSplitButtonHarnessFilters",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "interface"
+    },
     "KrnSplitLayout": {
       "canonicalSymbol": "KrnSplitLayout",
       "importPath": "@kern-ui/angular/kit",
@@ -3159,11 +3441,47 @@
       "owner": "kit",
       "kind": "class"
     },
+    "KrnToggleButtonHarness": {
+      "canonicalSymbol": "KrnToggleButtonHarness",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "class"
+    },
+    "KrnToggleButtonHarnessFilters": {
+      "canonicalSymbol": "KrnToggleButtonHarnessFilters",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "interface"
+    },
+    "KrnToggleButtonOptions": {
+      "canonicalSymbol": "KrnToggleButtonOptions",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "interface"
+    },
     "KrnToggleGroup": {
       "canonicalSymbol": "KrnToggleGroup",
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "class"
+    },
+    "KrnToggleGroupHarness": {
+      "canonicalSymbol": "KrnToggleGroupHarness",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "class"
+    },
+    "KrnToggleGroupHarnessFilters": {
+      "canonicalSymbol": "KrnToggleGroupHarnessFilters",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "interface"
+    },
+    "KrnToggleGroupOptions": {
+      "canonicalSymbol": "KrnToggleGroupOptions",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "interface"
     },
     "KrnTokenDescriptor": {
       "canonicalSymbol": "KrnTokenDescriptor",
@@ -3333,14 +3651,68 @@
       "owner": "core",
       "kind": "function"
     },
+    "provideKrnButtonGroupOptions": {
+      "canonicalSymbol": "provideKrnButtonGroupOptions",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "provideKrnButtonOptions": {
+      "canonicalSymbol": "provideKrnButtonOptions",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "provideKrnCopyButtonOptions": {
+      "canonicalSymbol": "provideKrnCopyButtonOptions",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "provideKrnFloatingActionButtonOptions": {
+      "canonicalSymbol": "provideKrnFloatingActionButtonOptions",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "provideKrnIconButtonOptions": {
+      "canonicalSymbol": "provideKrnIconButtonOptions",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
     "provideKrnIcons": {
       "canonicalSymbol": "provideKrnIcons",
       "importPath": "@kern-ui/angular/core",
       "owner": "core",
       "kind": "function"
     },
+    "provideKrnMenuButtonOptions": {
+      "canonicalSymbol": "provideKrnMenuButtonOptions",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
     "provideKrnTheme": {
       "canonicalSymbol": "provideKrnTheme",
+      "importPath": "@kern-ui/angular/core",
+      "owner": "core",
+      "kind": "function"
+    },
+    "provideKrnToggleButtonOptions": {
+      "canonicalSymbol": "provideKrnToggleButtonOptions",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "provideKrnToggleGroupOptions": {
+      "canonicalSymbol": "provideKrnToggleGroupOptions",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "constant"
+    },
+    "provideKrnTranslationBridge": {
+      "canonicalSymbol": "provideKrnTranslationBridge",
       "importPath": "@kern-ui/angular/core",
       "owner": "core",
       "kind": "function"

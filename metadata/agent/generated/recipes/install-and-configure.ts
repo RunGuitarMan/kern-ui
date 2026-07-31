@@ -8,7 +8,7 @@ import { KrnButton } from '@kern-ui/angular/kit';
   standalone: true,
   imports: [KrnButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<krn-button>Configured KERN application</krn-button>`,
+  template: `<button krnButton>Configured KERN application</button>`,
 })
 export class KernInstallRecipe {}
 

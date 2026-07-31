@@ -43,15 +43,24 @@ void bootstrapApplication(KernRadioAgentExample);
 
 ## API
 
-| Name          | Kind   | Type      | Required | Default                | Description                                                                |
-| ------------- | ------ | --------- | -------- | ---------------------- | -------------------------------------------------------------------------- |
-| `value`       | input  | `string`  | yes      | `required`             | Controlled component value.                                                |
-| `name`        | input  | `string`  | no       | `createKrnId('radio')` | Required human-readable name for the represented person, item, or action.  |
-| `ariaLabel`   | input  | `string`  | no       | `''`                   | Accessible name used when visible content is not sufficient.               |
-| `description` | input  | `string`  | no       | `''`                   | Visible supporting description for the component content.                  |
-| `disabled`    | input  | `boolean` | no       | `false`                | Prevents user interaction and participates in the disabled-state contract. |
-| `readonly`    | input  | `boolean` | no       | `false`                | Keeps the value perceivable while preventing user edits.                   |
-| `selected`    | output | `string`  | no       | `undefined`            | Controlled selected state, distinct from keyboard focus.                   |
+| Name              | Kind   | Type      | Required | Default            | Description                                                                                      |
+| ----------------- | ------ | --------- | -------- | ------------------ | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`  | no       | `''`               | Stable identifier value used by the id contract.                                                 |
+| `value`           | input  | `string`  | yes      | `required`         | Controlled component value.                                                                      |
+| `name`            | input  | `string`  | no       | `this.generatedId` | Required human-readable name for the represented person, item, or action.                        |
+| `checked`         | input  | `boolean` | no       | `false`            | Controlled checked state rendered by the native choice control.                                  |
+| `ariaLabel`       | input  | `string`  | no       | `''`               | Accessible name used when visible content is not sufficient.                                     |
+| `ariaLabelledBy`  | input  | `string`  | no       | `''`               | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`  | no       | `''`               | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `description`     | input  | `string`  | no       | `''`               | Visible supporting description for the component content.                                        |
+| `disabled`        | input  | `boolean` | no       | `false`            | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean` | no       | `false`            | Keeps the value perceivable while preventing user edits.                                         |
+| `tabindex`        | input  | `number`  | no       | `0`                | Native sequential-focus order forwarded to the owned interactive element.                        |
+| `selected`        | output | `string`  | no       | `undefined`        | Controlled selected state, distinct from keyboard focus.                                         |
+
+## Deprecated selectors
+
+_No deprecated selectors._
 
 ## Content slots
 
@@ -105,8 +114,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/radio`
 
 Scenarios: `default`.
-Public API coverage: 4/6
-directly controlled; 2 exact exclusions; 0 unclassified.
+Public API coverage: 7/11
+directly controlled; 4 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -117,15 +126,20 @@ component inputs or models.
 | `selected`    | boolean | `false`                         | `true`                                      | fixture interaction            | Selects the annual billing option.                |
 | `disabled`    | boolean | `false`                         | `true`                                      | input `disabled` (property)    | Prevents user interaction.                        |
 | `readOnly`    | boolean | `false`                         | `true`                                      | input `readonly` (property)    | Keeps the value focusable while preventing edits. |
+| `checked`     | boolean | `false`                         | `true`                                      | input `checked` (property)     | Configures the component checked contract.        |
 | `description` | text    | `"Flexible, billed each month"` | `"Flexible, billed each month · alternate"` | input `description` (property) | Configures the component description contract.    |
+| `id`          | text    | `""`                            | `"Alternate value"`                         | input `id` (property)          | Configures the component id contract.             |
+| `tabindex`    | number  | `0`                             | `1`                                         | input `tabindex` (property)    | Configures the component tabindex contract.       |
 | `value`       | text    | `"monthly"`                     | `"monthly · alternate"`                     | input `value` (property)       | Controlled component value.                       |
 
 Exact API exclusions:
 
-| Public API  | Category           | Evidence                                                          | Reason                                                                                                                  |
-| ----------- | ------------------ | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#radio`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
-| `name`      | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#radio` | Form submission field names do not alter the rendered component and are covered by forms integration tests.             |
+| Public API        | Category           | Evidence                                                          | Reason                                                                                                                  |
+| ----------------- | ------------------ | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `ariaDescribedBy` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#radio`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#radio`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `ariaLabelledBy`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#radio`                | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `name`            | form-serialization | `forms-integration:tests/e2e/enterprise-acceptance.spec.ts#radio` | Form submission field names do not alter the rendered component and are covered by forms integration tests.             |
 
 Presets:
 
