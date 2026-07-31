@@ -3911,6 +3911,8 @@ interface KrnTocItem {
 }
 
 interface VisibleBreadcrumb extends KrnBreadcrumbItem {
+  readonly source: KrnBreadcrumbItem;
+  readonly index: number;
   readonly ellipsis?: true;
 }
 declare class KrnBreadcrumbs {
@@ -3923,8 +3925,13 @@ declare class KrnBreadcrumbs {
   readonly showAllLabel: _angular_core.InputSignal<string>;
   readonly itemActivated: _angular_core.OutputEmitterRef<KrnBreadcrumbItem>;
   protected readonly expanded: _angular_core.WritableSignal<boolean>;
+  protected readonly resolvedMaxItems: _angular_core.Signal<number>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
+  protected readonly resolvedShowAllLabel: _angular_core.Signal<string>;
+  protected readonly currentIndex: _angular_core.Signal<number>;
   protected readonly ellipsis: _angular_core.Signal<VisibleBreadcrumb>;
   protected readonly visibleItems: _angular_core.Signal<readonly VisibleBreadcrumb[]>;
+  constructor();
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnBreadcrumbs, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnBreadcrumbs,
@@ -3952,13 +3959,18 @@ declare class KrnTabs {
   private readonly platform;
   protected readonly translations: Readonly<_kern_ui_angular_core.KrnTranslations>;
   private readonly instanceId;
+  private readonly tabList;
   private readonly tabElements;
+  private readonly tabListResizeRevision;
   readonly items: _angular_core.InputSignal<readonly KrnTabItem[]>;
   readonly value: _angular_core.ModelSignal<string | null>;
   readonly orientation: _angular_core.InputSignal<KrnNavigationOrientation>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  protected readonly resolvedOrientation: _angular_core.Signal<KrnNavigationOrientation>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
   protected readonly selectedId: _angular_core.Signal<string | null>;
   protected readonly selectedItem: _angular_core.Signal<KrnTabItem | null>;
+  constructor();
   protected tabId(item: KrnTabItem): string;
   protected panelId(item: KrnTabItem): string;
   protected asTemplate(template: TemplateRef<unknown>): TemplateRef<unknown>;
@@ -3986,7 +3998,6 @@ declare class KrnTabs {
 type PageToken = number | 'ellipsis';
 declare class KrnPagination {
   private readonly translations;
-  protected readonly mobileSlotCount = 5;
   readonly totalItems: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly pageSize: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly siblingCount: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -4005,12 +4016,17 @@ declare class KrnPagination {
   readonly rangeLabelFormatter: _angular_core.InputSignal<
     ((start: number, end: number, total: number) => string) | undefined
   >;
+  protected readonly safeTotalItems: _angular_core.Signal<number>;
   protected readonly safePageSize: _angular_core.Signal<number>;
+  protected readonly safeSiblingCount: _angular_core.Signal<number>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
+  protected readonly resolvedPreviousLabel: _angular_core.Signal<string>;
+  protected readonly resolvedNextLabel: _angular_core.Signal<string>;
   protected readonly pageCount: _angular_core.Signal<number>;
   protected readonly currentPage: _angular_core.Signal<number>;
   protected readonly summary: _angular_core.Signal<string>;
   protected readonly pageTokens: _angular_core.Signal<readonly PageToken[]>;
-  protected readonly mobileVisibleIndexes: _angular_core.Signal<ReadonlySet<number>>;
+  protected readonly mobilePageTokens: _angular_core.Signal<readonly PageToken[]>;
   constructor();
   protected goTo(value: number): void;
   protected pageAriaLabel(page: number): string;
@@ -4045,6 +4061,7 @@ declare class KrnStepper {
   private readonly host;
   private readonly platform;
   private readonly translations;
+  private readonly stepList;
   private readonly buttons;
   readonly steps: _angular_core.InputSignal<readonly KrnStepItem[]>;
   readonly activeStep: _angular_core.ModelSignal<number>;
@@ -4053,10 +4070,17 @@ declare class KrnStepper {
   readonly orientation: _angular_core.InputSignal<KrnNavigationOrientation>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly optionalLabel: _angular_core.InputSignal<string>;
+  protected readonly resolvedOrientation: _angular_core.Signal<KrnNavigationOrientation>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
+  protected readonly resolvedOptionalLabel: _angular_core.Signal<string>;
+  protected readonly currentStep: _angular_core.Signal<number>;
+  private readonly completed;
+  constructor();
   protected isComplete(index: number): boolean;
   protected canSelect(index: number): boolean;
   protected select(index: number): void;
   protected onKeydown(event: KeyboardEvent, current: number): void;
+  private scrollActiveStepIntoView;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnStepper, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnStepper,
@@ -4099,6 +4123,7 @@ declare class KrnMenu {
   private readonly platform;
   private readonly translations;
   private readonly trigger;
+  private readonly menuPanel;
   private readonly menuItems;
   private readonly projectedTrigger;
   readonly items: _angular_core.InputSignal<
@@ -4118,7 +4143,13 @@ declare class KrnMenu {
   readonly itemSelected: _angular_core.OutputEmitterRef<KrnNavigationItem>;
   readonly closed: _angular_core.OutputEmitterRef<'escape' | 'outside' | 'detach' | 'selection'>;
   protected readonly activeIndex: _angular_core.WritableSignal<number>;
+  protected readonly panelId: _angular_core.WritableSignal<string | null>;
+  protected readonly hasEnabledItems: _angular_core.Signal<boolean>;
   protected readonly showDefaultTrigger: _angular_core.Signal<boolean>;
+  protected readonly resolvedTriggerLabel: _angular_core.Signal<string>;
+  protected readonly resolvedTriggerAriaLabel: _angular_core.Signal<string | null>;
+  protected readonly resolvedMenuAriaLabel: _angular_core.Signal<string | null>;
+  protected readonly resolvedEmptyLabel: _angular_core.Signal<string>;
   protected readonly positions: (
     | {
         originX: 'start';
@@ -4135,10 +4166,13 @@ declare class KrnMenu {
         offsetY: number;
       }
   )[];
+  constructor();
   protected toggle(): void;
-  protected registerOverlay(overlay: CdkConnectedOverlay, origin: HTMLElement): void;
+  protected onAttach(overlay: CdkConnectedOverlay, origin: HTMLElement): void;
+  protected onDetach(): void;
   protected close(reason: 'escape' | 'outside' | 'detach' | 'selection'): void;
   protected activate(item: KrnNavigationItem): void;
+  protected focusIndex(index: number): void;
   protected onTriggerKeydown(event: KeyboardEvent): void;
   protected onMenuKeydown(event: KeyboardEvent): void;
   private focusFirst;
@@ -4167,13 +4201,19 @@ declare class KrnMenu {
   >;
 }
 declare class KrnMenubar {
+  private readonly host;
+  private readonly platform;
   private readonly elements;
   private readonly translations;
+  private focusRepairToken;
   readonly items: _angular_core.InputSignal<readonly KrnNavigationItem[]>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly itemSelected: _angular_core.OutputEmitterRef<KrnNavigationItem>;
   protected readonly activeIndex: _angular_core.WritableSignal<number>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
+  constructor();
   protected onKeydown(event: KeyboardEvent): void;
+  private scheduleFocus;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnMenubar, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnMenubar,
@@ -4191,32 +4231,73 @@ declare class KrnMenubar {
   >;
 }
 declare class KrnContextMenu {
+  private readonly overlayCoordinator;
   private readonly platform;
   private readonly translations;
   private readonly host;
   private readonly elements;
-  readonly items: _angular_core.InputSignal<readonly KrnContextMenuItem[]>;
+  private readonly panels;
+  readonly items: _angular_core.InputSignalWithTransform<
+    readonly KrnContextMenuItem[],
+    readonly KrnContextMenuItem[]
+  >;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly itemSelected: _angular_core.OutputEmitterRef<KrnContextMenuItem>;
   protected readonly open: _angular_core.WritableSignal<boolean>;
-  protected readonly x: _angular_core.WritableSignal<number>;
-  protected readonly y: _angular_core.WritableSignal<number>;
+  protected readonly origin: _angular_core.WritableSignal<{
+    x: number;
+    y: number;
+  }>;
   protected readonly activeId: _angular_core.WritableSignal<string>;
   protected readonly openPath: _angular_core.WritableSignal<readonly string[]>;
+  private readonly submenusTowardsStart;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
+  protected readonly resolvedEmptyLabel: _angular_core.Signal<string>;
+  protected readonly positions: (
+    | {
+        originX: 'start';
+        originY: 'top';
+        overlayX: 'start';
+        overlayY: 'top';
+      }
+    | {
+        originX: 'start';
+        originY: 'top';
+        overlayX: 'end';
+        overlayY: 'top';
+      }
+    | {
+        originX: 'start';
+        originY: 'top';
+        overlayX: 'start';
+        overlayY: 'bottom';
+      }
+  )[];
   private previousFocus;
+  private focusToken;
+  constructor();
   protected onContextMenu(event: MouseEvent): void;
+  protected onAttach(overlay: CdkConnectedOverlay): void;
+  protected onOverlayDetach(): void;
+  protected branchHasEnabledItem(items: readonly KrnContextMenuItem[]): boolean;
+  protected rightToLeft(): boolean;
+  protected submenuOpensTowardsStart(id: string): boolean;
   protected submenuOpen(id: string): boolean;
   protected onPointerEnter(item: KrnContextMenuItem): void;
   protected onItemClick(event: MouseEvent, item: KrnContextMenuItem): void;
   protected activate(item: KrnContextMenuItem): void;
   protected onKeydown(event: KeyboardEvent): void;
   private openBranch;
+  private updateSubmenuDirection;
   private findItem;
   private findParent;
   private findSiblings;
   private pathTo;
   private focusById;
-  protected dismiss(): void;
+  protected dismiss(restoreFocus: boolean): void;
+  protected onDocumentEscape(event: Event): void;
+  protected onDocumentContextMenu(event: MouseEvent): void;
+  protected onWindowBlur(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnContextMenu, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnContextMenu,
