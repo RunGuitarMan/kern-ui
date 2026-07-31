@@ -186,6 +186,21 @@ test.describe('Round three: layout specimens', () => {
     expect(lastRowBounds.y + lastRowBounds.height).toBeLessThanOrEqual(
       viewportBounds.y + viewportBounds.height + 1,
     );
+    await page.emulateMedia({ forcedColors: 'active' });
+    await viewport.focus();
+    const focusIndicator = await viewport.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return {
+        color: style.outlineColor,
+        offset: Number.parseFloat(style.outlineOffset),
+        style: style.outlineStyle,
+        width: Number.parseFloat(style.outlineWidth),
+      };
+    });
+    expect(focusIndicator.style).not.toBe('none');
+    expect(focusIndicator.width).toBeGreaterThanOrEqual(1);
+    expect(focusIndicator.offset).toBeLessThan(0);
+    expect(focusIndicator.color).not.toBe('rgba(0, 0, 0, 0)');
 
     specimen = await openSpecimen(page, 'responsive-show-hide');
     await expect(specimen.getByText('Wide navigation + contextual actions')).toBeVisible();

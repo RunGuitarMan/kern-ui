@@ -230,8 +230,8 @@ export class KrnAspectRatio {
     <div
       class="krn-scroll-area__viewport"
       [attr.tabindex]="keyboardAccessible() ? 0 : null"
-      [attr.role]="ariaLabel() ? 'region' : null"
-      [attr.aria-label]="ariaLabel() || null"
+      [attr.role]="resolvedAriaLabel() ? 'region' : null"
+      [attr.aria-label]="resolvedAriaLabel()"
     >
       <div class="krn-scroll-area__content"><ng-content /></div>
     </div>
@@ -239,13 +239,14 @@ export class KrnAspectRatio {
   host: {
     '[style.--krn-scroll-max-block]': 'resolvedMaxBlockSize()',
     '[style.--krn-scroll-max-inline]': 'resolvedMaxInlineSize()',
-    '[attr.data-axis]': 'axis()',
-    '[attr.data-scrollbar]': 'scrollbar()',
+    '[attr.data-axis]': 'resolvedAxis()',
+    '[attr.data-scrollbar]': 'resolvedScrollbar()',
   },
   styles: `
     :host {
       position: relative;
       display: block;
+      box-sizing: border-box;
       min-inline-size: 0;
       min-block-size: 0;
       max-inline-size: var(--krn-scroll-max-inline);
@@ -255,12 +256,18 @@ export class KrnAspectRatio {
       isolation: isolate;
     }
 
+    :host([hidden]) {
+      display: none;
+    }
+
     .krn-scroll-area__viewport {
       box-sizing: border-box;
+      inline-size: 100%;
       max-inline-size: inherit;
       max-block-size: inherit;
+      min-inline-size: 0;
+      min-block-size: 0;
       border-radius: inherit;
-      overscroll-behavior: contain;
       scrollbar-color: var(--krn-color-border-strong) transparent;
       scrollbar-width: thin;
       background-color: var(--krn-color-surface);
@@ -305,14 +312,21 @@ export class KrnAspectRatio {
       background-clip: padding-box;
     }
 
+    .krn-scroll-area__viewport:focus-visible {
+      outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
+      outline-offset: calc(var(--krn-focus-ring-width) * -1);
+    }
+
     :host([data-axis='vertical']) .krn-scroll-area__viewport {
       overflow-y: auto;
       overflow-x: clip;
+      overscroll-behavior-y: contain;
     }
 
     :host([data-axis='horizontal']) .krn-scroll-area__viewport {
       overflow-x: auto;
       overflow-y: clip;
+      overscroll-behavior-x: contain;
       background:
         linear-gradient(90deg, var(--krn-color-surface) 30%, transparent) left center,
         linear-gradient(270deg, var(--krn-color-surface) 30%, transparent) right center,
@@ -339,6 +353,7 @@ export class KrnAspectRatio {
 
     :host([data-axis='both']) .krn-scroll-area__viewport {
       overflow: auto;
+      overscroll-behavior: contain;
     }
 
     :host([data-scrollbar='hidden']) .krn-scroll-area__viewport {
@@ -353,29 +368,51 @@ export class KrnAspectRatio {
     }
 
     .krn-scroll-area__content {
-      min-inline-size: min-content;
+      min-width: min-content;
     }
 
     :host([data-axis='vertical']) .krn-scroll-area__content {
-      min-inline-size: 0;
+      max-width: 100%;
+      min-width: 0;
     }
 
     @media (forced-colors: active) {
       .krn-scroll-area__viewport {
         background: Canvas;
       }
+
+      .krn-scroll-area__viewport:focus-visible {
+        outline-color: Highlight;
+      }
     }
   `,
 })
 export class KrnScrollArea {
   private readonly translations = inject(KRN_TRANSLATIONS);
+
+  /** Selects the scrollable axis. Invalid runtime values fall back to vertical. */
   readonly axis = input<'vertical' | 'horizontal' | 'both'>('vertical');
   readonly maxBlockSize = input<KrnLayoutSpace>('100%');
   readonly maxInlineSize = input<KrnLayoutSpace>('100%');
+
+  /** Keeps the native viewport keyboard-scrollable when enabled. */
   readonly keyboardAccessible = input(true, { transform: booleanAttribute });
+
+  /** Names the scrollable region. Blank values omit the region role and accessible name. */
   readonly ariaLabel = input<string | null>(this.translations.layout.scrollableContent);
+
+  /** Controls native scrollbar visibility and gutter allocation. */
   readonly scrollbar = input<'auto' | 'stable' | 'hidden'>('auto');
 
+  protected readonly resolvedAxis = computed<'vertical' | 'horizontal' | 'both'>(() => {
+    const axis = this.axis();
+    return axis === 'horizontal' || axis === 'both' ? axis : 'vertical';
+  });
+  protected readonly resolvedScrollbar = computed<'auto' | 'stable' | 'hidden'>(() => {
+    const scrollbar = this.scrollbar();
+    return scrollbar === 'stable' || scrollbar === 'hidden' ? scrollbar : 'auto';
+  });
+  protected readonly resolvedAriaLabel = computed(() => this.ariaLabel()?.trim() || null);
   protected readonly resolvedMaxBlockSize = computed(() =>
     krnCssLength(this.maxBlockSize(), '100%'),
   );

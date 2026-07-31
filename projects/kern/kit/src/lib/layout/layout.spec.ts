@@ -8,7 +8,7 @@ import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
 import { KrnAppShell, KrnHeader, KrnSidebar } from './app-shell';
 import { KrnCluster, KrnInline, KrnSpacer, KrnStack } from './flex-layout';
 import { KrnGrid } from './grid';
-import { KrnAspectRatio, KrnDivider } from './media-layout';
+import { KrnAspectRatio, KrnDivider, KrnScrollArea } from './media-layout';
 import { KrnResizablePanel, KrnResizablePanels, KrnResizeHandle } from './resizable-panels';
 import { KrnSplitLayout } from './split-layout';
 
@@ -457,6 +457,65 @@ describe('Kern layout primitives', () => {
     fixture.componentInstance.ratio.set(Number.POSITIVE_INFINITY);
     fixture.detectChanges();
     expect(host.style.getPropertyValue('--krn-aspect-ratio')).toBe('16 / 9');
+
+    host.hidden = true;
+    expect(getComputedStyle(host).display).toBe('none');
+  });
+
+  it('configures a named keyboard-scrollable area with axis-specific containment', () => {
+    const fixture = TestBed.createComponent(KrnScrollArea);
+    fixture.componentRef.setInput('axis', 'both');
+    fixture.componentRef.setInput('scrollbar', 'stable');
+    fixture.componentRef.setInput('maxBlockSize', 320);
+    fixture.componentRef.setInput('maxInlineSize', '40rem');
+    fixture.componentRef.setInput('ariaLabel', '  Search results  ');
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const viewport = host.querySelector<HTMLElement>('.krn-scroll-area__viewport')!;
+    const hostStyle = getComputedStyle(host);
+    const viewportStyle = getComputedStyle(viewport);
+
+    expect(host.getAttribute('data-axis')).toBe('both');
+    expect(host.getAttribute('data-scrollbar')).toBe('stable');
+    expect(host.style.getPropertyValue('--krn-scroll-max-block')).toBe('320px');
+    expect(host.style.getPropertyValue('--krn-scroll-max-inline')).toBe('40rem');
+    expect(hostStyle.boxSizing).toBe('border-box');
+    expect(hostStyle.minInlineSize).toBe('0px');
+    expect(viewport.tabIndex).toBe(0);
+    expect(viewport.getAttribute('role')).toBe('region');
+    expect(viewport.getAttribute('aria-label')).toBe('Search results');
+    expect(viewportStyle.inlineSize).toBe('100%');
+    expect(viewportStyle.overflow).toBe('auto');
+    expect(viewportStyle.overscrollBehavior).toBe('contain');
+    expect(viewportStyle.scrollbarGutter).toBe('stable both-edges');
+  });
+
+  it('falls back to safe scroll settings and omits a blank region name', () => {
+    const fixture = TestBed.createComponent(KrnScrollArea);
+    fixture.componentRef.setInput('axis', 'diagonal');
+    fixture.componentRef.setInput('scrollbar', 'overlay');
+    fixture.componentRef.setInput('maxBlockSize', '');
+    fixture.componentRef.setInput('maxInlineSize', '');
+    fixture.componentRef.setInput('keyboardAccessible', false);
+    fixture.componentRef.setInput('ariaLabel', '   ');
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const viewport = host.querySelector<HTMLElement>('.krn-scroll-area__viewport')!;
+
+    expect(host.getAttribute('data-axis')).toBe('vertical');
+    expect(host.getAttribute('data-scrollbar')).toBe('auto');
+    expect(host.style.getPropertyValue('--krn-scroll-max-block')).toBe('100%');
+    expect(host.style.getPropertyValue('--krn-scroll-max-inline')).toBe('100%');
+    expect(viewport.hasAttribute('tabindex')).toBe(false);
+    expect(viewport.hasAttribute('role')).toBe(false);
+    expect(viewport.hasAttribute('aria-label')).toBe(false);
+    expect(getComputedStyle(viewport).overflowY).toBe('auto');
+    expect(getComputedStyle(viewport).overscrollBehaviorY).toBe('contain');
+
+    fixture.componentRef.setInput('axis', 'horizontal');
+    fixture.detectChanges();
+    expect(getComputedStyle(viewport).overflowX).toBe('auto');
+    expect(getComputedStyle(viewport).overscrollBehaviorX).toBe('contain');
 
     host.hidden = true;
     expect(getComputedStyle(host).display).toBe('none');
