@@ -69,6 +69,8 @@ contract or upgrade decision.
   `closeOnOutside`, added typed `closed` reasons, and normalized accessible labels.
 - Strengthened CRUD Toolbar and Bulk Actions with selected-count validation, persistent live
   selection announcements, normalized labels, and wrap-safe high-contrast states.
+- Fixed Master Detail Layout container responsiveness, replaced nested main landmarks with labelled
+  detail regions, and normalized pane labels.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned

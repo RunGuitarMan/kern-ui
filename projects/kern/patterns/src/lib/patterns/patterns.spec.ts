@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { vi } from 'vitest';
 
 import { KRN_ENGLISH_TRANSLATIONS, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import { KrnDrawer } from '@kern-ui/angular/kit';
@@ -10,6 +11,7 @@ import {
   KrnCrudToolbar,
   KrnFilterBar,
   KrnGlobalSearch,
+  KrnMasterDetailLayout,
   type KrnNotification,
   KrnNotificationCenter,
   KrnPageHeader,
@@ -261,6 +263,54 @@ describe('Kern product patterns', () => {
     const fixture = TestBed.createComponent(KrnCrudToolbar);
     fixture.componentRef.setInput('selectedCount', -1);
     expect(() => fixture.detectChanges()).toThrowError(/non-negative safe integer/);
+  });
+
+  it('uses responsive labelled regions for master-detail layout', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnMasterDetailLayout] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnMasterDetailLayout);
+    fixture.componentRef.setInput('masterLabel', '   ');
+    fixture.componentRef.setInput('detailLabel', '  Account detail  ');
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const master = element.querySelector('aside') as HTMLElement;
+    const detail = element.querySelector('section') as HTMLElement;
+    expect(master.getAttribute('aria-label')?.trim()).toBeTruthy();
+    expect(detail.getAttribute('aria-label')).toBe('Account detail');
+    expect(element.querySelector('main')).toBeNull();
+    expect(element.hasAttribute('data-detail-open')).toBe(false);
+
+    let compact = true;
+    const styleSpy = vi
+      .spyOn(window, 'getComputedStyle')
+      .mockImplementation(
+        (target) =>
+          ({ display: compact && target === master ? 'none' : 'block' }) as CSSStyleDeclaration,
+      );
+    try {
+      master.focus();
+      fixture.componentInstance.detailOpen.set(true);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(element.hasAttribute('data-detail-open')).toBe(true);
+      expect(document.activeElement).toBe(detail);
+
+      compact = false;
+      detail.focus();
+      fixture.componentInstance.detailOpen.set(false);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(document.activeElement).toBe(detail);
+    } finally {
+      styleSpy.mockRestore();
+    }
+
+    const componentStyles = (
+      KrnMasterDetailLayout as unknown as { ɵcmp: { styles: readonly string[] } }
+    ).ɵcmp.styles.join('\n');
+    expect(componentStyles).toMatch(
+      /container-type: inline-size;[\s\S]*?@container \(max-width: 42rem\) \{[\s\S]*?\.layout[^{]*\{\s*grid-template-columns: 1fr;/,
+    );
   });
 
   it('opens the user menu, moves focus to its first action, and closes on selection', async () => {
