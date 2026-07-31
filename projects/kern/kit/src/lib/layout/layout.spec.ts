@@ -8,7 +8,7 @@ import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
 import { KrnAppShell, KrnHeader, KrnSidebar } from './app-shell';
 import { KrnCluster, KrnInline, KrnSpacer, KrnStack } from './flex-layout';
 import { KrnGrid } from './grid';
-import { KrnDivider } from './media-layout';
+import { KrnAspectRatio, KrnDivider } from './media-layout';
 import { KrnResizablePanel, KrnResizablePanels, KrnResizeHandle } from './resizable-panels';
 import { KrnSplitLayout } from './split-layout';
 
@@ -41,6 +41,22 @@ class ResizableHost {
   `,
 })
 class SplitLayoutHost {}
+
+@Component({
+  selector: 'krn-test-aspect-ratio-host',
+  standalone: true,
+  imports: [KrnAspectRatio],
+  template: `
+    <krn-aspect-ratio [ratio]="ratio()" [fit]="fit()">
+      <img alt="" />
+      <iframe title="Preview"></iframe>
+    </krn-aspect-ratio>
+  `,
+})
+class AspectRatioHost {
+  readonly ratio = signal<number | string>('3:2');
+  readonly fit = signal<'cover' | 'contain' | 'fill' | 'none'>('contain');
+}
 
 function pointerEvent(type: string, clientX: number): PointerEvent {
   const event = new MouseEvent(type, {
@@ -390,6 +406,57 @@ describe('Kern layout primitives', () => {
     expect(separator.getAttribute('aria-orientation')).toBe('horizontal');
     expect(separator.hasAttribute('aria-label')).toBe(false);
     expect(host.querySelector('.krn-divider__label')).toBeNull();
+
+    host.hidden = true;
+    expect(getComputedStyle(host).display).toBe('none');
+  });
+
+  it('normalizes aspect ratio media sizing without escaping its container', () => {
+    const fixture = TestBed.createComponent(AspectRatioHost);
+    fixture.detectChanges();
+    const host = fixture.nativeElement.querySelector('krn-aspect-ratio') as HTMLElement;
+    const content = host.querySelector<HTMLElement>('.krn-aspect-ratio__content')!;
+    const image = host.querySelector<HTMLImageElement>('img')!;
+    const frame = host.querySelector<HTMLIFrameElement>('iframe')!;
+    const style = getComputedStyle(host);
+    const contentStyle = getComputedStyle(content);
+    const imageStyle = getComputedStyle(image);
+    const frameStyle = getComputedStyle(frame);
+
+    expect(host.style.getPropertyValue('--krn-aspect-ratio')).toBe('3 / 2');
+    expect(host.getAttribute('data-fit')).toBe('contain');
+    expect(style.boxSizing).toBe('border-box');
+    expect(style.maxInlineSize).toBe('100%');
+    expect(style.minInlineSize).toBe('0px');
+    expect(style.minBlockSize).toBe('0px');
+    expect(style.aspectRatio).toBe('var(--krn-aspect-ratio)');
+    expect(contentStyle.boxSizing).toBe('border-box');
+    expect(contentStyle.maxInlineSize).toBe('100%');
+    expect(contentStyle.maxBlockSize).toBe('100%');
+    expect(contentStyle.minInlineSize).toBe('0px');
+    expect(contentStyle.minBlockSize).toBe('0px');
+    expect(imageStyle.display).toBe('block');
+    expect(imageStyle.inlineSize).toBe('100%');
+    expect(imageStyle.blockSize).toBe('100%');
+    expect(imageStyle.maxInlineSize).toBe('100%');
+    expect(imageStyle.maxBlockSize).toBe('100%');
+    expect(imageStyle.objectFit).toBe('var(--krn-aspect-fit)');
+    expect(frameStyle.borderTopWidth).toBe('0px');
+  });
+
+  it('rejects degenerate ratios and invalid fit values while preserving native hidden semantics', () => {
+    const fixture = TestBed.createComponent(AspectRatioHost);
+    fixture.componentInstance.ratio.set('16 / 0');
+    fixture.componentInstance.fit.set('crop' as 'cover');
+    fixture.detectChanges();
+    const host = fixture.nativeElement.querySelector('krn-aspect-ratio') as HTMLElement;
+
+    expect(host.style.getPropertyValue('--krn-aspect-ratio')).toBe('16 / 9');
+    expect(host.getAttribute('data-fit')).toBe('cover');
+
+    fixture.componentInstance.ratio.set(Number.POSITIVE_INFINITY);
+    fixture.detectChanges();
+    expect(host.style.getPropertyValue('--krn-aspect-ratio')).toBe('16 / 9');
 
     host.hidden = true;
     expect(getComputedStyle(host).display).toBe('none');

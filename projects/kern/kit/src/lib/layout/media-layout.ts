@@ -137,30 +137,47 @@ export class KrnDivider {
   template: `<div class="krn-aspect-ratio__content"><ng-content /></div>`,
   host: {
     '[style.--krn-aspect-ratio]': 'resolvedRatio()',
-    '[attr.data-fit]': 'fit()',
+    '[attr.data-fit]': 'resolvedFit()',
   },
   styles: `
     krn-aspect-ratio {
       position: relative;
       display: block;
+      box-sizing: border-box;
+      max-inline-size: 100%;
       min-inline-size: 0;
+      min-block-size: 0;
       aspect-ratio: var(--krn-aspect-ratio);
       overflow: clip;
       border-radius: inherit;
       background: var(--krn-color-surface-sunken);
     }
 
+    krn-aspect-ratio[hidden] {
+      display: none;
+    }
+
     krn-aspect-ratio > .krn-aspect-ratio__content {
       position: absolute;
       inset: 0;
+      box-sizing: border-box;
+      max-inline-size: 100%;
+      max-block-size: 100%;
       min-inline-size: 0;
       min-block-size: 0;
     }
 
     krn-aspect-ratio > .krn-aspect-ratio__content > :is(img, video, iframe, canvas, svg) {
+      display: block;
       inline-size: 100%;
       block-size: 100%;
+      max-inline-size: 100%;
+      max-block-size: 100%;
       object-fit: var(--krn-aspect-fit);
+    }
+
+    krn-aspect-ratio > .krn-aspect-ratio__content > iframe {
+      border: 0;
     }
 
     krn-aspect-ratio[data-fit='cover'] {
@@ -178,17 +195,29 @@ export class KrnDivider {
   `,
 })
 export class KrnAspectRatio {
+  /** Sets a positive width-to-height ratio as a number, `16 / 9`, or `16:9`. */
   readonly ratio = input<number | string>(16 / 9);
+
+  /** Controls how direct projected media fills the ratio box. Invalid runtime values use cover. */
   readonly fit = input<'cover' | 'contain' | 'fill' | 'none'>('cover');
 
+  protected readonly resolvedFit = computed<'cover' | 'contain' | 'fill' | 'none'>(() => {
+    const fit = this.fit();
+    return fit === 'contain' || fit === 'fill' || fit === 'none' ? fit : 'cover';
+  });
   protected readonly resolvedRatio = computed(() => {
     const ratio = this.ratio();
     if (typeof ratio === 'number') {
       return Number.isFinite(ratio) && ratio > 0 ? `${ratio}` : '16 / 9';
     }
     const normalized = ratio.trim();
-    return /^(\d+(?:\.\d+)?)\s*(?:\/|:)\s*(\d+(?:\.\d+)?)$/.test(normalized)
-      ? normalized.replace(':', ' / ')
+    const match = /^(\d+(?:\.\d+)?)\s*(?:\/|:)\s*(\d+(?:\.\d+)?)$/.exec(normalized);
+    if (!match) return '16 / 9';
+
+    const inline = Number(match[1]);
+    const block = Number(match[2]);
+    return Number.isFinite(inline) && inline > 0 && Number.isFinite(block) && block > 0
+      ? `${inline} / ${block}`
       : '16 / 9';
   });
 }
