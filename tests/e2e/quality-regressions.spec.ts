@@ -67,6 +67,41 @@ function boxShadowLayerCount(value: string): number {
   return value === 'none' ? 0 : value.split(/,(?![^(]*\))/).length;
 }
 
+test.describe('Quality regressions: layout primitives', () => {
+  test('divider keeps physical orientation and a visible standalone vertical line', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    const specimen = await openSpecimen(page, 'divider');
+    await specimen.locator('.divider-demo').evaluate((element) => {
+      (element as HTMLElement).style.writingMode = 'vertical-rl';
+    });
+
+    const horizontal = specimen.locator('krn-divider[data-orientation="horizontal"]');
+    const vertical = specimen.locator('krn-divider[data-orientation="vertical"]');
+    const horizontalSeparator = horizontal.locator('[role="separator"]');
+    const verticalSeparator = vertical.locator('[role="separator"]');
+    const verticalLine = vertical.locator('.krn-divider__line').first();
+    await vertical.locator('.krn-divider__label').evaluate((element) => element.remove());
+    await vertical
+      .locator('.krn-divider__line')
+      .nth(1)
+      .evaluate((element) => element.remove());
+
+    await expect(horizontalSeparator).toHaveAttribute('aria-orientation', 'horizontal');
+    await expect(verticalSeparator).toHaveAttribute('aria-orientation', 'vertical');
+    const horizontalRect = await elementRect(horizontalSeparator);
+    const verticalRect = await elementRect(verticalSeparator);
+    const verticalLineRect = await elementRect(verticalLine);
+    expect(horizontalRect.width).toBeGreaterThan(horizontalRect.height);
+    expect(verticalRect.height).toBeGreaterThan(verticalRect.width);
+    expect(verticalLineRect.height).toBeGreaterThan(verticalLineRect.width);
+    expect(verticalLineRect.height).toBeGreaterThan(0);
+
+    assertNoRuntimeErrors();
+  });
+});
+
 test.describe('Quality regressions: menus and focus treatment', () => {
   test('split-button menu items expose a subtle pointer hover without shifting', async ({
     page,

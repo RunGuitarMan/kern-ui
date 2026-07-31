@@ -17,42 +17,62 @@ import { krnCssLength } from './layout.types';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="krn-divider" role="separator" [attr.aria-orientation]="orientation()">
+    <div
+      class="krn-divider"
+      role="separator"
+      [attr.aria-label]="resolvedLabel()"
+      [attr.aria-orientation]="resolvedOrientation()"
+    >
       <span class="krn-divider__line" aria-hidden="true"></span>
-      @if (label()) {
-        <span class="krn-divider__label">{{ label() }}</span>
+      @if (resolvedLabel(); as label) {
+        <span class="krn-divider__label" aria-hidden="true">{{ label }}</span>
         <span class="krn-divider__line" aria-hidden="true"></span>
       }
     </div>
   `,
   host: {
     '[style.--krn-divider-inset]': 'resolvedInset()',
-    '[attr.data-orientation]': 'orientation()',
+    '[attr.data-orientation]': 'resolvedOrientation()',
   },
   styles: `
     :host {
       display: block;
+      box-sizing: border-box;
+      max-inline-size: 100%;
       min-inline-size: 0;
+      min-block-size: 0;
       padding-inline: var(--krn-divider-inset);
       color: var(--krn-color-text-muted);
+      writing-mode: horizontal-tb;
+    }
+
+    :host([hidden]) {
+      display: none;
     }
 
     .krn-divider {
       display: flex;
+      box-sizing: border-box;
+      max-inline-size: 100%;
       align-items: center;
       gap: var(--krn-space-3);
       min-inline-size: 0;
+      min-block-size: 0;
     }
 
     .krn-divider__line {
       flex: 1 1 auto;
       block-size: 1px;
+      min-inline-size: 0;
+      min-block-size: 0;
       background: var(--krn-color-border);
     }
 
     .krn-divider__label {
       flex: 0 1 auto;
+      max-inline-size: 100%;
       min-inline-size: 0;
+      min-block-size: 0;
       color: var(--krn-color-text-muted);
       font-size: var(--krn-font-size-xs);
       font-weight: var(--krn-font-weight-medium);
@@ -72,6 +92,7 @@ import { krnCssLength } from './layout.types';
 
     :host([data-orientation='vertical']) .krn-divider {
       block-size: 100%;
+      min-block-size: var(--krn-space-4);
       flex-direction: column;
     }
 
@@ -92,10 +113,19 @@ import { krnCssLength } from './layout.types';
   `,
 })
 export class KrnDivider {
+  /** Sets the separator and visual line orientation. Invalid runtime values fall back to horizontal. */
   readonly orientation = input<'horizontal' | 'vertical'>('horizontal');
+
+  /** Insets both ends of the divider along its length using a spacing token, pixels, or CSS length. */
   readonly inset = input<KrnLayoutSpace>('0');
+
+  /** Adds a visible label and uses its trimmed text as the separator's accessible name. */
   readonly label = input<string | null>(null);
 
+  protected readonly resolvedOrientation = computed<'horizontal' | 'vertical'>(() =>
+    this.orientation() === 'vertical' ? 'vertical' : 'horizontal',
+  );
+  protected readonly resolvedLabel = computed(() => this.label()?.trim() || null);
   protected readonly resolvedInset = computed(() => krnCssLength(this.inset(), '0'));
 }
 

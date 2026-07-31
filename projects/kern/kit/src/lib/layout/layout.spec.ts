@@ -8,6 +8,7 @@ import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
 import { KrnAppShell, KrnHeader, KrnSidebar } from './app-shell';
 import { KrnCluster, KrnInline, KrnSpacer, KrnStack } from './flex-layout';
 import { KrnGrid } from './grid';
+import { KrnDivider } from './media-layout';
 import { KrnResizablePanel, KrnResizablePanels, KrnResizeHandle } from './resizable-panels';
 import { KrnSplitLayout } from './split-layout';
 
@@ -340,6 +341,58 @@ describe('Kern layout primitives', () => {
     expect(
       Boolean(actions[0].compareDocumentPosition(actions[1]) & Node.DOCUMENT_POSITION_FOLLOWING),
     ).toBe(true);
+  });
+
+  it('names and contains a labelled vertical divider', () => {
+    const fixture = TestBed.createComponent(KrnDivider);
+    fixture.componentRef.setInput('orientation', 'vertical');
+    fixture.componentRef.setInput('inset', 12);
+    fixture.componentRef.setInput('label', '  Section boundary  ');
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const separator = host.querySelector<HTMLElement>('[role="separator"]')!;
+    const label = host.querySelector<HTMLElement>('.krn-divider__label')!;
+    const line = host.querySelector<HTMLElement>('.krn-divider__line')!;
+    const style = getComputedStyle(host);
+    const separatorStyle = getComputedStyle(separator);
+    const lineStyle = getComputedStyle(line);
+
+    expect(host.style.getPropertyValue('--krn-divider-inset')).toBe('12px');
+    expect(host.getAttribute('data-orientation')).toBe('vertical');
+    expect(separator.getAttribute('aria-orientation')).toBe('vertical');
+    expect(separator.getAttribute('aria-label')).toBe('Section boundary');
+    expect(label.textContent).toBe('Section boundary');
+    expect(label.getAttribute('aria-hidden')).toBe('true');
+    expect(style.boxSizing).toBe('border-box');
+    expect(style.maxInlineSize).toBe('100%');
+    expect(style.minInlineSize).toBe('0px');
+    expect(style.writingMode).toBe('horizontal-tb');
+    expect(separatorStyle.boxSizing).toBe('border-box');
+    expect(separatorStyle.maxInlineSize).toBe('100%');
+    expect(separatorStyle.minInlineSize).toBe('0px');
+    expect(separatorStyle.minBlockSize).toBe('var(--krn-space-4)');
+    expect(lineStyle.inlineSize).toBe('1px');
+    expect(lineStyle.minInlineSize).toBe('0px');
+    expect(lineStyle.minBlockSize).toBe('0px');
+  });
+
+  it('falls back to an unlabelled horizontal divider and preserves native hidden semantics', () => {
+    const fixture = TestBed.createComponent(KrnDivider);
+    fixture.componentRef.setInput('orientation', 'diagonal');
+    fixture.componentRef.setInput('inset', '');
+    fixture.componentRef.setInput('label', '   ');
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const separator = host.querySelector<HTMLElement>('[role="separator"]')!;
+
+    expect(host.style.getPropertyValue('--krn-divider-inset')).toBe('0');
+    expect(host.getAttribute('data-orientation')).toBe('horizontal');
+    expect(separator.getAttribute('aria-orientation')).toBe('horizontal');
+    expect(separator.hasAttribute('aria-label')).toBe(false);
+    expect(host.querySelector('.krn-divider__label')).toBeNull();
+
+    host.hidden = true;
+    expect(getComputedStyle(host).display).toBe('none');
   });
 
   it('provides a controlled modal navigation drawer at the mobile breakpoint', async () => {
