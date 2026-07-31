@@ -150,16 +150,6 @@
       "descriptionSource": "inferred"
     },
     {
-      "name": "emptyStepLabel",
-      "property": "emptyStepLabel",
-      "kind": "input",
-      "type": "string",
-      "required": false,
-      "defaultValue": "this.translations.patterns.step",
-      "description": "Human-readable copy for the empty step state or control.",
-      "descriptionSource": "inferred"
-    },
-    {
       "name": "stepCounterLabel",
       "property": "stepCounterLabel",
       "kind": "input",
@@ -245,7 +235,6 @@
     "optionalLabel",
     "backLabel",
     "continueLabel",
-    "emptyStepLabel",
     "stepCounterLabel",
     "completed"
   ],
@@ -469,9 +458,9 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 12,
+      "publicInputsAndModels": 11,
       "controlled": 4,
-      "excluded": 8,
+      "excluded": 7,
       "unclassified": 0
     },
     "exclusions": [
@@ -514,18 +503,6 @@
       {
         "componentId": "multi-step-form",
         "publicName": "continueLabel",
-        "kind": "input",
-        "type": "string",
-        "code": "accessibility-copy",
-        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
-        "evidence": {
-          "category": "a11y-test",
-          "pointer": "tests/a11y/accessibility.spec.ts#multi-step-form"
-        }
-      },
-      {
-        "componentId": "multi-step-form",
-        "publicName": "emptyStepLabel",
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",

@@ -69,21 +69,23 @@ void bootstrapApplication(KernProfileFormAgentExample);
 
 ## API
 
-| Name             | Kind   | Type                                                                 | Required | Default                                            | Description                                                          |
-| ---------------- | ------ | -------------------------------------------------------------------- | -------- | -------------------------------------------------- | -------------------------------------------------------------------- |
-| `value`          | input  | `KrnProfileValue`                                                    | no       | `{ name: '', role: '', bio: '', timezone: 'UTC' }` | Controlled component value.                                          |
-| `timezones`      | input  | `ReadonlyArray<{ readonly value: string; readonly label: string; }>` | no       | `this.translations.patterns.profileTimezones`      | Ordered domain values supplied to the timezone collection.           |
-| `saving`         | input  | `boolean`                                                            | no       | `false`                                            | Exposes an in-progress save state and prevents duplicate submission. |
-| `dirtyMessage`   | input  | `string`                                                             | no       | `this.translations.patterns.unsavedChanges`        | Human-readable copy for the dirty state or control.                  |
-| `nameLabel`      | input  | `string`                                                             | no       | `this.translations.patterns.displayName`           | Human-readable copy for the name state or control.                   |
-| `nameErrorLabel` | input  | `string`                                                             | no       | `this.translations.patterns.displayNameRequired`   | Human-readable copy for the name error state or control.             |
-| `roleLabel`      | input  | `string`                                                             | no       | `this.translations.patterns.role`                  | Human-readable copy for the role state or control.                   |
-| `bioLabel`       | input  | `string`                                                             | no       | `this.translations.patterns.bio`                   | Human-readable copy for the bio state or control.                    |
-| `bioMaxLength`   | input  | `number`                                                             | no       | `280`                                              | Maximum biography length enforced by the profile form pattern.       |
-| `timezoneLabel`  | input  | `string`                                                             | no       | `this.translations.patterns.timezone`              | Human-readable copy for the timezone state or control.               |
-| `savingLabel`    | input  | `string`                                                             | no       | `this.translations.patterns.saving`                | Human-readable copy for the saving state or control.                 |
-| `saveLabel`      | input  | `string`                                                             | no       | `this.translations.patterns.saveProfile`           | Human-readable copy for the save state or control.                   |
-| `saved`          | output | `KrnProfileValue`                                                    | no       | `undefined`                                        | Notifies the consumer after the saved interaction completes.         |
+| Name                 | Kind   | Type                                                                 | Required | Default                                            | Description                                                          |
+| -------------------- | ------ | -------------------------------------------------------------------- | -------- | -------------------------------------------------- | -------------------------------------------------------------------- |
+| `value`              | input  | `KrnProfileValue`                                                    | no       | `{ name: '', role: '', bio: '', timezone: 'UTC' }` | Controlled component value.                                          |
+| `timezones`          | input  | `ReadonlyArray<{ readonly value: string; readonly label: string; }>` | no       | `this.translations.patterns.profileTimezones`      | Ordered domain values supplied to the timezone collection.           |
+| `saving`             | input  | `boolean`                                                            | no       | `false`                                            | Exposes an in-progress save state and prevents duplicate submission. |
+| `dirtyMessage`       | input  | `string`                                                             | no       | `this.translations.patterns.unsavedChanges`        | Human-readable copy for the dirty state or control.                  |
+| `nameLabel`          | input  | `string`                                                             | no       | `this.translations.patterns.displayName`           | Human-readable copy for the name state or control.                   |
+| `nameErrorLabel`     | input  | `string`                                                             | no       | `this.translations.patterns.displayNameRequired`   | Human-readable copy for the name error state or control.             |
+| `roleLabel`          | input  | `string`                                                             | no       | `this.translations.patterns.role`                  | Human-readable copy for the role state or control.                   |
+| `bioLabel`           | input  | `string`                                                             | no       | `this.translations.patterns.bio`                   | Human-readable copy for the bio state or control.                    |
+| `bioErrorLabel`      | input  | `(maximumLength: number) => string`                                  | no       | `this.translations.patterns.bioMaximumLength`      | Human-readable copy for the bio error state or control.              |
+| `bioMaxLength`       | input  | `number`                                                             | no       | `280`                                              | Maximum biography length enforced by the profile form pattern.       |
+| `timezoneLabel`      | input  | `string`                                                             | no       | `this.translations.patterns.timezone`              | Human-readable copy for the timezone state or control.               |
+| `timezoneErrorLabel` | input  | `string`                                                             | no       | `this.translations.patterns.timezoneUnavailable`   | Human-readable copy for the timezone error state or control.         |
+| `savingLabel`        | input  | `string`                                                             | no       | `this.translations.patterns.saving`                | Human-readable copy for the saving state or control.                 |
+| `saveLabel`          | input  | `string`                                                             | no       | `this.translations.patterns.saveProfile`           | Human-readable copy for the save state or control.                   |
+| `saved`              | output | `KrnProfileValue`                                                    | no       | `undefined`                                        | Notifies the consumer after the saved interaction completes.         |
 
 ## Deprecated selectors
 
@@ -135,8 +137,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/profile-form`
 
 Scenarios: `default`.
-Public API coverage: 3/12
-directly controlled; 9 exact exclusions; 0 unclassified.
+Public API coverage: 3/14
+directly controlled; 11 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -150,17 +152,19 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API       | Category           | Evidence                                                  | Reason                                                                                                                                                               |
-| ---------------- | ------------------ | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `bioLabel`       | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `nameErrorLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `nameLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `roleLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `saveLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `savingLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `timezoneLabel`  | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `timezones`      | complex-data       | `specimen-fixture:preview/profile-form?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
-| `value`          | complex-data       | `specimen-fixture:preview/profile-form?state=default`     | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                     |
+| Public API           | Category           | Evidence                                                           | Reason                                                                                                                                                               |
+| -------------------- | ------------------ | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bioErrorLabel`      | callback           | `component-example:agent/components/profile-form.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                   |
+| `bioLabel`           | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `nameErrorLabel`     | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `nameLabel`          | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `roleLabel`          | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `saveLabel`          | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `savingLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `timezoneErrorLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `timezoneLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `timezones`          | complex-data       | `specimen-fixture:preview/profile-form?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
+| `value`              | complex-data       | `specimen-fixture:preview/profile-form?state=default`              | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                     |
 
 Presets:
 

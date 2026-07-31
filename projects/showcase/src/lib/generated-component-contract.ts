@@ -6249,14 +6249,6 @@ export const KERN_RUNTIME_COMPONENTS = {
         defaultValue: 'this.translations.patterns.continue',
       },
       {
-        name: 'emptyStepLabel',
-        property: 'emptyStepLabel',
-        kind: 'input',
-        type: 'string',
-        required: false,
-        defaultValue: 'this.translations.patterns.step',
-      },
-      {
         name: 'optionalLabel',
         property: 'optionalLabel',
         kind: 'input',
@@ -7247,6 +7239,14 @@ export const KERN_RUNTIME_COMPONENTS = {
     source: 'projects/kern/patterns/src/lib/patterns/form-patterns.ts',
     api: [
       {
+        name: 'bioErrorLabel',
+        property: 'bioErrorLabel',
+        kind: 'input',
+        type: '(maximumLength: number) => string',
+        required: false,
+        defaultValue: 'this.translations.patterns.bioMaximumLength',
+      },
+      {
         name: 'bioLabel',
         property: 'bioLabel',
         kind: 'input',
@@ -7317,6 +7317,14 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'this.translations.patterns.saving',
+      },
+      {
+        name: 'timezoneErrorLabel',
+        property: 'timezoneErrorLabel',
+        kind: 'input',
+        type: 'string',
+        required: false,
+        defaultValue: 'this.translations.patterns.timezoneUnavailable',
       },
       {
         name: 'timezoneLabel',
@@ -7918,12 +7926,28 @@ export const KERN_RUNTIME_COMPONENTS = {
     source: 'projects/kern/patterns/src/lib/patterns/product-patterns.ts',
     api: [
       {
+        name: 'closeNavigationLabel',
+        property: 'closeNavigationLabel',
+        kind: 'input',
+        type: 'string',
+        required: false,
+        defaultValue: 'this.translations.layout.closeNavigation',
+      },
+      {
         name: 'mainId',
         property: 'mainId',
         kind: 'input',
         type: 'string',
         required: false,
-        defaultValue: "'main-content'",
+        defaultValue: "this.ids.next('main-content')",
+      },
+      {
+        name: 'navigationLabel',
+        property: 'navigationLabel',
+        kind: 'input',
+        type: 'string',
+        required: false,
+        defaultValue: 'this.translations.layout.primaryNavigation',
       },
       {
         name: 'navigationOpen',

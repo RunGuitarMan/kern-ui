@@ -130,6 +130,16 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "bioErrorLabel",
+      "property": "bioErrorLabel",
+      "kind": "input",
+      "type": "(maximumLength: number) => string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.bioMaximumLength",
+      "description": "Human-readable copy for the bio error state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
       "name": "bioMaxLength",
       "property": "bioMaxLength",
       "kind": "input",
@@ -147,6 +157,16 @@
       "required": false,
       "defaultValue": "this.translations.patterns.timezone",
       "description": "Human-readable copy for the timezone state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "timezoneErrorLabel",
+      "property": "timezoneErrorLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.patterns.timezoneUnavailable",
+      "description": "Human-readable copy for the timezone error state or control.",
       "descriptionSource": "inferred"
     },
     {
@@ -236,8 +256,10 @@
     "nameErrorLabel",
     "roleLabel",
     "bioLabel",
+    "bioErrorLabel",
     "bioMaxLength",
     "timezoneLabel",
+    "timezoneErrorLabel",
     "savingLabel",
     "saveLabel",
     "saved"
@@ -437,12 +459,24 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 12,
+      "publicInputsAndModels": 14,
       "controlled": 3,
-      "excluded": 9,
+      "excluded": 11,
       "unclassified": 0
     },
     "exclusions": [
+      {
+        "componentId": "profile-form",
+        "publicName": "bioErrorLabel",
+        "kind": "input",
+        "type": "(maximumLength: number) => string",
+        "code": "callback",
+        "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+        "evidence": {
+          "category": "component-example",
+          "pointer": "agent/components/profile-form.json#/examples/0"
+        }
+      },
       {
         "componentId": "profile-form",
         "publicName": "bioLabel",
@@ -506,6 +540,18 @@
       {
         "componentId": "profile-form",
         "publicName": "savingLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#profile-form"
+        }
+      },
+      {
+        "componentId": "profile-form",
+        "publicName": "timezoneErrorLabel",
         "kind": "input",
         "type": "string",
         "code": "accessibility-copy",

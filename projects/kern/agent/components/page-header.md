@@ -85,6 +85,7 @@ Manual assistive-technology validation remains required in the consuming applica
 
 - KERN avoids ambient browser globals in reusable runtime infrastructure.
 - Validate the consuming SSR/hydration route, locale, ids and overlay host.
+- Uses the shared deterministic KERN id service.
 
 Hydration evidence scope: `library-docs-route-smoke`; status:
 `consumer-validation-required`.

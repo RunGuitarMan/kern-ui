@@ -1,3 +1,21 @@
-import { KrnButtonHarness, KrnDataGridHarness } from '@kern-ui/angular/testing';
+import {
+  KrnButtonGroupHarness,
+  KrnButtonHarness,
+  KrnCopyButtonHarness,
+  KrnDataGridHarness,
+  KrnFloatingActionButtonHarness,
+  KrnIconButtonHarness,
+  KrnToggleButtonHarness,
+  KrnToggleGroupHarness,
+} from '@kern-ui/angular/testing';
 
-export const testingHarnesses = [KrnButtonHarness, KrnDataGridHarness] as const;
+export const testingHarnesses = [
+  KrnButtonGroupHarness,
+  KrnButtonHarness,
+  KrnCopyButtonHarness,
+  KrnDataGridHarness,
+  KrnFloatingActionButtonHarness,
+  KrnIconButtonHarness,
+  KrnToggleButtonHarness,
+  KrnToggleGroupHarness,
+] as const;

@@ -81,7 +81,7 @@ void bootstrapApplication(KernGlobalSearchAgentExample);
 | `emptyResultsLabel` | input  | `(query: string) => string`      | no       | `this.translations.patterns.noSearchResults`   | Accessible copy announced when a search has no matching results.       |
 | `results`           | input  | `ReadonlyArray<KrnSearchResult>` | no       | `[]`                                           | Search result collection rendered in response to the current query.    |
 | `maxResults`        | input  | `number`                         | no       | `8`                                            | Upper or lower bound applied to the results value.                     |
-| `resultsId`         | input  | `string`                         | no       | `this.ids.next('global-search-results')`       | Stable identifier value used by the results contract.                  |
+| `resultsId`         | input  | `string`                         | no       | `this.generatedResultsId`                      | Stable identifier value used by the results contract.                  |
 | `query`             | model  | `string`                         | no       | `''`                                           | Current controlled search text used to derive visible results.         |
 | `open`              | model  | `boolean`                        | no       | `false`                                        | Controls whether the disclosure or overlay surface is visible.         |
 | `activeIndex`       | model  | `number`                         | no       | `0`                                            | Zero-based index currently participating in managed keyboard focus.    |

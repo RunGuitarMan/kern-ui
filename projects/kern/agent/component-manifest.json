@@ -73,7 +73,7 @@
       "@kern-ui/angular/patterns",
       "@kern-ui/angular/testing"
     ],
-    "sourceDigest": "sha256-eef674c1ad13f6fce9d96a8d73222325344df611fd341bda41703f18aabc3107"
+    "sourceDigest": "sha256-e9d6d40d13d8dd6bf068f4423a5b05307ec88d4fefe269559a7126fca360b610"
   },
   "components": [
     {
@@ -57749,7 +57749,8 @@
         "evidenceScope": "library-docs-route-smoke",
         "notes": [
           "KERN avoids ambient browser globals in reusable runtime infrastructure.",
-          "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+          "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+          "Uses the shared deterministic KERN id service."
         ]
       },
       "examples": [
@@ -58178,7 +58179,8 @@
         "evidenceScope": "library-docs-route-smoke",
         "notes": [
           "KERN avoids ambient browser globals in reusable runtime infrastructure.",
-          "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+          "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+          "Uses the shared deterministic KERN id service."
         ]
       },
       "examples": [
@@ -58616,7 +58618,7 @@
           "kind": "input",
           "type": "string",
           "required": false,
-          "defaultValue": "this.ids.next('global-search-results')",
+          "defaultValue": "this.generatedResultsId",
           "description": "Stable identifier value used by the results contract.",
           "descriptionSource": "inferred"
         },
@@ -59611,7 +59613,8 @@
         "evidenceScope": "library-docs-route-smoke",
         "notes": [
           "KERN avoids ambient browser globals in reusable runtime infrastructure.",
-          "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+          "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+          "Uses the shared deterministic KERN id service."
         ]
       },
       "examples": [
@@ -59925,6 +59928,36 @@
           "descriptionSource": "inferred"
         },
         {
+          "name": "initialFocus",
+          "property": "initialFocus",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "'first-tabbable'",
+          "description": "Identifies the element that receives focus when the modal surface opens.",
+          "descriptionSource": "inferred"
+        },
+        {
+          "name": "closeOnEscape",
+          "property": "closeOnEscape",
+          "kind": "input",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "Allows Escape to dismiss the topmost owned overlay.",
+          "descriptionSource": "inferred"
+        },
+        {
+          "name": "closeOnOutside",
+          "property": "closeOnOutside",
+          "kind": "input",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "Allows an interaction outside the owned overlay to dismiss it.",
+          "descriptionSource": "inferred"
+        },
+        {
           "name": "open",
           "property": "open",
           "kind": "model",
@@ -59932,6 +59965,16 @@
           "required": false,
           "defaultValue": "false",
           "description": "Controls whether the disclosure or overlay surface is visible.",
+          "descriptionSource": "inferred"
+        },
+        {
+          "name": "closed",
+          "property": "closed",
+          "kind": "output",
+          "type": "KrnOverlayCloseReason",
+          "required": false,
+          "defaultValue": "undefined",
+          "description": "Notifies the consumer after the closed interaction completes.",
           "descriptionSource": "inferred"
         }
       ],
@@ -59997,7 +60040,11 @@
         "KrnSettingsPanel",
         "heading",
         "closeLabel",
-        "open"
+        "initialFocus",
+        "closeOnEscape",
+        "closeOnOutside",
+        "open",
+        "closed"
       ],
       "guidance": {
         "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
@@ -60035,6 +60082,32 @@
             "binding": {
               "kind": "model",
               "publicName": "open"
+            }
+          },
+          {
+            "key": "closeOnEscape",
+            "label": "Close On Escape",
+            "kind": "boolean",
+            "defaultValue": true,
+            "testValue": false,
+            "description": "Configures the component closeOnEscape contract.",
+            "binding": {
+              "kind": "input",
+              "publicName": "closeOnEscape",
+              "syntax": "property"
+            }
+          },
+          {
+            "key": "closeOnOutside",
+            "label": "Close On Outside",
+            "kind": "boolean",
+            "defaultValue": true,
+            "testValue": false,
+            "description": "Configures the component closeOnOutside contract.",
+            "binding": {
+              "kind": "input",
+              "publicName": "closeOnOutside",
+              "syntax": "property"
             }
           },
           {
@@ -60199,9 +60272,9 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 3,
-          "controlled": 2,
-          "excluded": 1,
+          "publicInputsAndModels": 6,
+          "controlled": 4,
+          "excluded": 2,
           "unclassified": 0
         },
         "exclusions": [
@@ -60212,6 +60285,18 @@
             "type": "string",
             "code": "accessibility-copy",
             "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#settings-panel"
+            }
+          },
+          {
+            "componentId": "settings-panel",
+            "publicName": "initialFocus",
+            "kind": "input",
+            "type": "string",
+            "code": "dom-wiring",
+            "reason": "DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.",
             "evidence": {
               "category": "a11y-test",
               "pointer": "tests/a11y/accessibility.spec.ts#settings-panel"
@@ -62278,6 +62363,16 @@
           "descriptionSource": "inferred"
         },
         {
+          "name": "bioErrorLabel",
+          "property": "bioErrorLabel",
+          "kind": "input",
+          "type": "(maximumLength: number) => string",
+          "required": false,
+          "defaultValue": "this.translations.patterns.bioMaximumLength",
+          "description": "Human-readable copy for the bio error state or control.",
+          "descriptionSource": "inferred"
+        },
+        {
           "name": "bioMaxLength",
           "property": "bioMaxLength",
           "kind": "input",
@@ -62295,6 +62390,16 @@
           "required": false,
           "defaultValue": "this.translations.patterns.timezone",
           "description": "Human-readable copy for the timezone state or control.",
+          "descriptionSource": "inferred"
+        },
+        {
+          "name": "timezoneErrorLabel",
+          "property": "timezoneErrorLabel",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "this.translations.patterns.timezoneUnavailable",
+          "description": "Human-readable copy for the timezone error state or control.",
           "descriptionSource": "inferred"
         },
         {
@@ -62384,8 +62489,10 @@
         "nameErrorLabel",
         "roleLabel",
         "bioLabel",
+        "bioErrorLabel",
         "bioMaxLength",
         "timezoneLabel",
+        "timezoneErrorLabel",
         "savingLabel",
         "saveLabel",
         "saved"
@@ -62585,12 +62692,24 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 12,
+          "publicInputsAndModels": 14,
           "controlled": 3,
-          "excluded": 9,
+          "excluded": 11,
           "unclassified": 0
         },
         "exclusions": [
+          {
+            "componentId": "profile-form",
+            "publicName": "bioErrorLabel",
+            "kind": "input",
+            "type": "(maximumLength: number) => string",
+            "code": "callback",
+            "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
+            "evidence": {
+              "category": "component-example",
+              "pointer": "agent/components/profile-form.json#/examples/0"
+            }
+          },
           {
             "componentId": "profile-form",
             "publicName": "bioLabel",
@@ -62654,6 +62773,18 @@
           {
             "componentId": "profile-form",
             "publicName": "savingLabel",
+            "kind": "input",
+            "type": "string",
+            "code": "accessibility-copy",
+            "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#profile-form"
+            }
+          },
+          {
+            "componentId": "profile-form",
+            "publicName": "timezoneErrorLabel",
             "kind": "input",
             "type": "string",
             "code": "accessibility-copy",
@@ -62854,16 +62985,6 @@
           "descriptionSource": "inferred"
         },
         {
-          "name": "emptyStepLabel",
-          "property": "emptyStepLabel",
-          "kind": "input",
-          "type": "string",
-          "required": false,
-          "defaultValue": "this.translations.patterns.step",
-          "description": "Human-readable copy for the empty step state or control.",
-          "descriptionSource": "inferred"
-        },
-        {
           "name": "stepCounterLabel",
           "property": "stepCounterLabel",
           "kind": "input",
@@ -62949,7 +63070,6 @@
         "optionalLabel",
         "backLabel",
         "continueLabel",
-        "emptyStepLabel",
         "stepCounterLabel",
         "completed"
       ],
@@ -63173,9 +63293,9 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 12,
+          "publicInputsAndModels": 11,
           "controlled": 4,
-          "excluded": 8,
+          "excluded": 7,
           "unclassified": 0
         },
         "exclusions": [
@@ -63218,18 +63338,6 @@
           {
             "componentId": "multi-step-form",
             "publicName": "continueLabel",
-            "kind": "input",
-            "type": "string",
-            "code": "accessibility-copy",
-            "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
-            "evidence": {
-              "category": "a11y-test",
-              "pointer": "tests/a11y/accessibility.spec.ts#multi-step-form"
-            }
-          },
-          {
-            "componentId": "multi-step-form",
-            "publicName": "emptyStepLabel",
             "kind": "input",
             "type": "string",
             "code": "accessibility-copy",
@@ -63664,8 +63772,28 @@
           "kind": "input",
           "type": "string",
           "required": false,
-          "defaultValue": "'main-content'",
+          "defaultValue": "this.ids.next('main-content')",
           "description": "Stable identifier value used by the main contract.",
+          "descriptionSource": "inferred"
+        },
+        {
+          "name": "navigationLabel",
+          "property": "navigationLabel",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "this.translations.layout.primaryNavigation",
+          "description": "Human-readable copy for the navigation state or control.",
+          "descriptionSource": "inferred"
+        },
+        {
+          "name": "closeNavigationLabel",
+          "property": "closeNavigationLabel",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "this.translations.layout.closeNavigation",
+          "description": "Human-readable copy for the close navigation state or control.",
           "descriptionSource": "inferred"
         }
       ],
@@ -63720,7 +63848,8 @@
         "evidenceScope": "library-docs-route-smoke",
         "notes": [
           "KERN avoids ambient browser globals in reusable runtime infrastructure.",
-          "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+          "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+          "Uses the shared deterministic KERN id service."
         ]
       },
       "examples": [
@@ -63742,7 +63871,9 @@
         "krn-responsive-application-shell",
         "KrnResponsiveApplicationShell",
         "navigationOpen",
-        "mainId"
+        "mainId",
+        "navigationLabel",
+        "closeNavigationLabel"
       ],
       "guidance": {
         "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
@@ -63909,12 +64040,24 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 2,
+          "publicInputsAndModels": 4,
           "controlled": 1,
-          "excluded": 1,
+          "excluded": 3,
           "unclassified": 0
         },
         "exclusions": [
+          {
+            "componentId": "responsive-application-shell",
+            "publicName": "closeNavigationLabel",
+            "kind": "input",
+            "type": "string",
+            "code": "accessibility-copy",
+            "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#responsive-application-shell"
+            }
+          },
           {
             "componentId": "responsive-application-shell",
             "publicName": "mainId",
@@ -63922,6 +64065,18 @@
             "type": "string",
             "code": "dom-wiring",
             "reason": "DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#responsive-application-shell"
+            }
+          },
+          {
+            "componentId": "responsive-application-shell",
+            "publicName": "navigationLabel",
+            "kind": "input",
+            "type": "string",
+            "code": "accessibility-copy",
+            "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
             "evidence": {
               "category": "a11y-test",
               "pointer": "tests/a11y/accessibility.spec.ts#responsive-application-shell"

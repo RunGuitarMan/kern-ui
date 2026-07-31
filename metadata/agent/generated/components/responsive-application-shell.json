@@ -65,8 +65,28 @@
       "kind": "input",
       "type": "string",
       "required": false,
-      "defaultValue": "'main-content'",
+      "defaultValue": "this.ids.next('main-content')",
       "description": "Stable identifier value used by the main contract.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "navigationLabel",
+      "property": "navigationLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.layout.primaryNavigation",
+      "description": "Human-readable copy for the navigation state or control.",
+      "descriptionSource": "inferred"
+    },
+    {
+      "name": "closeNavigationLabel",
+      "property": "closeNavigationLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "this.translations.layout.closeNavigation",
+      "description": "Human-readable copy for the close navigation state or control.",
       "descriptionSource": "inferred"
     }
   ],
@@ -121,7 +141,8 @@
     "evidenceScope": "library-docs-route-smoke",
     "notes": [
       "KERN avoids ambient browser globals in reusable runtime infrastructure.",
-      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
+      "Uses the shared deterministic KERN id service."
     ]
   },
   "examples": [
@@ -143,7 +164,9 @@
     "krn-responsive-application-shell",
     "KrnResponsiveApplicationShell",
     "navigationOpen",
-    "mainId"
+    "mainId",
+    "navigationLabel",
+    "closeNavigationLabel"
   ],
   "guidance": {
     "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
@@ -310,12 +333,24 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 2,
+      "publicInputsAndModels": 4,
       "controlled": 1,
-      "excluded": 1,
+      "excluded": 3,
       "unclassified": 0
     },
     "exclusions": [
+      {
+        "componentId": "responsive-application-shell",
+        "publicName": "closeNavigationLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#responsive-application-shell"
+        }
+      },
       {
         "componentId": "responsive-application-shell",
         "publicName": "mainId",
@@ -323,6 +358,18 @@
         "type": "string",
         "code": "dom-wiring",
         "reason": "DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#responsive-application-shell"
+        }
+      },
+      {
+        "componentId": "responsive-application-shell",
+        "publicName": "navigationLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#responsive-application-shell"

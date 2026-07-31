@@ -24727,8 +24727,10 @@ void bootstrapApplication(KernProfileFormAgentExample);
 | `nameErrorLabel` | input | `string` | no | `this.translations.patterns.displayNameRequired` | Human-readable copy for the name error state or control. |
 | `roleLabel` | input | `string` | no | `this.translations.patterns.role` | Human-readable copy for the role state or control. |
 | `bioLabel` | input | `string` | no | `this.translations.patterns.bio` | Human-readable copy for the bio state or control. |
+| `bioErrorLabel` | input | `(maximumLength: number) => string` | no | `this.translations.patterns.bioMaximumLength` | Human-readable copy for the bio error state or control. |
 | `bioMaxLength` | input | `number` | no | `280` | Maximum biography length enforced by the profile form pattern. |
 | `timezoneLabel` | input | `string` | no | `this.translations.patterns.timezone` | Human-readable copy for the timezone state or control. |
+| `timezoneErrorLabel` | input | `string` | no | `this.translations.patterns.timezoneUnavailable` | Human-readable copy for the timezone error state or control. |
 | `savingLabel` | input | `string` | no | `this.translations.patterns.saving` | Human-readable copy for the saving state or control. |
 | `saveLabel` | input | `string` | no | `this.translations.patterns.saveProfile` | Human-readable copy for the save state or control. |
 | `saved` | output | `KrnProfileValue` | no | `undefined` | Notifies the consumer after the saved interaction completes. |
@@ -24783,8 +24785,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/profile-form`
 
 Scenarios: `default`.
-Public API coverage: 3/12
-directly controlled; 9 exact exclusions; 0 unclassified.
+Public API coverage: 3/14
+directly controlled; 11 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -24800,12 +24802,14 @@ Exact API exclusions:
 
 | Public API | Category | Evidence | Reason |
 | --- | --- | --- | --- |
+| `bioErrorLabel` | callback | `component-example:agent/components/profile-form.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture. |
 | `bioLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `nameErrorLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `nameLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `roleLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `saveLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `savingLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `timezoneErrorLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `timezoneLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#profile-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `timezones` | complex-data | `specimen-fixture:preview/profile-form?state=default` | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
 | `value` | complex-data | `specimen-fixture:preview/profile-form?state=default` | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture. |
@@ -24926,7 +24930,6 @@ void bootstrapApplication(KernMultiStepFormAgentExample);
 | `optionalLabel` | input | `string` | no | `this.translations.patterns.optional` | Human-readable copy for the optional state or control. |
 | `backLabel` | input | `string` | no | `this.translations.patterns.back` | Human-readable copy for the back state or control. |
 | `continueLabel` | input | `string` | no | `this.translations.patterns.continue` | Human-readable copy for the continue state or control. |
-| `emptyStepLabel` | input | `string` | no | `this.translations.patterns.step` | Human-readable copy for the empty step state or control. |
 | `stepCounterLabel` | input | `(current: number, total: number) => string` | no | `this.translations.patterns.stepCounter` | Human-readable copy for the step counter state or control. |
 | `completed` | output | `void` | no | `undefined` | Notifies the consumer after the completed interaction completes. |
 
@@ -24980,8 +24983,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/multi-step-form`
 
 Scenarios: `default`.
-Public API coverage: 4/12
-directly controlled; 8 exact exclusions; 0 unclassified.
+Public API coverage: 4/11
+directly controlled; 7 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -25002,7 +25005,6 @@ Exact API exclusions:
 | `backLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `completeLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `continueLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `emptyStepLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `optionalLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `stepCounterLabel` | callback | `component-example:agent/components/multi-step-form.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture. |
 | `steps` | complex-data | `specimen-fixture:preview/multi-step-form?state=default` | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
@@ -25273,7 +25275,9 @@ void bootstrapApplication(KernResponsiveApplicationShellAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `navigationOpen` | model | `boolean` | no | `false` | Controlled navigation open state with a matching Angular model-change output. |
-| `mainId` | input | `string` | no | `'main-content'` | Stable identifier value used by the main contract. |
+| `mainId` | input | `string` | no | `this.ids.next('main-content')` | Stable identifier value used by the main contract. |
+| `navigationLabel` | input | `string` | no | `this.translations.layout.primaryNavigation` | Human-readable copy for the navigation state or control. |
+| `closeNavigationLabel` | input | `string` | no | `this.translations.layout.closeNavigation` | Human-readable copy for the close navigation state or control. |
 
 ## Deprecated selectors
 
@@ -25303,6 +25307,7 @@ Manual assistive-technology validation remains required in the consuming applica
 
 - KERN avoids ambient browser globals in reusable runtime infrastructure.
 - Validate the consuming SSR/hydration route, locale, ids and overlay host.
+- Uses the shared deterministic KERN id service.
 
 Hydration evidence scope: `library-docs-route-smoke`; status:
 `consumer-validation-required`.
@@ -25327,8 +25332,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/responsive-application-shell`
 
 Scenarios: `default`.
-Public API coverage: 1/2
-directly controlled; 1 exact exclusions; 0 unclassified.
+Public API coverage: 1/4
+directly controlled; 3 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -25342,7 +25347,9 @@ Exact API exclusions:
 
 | Public API | Category | Evidence | Reason |
 | --- | --- | --- | --- |
+| `closeNavigationLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#responsive-application-shell` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `mainId` | dom-wiring | `a11y-test:tests/a11y/accessibility.spec.ts#responsive-application-shell` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid. |
+| `navigationLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#responsive-application-shell` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 

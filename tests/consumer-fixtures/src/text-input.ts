@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnButton } from '@kern-ui/angular';
+import { KrnTextInput } from '@kern-ui/angular';
 
 @Component({
   selector: 'krn-consumer-root',
-  imports: [KrnButton],
+  imports: [KrnTextInput],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<button krnButton>Save</button>`,
+  template: `<krn-text-input id="email" name="email" autocomplete="email" />`,
 })
-class ButtonConsumer {}
+class TextInputConsumer {}
 
-void bootstrapApplication(ButtonConsumer);
+void bootstrapApplication(TextInputConsumer);

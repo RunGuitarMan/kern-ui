@@ -47,6 +47,17 @@ declare class KrnLoginForm {
   readonly loadingLabel: _angular_core.InputSignal<string>;
   readonly minimumPasswordLength: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly submitted: _angular_core.OutputEmitterRef<KrnLoginCredentials>;
+  protected readonly resolvedMinimumPasswordLength: _angular_core.Signal<number>;
+  protected readonly resolvedSubmitLabel: _angular_core.Signal<string>;
+  protected readonly resolvedEmailLabel: _angular_core.Signal<string>;
+  protected readonly resolvedEmailErrorLabel: _angular_core.Signal<string>;
+  protected readonly resolvedPasswordLabel: _angular_core.Signal<string>;
+  protected readonly resolvedPasswordErrorLabel: _angular_core.Signal<string>;
+  protected readonly resolvedRememberLabel: _angular_core.Signal<string>;
+  protected readonly resolvedRecoveryLabel: _angular_core.Signal<string>;
+  protected readonly resolvedLoadingLabel: _angular_core.Signal<string>;
+  protected readonly resolvedRecoveryHref: _angular_core.Signal<string>;
+  protected readonly resolvedErrorMessage: _angular_core.Signal<string>;
   readonly form: FormGroup<{
     email: FormControl<string>;
     password: FormControl<string>;
@@ -55,6 +66,8 @@ declare class KrnLoginForm {
   constructor();
   showError(control: 'email' | 'password'): boolean;
   submit(): void;
+  private normalizeText;
+  private requiredLabel;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnLoginForm, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnLoginForm,
@@ -85,10 +98,13 @@ declare class KrnProfileForm {
   private readonly translations;
   private readonly instanceId;
   protected readonly nameId: string;
+  protected readonly nameErrorId: string;
   protected readonly roleId: string;
   protected readonly bioId: string;
   protected readonly bioCountId: string;
+  protected readonly bioErrorId: string;
   protected readonly timezoneId: string;
+  protected readonly timezoneErrorId: string;
   readonly value: _angular_core.InputSignal<KrnProfileValue>;
   readonly timezones: _angular_core.InputSignal<
     readonly {
@@ -102,11 +118,30 @@ declare class KrnProfileForm {
   readonly nameErrorLabel: _angular_core.InputSignal<string>;
   readonly roleLabel: _angular_core.InputSignal<string>;
   readonly bioLabel: _angular_core.InputSignal<string>;
+  readonly bioErrorLabel: _angular_core.InputSignal<(maximumLength: number) => string>;
   readonly bioMaxLength: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly timezoneLabel: _angular_core.InputSignal<string>;
+  readonly timezoneErrorLabel: _angular_core.InputSignal<string>;
   readonly savingLabel: _angular_core.InputSignal<string>;
   readonly saveLabel: _angular_core.InputSignal<string>;
   readonly saved: _angular_core.OutputEmitterRef<KrnProfileValue>;
+  protected readonly resolvedBioMaxLength: _angular_core.Signal<number>;
+  protected readonly resolvedTimezones: _angular_core.Signal<
+    {
+      readonly value: string;
+      readonly label: string;
+    }[]
+  >;
+  protected readonly resolvedDirtyMessage: _angular_core.Signal<string>;
+  protected readonly resolvedNameLabel: _angular_core.Signal<string>;
+  protected readonly resolvedNameErrorLabel: _angular_core.Signal<string>;
+  protected readonly resolvedRoleLabel: _angular_core.Signal<string>;
+  protected readonly resolvedBioLabel: _angular_core.Signal<string>;
+  protected readonly resolvedBioErrorLabel: _angular_core.Signal<string>;
+  protected readonly resolvedTimezoneLabel: _angular_core.Signal<string>;
+  protected readonly resolvedTimezoneErrorLabel: _angular_core.Signal<string>;
+  protected readonly resolvedSavingLabel: _angular_core.Signal<string>;
+  protected readonly resolvedSaveLabel: _angular_core.Signal<string>;
   readonly form: FormGroup<{
     name: FormControl<string>;
     role: FormControl<string>;
@@ -114,7 +149,12 @@ declare class KrnProfileForm {
     timezone: FormControl<string>;
   }>;
   constructor();
+  showNameError(): boolean;
+  showBioError(): boolean;
+  showTimezoneError(): boolean;
   submit(): void;
+  private normalizeText;
+  private requiredLabel;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnProfileForm, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnProfileForm,
@@ -129,8 +169,10 @@ declare class KrnProfileForm {
       nameErrorLabel: { alias: 'nameErrorLabel'; required: false; isSignal: true };
       roleLabel: { alias: 'roleLabel'; required: false; isSignal: true };
       bioLabel: { alias: 'bioLabel'; required: false; isSignal: true };
+      bioErrorLabel: { alias: 'bioErrorLabel'; required: false; isSignal: true };
       bioMaxLength: { alias: 'bioMaxLength'; required: false; isSignal: true };
       timezoneLabel: { alias: 'timezoneLabel'; required: false; isSignal: true };
+      timezoneErrorLabel: { alias: 'timezoneErrorLabel'; required: false; isSignal: true };
       savingLabel: { alias: 'savingLabel'; required: false; isSignal: true };
       saveLabel: { alias: 'saveLabel'; required: false; isSignal: true };
     },
@@ -143,8 +185,10 @@ declare class KrnProfileForm {
 }
 declare class KrnMultiStepForm {
   private readonly ids;
+  private readonly injector;
   private readonly translations;
   private readonly instanceId;
+  private readonly stepHeading;
   readonly steps: _angular_core.InputSignal<readonly KrnFormStep[]>;
   readonly current: _angular_core.ModelSignal<number>;
   readonly furthestStep: _angular_core.ModelSignal<number>;
@@ -155,14 +199,29 @@ declare class KrnMultiStepForm {
   readonly optionalLabel: _angular_core.InputSignal<string>;
   readonly backLabel: _angular_core.InputSignal<string>;
   readonly continueLabel: _angular_core.InputSignal<string>;
-  readonly emptyStepLabel: _angular_core.InputSignal<string>;
   readonly stepCounterLabel: _angular_core.InputSignal<(current: number, total: number) => string>;
   readonly completed: _angular_core.OutputEmitterRef<void>;
-  protected readonly currentStep: () => KrnFormStep;
-  protected readonly currentStepLabelId: () => string;
+  protected readonly validatedSteps: _angular_core.Signal<readonly KrnFormStep[]>;
+  protected readonly resolvedOrientation: _angular_core.Signal<'horizontal' | 'vertical'>;
+  protected readonly resolvedCompleteLabel: _angular_core.Signal<string>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
+  protected readonly resolvedOptionalLabel: _angular_core.Signal<string>;
+  protected readonly resolvedBackLabel: _angular_core.Signal<string>;
+  protected readonly resolvedContinueLabel: _angular_core.Signal<string>;
+  protected readonly currentStep: _angular_core.Signal<KrnFormStep>;
+  protected readonly currentStepLabelId: _angular_core.Signal<string>;
+  protected readonly resolvedStepCounterLabel: _angular_core.Signal<string>;
+  constructor();
+  protected canNavigateTo(index: number): boolean;
+  protected isStepComplete(step: KrnFormStep, index: number): boolean;
   goTo(index: number): void;
   next(): void;
   previous(): void;
+  complete(): void;
+  private moveTo;
+  private clampIndex;
+  private normalizeText;
+  private requiredLabel;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnMultiStepForm, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnMultiStepForm,
@@ -179,7 +238,6 @@ declare class KrnMultiStepForm {
       optionalLabel: { alias: 'optionalLabel'; required: false; isSignal: true };
       backLabel: { alias: 'backLabel'; required: false; isSignal: true };
       continueLabel: { alias: 'continueLabel'; required: false; isSignal: true };
-      emptyStepLabel: { alias: 'emptyStepLabel'; required: false; isSignal: true };
       stepCounterLabel: { alias: 'stepCounterLabel'; required: false; isSignal: true };
     },
     { current: 'currentChange'; furthestStep: 'furthestStepChange'; completed: 'completed' },
@@ -505,10 +563,18 @@ declare class KrnCrudToolbar {
 }
 
 declare class KrnMasterDetailLayout {
+  private readonly injector;
+  private readonly platform;
   private readonly translations;
+  private readonly masterPane;
+  private readonly detailPane;
   readonly masterLabel: _angular_core.InputSignal<string>;
   readonly detailLabel: _angular_core.InputSignal<string>;
   readonly detailOpen: _angular_core.ModelSignal<boolean>;
+  protected readonly resolvedMasterLabel: _angular_core.Signal<string>;
+  protected readonly resolvedDetailLabel: _angular_core.Signal<string>;
+  private readonly focusHandoff;
+  private requiredLabel;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnMasterDetailLayout, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnMasterDetailLayout,
@@ -529,6 +595,9 @@ declare class KrnMasterDetailLayout {
 declare class KrnDashboardWidget {
   readonly eyebrow: _angular_core.InputSignal<string>;
   readonly heading: _angular_core.InputSignal<string>;
+  protected readonly resolvedEyebrow: _angular_core.Signal<string>;
+  protected readonly resolvedHeading: _angular_core.Signal<string>;
+  private normalizeText;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDashboardWidget, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnDashboardWidget,
@@ -548,6 +617,8 @@ declare class KrnDashboardWidget {
 declare class KrnMobileNavigation {
   private readonly translations;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
+  private normalizeText;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnMobileNavigation, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnMobileNavigation,
@@ -562,8 +633,29 @@ declare class KrnMobileNavigation {
   >;
 }
 declare class KrnResponsiveApplicationShell {
+  private readonly platform;
+  private readonly coordinator;
+  private readonly ids;
+  private readonly translations;
+  private readonly destroyRef;
+  private readonly navigationOverlay;
+  private readonly navigationPane;
+  private readonly mobileViewport;
+  private readonly responsiveViewportKnown;
+  protected readonly navigationId: string;
+  private readonly overlayId;
   readonly navigationOpen: _angular_core.ModelSignal<boolean>;
   readonly mainId: _angular_core.InputSignal<string>;
+  readonly navigationLabel: _angular_core.InputSignal<string>;
+  readonly closeNavigationLabel: _angular_core.InputSignal<string>;
+  protected readonly resolvedMainId: _angular_core.Signal<string>;
+  protected readonly resolvedNavigationLabel: _angular_core.Signal<string>;
+  protected readonly resolvedCloseNavigationLabel: _angular_core.Signal<string>;
+  protected readonly isMobileNavigationOpen: _angular_core.Signal<boolean>;
+  constructor();
+  protected closeNavigation(): void;
+  protected closeFromBackdrop(event: PointerEvent): void;
+  private requiredLabel;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnResponsiveApplicationShell, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnResponsiveApplicationShell,
@@ -572,6 +664,8 @@ declare class KrnResponsiveApplicationShell {
     {
       navigationOpen: { alias: 'navigationOpen'; required: false; isSignal: true };
       mainId: { alias: 'mainId'; required: false; isSignal: true };
+      navigationLabel: { alias: 'navigationLabel'; required: false; isSignal: true };
+      closeNavigationLabel: { alias: 'closeNavigationLabel'; required: false; isSignal: true };
     },
     { navigationOpen: 'navigationOpenChange' },
     never,

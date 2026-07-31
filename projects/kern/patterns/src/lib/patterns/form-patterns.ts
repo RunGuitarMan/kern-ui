@@ -2,7 +2,7 @@ import {
   afterNextRender,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
+  type ElementRef,
   Injector,
   booleanAttribute,
   computed,
@@ -848,7 +848,7 @@ export class KrnMultiStepForm {
   readonly continueLabel = input(this.translations.patterns.continue);
   readonly stepCounterLabel = input(this.translations.patterns.stepCounter);
   readonly completed = output<void>();
-  protected readonly validatedSteps = computed(() => {
+  protected readonly validatedSteps = computed<readonly KrnFormStep[]>(() => {
     const steps = this.steps();
     if (!Array.isArray(steps) || steps.length === 0) {
       throw new Error('KrnMultiStepForm: steps must contain at least one step.');
@@ -902,7 +902,7 @@ export class KrnMultiStepForm {
   protected readonly resolvedContinueLabel = computed(() =>
     this.requiredLabel(this.continueLabel(), this.translations.patterns.continue, 'Continue'),
   );
-  protected readonly currentStep = computed(() => {
+  protected readonly currentStep = computed<KrnFormStep>(() => {
     const steps = this.validatedSteps();
     return steps[this.clampIndex(this.current(), steps.length)]!;
   });

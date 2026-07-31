@@ -59,10 +59,12 @@ void bootstrapApplication(KernResponsiveApplicationShellAgentExample);
 
 ## API
 
-| Name             | Kind  | Type      | Required | Default          | Description                                                                   |
-| ---------------- | ----- | --------- | -------- | ---------------- | ----------------------------------------------------------------------------- |
-| `navigationOpen` | model | `boolean` | no       | `false`          | Controlled navigation open state with a matching Angular model-change output. |
-| `mainId`         | input | `string`  | no       | `'main-content'` | Stable identifier value used by the main contract.                            |
+| Name                   | Kind  | Type      | Required | Default                                      | Description                                                                   |
+| ---------------------- | ----- | --------- | -------- | -------------------------------------------- | ----------------------------------------------------------------------------- |
+| `navigationOpen`       | model | `boolean` | no       | `false`                                      | Controlled navigation open state with a matching Angular model-change output. |
+| `mainId`               | input | `string`  | no       | `this.ids.next('main-content')`              | Stable identifier value used by the main contract.                            |
+| `navigationLabel`      | input | `string`  | no       | `this.translations.layout.primaryNavigation` | Human-readable copy for the navigation state or control.                      |
+| `closeNavigationLabel` | input | `string`  | no       | `this.translations.layout.closeNavigation`   | Human-readable copy for the close navigation state or control.                |
 
 ## Deprecated selectors
 
@@ -92,6 +94,7 @@ Manual assistive-technology validation remains required in the consuming applica
 
 - KERN avoids ambient browser globals in reusable runtime infrastructure.
 - Validate the consuming SSR/hydration route, locale, ids and overlay host.
+- Uses the shared deterministic KERN id service.
 
 Hydration evidence scope: `library-docs-route-smoke`; status:
 `consumer-validation-required`.
@@ -116,8 +119,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/responsive-application-shell`
 
 Scenarios: `default`.
-Public API coverage: 1/2
-directly controlled; 1 exact exclusions; 0 unclassified.
+Public API coverage: 1/4
+directly controlled; 3 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -129,9 +132,11 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API | Category   | Evidence                                                                  | Reason                                                                                                        |
-| ---------- | ---------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `mainId`   | dom-wiring | `a11y-test:tests/a11y/accessibility.spec.ts#responsive-application-shell` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid. |
+| Public API             | Category           | Evidence                                                                  | Reason                                                                                                                                                               |
+| ---------------------- | ------------------ | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `closeNavigationLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#responsive-application-shell` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `mainId`               | dom-wiring         | `a11y-test:tests/a11y/accessibility.spec.ts#responsive-application-shell` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.                                                        |
+| `navigationLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#responsive-application-shell` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
 

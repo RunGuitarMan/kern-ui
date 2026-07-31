@@ -984,7 +984,9 @@ interface KrnPatternTranslations {
   readonly displayNameRequired: string;
   readonly role: string;
   readonly bio: string;
+  readonly bioMaximumLength: (maximumLength: number) => string;
   readonly timezone: string;
+  readonly timezoneUnavailable: string;
   readonly saving: string;
   readonly saveProfile: string;
   readonly complete: string;

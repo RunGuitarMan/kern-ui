@@ -2,6 +2,7 @@ import * as addonCharts from '@kern-ui/angular/addon-charts';
 import * as addonGrid from '@kern-ui/angular/addon-grid';
 import * as cdk from '@kern-ui/angular/cdk';
 import * as core from '@kern-ui/angular/core';
+import * as i18n from '@kern-ui/angular/i18n';
 import * as kit from '@kern-ui/angular/kit';
 import * as patterns from '@kern-ui/angular/patterns';
 import * as root from '@kern-ui/angular';
@@ -11,6 +12,7 @@ type RuntimeNamespace = Readonly<Record<string, unknown>>;
 const rootExports = root as RuntimeNamespace;
 const entrypoints = {
   cdk: cdk as RuntimeNamespace,
+  i18n: i18n as RuntimeNamespace,
   core: core as RuntimeNamespace,
   kit: kit as RuntimeNamespace,
   'addon-grid': addonGrid as RuntimeNamespace,

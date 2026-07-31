@@ -9,7 +9,7 @@ import { KrnFormField, KrnHint, KrnLabel, KrnTextInput } from '@kern-ui/angular/
   template: `
     <krn-form-field>
       <krn-label>Email</krn-label>
-      <krn-text-input name="email" autocomplete="email" />
+      <krn-text-input id="email" name="email" autocomplete="email" />
       <krn-hint>Use a work address</krn-hint>
     </krn-form-field>
   `,

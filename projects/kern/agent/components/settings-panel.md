@@ -51,11 +51,15 @@ void bootstrapApplication(KernSettingsPanelAgentExample);
 
 ## API
 
-| Name         | Kind  | Type      | Required | Default                                    | Description                                                    |
-| ------------ | ----- | --------- | -------- | ------------------------------------------ | -------------------------------------------------------------- |
-| `heading`    | input | `string`  | no       | `this.translations.patterns.settings`      | Human-readable copy for the heading state or control.          |
-| `closeLabel` | input | `string`  | no       | `this.translations.patterns.closeSettings` | Human-readable copy for the close state or control.            |
-| `open`       | model | `boolean` | no       | `false`                                    | Controls whether the disclosure or overlay surface is visible. |
+| Name             | Kind   | Type                    | Required | Default                                    | Description                                                              |
+| ---------------- | ------ | ----------------------- | -------- | ------------------------------------------ | ------------------------------------------------------------------------ |
+| `heading`        | input  | `string`                | no       | `this.translations.patterns.settings`      | Human-readable copy for the heading state or control.                    |
+| `closeLabel`     | input  | `string`                | no       | `this.translations.patterns.closeSettings` | Human-readable copy for the close state or control.                      |
+| `initialFocus`   | input  | `string`                | no       | `'first-tabbable'`                         | Identifies the element that receives focus when the modal surface opens. |
+| `closeOnEscape`  | input  | `boolean`               | no       | `true`                                     | Allows Escape to dismiss the topmost owned overlay.                      |
+| `closeOnOutside` | input  | `boolean`               | no       | `true`                                     | Allows an interaction outside the owned overlay to dismiss it.           |
+| `open`           | model  | `boolean`               | no       | `false`                                    | Controls whether the disclosure or overlay surface is visible.           |
+| `closed`         | output | `KrnOverlayCloseReason` | no       | `undefined`                                | Notifies the consumer after the closed interaction completes.            |
 
 ## Deprecated selectors
 
@@ -109,23 +113,26 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/settings-panel`
 
 Scenarios: `default`.
-Public API coverage: 2/3
-directly controlled; 1 exact exclusions; 0 unclassified.
+Public API coverage: 4/6
+directly controlled; 2 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument  | Control | Default                | Test value                         | Binding                    | Description                                |
-| --------- | ------- | ---------------------- | ---------------------------------- | -------------------------- | ------------------------------------------ |
-| `open`    | boolean | `false`                | `true`                             | model `open`               | Opens the settings panel.                  |
-| `heading` | text    | `"Workspace settings"` | `"Workspace settings · alternate"` | input `heading` (property) | Configures the component heading contract. |
+| Argument         | Control | Default                | Test value                         | Binding                           | Description                                       |
+| ---------------- | ------- | ---------------------- | ---------------------------------- | --------------------------------- | ------------------------------------------------- |
+| `open`           | boolean | `false`                | `true`                             | model `open`                      | Opens the settings panel.                         |
+| `closeOnEscape`  | boolean | `true`                 | `false`                            | input `closeOnEscape` (property)  | Configures the component closeOnEscape contract.  |
+| `closeOnOutside` | boolean | `true`                 | `false`                            | input `closeOnOutside` (property) | Configures the component closeOnOutside contract. |
+| `heading`        | text    | `"Workspace settings"` | `"Workspace settings · alternate"` | input `heading` (property)        | Configures the component heading contract.        |
 
 Exact API exclusions:
 
-| Public API   | Category           | Evidence                                                    | Reason                                                                                                                                                               |
-| ------------ | ------------------ | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `closeLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#settings-panel` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| Public API     | Category           | Evidence                                                    | Reason                                                                                                                                                               |
+| -------------- | ------------------ | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `closeLabel`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#settings-panel` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `initialFocus` | dom-wiring         | `a11y-test:tests/a11y/accessibility.spec.ts#settings-panel` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.                                                        |
 
 Presets:
 

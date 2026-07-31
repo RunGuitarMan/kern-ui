@@ -74,7 +74,6 @@ void bootstrapApplication(KernMultiStepFormAgentExample);
 | `optionalLabel`       | input  | `string`                                     | no       | `this.translations.patterns.optional`     | Human-readable copy for the optional state or control.                      |
 | `backLabel`           | input  | `string`                                     | no       | `this.translations.patterns.back`         | Human-readable copy for the back state or control.                          |
 | `continueLabel`       | input  | `string`                                     | no       | `this.translations.patterns.continue`     | Human-readable copy for the continue state or control.                      |
-| `emptyStepLabel`      | input  | `string`                                     | no       | `this.translations.patterns.step`         | Human-readable copy for the empty step state or control.                    |
 | `stepCounterLabel`    | input  | `(current: number, total: number) => string` | no       | `this.translations.patterns.stepCounter`  | Human-readable copy for the step counter state or control.                  |
 | `completed`           | output | `void`                                       | no       | `undefined`                               | Notifies the consumer after the completed interaction completes.            |
 
@@ -128,8 +127,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/multi-step-form`
 
 Scenarios: `default`.
-Public API coverage: 4/12
-directly controlled; 8 exact exclusions; 0 unclassified.
+Public API coverage: 4/11
+directly controlled; 7 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -150,7 +149,6 @@ Exact API exclusions:
 | `backLabel`        | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `completeLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `continueLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
-| `emptyStepLabel`   | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `optionalLabel`    | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#multi-step-form`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `stepCounterLabel` | callback           | `component-example:agent/components/multi-step-form.json#/examples/0` | Callback inputs require executable application code and are covered by the typed specimen fixture.                                                                   |
 | `steps`            | complex-data       | `specimen-fixture:preview/multi-step-form?state=default`              | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.                                              |
