@@ -1,11 +1,15 @@
 import {
+  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   booleanAttribute,
+  computed,
+  effect,
   inject,
   input,
   model,
+  viewChild,
   viewChildren,
 } from '@angular/core';
 import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
@@ -18,13 +22,14 @@ import type { KrnNavigationOrientation, KrnStepItem } from './navigation.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ol
+      #stepList
       class="stepper"
-      [class.vertical]="orientation() === 'vertical'"
-      [attr.aria-label]="ariaLabel()"
+      [class.vertical]="resolvedOrientation() === 'vertical'"
+      [attr.aria-label]="resolvedAriaLabel()"
     >
-      @for (step of steps(); track step.id; let index = $index) {
+      @for (step of steps(); track $index; let index = $index) {
         <li
-          [class.active]="index === activeStep()"
+          [class.active]="index === currentStep()"
           [class.complete]="isComplete(index)"
           [class.invalid]="!!step.error"
         >
@@ -32,10 +37,9 @@ import type { KrnNavigationOrientation, KrnStepItem } from './navigation.types';
             #stepButton
             type="button"
             [disabled]="!canSelect(index)"
-            [attr.aria-current]="index === activeStep() ? 'step' : null"
-            [attr.aria-describedby]="
-              step.description || step.error ? step.id + '-description' : null
-            "
+            [attr.tabindex]="index === currentStep() ? 0 : -1"
+            [attr.aria-current]="index === currentStep() ? 'step' : null"
+            [attr.aria-invalid]="step.error ? 'true' : null"
             (click)="select(index)"
             (keydown)="onKeydown($event, index)"
           >
@@ -43,12 +47,10 @@ import type { KrnNavigationOrientation, KrnStepItem } from './navigation.types';
             <span class="copy">
               <span class="label">{{ step.label }}</span>
               @if (step.optional) {
-                <span class="optional">{{ optionalLabel() }}</span>
+                <span class="optional">{{ resolvedOptionalLabel() }}</span>
               }
               @if (step.description || step.error) {
-                <span class="description" [id]="step.id + '-description'">{{
-                  step.error || step.description
-                }}</span>
+                <span class="description">{{ step.error || step.description }}</span>
               }
             </span>
           </button>
@@ -63,17 +65,26 @@ import type { KrnNavigationOrientation, KrnStepItem } from './navigation.types';
     :host {
       display: block;
     }
+    :host([hidden]) {
+      display: none;
+    }
     .stepper {
       display: flex;
       margin: 0;
       padding: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
       list-style: none;
       counter-reset: step;
+      scroll-behavior: smooth;
+    }
+    .stepper::-webkit-scrollbar {
+      display: none;
     }
     .stepper li {
       position: relative;
-      min-inline-size: 0;
-      flex: 1;
+      min-inline-size: 8rem;
+      flex: 1 0 8rem;
     }
     .stepper:not(.vertical) li:not(:last-child)::after {
       position: absolute;
@@ -159,6 +170,11 @@ import type { KrnNavigationOrientation, KrnStepItem } from './navigation.types';
     .vertical {
       flex-direction: column;
       gap: var(--krn-space-3);
+      overflow: auto;
+    }
+    .vertical li {
+      min-inline-size: 0;
+      flex-basis: auto;
     }
     .vertical li:not(:last-child)::after {
       position: absolute;
@@ -183,12 +199,28 @@ import type { KrnNavigationOrientation, KrnStepItem } from './navigation.types';
       justify-items: start;
       padding-block-start: var(--krn-space-1);
     }
+    @media (prefers-reduced-motion: reduce) {
+      .stepper {
+        scroll-behavior: auto;
+      }
+    }
+    @media (forced-colors: active) {
+      .active .marker,
+      .complete .marker,
+      .invalid .marker {
+        border-color: Highlight;
+      }
+      button:focus-visible {
+        outline-color: Highlight;
+      }
+    }
   `,
 })
 export class KrnStepper {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly platform = inject(KRN_PLATFORM);
   private readonly translations = inject(KRN_TRANSLATIONS);
+  private readonly stepList = viewChild<ElementRef<HTMLOListElement>>('stepList');
   private readonly buttons = viewChildren<ElementRef<HTMLButtonElement>>('stepButton');
   readonly steps = input<readonly KrnStepItem[]>([]);
   readonly activeStep = model(0);
@@ -197,50 +229,121 @@ export class KrnStepper {
   readonly orientation = input<KrnNavigationOrientation>('horizontal');
   readonly ariaLabel = input(this.translations.navigation.progress);
   readonly optionalLabel = input(this.translations.navigation.optional);
+  protected readonly resolvedOrientation = computed<KrnNavigationOrientation>(() =>
+    this.orientation() === 'vertical' ? 'vertical' : 'horizontal',
+  );
+  protected readonly resolvedAriaLabel = computed(
+    () => this.ariaLabel()?.trim() || this.translations.navigation.progress.trim() || null,
+  );
+  protected readonly resolvedOptionalLabel = computed(
+    () => this.optionalLabel()?.trim() || this.translations.navigation.optional.trim(),
+  );
+  protected readonly currentStep = computed(() => {
+    const steps = this.steps();
+    if (steps.length === 0) return -1;
+    const requested = this.activeStep();
+    const normalized = Number.isFinite(requested) ? Math.trunc(requested) : 0;
+    const clamped = Math.min(Math.max(0, normalized), steps.length - 1);
+    if (!steps[clamped]?.disabled) return clamped;
+    const next = steps.findIndex((step, index) => index > clamped && !step.disabled);
+    if (next >= 0) return next;
+    for (let index = clamped - 1; index >= 0; index -= 1) {
+      if (!steps[index]?.disabled) return index;
+    }
+    return -1;
+  });
+  private readonly completed = computed<ReadonlySet<number>>(() => {
+    const count = this.steps().length;
+    return new Set(
+      this.completedSteps()
+        .filter(Number.isFinite)
+        .map(Math.trunc)
+        .filter((index) => index >= 0 && index < count),
+    );
+  });
+
+  constructor() {
+    effect(() => {
+      const current = Math.max(0, this.currentStep());
+      if (!Object.is(current, this.activeStep())) this.activeStep.set(current);
+    });
+
+    afterRenderEffect((onCleanup) => {
+      this.scrollActiveStepIntoView();
+      const list = this.stepList()?.nativeElement;
+      const ResizeObserver = this.platform.window?.ResizeObserver;
+      if (!list || !ResizeObserver) return;
+      const observer = new ResizeObserver(() => this.scrollActiveStepIntoView());
+      observer.observe(list);
+      onCleanup(() => observer.disconnect());
+    });
+  }
 
   protected isComplete(index: number): boolean {
-    return this.completedSteps().includes(index) || index < this.activeStep();
+    return this.completed().has(index) || index < this.currentStep();
   }
 
   protected canSelect(index: number): boolean {
     const step = this.steps()[index];
     if (!step || step.disabled) return false;
     if (!this.linear()) return true;
-    const furthestComplete = this.completedSteps().reduce(
-      (maximum, value) => Math.max(maximum, value),
-      -1,
-    );
-    return index <= Math.max(this.activeStep(), furthestComplete + 1);
+    const furthestComplete = Math.max(-1, ...this.completed());
+    const firstEnabled = this.steps().findIndex((candidate) => !candidate.disabled);
+    return index <= Math.max(this.currentStep(), furthestComplete + 1, firstEnabled);
   }
 
   protected select(index: number): void {
-    if (!this.canSelect(index)) return;
+    if (!this.canSelect(index) || index === this.currentStep()) return;
     this.activeStep.set(index);
   }
 
   protected onKeydown(event: KeyboardEvent, current: number): void {
     const rightToLeft =
-      this.orientation() === 'horizontal' &&
+      this.resolvedOrientation() === 'horizontal' &&
       this.platform.window?.getComputedStyle(this.host.nativeElement).direction === 'rtl';
     const forward = rightToLeft ? -1 : 1;
     const delta =
-      event.key === 'ArrowRight'
+      this.resolvedOrientation() === 'horizontal' && event.key === 'ArrowRight'
         ? forward
-        : event.key === 'ArrowLeft'
+        : this.resolvedOrientation() === 'horizontal' && event.key === 'ArrowLeft'
           ? -forward
-          : event.key === 'ArrowDown'
+          : this.resolvedOrientation() === 'vertical' && event.key === 'ArrowDown'
             ? 1
-            : event.key === 'ArrowUp'
+            : this.resolvedOrientation() === 'vertical' && event.key === 'ArrowUp'
               ? -1
               : 0;
     if (delta === 0 && event.key !== 'Home' && event.key !== 'End') return;
+    const selectable = this.steps()
+      .map((_, index) => index)
+      .filter((index) => this.canSelect(index));
+    if (selectable.length === 0) return;
     event.preventDefault();
-    const steps = this.steps();
-    let next = event.key === 'Home' ? 0 : event.key === 'End' ? steps.length - 1 : current + delta;
-    while (next >= 0 && next < steps.length && !this.canSelect(next)) next += delta || 1;
-    if (next >= 0 && next < steps.length) {
-      this.select(next);
-      this.buttons()[next]?.nativeElement.focus();
+    const currentPosition = selectable.indexOf(current);
+    const next =
+      event.key === 'Home'
+        ? selectable[0]
+        : event.key === 'End'
+          ? selectable.at(-1)
+          : currentPosition < 0
+            ? selectable[delta > 0 ? 0 : selectable.length - 1]
+            : selectable[(currentPosition + delta + selectable.length) % selectable.length];
+    if (next === undefined) return;
+    this.select(next);
+    this.buttons()[next]?.nativeElement.focus();
+  }
+
+  private scrollActiveStepIntoView(): void {
+    const list = this.stepList()?.nativeElement;
+    const button = this.buttons()[this.currentStep()]?.nativeElement;
+    if (!list || !button) return;
+    const listRect = list.getBoundingClientRect();
+    const buttonRect = button.getBoundingClientRect();
+    const left = buttonRect.left < listRect.left ? buttonRect.left - listRect.left : 0;
+    const right = buttonRect.right > listRect.right ? buttonRect.right - listRect.right : 0;
+    const top = buttonRect.top < listRect.top ? buttonRect.top - listRect.top : 0;
+    const bottom = buttonRect.bottom > listRect.bottom ? buttonRect.bottom - listRect.bottom : 0;
+    if (left || right || top || bottom) {
+      list.scrollBy({ left: left || right, top: top || bottom });
     }
   }
 }

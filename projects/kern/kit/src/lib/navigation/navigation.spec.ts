@@ -606,6 +606,154 @@ describe('Kern navigation', () => {
     }
   });
 
+  it('normalizes stepper state and exposes one accessible tab stop', async () => {
+    const fixture = await create(KrnStepper, {
+      steps: [
+        { id: 'disabled', label: 'Disabled', disabled: true },
+        { id: 'details', label: 'Details', optional: true, error: 'Details are invalid' },
+        { id: 'review', label: 'Review' },
+      ],
+      activeStep: Number.NaN,
+      completedSteps: [Number.POSITIVE_INFINITY, -1, 99],
+      ariaLabel: '   ',
+      optionalLabel: '   ',
+    });
+    fixture.componentRef.setInput('orientation', 'diagonal');
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const buttons = element.querySelectorAll<HTMLButtonElement>('.stepper button');
+    expect(fixture.componentInstance.activeStep()).toBe(1);
+    expect(element.querySelector('.stepper')?.classList.contains('vertical')).toBe(false);
+    expect(element.querySelector('.stepper')?.getAttribute('aria-label')).toBeTruthy();
+    expect(element.querySelectorAll('button[tabindex="0"]')).toHaveLength(1);
+    expect(buttons[1]?.getAttribute('aria-current')).toBe('step');
+    expect(buttons[1]?.getAttribute('aria-invalid')).toBe('true');
+    expect(buttons[1]?.hasAttribute('aria-describedby')).toBe(false);
+    expect(buttons[1]?.querySelector('.optional')?.textContent?.trim()).toBeTruthy();
+  });
+
+  it('uses orientation-aware stepper navigation and skips disabled endpoints', async () => {
+    const fixture = await create(KrnStepper, {
+      steps: [
+        { id: 'details', label: 'Details' },
+        { id: 'disabled', label: 'Disabled', disabled: true },
+        { id: 'review', label: 'Review' },
+        { id: 'disabled-tail', label: 'Disabled tail', disabled: true },
+      ],
+      orientation: 'vertical',
+      activeStep: 0,
+    });
+    const buttons = fixture.nativeElement.querySelectorAll(
+      '.stepper button',
+    ) as NodeListOf<HTMLButtonElement>;
+    const horizontal = new KeyboardEvent('keydown', {
+      key: 'ArrowRight',
+      bubbles: true,
+      cancelable: true,
+    });
+    buttons[0]?.dispatchEvent(horizontal);
+    fixture.detectChanges();
+    expect(horizontal.defaultPrevented).toBe(false);
+    expect(fixture.componentInstance.activeStep()).toBe(0);
+
+    buttons[0]?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.activeStep()).toBe(2);
+    expect(document.activeElement).toBe(buttons[2]);
+
+    buttons[2]?.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.activeStep()).toBe(2);
+    expect(document.activeElement).toBe(buttons[2]);
+  });
+
+  it('does not let invalid completion indexes unlock a linear stepper', async () => {
+    const fixture = await create(KrnStepper, {
+      steps: [
+        { id: 'details', label: 'Details' },
+        { id: 'permissions', label: 'Permissions' },
+        { id: 'review', label: 'Review' },
+      ],
+      linear: true,
+      activeStep: 0,
+      completedSteps: [Number.POSITIVE_INFINITY, 99, -1],
+    });
+    const buttons = fixture.nativeElement.querySelectorAll(
+      '.stepper button',
+    ) as NodeListOf<HTMLButtonElement>;
+
+    expect(buttons[1]?.disabled).toBe(true);
+    expect(buttons[2]?.disabled).toBe(true);
+    fixture.componentRef.setInput('completedSteps', [0]);
+    fixture.detectChanges();
+    expect(buttons[1]?.disabled).toBe(false);
+    expect(buttons[2]?.disabled).toBe(true);
+  });
+
+  it('keeps a controlled active step visible after selection and resize', async () => {
+    const originalResizeObserver = window.ResizeObserver;
+    let resizeCallback: ResizeObserverCallback | undefined;
+    const disconnect = vi.fn();
+    class TestResizeObserver {
+      constructor(callback: ResizeObserverCallback) {
+        resizeCallback = callback;
+      }
+      observe(): void {}
+      unobserve(): void {}
+      disconnect(): void {
+        disconnect();
+      }
+    }
+    Object.defineProperty(window, 'ResizeObserver', {
+      configurable: true,
+      value: TestResizeObserver,
+    });
+
+    let fixture: ComponentFixture<KrnStepper> | undefined;
+    try {
+      fixture = await create(KrnStepper, {
+        steps: [
+          { id: 'details', label: 'Details' },
+          { id: 'permissions', label: 'Permissions' },
+          { id: 'review', label: 'Review' },
+        ],
+        activeStep: 0,
+      });
+      const element = fixture.nativeElement as HTMLElement;
+      const list = element.querySelector<HTMLOListElement>('.stepper')!;
+      const buttons = element.querySelectorAll<HTMLButtonElement>('.stepper button');
+      const scrollBy = vi.fn();
+      Object.defineProperty(list, 'scrollBy', { configurable: true, value: scrollBy });
+      Object.defineProperty(list, 'getBoundingClientRect', {
+        configurable: true,
+        value: () => ({ left: 0, right: 100, top: 0, bottom: 50 }) as DOMRect,
+      });
+      Object.defineProperty(buttons[2]!, 'getBoundingClientRect', {
+        configurable: true,
+        value: () => ({ left: 140, right: 180, top: 0, bottom: 40 }) as DOMRect,
+      });
+
+      fixture.componentRef.setInput('activeStep', 2);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(scrollBy).toHaveBeenCalledWith({ left: 80, top: 0 });
+
+      scrollBy.mockClear();
+      resizeCallback?.([], {} as ResizeObserver);
+      expect(scrollBy).toHaveBeenCalledWith({ left: 80, top: 0 });
+      fixture.destroy();
+      fixture = undefined;
+      expect(disconnect).toHaveBeenCalled();
+    } finally {
+      fixture?.destroy();
+      Object.defineProperty(window, 'ResizeObserver', {
+        configurable: true,
+        value: originalResizeObserver,
+      });
+    }
+  });
+
   it('filters commands and closes on Escape', async () => {
     const fixture = await create(KrnCommandPalette, {
       open: true,
