@@ -66,7 +66,8 @@ contract or upgrade decision.
   the mounted visible field label, self-labelled controls compose both visible names, and composite
   controls delegate label focus. Deterministic live DOM-first ownership prevents duplicate ids,
   pristine Angular errors stay visually neutral until interaction, and `aria-describedby`
-  deduplicates manual ids with mounted hints and errors.
+  deduplicates manual ids with mounted hints and errors. The public Form Field harness now resolves
+  registered primary roots and exposes readonly and pending predicates.
 - Strengthened Text Input with deterministic standalone `value` ownership, IME-safe and
   duplicate-free updates, composable ARIA references, validated length constraints, and public
   native focus, blur, and selection methods.

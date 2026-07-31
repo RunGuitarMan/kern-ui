@@ -9,7 +9,9 @@ export interface KrnFormFieldHarnessFilters extends BaseHarnessFilters {
   readonly error?: KrnHarnessText;
   readonly state?: string;
   readonly disabled?: boolean;
+  readonly readonly?: boolean;
   readonly invalid?: boolean;
+  readonly pending?: boolean;
   readonly required?: boolean;
 }
 
@@ -43,9 +45,19 @@ export class KrnFormFieldHarness extends ContentContainerComponentHarness {
         async (harness, value) => (await harness.isDisabled()) === value,
       )
       .addOption(
+        'readonly',
+        options.readonly,
+        async (harness, value) => (await harness.isReadonly()) === value,
+      )
+      .addOption(
         'invalid',
         options.invalid,
         async (harness, value) => (await harness.isInvalid()) === value,
+      )
+      .addOption(
+        'pending',
+        options.pending,
+        async (harness, value) => (await harness.isPending()) === value,
       )
       .addOption(
         'required',
@@ -58,15 +70,7 @@ export class KrnFormFieldHarness extends ContentContainerComponentHarness {
   private readonly hints = this.locatorForAll('.krn-message:not(.krn-message--error)');
   private readonly errors = this.locatorForAll('.krn-message--error');
   private readonly control = this.locatorForOptional(
-    [
-      '.krn-field-control input',
-      '.krn-field-control textarea',
-      '.krn-field-control select',
-      '.krn-field-control button',
-      '.krn-field-control [role="combobox"]',
-      '.krn-field-control [role="spinbutton"]',
-      '.krn-field-control [contenteditable="true"]',
-    ].join(', '),
+    '.krn-field-control [data-krn-form-field-control]',
   );
 
   async getLabelText(): Promise<string | null> {
@@ -99,8 +103,16 @@ export class KrnFormFieldHarness extends ContentContainerComponentHarness {
     return booleanAttributeValue(await (await this.host()).getAttribute('data-disabled'));
   }
 
+  async isReadonly(): Promise<boolean> {
+    return booleanAttributeValue(await (await this.host()).getAttribute('data-readonly'));
+  }
+
   async isInvalid(): Promise<boolean> {
     return booleanAttributeValue(await (await this.host()).getAttribute('data-invalid'));
+  }
+
+  async isPending(): Promise<boolean> {
+    return (await this.getState()) === 'pending';
   }
 
   async isRequired(): Promise<boolean> {

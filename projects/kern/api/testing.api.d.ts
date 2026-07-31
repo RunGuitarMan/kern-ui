@@ -498,7 +498,9 @@ interface KrnFormFieldHarnessFilters extends BaseHarnessFilters {
   readonly error?: KrnHarnessText;
   readonly state?: string;
   readonly disabled?: boolean;
+  readonly readonly?: boolean;
   readonly invalid?: boolean;
+  readonly pending?: boolean;
   readonly required?: boolean;
 }
 /**
@@ -520,7 +522,9 @@ declare class KrnFormFieldHarness extends ContentContainerComponentHarness {
   getErrorText(): Promise<string | null>;
   getState(): Promise<string | null>;
   isDisabled(): Promise<boolean>;
+  isReadonly(): Promise<boolean>;
   isInvalid(): Promise<boolean>;
+  isPending(): Promise<boolean>;
   isRequired(): Promise<boolean>;
   isValid(): Promise<boolean>;
   getControl(): Promise<TestElement | null>;

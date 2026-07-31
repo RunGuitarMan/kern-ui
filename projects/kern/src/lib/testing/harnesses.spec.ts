@@ -7,6 +7,8 @@ import {
   KrnButton,
   KrnCalendar,
   KrnChart,
+  KrnCheckbox,
+  KrnCheckboxGroup,
   KrnColorPicker,
   KrnCombobox,
   KrnCommandPalette,
@@ -21,10 +23,15 @@ import {
   KrnLineChart,
   KrnMenu,
   KrnMultiSelect,
+  KrnOtpInput,
+  KrnRadio,
+  KrnRadioGroup,
+  KrnRangeSlider,
   KrnResizablePanel,
   KrnResizablePanels,
   KrnResizeHandle,
   KrnSelect,
+  KrnSegmentedControl,
   KrnTabs,
   KrnTextInput,
   KrnTimePicker,
@@ -89,13 +96,12 @@ interface HarnessDemoRow extends Record<string, unknown> {
       Save changes
     </krn-button>
 
-    <krn-form-field
-      id="workspace-name"
-      label="Workspace name"
-      hint="Visible to every member"
-      required
-    >
-      <krn-text-input />
+    <krn-form-field label="Workspace name" hint="Visible to every member">
+      <krn-text-input id="workspace-name" readonly required />
+    </krn-form-field>
+
+    <krn-form-field id="editable-workspace-field" label="Editable workspace">
+      <krn-text-input required />
     </krn-form-field>
 
     <krn-select ariaLabel="Plan" placeholder="Choose a plan" [options]="plans" />
@@ -141,6 +147,44 @@ class HarnessDemo {
   recordActivation(): void {
     this.activationCount.update((count) => count + 1);
   }
+}
+
+@Component({
+  imports: [
+    KrnCheckbox,
+    KrnCheckboxGroup,
+    KrnFormField,
+    KrnOtpInput,
+    KrnRadio,
+    KrnRadioGroup,
+    KrnRangeSlider,
+    KrnSegmentedControl,
+  ],
+  template: `
+    <krn-form-field label="Permissions" hint="Choose permissions.">
+      <krn-checkbox-group>
+        <krn-checkbox value="read">Read</krn-checkbox>
+      </krn-checkbox-group>
+    </krn-form-field>
+    <krn-form-field label="Plan" hint="Choose a plan.">
+      <krn-radio-group>
+        <krn-radio value="starter">Starter</krn-radio>
+      </krn-radio-group>
+    </krn-form-field>
+    <krn-form-field label="Density" hint="Choose a density.">
+      <krn-segmented-control [options]="segments" />
+    </krn-form-field>
+    <krn-form-field label="Verification code" hint="Enter every digit.">
+      <krn-otp-input />
+    </krn-form-field>
+    <krn-form-field label="Budget range" hint="Choose both limits.">
+      <krn-range-slider />
+    </krn-form-field>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class CompositeFormFieldHarnessDemo {
+  readonly segments = [{ value: 'comfortable', label: 'Comfortable' }] as const;
 }
 
 @Component({
@@ -332,7 +376,12 @@ class AdvancedHarnessDemo {
 describe('@kern-ui/angular/testing', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdvancedHarnessDemo, ExtendedHarnessDemo, HarnessDemo],
+      imports: [
+        AdvancedHarnessDemo,
+        CompositeFormFieldHarnessDemo,
+        ExtendedHarnessDemo,
+        HarnessDemo,
+      ],
     }).compileComponents();
   });
 
@@ -362,24 +411,45 @@ describe('@kern-ui/angular/testing', () => {
         label: 'Workspace name',
         hint: 'Visible to every member',
         required: true,
+        readonly: true,
         invalid: false,
+        pending: false,
       }),
     );
 
     expect(await field.getControlId()).toBe('workspace-name');
     expect(await field.getHintTexts()).toEqual(['Visible to every member']);
     expect(await field.getControlDescribedBy()).toEqual(['workspace-name-hint']);
+    expect(await field.isReadonly()).toBe(true);
+    expect(await field.isPending()).toBe(false);
 
     const control = await loader.getHarness(
       KrnFormControlHarness.with({
-        ancestor: 'krn-form-field',
+        ancestor: '#editable-workspace-field',
         required: true,
+        readonly: false,
         invalid: false,
       }),
     );
     await control.setValue('Enterprise workspace');
     expect(await control.getValue()).toBe('Enterprise workspace');
-    expect(await control.getDescribedBy()).toEqual(['workspace-name-hint']);
+  });
+
+  it('resolves every registered composite root through the form-field harness', async () => {
+    const fixture = TestBed.createComponent(CompositeFormFieldHarnessDemo);
+    const loader = TestbedHarnessEnvironment.loader(fixture);
+    const fields = await loader.getAllHarnesses(KrnFormFieldHarness);
+
+    expect(fields).toHaveLength(5);
+    for (const field of fields) {
+      const control = await field.getControl();
+      const controlId = await field.getControlId();
+
+      expect(control).not.toBeNull();
+      expect(controlId).toBeTruthy();
+      expect(await control?.getAttribute('data-krn-form-field-control')).toBe('');
+      expect(await field.getControlDescribedBy()).toEqual([`${controlId}-hint`]);
+    }
   });
 
   it('opens and selects options through the select harness', async () => {

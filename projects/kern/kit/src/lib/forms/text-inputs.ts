@@ -60,6 +60,9 @@ const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string
   return ids.length > 0 ? [...new Set(ids)].join(' ') : null;
 };
 
+const isElementTarget = (target: EventTarget | null): target is Element =>
+  target !== null && 'closest' in target && typeof target.closest === 'function';
+
 @Component({
   selector: 'krn-text-input',
   providers: [...provideKrnFormControl(() => KrnTextInput)],
@@ -231,7 +234,7 @@ export class KrnTextInput extends KrnValueAccessor<string> {
 
     if (
       event.button !== 0 ||
-      !(target instanceof Element) ||
+      !isElementTarget(target) ||
       target.closest('input,button,a,select,textarea,[contenteditable],[tabindex]')
     ) {
       return;
@@ -450,7 +453,7 @@ export class KrnTextarea extends KrnValueAccessor<string> {
 
     if (
       event.button !== 0 ||
-      !(target instanceof Element) ||
+      !isElementTarget(target) ||
       target.closest('input,button,a,select,textarea,[contenteditable],[tabindex]')
     ) {
       return;
@@ -661,7 +664,7 @@ export class KrnPasswordInput extends KrnValueAccessor<string> {
 
     if (
       event.button !== 0 ||
-      !(target instanceof Element) ||
+      !isElementTarget(target) ||
       target.closest('input,button,a,select,textarea,[contenteditable],[tabindex]')
     ) {
       return;
@@ -884,7 +887,7 @@ export class KrnSearchInput extends KrnValueAccessor<string> {
 
     if (
       event.button !== 0 ||
-      !(target instanceof Element) ||
+      !isElementTarget(target) ||
       target.closest('input,button,a,select,textarea,[contenteditable],[tabindex]')
     ) {
       return;
@@ -1132,7 +1135,7 @@ export class KrnNumberInput extends KrnValueAccessor<number | null> {
 
     if (
       event.button !== 0 ||
-      !(target instanceof Element) ||
+      !isElementTarget(target) ||
       target.closest('input,button,a,select,textarea,[contenteditable],[tabindex]')
     ) {
       return;

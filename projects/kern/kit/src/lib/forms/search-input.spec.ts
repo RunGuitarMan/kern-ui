@@ -71,21 +71,22 @@ describe('KrnSearchInput', () => {
     fixture.componentInstance.searchSubmitted.subscribe(submitted);
     await fixture.whenStable();
     const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    const view = input.ownerDocument.defaultView!;
 
-    input.dispatchEvent(new Event('compositionstart', { bubbles: true }));
+    input.dispatchEvent(new view.Event('compositionstart', { bubbles: true }));
     input.value = '東';
-    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new view.Event('input', { bubbles: true }));
     input.dispatchEvent(
-      new KeyboardEvent('keydown', { bubbles: true, isComposing: true, key: 'Enter' }),
+      new view.KeyboardEvent('keydown', { bubbles: true, isComposing: true, key: 'Enter' }),
     );
 
     expect(onChange).not.toHaveBeenCalled();
     expect(submitted).not.toHaveBeenCalled();
 
     input.value = '東京';
-    input.dispatchEvent(new Event('compositionend', { bubbles: true }));
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-    input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+    input.dispatchEvent(new view.Event('compositionend', { bubbles: true }));
+    input.dispatchEvent(new view.Event('input', { bubbles: true }));
+    input.dispatchEvent(new view.KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenLastCalledWith('東京');
@@ -109,7 +110,12 @@ describe('KrnSearchInput', () => {
     const clear = fixture.nativeElement.querySelector('button') as HTMLButtonElement;
 
     fixture.componentInstance.focus();
-    clear.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, button: 0 }));
+    clear.dispatchEvent(
+      new clear.ownerDocument.defaultView!.MouseEvent('pointerdown', {
+        bubbles: true,
+        button: 0,
+      }),
+    );
     expect(clear.tabIndex).toBe(-1);
     expect(clear.getAttribute('aria-controls')).toBe('workspace-search');
     clear.click();
@@ -157,7 +163,12 @@ describe('KrnSearchInput', () => {
     const shell = fixture.nativeElement.querySelector('.krn-control-shell') as HTMLElement;
     const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
 
-    shell.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, button: 0 }));
+    shell.dispatchEvent(
+      new shell.ownerDocument.defaultView!.MouseEvent('pointerdown', {
+        bubbles: true,
+        button: 0,
+      }),
+    );
     expect(input.ownerDocument.activeElement).toBe(input);
 
     fixture.componentInstance.select();

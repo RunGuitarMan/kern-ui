@@ -965,60 +965,72 @@ declare class KrnLink {
   >;
 }
 
+interface KrnFormFieldControlRegistration {
+  readonly element: HTMLElement;
+  readonly id: Signal<string>;
+  readonly labelStrategy: 'native' | 'group';
+  readonly invalid: Signal<boolean>;
+  readonly required: Signal<boolean>;
+  readonly disabled: Signal<boolean>;
+  readonly readOnly: Signal<boolean>;
+  readonly pending: Signal<boolean>;
+  readonly valid: Signal<boolean>;
+  readonly touched: Signal<boolean>;
+  readonly dirty: Signal<boolean>;
+}
 interface KrnFormFieldController {
   readonly controlId: Signal<string>;
+  readonly labelId: Signal<string>;
+  readonly labelledBy: Signal<string | null>;
+  readonly nativeLabelFor: Signal<string | null>;
   readonly hintId: Signal<string>;
   readonly errorId: Signal<string>;
   readonly describedBy: Signal<string>;
   readonly invalid: Signal<boolean>;
   readonly required: Signal<boolean>;
-  readonly effectiveRequired: Signal<boolean>;
   readonly disabled: Signal<boolean>;
   readonly readOnly: Signal<boolean>;
+  readonly pending: Signal<boolean>;
+  registerControl(control: KrnFormFieldControlRegistration): () => void;
   registerDescription(kind: 'hint' | 'error', id: Signal<string>): () => void;
+  isPrimaryControl(control: KrnFormFieldControlRegistration): boolean;
+  focusControl(): void;
 }
-declare class KrnFormField implements KrnFormFieldController {
-  private readonly generatedControlId;
-  private readonly projectedHints;
-  private readonly projectedErrors;
+declare class KrnFormField {
+  private readonly fieldState;
+  protected readonly projectedLabel: Signal<KrnLabel | undefined>;
   private readonly projectedControl;
-  private readonly controlStatusVersion;
-  private readonly controlStatusEffect;
-  readonly id: _angular_core.InputSignal<string>;
   readonly label: _angular_core.InputSignal<string>;
   readonly hint: _angular_core.InputSignal<string>;
   readonly error: _angular_core.InputSignal<string>;
   readonly optionalText: _angular_core.InputSignal<string>;
-  readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly state: _angular_core.InputSignal<'invalid' | 'default' | 'valid' | 'pending'>;
-  readonly controlId: Signal<string>;
-  readonly hintId: Signal<string>;
-  readonly errorId: Signal<string>;
-  readonly invalid: Signal<boolean>;
-  readonly effectiveRequired: Signal<boolean>;
+  private readonly hasLabel;
+  protected readonly controlId: Signal<string>;
+  protected readonly labelId: Signal<string>;
+  protected readonly nativeLabelFor: Signal<string | null>;
+  protected readonly hintId: Signal<string>;
+  protected readonly errorId: Signal<string>;
+  protected readonly invalid: Signal<boolean>;
+  protected readonly required: Signal<boolean>;
+  protected readonly disabled: Signal<boolean>;
+  protected readonly readOnly: Signal<boolean>;
   protected readonly valid: Signal<boolean>;
-  readonly describedBy: Signal<string>;
-  registerDescription(kind: 'hint' | 'error', id: Signal<string>): () => void;
+  protected readonly state: Signal<'invalid' | 'default' | 'valid' | 'pending'>;
+  constructor();
+  protected focusControl(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnFormField, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnFormField,
     'krn-form-field',
     never,
     {
-      id: { alias: 'id'; required: false; isSignal: true };
       label: { alias: 'label'; required: false; isSignal: true };
       hint: { alias: 'hint'; required: false; isSignal: true };
       error: { alias: 'error'; required: false; isSignal: true };
       optionalText: { alias: 'optionalText'; required: false; isSignal: true };
-      required: { alias: 'required'; required: false; isSignal: true };
-      disabled: { alias: 'disabled'; required: false; isSignal: true };
-      readOnly: { alias: 'readonly'; required: false; isSignal: true };
-      state: { alias: 'state'; required: false; isSignal: true };
     },
     {},
-    ['projectedControl'],
+    ['projectedLabel', 'projectedControl'],
     ['krn-label', '*', 'krn-hint, krn-validation-message'],
     true,
     never
@@ -1028,8 +1040,10 @@ declare class KrnLabel {
   private readonly field;
   readonly for: _angular_core.InputSignal<string>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  protected readonly forId: Signal<string>;
+  protected readonly forId: Signal<string | null>;
+  protected readonly labelId: Signal<string | null>;
   protected readonly effectiveRequired: Signal<boolean>;
+  protected focusControl(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnLabel, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnLabel,
@@ -1093,36 +1107,82 @@ declare class KrnValidationMessage {
  * @publicApi
  * @experimental
  */
-declare abstract class KrnValueAccessor<T> implements ControlValueAccessor, Validator {
+declare abstract class KrnValueAccessor<T, TControl = T>
+  implements ControlValueAccessor, Validator
+{
   protected readonly controlValue: WritableSignal<T>;
   protected readonly formDisabled: WritableSignal<boolean>;
+  private readonly valueOwnerState;
+  protected readonly valueOwner: Signal<'angular' | 'internal' | 'standalone'>;
   private readonly accessorDestroyRef;
   private readonly initialValue;
   private onChange;
   private onTouched;
   private onValidatorChange;
+  private mixedOwnershipReported;
   protected constructor(initialValue: T);
   writeValue(value: unknown): void;
-  registerOnChange(fn: (value: T) => void): void;
+  registerOnChange(fn: (value: TControl) => void): void;
   registerOnTouched(fn: () => void): void;
   setDisabledState(disabled: boolean): void;
   validate(control: AbstractControl): ValidationErrors | null;
   registerOnValidatorChange(fn: () => void): void;
+  /**
+   * Converts an Angular Forms value into the component's view-value domain.
+   *
+   * Override together with `toControlValue` when the form model and the rendered component use
+   * different value types. Existing controls can continue overriding `normalizeIncomingValue`.
+   */
+  protected fromControlValue(value: TControl | null | undefined): T;
+  /**
+   * Converts a committed view value into the Angular Forms value domain.
+   */
+  protected toControlValue(value: T): TControl;
   protected normalizeIncomingValue(value: unknown): T;
+  /**
+   * Normalizes a declarative standalone value without claiming Angular Forms ownership.
+   */
+  protected normalizeStandaloneValue(value: T): T;
+  /**
+   * Binds an optional declarative value source to this accessor.
+   *
+   * `undefined` means that no standalone owner is present. Once Angular Forms registers the
+   * accessor it remains the deterministic owner and later standalone writes are ignored.
+   * Incoming writes are always silent: they never call `onChange`, touch the control, or emit a
+   * component output.
+   */
+  protected bindStandaloneValue(value: Signal<T | undefined>): void;
   protected validateValue(_value: unknown): ValidationErrors | null;
   protected watchValidationInputs(...dependencies: readonly Signal<unknown>[]): void;
   protected commitValue(value: T): void;
+  /**
+   * Commits one user-originated value when it differs from the rendered value.
+   *
+   * The boolean result lets a concrete component emit its existing public output only for an
+   * accepted change. The legacy `commitValue` method deliberately keeps its historical
+   * always-notify behavior until concrete controls migrate one by one.
+   */
+  protected commitUserValue(value: T): boolean;
+  /**
+   * Equality policy for user commits. Reference-valued controls can override this with their
+   * domain identity contract.
+   */
+  protected valuesEqual(current: T, next: T): boolean;
   protected touch(): void;
   private bindAngularControl;
   private syncAngularControlState;
+  private claimAngularOwnership;
+  private reportMixedOwnership;
 }
 interface KrnControlA11y {
   readonly id: Signal<string>;
   readonly describedBy: Signal<string | null>;
+  readonly labelledBy: Signal<string | null>;
   readonly invalid: Signal<boolean>;
   readonly required: Signal<boolean>;
   readonly disabled: Signal<boolean>;
   readonly readOnly: Signal<boolean>;
+  readonly isFormFieldControl: Signal<boolean>;
   readonly field: KrnFormFieldController | null;
 }
 
@@ -1209,6 +1269,8 @@ declare class KrnDatePicker extends KrnValueAccessor<string> {
   private readonly translations;
   readonly id: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly locale: _angular_core.InputSignal<string>;
   readonly today: _angular_core.InputSignal<string>;
   readonly weekStartsOn: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -1219,8 +1281,10 @@ declare class KrnDatePicker extends KrnValueAccessor<string> {
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly value: _angular_core.InputSignal<string | undefined>;
+  readonly open: _angular_core.ModelSignal<boolean>;
   readonly valueChange: _angular_core.OutputEmitterRef<string>;
-  protected readonly open: _angular_core.WritableSignal<boolean>;
   protected readonly visibleMonth: _angular_core.WritableSignal<Date>;
   protected readonly focusedDate: _angular_core.WritableSignal<string>;
   protected readonly copy: _angular_core.Signal<{
@@ -1243,6 +1307,8 @@ declare class KrnDatePicker extends KrnValueAccessor<string> {
   protected readonly weekdays: _angular_core.Signal<readonly string[]>;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
   protected readonly calendarId: _angular_core.Signal<string>;
   protected readonly days: _angular_core.Signal<readonly KrnCalendarDay$1[]>;
   protected readonly calendarRows: _angular_core.Signal<readonly (readonly KrnCalendarDay$1[])[]>;
@@ -1252,6 +1318,9 @@ declare class KrnDatePicker extends KrnValueAccessor<string> {
   private readonly trigger;
   private readonly panel;
   private readonly dayButtons;
+  private focusGeneration;
+  private lastObservedOpen;
+  private readonly initializeControlledOpen;
   private readonly syncPanel;
   private readonly syncFocusedDay;
   private readonly closeWhenBlocked;
@@ -1269,6 +1338,11 @@ declare class KrnDatePicker extends KrnValueAccessor<string> {
   protected selectDate(value: string): void;
   protected clear(): void;
   protected handleCalendarKeydown(event: KeyboardEvent, day: KrnCalendarDay$1): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
+  private prepareOpen;
+  private setOpen;
+  private restoreTriggerFocus;
   private initialFocusDate;
   private focusDate;
   private focusDayButton;
@@ -1280,6 +1354,8 @@ declare class KrnDatePicker extends KrnValueAccessor<string> {
     {
       id: { alias: 'id'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       locale: { alias: 'locale'; required: false; isSignal: true };
       today: { alias: 'today'; required: false; isSignal: true };
       weekStartsOn: { alias: 'weekStartsOn'; required: false; isSignal: true };
@@ -1290,8 +1366,11 @@ declare class KrnDatePicker extends KrnValueAccessor<string> {
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       required: { alias: 'required'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
+      open: { alias: 'open'; required: false; isSignal: true };
     },
-    { valueChange: 'valueChange' },
+    { open: 'openChange'; valueChange: 'valueChange' },
     never,
     never,
     true,
@@ -1303,6 +1382,8 @@ declare class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
   private readonly translations;
   readonly id: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly locale: _angular_core.InputSignal<string>;
   readonly today: _angular_core.InputSignal<string>;
   readonly weekStartsOn: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -1315,8 +1396,10 @@ declare class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly value: _angular_core.InputSignal<KrnDateRangeValue | undefined>;
+  readonly open: _angular_core.ModelSignal<boolean>;
   readonly valueChange: _angular_core.OutputEmitterRef<KrnDateRangeValue>;
-  protected readonly open: _angular_core.WritableSignal<boolean>;
   protected readonly visibleMonth: _angular_core.WritableSignal<Date>;
   protected readonly focusedDate: _angular_core.WritableSignal<string>;
   protected readonly copy: _angular_core.Signal<{
@@ -1339,6 +1422,8 @@ declare class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
   protected readonly weekdays: _angular_core.Signal<readonly string[]>;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
   protected readonly calendarId: _angular_core.Signal<string>;
   protected readonly days: _angular_core.Signal<readonly KrnCalendarDay$1[]>;
   protected readonly calendarRows: _angular_core.Signal<readonly (readonly KrnCalendarDay$1[])[]>;
@@ -1349,12 +1434,19 @@ declare class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
   private readonly trigger;
   private readonly panel;
   private readonly dayButtons;
+  private focusGeneration;
+  private lastObservedOpen;
+  private preparedOpenGeneration;
+  private lastUserCommittedValue;
+  private lastPreparationInputs;
+  private readonly initializeControlledOpen;
   private readonly syncPanel;
   private readonly syncFocusedDay;
   private readonly closeWhenBlocked;
   constructor();
   writeValue(value: unknown): void;
   protected normalizeIncomingValue(value: unknown): KrnDateRangeValue;
+  protected valuesEqual(current: KrnDateRangeValue, next: KrnDateRangeValue): boolean;
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
   protected toggleOpen(): void;
   protected close(restoreFocus?: boolean): void;
@@ -1368,6 +1460,11 @@ declare class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
   protected selectDate(value: string): void;
   protected clear(): void;
   protected handleCalendarKeydown(event: KeyboardEvent, day: KrnCalendarDay$1): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
+  private prepareOpen;
+  private setOpen;
+  private restoreTriggerFocus;
   private initialFocusDate;
   private focusDate;
   private focusDayButton;
@@ -1380,6 +1477,8 @@ declare class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
     {
       id: { alias: 'id'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       locale: { alias: 'locale'; required: false; isSignal: true };
       today: { alias: 'today'; required: false; isSignal: true };
       weekStartsOn: { alias: 'weekStartsOn'; required: false; isSignal: true };
@@ -1392,8 +1491,11 @@ declare class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       required: { alias: 'required'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
+      open: { alias: 'open'; required: false; isSignal: true };
     },
-    { valueChange: 'valueChange' },
+    { open: 'openChange'; valueChange: 'valueChange' },
     never,
     never,
     true,
@@ -1705,7 +1807,9 @@ declare class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
 
 declare class KrnSlider extends KrnValueAccessor<number> {
   private readonly translations;
+  private readonly inputElement;
   readonly id: _angular_core.InputSignal<string>;
+  readonly name: _angular_core.InputSignal<string>;
   readonly label: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly min: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -1715,17 +1819,27 @@ declare class KrnSlider extends KrnValueAccessor<number> {
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly showValue: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly value: _angular_core.InputSignal<number | undefined>;
   readonly valueFormatter: _angular_core.InputSignal<((value: number) => string) | undefined>;
   readonly valueChange: _angular_core.OutputEmitterRef<number>;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly effectiveMin: _angular_core.Signal<number>;
+  protected readonly effectiveMax: _angular_core.Signal<number>;
+  protected readonly effectiveStep: _angular_core.Signal<number>;
   protected readonly labelId: _angular_core.Signal<string>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
   protected readonly formattedValue: _angular_core.Signal<string>;
   protected readonly valuePercent: _angular_core.Signal<number>;
   constructor();
   protected normalizeIncomingValue(value: unknown): number;
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
   protected updateValue(event: Event): void;
+  protected protectReadOnlyKeyboard(event: KeyboardEvent): void;
+  protected protectReadOnlyPointer(event: PointerEvent): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
   private clamp;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnSlider, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
@@ -1734,6 +1848,7 @@ declare class KrnSlider extends KrnValueAccessor<number> {
     never,
     {
       id: { alias: 'id'; required: false; isSignal: true };
+      name: { alias: 'name'; required: false; isSignal: true };
       label: { alias: 'label'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
       min: { alias: 'min'; required: false; isSignal: true };
@@ -1743,6 +1858,8 @@ declare class KrnSlider extends KrnValueAccessor<number> {
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
       showValue: { alias: 'showValue'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
       valueFormatter: { alias: 'valueFormatter'; required: false; isSignal: true };
     },
     { valueChange: 'valueChange' },
@@ -1754,6 +1871,8 @@ declare class KrnSlider extends KrnValueAccessor<number> {
 }
 declare class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
   private readonly platform;
+  private readonly startInput;
+  private readonly endInput;
   protected readonly translations: Readonly<_kern_ui_angular_core.KrnTranslations>;
   readonly id: _angular_core.InputSignal<string>;
   readonly label: _angular_core.InputSignal<string>;
@@ -1765,22 +1884,35 @@ declare class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly value: _angular_core.InputSignal<KrnRangeValue | undefined>;
+  readonly valueFormatter: _angular_core.InputSignal<((value: number) => string) | undefined>;
   readonly valueChange: _angular_core.OutputEmitterRef<KrnRangeValue>;
   protected readonly activeThumb: _angular_core.WritableSignal<'start' | 'end'>;
   protected readonly draggingThumb: _angular_core.WritableSignal<'start' | 'end' | null>;
   private activePointerId;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly effectiveMin: _angular_core.Signal<number>;
+  protected readonly effectiveMax: _angular_core.Signal<number>;
+  protected readonly effectiveStep: _angular_core.Signal<number>;
+  protected readonly formattedStart: _angular_core.Signal<string>;
+  protected readonly formattedEnd: _angular_core.Signal<string>;
   protected readonly startPercent: _angular_core.Signal<number>;
   protected readonly endPercent: _angular_core.Signal<number>;
   constructor();
   protected normalizeIncomingValue(value: unknown): KrnRangeValue;
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  protected valuesEqual(current: KrnRangeValue, next: KrnRangeValue): boolean;
   protected updateStart(event: Event): void;
   protected updateEnd(event: Event): void;
   protected beginPointerInteraction(event: PointerEvent): void;
   protected continuePointerInteraction(event: PointerEvent): void;
   protected finishPointerInteraction(event: PointerEvent): void;
+  protected protectReadOnlyKeyboard(event: KeyboardEvent): void;
+  protected handleFocusOut(event: FocusEvent): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
   private nearestThumb;
   private updateThumbFromPointer;
   private emitRange;
@@ -1789,6 +1921,7 @@ declare class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
   private valueFromPointer;
   private fractionDigits;
   private toPercent;
+  private thumbInput;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnRangeSlider, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnRangeSlider,
@@ -1805,6 +1938,9 @@ declare class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
       disabled: { alias: 'disabled'; required: false; isSignal: true };
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
+      valueFormatter: { alias: 'valueFormatter'; required: false; isSignal: true };
     },
     { valueChange: 'valueChange' },
     never,
@@ -1815,10 +1951,13 @@ declare class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
 }
 
 declare class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
+  private readonly select;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
   readonly placeholder: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly options: _angular_core.InputSignal<readonly KrnSelectOption<T>[]>;
   readonly identityMatcher: _angular_core.InputSignal<KrnIdentityMatcher<T>>;
   readonly trackBy: _angular_core.InputSignal<KrnOptionTrackBy<T>>;
@@ -1828,15 +1967,24 @@ declare class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly value: _angular_core.InputSignal<T | null | undefined>;
   readonly valueChange: _angular_core.OutputEmitterRef<T | null>;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly isReadOnly: _angular_core.Signal<boolean>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
   protected readonly selectedNativeKey: _angular_core.Signal<string>;
   constructor();
   protected normalizeIncomingValue(value: unknown): T | null;
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  protected valuesEqual(current: T | null, next: T | null): boolean;
   protected optionKey(_option: KrnSelectOption<T>, index: number): string;
   protected selectNative(event: Event): void;
+  protected protectReadOnlyInteraction(event: Event): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnNativeSelect<any>, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnNativeSelect<any>,
@@ -1847,6 +1995,8 @@ declare class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
       name: { alias: 'name'; required: false; isSignal: true };
       placeholder: { alias: 'placeholder'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       options: { alias: 'options'; required: true; isSignal: true };
       identityMatcher: { alias: 'identityMatcher'; required: false; isSignal: true };
       trackBy: { alias: 'trackBy'; required: false; isSignal: true };
@@ -1856,6 +2006,8 @@ declare class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       required: { alias: 'required'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
     },
     { valueChange: 'valueChange' },
     never,
@@ -1866,12 +2018,15 @@ declare class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
 }
 declare class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
   private readonly translations;
+  private readonly trigger;
   readonly id: _angular_core.InputSignal<string>;
   readonly placeholder: _angular_core.InputSignal<string>;
   readonly emptyText: _angular_core.InputSignal<string>;
   readonly loadingText: _angular_core.InputSignal<string>;
   readonly errorText: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly options: _angular_core.InputSignal<readonly KrnSelectOption<T>[]>;
   /** Controls whether options are interactive or replaced by an announced loading/error state. */
   readonly optionsState: _angular_core.InputSignal<KrnOptionsState>;
@@ -1887,16 +2042,22 @@ declare class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly value: _angular_core.InputSignal<T | null | undefined>;
   readonly open: _angular_core.ModelSignal<boolean>;
   readonly valueChange: _angular_core.OutputEmitterRef<T | null>;
   readonly selectionChange: _angular_core.OutputEmitterRef<KrnSelectOption<T> | null>;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly isReadOnly: _angular_core.Signal<boolean>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
   protected readonly selectedOption: _angular_core.Signal<KrnSelectOption<T> | null>;
   protected readonly selectedValues: _angular_core.Signal<T[]>;
   constructor();
   protected normalizeIncomingValue(value: unknown): T | null;
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  protected valuesEqual(current: T | null, next: T | null): boolean;
   protected setOpen(open: boolean): void;
   protected close(): void;
   protected onEscape(event: Event): void;
@@ -1904,6 +2065,7 @@ declare class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
   protected selectValues(values: T[]): void;
   protected isSelected(option: KrnSelectOption<T>): boolean;
   protected optionContext(option: KrnSelectOption<T>): KrnSelectOptionContext<T>;
+  focus(options?: FocusOptions): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnSelect<any>, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnSelect<any>,
@@ -1916,6 +2078,8 @@ declare class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
       loadingText: { alias: 'loadingText'; required: false; isSignal: true };
       errorText: { alias: 'errorText'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       options: { alias: 'options'; required: true; isSignal: true };
       optionsState: { alias: 'optionsState'; required: false; isSignal: true };
       identityMatcher: { alias: 'identityMatcher'; required: false; isSignal: true };
@@ -1928,6 +2092,8 @@ declare class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       required: { alias: 'required'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
       open: { alias: 'open'; required: false; isSignal: true };
     },
     { open: 'openChange'; valueChange: 'valueChange'; selectionChange: 'selectionChange' },
@@ -1939,12 +2105,15 @@ declare class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
 }
 declare class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
   private readonly translations;
+  private readonly trigger;
   readonly id: _angular_core.InputSignal<string>;
   readonly placeholder: _angular_core.InputSignal<string>;
   readonly emptyText: _angular_core.InputSignal<string>;
   readonly loadingText: _angular_core.InputSignal<string>;
   readonly errorText: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly options: _angular_core.InputSignal<readonly KrnSelectOption<T>[]>;
   /** Controls whether options are interactive or replaced by an announced loading/error state. */
   readonly optionsState: _angular_core.InputSignal<KrnOptionsState>;
@@ -1961,10 +2130,16 @@ declare class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> 
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly value: _angular_core.InputSignal<readonly T[] | undefined>;
   readonly open: _angular_core.ModelSignal<boolean>;
   readonly valueChange: _angular_core.OutputEmitterRef<readonly T[]>;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly isReadOnly: _angular_core.Signal<boolean>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
+  protected readonly visibleLimit: _angular_core.Signal<number>;
   protected readonly selectedOptions: _angular_core.Signal<KrnSelectOption<T>[]>;
   protected readonly visibleSelectedOptions: _angular_core.Signal<KrnSelectOption<T>[]>;
   protected readonly remainingCount: _angular_core.Signal<number>;
@@ -1972,6 +2147,7 @@ declare class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> 
   constructor();
   protected normalizeIncomingValue(value: unknown): readonly T[];
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  protected valuesEqual(current: readonly T[], next: readonly T[]): boolean;
   protected setOpen(open: boolean): void;
   protected close(): void;
   protected onEscape(event: Event): void;
@@ -1979,6 +2155,7 @@ declare class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> 
   protected selectValues(values: T[]): void;
   protected isSelected(option: KrnSelectOption<T>): boolean;
   protected optionContext(option: KrnSelectOption<T>): KrnSelectOptionContext<T>;
+  focus(options?: FocusOptions): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnMultiSelect<any>, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnMultiSelect<any>,
@@ -1991,6 +2168,8 @@ declare class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> 
       loadingText: { alias: 'loadingText'; required: false; isSignal: true };
       errorText: { alias: 'errorText'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       options: { alias: 'options'; required: true; isSignal: true };
       optionsState: { alias: 'optionsState'; required: false; isSignal: true };
       identityMatcher: { alias: 'identityMatcher'; required: false; isSignal: true };
@@ -2004,6 +2183,8 @@ declare class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> 
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       required: { alias: 'required'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
       open: { alias: 'open'; required: false; isSignal: true };
     },
     { open: 'openChange'; valueChange: 'valueChange' },
@@ -2021,15 +2202,20 @@ declare class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> 
  */
 declare abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   private readonly comboboxDirective;
+  private readonly inputElement;
+  private readonly destroyRef;
   private readonly locale;
+  private readonly renderer;
   private readonly translations;
+  protected readonly inputFocused: _angular_core.WritableSignal<boolean>;
   private readonly queryEditing;
+  private inlineRenderRevision;
+  private pendingEnterClose;
+  private renderedAutocompleteMode;
   protected readonly defaultAutocompleteMode: KrnAutocompleteMode;
   protected readonly defaultAllowCustomValue: boolean;
-  protected readonly autocompleteModeInput: _angular_core.InputSignal<
-    KrnAutocompleteMode | undefined
-  >;
-  protected readonly allowCustomValueInput: _angular_core.InputSignalWithTransform<
+  readonly autocompleteModeInput: _angular_core.InputSignal<KrnAutocompleteMode | undefined>;
+  readonly allowCustomValueInput: _angular_core.InputSignalWithTransform<
     boolean | undefined,
     unknown
   >;
@@ -2039,7 +2225,10 @@ declare abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> 
   readonly loadingText: _angular_core.InputSignal<string>;
   readonly errorText: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly toggleLabel: _angular_core.InputSignal<string>;
+  readonly name: _angular_core.InputSignal<string>;
   readonly options: _angular_core.InputSignal<readonly KrnSelectOption<string>[]>;
   /** Controls whether options are interactive or replaced by an announced loading/error state. */
   readonly optionsState: _angular_core.InputSignal<KrnOptionsState>;
@@ -2048,11 +2237,14 @@ declare abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> 
   /** Overrides the default case-insensitive local option filter. */
   readonly optionFilter: _angular_core.InputSignal<KrnOptionFilter<string> | null>;
   protected readonly autocompleteMode: _angular_core.Signal<KrnAutocompleteMode>;
+  protected readonly hasAutocompletePopup: _angular_core.Signal<boolean>;
   protected readonly allowCustomValue: _angular_core.Signal<boolean>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly value: _angular_core.InputSignal<string | undefined>;
   readonly open: _angular_core.ModelSignal<boolean>;
   readonly valueChange: _angular_core.OutputEmitterRef<string>;
   /** Emits every user query so remote option sources can load and replace options. */
@@ -2061,7 +2253,11 @@ declare abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> 
   protected readonly query: _angular_core.WritableSignal<string>;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly isReadOnly: _angular_core.Signal<boolean>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
   protected readonly filteredOptions: _angular_core.Signal<readonly KrnSelectOption<string>[]>;
+  private readonly inlineSuggestedOption;
   protected readonly inlineSuggestion: _angular_core.Signal<string | undefined>;
   protected readonly selectedValues: _angular_core.Signal<string[]>;
   protected constructor();
@@ -2069,7 +2265,7 @@ declare abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> 
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
   protected updateQuery(query: string): void;
   protected selectValues(values: string[]): void;
-  protected commitQuery(): void;
+  protected commitQuery(event?: Event): void;
   protected closeOnFocusOut(event: FocusEvent): void;
   private normalizeForSearch;
   protected setOpen(open: boolean): void;
@@ -2077,8 +2273,16 @@ declare abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> 
   protected cancelQuery(): void;
   protected onEscape(event: Event): void;
   protected toggleOptions(input: HTMLInputElement): void;
+  protected acceptInlineCompletion(input: HTMLInputElement): void;
+  protected closeSelectedOption(option: KrnSelectOption<string>): void;
   private restoreCommittedQuery;
   private setQuery;
+  private cancelPendingEnterClose;
+  private acceptInlineSuggestion;
+  focus(options?: FocusOptions): void;
+  blur(): void;
+  select(): void;
+  setSelectionRange(start: number, end: number, direction?: SelectionDirection): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnEditableComboboxBase, never>;
   static ɵdir: _angular_core.ɵɵDirectiveDeclaration<
     KrnEditableComboboxBase,
@@ -2093,7 +2297,10 @@ declare abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> 
       loadingText: { alias: 'loadingText'; required: false; isSignal: true };
       errorText: { alias: 'errorText'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       toggleLabel: { alias: 'toggleLabel'; required: false; isSignal: true };
+      name: { alias: 'name'; required: false; isSignal: true };
       options: { alias: 'options'; required: true; isSignal: true };
       optionsState: { alias: 'optionsState'; required: false; isSignal: true };
       filterLocally: { alias: 'filterLocally'; required: false; isSignal: true };
@@ -2102,6 +2309,8 @@ declare abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> 
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       required: { alias: 'required'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
       open: { alias: 'open'; required: false; isSignal: true };
     },
     {
@@ -2153,15 +2362,22 @@ interface KrnCheckboxGroupController {
   readonly isDisabled: () => boolean;
   readonly isReadOnly: () => boolean;
   has(value: string): boolean;
+  markTouched(): void;
   toggle(value: string, checked: boolean): void;
 }
 declare class KrnCheckboxGroup
   extends KrnValueAccessor<readonly string[]>
   implements KrnCheckboxGroupController
 {
+  private readonly fieldset;
+  private angularOwnsValue;
   readonly id: _angular_core.InputSignal<string>;
   readonly label: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly orientation: _angular_core.InputSignal<KrnOrientation>;
+  readonly value: _angular_core.InputSignal<readonly string[] | undefined>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -2171,11 +2387,19 @@ declare class KrnCheckboxGroup
   protected readonly a11y: KrnControlA11y;
   readonly isDisabled: _angular_core.Signal<boolean>;
   readonly isReadOnly: _angular_core.Signal<boolean>;
+  protected readonly formFieldLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
+  protected readonly isFormFieldControl: _angular_core.Signal<boolean>;
   constructor();
+  writeValue(value: unknown): void;
+  registerOnChange(fn: (value: readonly string[]) => void): void;
   protected normalizeIncomingValue(value: unknown): readonly string[];
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
   has(value: string): boolean;
+  markTouched(): void;
   toggle(value: string, checked: boolean): void;
+  focus(options?: FocusOptions): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnCheckboxGroup, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnCheckboxGroup,
@@ -2184,7 +2408,11 @@ declare class KrnCheckboxGroup
     {
       id: { alias: 'id'; required: false; isSignal: true };
       label: { alias: 'label'; required: false; isSignal: true };
+      ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       orientation: { alias: 'orientation'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
       disabled: { alias: 'disabled'; required: false; isSignal: true };
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       required: { alias: 'required'; required: false; isSignal: true };
@@ -2198,27 +2426,46 @@ declare class KrnCheckboxGroup
     never
   >;
 }
-declare class KrnCheckbox extends KrnValueAccessor<boolean> {
+declare class KrnCheckbox extends KrnValueAccessor<boolean | null> {
   private readonly group;
+  private readonly inputElement;
+  private readonly indeterminateOverride;
+  private angularOwnsChecked;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
   readonly value: _angular_core.InputSignal<string>;
+  readonly checked: _angular_core.InputSignalWithTransform<boolean | undefined, unknown>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly description: _angular_core.InputSignal<string>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly indeterminate: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly checkedChange: _angular_core.OutputEmitterRef<boolean>;
+  readonly indeterminateChange: _angular_core.OutputEmitterRef<boolean>;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   protected readonly isReadOnly: _angular_core.Signal<boolean>;
-  protected readonly checked: _angular_core.Signal<boolean>;
+  protected readonly labelId: _angular_core.Signal<string>;
+  protected readonly descriptionId: _angular_core.Signal<string>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
+  protected readonly renderedChecked: _angular_core.Signal<boolean>;
+  protected readonly isFormFieldControl: _angular_core.Signal<boolean>;
+  protected readonly isIndeterminate: _angular_core.Signal<boolean>;
   constructor();
-  protected normalizeIncomingValue(value: unknown): boolean;
+  writeValue(value: unknown): void;
+  registerOnChange(fn: (value: boolean | null) => void): void;
+  protected normalizeIncomingValue(value: unknown): boolean | null;
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
   protected changeChecked(event: Event): void;
+  protected blurred(): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnCheckbox, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnCheckbox,
@@ -2228,15 +2475,19 @@ declare class KrnCheckbox extends KrnValueAccessor<boolean> {
       id: { alias: 'id'; required: false; isSignal: true };
       name: { alias: 'name'; required: false; isSignal: true };
       value: { alias: 'value'; required: false; isSignal: true };
+      checked: { alias: 'checked'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       description: { alias: 'description'; required: false; isSignal: true };
       disabled: { alias: 'disabled'; required: false; isSignal: true };
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       required: { alias: 'required'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
       indeterminate: { alias: 'indeterminate'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
     },
-    { checkedChange: 'checkedChange' },
+    { checkedChange: 'checkedChange'; indeterminateChange: 'indeterminateChange' },
     never,
     ['*'],
     true,
@@ -2248,6 +2499,7 @@ interface KrnRadioGroupController {
   readonly isDisabled: () => boolean;
   readonly isReadOnly: () => boolean;
   isSelected(value: string): boolean;
+  markTouched(): void;
   select(value: string): void;
 }
 declare class KrnRadioGroup
@@ -2255,10 +2507,16 @@ declare class KrnRadioGroup
   implements KrnRadioGroupController
 {
   private readonly generatedName;
+  private readonly fieldset;
+  private angularOwnsValue;
   readonly id: _angular_core.InputSignal<string>;
   readonly label: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly customName: _angular_core.InputSignal<string>;
   readonly orientation: _angular_core.InputSignal<KrnOrientation>;
+  readonly value: _angular_core.InputSignal<string | null | undefined>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -2269,11 +2527,20 @@ declare class KrnRadioGroup
   protected readonly a11y: KrnControlA11y;
   readonly isDisabled: _angular_core.Signal<boolean>;
   readonly isReadOnly: _angular_core.Signal<boolean>;
+  protected readonly formFieldLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly legendId: _angular_core.Signal<string>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
+  protected readonly isFormFieldControl: _angular_core.Signal<boolean>;
   constructor();
+  writeValue(value: unknown): void;
+  registerOnChange(fn: (value: string | null) => void): void;
   protected normalizeIncomingValue(value: unknown): string | null;
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
   isSelected(value: string): boolean;
   select(value: string): void;
+  markTouched(): void;
+  focus(options?: FocusOptions): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnRadioGroup, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnRadioGroup,
@@ -2282,8 +2549,12 @@ declare class KrnRadioGroup
     {
       id: { alias: 'id'; required: false; isSignal: true };
       label: { alias: 'label'; required: false; isSignal: true };
+      ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       customName: { alias: 'name'; required: false; isSignal: true };
       orientation: { alias: 'orientation'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
       disabled: { alias: 'disabled'; required: false; isSignal: true };
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       required: { alias: 'required'; required: false; isSignal: true };
@@ -2298,30 +2569,53 @@ declare class KrnRadioGroup
   >;
 }
 declare class KrnRadio {
-  protected readonly group: KrnRadioGroupController | null;
+  private readonly group;
+  private readonly inputElement;
+  private readonly generatedId;
+  readonly id: _angular_core.InputSignal<string>;
   readonly value: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
+  readonly checked: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly description: _angular_core.InputSignal<string>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly selected: _angular_core.OutputEmitterRef<string>;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   protected readonly isReadOnly: _angular_core.Signal<boolean>;
-  protected readonly checked: _angular_core.Signal<boolean>;
+  protected readonly nativeId: _angular_core.Signal<string>;
+  protected readonly effectiveName: _angular_core.Signal<string>;
+  protected readonly labelId: _angular_core.Signal<string>;
+  protected readonly descriptionId: _angular_core.Signal<string>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
+  protected readonly renderedChecked: _angular_core.Signal<boolean>;
   protected select(event: Event): void;
+  protected preventReadonly(event: Event): void;
+  protected blurred(): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
+  private restoreCheckedState;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnRadio, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnRadio,
     'krn-radio',
     never,
     {
+      id: { alias: 'id'; required: false; isSignal: true };
       value: { alias: 'value'; required: true; isSignal: true };
       name: { alias: 'name'; required: false; isSignal: true };
+      checked: { alias: 'checked'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       description: { alias: 'description'; required: false; isSignal: true };
       disabled: { alias: 'disabled'; required: false; isSignal: true };
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
     },
     { selected: 'selected' },
     never,
@@ -2331,21 +2625,39 @@ declare class KrnRadio {
   >;
 }
 declare class KrnSwitch extends KrnValueAccessor<boolean> {
+  private readonly inputElement;
+  private angularOwnsChecked;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
+  readonly checked: _angular_core.InputSignalWithTransform<boolean | undefined, unknown>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly description: _angular_core.InputSignal<string>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly valueChange: _angular_core.OutputEmitterRef<boolean>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly checkedChange: _angular_core.OutputEmitterRef<boolean>;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly isReadOnly: _angular_core.Signal<boolean>;
+  protected readonly labelId: _angular_core.Signal<string>;
+  protected readonly descriptionId: _angular_core.Signal<string>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
+  protected readonly renderedChecked: _angular_core.Signal<boolean>;
+  protected readonly isFormFieldControl: _angular_core.Signal<boolean>;
   constructor();
+  writeValue(value: unknown): void;
+  registerOnChange(fn: (value: boolean) => void): void;
   protected normalizeIncomingValue(value: unknown): boolean;
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
   protected changeValue(event: Event): void;
+  protected preventReadonly(event: Event): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnSwitch, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnSwitch,
@@ -2354,14 +2666,18 @@ declare class KrnSwitch extends KrnValueAccessor<boolean> {
     {
       id: { alias: 'id'; required: false; isSignal: true };
       name: { alias: 'name'; required: false; isSignal: true };
+      checked: { alias: 'checked'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       description: { alias: 'description'; required: false; isSignal: true };
       disabled: { alias: 'disabled'; required: false; isSignal: true };
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       required: { alias: 'required'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
     },
-    { valueChange: 'valueChange' },
+    { checkedChange: 'checkedChange' },
     never,
     ['*'],
     true,
@@ -2380,21 +2696,32 @@ declare class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null>
     KrnSegmentOptionContext<T>
   > | null>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
+  readonly orientation: _angular_core.InputSignal<KrnOrientation>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly value: _angular_core.InputSignal<T | null | undefined>;
   readonly valueChange: _angular_core.OutputEmitterRef<T | null>;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
+  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
   constructor();
   protected normalizeIncomingValue(value: unknown): T | null;
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  protected valuesEqual(current: T | null, next: T | null): boolean;
   protected tabIndexFor(value: T, index: number): number;
   protected select(value: T): void;
   protected navigate(event: KeyboardEvent): void;
   protected isSelected(value: T): boolean;
   protected optionContext(option: KrnSegmentOption<T>): KrnSegmentOptionContext<T>;
+  protected handleFocusOut(event: FocusEvent): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
   private firstEnabledIndex;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnSegmentedControl<any>, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
@@ -2409,10 +2736,15 @@ declare class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null>
       disabledHandler: { alias: 'disabledHandler'; required: false; isSignal: true };
       optionTemplate: { alias: 'optionTemplate'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
+      orientation: { alias: 'orientation'; required: false; isSignal: true };
       disabled: { alias: 'disabled'; required: false; isSignal: true };
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       required: { alias: 'required'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
     },
     { valueChange: 'valueChange' },
     never,
@@ -2423,13 +2755,19 @@ declare class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null>
 }
 
 declare class KrnTextInput extends KrnValueAccessor<string> {
+  private readonly inputElement;
+  private angularOwnsValue;
+  private composing;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
   readonly placeholder: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly autocomplete: _angular_core.InputSignal<string>;
   readonly inputMode: _angular_core.InputSignal<KrnInputMode>;
   readonly size: _angular_core.InputSignal<_kern_ui_angular_kit.KrnSize>;
+  readonly value: _angular_core.InputSignal<string | undefined>;
   readonly maxLength: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
   readonly minLength: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
   readonly spellcheck: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -2439,10 +2777,20 @@ declare class KrnTextInput extends KrnValueAccessor<string> {
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly valueChange: _angular_core.OutputEmitterRef<string>;
   protected readonly a11y: KrnControlA11y;
+  protected readonly labelledBy: _angular_core.Signal<string | null>;
+  protected readonly describedBy: _angular_core.Signal<string | null>;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   constructor();
+  writeValue(value: unknown): void;
+  registerOnChange(fn: (value: string) => void): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
+  select(): void;
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
   protected updateText(event: Event): void;
+  protected startComposition(): void;
+  protected endComposition(event: Event): void;
+  protected focusFromShell(event: PointerEvent): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnTextInput, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnTextInput,
@@ -2453,9 +2801,12 @@ declare class KrnTextInput extends KrnValueAccessor<string> {
       name: { alias: 'name'; required: false; isSignal: true };
       placeholder: { alias: 'placeholder'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       autocomplete: { alias: 'autocomplete'; required: false; isSignal: true };
       inputMode: { alias: 'inputMode'; required: false; isSignal: true };
       size: { alias: 'size'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
       maxLength: { alias: 'maxLength'; required: false; isSignal: true };
       minLength: { alias: 'minLength'; required: false; isSignal: true };
       spellcheck: { alias: 'spellcheck'; required: false; isSignal: true };
@@ -2472,14 +2823,22 @@ declare class KrnTextInput extends KrnValueAccessor<string> {
   >;
 }
 declare class KrnTextarea extends KrnValueAccessor<string> {
+  private readonly textareaElement;
+  private angularOwnsValue;
+  private composing;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
   readonly placeholder: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly autocomplete: _angular_core.InputSignal<string>;
   readonly size: _angular_core.InputSignal<_kern_ui_angular_kit.KrnSize>;
   readonly rows: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly value: _angular_core.InputSignal<string | undefined>;
+  readonly minLength: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
   readonly maxLength: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
+  readonly spellcheck: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly showCount: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly autoResize: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -2488,10 +2847,22 @@ declare class KrnTextarea extends KrnValueAccessor<string> {
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly valueChange: _angular_core.OutputEmitterRef<string>;
   protected readonly a11y: KrnControlA11y;
+  protected readonly labelledBy: _angular_core.Signal<string | null>;
+  protected readonly describedBy: _angular_core.Signal<string | null>;
+  protected readonly isFormFieldControl: _angular_core.Signal<boolean>;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   constructor();
+  writeValue(value: unknown): void;
+  registerOnChange(fn: (value: string) => void): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
+  select(): void;
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
   protected updateText(event: Event): void;
+  protected startComposition(): void;
+  protected endComposition(event: Event): void;
+  protected focusFromShell(event: PointerEvent): void;
+  private resizeToContent;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnTextarea, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnTextarea,
@@ -2502,10 +2873,15 @@ declare class KrnTextarea extends KrnValueAccessor<string> {
       name: { alias: 'name'; required: false; isSignal: true };
       placeholder: { alias: 'placeholder'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       autocomplete: { alias: 'autocomplete'; required: false; isSignal: true };
       size: { alias: 'size'; required: false; isSignal: true };
       rows: { alias: 'rows'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
+      minLength: { alias: 'minLength'; required: false; isSignal: true };
       maxLength: { alias: 'maxLength'; required: false; isSignal: true };
+      spellcheck: { alias: 'spellcheck'; required: false; isSignal: true };
       showCount: { alias: 'showCount'; required: false; isSignal: true };
       autoResize: { alias: 'autoResize'; required: false; isSignal: true };
       disabled: { alias: 'disabled'; required: false; isSignal: true };
@@ -2522,11 +2898,19 @@ declare class KrnTextarea extends KrnValueAccessor<string> {
 }
 declare class KrnPasswordInput extends KrnValueAccessor<string> {
   private readonly translations;
+  private readonly inputElement;
+  private angularOwnsValue;
+  private composing;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
   readonly placeholder: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly autocomplete: _angular_core.InputSignal<string>;
+  readonly value: _angular_core.InputSignal<string | undefined>;
+  readonly minLength: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
+  readonly maxLength: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
   readonly showLabel: _angular_core.InputSignal<string>;
   readonly hideLabel: _angular_core.InputSignal<string>;
   readonly showText: _angular_core.InputSignal<string>;
@@ -2539,10 +2923,22 @@ declare class KrnPasswordInput extends KrnValueAccessor<string> {
   protected readonly revealed: _angular_core.WritableSignal<boolean>;
   protected readonly toggle: (value: boolean) => boolean;
   protected readonly a11y: KrnControlA11y;
+  protected readonly labelledBy: _angular_core.Signal<string | null>;
+  protected readonly describedBy: _angular_core.Signal<string | null>;
+  protected readonly isFormFieldControl: _angular_core.Signal<boolean>;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   constructor();
+  writeValue(value: unknown): void;
+  registerOnChange(fn: (value: string) => void): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
+  select(): void;
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
   protected updatePassword(event: Event): void;
+  protected startComposition(): void;
+  protected endComposition(event: Event): void;
+  protected focusFromShell(event: PointerEvent): void;
+  protected retainInputFocus(event: PointerEvent): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnPasswordInput, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnPasswordInput,
@@ -2553,7 +2949,12 @@ declare class KrnPasswordInput extends KrnValueAccessor<string> {
       name: { alias: 'name'; required: false; isSignal: true };
       placeholder: { alias: 'placeholder'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       autocomplete: { alias: 'autocomplete'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
+      minLength: { alias: 'minLength'; required: false; isSignal: true };
+      maxLength: { alias: 'maxLength'; required: false; isSignal: true };
       showLabel: { alias: 'showLabel'; required: false; isSignal: true };
       hideLabel: { alias: 'hideLabel'; required: false; isSignal: true };
       showText: { alias: 'showText'; required: false; isSignal: true };
@@ -2572,24 +2973,47 @@ declare class KrnPasswordInput extends KrnValueAccessor<string> {
 }
 declare class KrnSearchInput extends KrnValueAccessor<string> {
   private readonly translations;
+  private readonly inputElement;
+  private angularOwnsValue;
+  private composing;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
   readonly placeholder: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly clearLabel: _angular_core.InputSignal<string>;
   readonly autocomplete: _angular_core.InputSignal<string>;
+  readonly enterKeyHint: _angular_core.InputSignal<string>;
+  readonly value: _angular_core.InputSignal<string | undefined>;
+  readonly minLength: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
+  readonly maxLength: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
+  readonly spellcheck: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly valueChange: _angular_core.OutputEmitterRef<string>;
   readonly searchSubmitted: _angular_core.OutputEmitterRef<string>;
   protected readonly a11y: KrnControlA11y;
+  protected readonly labelledBy: _angular_core.Signal<string | null>;
+  protected readonly describedBy: _angular_core.Signal<string | null>;
+  protected readonly isFormFieldControl: _angular_core.Signal<boolean>;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   constructor();
+  writeValue(value: unknown): void;
+  registerOnChange(fn: (value: string) => void): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
+  select(): void;
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
   protected updateSearch(event: Event): void;
   protected clear(): void;
-  protected submitSearch(): void;
+  protected submitSearch(event: Event): void;
+  protected startComposition(): void;
+  protected endComposition(event: Event): void;
+  protected focusFromShell(event: PointerEvent): void;
+  protected retainInputFocus(event: PointerEvent): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnSearchInput, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnSearchInput,
@@ -2600,10 +3024,18 @@ declare class KrnSearchInput extends KrnValueAccessor<string> {
       name: { alias: 'name'; required: false; isSignal: true };
       placeholder: { alias: 'placeholder'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       clearLabel: { alias: 'clearLabel'; required: false; isSignal: true };
       autocomplete: { alias: 'autocomplete'; required: false; isSignal: true };
+      enterKeyHint: { alias: 'enterKeyHint'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
+      minLength: { alias: 'minLength'; required: false; isSignal: true };
+      maxLength: { alias: 'maxLength'; required: false; isSignal: true };
+      spellcheck: { alias: 'spellcheck'; required: false; isSignal: true };
       disabled: { alias: 'disabled'; required: false; isSignal: true };
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
+      required: { alias: 'required'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
     },
     { valueChange: 'valueChange'; searchSubmitted: 'searchSubmitted' },
@@ -2615,10 +3047,17 @@ declare class KrnSearchInput extends KrnValueAccessor<string> {
 }
 declare class KrnNumberInput extends KrnValueAccessor<number | null> {
   private readonly translations;
+  private readonly inputElement;
+  private angularOwnsValue;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
   readonly placeholder: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
+  readonly autocomplete: _angular_core.InputSignal<string>;
+  readonly inputMode: _angular_core.InputSignal<KrnInputMode>;
+  readonly value: _angular_core.InputSignal<number | null | undefined>;
   readonly increaseLabel: _angular_core.InputSignal<string>;
   readonly decreaseLabel: _angular_core.InputSignal<string>;
   readonly min: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
@@ -2631,12 +3070,27 @@ declare class KrnNumberInput extends KrnValueAccessor<number | null> {
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly valueChange: _angular_core.OutputEmitterRef<number | null>;
   protected readonly a11y: KrnControlA11y;
+  protected readonly labelledBy: _angular_core.Signal<string | null>;
+  protected readonly describedBy: _angular_core.Signal<string | null>;
+  protected readonly isFormFieldControl: _angular_core.Signal<boolean>;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly canIncrease: _angular_core.Signal<boolean>;
+  protected readonly canDecrease: _angular_core.Signal<boolean>;
   constructor();
+  writeValue(value: unknown): void;
+  registerOnChange(fn: (value: number | null) => void): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
   protected normalizeIncomingValue(value: unknown): number | null;
   protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
   protected updateNumber(event: Event): void;
   protected stepBy(direction: 1 | -1): void;
+  protected focusFromShell(event: PointerEvent): void;
+  protected retainInputFocus(event: PointerEvent): void;
+  private nextStepValue;
+  private addStep;
+  private decimalParts;
+  private decimalNumber;
   private clamp;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnNumberInput, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
@@ -2648,6 +3102,11 @@ declare class KrnNumberInput extends KrnValueAccessor<number | null> {
       name: { alias: 'name'; required: false; isSignal: true };
       placeholder: { alias: 'placeholder'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
+      autocomplete: { alias: 'autocomplete'; required: false; isSignal: true };
+      inputMode: { alias: 'inputMode'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
       increaseLabel: { alias: 'increaseLabel'; required: false; isSignal: true };
       decreaseLabel: { alias: 'decreaseLabel'; required: false; isSignal: true };
       min: { alias: 'min'; required: false; isSignal: true };
