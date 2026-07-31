@@ -5,6 +5,7 @@ import {
   Component,
   DestroyRef,
   computed,
+  effect,
   inject,
   input,
   model,
@@ -22,7 +23,7 @@ import type { KrnTreeNavigationItem } from './navigation.types';
   imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <nav [attr.aria-label]="ariaLabel()">
+    <nav [attr.aria-label]="resolvedAriaLabel()">
       <ng-container
         [ngTemplateOutlet]="branch"
         [ngTemplateOutletContext]="{ $implicit: treeItems(), root: true, level: 0, groupId: null }"
@@ -32,6 +33,7 @@ import type { KrnTreeNavigationItem } from './navigation.types';
       <ul
         [attr.id]="groupId"
         [attr.role]="root ? 'tree' : 'group'"
+        [attr.aria-label]="root ? resolvedAriaLabel() : null"
         [attr.data-level]="level"
         [class.branch]="!root"
         [class.with-guides]="showGuides()"
@@ -114,7 +116,7 @@ import type { KrnTreeNavigationItem } from './navigation.types';
                   (click)="activate(node)"
                   (keydown)="onKeydown($event, node)"
                 >
-                  {{ node.label }}
+                  <span>{{ node.label }}</span>
                   @if (node.childrenState === 'loading') {
                     <span class="node-state" aria-hidden="true">…</span>
                   } @else if (node.childrenState === 'error') {
@@ -146,6 +148,9 @@ import type { KrnTreeNavigationItem } from './navigation.types';
     :host {
       display: block;
       min-inline-size: 0;
+    }
+    :host([hidden]) {
+      display: none;
     }
     nav,
     ul {
@@ -237,6 +242,12 @@ import type { KrnTreeNavigationItem } from './navigation.types';
       text-decoration: none;
       cursor: pointer;
     }
+    .node > span:first-child {
+      min-inline-size: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     .selected .node {
       color: var(--krn-color-text);
       font-weight: var(--krn-font-weight-medium);
@@ -251,6 +262,7 @@ import type { KrnTreeNavigationItem } from './navigation.types';
       cursor: not-allowed;
     }
     .node-state {
+      flex: 0 0 auto;
       margin-inline-start: auto;
       color: var(--krn-color-text-muted);
       font-size: var(--krn-font-size-xs);
@@ -265,6 +277,17 @@ import type { KrnTreeNavigationItem } from './navigation.types';
         transition: none;
       }
     }
+    @media (forced-colors: active) {
+      .node-row.selected {
+        border-inline-start-color: Highlight;
+      }
+      .node:focus-visible {
+        outline-color: Highlight;
+      }
+      ul.branch.with-guides::before {
+        background: CanvasText;
+      }
+    }
   `,
 })
 export class KrnTreeNavigation {
@@ -277,6 +300,7 @@ export class KrnTreeNavigation {
   private readonly treeId = this.ids.next('tree-navigation');
   private typeaheadBuffer = '';
   private typeaheadTimer: KrnScheduledHandle | null = null;
+  private focusToken = 0;
   readonly items = input<readonly KrnTreeNavigationItem[]>([]);
   readonly selectedId = model<string | null>(null);
   readonly expandedIds = model<readonly string[]>([]);
@@ -286,6 +310,12 @@ export class KrnTreeNavigation {
   readonly itemSelected = output<KrnTreeNavigationItem>();
   /** Requests children when an unloaded item is expanded or its failed request is retried. */
   readonly loadChildren = output<KrnTreeNavigationItem>();
+  protected readonly resolvedAriaLabel = computed(
+    () =>
+      this.ariaLabel()?.trim() ||
+      this.translations.navigation.navigationTree.trim() ||
+      KRN_ENGLISH_TRANSLATIONS.navigation.navigationTree,
+  );
   protected readonly treeItems = computed(() => {
     const ids = new Set<string>();
     const visit = (items: readonly KrnTreeNavigationItem[]): void => {
@@ -326,6 +356,59 @@ export class KrnTreeNavigation {
   );
 
   constructor() {
+    effect(() => {
+      const expandableIds = new Set<string>();
+      const collectExpandableIds = (items: readonly KrnTreeNavigationItem[]): void => {
+        for (const item of items) {
+          if (this.isExpandable(item)) expandableIds.add(item.id);
+          collectExpandableIds(item.children ?? []);
+        }
+      };
+      collectExpandableIds(this.treeItems());
+      const current = this.expandedIds();
+      const normalized = [...new Set(current)].filter((id) => expandableIds.has(id));
+      if (
+        normalized.length !== current.length ||
+        normalized.some((id, index) => id !== current[index])
+      ) {
+        this.expandedIds.set(normalized);
+      }
+    });
+
+    effect(() => {
+      const selectedId = this.selectedId();
+      if (!selectedId || this.focusableTreeItems().some((item) => item.id === selectedId)) return;
+
+      const token = ++this.focusToken;
+      const document = this.platform.document;
+      const focusWasInTree = this.hostContains(document.activeElement);
+      const visibleIds = new Set(this.focusableTreeItems().map((item) => item.id));
+      let replacement = this.enabledParent(selectedId);
+      while (replacement && !visibleIds.has(replacement.id)) {
+        replacement = this.enabledParent(replacement.id);
+      }
+      replacement ??= this.focusableTreeItems()[0] ?? null;
+      this.selectedId.set(replacement?.id ?? null);
+      if (focusWasInTree && replacement) {
+        const replacementId = replacement.id;
+        this.platform.queueMicrotask(() => {
+          const currentFocus = document.activeElement;
+          const focusMovedOutside =
+            currentFocus !== document.body &&
+            !!currentFocus?.isConnected &&
+            !this.hostContains(currentFocus);
+          if (
+            token !== this.focusToken ||
+            this.selectedId() !== replacementId ||
+            focusMovedOutside
+          ) {
+            return;
+          }
+          this.focusItem(replacementId, false);
+        });
+      }
+    });
+
     this.destroyRef.onDestroy(() => {
       if (this.typeaheadTimer !== null) {
         this.platform.cancelScheduled(this.typeaheadTimer);
@@ -543,13 +626,19 @@ export class KrnTreeNavigation {
     return parent;
   }
 
-  private focusItem(id?: string): void {
+  private focusItem(id?: string, select = true): void {
     if (!id) return;
     const item = this.visibleItems().find((candidate) => candidate.id === id);
     if (!item || item.disabled) return;
-    this.selectedId.set(id);
+    if (select) this.selectedId.set(id);
     this.elements()
       .find(({ nativeElement }) => nativeElement.dataset['treeItem'] === id)
       ?.nativeElement.focus();
+  }
+
+  private hostContains(element: Element | null): boolean {
+    return this.elements().some(({ nativeElement }) =>
+      element ? nativeElement === element || nativeElement.contains(element) : false,
+    );
   }
 }

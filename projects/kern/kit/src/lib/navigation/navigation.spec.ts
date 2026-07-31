@@ -1378,6 +1378,63 @@ describe('Kern navigation', () => {
     expect(node('products').getAttribute('aria-expanded')).toBe('true');
     expect(node('products').closest('li')?.getAttribute('role')).toBe('none');
   });
+
+  it('normalizes dynamic tree selection and expanded ids without stealing external focus', async () => {
+    const fixture = await create(KrnTreeNavigation, {
+      items: [
+        {
+          id: 'parent',
+          label: 'Parent',
+          children: [{ id: 'child', label: 'Child' }],
+        },
+        { id: 'moving', label: 'Moving' },
+      ],
+      selectedId: 'moving',
+      expandedIds: ['parent', 'parent', 'missing'],
+      ariaLabel: '   ',
+    });
+    const element = fixture.nativeElement as HTMLElement;
+    const moving = element.querySelector<HTMLElement>('[data-tree-item="moving"]')!;
+
+    expect(fixture.componentInstance.expandedIds()).toEqual(['parent']);
+    expect(element.querySelector('[role="tree"]')?.getAttribute('aria-label')).toBeTruthy();
+    moving.focus();
+    fixture.componentRef.setInput('items', [
+      {
+        id: 'new-parent',
+        label: 'New parent',
+        children: [{ id: 'moving', label: 'Moving' }],
+      },
+    ]);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const newParent = element.querySelector<HTMLElement>('[data-tree-item="new-parent"]')!;
+    expect(fixture.componentInstance.selectedId()).toBe('new-parent');
+    expect(document.activeElement).toBe(newParent);
+    expect(newParent.tabIndex).toBe(0);
+
+    const external = document.createElement('button');
+    document.body.append(external);
+    try {
+      fixture.componentRef.setInput('selectedId', 'moving');
+      fixture.componentRef.setInput('items', [
+        {
+          id: 'parent-again',
+          label: 'Parent again',
+          children: [{ id: 'moving', label: 'Moving' }],
+        },
+      ]);
+      fixture.detectChanges();
+      external.focus();
+      await fixture.whenStable();
+
+      expect(fixture.componentInstance.selectedId()).toBe('parent-again');
+      expect(document.activeElement).toBe(external);
+    } finally {
+      external.remove();
+    }
+  });
 });
 
 async function create<T>(
