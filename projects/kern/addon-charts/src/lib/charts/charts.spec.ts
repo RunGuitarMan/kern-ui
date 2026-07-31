@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { vi } from 'vitest';
 
-import { KrnBarChart, KrnChart, type KrnChartLabels, KrnLineChart } from './charts';
+import { KrnBarChart, KrnChart, type KrnChartLabels, KrnDonutChart, KrnLineChart } from './charts';
 
 describe('KrnChart', () => {
   it('creates readable line geometry and a source-data summary', async () => {
@@ -549,6 +549,34 @@ describe('KrnBarChart', () => {
 
     const chart = fixture.debugElement.query(By.directive(KrnChart)).componentInstance as KrnChart;
     chart.activeIndex.set(0);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.activeIndex()).toBe(0);
+  });
+});
+
+describe('KrnDonutChart', () => {
+  it('keeps controlled disclosure and active segment synchronized with its chart', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnDonutChart] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnDonutChart);
+    fixture.componentRef.setInput('title', 'Plan mix');
+    fixture.componentRef.setInput('data', [
+      { id: 'starter', label: 'Starter', value: 30 },
+      { id: 'scale', label: 'Scale', value: 70 },
+    ]);
+    fixture.componentRef.setInput('tableVisible', true);
+    fixture.componentRef.setInput('activeIndex', 1);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('table')).not.toBeNull();
+    expect(element.querySelector('.chart-tooltip')?.textContent).toContain('Scale');
+
+    element.querySelector<HTMLButtonElement>('.data-toggle')?.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.tableVisible()).toBe(false);
+
+    element.querySelectorAll<HTMLButtonElement>('.legend button')[0]?.click();
     fixture.detectChanges();
     expect(fixture.componentInstance.activeIndex()).toBe(0);
   });
