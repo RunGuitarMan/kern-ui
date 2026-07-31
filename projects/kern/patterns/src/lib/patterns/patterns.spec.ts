@@ -2,8 +2,16 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
+import { KRN_ENGLISH_TRANSLATIONS, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+
 import { KrnLoginForm, KrnMultiStepForm, KrnProfileForm } from './form-patterns';
-import { KrnGlobalSearch, KrnSettingsPanel, KrnUserMenu } from './product-patterns';
+import {
+  KrnGlobalSearch,
+  type KrnNotification,
+  KrnNotificationCenter,
+  KrnSettingsPanel,
+  KrnUserMenu,
+} from './product-patterns';
 
 describe('Kern product patterns', () => {
   it('filters and chooses a global-search result', async () => {
@@ -133,6 +141,109 @@ describe('Kern product patterns', () => {
     const fixture = TestBed.createComponent(KrnUserMenu);
     fixture.componentRef.setInput('name', '   ');
     expect(() => fixture.detectChanges()).toThrowError(/non-empty name/);
+  });
+
+  it('renders notification-center structure with machine-readable time and stable selection', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnNotificationCenter] }).compileComponents();
+    const notification: KrnNotification = {
+      id: 'release',
+      title: 'Release completed',
+      detail: 'Version 0.2.0 is available.',
+      timestamp: 'Two minutes ago',
+      dateTime: '2026-07-31T15:30:00Z',
+      read: false,
+      tone: 'success',
+    };
+    const fixture = TestBed.createComponent(KrnNotificationCenter);
+    fixture.componentRef.setInput('heading', '  Notifications  ');
+    fixture.componentRef.setInput('ariaLabel', '   ');
+    fixture.componentRef.setInput('unreadLabel', () => '   ');
+    fixture.componentRef.setInput('unreadStateLabel', '   ');
+    fixture.componentRef.setInput('notifications', [notification]);
+    const selected: KrnNotification[] = [];
+    fixture.componentInstance.notificationSelected.subscribe((value) => selected.push(value));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const list = element.querySelector('ol') as HTMLOListElement;
+    const markAll = element.querySelector('header button') as HTMLButtonElement;
+    const badge = element.querySelector('krn-badge') as HTMLElement;
+    expect(element.querySelector('h2')?.textContent).toBe('Notifications');
+    expect(element.querySelector('section')?.getAttribute('aria-label')?.trim()).toBeTruthy();
+    expect(markAll.getAttribute('aria-controls')).toBe(list.id);
+    expect(badge.getAttribute('aria-live')).toBe('polite');
+    expect(badge.textContent?.trim()).toBeTruthy();
+    expect(element.querySelector('.sr-only')?.textContent?.trim()).toBeTruthy();
+    expect(element.querySelector('time')?.getAttribute('datetime')).toBe(notification.dateTime);
+
+    element.querySelector<HTMLButtonElement>('li button')?.click();
+    expect(selected).toEqual([notification]);
+  });
+
+  it('rejects invalid notification-center data at the public boundary', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnNotificationCenter] }).compileComponents();
+    const duplicate = TestBed.createComponent(KrnNotificationCenter);
+    duplicate.componentRef.setInput('notifications', [
+      { id: 'same', title: 'First', detail: 'Detail', timestamp: 'Now', read: false },
+      { id: ' same ', title: 'Second', detail: 'Detail', timestamp: 'Now', read: true },
+    ]);
+    expect(() => duplicate.detectChanges()).toThrowError(/non-empty unique notification ids/);
+
+    const invalidContent = TestBed.createComponent(KrnNotificationCenter);
+    invalidContent.componentRef.setInput('notifications', [
+      { id: 'invalid', title: ' ', detail: 'Detail', timestamp: 'Now', read: false },
+    ]);
+    expect(() => invalidContent.detectChanges()).toThrowError(/non-empty title/);
+
+    const invalidDateTime = TestBed.createComponent(KrnNotificationCenter);
+    invalidDateTime.componentRef.setInput('notifications', [
+      {
+        id: 'invalid-date',
+        title: 'Invalid date',
+        detail: 'Detail',
+        timestamp: 'Soon',
+        dateTime: 'soon',
+        read: false,
+      },
+    ]);
+    expect(() => invalidDateTime.detectChanges()).toThrowError(/valid ISO dateTime/);
+  });
+
+  it('preserves unread announcements and valid early ISO years with blank translations', async () => {
+    await TestBed.configureTestingModule({
+      imports: [KrnNotificationCenter],
+      providers: [
+        {
+          provide: KRN_TRANSLATIONS,
+          useValue: {
+            ...KRN_ENGLISH_TRANSLATIONS,
+            patterns: {
+              ...KRN_ENGLISH_TRANSLATIONS.patterns,
+              unread: '   ',
+              unreadCount: () => '   ',
+            },
+          },
+        },
+      ],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(KrnNotificationCenter);
+    fixture.componentRef.setInput('notifications', [
+      {
+        id: 'archive',
+        title: 'Archive created',
+        detail: 'Historical data is ready.',
+        timestamp: 'Long ago',
+        dateTime: '0099-01-01',
+        read: false,
+      },
+    ]);
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('krn-badge')?.textContent?.trim()).toBe('1 unread notification');
+    expect(element.querySelector('.sr-only')?.textContent?.trim()).toBe('Unread');
+    expect(element.querySelector('time')?.getAttribute('datetime')).toBe('0099-01-01');
   });
 
   it('composes settings with the coordinated drawer contract', async () => {

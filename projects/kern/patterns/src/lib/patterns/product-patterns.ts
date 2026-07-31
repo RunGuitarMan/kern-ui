@@ -32,6 +32,8 @@ export interface KrnNotification {
   readonly title: string;
   readonly detail: string;
   readonly timestamp: string;
+  /** Optional ISO 8601 date or date-time for the rendered `<time datetime>` attribute. */
+  readonly dateTime?: string;
   readonly read: boolean;
   readonly tone?: 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 }
@@ -429,21 +431,26 @@ export class KrnUserMenu {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [KrnBadge],
   template: `
-    <section [attr.aria-label]="ariaLabel()">
+    <section [attr.aria-label]="resolvedAriaLabel()">
       <header>
         <span>
-          <strong>{{ heading() }}</strong>
-          <krn-badge [tone]="unreadCount() ? 'brand' : 'neutral'">{{
-            unreadLabel()(unreadCount())
-          }}</krn-badge>
+          <h2>{{ resolvedHeading() }}</h2>
+          <krn-badge
+            aria-live="polite"
+            aria-atomic="true"
+            [tone]="unreadCount() ? 'brand' : 'neutral'"
+            >{{ resolvedUnreadLabel() }}</krn-badge
+          >
         </span>
         @if (unreadCount()) {
-          <button type="button" (click)="markAllRead.emit()">{{ markAllReadLabel() }}</button>
+          <button type="button" [attr.aria-controls]="notificationsId" (click)="markAllRead.emit()">
+            {{ resolvedMarkAllReadLabel() }}
+          </button>
         }
       </header>
-      @if (notifications().length) {
-        <ol>
-          @for (notification of notifications(); track notification.id) {
+      @if (validatedNotifications().length) {
+        <ol [id]="notificationsId">
+          @for (notification of validatedNotifications(); track notification.id) {
             <li [attr.data-unread]="!notification.read ? '' : null">
               <button type="button" (click)="notificationSelected.emit(notification)">
                 <span
@@ -454,17 +461,19 @@ export class KrnUserMenu {
                 <span>
                   <strong>{{ notification.title }}</strong>
                   <span>{{ notification.detail }}</span>
-                  <time>{{ notification.timestamp }}</time>
+                  <time [attr.datetime]="notification.dateTime?.trim() || null">{{
+                    notification.timestamp
+                  }}</time>
                 </span>
                 @if (!notification.read) {
-                  <span class="sr-only">{{ unreadStateLabel() }}</span>
+                  <span class="sr-only">{{ resolvedUnreadStateLabel() }}</span>
                 }
               </button>
             </li>
           }
         </ol>
       } @else {
-        <div class="empty" role="status">{{ emptyLabel() }}</div>
+        <div class="empty" role="status">{{ resolvedEmptyLabel() }}</div>
       }
     </section>
   `,
@@ -472,6 +481,9 @@ export class KrnUserMenu {
     :host {
       display: block;
       color: var(--krn-color-text, #252932);
+    }
+    :host([hidden]) {
+      display: none;
     }
     section {
       overflow: clip;
@@ -492,6 +504,11 @@ export class KrnUserMenu {
       display: flex;
       align-items: center;
       gap: 0.625rem;
+    }
+    h2 {
+      margin: 0;
+      font: inherit;
+      font-weight: 650;
     }
     header button {
       border: 0;
@@ -537,6 +554,8 @@ export class KrnUserMenu {
     li button > span:nth-child(2) {
       display: grid;
       gap: 0.125rem;
+      min-inline-size: 0;
+      overflow-wrap: anywhere;
     }
     li button > span > span,
     time {
@@ -579,10 +598,36 @@ export class KrnUserMenu {
       overflow: hidden;
       clip-path: inset(50%);
     }
+    @media (pointer: coarse) {
+      header button {
+        min-block-size: 2.75rem;
+      }
+    }
+    @media (forced-colors: active) {
+      section,
+      header,
+      li + li {
+        border-color: CanvasText;
+      }
+      li[data-unread] {
+        background: Canvas;
+        outline: 2px solid Highlight;
+        outline-offset: -2px;
+      }
+      .marker {
+        border-color: CanvasText;
+        background: CanvasText;
+      }
+      li[data-unread] .marker {
+        border-color: Highlight;
+        background: Highlight;
+      }
+    }
   `,
 })
 export class KrnNotificationCenter {
   private readonly translations = inject(KRN_TRANSLATIONS);
+  protected readonly notificationsId = inject(KrnIdService).next('notifications');
   readonly heading = input(this.translations.patterns.notifications);
   readonly ariaLabel = input(this.translations.patterns.notificationCenter);
   readonly unreadLabel = input(this.translations.patterns.unreadCount);
@@ -592,9 +637,117 @@ export class KrnNotificationCenter {
   readonly notifications = input<readonly KrnNotification[]>([]);
   readonly markAllRead = output<void>();
   readonly notificationSelected = output<KrnNotification>();
-  protected readonly unreadCount = computed(
-    () => this.notifications().filter((item) => !item.read).length,
+  protected readonly resolvedHeading = computed(() =>
+    this.requiredLabel(this.heading(), this.translations.patterns.notifications),
   );
+  protected readonly resolvedAriaLabel = computed(() =>
+    this.requiredLabel(this.ariaLabel(), this.translations.patterns.notificationCenter),
+  );
+  protected readonly resolvedMarkAllReadLabel = computed(() =>
+    this.requiredLabel(this.markAllReadLabel(), this.translations.patterns.markAllRead),
+  );
+  protected readonly resolvedEmptyLabel = computed(() =>
+    this.requiredLabel(this.emptyLabel(), this.translations.patterns.notificationsEmpty),
+  );
+  protected readonly validatedNotifications = computed(() => {
+    const ids = new Set<string>();
+    for (const [index, notification] of this.notifications().entries()) {
+      const id = typeof notification.id === 'string' ? notification.id.trim() : '';
+      if (!id || ids.has(id)) {
+        throw new Error(
+          `KrnNotificationCenter requires non-empty unique notification ids; received "${String(notification.id)}" at index ${index}.`,
+        );
+      }
+      ids.add(id);
+      for (const [field, value] of [
+        ['title', notification.title],
+        ['detail', notification.detail],
+        ['timestamp', notification.timestamp],
+      ] as const) {
+        if (typeof value !== 'string' || !value.trim()) {
+          throw new Error(
+            `KrnNotificationCenter notification "${notification.id}" requires a non-empty ${field}.`,
+          );
+        }
+      }
+      if (typeof notification.read !== 'boolean') {
+        throw new TypeError(
+          `KrnNotificationCenter notification "${notification.id}" requires a boolean read state.`,
+        );
+      }
+      if (
+        notification.dateTime !== undefined &&
+        (typeof notification.dateTime !== 'string' ||
+          !this.isIsoDateTime(notification.dateTime.trim()))
+      ) {
+        throw new Error(
+          `KrnNotificationCenter notification "${notification.id}" requires a valid ISO dateTime when provided.`,
+        );
+      }
+      if (
+        notification.tone !== undefined &&
+        !['neutral', 'info', 'success', 'warning', 'danger'].includes(notification.tone)
+      ) {
+        throw new Error(
+          `KrnNotificationCenter notification "${notification.id}" has an invalid tone.`,
+        );
+      }
+    }
+    return this.notifications();
+  });
+  protected readonly unreadCount = computed(
+    () => this.validatedNotifications().filter((item) => !item.read).length,
+  );
+  protected readonly resolvedUnreadLabel = computed(() => {
+    const count = this.unreadCount();
+    const formatter = this.unreadLabel();
+    const translatedFormatter = this.translations.patterns.unreadCount;
+    const formatted = typeof formatter === 'function' ? formatter(count) : '';
+    const translated = typeof translatedFormatter === 'function' ? translatedFormatter(count) : '';
+
+    return (
+      formatted.trim() ||
+      translated.trim() ||
+      `${count} unread notification${count === 1 ? '' : 's'}`
+    );
+  });
+  protected readonly resolvedUnreadStateLabel = computed(() =>
+    this.requiredLabel(
+      this.unreadStateLabel(),
+      typeof this.translations.patterns.unread === 'string'
+        ? this.translations.patterns.unread.trim() || 'Unread'
+        : 'Unread',
+    ),
+  );
+
+  private requiredLabel(value: string, fallback: string): string {
+    const normalized = typeof value === 'string' ? value.trim() : '';
+    return normalized || fallback.trim();
+  }
+
+  private isIsoDateTime(value: string): boolean {
+    const match =
+      /^(\d{4})-(\d{2})-(\d{2})(?:T(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z|[+-](?:[01]\d|2[0-3]):[0-5]\d)?)?$/.exec(
+        value,
+      );
+
+    if (!match) {
+      return false;
+    }
+
+    const year = Number(match[1]);
+    const month = Number(match[2]);
+    const day = Number(match[3]);
+    const date = new Date(0);
+    date.setUTCHours(0, 0, 0, 0);
+    date.setUTCFullYear(year, month - 1, day);
+
+    return (
+      date.getUTCFullYear() === year &&
+      date.getUTCMonth() === month - 1 &&
+      date.getUTCDate() === day
+    );
+  }
 }
 
 @Component({

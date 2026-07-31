@@ -57,6 +57,8 @@ contract or upgrade decision.
 - Strengthened Charts with stable datum identity, finite-value validation, negative-value policy,
   explicit empty state, bounded accessible summaries, and two-way source-table and active-datum
   state on `KrnLineChart`, `KrnBarChart`, and `KrnDonutChart`.
+- Strengthened Notification Center identity and content validation, semantic heading and live-count
+  structure, and added optional `KrnNotification.dateTime` for machine-readable timestamps.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned
