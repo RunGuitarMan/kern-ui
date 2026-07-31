@@ -6,6 +6,7 @@ import { KRN_ENGLISH_TRANSLATIONS, KRN_TRANSLATIONS } from '@kern-ui/angular/cor
 
 import { KrnLoginForm, KrnMultiStepForm, KrnProfileForm } from './form-patterns';
 import {
+  KrnFilterBar,
   KrnGlobalSearch,
   type KrnNotification,
   KrnNotificationCenter,
@@ -113,6 +114,81 @@ describe('Kern product patterns', () => {
     expect(() => invalidResultsId.detectChanges()).toThrowError(
       /single non-whitespace DOM id token/,
     );
+  });
+
+  it('keeps filter-bar values canonical and restores focus after clearing', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnFilterBar] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnFilterBar);
+    fixture.componentRef.setInput('ariaLabel', '   ');
+    fixture.componentRef.setInput('activeLabel', () => '   ');
+    fixture.componentRef.setInput('filters', [
+      {
+        id: 'status',
+        label: 'Status',
+        options: [
+          { value: 'open', label: 'Open', count: 2 },
+          { value: 'closed', label: 'Closed', count: 0 },
+        ],
+      },
+    ]);
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const status = element.querySelector('.filter-status') as HTMLElement;
+    expect(status.getAttribute('aria-live')).toBe('polite');
+    expect(status.textContent?.trim()).toBe('');
+
+    fixture.componentInstance.values.set({ status: 'open' });
+    fixture.detectChanges();
+    const select = element.querySelector('select') as HTMLSelectElement;
+    const badge = element.querySelector('krn-badge') as HTMLElement;
+    expect(
+      element.querySelector('[role="group"]')?.getAttribute('aria-label')?.trim(),
+    ).toBeTruthy();
+    expect(select.value).toBe('open');
+    expect(status.textContent?.trim()).toBeTruthy();
+    expect(badge.getAttribute('aria-hidden')).toBe('true');
+    expect(badge.textContent?.trim()).toBeTruthy();
+
+    select.value = '';
+    select.dispatchEvent(new Event('change'));
+    expect(fixture.componentInstance.values()).toEqual({});
+
+    fixture.componentInstance.values.set({ status: 'closed' });
+    fixture.detectChanges();
+    const clear = element.querySelector('button') as HTMLButtonElement;
+    clear.focus();
+    clear.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.values()).toEqual({});
+    expect(document.activeElement).toBe(select);
+  });
+
+  it('rejects inconsistent filter-bar definitions and controlled values', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnFilterBar] }).compileComponents();
+    const duplicate = TestBed.createComponent(KrnFilterBar);
+    duplicate.componentRef.setInput('filters', [
+      {
+        id: 'status',
+        label: 'Status',
+        options: [
+          { value: 'same', label: 'First' },
+          { value: ' same ', label: 'Second' },
+        ],
+      },
+    ]);
+    expect(() => duplicate.detectChanges()).toThrowError(/non-empty unique option values/);
+
+    const invalidValue = TestBed.createComponent(KrnFilterBar);
+    invalidValue.componentRef.setInput('filters', [
+      {
+        id: 'status',
+        label: 'Status',
+        options: [{ value: 'open', label: 'Open' }],
+      },
+    ]);
+    invalidValue.componentInstance.values.set({ status: 'missing' });
+    expect(() => invalidValue.detectChanges()).toThrowError(/is not an option/);
   });
 
   it('opens the user menu, moves focus to its first action, and closes on selection', async () => {

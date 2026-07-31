@@ -61,6 +61,8 @@ contract or upgrade decision.
   structure, and added optional `KrnNotification.dateTime` for machine-readable timestamps.
 - Strengthened Global Search result identity, bounded keyboard navigation, combobox popup semantics,
   focus lifecycle, and positive `maxResults` validation.
+- Strengthened Filter Bar definition and controlled-value validation, canonical clearing semantics,
+  live active-count labels, and post-clear focus restoration.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned
