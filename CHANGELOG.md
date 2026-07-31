@@ -117,6 +117,10 @@ contract or upgrade decision.
   precise decimal pointer snapping, structural change deduplication, composite focus/touched
   semantics, formatted accessible values, readonly-safe interaction, and public focus and blur
   methods.
+- Strengthened Segmented Control with deterministic standalone `value` ownership, identity-based
+  duplicate-free changes, composable group semantics, labelled custom content, horizontal and
+  vertical orientation, focus-based disabled-skipping keyboard navigation, composite touched
+  state, configurable tab order, and public focus and blur methods.
 
 ### Deprecated
 

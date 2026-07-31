@@ -898,13 +898,18 @@ export class KrnSwitch extends KrnValueAccessor<boolean> {
     <div
       class="krn-segmented"
       role="radiogroup"
-      [attr.aria-describedby]="a11y.describedBy()"
+      [attr.aria-describedby]="effectiveDescribedBy()"
       [attr.aria-invalid]="a11y.invalid()"
-      [attr.aria-label]="ariaLabel()"
+      [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel()"
+      [attr.aria-labelledby]="effectiveLabelledBy()"
       [attr.aria-disabled]="isDisabled()"
+      [attr.aria-orientation]="orientation()"
       [attr.aria-readonly]="a11y.readOnly()"
       [attr.aria-required]="a11y.required()"
+      [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
+      [attr.data-orientation]="orientation()"
       [id]="a11y.id()"
+      (focusout)="handleFocusOut($event)"
       (keydown)="navigate($event)"
     >
       @for (option of options(); track trackBy()(option, $index); let index = $index) {
@@ -913,9 +918,9 @@ export class KrnSwitch extends KrnValueAccessor<boolean> {
           type="button"
           role="radio"
           [attr.aria-checked]="isSelected(option.value)"
+          [attr.aria-label]="option.label"
           [attr.tabindex]="tabIndexFor(option.value, index)"
           [disabled]="isDisabled() || disabledHandler()(option)"
-          (blur)="touch()"
           (click)="select(option.value)"
         >
           @if (optionTemplate(); as template) {
@@ -945,6 +950,9 @@ export class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null> 
   );
   readonly optionTemplate = input<TemplateRef<KrnSegmentOptionContext<T>> | null>(null);
   readonly ariaLabel = input(this.translations.forms.chooseOption);
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
+  readonly orientation = input<KrnOrientation>('horizontal');
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false, {
     alias: 'readonly',
@@ -952,17 +960,27 @@ export class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null> 
   });
   readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
+  readonly value = input<T | null | undefined>(undefined);
   readonly valueChange = output<T | null>();
 
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'segmented', {
     disabled: this.disabled,
+    labelStrategy: 'group',
     readOnly: this.readOnly,
     required: this.required,
   });
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
+  protected readonly effectiveLabelledBy = computed(() =>
+    mergeAriaIds(this.ariaLabelledBy(), this.a11y.labelledBy()),
+  );
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(this.ariaDescribedBy(), this.a11y.describedBy()),
+  );
 
   constructor() {
     super(null);
+    this.bindStandaloneValue(this.value);
     this.watchValidationInputs(this.required, this.a11y.required);
   }
 
@@ -974,14 +992,20 @@ export class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null> 
     return requiredError(value, this.a11y.required());
   }
 
+  protected override valuesEqual(current: T | null, next: T | null): boolean {
+    return current === null || next === null
+      ? current === next
+      : this.identityMatcher()(current, next);
+  }
+
   protected tabIndexFor(value: T, index: number): number {
     if (this.isSelected(value)) {
-      return 0;
+      return this.tabIndex();
     }
     const hasSelection = this.options().some(
       (option) => this.isSelected(option.value) && !this.disabledHandler()(option),
     );
-    return !hasSelection && index === this.firstEnabledIndex() ? 0 : -1;
+    return !hasSelection && index === this.firstEnabledIndex() ? this.tabIndex() : -1;
   }
 
   protected select(value: T): void {
@@ -992,11 +1016,15 @@ export class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null> 
     if (!option || this.disabledHandler()(option)) {
       return;
     }
-    this.commitValue(value);
-    this.valueChange.emit(value);
+    if (this.commitUserValue(option.value)) {
+      this.valueChange.emit(option.value);
+    }
   }
 
   protected navigate(event: KeyboardEvent): void {
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) {
+      return;
+    }
     if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
       return;
     }
@@ -1007,8 +1035,16 @@ export class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null> 
       return;
     }
 
-    const current = options.findIndex((option) => this.isSelected(option.value));
-    const direction = event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -1 : 1;
+    const target = event.target as Node | null;
+    const focused = this.segmentButtons().findIndex(
+      (button) =>
+        button.nativeElement === event.target ||
+        Boolean(target && button.nativeElement.contains(target)),
+    );
+    const selected = options.findIndex((option) => this.isSelected(option.value));
+    const current = focused >= 0 ? focused : selected;
+    const direction =
+      event.key === 'ArrowLeft' || event.key === 'ArrowUp' || event.key === 'End' ? -1 : 1;
     let next =
       event.key === 'Home'
         ? 0
@@ -1021,7 +1057,9 @@ export class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null> 
     for (let checked = 0; checked < options.length; checked += 1) {
       const option = options[next];
       if (option && !this.disabledHandler()(option)) {
-        this.select(option.value);
+        if (!this.a11y.readOnly()) {
+          this.select(option.value);
+        }
         this.segmentButtons()[next]?.nativeElement.focus();
         return;
       }
@@ -1040,6 +1078,29 @@ export class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null> 
       option,
       selected: this.isSelected(option.value),
     };
+  }
+
+  protected handleFocusOut(event: FocusEvent): void {
+    const group = event.currentTarget as HTMLElement;
+    const next = event.relatedTarget as Node | null;
+    if (next && group.contains(next)) {
+      return;
+    }
+    this.touch();
+  }
+
+  focus(options?: FocusOptions): void {
+    const selected = this.options().findIndex(
+      (option) => this.isSelected(option.value) && !this.disabledHandler()(option),
+    );
+    const index = selected >= 0 ? selected : this.firstEnabledIndex();
+    this.segmentButtons()[index]?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    for (const button of this.segmentButtons()) {
+      button.nativeElement.blur();
+    }
   }
 
   private firstEnabledIndex(): number {
