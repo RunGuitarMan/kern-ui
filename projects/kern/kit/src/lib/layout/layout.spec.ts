@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 
 import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
 import { KrnAppShell, KrnHeader, KrnSidebar } from './app-shell';
-import { KrnInline, KrnStack } from './flex-layout';
+import { KrnCluster, KrnInline, KrnStack } from './flex-layout';
 import { KrnGrid } from './grid';
 import { KrnResizablePanel, KrnResizablePanels, KrnResizeHandle } from './resizable-panels';
 
@@ -109,6 +109,43 @@ describe('Kern layout primitives', () => {
     expect(host.style.getPropertyValue('--krn-inline-gap')).toBe('var(--krn-space-3)');
     expect(host.hasAttribute('data-wrap')).toBe(false);
     expect(style.flexWrap).toBe('nowrap');
+
+    host.hidden = true;
+    expect(getComputedStyle(host).display).toBe('none');
+  });
+
+  it('inherits or overrides cluster gaps without escaping nested layouts', () => {
+    const fixture = TestBed.createComponent(KrnCluster);
+    fixture.componentRef.setInput('gap', '4');
+    fixture.componentRef.setInput('rowGap', '');
+    fixture.componentRef.setInput('columnGap', 12);
+    fixture.componentRef.setInput('align', 'stretch');
+    fixture.componentRef.setInput('justify', 'space-evenly');
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const style = getComputedStyle(host);
+
+    expect(host.style.getPropertyValue('--krn-cluster-row-gap')).toBe('var(--krn-space-4)');
+    expect(host.style.getPropertyValue('--krn-cluster-column-gap')).toBe('12px');
+    expect(host.getAttribute('data-align')).toBe('stretch');
+    expect(host.getAttribute('data-justify')).toBe('space-evenly');
+    expect(style.boxSizing).toBe('border-box');
+    expect(style.maxInlineSize).toBe('100%');
+    expect(style.minInlineSize).toBe('0px');
+    expect(style.minBlockSize).toBe('0px');
+    expect(style.flexWrap).toBe('wrap');
+    expect(style.getPropertyValue('--krn-cluster-align')).toBe('stretch');
+    expect(style.getPropertyValue('--krn-cluster-justify')).toBe('space-evenly');
+  });
+
+  it('falls back both cluster axes and preserves native hidden semantics', () => {
+    const fixture = TestBed.createComponent(KrnCluster);
+    fixture.componentRef.setInput('gap', '');
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+
+    expect(host.style.getPropertyValue('--krn-cluster-row-gap')).toBe('var(--krn-space-2)');
+    expect(host.style.getPropertyValue('--krn-cluster-column-gap')).toBe('var(--krn-space-2)');
 
     host.hidden = true;
     expect(getComputedStyle(host).display).toBe('none');

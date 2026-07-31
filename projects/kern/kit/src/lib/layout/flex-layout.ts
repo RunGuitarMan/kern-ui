@@ -176,12 +176,19 @@ export class KrnInline {
   styles: `
     :host {
       display: flex;
+      box-sizing: border-box;
+      max-inline-size: 100%;
       min-inline-size: 0;
+      min-block-size: 0;
       flex-wrap: wrap;
       row-gap: var(--krn-cluster-row-gap);
       column-gap: var(--krn-cluster-column-gap);
       align-items: var(--krn-cluster-align, center);
       justify-content: var(--krn-cluster-justify, flex-start);
+    }
+
+    :host([hidden]) {
+      display: none;
     }
 
     :host([data-align='start']) {
@@ -220,17 +227,23 @@ export class KrnInline {
   `,
 })
 export class KrnCluster {
+  /** Default logical spacing between projected children and wrapped flex lines. */
   readonly gap = input<KrnLayoutSpace>('2');
+  /** Optional spacing override between wrapped flex lines. */
   readonly rowGap = input<KrnLayoutSpace | null>(null);
+  /** Optional spacing override between adjacent children within each flex line. */
   readonly columnGap = input<KrnLayoutSpace | null>(null);
+  /** Cross-axis alignment of projected children within each flex line. */
   readonly align = input<KrnLayoutAlignment>('center');
+  /** Distribution of projected children along the inline axis. */
   readonly justify = input<KrnLayoutJustification>('start');
 
+  protected readonly resolvedGap = computed(() => krnCssLength(this.gap(), 'var(--krn-space-2)'));
   protected readonly resolvedRowGap = computed(() =>
-    krnCssLength(this.rowGap() ?? this.gap(), 'var(--krn-space-2)'),
+    krnCssLength(this.rowGap(), this.resolvedGap()),
   );
   protected readonly resolvedColumnGap = computed(() =>
-    krnCssLength(this.columnGap() ?? this.gap(), 'var(--krn-space-2)'),
+    krnCssLength(this.columnGap(), this.resolvedGap()),
   );
 }
 
