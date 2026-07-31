@@ -101,6 +101,15 @@ for (const { family, path } of sharedStyles) {
   }
 }
 
+const actionStyles = readFileSync(sharedStyles[0].path, 'utf8');
+const linkFocusRule = actionStyles.match(/\.krn-link:focus-visible\s*\{([^}]*)\}/)?.[1] ?? '';
+if (!linkFocusRule.includes('var(--krn-focus-ring')) {
+  failures.push('Link focus-visible styles must use the public --krn-focus-ring token.');
+}
+if (linkFocusRule.includes('var(--_action-')) {
+  failures.push('Link focus-visible styles must not depend on private action-root variables.');
+}
+
 const bundleDirectory = join(workspaceRoot, 'dist/kern/fesm2022');
 let bundleSummary = 'bundle not present';
 

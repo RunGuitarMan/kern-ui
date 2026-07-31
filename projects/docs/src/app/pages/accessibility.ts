@@ -128,7 +128,7 @@ import { KrnPageHeader } from '@kern-ui/angular/patterns';
         </header>
         <krn-code-block
           language="html"
-          [code]="'<krn-form-field\\n  label=&quot;Workspace name&quot;\\n  hint=&quot;Visible to every member.&quot;\\n  error=&quot;Use 3–48 characters.&quot;\\n  required\\n>\\n  <krn-text-input autocomplete=&quot;organization&quot; />\\n</krn-form-field>'"
+          [code]="'<krn-form-field\\n  label=&quot;Workspace name&quot;\\n  hint=&quot;Visible to every member.&quot;\\n  error=&quot;Use 3–48 characters.&quot;\\n>\\n  <krn-text-input autocomplete=&quot;organization&quot; required />\\n</krn-form-field>'"
         />
       </section>
     </article>

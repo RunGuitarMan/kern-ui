@@ -263,26 +263,44 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
   }),
   button: defineRecipe({
     title: 'Primary save action',
-    scenario: 'Render an explicit form action with semantic hierarchy.',
-    template: `<krn-button type="submit" variant="solid" tone="brand">Save changes</krn-button>`,
+    scenario: 'Render an explicit form action with scoped visual and loading-copy defaults.',
+    template: `
+      <form (submit)="saving = true; $event.preventDefault()">
+        <button krnButton type="submit" [loading]="saving">Save changes</button>
+      </form>
+    `,
+    valueImports: {
+      '@kern-ui/angular/kit': ['provideKrnButtonOptions'],
+    },
+    providers: [
+      `provideKrnButtonOptions({
+        size: 'lg',
+        loadingLabel: 'Saving workspace…',
+      })`,
+    ],
+    members: ['saving = false;'],
+    riskTags: ['forms', 'controlled-state', 'scoped-options', 'accessibility-copy'],
+    assertions: ['provideKrnButtonOptions', 'loadingLabel', '[loading]="saving"'],
   }),
   'icon-button': defineRecipe({
     title: 'Accessible icon-only action',
-    scenario: 'Provide a stable accessible name for an icon-only control.',
-    template: `<krn-icon-button ariaLabel="Add team member">+</krn-icon-button>`,
-    assertions: ['ariaLabel="Add team member"'],
+    scenario: 'Keep the accessible name and native action semantics on the icon-only button host.',
+    template: `<button krnIconButton type="button" aria-label="Add team member">+</button>`,
+    assertions: ['button krnIconButton', 'type="button"', 'aria-label="Add team member"'],
   }),
   'button-group': defineRecipe({
     title: 'Grouped review actions',
-    scenario: 'Present closely related actions as one labeled control group.',
+    scenario: 'Present independent native actions as one labeled visual group.',
     template: `
-      <krn-button-group ariaLabel="Review actions">
-        <krn-button variant="outline">Request changes</krn-button>
-        <krn-button>Approve</krn-button>
-      </krn-button-group>
+      <div krnButtonGroup aria-label="Review actions">
+        <button krnButton type="button" variant="outline">Request changes</button>
+        <button krnButton type="button">Approve</button>
+      </div>
     `,
     valueImports: { '@kern-ui/angular/kit': ['KrnButton'] },
     componentImports: ['KrnButton'],
+    riskTags: ['compound-component', 'accessibility-copy'],
+    assertions: ['div krnButtonGroup', 'aria-label="Review actions"', 'type="button"'],
   }),
   'split-button': defineRecipe({
     title: 'Primary export with alternatives',
@@ -304,77 +322,129 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
     title: 'Create-record floating action',
     scenario: 'Expose a single high-priority creation action on compact layouts.',
     template: `
-      <krn-floating-action-button ariaLabel="Create customer" [extended]="true">
-        <span krnFabIcon aria-hidden="true">+</span>
+      <button krnFab type="button">
+        <span krnFabIcon>+</span>
         Create customer
-      </krn-floating-action-button>
+      </button>
     `,
+    assertions: ['button krnFab', 'type="button"', 'Create customer'],
   }),
   'toggle-button': defineRecipe({
     title: 'Controlled formatting toggle',
-    scenario: 'Keep the pressed state in application-owned state.',
+    scenario: 'Keep formatting state controlled while native button semantics remain intact.',
     template: `
-      <krn-toggle-button value="bold" [(pressed)]="boldEnabled">Bold</krn-toggle-button>
+      <button
+        krnToggleButton
+        type="button"
+        value="bold"
+        [(pressed)]="boldEnabled"
+      >
+        Bold
+      </button>
     `,
     members: ['boldEnabled = false;'],
-    assertions: ['value="bold"', '[(pressed)]="boldEnabled"'],
+    assertions: ['button', 'krnToggleButton', 'value="bold"', '[(pressed)]="boldEnabled"'],
   }),
   'toggle-group': defineRecipe({
     title: 'Multi-select view controls',
     scenario: 'Control a set of pressed view options by stable string values.',
     template: `
-      <krn-toggle-group
-        ariaLabel="Visible dashboard layers"
+      <div
+        krnToggleGroup
+        aria-label="Visible dashboard layers"
         [multiple]="true"
         [(values)]="visibleLayers"
       >
-        <krn-toggle-button value="targets">Targets</krn-toggle-button>
-        <krn-toggle-button value="forecast">Forecast</krn-toggle-button>
-      </krn-toggle-group>
+        <button krnToggleButton value="targets">Targets</button>
+        <button krnToggleButton value="forecast">Forecast</button>
+      </div>
     `,
     valueImports: { '@kern-ui/angular/kit': ['KrnToggleButton'] },
     componentImports: ['KrnToggleButton'],
     members: [`visibleLayers: readonly string[] = ['targets'];`],
     riskTags: ['controlled-state', 'compound-component'],
-    assertions: ['[(values)]="visibleLayers"', 'readonly string[]'],
+    assertions: [
+      'div',
+      'krnToggleGroup',
+      'aria-label',
+      '[(values)]="visibleLayers"',
+      'readonly string[]',
+    ],
   }),
   'copy-button': defineRecipe({
     title: 'Copy immutable record id',
-    scenario: 'Copy a visible domain identifier with explicit accessible feedback.',
+    scenario:
+      'Copy an explicit domain identifier, localize its accessible context, and consume confirmed outcomes.',
     template: `
-      <krn-copy-button value="CUS-2048" ariaLabel="Copy customer id">
-        CUS-2048
+      <krn-copy-button
+        [value]="customerId"
+        (copied)="lastResult = 'Copied ' + $event"
+        (copyError)="lastResult = 'Customer id copy failed'"
+      >
+        Copy customer id {{ customerId }}
       </krn-copy-button>
+      <output>{{ lastResult }}</output>
     `,
+    valueImports: {
+      '@kern-ui/angular/kit': ['provideKrnCopyButtonOptions'],
+    },
+    providers: [
+      `provideKrnCopyButtonOptions({
+        size: 'sm',
+        feedbackDuration: 2400,
+      })`,
+    ],
+    members: [`readonly customerId = 'CUS-2048';`, `lastResult = '';`],
+    riskTags: ['async', 'typed-output', 'scoped-options', 'accessibility-copy'],
+    assertions: [
+      'provideKrnCopyButtonOptions',
+      '[value]="customerId"',
+      '(copied)="lastResult',
+      '(copyError)="lastResult',
+    ],
   }),
   link: defineRecipe({
     title: 'External audit documentation link',
     scenario: 'Render a semantic link with safe external navigation metadata.',
     template: `
-      <krn-link
+      <a
+        krnLink
         href="https://example.com/audit-policy"
         target="_blank"
         rel="noopener noreferrer"
       >
         Audit policy
-      </krn-link>
+      </a>
     `,
   }),
   'dropdown-button': defineRecipe({
     title: 'Controlled bulk-action menu',
-    scenario: 'Expose secondary actions while retaining owned open state.',
+    scenario:
+      'Expose keyboard-operable secondary actions with controlled state and scoped placement.',
     template: `
       <krn-dropdown-button [(open)]="open">
         <span krnLabel>Bulk actions</span>
-        <div krnMenu>
-          <button type="button">Assign owner</button>
-          <button type="button">Archive</button>
-        </div>
+        <button krnMenu type="button">Assign owner</button>
+        <button krnMenu type="button">Archive</button>
       </krn-dropdown-button>
     `,
+    valueImports: {
+      '@kern-ui/angular/kit': ['provideKrnMenuButtonOptions'],
+    },
+    providers: [
+      `provideKrnMenuButtonOptions({
+        menuAlign: 'start',
+        matchTriggerWidth: true,
+      })`,
+    ],
     members: ['open = false;'],
-    riskTags: ['overlay', 'controlled-state'],
-    assertions: ['[(open)]="open"'],
+    riskTags: ['overlay', 'controlled-state', 'scoped-options', 'keyboard-navigation'],
+    assertions: [
+      '[(open)]="open"',
+      'button krnMenu',
+      'provideKrnMenuButtonOptions',
+      'matchTriggerWidth',
+    ],
   }),
   'form-field': defineRecipe({
     title: 'Labeled reactive form field',
@@ -385,7 +455,6 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         <krn-text-input
           id="account-name"
           [formControl]="control"
-          ariaLabel="Account name"
         />
         <krn-hint>Use the legal customer name.</krn-hint>
       </krn-form-field>

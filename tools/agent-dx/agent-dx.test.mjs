@@ -41,6 +41,28 @@ describe('KERN agent DX examples', () => {
     assert.match(result.stdout, /is current/);
   });
 
+  it('keeps every generated Markdown API table structurally valid', async () => {
+    for (const component of manifest.components) {
+      const source = await readFile(
+        resolve(workspaceRoot, `metadata/agent/generated/components/${component.id}.md`),
+        'utf8',
+      );
+      const section = source.match(/## API\n\n([\s\S]*?)\n\n## Deprecated selectors/)?.[1];
+      assert.ok(section, `${component.id}: missing generated Markdown API section`);
+      if (section === '_No signal inputs, models, or outputs._') continue;
+
+      const lines = section.split('\n');
+      for (const line of lines) {
+        assert.match(line, /^\|.*\|$/, `${component.id}: malformed Markdown API row`);
+        assert.equal(
+          line.match(/(?<!\\)\|/g)?.length,
+          7,
+          `${component.id}: Markdown API row has an invalid column count`,
+        );
+      }
+    }
+  });
+
   it('requires typed backing state for every declared high-risk task', async () => {
     for (const task of KERN_AGENT_HIGH_RISK_TASKS) {
       const source = await readFile(
@@ -136,19 +158,27 @@ describe('KERN agent DX examples', () => {
         <span krnHoverCardTrigger><a href="/accounts">Account</a></span>
       </krn-hover-card>
       <krn-menu>
-        <span krnMenuTrigger><krn-icon-button ariaLabel="Actions">⋯</krn-icon-button></span>
+        <span krnMenuTrigger>
+          <button krnIconButton type="button" aria-label="Actions">⋯</button>
+        </span>
       </krn-menu>
       <krn-popover>
         <span krnPopoverTrigger><krn-select [options]="options" /></span>
       </krn-popover>
+      <krn-hover-card>
+        <span krnHoverCardTrigger>
+          <div krnToggleGroup aria-label="Formatting"></div>
+        </span>
+      </krn-hover-card>
     `);
     assert.deepEqual(
       violations.map(({ slot, element }) => ({ slot, element })),
       [
         { slot: 'krnPopoverTrigger', element: 'button' },
         { slot: 'krnHoverCardTrigger', element: 'a' },
-        { slot: 'krnMenuTrigger', element: 'krn-icon-button' },
+        { slot: 'krnMenuTrigger', element: 'button' },
         { slot: 'krnPopoverTrigger', element: 'krn-select' },
+        { slot: 'krnHoverCardTrigger', element: '[krnToggleGroup]' },
       ],
     );
   });

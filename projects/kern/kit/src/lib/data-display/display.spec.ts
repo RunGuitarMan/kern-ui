@@ -144,7 +144,7 @@ describe('KrnCodeBlock', () => {
     const source = [
       "import { Component } from '@angular/core';",
       '@Component({',
-      '  template: `<krn-button [disabled]="false">Publish</krn-button>`,',
+      '  template: `<button krnButton [disabled]="false">Publish</button>`,',
       '})',
       'export class Toolbar {}',
     ].join('\n');
@@ -157,7 +157,7 @@ describe('KrnCodeBlock', () => {
     expect(element.querySelector('code')?.textContent).toBe(source);
     expect(element.querySelector('.token-keyword')?.textContent).toBe('import');
     expect(element.querySelector('.token-decorator')?.textContent).toBe('@Component');
-    expect(element.querySelector('.token-tag')?.textContent).toBe('<krn-button');
+    expect(element.querySelector('.token-tag')?.textContent).toBe('<button');
     expect(element.querySelector('.token-attribute')?.textContent).toBe('[disabled]');
   });
 });

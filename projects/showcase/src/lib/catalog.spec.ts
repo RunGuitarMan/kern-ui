@@ -67,7 +67,53 @@ describe('Kern showcase catalog', () => {
     expect(findKernComponent('tag')?.variantOf).toBe('chip');
     expect(findKernComponent('data-table')?.variantOf).toBe('data-grid');
     expect(findKernComponent('bulk-actions')?.variantOf).toBe('crud-toolbar');
+    expect(findKernComponent('button')?.selector).toBe('button[krnButton]');
+    expect(findKernComponent('icon-button')?.selector).toBe('button[krnIconButton]');
+    expect(findKernComponent('button-group')?.selector).toBe('div[krnButtonGroup]');
     expect(findKernComponent('tooltip')?.selector).toBe('[krnTooltip]');
+  });
+
+  it('documents Icon Button as a named native action instead of a managed toggle', () => {
+    const iconButton = findKernComponent('icon-button');
+
+    expect(iconButton?.accessibility).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('aria-label or aria-labelledby'),
+        expect.stringContaining('aria-describedby'),
+      ]),
+    );
+    expect(iconButton?.do).toContain('<button krnIconButton');
+    expect(iconButton?.dont).toContain('Toggle Button');
+  });
+
+  it('documents Button Group as a named stateless layout for independent actions', () => {
+    const buttonGroup = findKernComponent('button-group');
+
+    expect(buttonGroup?.states).toEqual([
+      'default',
+      'overflow',
+      'long text',
+      'dark',
+      'high contrast',
+      'compact',
+      'RTL',
+      'mobile',
+      'connected',
+    ]);
+    expect(buttonGroup?.keyboard).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('document order'),
+        expect.stringContaining('do not add Arrow-key navigation'),
+      ]),
+    );
+    expect(buttonGroup?.accessibility).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('aria-label or aria-labelledby'),
+        expect.stringContaining('Toggle Group or Segmented Control'),
+      ]),
+    );
+    expect(buttonGroup?.do).toContain('<div krnButtonGroup');
+    expect(buttonGroup?.dont).toContain('group-level disabled/loading');
   });
 
   it('documents combobox selection separately from free-text autocomplete', () => {

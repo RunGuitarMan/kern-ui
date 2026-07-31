@@ -15,6 +15,7 @@ import type { KrnDensity, KrnTheme } from '../foundations/tokens';
 import { createKrnTranslations, KRN_TRANSLATIONS } from './i18n';
 import type { KrnTranslationsPatch } from './i18n';
 import { provideKrnTheme } from './theme';
+import { provideKrnTranslationBridge } from './translation-bridge';
 
 export type KrnDirection = 'ltr' | 'rtl';
 export type KrnMotionPreference = 'system' | 'reduce' | 'full';
@@ -150,18 +151,23 @@ class KrnRuntimeConfigService {
  * Registers Kern's cross-cutting configuration as one environment provider.
  * Feature-level providers may still override individual tokens in a child
  * injector when an embedded application needs a different locale or direction.
+ * A child that provides the complete `KRN_TRANSLATIONS` registry directly must
+ * also install `provideKrnTranslationBridge()` so dependency-light leaf-copy
+ * tokens follow that registry.
  */
 export function provideKrn(config: KrnConfig = {}): EnvironmentProviders {
   const frozenConfig = Object.freeze({
     ...config,
     locale: config.locale === undefined ? undefined : normalizedLocale(config.locale),
   });
+  const translations = createKrnTranslations(frozenConfig.translations);
   const providers: Array<Provider | EnvironmentProviders> = [
     { provide: KRN_CONFIG, useValue: frozenConfig },
     {
       provide: KRN_TRANSLATIONS,
-      useValue: createKrnTranslations(frozenConfig.translations),
+      useValue: translations,
     },
+    provideKrnTranslationBridge(),
     provideKrnTheme({
       theme: frozenConfig.theme,
       density: frozenConfig.density,
@@ -173,6 +179,7 @@ export function provideKrn(config: KrnConfig = {}): EnvironmentProviders {
     provideEnvironmentInitializer(() => {
       inject(KrnRuntimeConfigService).initialize();
     }),
+    { provide: OverlayContainer, useClass: KrnOverlayContainer },
   ];
 
   if (frozenConfig.locale !== undefined) {
@@ -189,7 +196,6 @@ export function provideKrn(config: KrnConfig = {}): EnvironmentProviders {
   }
   if (frozenConfig.overlayHost !== undefined) {
     providers.push(overlayHostProvider(frozenConfig.overlayHost));
-    providers.push({ provide: OverlayContainer, useClass: KrnOverlayContainer });
   }
 
   return makeEnvironmentProviders(providers);

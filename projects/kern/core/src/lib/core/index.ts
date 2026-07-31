@@ -18,6 +18,7 @@ export {
   applyKrnPrepaintTheme,
   provideKrnTheme,
 } from './theme';
+export { provideKrnTranslationBridge } from './translation-bridge';
 
 export type { KrnConfig, KrnDirection, KrnMotionPreference, KrnOverlayHost } from './config';
 export type {

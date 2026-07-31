@@ -6,9 +6,11 @@ Runtime code follows one physical package graph. CI rejects undeclared edges, cr
 imports, cycles, duplicate owners, and root imports from secondary entrypoints.
 
 ```text
-cdk ─→ core ─→ kit ─→ patterns
-  └────┴────→ addon-grid
-       └────→ addon-charts
+core        ← cdk + i18n
+kit         ← cdk + i18n + core
+addon-grid  ← cdk + core
+addon-charts ← cdk + core
+patterns    ← cdk + core + kit
 
 root ─→ compatibility re-export of every runtime entrypoint
 styles ─→ every rendered component
@@ -17,7 +19,8 @@ styles ─→ every rendered component
 | Entrypoint     | Responsibility                                                      |
 | -------------- | ------------------------------------------------------------------- |
 | `cdk`          | Platform boundary, stable IDs, content, and overlay coordination    |
-| `core`         | Foundations, tokens, icons, theme, configuration, and translations  |
+| `i18n`         | Dependency-light UI-copy tokens safe for leaf components            |
+| `core`         | Foundations, tokens, icons, theme, configuration, and locale packs  |
 | `kit`          | General layout, action, form, navigation, feedback, and display UI  |
 | `addon-grid`   | Virtualized enterprise data grid                                    |
 | `addon-charts` | Accessible data visualizations                                      |
@@ -34,9 +37,12 @@ brand, and preference persistence are needed.
 
 Nx owns the workspace project graph and target orchestration. The allowed dependency direction is
 `docs → showcase → kern` (with Docs also consuming Kern directly); project tags and ESLint module
-boundaries reject reverse dependencies. Nx is the sole persistent task-cache owner.
+boundaries reject reverse dependencies. Nx is the sole persistent task-cache owner. Every Angular
+`project.json` explicitly sets `cli.cache.enabled` to `false`; governance discovers the Nx project
+graph, inspects every project with an Angular executor, and rejects drift back to Angular CLI's
+separate persistent cache.
 
-- `kern` is the only publishable package. `/cdk`, `/core`, `/kit`, `/addon-grid`,
+- `kern` is the only publishable package. `/cdk`, `/i18n`, `/core`, `/kit`, `/addon-grid`,
   `/addon-charts`, `/patterns`, and `/testing` are its supported physical entrypoints.
 - The package root is a compatibility-only aggregator. It declares no runtime implementation and
   preserves strict object identity with every direct entrypoint.
@@ -54,6 +60,30 @@ boundaries reject reverse dependencies. Nx is the sole persistent task-cache own
 Each runtime source file has one owner recorded in `projects/kern/api/runtime-entrypoints.json`.
 Cross-entrypoint imports use only published package subpaths. The root compatibility entrypoint is
 retained for at least one major line, while new consumers should import from the narrow owner.
+
+`projects/kern/api/component-inventory.json` is the generated implementation inventory. The same
+AST pass that generates the showcase API contract combines selectors, direct public exports,
+runtime ownership, catalog metadata, and lifecycle registrations into one versioned record. A
+review unit is one decorated implementation class, not one selector or one catalog route. All
+public symbol aliases, selector aliases, and catalog variants are reviewed with that canonical
+class; supporting public components and directives remain explicit review units even when they do
+not need a separate documentation route. An internal decorated surface must declare an explicit
+`@internalReviewWith entrypoint:PublicClass` JSDoc tag. Its generated `reviewWith` target must exist,
+be public, and share the same runtime entrypoint and behavior family; the internal surface is then
+reviewed with that public behavior. Type-only exports never make a decorated class public,
+including `export type *`, type-only specifiers, and local `import type` aliases passed through a
+later `export`. CI compares the generated file, validates it against its versioned schema, and
+rejects unowned selectors, duplicate aliases, public/internal mismatches, missing review ownership,
+and lifecycle drift.
+
+Catalog selector identity has one exception registry, `SELECTOR_BY_ID` in
+`projects/showcase/src/lib/catalog.ts`. Both contract/inventory generation and lifecycle
+verification parse that literal. Conventional entries still default to `krn-${id}`; attribute or
+host-qualified selectors must be added only to this registry. Documentation overrides cannot
+replace identity, selector, lifecycle status, or generated API fields. Runtime contract union
+types are serialized recursively in a canonical order, including unions nested in generics, object
+members, and function parameters or returns. `null` and then `undefined` remain last, so generated
+contracts do not depend on TypeScript program ordering.
 
 CSS layers already have declared side-effect subpath exports. Applications must normally import
 `styles/kern.css`; tooling and controlled integrations may import tokens, themes, density,
@@ -126,10 +156,14 @@ or `full` preference. Locale defaults to Angular's `LOCALE_ID`, while direction 
 document `dir`. `KRN_TRANSLATIONS` supplies typed English component UI-copy defaults; complete
 schema-checked English and Russian packs can be adapted through `krnLocaleConfig`.
 `provideKrn({ translations })` accepts a typed partial override, and component label inputs remain
-available for one-off copy. Existing token templates such as `Page {page}` remain source-compatible;
-new locale packs can add the corresponding optional typed formatter for grammar that cannot be
-expressed by a template. Runtime interpolation is single-pass and resolves only named tokens.
-Kern does not bundle application content.
+available for one-off copy. Leaf components consume narrow tokens from the dependency-light
+`i18n` entrypoint; `provideKrn` installs `provideKrnTranslationBridge()` so those tokens resolve
+from the final `KRN_TRANSLATIONS` value without retaining the complete dictionary in a leaf bundle.
+A nested injector that provides `KRN_TRANSLATIONS` directly installs the bridge at the same
+boundary. Existing token templates such as `Page {page}` remain source-compatible; new locale
+packs can add the corresponding optional typed formatter for grammar that cannot be expressed by
+a template. Runtime interpolation is single-pass and resolves only named tokens. Kern does not
+bundle application content.
 
 ## Accessibility contract
 
@@ -183,4 +217,5 @@ checks, and a focused cross-engine matrix. See [COMPONENTS.md](COMPONENTS.md) an
 
 The staged pre-split decision is recorded in historical
 [ADR 0001](adr/0001-runtime-boundaries.md). The implemented physical ownership model is recorded
-in [ADR 0002](adr/0002-runtime-entrypoint-feasibility.md).
+in [ADR 0002](adr/0002-runtime-entrypoint-feasibility.md); the leaf UI-copy boundary and bridge are
+recorded in [ADR 0005](adr/0005-lightweight-i18n-entrypoint.md).

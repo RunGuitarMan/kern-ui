@@ -4,6 +4,11 @@
   "projectType": "library",
   "sourceRoot": "projects/showcase/src",
   "prefix": "kshow",
+  "cli": {
+    "cache": {
+      "enabled": false
+    }
+  },
   "tags": ["scope:showcase", "type:library", "publishable:false"],
   "targets": {
     "build": {

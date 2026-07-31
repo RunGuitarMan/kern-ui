@@ -15,9 +15,9 @@ import { KrnLink } from '@kern-ui/angular/kit';
   imports: [KrnLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <krn-link href="https://example.com/audit-policy" target="_blank" rel="noopener noreferrer">
+    <a krnLink href="https://example.com/audit-policy" target="_blank" rel="noopener noreferrer">
       Audit policy
-    </krn-link>
+    </a>
   `,
 })
 export class KernLinkAgentExample {}

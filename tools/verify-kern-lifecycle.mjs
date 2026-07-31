@@ -5,7 +5,10 @@ import { fileURLToPath } from 'node:url';
 
 import ts from 'typescript';
 
-const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+import { extractCatalogFromSource } from '../scripts/generate-component-contract.mjs';
+
+const modulePath = fileURLToPath(import.meta.url);
+const workspaceRoot = resolve(dirname(modulePath), '..');
 const defaultLifecyclePath = resolve(workspaceRoot, 'projects/kern/api/lifecycle.json');
 const defaultDeprecationsPath = resolve(workspaceRoot, 'projects/kern/api/deprecations.json');
 const catalogPath = resolve(workspaceRoot, 'projects/showcase/src/lib/catalog.ts');
@@ -85,27 +88,15 @@ function stringArray(node, sourceFile, label) {
   });
 }
 
-function slugify(value) {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
-}
-
-async function discoverCatalog() {
-  const sourceText = await readFile(catalogPath, 'utf8');
+export function discoverLifecycleCatalogFromSource(sourceText, sourcePath = catalogPath) {
+  const descriptors = extractCatalogFromSource(sourceText, sourcePath);
   const sourceFile = ts.createSourceFile(
-    catalogPath,
+    sourcePath,
     sourceText,
     ts.ScriptTarget.Latest,
     true,
     ts.ScriptKind.TS,
   );
-  const groupsNode = variableInitializer(sourceFile, 'GROUPS');
-  if (!groupsNode || !ts.isObjectLiteralExpression(groupsNode)) {
-    throw new Error('Catalog GROUPS must remain an object literal.');
-  }
-
   function statusSet(name) {
     const initializer = variableInitializer(sourceFile, name);
     if (!initializer || !ts.isNewExpression(initializer)) {
@@ -118,28 +109,24 @@ async function discoverCatalog() {
   const experimental = statusSet('EXPERIMENTAL_COMPONENTS');
   const catalog = new Map();
 
-  for (const property of groupsNode.properties) {
-    if (!ts.isPropertyAssignment(property)) {
-      throw new Error('Catalog GROUPS may contain only property assignments.');
-    }
-    const category = nodeName(property.name, sourceFile);
-    if (!category) throw new Error('Catalog category is missing a literal name.');
-    for (const name of stringArray(property.initializer, sourceFile, `GROUPS.${category}`)) {
-      const id = slugify(name);
-      const status =
-        category === 'Patterns'
-          ? 'recipe'
-          : experimental.has(id)
-            ? 'experimental'
-            : beta.has(id)
-              ? 'beta'
-              : 'stable';
-      if (catalog.has(id)) throw new Error(`Catalog id "${id}" is duplicated.`);
-      catalog.set(id, { category, id, name, status });
-    }
+  for (const item of descriptors) {
+    const status =
+      item.category === 'Patterns'
+        ? 'recipe'
+        : experimental.has(item.id)
+          ? 'experimental'
+          : beta.has(item.id)
+            ? 'beta'
+            : 'stable';
+    if (catalog.has(item.id)) throw new Error(`Catalog id "${item.id}" is duplicated.`);
+    catalog.set(item.id, { ...item, status });
   }
 
   return catalog;
+}
+
+async function discoverCatalog() {
+  return discoverLifecycleCatalogFromSource(await readFile(catalogPath, 'utf8'));
 }
 
 function declarationName(node, sourceFile) {
@@ -240,7 +227,7 @@ async function discoverPublicApi(apiConfig) {
   return { deprecatedMembers, symbols };
 }
 
-async function discoverComponentClasses() {
+async function discoverComponentContracts() {
   const sourceText = await readFile(componentContractPath, 'utf8');
   const sourceFile = ts.createSourceFile(
     componentContractPath,
@@ -254,7 +241,7 @@ async function discoverComponentClasses() {
     throw new Error('Generated KERN_RUNTIME_COMPONENTS must remain an object literal.');
   }
 
-  const classes = new Map();
+  const contracts = new Map();
   for (const property of contractsNode.properties) {
     if (!ts.isPropertyAssignment(property)) continue;
     const selector = nodeName(property.name, sourceFile);
@@ -264,13 +251,33 @@ async function discoverComponentClasses() {
       (candidate) =>
         ts.isPropertyAssignment(candidate) && nodeName(candidate.name, sourceFile) === 'className',
     );
-    if (!classProperty || !ts.isPropertyAssignment(classProperty)) continue;
+    const kindProperty = contract.properties.find(
+      (candidate) =>
+        ts.isPropertyAssignment(candidate) && nodeName(candidate.name, sourceFile) === 'kind',
+    );
+    if (
+      !classProperty ||
+      !ts.isPropertyAssignment(classProperty) ||
+      !kindProperty ||
+      !ts.isPropertyAssignment(kindProperty)
+    ) {
+      continue;
+    }
     const classNameNode = unwrapExpression(classProperty.initializer);
-    if (classNameNode && ts.isStringLiteralLike(classNameNode)) {
-      classes.set(selector, classNameNode.text);
+    const kindNode = unwrapExpression(kindProperty.initializer);
+    if (
+      classNameNode &&
+      ts.isStringLiteralLike(classNameNode) &&
+      kindNode &&
+      ts.isStringLiteralLike(kindNode)
+    ) {
+      contracts.set(selector, {
+        className: classNameNode.text,
+        kind: kindNode.text,
+      });
     }
   }
-  return classes;
+  return contracts;
 }
 
 function flattenCatalogRegistry(registry) {
@@ -404,29 +411,34 @@ function compareSymbols(expected, registered) {
   }
 }
 
-function compareComponentStatuses(catalog, classes, registeredSymbols) {
+export function componentStatusIssues(catalog, classes, registeredSymbols) {
+  const found = [];
   for (const [id, item] of catalog) {
-    const selector = id === 'tooltip' ? '[krnTooltip]' : `krn-${id}`;
-    const className = classes.get(selector);
+    const className = classes.get(item.selector);
     if (!className) {
-      report(`Catalog selector "${selector}" has no generated component contract.`);
+      found.push(`Catalog selector "${item.selector}" has no generated component contract.`);
       continue;
     }
     const matches = [...registeredSymbols.values()].filter(
       (symbol) => symbol.name === className && symbol.entrypoint !== './testing',
     );
     if (matches.length !== 1) {
-      report(
+      found.push(
         `Catalog entry "${id}" resolves to ${className}, expected one lifecycle public symbol but found ${matches.length}.`,
       );
       continue;
     }
     if (matches[0].status !== item.status) {
-      report(
+      found.push(
         `Catalog entry "${id}" is ${item.status}, but its public class ${className} is ${matches[0].status}.`,
       );
     }
   }
+  return found;
+}
+
+function compareComponentStatuses(catalog, classes, registeredSymbols) {
+  for (const issue of componentStatusIssues(catalog, classes, registeredSymbols)) report(issue);
 }
 
 function parseSemver(value) {
@@ -452,23 +464,40 @@ function compareSemver(left, right) {
   return left.prerelease.localeCompare(right.prerelease);
 }
 
-async function verifyDeprecations(registry, discovered, lifecycleSymbols, packageVersion) {
+async function verifyDeprecations(
+  registry,
+  discoveredApi,
+  lifecycleSymbols,
+  packageVersion,
+  componentContracts,
+) {
   if (!registry || registry.schemaVersion !== 1 || !Array.isArray(registry.entries)) {
     report('deprecations.json requires schemaVersion 1 and an entries array.');
-    return;
+    return 0;
   }
-  const active = new Map();
+  const activeMembers = new Map();
+  const activeSelectors = new Map();
+  const ids = new Set();
   for (const [index, entry] of registry.entries.entries()) {
     const label = `deprecations.entries[${index}]`;
     if (!entry || typeof entry !== 'object') {
       report(`${label} must be an object.`);
       continue;
     }
-    const key = `${entry.entrypoint}:${entry.symbol}.${entry.member}`;
-    if (!lifecycleSymbols.has(`${entry.entrypoint}:${entry.symbol}`)) {
-      report(
-        `${label} references unregistered public symbol "${entry.entrypoint}:${entry.symbol}".`,
-      );
+    if (typeof entry.id !== 'string' || entry.id.length < 3) {
+      report(`${label} requires a stable id.`);
+    } else if (ids.has(entry.id)) {
+      report(`${label} duplicates deprecation id "${entry.id}".`);
+    } else {
+      ids.add(entry.id);
+    }
+    const publicSymbolKey = `${entry.entrypoint}:${entry.symbol}`;
+    const publicSymbol = discoveredApi.symbols.get(publicSymbolKey);
+    if (!lifecycleSymbols.has(publicSymbolKey) || !publicSymbol) {
+      report(`${label} references unregistered public symbol "${publicSymbolKey}".`);
+    }
+    if (!['input', 'model', 'output', 'method', 'property', 'selector'].includes(entry.kind)) {
+      report(`${label} has invalid kind "${entry.kind}".`);
     }
     if (!['active', 'removed'].includes(entry.status)) {
       report(`${label} has invalid status "${entry.status}".`);
@@ -486,11 +515,52 @@ async function verifyDeprecations(registry, discovered, lifecycleSymbols, packag
     if (introduced && removal && compareSemver(removal, introduced) <= 0) {
       report(`${label} removeIn must be later than introducedIn.`);
     }
+    if (entry.kind === 'selector') {
+      if (typeof entry.selector !== 'string' || entry.selector.length === 0) {
+        report(`${label} requires a selector.`);
+      }
+      if ('member' in entry) {
+        report(`${label} selector deprecation must not declare member.`);
+      }
+      if (entry.status === 'active' && typeof entry.selector === 'string') {
+        const key = `${publicSymbolKey}#${entry.selector}`;
+        if (activeSelectors.has(key)) {
+          report(`Active selector deprecation "${key}" is registered more than once.`);
+        }
+        activeSelectors.set(key, entry);
+        const contract = componentContracts.get(entry.selector);
+        if (!contract) {
+          report(
+            `${label} active selector "${entry.selector}" does not exist on a public component or directive.`,
+          );
+        } else if (
+          !publicSymbol ||
+          contract.className !== publicSymbol.localName ||
+          !['component', 'directive'].includes(contract.kind)
+        ) {
+          report(
+            `${label} selector "${entry.selector}" belongs to ${contract.className}, not public symbol "${publicSymbolKey}".`,
+          );
+        }
+      }
+    } else {
+      if (typeof entry.member !== 'string' || entry.member.length === 0) {
+        report(`${label} member deprecation requires member.`);
+      }
+      if ('selector' in entry) {
+        report(`${label} member deprecation must not declare selector.`);
+      }
+      if (entry.status === 'active' && typeof entry.member === 'string') {
+        const key = `${publicSymbolKey}.${entry.member}`;
+        if (activeMembers.has(key)) {
+          report(`Active deprecation "${key}" is registered more than once.`);
+        }
+        activeMembers.set(key, entry);
+      }
+    }
     if (entry.status === 'active') {
-      if (active.has(key)) report(`Active deprecation "${key}" is registered more than once.`);
-      active.set(key, entry);
       if (removal && compareSemver(removal, packageVersion) <= 0) {
-        report(`Active deprecation "${key}" has reached removal version ${entry.removeIn}.`);
+        report(`Active deprecation "${entry.id}" has reached removal version ${entry.removeIn}.`);
       }
     }
 
@@ -510,29 +580,32 @@ async function verifyDeprecations(registry, discovered, lifecycleSymbols, packag
     }
   }
 
-  for (const key of discovered.keys()) {
-    if (!active.has(key))
+  for (const key of discoveredApi.deprecatedMembers.keys()) {
+    if (!activeMembers.has(key))
       report(`Public API deprecation "${key}" is missing from deprecations.json.`);
   }
-  for (const key of active.keys()) {
-    if (!discovered.has(key)) {
+  for (const key of activeMembers.keys()) {
+    if (!discoveredApi.deprecatedMembers.has(key)) {
       report(`Active deprecation "${key}" is not tagged @deprecated in the API baseline.`);
     }
   }
+  return activeMembers.size + activeSelectors.size;
 }
 
 async function main() {
   const lifecyclePath = option('lifecycle', defaultLifecyclePath);
   const deprecationsPath = option('deprecations', defaultDeprecationsPath);
-  const [lifecycle, deprecations, apiConfig, packageManifest, catalog, classes] = await Promise.all(
-    [
+  const [lifecycle, deprecations, apiConfig, packageManifest, catalog, componentContracts] =
+    await Promise.all([
       readJson(lifecyclePath, 'Lifecycle registry'),
       readJson(deprecationsPath, 'Deprecation registry'),
       readJson(apiConfigPath, 'API entrypoint configuration'),
       readJson(packageManifestPath, 'Kern package manifest'),
       discoverCatalog(),
-      discoverComponentClasses(),
-    ],
+      discoverComponentContracts(),
+    ]);
+  const classes = new Map(
+    [...componentContracts].map(([selector, contract]) => [selector, contract.className]),
   );
 
   if (lifecycle.schemaVersion !== 1) report('lifecycle.json schemaVersion must be 1.');
@@ -553,14 +626,16 @@ async function main() {
   compareComponentStatuses(catalog, classes, registeredSymbols);
 
   const version = parseSemver(packageManifest.version);
+  let activeDeprecationCount = 0;
   if (!version) {
     report(`projects/kern/package.json has invalid version "${packageManifest.version}".`);
   } else {
-    await verifyDeprecations(
+    activeDeprecationCount = await verifyDeprecations(
       deprecations,
-      discoveredApi.deprecatedMembers,
+      discoveredApi,
       registeredSymbols,
       version,
+      componentContracts,
     );
   }
 
@@ -573,15 +648,17 @@ async function main() {
   console.log(
     `Kern lifecycle verified: ${registeredCatalog.size} catalog entries, ` +
       `${registeredSymbols.size} public symbols, ` +
-      `${discoveredApi.deprecatedMembers.size} active deprecations.`,
+      `${activeDeprecationCount} active deprecations.`,
   );
 }
 
-try {
-  await main();
-} catch (error) {
-  console.error(
-    `Kern lifecycle verification failed: ${error instanceof Error ? error.message : String(error)}`,
-  );
-  process.exitCode = 1;
+if (process.argv[1] && resolve(process.argv[1]) === modulePath) {
+  try {
+    await main();
+  } catch (error) {
+    console.error(
+      `Kern lifecycle verification failed: ${error instanceof Error ? error.message : String(error)}`,
+    );
+    process.exitCode = 1;
+  }
 }

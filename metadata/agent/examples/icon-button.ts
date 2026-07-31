@@ -1,7 +1,7 @@
 /**
  * Accessible icon-only action
  *
- * Provide a stable accessible name for an icon-only control.
+ * Keep the accessible name and native action semantics on the icon-only button host.
  *
  * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.
  */
@@ -14,7 +14,7 @@ import { KrnIconButton } from '@kern-ui/angular/kit';
   standalone: true,
   imports: [KrnIconButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ` <krn-icon-button ariaLabel="Add team member">+</krn-icon-button> `,
+  template: ` <button krnIconButton type="button" aria-label="Add team member">+</button> `,
 })
 export class KernIconButtonAgentExample {}
 

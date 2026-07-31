@@ -56,7 +56,7 @@ function template() {
     <krn-text-input [formControl]="form.controls.email" />
   </krn-form-field>
 
-  <krn-button type="submit" [disabled]="form.invalid">Save</krn-button>
+  <button krnButton type="submit" [disabled]="form.invalid">Save</button>
 </form>
 `;
 }

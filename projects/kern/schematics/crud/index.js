@@ -104,7 +104,7 @@ function template() {
   <section krnMaster aria-label="Records">
     <header>
       <h2>Records</h2>
-      <krn-button variant="outline" (activated)="create()">New</krn-button>
+      <button krnButton variant="outline" (click)="create()">New</button>
     </header>
 
     <krn-data-grid
@@ -129,9 +129,9 @@ function template() {
         <krn-text-input [formControl]="form.controls.description" />
       </krn-form-field>
       <footer>
-        <krn-button type="submit" [disabled]="form.invalid">Save</krn-button>
+        <button krnButton type="submit" [disabled]="form.invalid">Save</button>
         @if (selected()) {
-          <krn-button tone="danger" variant="outline" (activated)="remove()">Delete</krn-button>
+          <button krnButton tone="danger" variant="outline" (click)="remove()">Delete</button>
         }
       </footer>
     </form>

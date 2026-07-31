@@ -6,6 +6,8 @@ import { fileURLToPath } from 'node:url';
 import { format, resolveConfig } from 'prettier';
 import ts from 'typescript';
 
+import { findAngularSelectorStart } from './agent-dx/angular-selector.mjs';
+
 const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const generatedContractPath = resolve(
   workspaceRoot,
@@ -75,7 +77,7 @@ const selectorOverrides = Object.freeze({
   'drag-drop-upload': 'krn-drop-upload',
   'responsive-show-hide': 'krn-show',
   toast: 'krn-toast-viewport',
-  tooltip: 'krn-icon-button',
+  tooltip: 'button[krnIconButton]',
   'verification-code': 'krn-otp-input',
 });
 
@@ -94,12 +96,6 @@ function escapeRegExp(value) {
 
 function escapeTemplateString(value) {
   return value.replaceAll('\\', '\\\\').replaceAll("'", "\\'");
-}
-
-function findSelectorStart(source, selector, start, end) {
-  const segment = source.slice(start, end);
-  const match = new RegExp(`<${escapeRegExp(selector)}(?=[\\s/>])`).exec(segment);
-  return match ? start + match.index : -1;
 }
 
 function expressionFor(control) {
@@ -191,10 +187,7 @@ for (let index = catalog.length - 1; index >= 0; index -= 1) {
   invariant(segmentEnd > segmentStart, `${item.id}: specimen case boundary is invalid.`);
 
   const selector = selectorOverrides[item.id] ?? item.selector;
-  let tagStart = findSelectorStart(template, selector, segmentStart, segmentEnd);
-  if (!(tagStart >= segmentStart && tagStart < segmentEnd)) {
-    tagStart = findSelectorStart(template, selector.slice(0, -1), segmentStart, segmentEnd);
-  }
+  const tagStart = findAngularSelectorStart(template, selector, segmentStart, segmentEnd);
   invariant(
     tagStart >= segmentStart && tagStart < segmentEnd,
     `${item.id}: cannot find renderer target <${selector}> in its specimen case.`,

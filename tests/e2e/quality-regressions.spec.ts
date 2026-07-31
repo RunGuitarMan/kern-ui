@@ -1,7 +1,13 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
 import { KERN_CATALOG } from '../../projects/showcase/src/lib/catalog';
-import { DOCS_URL, settlePage, watchRuntimeErrors } from '../support/browser';
+import {
+  DOCS_URL,
+  expectNoPageOverflow,
+  previewUrl,
+  settlePage,
+  watchRuntimeErrors,
+} from '../support/browser';
 
 interface ElementRect {
   readonly height: number;
@@ -103,6 +109,495 @@ test.describe('Quality regressions: layout primitives', () => {
 });
 
 test.describe('Quality regressions: menus and focus treatment', () => {
+  test('button keeps its geometry while its loading overlay is active', async ({ page }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    await page.goto(`${DOCS_URL}/components/button?arg.loading=false`);
+    await settlePage(page);
+    let specimen = page.getByTestId('component-specimen-button');
+    let button = specimen.locator('button[krnButton]').first();
+    await expect(button).toHaveAttribute('data-loading', 'false');
+    const before = await elementRect(button);
+
+    await page.goto(`${DOCS_URL}/components/button?arg.loading=true`);
+    await settlePage(page);
+    specimen = page.getByTestId('component-specimen-button');
+    button = specimen.locator('button[krnButton]').first();
+    await expect(button).toHaveAttribute('data-loading', 'true');
+    expectStableRect(before, await elementRect(button), 'button loading state');
+
+    assertNoRuntimeErrors();
+  });
+
+  test('icon button stays square and stable while loading', async ({ page }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    await page.goto(
+      previewUrl({
+        component: 'icon-button',
+        args: { loading: false },
+      }),
+    );
+    await settlePage(page);
+    let specimen = page.getByTestId('component-specimen-icon-button');
+    let button = specimen.locator('button[krnIconButton]').first();
+    await expect(button).toHaveAttribute('data-loading', 'false');
+    const before = await elementRect(button);
+    expect(
+      Math.abs(before.width - before.height),
+      'resting icon button is square',
+    ).toBeLessThanOrEqual(1);
+    await button.evaluate((element) => {
+      const probe = document.createElement('div');
+      probe.style.display = 'flex';
+      probe.style.inlineSize = '1px';
+      element.parentElement?.insertBefore(probe, element);
+      probe.append(element);
+    });
+    const constrained = await elementRect(button);
+    expect(
+      Math.abs(constrained.width - before.width),
+      'icon button resists flex shrinking',
+    ).toBeLessThanOrEqual(1);
+    expect(
+      Math.abs(constrained.width - constrained.height),
+      'constrained icon button stays square',
+    ).toBeLessThanOrEqual(1);
+
+    await page.goto(
+      previewUrl({
+        component: 'icon-button',
+        args: { loading: true },
+      }),
+    );
+    await settlePage(page);
+    specimen = page.getByTestId('component-specimen-icon-button');
+    button = specimen.locator('button[krnIconButton]').first();
+    await expect(button).toHaveAttribute('data-loading', 'true');
+    const after = await elementRect(button);
+    expectStableRect(before, after, 'icon-button loading state');
+    expect(
+      Math.abs(after.width - after.height),
+      'loading icon button is square',
+    ).toBeLessThanOrEqual(1);
+
+    assertNoRuntimeErrors();
+  });
+
+  test('button group preserves separated spacing and connected geometry in both axes', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    const openButtonGroup = async (
+      connected: boolean,
+      orientation: 'horizontal' | 'vertical',
+    ): Promise<{ actions: Locator; group: Locator }> => {
+      await page.goto(
+        previewUrl({
+          component: 'button-group',
+          args: { connected, orientation },
+        }),
+      );
+      await settlePage(page);
+
+      const specimen = page.getByTestId('component-specimen-button-group');
+      const group = specimen.locator('div[krnButtonGroup]');
+      const actions = group.locator(':scope > button[krnButton], :scope > button[krnIconButton]');
+      if (connected) {
+        await expect(group).toHaveAttribute('data-connected', 'true');
+      } else {
+        await expect(group).not.toHaveAttribute('data-connected');
+      }
+      await expect(group).toHaveAttribute('data-orientation', orientation);
+      await expect(actions).toHaveCount(3);
+      return { actions, group };
+    };
+    const adjacentOffsets = async (
+      actions: Locator,
+      orientation: 'horizontal' | 'vertical',
+    ): Promise<number[]> =>
+      actions.evaluateAll(
+        (elements, axis) =>
+          elements.slice(0, -1).map((element, index) => {
+            const current = element.getBoundingClientRect();
+            const next = elements[index + 1]?.getBoundingClientRect();
+            if (!next) {
+              throw new Error('Expected an adjacent button-group action.');
+            }
+
+            return axis === 'horizontal' ? next.left - current.right : next.top - current.bottom;
+          }),
+        orientation,
+      );
+    const logicalRadii = async (
+      action: Locator,
+    ): Promise<{
+      endEnd: number;
+      endStart: number;
+      startEnd: number;
+      startStart: number;
+    }> =>
+      action.evaluate((element) => {
+        const style = getComputedStyle(element);
+        const radius = (property: string): number =>
+          Number.parseFloat(style.getPropertyValue(property)) || 0;
+
+        return {
+          endEnd: radius('border-end-end-radius'),
+          endStart: radius('border-end-start-radius'),
+          startEnd: radius('border-start-end-radius'),
+          startStart: radius('border-start-start-radius'),
+        };
+      });
+
+    let state = await openButtonGroup(false, 'horizontal');
+    for (const gap of await adjacentOffsets(state.actions, 'horizontal')) {
+      expect(gap, 'separated actions retain token spacing').toBeGreaterThan(1);
+    }
+
+    state = await openButtonGroup(true, 'horizontal');
+    for (const gap of await adjacentOffsets(state.actions, 'horizontal')) {
+      expect(gap, 'connected horizontal actions have no visible gap').toBeGreaterThanOrEqual(-2);
+      expect(gap, 'connected horizontal actions have no visible gap').toBeLessThanOrEqual(0.5);
+    }
+
+    const horizontalFirst = await logicalRadii(state.actions.first());
+    const horizontalMiddle = await logicalRadii(state.actions.nth(1));
+    const horizontalLast = await logicalRadii(state.actions.last());
+    expect(horizontalFirst.startStart).toBeGreaterThan(0);
+    expect(horizontalFirst.endStart).toBeGreaterThan(0);
+    expect(horizontalFirst.startEnd).toBe(0);
+    expect(horizontalFirst.endEnd).toBe(0);
+    expect(Object.values(horizontalMiddle)).toEqual([0, 0, 0, 0]);
+    expect(horizontalLast.startStart).toBe(0);
+    expect(horizontalLast.endStart).toBe(0);
+    expect(horizontalLast.startEnd).toBeGreaterThan(0);
+    expect(horizontalLast.endEnd).toBeGreaterThan(0);
+
+    const requestChanges = state.group.getByRole('button', { name: 'Request changes' });
+    const approve = state.group.getByRole('button', { name: 'Approve' });
+    await requestChanges.focus();
+    await page.keyboard.press('Tab');
+    await expect(approve).toBeFocused();
+    const focusTreatment = await approve.evaluate((element) => {
+      const action = getComputedStyle(element);
+      const group = getComputedStyle(element.parentElement as HTMLElement);
+      const siblingZIndices = [...(element.parentElement?.children ?? [])]
+        .filter((sibling) => sibling !== element)
+        .map((sibling) => Number.parseInt(getComputedStyle(sibling).zIndex, 10) || 0);
+
+      return {
+        boxShadow: action.boxShadow,
+        focusedZIndex: Number.parseInt(action.zIndex, 10) || 0,
+        groupOverflowX: group.overflowX,
+        groupOverflowY: group.overflowY,
+        outlineStyle: action.outlineStyle,
+        siblingZIndices,
+      };
+    });
+    expect(focusTreatment.boxShadow).not.toBe('none');
+    expect(focusTreatment.outlineStyle).not.toBe('none');
+    expect(focusTreatment.groupOverflowX).not.toMatch(/hidden|clip/);
+    expect(focusTreatment.groupOverflowY).not.toMatch(/hidden|clip/);
+    expect(focusTreatment.focusedZIndex).toBeGreaterThan(
+      Math.max(...focusTreatment.siblingZIndices),
+    );
+    const horizontalIcon = state.group.getByRole('button', { name: 'More review actions' });
+    const horizontalIconRect = await elementRect(horizontalIcon);
+    expect(
+      Math.abs(horizontalIconRect.width - horizontalIconRect.height),
+      'horizontally grouped icon action remains square',
+    ).toBeLessThanOrEqual(1);
+
+    state = await openButtonGroup(true, 'vertical');
+    for (const gap of await adjacentOffsets(state.actions, 'vertical')) {
+      expect(gap, 'connected vertical actions have no visible gap').toBeGreaterThanOrEqual(-2);
+      expect(gap, 'connected vertical actions have no visible gap').toBeLessThanOrEqual(0.5);
+    }
+
+    const verticalFirst = await logicalRadii(state.actions.first());
+    const verticalLast = await logicalRadii(state.actions.last());
+    expect(verticalFirst.startStart).toBeGreaterThan(0);
+    expect(verticalFirst.startEnd).toBeGreaterThan(0);
+    expect(verticalFirst.endStart).toBe(0);
+    expect(verticalFirst.endEnd).toBe(0);
+    expect(verticalLast.startStart).toBe(0);
+    expect(verticalLast.startEnd).toBe(0);
+    expect(verticalLast.endStart).toBeGreaterThan(0);
+    expect(verticalLast.endEnd).toBeGreaterThan(0);
+    const verticalIcon = state.group.getByRole('button', { name: 'More review actions' });
+    const verticalIconRect = await elementRect(verticalIcon);
+    expect(
+      Math.abs(verticalIconRect.width - verticalIconRect.height),
+      'vertically grouped icon action remains square',
+    ).toBeLessThanOrEqual(1);
+
+    await state.actions.nth(1).evaluate((element) => element.remove());
+    await state.actions.nth(1).evaluate((element) => element.remove());
+    await expect(state.actions).toHaveCount(1);
+    expect(
+      Object.values(await logicalRadii(state.actions.first())).every((radius) => radius > 0),
+    ).toBe(true);
+
+    await page.goto(
+      previewUrl({
+        component: 'button-group',
+        direction: 'rtl',
+        args: { connected: true, orientation: 'horizontal' },
+      }),
+    );
+    await settlePage(page);
+    const rtlGroup = page
+      .getByTestId('component-specimen-button-group')
+      .locator('div[krnButtonGroup]');
+    const rtlActions = rtlGroup.locator(
+      ':scope > button[krnButton], :scope > button[krnIconButton]',
+    );
+    const rtlRects = await rtlActions.evaluateAll((elements) =>
+      elements.map((element) => {
+        const { left, right } = element.getBoundingClientRect();
+        return { left, right };
+      }),
+    );
+    expect(rtlRects[0]?.left).toBeGreaterThan(rtlRects[1]?.left ?? Number.POSITIVE_INFINITY);
+    for (let index = 0; index < rtlRects.length - 1; index += 1) {
+      const current = rtlRects[index];
+      const next = rtlRects[index + 1];
+      if (!current || !next) throw new Error('Expected adjacent RTL button-group actions.');
+      const gap = current.left - next.right;
+      expect(gap, 'RTL actions overlap one shared border').toBeGreaterThanOrEqual(-2);
+      expect(gap, 'RTL actions overlap one shared border').toBeLessThanOrEqual(0.5);
+    }
+    const rtlPhysicalRadii = await rtlActions.evaluateAll((elements) =>
+      [elements[0], elements.at(-1)].map((element) => {
+        if (!element) throw new Error('Expected first and last RTL button-group actions.');
+        const style = getComputedStyle(element);
+        return {
+          bottomLeft: Number.parseFloat(style.borderBottomLeftRadius) || 0,
+          bottomRight: Number.parseFloat(style.borderBottomRightRadius) || 0,
+          topLeft: Number.parseFloat(style.borderTopLeftRadius) || 0,
+          topRight: Number.parseFloat(style.borderTopRightRadius) || 0,
+        };
+      }),
+    );
+    expect(rtlPhysicalRadii[0]).toMatchObject({
+      bottomLeft: 0,
+      topLeft: 0,
+    });
+    expect(rtlPhysicalRadii[0]?.bottomRight).toBeGreaterThan(0);
+    expect(rtlPhysicalRadii[0]?.topRight).toBeGreaterThan(0);
+    expect(rtlPhysicalRadii[1]).toMatchObject({
+      bottomRight: 0,
+      topRight: 0,
+    });
+    expect(rtlPhysicalRadii[1]?.bottomLeft).toBeGreaterThan(0);
+    expect(rtlPhysicalRadii[1]?.topLeft).toBeGreaterThan(0);
+
+    await page.setViewportSize({ width: 480, height: 900 });
+    await page.goto(
+      previewUrl({
+        component: 'button-group',
+        args: { connected: false, orientation: 'horizontal' },
+      }),
+    );
+    await settlePage(page);
+    await page.addStyleTag({ content: 'html { font-size: 200% !important; }' });
+    const zoomedActions = page
+      .getByTestId('component-specimen-button-group')
+      .locator('div[krnButtonGroup] > button');
+    const zoomedRows = await zoomedActions.evaluateAll((elements) => [
+      ...new Set(elements.map((element) => Math.round(element.getBoundingClientRect().top))),
+    ]);
+    expect(zoomedRows.length, 'separated actions wrap under 200% text zoom').toBeGreaterThan(1);
+    await expectNoPageOverflow(page);
+    assertNoRuntimeErrors();
+  });
+
+  test('toggle group keeps visible focus and responsive toolbar geometry', async ({ page }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    await page.goto(
+      previewUrl({
+        component: 'toggle-group',
+        args: { multiple: true, orientation: 'horizontal' },
+      }),
+    );
+    await settlePage(page);
+
+    const specimen = page.getByTestId('component-specimen-toggle-group');
+    const group = specimen.locator('div[krnToggleGroup]');
+    const actions = group.locator(':scope > button[krnToggleButton]');
+    await expect(actions).toHaveCount(3);
+    await expect(group).toHaveAttribute('role', 'toolbar');
+    await expect(group).toHaveAttribute('aria-orientation', 'horizontal');
+
+    const list = actions.first();
+    const board = actions.nth(1);
+    await list.focus();
+    await list.press('ArrowRight');
+    await expect(board).toBeFocused();
+    const focusGeometry = await board.evaluate((element) => {
+      const action = getComputedStyle(element);
+      const toolbar = getComputedStyle(element.parentElement as HTMLElement);
+      return {
+        boxShadow: action.boxShadow,
+        outlineStyle: action.outlineStyle,
+        overflowX: toolbar.overflowX,
+        overflowY: toolbar.overflowY,
+      };
+    });
+    expect(focusGeometry.boxShadow).not.toBe('none');
+    expect(focusGeometry.outlineStyle).not.toBe('none');
+    expect(focusGeometry.overflowX).not.toMatch(/hidden|clip/);
+    expect(focusGeometry.overflowY).not.toMatch(/hidden|clip/);
+
+    await page.setViewportSize({ width: 480, height: 900 });
+    await page.addStyleTag({ content: 'html { font-size: 200% !important; }' });
+    await expectNoPageOverflow(page);
+    const toolbarRect = await elementRect(group);
+    const specimenRect = await elementRect(specimen);
+    expect(toolbarRect.width).toBeLessThanOrEqual(specimenRect.width + 1);
+    assertNoRuntimeErrors();
+  });
+
+  test('copy-button renders deterministic async feedback once and remains responsive', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    const openCopyState = async (
+      state: 'idle' | 'pending' | 'copied' | 'error' | 'disabled',
+    ): Promise<{ button: Locator; copy: Locator; status: Locator }> => {
+      await page.goto(
+        previewUrl({
+          component: 'copy-button',
+          state,
+          args: {
+            feedbackDuration: 60_000,
+            size: 'lg',
+            tone: 'success',
+            variant: 'soft',
+          },
+        }),
+      );
+      await settlePage(page);
+      const specimen = page.getByTestId('component-specimen-copy-button');
+      const copy = specimen.locator('krn-copy-button');
+      const button = copy.getByRole('button', { name: 'Copy install command' });
+      const status = copy.locator('.krn-copy-status');
+
+      await expect(copy).toHaveAttribute('data-size', 'lg');
+      await expect(copy).toHaveAttribute('data-tone', 'success');
+      await expect(copy).toHaveAttribute('data-variant', 'soft');
+      await expect(button).toHaveAttribute('type', 'button');
+      await expect(button).toHaveAccessibleName('Copy install command');
+      return { button, copy, status };
+    };
+    const expectStableActionLabel = async (button: Locator): Promise<void> => {
+      const label = button.locator('.krn-copy-label');
+      await expect(label).toHaveCount(1);
+      await expect(label).toHaveText('Copy install command');
+      await expect(label).toBeVisible();
+    };
+
+    let fixture = await openCopyState('idle');
+    await expect(fixture.copy).toHaveAttribute('data-state', 'idle');
+    await expect(fixture.copy).toHaveAttribute('data-pending', 'false');
+    await expect(fixture.status).toHaveText('');
+    await expectStableActionLabel(fixture.button);
+    await expect(fixture.button.locator('.krn-copy-indicator')).toHaveAttribute(
+      'data-state',
+      'idle',
+    );
+    await expect(fixture.button.locator('.krn-copy-indicator')).toHaveText('');
+    const idleButtonRect = await elementRect(fixture.button);
+    const expectStableButtonGeometry = async (button: Locator): Promise<void> => {
+      const rect = await elementRect(button);
+      expect(Math.abs(rect.width - idleButtonRect.width)).toBeLessThanOrEqual(1);
+      expect(Math.abs(rect.height - idleButtonRect.height)).toBeLessThanOrEqual(1);
+    };
+
+    fixture = await openCopyState('pending');
+    await expect(fixture.copy).toHaveAttribute('data-state', 'idle');
+    await expect(fixture.copy).toHaveAttribute('data-pending', 'true');
+    await expect(fixture.button).toHaveAttribute('aria-disabled', 'true');
+    await expectStableActionLabel(fixture.button);
+    await expectStableButtonGeometry(fixture.button);
+    await expect(fixture.status).toHaveText('Copying…');
+    await expect(fixture.button.locator('.krn-action__status')).toHaveText('');
+    await fixture.button.click({ force: true });
+    await expect(fixture.copy).toHaveAttribute('data-pending', 'true');
+
+    for (const [state, feedback, indicator] of [
+      ['copied', 'Copied', '✓'],
+      ['error', 'Could not copy', '!'],
+    ] as const) {
+      fixture = await openCopyState(state);
+      await expect(fixture.copy).toHaveAttribute('data-state', state);
+      await expect(fixture.copy).toHaveAttribute('data-pending', 'false');
+      await expectStableActionLabel(fixture.button);
+      await expect(fixture.button.locator('.krn-copy-indicator')).toHaveAttribute(
+        'data-state',
+        state,
+      );
+      await expect(fixture.button.locator('.krn-copy-indicator')).toHaveText(indicator);
+      await expectStableButtonGeometry(fixture.button);
+      await expect(fixture.status).toHaveText(feedback);
+      const hiddenStatusStyle = await fixture.status.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return {
+          blockSize: style.blockSize,
+          clipPath: style.clipPath,
+          inlineSize: style.inlineSize,
+          overflow: style.overflow,
+          position: style.position,
+        };
+      });
+      expect(hiddenStatusStyle).toMatchObject({
+        blockSize: '1px',
+        inlineSize: '1px',
+        overflow: 'hidden',
+        position: 'absolute',
+      });
+      expect(hiddenStatusStyle.clipPath).toContain('inset(50%)');
+    }
+
+    fixture = await openCopyState('disabled');
+    await expect(fixture.button).toBeDisabled();
+    await fixture.button.evaluate((element) => (element as HTMLButtonElement).click());
+    await expect(fixture.copy).toHaveAttribute('data-state', 'idle');
+    await expect(fixture.copy).toHaveAttribute('data-pending', 'false');
+
+    await page.setViewportSize({ width: 480, height: 900 });
+    fixture = await openCopyState('error');
+    await page.addStyleTag({ content: 'html { font-size: 200% !important; }' });
+    const copyRect = await elementRect(fixture.copy);
+    const canvasRect = await elementRect(page.locator('.specimen-canvas'));
+    expect(copyRect.width).toBeLessThanOrEqual(canvasRect.width + 1);
+    await expectNoPageOverflow(page);
+    assertNoRuntimeErrors();
+  });
+
+  test('tooltip describes the native icon-button focus target', async ({ page }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    const specimen = await openSpecimen(page, 'tooltip');
+    const trigger = specimen.locator('button[krnIconButton][aria-label="Copy public link"]');
+
+    await expect(trigger).toHaveCount(1);
+    await expect(specimen.locator('krn-icon-button')).toHaveCount(0);
+    await trigger.focus();
+
+    const tooltip = page.getByRole('tooltip');
+    await expect(tooltip).toBeVisible();
+    await expect(trigger).toBeFocused();
+    expect(await trigger.evaluate((element) => element.tagName)).toBe('BUTTON');
+
+    const tooltipId = await tooltip.getAttribute('id');
+    const describedBy = await trigger.getAttribute('aria-describedby');
+    expect(tooltipId).toBeTruthy();
+    expect(describedBy?.split(/\s+/)).toContain(tooltipId);
+
+    assertNoRuntimeErrors();
+  });
+
   test('split-button menu items expose a subtle pointer hover without shifting', async ({
     page,
   }) => {
@@ -146,10 +641,11 @@ test.describe('Quality regressions: menus and focus treatment', () => {
     for (const config of [
       {
         id: 'split-button',
-        root: '.krn-split',
+        root: '.krn-split-button',
         triggerName: 'More actions',
         firstItem: 'Publish now',
         lastItem: 'Save as draft',
+        typeaheadKey: 's',
       },
       {
         id: 'dropdown-button',
@@ -157,6 +653,7 @@ test.describe('Quality regressions: menus and focus treatment', () => {
         triggerName: 'Export',
         firstItem: 'CSV spreadsheet',
         lastItem: 'JSON archive',
+        typeaheadKey: 'j',
       },
     ] as const) {
       const specimen = await openSpecimen(page, config.id);
@@ -174,6 +671,12 @@ test.describe('Quality regressions: menus and focus treatment', () => {
       await expect(menu).toBeVisible();
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       await expect(firstItem).toBeFocused();
+      const controlledMenuId = await trigger.getAttribute('aria-controls');
+      const triggerId = await trigger.getAttribute('id');
+      expect(controlledMenuId).toBeTruthy();
+      expect(triggerId).toBeTruthy();
+      await expect(menu).toHaveAttribute('id', controlledMenuId!);
+      await expect(menu).toHaveAttribute('aria-labelledby', triggerId!);
 
       const rootAfter = await elementRect(root);
       const triggerAfter = await elementRect(trigger);
@@ -204,13 +707,94 @@ test.describe('Quality regressions: menus and focus treatment', () => {
       expect(itemMetrics.height).toBeGreaterThanOrEqual(36);
       expect(itemMetrics.width).toBeGreaterThanOrEqual(menuRect.width - 10);
 
+      await firstItem.press(config.typeaheadKey);
+      await expect(lastItem).toBeFocused();
+      await lastItem.press('Home');
+      await expect(firstItem).toBeFocused();
       await firstItem.press('End');
       await expect(lastItem).toBeFocused();
-      await lastItem.press('Escape');
+      await lastItem.press('Home');
+      await expect(firstItem).toBeFocused();
+      await firstItem.press('Space');
+      await expect(menu).toHaveCount(0);
+      await expect(trigger).toBeFocused();
+
+      await trigger.press('ArrowDown');
+      await expect(firstItem).toBeFocused();
+      await firstItem.press('Escape');
       await expect(menu).toHaveCount(0);
       await expect(trigger).toBeFocused();
     }
 
+    assertNoRuntimeErrors();
+  });
+
+  test('dropdown exact-width mode and Tab order delegate to native browser focus navigation', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    await page.goto(
+      previewUrl({
+        component: 'dropdown-button',
+        args: { matchTriggerWidth: true },
+      }),
+    );
+    await settlePage(page);
+
+    const specimen = page.getByTestId('component-specimen-dropdown-button');
+    const host = specimen.locator('krn-dropdown-button');
+    const trigger = host.getByRole('button', { name: 'Export' });
+    await trigger.evaluate((element) => {
+      element.setAttribute('tabindex', '2');
+      element.style.inlineSize = '28rem';
+      const dropdown = element.closest('krn-dropdown-button');
+      if (!dropdown) {
+        throw new Error('Dropdown host is missing.');
+      }
+
+      const before = document.createElement('button');
+      before.type = 'button';
+      before.tabIndex = 1;
+      before.dataset['testid'] = 'dropdown-tab-before';
+      before.textContent = 'Before dropdown';
+
+      const hidden = document.createElement('button');
+      hidden.type = 'button';
+      hidden.tabIndex = 3;
+      hidden.hidden = true;
+      hidden.textContent = 'Hidden after dropdown';
+
+      const after = document.createElement('button');
+      after.type = 'button';
+      after.tabIndex = 4;
+      after.dataset['testid'] = 'dropdown-tab-after';
+      after.textContent = 'After dropdown';
+
+      dropdown.before(before);
+      dropdown.after(hidden, after);
+    });
+
+    await trigger.press('ArrowDown');
+    let menu = page.getByRole('menu');
+    let firstItem = menu.getByRole('menuitem', { name: 'CSV spreadsheet' });
+    await expect(firstItem).toBeFocused();
+    const triggerRect = await elementRect(trigger);
+    const menuRect = await elementRect(menu);
+    expect(triggerRect.width).toBeGreaterThan(320);
+    expect(Math.abs(menuRect.width - triggerRect.width)).toBeLessThanOrEqual(2);
+
+    await page.keyboard.press('Tab');
+    await expect(menu).toHaveCount(0);
+    await expect(page.getByTestId('dropdown-tab-after')).toBeFocused();
+
+    await trigger.focus();
+    await trigger.press('ArrowDown');
+    menu = page.getByRole('menu');
+    firstItem = menu.getByRole('menuitem', { name: 'CSV spreadsheet' });
+    await expect(firstItem).toBeFocused();
+    await page.keyboard.press('Shift+Tab');
+    await expect(menu).toHaveCount(0);
+    await expect(page.getByTestId('dropdown-tab-before')).toBeFocused();
     assertNoRuntimeErrors();
   });
 

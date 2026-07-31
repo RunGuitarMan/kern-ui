@@ -15,14 +15,15 @@ import { KrnToggleButton, KrnToggleGroup } from '@kern-ui/angular/kit';
   imports: [KrnToggleGroup, KrnToggleButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <krn-toggle-group
-      ariaLabel="Visible dashboard layers"
+    <div
+      krnToggleGroup
+      aria-label="Visible dashboard layers"
       [multiple]="true"
       [(values)]="visibleLayers"
     >
-      <krn-toggle-button value="targets">Targets</krn-toggle-button>
-      <krn-toggle-button value="forecast">Forecast</krn-toggle-button>
-    </krn-toggle-group>
+      <button krnToggleButton value="targets">Targets</button>
+      <button krnToggleButton value="forecast">Forecast</button>
+    </div>
   `,
 })
 export class KernToggleGroupAgentExample {

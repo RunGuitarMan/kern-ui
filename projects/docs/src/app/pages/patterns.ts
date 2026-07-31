@@ -61,12 +61,12 @@ import {
           <krn-crud-toolbar ariaLabel="Workspace actions" [selectedCount]="selectedCount()">
             <strong krnToolbarTitle>Workspaces</strong>
             @if (selectedCount()) {
-              <krn-button variant="ghost" tone="danger" (activated)="selectedCount.set(0)"
-                >Archive</krn-button
-              >
+              <button krnButton variant="ghost" tone="danger" (click)="selectedCount.set(0)">
+                Archive
+              </button>
             } @else {
-              <krn-button variant="outline" tone="neutral">Export</krn-button>
-              <krn-button>New workspace</krn-button>
+              <button krnButton variant="outline" tone="neutral">Export</button>
+              <button krnButton>New workspace</button>
             }
           </krn-crud-toolbar>
           <krn-master-detail-layout [(detailOpen)]="detailOpen">
@@ -221,9 +221,9 @@ import {
             </button>
             <button role="menuitem" type="button">Sign out</button>
           </krn-user-menu>
-          <krn-button variant="outline" tone="neutral" (activated)="settingsOpen.set(true)"
-            >Open settings</krn-button
-          >
+          <button krnButton variant="outline" tone="neutral" (click)="settingsOpen.set(true)">
+            Open settings
+          </button>
         </div>
       </section>
     </article>
@@ -244,10 +244,10 @@ import {
         >
       </div>
       <div krnSettingsActions>
-        <krn-button variant="outline" tone="neutral" (activated)="settingsOpen.set(false)"
-          >Cancel</krn-button
-        >
-        <krn-button (activated)="settingsOpen.set(false)">Save changes</krn-button>
+        <button krnButton variant="outline" tone="neutral" (click)="settingsOpen.set(false)">
+          Cancel
+        </button>
+        <button krnButton (click)="settingsOpen.set(false)">Save changes</button>
       </div>
     </krn-settings-panel>
   `,

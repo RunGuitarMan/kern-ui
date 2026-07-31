@@ -15,10 +15,10 @@ import { KrnFloatingActionButton } from '@kern-ui/angular/kit';
   imports: [KrnFloatingActionButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <krn-floating-action-button ariaLabel="Create customer" [extended]="true">
-      <span krnFabIcon aria-hidden="true">+</span>
+    <button krnFab type="button">
+      <span krnFabIcon>+</span>
       Create customer
-    </krn-floating-action-button>
+    </button>
   `,
 })
 export class KernFloatingActionButtonAgentExample {}

@@ -1,4 +1,137 @@
 {
+  "button": {
+    "keywords": ["native button", "form action", "scoped options", "loading announcement"],
+    "related": ["icon-button", "button-group", "split-button", "floating-action-button"],
+    "commonMistakes": [
+      "Configure inheritable visual defaults with provideKrnButtonOptions; keep type, disabled, name, value, form, and ARIA attributes on the native host.",
+      "Use provideKrn translations for application-wide loading copy, a scoped loadingLabel option for a subtree, and the input only for a one-off override."
+    ]
+  },
+  "icon-button": {
+    "keywords": [
+      "native button",
+      "icon-only action",
+      "accessible name",
+      "scoped options",
+      "loading announcement"
+    ],
+    "related": ["button", "toggle-button", "button-group", "floating-action-button"],
+    "commonMistakes": [
+      "Use button[krnIconButton] with a native aria-label or aria-labelledby; keep type, disabled, name, value, form, aria-describedby relationships, and click on the native host.",
+      "Use provideKrnIconButtonOptions for inheritable visual and loading-copy defaults, and prefer Toggle Button when the component must own managed pressed state."
+    ]
+  },
+  "floating-action-button": {
+    "keywords": [
+      "native button",
+      "primary creation action",
+      "compact accessible label",
+      "scoped options",
+      "loading announcement"
+    ],
+    "related": ["button", "icon-button", "button-group"],
+    "commonMistakes": [
+      "Use button[krnFab] with a persistent visible label; compact mode hides that label visually but keeps it as the native accessible name.",
+      "Keep type, disabled, name, value, form, ARIA relationships, and click on the native host instead of recreating component proxy inputs or outputs.",
+      "Use provideKrnFloatingActionButtonOptions for inheritable visual, extended, and loading-copy defaults; reserve a floating action for one high-priority contextual action."
+    ]
+  },
+  "toggle-button": {
+    "keywords": [
+      "native toggle button",
+      "aria-pressed",
+      "controlled pressed state",
+      "scoped state appearance"
+    ],
+    "related": ["button", "icon-button", "toggle-group", "segmented-control"],
+    "commonMistakes": [
+      "Use button[krnToggleButton] with a stable value and visible or native ARIA accessible name; do not nest another interactive element inside it.",
+      "Treat aria-pressed as component-owned derived state. Bind [(pressed)] for standalone controlled state and bind [(values)] on KrnToggleGroup for grouped state.",
+      "Use provideKrnToggleButtonOptions for inheritable pressed and unpressed appearance defaults; use native form, name, description, and click attributes on the same button."
+    ]
+  },
+  "toggle-group": {
+    "keywords": [
+      "toggle toolbar",
+      "roving tabindex",
+      "aria-pressed collection",
+      "controlled string values",
+      "scoped group defaults"
+    ],
+    "related": ["toggle-button", "button-group", "radio-group", "segmented-control"],
+    "commonMistakes": [
+      "Use div[krnToggleGroup] with a native aria-label or aria-labelledby and direct button[krnToggleButton] children whose values are stable and unique.",
+      "Arrow, Home, and End move focus without changing selection; activate the focused native button with Enter or Space.",
+      "Use provideKrnToggleGroupOptions only for inheritable orientation and multiple defaults. Keep disabled and controlled values explicit at the instance.",
+      "Use Radio Group or Segmented Control instead when an Angular form requires exactly one selected value."
+    ]
+  },
+  "button-group": {
+    "keywords": [
+      "native action group",
+      "independent actions",
+      "document-order keyboard",
+      "connected layout",
+      "scoped layout defaults"
+    ],
+    "related": ["button", "icon-button", "toggle-group", "segmented-control", "split-button"],
+    "commonMistakes": [
+      "Use div[krnButtonGroup] with a native aria-label or aria-labelledby; orientation and connected change layout only, while each child action keeps its own native semantics and Tab stop.",
+      "Do not add group-level disabled, loading, selection, or Arrow-key behavior; use Toggle Group or Segmented Control when the composition must own a managed choice.",
+      "Use provideKrnButtonGroupOptions for inheritable orientation or connected defaults; keep accessible naming and child interaction state explicit at the call site."
+    ]
+  },
+  "copy-button": {
+    "keywords": [
+      "clipboard action",
+      "copy feedback",
+      "deterministic async state",
+      "scoped options",
+      "localized status"
+    ],
+    "related": ["button", "icon-button", "code-block"],
+    "commonMistakes": [
+      "Pass the exact immutable value to copy; do not derive clipboard data from formatted or visually hidden DOM text.",
+      "Let the visible action label provide the accessible name. If ariaLabel is necessary, keep the complete visible label inside that override.",
+      "Treat copied and copyError as terminal operation results. While data-pending=\"true\", Copy Button retains focus and suppresses duplicate activation.",
+      "Use provideKrnCopyButtonOptions for inheritable visual and feedback-duration defaults, and use KRN_COPY_LABELS only for a narrow locale boundary.",
+      "Override KRN_CLIPBOARD_WRITER for tests or a platform bridge; do not mutate navigator.clipboard or add document-wide copy listeners."
+    ]
+  },
+  "link": {
+    "keywords": [
+      "native anchor",
+      "navigation",
+      "RouterLink",
+      "external destination",
+      "browser-owned attributes"
+    ],
+    "related": ["button", "breadcrumbs", "back-button", "skip-link"],
+    "commonMistakes": [
+      "Use a[krnLink] for navigation and keep href or RouterLink, target, rel, download, referrerpolicy, ARIA relationships, and click on that native anchor.",
+      "Do not simulate a disabled link. Omit the unavailable navigation control or render non-interactive text; use a native button component for an action in the current context.",
+      "For a privacy-hardened new browsing context, set target=\"_blank\" and explicit rel=\"noopener noreferrer\"; KrnLink never rewrites consumer-owned relationship or referrer policy.",
+      "Named browsing contexts are valid native targets; do not narrow target to the former KrnLinkTarget alias."
+    ]
+  },
+  "form-field": {
+    "keywords": [
+      "field composition",
+      "control-owned state",
+      "label association",
+      "accessible descriptions",
+      "Angular Forms status"
+    ],
+    "related": ["label", "hint", "validation-message", "text-input"],
+    "commonMistakes": [
+      "Keep id, required, disabled, readonly, and Angular Forms bindings on the projected control. Form Field derives presentation and relationships from that control instead of proxying its state.",
+      "Disable a reactive control through FormControl.disable(); do not create a DOM-disabled control whose Angular model remains enabled.",
+      "Use either the label input or one projected KrnLabel. A projected label is the canonical rich-content option and replaces the shorthand label instead of creating a second label.",
+      "Register exactly one control per Form Field. For Checkbox Group, Radio Group, Segmented Control, Verification Code, or Range Slider, project the group component itself; Form Field names its composite root with aria-labelledby and delegates label clicks to its first enabled member.",
+      "Angular validation becomes visually invalid only after the control is touched or dirty. Use mounted error content when a server or cross-field error must be announced before local interaction.",
+      "Use the error input for one inline message or project KrnValidationMessage for controlled validation content. Form Field only references description ids that are mounted in the DOM."
+    ]
+  },
   "select": {
     "keywords": ["single choice", "listbox", "typed option", "reactive forms"],
     "related": ["native-select", "combobox", "autocomplete", "multi-select"],
@@ -130,7 +263,7 @@
     "slots": {
       "[krnPopoverTrigger]": {
         "required": true,
-        "description": "Required non-interactive label content projected into the Popover-owned trigger button; do not project a button, link, form control, or krn-button."
+        "description": "Required non-interactive label content projected into the Popover-owned trigger button; do not project a button, link, form control, or button[krnButton]."
       }
     },
     "commonMistakes": [
@@ -144,7 +277,7 @@
     "slots": {
       "[krnHoverCardTrigger]": {
         "required": true,
-        "description": "Required non-interactive label content projected into the Hover Card-owned trigger button; do not project a button, link, form control, or krn-button."
+        "description": "Required non-interactive label content projected into the Hover Card-owned trigger button; do not project a button, link, form control, or button[krnButton]."
       }
     },
     "commonMistakes": [
@@ -157,7 +290,7 @@
     "slots": {
       "[krnMenuTrigger]": {
         "required": false,
-        "description": "Optional non-interactive label content projected into the Menu-owned trigger button; omit it to use triggerLabel and never project a button, link, form control, or krn-button."
+        "description": "Optional non-interactive label content projected into the Menu-owned trigger button; omit it to use triggerLabel and never project a button, link, form control, or button[krnButton]."
       }
     },
     "commonMistakes": [

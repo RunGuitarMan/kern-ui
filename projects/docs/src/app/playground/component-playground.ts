@@ -30,6 +30,7 @@ import {
   KRN_LOCALE_PACKS,
   KRN_TRANSLATIONS,
   KrnThemeDirective,
+  provideKrnTranslationBridge,
 } from '@kern-ui/angular/core';
 import { KrnCodeBlock, KrnCopyButton } from '@kern-ui/angular/kit';
 
@@ -126,6 +127,31 @@ function angularLiteral(value: KernPlaygroundValue): string {
   return `'${value.replaceAll('\\', '\\\\').replaceAll("'", "\\'").replaceAll('\n', '\\n')}'`;
 }
 
+interface MaterializedSelectorHost {
+  readonly attributes: readonly string[];
+  readonly tagName: string;
+}
+
+function materializedSelectorHost(selector: string): MaterializedSelectorHost | null {
+  const tagName = selector.match(/^([a-z][a-z0-9-]*)/i)?.[1];
+  if (!tagName) return null;
+
+  const attributes = [...selector.matchAll(/\[\s*([^\s~|^$*!=\]]+)/g)].map(
+    ([, attribute]) => attribute as string,
+  );
+  return Object.freeze({
+    attributes: Object.freeze(attributes),
+    tagName,
+  });
+}
+
+function openingTagHasAttribute(openingTag: string, attribute: string): boolean {
+  const escaped = escapeRegExp(attribute);
+  return new RegExp(
+    `\\s+(?:${escaped}|\\[${escaped}\\]|\\[\\(${escaped}\\)\\]|\\*${escaped})(?=\\s|=|/?>)`,
+  ).test(openingTag);
+}
+
 function materializePublicBindings(
   source: string,
   selector: string,
@@ -139,11 +165,18 @@ function materializePublicBindings(
   );
   if (publicControls.length === 0) return source;
 
-  const openingTagPattern = new RegExp(`<${escapeRegExp(selector)}\\b[^>]*>`);
-  const openingTag = source.match(openingTagPattern)?.[0];
-  if (!openingTag) return source;
+  const host = materializedSelectorHost(selector);
+  if (!host) return source;
+  const openingTagMatches = source.matchAll(
+    new RegExp(`<${escapeRegExp(host.tagName)}\\b[^>]*>`, 'g'),
+  );
+  const openingTagMatch = [...openingTagMatches].find((match) =>
+    host.attributes.every((attribute) => openingTagHasAttribute(match[0], attribute)),
+  );
+  const openingTag = openingTagMatch?.[0];
+  if (!openingTag || openingTagMatch?.index === undefined) return source;
 
-  const prefix = `<${selector}`;
+  const prefix = `<${host.tagName}`;
   const selfClosing = /\/\s*>$/.test(openingTag);
   let attributes = openingTag.slice(prefix.length, -1).replace(/\/\s*$/, '');
   const bindings: string[] = [];
@@ -166,7 +199,11 @@ function materializePublicBindings(
 
   const configuredOpeningTag =
     `${prefix}${attributes.trimEnd()} ${bindings.join(' ')}` + (selfClosing ? ' />' : '>');
-  return source.replace(openingTagPattern, configuredOpeningTag);
+  return (
+    source.slice(0, openingTagMatch.index) +
+    configuredOpeningTag +
+    source.slice(openingTagMatch.index + openingTag.length)
+  );
 }
 
 const PREVIEW_SPECIMEN_TEMPLATE = `
@@ -187,6 +224,7 @@ const PREVIEW_SPECIMEN_TEMPLATE = `
     { provide: LOCALE_ID, useValue: 'en-US' },
     { provide: KRN_LOCALE, useValue: 'en-US' },
     { provide: KRN_TRANSLATIONS, useValue: KRN_LOCALE_PACKS['en-US'].translations },
+    provideKrnTranslationBridge(),
   ],
   template: PREVIEW_SPECIMEN_TEMPLATE,
 })
@@ -206,6 +244,7 @@ export class PreviewFixtureEn {
     { provide: LOCALE_ID, useValue: 'ru-RU' },
     { provide: KRN_LOCALE, useValue: 'ru-RU' },
     { provide: KRN_TRANSLATIONS, useValue: KRN_LOCALE_PACKS['ru-RU'].translations },
+    provideKrnTranslationBridge(),
   ],
   template: PREVIEW_SPECIMEN_TEMPLATE,
 })

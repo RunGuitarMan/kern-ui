@@ -1,129 +1,63 @@
-import type { Provider } from '@angular/core';
 import {
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
-  computed,
-  forwardRef,
-  InjectionToken,
-  input,
-  model,
+  effect,
+  ElementRef,
   inject,
+  input,
+  Renderer2,
 } from '@angular/core';
-import type { KrnOrientation, KrnSize } from './action-types';
-
-interface KrnToggleGroupController {
-  isSelected(value: string): boolean;
-  toggle(value: string): void;
-  readonly disabled: () => boolean;
-}
-
-const KRN_TOGGLE_GROUP = new InjectionToken<KrnToggleGroupController>('KRN_TOGGLE_GROUP');
-
-const TOGGLE_GROUP_PROVIDER: Provider = {
-  provide: KRN_TOGGLE_GROUP,
-  useExisting: forwardRef(() => KrnToggleGroup),
-};
+import type { KrnOrientation } from './action-types';
+import { KRN_BUTTON_GROUP_OPTIONS } from './button-group-options';
 
 @Component({
-  selector: 'krn-button-group',
+  selector: 'div[krnButtonGroup], krn-button-group',
   host: {
-    class: 'krn-action-group',
+    class: 'krn-action-group krn-button-group',
     role: 'group',
-    '[attr.aria-label]': 'ariaLabel() || null',
+    '[attr.data-connected]': 'connected() ? "true" : null',
     '[attr.data-orientation]': 'orientation()',
   },
   template: `<ng-content />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnButtonGroup {
-  readonly ariaLabel = input('');
-  readonly orientation = input<KrnOrientation>('horizontal');
-}
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly options = inject(KRN_BUTTON_GROUP_OPTIONS);
+  private readonly renderer = inject(Renderer2);
+  private legacyAriaLabelOwned = false;
 
-@Component({
-  selector: 'krn-toggle-group',
-  providers: [TOGGLE_GROUP_PROVIDER],
-  host: {
-    class: 'krn-action-group',
-    role: 'group',
-    '[attr.aria-label]': 'ariaLabel()',
-    '[attr.aria-disabled]': 'disabled()',
-    '[attr.data-orientation]': 'orientation()',
-  },
-  template: `<ng-content />`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class KrnToggleGroup implements KrnToggleGroupController {
-  readonly ariaLabel = input.required<string>();
-  readonly orientation = input<KrnOrientation>('horizontal');
-  readonly multiple = input(false, { transform: booleanAttribute });
-  readonly disabled = input(false, { transform: booleanAttribute });
-  readonly values = model<readonly string[]>([]);
+  /** Changes the visual layout axis without altering native document-order keyboard behavior. */
+  readonly orientation = input<KrnOrientation>(this.options.orientation);
+  /** Joins adjacent action borders and radii without coordinating child state or activation. */
+  readonly connected = input(this.options.connected, { transform: booleanAttribute });
 
-  isSelected(value: string): boolean {
-    return this.values().includes(value);
-  }
+  /**
+   * Deprecated compatibility bridge for a native accessible-name attribute.
+   *
+   * @deprecated Set native `aria-label` or `aria-labelledby` on the group host.
+   * This bridge exists only for the legacy `<krn-button-group>` API.
+   */
+  readonly ariaLabel = input<string | null | undefined>(undefined);
 
-  toggle(value: string): void {
-    if (this.disabled()) {
+  private readonly syncLegacyAriaLabel = effect(() => {
+    const ariaLabel = this.ariaLabel();
+    const host = this.elementRef.nativeElement;
+
+    if (ariaLabel === undefined) {
+      if (this.legacyAriaLabelOwned) {
+        this.renderer.removeAttribute(host, 'aria-label');
+        this.legacyAriaLabelOwned = false;
+      }
       return;
     }
 
-    const current = this.values();
-    const next = this.multiple()
-      ? current.includes(value)
-        ? current.filter((item) => item !== value)
-        : [...current, value]
-      : current.includes(value)
-        ? []
-        : [value];
-
-    this.values.set(next);
-  }
-}
-
-@Component({
-  selector: 'krn-toggle-button',
-  template: `
-    <button
-      class="krn-action"
-      type="button"
-      [attr.aria-pressed]="isPressed()"
-      [attr.data-size]="size()"
-      [attr.data-tone]="isPressed() ? 'brand' : 'neutral'"
-      [attr.data-variant]="isPressed() ? 'soft' : 'ghost'"
-      [disabled]="isDisabled()"
-      (click)="toggle()"
-    >
-      <span class="krn-action__label"><ng-content /></span>
-    </button>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class KrnToggleButton {
-  private readonly group = inject(KRN_TOGGLE_GROUP, { optional: true });
-
-  readonly value = input.required<string>();
-  readonly size = input<KrnSize>('md');
-  readonly disabled = input(false, { transform: booleanAttribute });
-  readonly pressed = model(false);
-
-  protected readonly isPressed = computed(() =>
-    this.group ? this.group.isSelected(this.value()) : this.pressed(),
-  );
-  protected readonly isDisabled = computed(
-    () => this.disabled() || Boolean(this.group?.disabled()),
-  );
-
-  protected toggle(): void {
-    if (this.isDisabled()) {
-      return;
-    }
-    if (this.group) {
-      this.group.toggle(this.value());
+    this.legacyAriaLabelOwned = true;
+    if (ariaLabel) {
+      this.renderer.setAttribute(host, 'aria-label', ariaLabel);
     } else {
-      this.pressed.update((pressed) => !pressed);
+      this.renderer.removeAttribute(host, 'aria-label');
     }
-  }
+  });
 }

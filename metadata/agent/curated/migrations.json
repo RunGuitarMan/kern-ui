@@ -3,7 +3,7 @@
     "id": "narrow-owner-imports",
     "from": "@kern-ui/angular",
     "to": "@kern-ui/angular/<owner>",
-    "summary": "Move root compatibility imports to the canonical cdk, core, kit, addon-grid, addon-charts, patterns, or testing owner.",
+    "summary": "Move root compatibility imports to the canonical cdk, i18n, core, kit, addon-grid, addon-charts, patterns, or testing owner.",
     "components": [],
     "before": "import { KrnButton, KrnDataGrid } from '@kern-ui/angular';",
     "after": "import { KrnButton } from '@kern-ui/angular/kit';\nimport { KrnDataGrid } from '@kern-ui/angular/addon-grid';",
@@ -27,6 +27,96 @@
     "components": ["split-layout"],
     "before": "<krn-split-layout reverseCollapsed>\n  <main krnSplitPrimary>Primary</main>\n  <aside krnSplitSecondary>Secondary first when stacked</aside>\n</krn-split-layout>",
     "after": "<krn-split-layout ratio=\"1:2\">\n  <aside krnSplitPrimary>Secondary first in every reading mode</aside>\n  <main krnSplitSecondary>Primary second in every reading mode</main>\n</krn-split-layout>",
+    "automatic": false
+  },
+  {
+    "id": "button-native-host",
+    "from": "<krn-button>, (activated), ariaLabel, and pressed",
+    "to": "<button krnButton>, (click), native ARIA attributes other than loading-owned aria-disabled, or KrnToggleButton",
+    "summary": "Move Button behavior onto the native button, replace static ariaLabel with aria-label and bound ariaLabel with attr.aria-label, and replace pressed with KrnToggleButton unless native aria-pressed semantics are intentional. aria-disabled is reserved for the derived loading state; use native disabled for ordinary unavailability.",
+    "components": ["button"],
+    "before": "<krn-button\n  type=\"submit\"\n  [disabled]=\"saving\"\n  [ariaLabel]=\"saveLabel\"\n  [pressed]=\"selected\"\n  (activated)=\"save()\"\n>Save</krn-button>",
+    "after": "<button\n  krnButton\n  type=\"submit\"\n  [disabled]=\"saving\"\n  [attr.aria-label]=\"saveLabel\"\n  [attr.aria-pressed]=\"selected\"\n  (click)=\"save()\"\n>Save</button>",
+    "automatic": false
+  },
+  {
+    "id": "link-native-host",
+    "from": "<krn-link>, KrnLinkTarget, disabled, ariaLabel, and (activated)",
+    "to": "<a krnLink> with native anchor/ARIA attributes, href or RouterLink, and (click)",
+    "summary": "Move Link presentation onto one native anchor. Keep href or RouterLink, arbitrary named targets, rel, download, referrerpolicy, accessible-name relationships, and click on that host. KrnLink no longer rewrites rel or simulates disabled navigation; render unavailable navigation as text or omit it.",
+    "components": ["link"],
+    "before": "<krn-link\n  [href]=\"destination\"\n  [target]=\"target\"\n  [rel]=\"relationship\"\n  [ariaLabel]=\"linkLabel\"\n  [disabled]=\"unavailable\"\n  (activated)=\"trackNavigation($event)\"\n>Audit policy</krn-link>",
+    "after": "@if (!unavailable) {\n  <a\n    krnLink\n    [href]=\"destination\"\n    [target]=\"target\"\n    [rel]=\"relationship\"\n    [attr.aria-label]=\"linkLabel\"\n    (click)=\"trackNavigation($event)\"\n  >Audit policy</a>\n} @else {\n  <span>Audit policy unavailable</span>\n}",
+    "automatic": false
+  },
+  {
+    "id": "button-harness-pressed",
+    "from": "KrnButtonHarnessFilters.pressed and KrnButtonHarness.isPressed()",
+    "to": "KrnToggleButton harness semantics or the native aria-pressed attribute",
+    "summary": "Use KrnToggleButton for toggle interactions. If a plain native button deliberately owns aria-pressed, remove the pressed harness filter and read getNativeButton().getAttribute('aria-pressed') explicitly.",
+    "components": ["button", "toggle-button"],
+    "before": "const button = await loader.getHarness(KrnButtonHarness.with({ pressed: true }));\nexpect(await button.isPressed()).toBe(true);",
+    "after": "const button = await loader.getHarness(KrnButtonHarness);\nexpect(await (await button.getNativeButton()).getAttribute('aria-pressed')).toBe('true');",
+    "automatic": false
+  },
+  {
+    "id": "icon-button-native-host",
+    "from": "<krn-icon-button>, (activated), ariaLabel, pressed, disabled, and type inputs",
+    "to": "<button krnIconButton> for actions or KrnToggleButton for pressed state",
+    "summary": "Move stateless Icon Button behavior onto the native button, replace static ariaLabel with aria-label and bound ariaLabel with attr.aria-label, and keep type, disabled, form, accessible naming, descriptions, and click semantics on the host. aria-disabled is reserved for loading; use native disabled for ordinary unavailability. Migrate pressed state to KrnToggleButton so the visual and accessibility states remain synchronized.",
+    "components": ["icon-button", "toggle-button"],
+    "before": "<krn-icon-button\n  [ariaLabel]=\"actionLabel\"\n  [disabled]=\"saving\"\n  [pressed]=\"selected\"\n  type=\"submit\"\n  (activated)=\"save()\"\n>✓</krn-icon-button>",
+    "after": "<!-- Stateless action -->\n<button\n  krnIconButton\n  [attr.aria-label]=\"actionLabel\"\n  [disabled]=\"saving\"\n  type=\"submit\"\n  (click)=\"save()\"\n>✓</button>\n\n<!-- Managed pressed state -->\n<button\n  krnToggleButton\n  value=\"selected\"\n  [(pressed)]=\"selected\"\n  [disabled]=\"saving\"\n>Selected</button>",
+    "automatic": false
+  },
+  {
+    "id": "floating-action-button-native-host",
+    "from": "<krn-floating-action-button>, (activated), ariaLabel, disabled, and type inputs",
+    "to": "<button krnFab>, (click), native button/form semantics, and native ARIA attributes other than loading-owned aria-disabled",
+    "summary": "Move Floating Action Button behavior onto one native button, keep the projected label mounted as its accessible name in compact mode, and preserve loading focus while duplicate activation is suppressed. aria-disabled is reserved for loading; use native disabled for ordinary unavailability.",
+    "components": ["floating-action-button"],
+    "before": "<krn-floating-action-button\n  [ariaLabel]=\"createLabel\"\n  [disabled]=\"saving\"\n  type=\"submit\"\n  (activated)=\"create()\"\n>\n  <span krnFabIcon>+</span>\n  Create workspace\n</krn-floating-action-button>",
+    "after": "<button\n  krnFab\n  [attr.aria-label]=\"createLabel\"\n  [disabled]=\"saving\"\n  type=\"submit\"\n  (click)=\"create()\"\n>\n  <span krnFabIcon>+</span>\n  Create workspace\n</button>",
+    "automatic": false
+  },
+  {
+    "id": "toggle-button-native-host",
+    "from": "<krn-toggle-button>",
+    "to": "<button krnToggleButton>",
+    "summary": "Move managed pressed state onto one native button. Keep value, disabled, pressed, native form attributes, accessible-name relationships, and click on that host; aria-pressed is derived and owned by KrnToggleButton.",
+    "components": ["toggle-button", "toggle-group"],
+    "before": "<krn-toggle-button\n  value=\"bold\"\n  [(pressed)]=\"boldEnabled\"\n  [disabled]=\"readOnly\"\n>Bold</krn-toggle-button>",
+    "after": "<button\n  krnToggleButton\n  type=\"button\"\n  value=\"bold\"\n  [(pressed)]=\"boldEnabled\"\n  [disabled]=\"readOnly\"\n>Bold</button>",
+    "automatic": false
+  },
+  {
+    "id": "toggle-group-native-host",
+    "from": "<krn-toggle-group> and the ariaLabel input",
+    "to": "<div krnToggleGroup> and native aria-label or aria-labelledby attributes",
+    "summary": "Move Toggle Group coordination onto the canonical labelled toolbar host. The legacy element and ariaLabel input remain deprecated compatibility bridges; direct native Toggle Button children participate in roving focus and controlled values.",
+    "components": ["toggle-group", "toggle-button"],
+    "before": "<krn-toggle-group [ariaLabel]=\"formattingLabel\" [(values)]=\"formats\">\n  <button krnToggleButton value=\"bold\">Bold</button>\n  <button krnToggleButton value=\"italic\">Italic</button>\n</krn-toggle-group>",
+    "after": "<div krnToggleGroup [attr.aria-label]=\"formattingLabel\" [(values)]=\"formats\">\n  <button krnToggleButton value=\"bold\">Bold</button>\n  <button krnToggleButton value=\"italic\">Italic</button>\n</div>",
+    "automatic": false
+  },
+  {
+    "id": "button-group-native-host",
+    "from": "<krn-button-group> and the ariaLabel input",
+    "to": "<div krnButtonGroup> and native aria-label or aria-labelledby attributes",
+    "summary": "Move Button Group layout onto the canonical directive host and keep accessible naming on the native element. The legacy element and ariaLabel input remain deprecated compatibility bridges; orientation and connected affect layout only.",
+    "components": ["button-group"],
+    "before": "<krn-button-group [ariaLabel]=\"reviewActionsLabel\">\n  <button krnButton>Request changes</button>\n  <button krnButton>Approve</button>\n</krn-button-group>",
+    "after": "<div krnButtonGroup [attr.aria-label]=\"reviewActionsLabel\">\n  <button krnButton type=\"button\">Request changes</button>\n  <button krnButton type=\"button\">Approve</button>\n</div>",
+    "automatic": false
+  },
+  {
+    "id": "copy-button-lightweight-i18n-bridge",
+    "from": "A nested injector that provides KRN_TRANSLATIONS directly for KrnCopyButton",
+    "to": "The same KRN_TRANSLATIONS provider plus provideKrnTranslationBridge(), or a direct KRN_COPY_LABELS override",
+    "summary": "Keep Copy Button in a tree-shakable i18n entrypoint while explicitly bridging a nested complete translation registry. Application-wide provideKrn() already installs the bridge and needs no change.",
+    "components": ["copy-button"],
+    "before": "providers: [\n  { provide: KRN_TRANSLATIONS, useValue: nestedTranslations },\n]",
+    "after": "providers: [\n  { provide: KRN_TRANSLATIONS, useValue: nestedTranslations },\n  provideKrnTranslationBridge(),\n]",
     "automatic": false
   },
   {

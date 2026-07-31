@@ -15,11 +15,12 @@ isolate Grid and Charts at the package level.
 Kern publishes this acyclic runtime graph:
 
 ```text
-cdk ─→ core ─→ kit ─→ patterns
-  └────┴────→ addon-grid
-       └────→ addon-charts
+cdk ──────→ core ─→ kit ─→ patterns
+  └─────────┴────→ addon-grid
+            └────→ addon-charts
+i18n ─────→ core + kit
 
-root ─→ cdk + core + kit + addon-grid + addon-charts + patterns
+root ─→ cdk + i18n + core + kit + addon-grid + addon-charts + patterns
 testing ─→ Angular CDK testing only
 ```
 
@@ -27,6 +28,7 @@ The supported package paths are:
 
 ```text
 @kern-ui/angular/cdk
+@kern-ui/angular/i18n
 @kern-ui/angular/core
 @kern-ui/angular/kit
 @kern-ui/angular/addon-grid
@@ -41,6 +43,10 @@ subpaths, never relative source paths or the root compatibility API.
 
 The root entrypoint contains re-exports only and remains supported for at least one major line.
 It must expose the exact same runtime objects as direct entrypoints.
+
+[ADR 0005](0005-lightweight-i18n-entrypoint.md) records why the independent `i18n` leaf-token
+entrypoint exists. Core and Kit may depend on it; it never depends on CDK, Core, Kit, or product
+layers.
 
 ## Enforcement
 

@@ -6,6 +6,7 @@
  */
 
 export * from '@kern-ui/angular/cdk';
+export * from '@kern-ui/angular/i18n';
 export * from '@kern-ui/angular/core';
 export * from '@kern-ui/angular/kit';
 export * from '@kern-ui/angular/addon-grid';

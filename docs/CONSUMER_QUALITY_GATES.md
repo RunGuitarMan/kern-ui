@@ -9,8 +9,9 @@ workspace path aliases are deliberately excluded from these checks.
 both `types` and `default` conditions. Every discovered TypeScript entrypoint must be registered
 in `projects/kern/api/entrypoints.json` and have a committed, normalized declaration baseline.
 
-The current baselines cover the root compatibility API, all six runtime subpaths (`cdk`, `core`,
-`kit`, `addon-grid`, `addon-charts`, and `patterns`), and `@kern-ui/angular/testing`.
+The current baselines cover the root compatibility API, all seven runtime subpaths (`cdk`, `i18n`,
+`core`, `kit`, `addon-grid`, `addon-charts`, and `patterns`), and
+`@kern-ui/angular/testing`.
 
 An added, removed, or changed public declaration fails CI. After confirming the semantic-version
 impact, migration guidance, and changelog entry, update baselines explicitly:
@@ -28,7 +29,7 @@ so the gate scales to physical runtime subpaths without changing its implementat
 ## Runtime entrypoint ownership and identity
 
 `projects/kern/api/runtime-entrypoints.json` is the reviewed ownership and dependency matrix for
-`cdk`, `core`, `kit`, `addon-grid`, `addon-charts`, and `patterns`.
+`cdk`, `i18n`, `core`, `kit`, `addon-grid`, `addon-charts`, and `patterns`.
 
 `npm run verify:entrypoint-boundaries` runs before compilation and requires:
 
@@ -67,10 +68,15 @@ consumer case.
    and testing entrypoints;
 6. type-checks strict consumers of root, direct runtime subpaths, and testing APIs;
 7. production-builds isolated Button, Form, Select, Grid, and Charts applications from both the
-   root compatibility API and their direct `kit` or `addon-*` subpaths;
+   root compatibility API and their direct `kit` or `addon-*` subpaths, plus a Button with a
+   direct lightweight `i18n` override;
 8. enforces raw and gzip JavaScript budgets;
 9. limits each root/direct bundle pair to a 1 KiB raw and 512 byte gzip difference;
 10. checks retained and forbidden component markers to catch tree-shaking regressions.
+
+The Button, direct-Kit Button, and direct-i18n Button fixtures share the same raw/gzip limits.
+They reject `KRN_TRANSLATIONS` and representative full-dictionary copy so a leaf token cannot
+silently regain a Core dependency.
 
 Fixtures and budgets live in `tests/consumer-fixtures`. A budget increase must be supported by an
 intentional feature or dependency change and reviewed alongside the before/after measured sizes.
@@ -78,11 +84,13 @@ Do not raise a limit merely to make CI pass.
 
 The current complex-entrypoint limits were calibrated after the enterprise API pass:
 
-| Fixture | Measured raw / gzip |   Limit raw / gzip | Included contract                                                              |
-| ------- | ------------------: | -----------------: | ------------------------------------------------------------------------------ |
-| Select  |  249,381 / 72,471 B | 255,000 / 75,000 B | typed local/remote filtering, controlled loading states, late label resolution |
-| Grid    |  284,261 / 80,785 B | 292,000 / 83,000 B | server data source, virtualization, pinned regions, explicit async states      |
-| Charts  |  194,548 / 56,997 B | 200,000 / 59,000 B | keyboard marks, source tables, stable empty/loading/error semantics            |
+| Fixture              | Measured raw / gzip |   Limit raw / gzip | Included contract                                                              |
+| -------------------- | ------------------: | -----------------: | ------------------------------------------------------------------------------ |
+| Button               |  157,844 / 50,534 B | 161,000 / 52,000 B | native host, loading state, scoped defaults, English leaf-copy fallback        |
+| Button + direct i18n |  157,921 / 50,546 B | 161,000 / 52,000 B | direct leaf-token override without the complete translation registry           |
+| Select               |  252,356 / 73,435 B | 255,000 / 75,000 B | typed local/remote filtering, controlled loading states, late label resolution |
+| Grid                 |  284,610 / 80,894 B | 292,000 / 83,000 B | server data source, virtualization, pinned regions, explicit async states      |
+| Charts               |  194,605 / 57,022 B | 200,000 / 59,000 B | keyboard marks, source tables, stable empty/loading/error semantics            |
 
 Root and direct-subpath fixtures must still stay within 1 KiB raw and 512 B gzip of one another.
 Any future increase must update this evidence table with fresh production measurements.

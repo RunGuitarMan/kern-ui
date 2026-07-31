@@ -95,7 +95,9 @@ test.describe('Tier 1 browser contract', () => {
       await expect(stage).toHaveAttribute('data-krn-motion', 'reduce');
       await expect(stage).toHaveAttribute('data-state', 'loading');
       await expect(primaryAction).toHaveAttribute('data-variant', 'soft');
-      await expect(primaryAction).toHaveAttribute('aria-busy', 'true');
+      await expect(primaryAction).not.toHaveAttribute('aria-busy');
+      await expect(primaryAction).toHaveAttribute('aria-disabled', 'true');
+      await expect(primaryAction.getByRole('status')).toHaveText('Загрузка…');
     };
 
     await assertPlaygroundState();
@@ -104,6 +106,216 @@ test.describe('Tier 1 browser contract', () => {
     await expect(page).toHaveURL(sharedUrl);
     await assertPlaygroundState();
 
+    assertNoRuntimeErrors();
+  });
+
+  test('keeps native icon-button semantics across browsers', async ({ page }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    await page.goto(
+      previewUrl({
+        component: 'icon-button',
+        args: { loading: true },
+      }),
+    );
+    await settlePage(page);
+
+    const specimen = page.getByTestId('component-specimen-icon-button');
+    const button = specimen.locator('button[krnIconButton]').first();
+    await expect(button).toHaveAccessibleName('Create workspace');
+    await expect(button).toHaveAttribute('type', 'button');
+    await expect(button).toHaveAttribute('data-loading', 'true');
+    await expect(button).toHaveAttribute('aria-disabled', 'true');
+    await expect(button).not.toHaveAttribute('aria-busy');
+    await expect(button.getByRole('status')).toHaveText('Loading…');
+    await expect(button.locator('button')).toHaveCount(0);
+
+    const rect = await button.evaluate((element) => {
+      const { height, width } = element.getBoundingClientRect();
+      return { height, width };
+    });
+    expect(Math.abs(rect.width - rect.height), 'icon button is square').toBeLessThanOrEqual(1);
+
+    await button.focus();
+    await expect(button).toBeFocused();
+    assertNoRuntimeErrors();
+  });
+
+  test('keeps the native connected button-group contract across browsers', async ({ page }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+
+    await page.goto(
+      previewUrl({
+        component: 'button-group',
+        args: { connected: true, orientation: 'horizontal' },
+      }),
+    );
+    await settlePage(page);
+
+    const specimen = page.getByTestId('component-specimen-button-group');
+    const group = specimen.locator('div[krnButtonGroup]');
+    const actions = group.locator(':scope > button[krnButton], :scope > button[krnIconButton]');
+    const requestChanges = group.getByRole('button', { name: 'Request changes' });
+    const approve = group.getByRole('button', { name: 'Approve' });
+    const more = group.getByRole('button', { name: 'More review actions' });
+
+    await expect(group).toHaveCount(1);
+    await expect(group).toHaveAttribute('role', 'group');
+    await expect(group).toHaveAccessibleName('Review actions');
+    await expect(group).toHaveAttribute('data-connected', 'true');
+    await expect(group).toHaveAttribute('data-orientation', 'horizontal');
+    await expect(actions).toHaveCount(3);
+    await expect(group.locator(':scope > button[krnButton]')).toHaveCount(2);
+    await expect(group.locator(':scope > button[krnIconButton]')).toHaveCount(1);
+
+    const gaps = await actions.evaluateAll((elements) =>
+      elements.slice(0, -1).map((element, index) => {
+        const current = element.getBoundingClientRect();
+        const next = elements[index + 1]?.getBoundingClientRect();
+        if (!next) {
+          throw new Error('Expected an adjacent button-group action.');
+        }
+        return next.left - current.right;
+      }),
+    );
+    for (const gap of gaps) {
+      expect(gap, 'connected actions have no visible horizontal gap').toBeGreaterThanOrEqual(-2);
+      expect(gap, 'connected actions have no visible horizontal gap').toBeLessThanOrEqual(0.5);
+    }
+
+    await requestChanges.focus();
+    await requestChanges.press('ArrowRight');
+    await expect(requestChanges).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(approve).toBeFocused();
+
+    const focusAndOverflow = await approve.evaluate((element) => {
+      const actionStyle = getComputedStyle(element);
+      const groupStyle = getComputedStyle(element.parentElement as HTMLElement);
+      return {
+        boxShadow: actionStyle.boxShadow,
+        outlineStyle: actionStyle.outlineStyle,
+        overflowX: groupStyle.overflowX,
+        overflowY: groupStyle.overflowY,
+      };
+    });
+    expect(focusAndOverflow.boxShadow).not.toBe('none');
+    expect(focusAndOverflow.outlineStyle).not.toBe('none');
+    expect(focusAndOverflow.overflowX).not.toMatch(/hidden|clip/);
+    expect(focusAndOverflow.overflowY).not.toMatch(/hidden|clip/);
+
+    await page.keyboard.press('Tab');
+    await expect(more).toBeFocused();
+
+    const iconRect = await more.evaluate((element) => {
+      const { height, width } = element.getBoundingClientRect();
+      return { height, width };
+    });
+    expect(
+      Math.abs(iconRect.width - iconRect.height),
+      'grouped icon button is square',
+    ).toBeLessThanOrEqual(1);
+
+    assertNoRuntimeErrors();
+  });
+
+  test('keeps toggle-group toolbar navigation and pressed state across browsers', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    await page.goto(
+      previewUrl({
+        component: 'toggle-group',
+        args: { multiple: true, orientation: 'vertical' },
+      }),
+    );
+    await settlePage(page);
+
+    const specimen = page.getByTestId('component-specimen-toggle-group');
+    const group = specimen.getByRole('toolbar', { name: 'View mode' });
+    const list = group.getByRole('button', { name: 'List' });
+    const board = group.getByRole('button', { name: 'Board' });
+
+    await expect(group).toHaveAttribute('aria-orientation', 'vertical');
+    await expect(list).toHaveAttribute('aria-pressed', 'true');
+    await list.focus();
+    await list.press('ArrowDown');
+    await expect(board).toBeFocused();
+    await expect(board).toHaveAttribute('aria-pressed', 'false');
+    await board.press('Enter');
+    await expect(board).toHaveAttribute('aria-pressed', 'true');
+    await expect(list).toHaveAttribute('aria-pressed', 'true');
+    assertNoRuntimeErrors();
+  });
+
+  test('keeps deterministic copy-button state and keyboard behavior across browsers', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    await page.goto(
+      previewUrl({
+        component: 'copy-button',
+        state: 'idle',
+        args: {
+          feedbackDuration: 60_000,
+          size: 'sm',
+          tone: 'brand',
+          variant: 'solid',
+        },
+      }),
+    );
+    await settlePage(page);
+
+    let specimen = page.getByTestId('component-specimen-copy-button');
+    let copy = specimen.locator('krn-copy-button');
+    let button = copy.getByRole('button', { name: 'Copy install command' });
+    let status = copy.locator('.krn-copy-status');
+
+    await expect(copy).toHaveAttribute('data-state', 'idle');
+    await expect(copy).toHaveAttribute('data-pending', 'false');
+    await expect(copy).toHaveAttribute('data-size', 'sm');
+    await expect(copy).toHaveAttribute('data-tone', 'brand');
+    await expect(copy).toHaveAttribute('data-variant', 'solid');
+    await expect(button).toHaveAttribute('type', 'button');
+    await button.focus();
+    await button.press('Space');
+    await expect(button).toBeFocused();
+    await expect(copy).toHaveAttribute('data-state', 'copied');
+    await expect(status).toHaveText('Copied');
+
+    await page.goto(
+      previewUrl({
+        component: 'copy-button',
+        state: 'pending',
+      }),
+    );
+    await settlePage(page);
+    specimen = page.getByTestId('component-specimen-copy-button');
+    copy = specimen.locator('krn-copy-button');
+    button = copy.getByRole('button', { name: 'Copy install command' });
+    status = copy.locator('.krn-copy-status');
+    await expect(copy).toHaveAttribute('data-state', 'idle');
+    await expect(copy).toHaveAttribute('data-pending', 'true');
+    await expect(button).toHaveAttribute('aria-disabled', 'true');
+    await expect(button).not.toHaveAttribute('aria-busy');
+    await expect(status).toHaveText('Copying…');
+    await expect(button.locator('.krn-action__status')).toHaveText('');
+
+    await page.goto(
+      previewUrl({
+        component: 'copy-button',
+        state: 'error',
+      }),
+    );
+    await settlePage(page);
+    specimen = page.getByTestId('component-specimen-copy-button');
+    copy = specimen.locator('krn-copy-button');
+    button = copy.getByRole('button', { name: 'Copy install command' });
+    status = copy.locator('.krn-copy-status');
+    await expect(copy).toHaveAttribute('data-state', 'error');
+    await expect(copy).toHaveAttribute('data-pending', 'false');
+    await expect(button).toHaveAccessibleName('Copy install command');
+    await expect(status).toHaveText('Could not copy');
     assertNoRuntimeErrors();
   });
 

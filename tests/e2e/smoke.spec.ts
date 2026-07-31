@@ -329,14 +329,7 @@ test.describe('Docs preview smoke contracts', () => {
     await expect(page).toHaveURL(/arg\.variant=soft/);
     await expect(primaryAction).toHaveAttribute('data-variant', 'soft');
 
-    const disabledControl = page.getByRole('checkbox', { name: 'Disabled' });
-    await disabledControl.check();
-    await expect(page).toHaveURL(/arg\.disabled=true/);
-    await expect(primaryAction).toBeDisabled();
-
-    await disabledControl.uncheck();
-    await expectQueryParam(page, 'arg.disabled', null);
-    await expect(primaryAction).toBeEnabled();
+    await expect(specimen.getByRole('button', { name: 'Unavailable' })).toBeDisabled();
 
     await statePresets.getByRole('button', { name: 'Loading', exact: true }).click();
     await expect(page).toHaveURL(/state=loading/);
@@ -345,6 +338,8 @@ test.describe('Docs preview smoke contracts', () => {
     await expect(stage).toHaveAttribute('data-state', 'loading');
     await expect(specimen).toHaveAttribute('data-scenario', 'default');
     await expect(primaryAction).toHaveAttribute('aria-busy', 'true');
+    await expect(primaryAction).toHaveAttribute('aria-disabled', 'true');
+    await expect(primaryAction).not.toHaveAttribute('disabled');
     assertNoRuntimeErrors();
   });
 
@@ -561,7 +556,17 @@ test.describe('Docs preview smoke contracts', () => {
   }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
 
-    await page.goto(previewUrl({ component: 'button', args: { variant: 'soft' } }));
+    await page.goto(
+      previewUrl({
+        component: 'button',
+        args: {
+          loading: true,
+          size: 'sm',
+          tone: 'danger',
+          variant: 'soft',
+        },
+      }),
+    );
     await settlePage(page);
     await page.getByRole('button', { name: 'Code', exact: true }).click();
 
@@ -571,7 +576,12 @@ test.describe('Docs preview smoke contracts', () => {
       'Strict AOT verified against the packed npm artifact.',
     );
     await expect(codePanel).toContainText('generated base scaffold');
+    await expect(codePanel).toContainText('<button krnButton');
+    await expect(codePanel).not.toContainText('<button[krnButton]');
     await expect(codePanel).toContainText(`[variant]="'soft'"`);
+    await expect(codePanel).toContainText(`[tone]="'danger'"`);
+    await expect(codePanel).toContainText(`[size]="'sm'"`);
+    await expect(codePanel).toContainText(`[loading]="true"`);
     await expect(codePanel).toContainText(/variant\s+\(Public input:\s*variant\)\s*=\s*"soft"/);
     assertNoRuntimeErrors();
   });

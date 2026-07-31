@@ -12,6 +12,7 @@
       "@kern-ui/angular/addon-grid": ["./addon-grid/src/public-api.ts"],
       "@kern-ui/angular/cdk": ["./cdk/src/public-api.ts"],
       "@kern-ui/angular/core": ["./core/src/public-api.ts"],
+      "@kern-ui/angular/i18n": ["./i18n/src/public-api.ts"],
       "@kern-ui/angular/kit": ["./kit/src/public-api.ts"],
       "@kern-ui/angular/patterns": ["./patterns/src/public-api.ts"]
     },
@@ -23,6 +24,7 @@
     "addon-grid/src/**/*.ts",
     "cdk/src/**/*.ts",
     "core/src/**/*.ts",
+    "i18n/src/**/*.ts",
     "kit/src/**/*.ts",
     "patterns/src/**/*.ts"
   ],

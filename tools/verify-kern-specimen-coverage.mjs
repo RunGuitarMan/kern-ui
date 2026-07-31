@@ -39,7 +39,7 @@ if (!specimenSource.includes('Example pending')) {
   );
 }
 const nestedInteractiveTrigger = specimenSource.match(
-  /<(?:button|a|input|select|textarea|krn-button|krn-icon-button)\b[^>]*\bkrn(?:Menu|Popover|HoverCard)Trigger\b/i,
+  /<(?:button|a|input|select|textarea)\b[^>]*\bkrn(?:Menu|Popover|HoverCard)Trigger\b/i,
 );
 if (nestedInteractiveTrigger) {
   throw new Error(

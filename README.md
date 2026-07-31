@@ -138,21 +138,33 @@ Import standalone components directly:
 
 ```ts
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KrnButton, KrnFormField, KrnTextInput } from '@kern-ui/angular/kit';
 
 @Component({
   selector: 'app-profile-action',
-  imports: [KrnButton, KrnFormField, KrnTextInput],
+  imports: [ReactiveFormsModule, KrnButton, KrnFormField, KrnTextInput],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <krn-form-field label="Workspace name">
-      <krn-text-input value="Northstar" />
+      <krn-text-input [formControl]="workspaceName" />
     </krn-form-field>
-    <krn-button variant="solid" tone="brand">Save changes</krn-button>
+    <button krnButton variant="solid" tone="brand">Save changes</button>
   `,
 })
-export class ProfileAction {}
+export class ProfileAction {
+  protected readonly workspaceName = new FormControl('Northstar', { nonNullable: true });
+}
 ```
+
+`KrnFormField` owns label, optional copy, hint/error layout, and description relationships; the
+projected control remains the source of truth for `id`, required, disabled, readonly, pending,
+valid, and invalid state. Disable reactive controls through their `FormControl` instead of adding
+state to the presentation wrapper. Project exactly one control: group controls such as Checkbox
+Group, Radio Group, Segmented Control, Verification Code, and Range Slider receive
+`aria-labelledby` plus delegated label focus automatically. Native controls also use the mounted
+visible field label as their accessible name; Checkbox, Switch, and Slider compose it with their
+own visible label instead of hiding either name.
 
 The public theme service can switch `light`, `dark`, `system`, and `high-contrast` modes,
 `compact`, `comfortable`, and `spacious` density, and a runtime brand color. CSS custom
@@ -167,17 +179,25 @@ component UI copy. Applications can install a pack through `provideKrn` or suppl
 Legacy `{token}` string overrides remain supported; optional typed `format…` fields provide
 plural-aware formatting without evaluating or recursively expanding translation text.
 
-Runtime ownership is explicit: `/cdk` contains infrastructure, `/core` configuration and
-foundations, `/kit` general components, `/addon-grid` and `/addon-charts` heavy capabilities, and
-`/patterns` product compositions. The package root remains a compatibility aggregator with strict
-identity against these subpaths; new code should prefer the narrow owner.
+Runtime ownership is explicit: `/cdk` contains infrastructure, `/i18n` dependency-light UI-copy
+tokens, `/core` configuration and foundations, `/kit` general components, `/addon-grid` and
+`/addon-charts` heavy capabilities, and `/patterns` product compositions. The package root remains
+a compatibility aggregator with strict identity against these subpaths; new code should prefer
+the narrow owner.
 
 ## Consumer testing
 
 The package ships a separate, test-only Angular CDK harness entry point:
 
 ```ts
-import { KrnButtonHarness, KrnDataGridHarness } from '@kern-ui/angular/testing';
+import {
+  KrnButtonGroupHarness,
+  KrnButtonHarness,
+  KrnDataGridHarness,
+  KrnIconButtonHarness,
+  KrnToggleButtonHarness,
+  KrnToggleGroupHarness,
+} from '@kern-ui/angular/testing';
 ```
 
 Use these harnesses instead of depending on internal component markup. Runtime components remain

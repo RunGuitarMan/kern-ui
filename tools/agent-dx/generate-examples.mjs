@@ -38,8 +38,10 @@ function digest(value) {
 }
 
 function selectorMarker(component) {
-  const selector = component.selector ?? component.selectors[0];
-  return selector.replace(/[[\]]/g, '').split(/[,\s]/)[0];
+  const selector = (component.selector ?? component.selectors[0]).split(',')[0].trim();
+  const attribute = /\[\s*([A-Za-z_][\w-]*)/.exec(selector);
+  if (attribute) return attribute[1];
+  return /^[A-Za-z][\w-]*/.exec(selector)?.[0] ?? selector;
 }
 
 function addImport(map, moduleName, symbol) {
@@ -102,6 +104,7 @@ function validateRecipe(component, recipe) {
       recipe.template,
       ...(recipe.declarations ?? []),
       ...(recipe.members ?? []),
+      ...(recipe.providers ?? []),
     ].join('\n');
     if (!completeRecipe.includes(assertion)) {
       failures.push(`declared assertion marker is absent: ${JSON.stringify(assertion)}`);
@@ -119,6 +122,9 @@ export function renderExample(component, recipe) {
   const componentImports = unique([component.symbol, ...(recipe.componentImports ?? [])]);
   const declarations = (recipe.declarations ?? []).join('\n\n');
   const members = (recipe.members ?? []).join('\n\n');
+  const providerLine = recipe.providers?.length
+    ? `  providers: [${recipe.providers.join(', ')}],\n`
+    : '';
   const source = `/**
  * ${recipe.title}
  *
@@ -133,7 +139,7 @@ ${declarations}
   selector: 'app-kern-${component.id}-agent-example',
   standalone: true,
   imports: [${componentImports.join(', ')}],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+${providerLine}  changeDetection: ChangeDetectionStrategy.OnPush,
   template: \`
 ${recipe.template.trim()}
   \`,

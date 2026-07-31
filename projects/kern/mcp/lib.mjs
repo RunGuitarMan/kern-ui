@@ -354,8 +354,17 @@ function elementBindingNames(element) {
 }
 
 function matchesSelector(element, selector) {
-  const attribute = selector.match(/^\[([-\w:]+)\]$/);
-  return attribute ? elementBindingNames(element).has(attribute[1]) : element.name === selector;
+  const compound = /^(?:([-\w:]+))?((?:\[[-\w:]+\])*)$/.exec(selector.trim());
+  if (!compound) return false;
+
+  const [, elementName, attributeSource] = compound;
+  if (elementName && element.name !== elementName) return false;
+
+  const bindings = elementBindingNames(element);
+  const attributes = [...attributeSource.matchAll(/\[([-\w:]+)\]/g)].map(
+    (match) => match[1],
+  );
+  return attributes.every((attribute) => bindings.has(attribute));
 }
 
 function targetElements(template, sourceName, selectors) {

@@ -43,6 +43,18 @@ describe('KERN agent component contract', () => {
       'Playground routes must be mount-relative.',
     );
 
+    const incompleteSelectorDeprecation = structuredClone(manifest);
+    const buttonGroup = incompleteSelectorDeprecation.components.find(
+      (component) => component.id === 'button-group',
+    );
+    assert.ok(buttonGroup?.selectorDeprecations.length);
+    delete buttonGroup.selectorDeprecations[0].migration;
+    assert.equal(
+      validate(incompleteSelectorDeprecation),
+      false,
+      'Deprecated selector metadata must include migration guidance.',
+    );
+
     const validFixtureEffects = [
       {
         kind: 'layout',
@@ -124,7 +136,7 @@ describe('KERN agent component contract', () => {
   });
 
   it('covers every catalog entry with complete public ownership and agent fields', () => {
-    assert.equal(manifest.schemaVersion, '1.2.0');
+    assert.equal(manifest.schemaVersion, '1.3.0');
     assert.deepEqual(
       manifest.library.playground.environment.map(({ key }) => key),
       ['theme', 'density', 'direction', 'locale', 'motion', 'viewport'],
@@ -374,7 +386,7 @@ describe('KERN agent API', () => {
 
         @Component({
           imports: [KrnButton],
-          template: '<krn-button>Save</krn-button>',
+          template: '<button krnButton>Save</button>',
         })
         class ValidButton {}
       `,
@@ -399,7 +411,7 @@ describe('KERN agent API', () => {
 
           @Component({
             imports: [KrnButton],
-            template: '<krn-button>Save</krn-button>',
+            template: '<button krnButton>Save</button>',
           })
           class UnverifiedStylesButton {}
         `,
@@ -436,7 +448,7 @@ describe('KERN agent API', () => {
 
         @Component({
           imports: [PrimaryAction],
-          template: '<krn-button>Save</krn-button>',
+          template: '<button krnButton>Save</button>',
         })
         class AliasedButton {}
       `,
@@ -452,13 +464,13 @@ describe('KERN agent API', () => {
       `
         import { Component } from '@angular/core';
         import type { KrnButton } from '@kern-ui/angular/kit';
-        @Component({ imports: [KrnButton], template: '<krn-button>Save</krn-button>' })
+        @Component({ imports: [KrnButton], template: '<button krnButton>Save</button>' })
         class TypeOnlyButton {}
       `,
       `
         import { Component } from '@angular/core';
         import { type KrnButton as PrimaryAction } from '@kern-ui/angular/kit';
-        @Component({ imports: [PrimaryAction], template: '<krn-button>Save</krn-button>' })
+        @Component({ imports: [PrimaryAction], template: '<button krnButton>Save</button>' })
         class TypeOnlyAliasedButton {}
       `,
     ]) {
@@ -479,7 +491,7 @@ describe('KERN agent API', () => {
       code: `
         import { Component } from '@angular/core';
         import { KrnSelectOption as KrnButton } from '@kern-ui/angular/kit';
-        @Component({ imports: [KrnButton], template: '<krn-button>Save</krn-button>' })
+        @Component({ imports: [KrnButton], template: '<button krnButton>Save</button>' })
         class CollidingButton {}
       `,
       stylesConfigured: true,
@@ -575,7 +587,7 @@ describe('KERN agent API', () => {
       code: `
         import { Component } from '@angular/core';
         import { KrnButton } from '@kern-ui/angular/kit';
-        @Component({ imports: [], template: '<krn-button>Save</krn-button>' })
+        @Component({ imports: [], template: '<button krnButton>Save</button>' })
         class MissingWiring {}
       `,
       stylesConfigured: true,

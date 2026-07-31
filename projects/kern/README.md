@@ -54,15 +54,16 @@ export const appConfig = {
 
 Use the narrow entrypoint that owns the capability:
 
-| Entrypoint                      | Contents                                              |
-| ------------------------------- | ----------------------------------------------------- |
-| `@kern-ui/angular/cdk`          | Platform, IDs, content, and overlay infrastructure    |
-| `@kern-ui/angular/core`         | Tokens, icons, configuration, theming, and i18n       |
-| `@kern-ui/angular/kit`          | Layout, actions, forms, navigation, feedback, display |
-| `@kern-ui/angular/addon-grid`   | Virtualized enterprise data grid                      |
-| `@kern-ui/angular/addon-charts` | Accessible chart components                           |
-| `@kern-ui/angular/patterns`     | Opinionated product compositions                      |
-| `@kern-ui/angular/testing`      | Angular CDK component harnesses                       |
+| Entrypoint                      | Contents                                                |
+| ------------------------------- | ------------------------------------------------------- |
+| `@kern-ui/angular/cdk`          | Platform, IDs, content, and overlay infrastructure      |
+| `@kern-ui/angular/i18n`         | Lightweight UI-copy bridge tokens for leaf components   |
+| `@kern-ui/angular/core`         | Tokens, icons, configuration, theming, and locale packs |
+| `@kern-ui/angular/kit`          | Layout, actions, forms, navigation, feedback, display   |
+| `@kern-ui/angular/addon-grid`   | Virtualized enterprise data grid                        |
+| `@kern-ui/angular/addon-charts` | Accessible chart components                             |
+| `@kern-ui/angular/patterns`     | Opinionated product compositions                        |
+| `@kern-ui/angular/testing`      | Angular CDK component harnesses                         |
 
 `@kern-ui/angular` remains a supported compatibility aggregator and preserves the same runtime
 identities as direct imports. Deep source imports and undeclared family paths such as
@@ -123,6 +124,70 @@ export const appConfig = {
 Application copy remains outside the locale packs; component label inputs remain available for
 one-off overrides.
 
+### Native action defaults and loading copy
+
+`KrnButton`, `KrnIconButton`, and `KrnToggleButton` keep native `button` semantics on their hosts.
+Configure only inheritable visual defaults and the optional subtree loading announcement through
+their scoped options; instance inputs still take precedence:
+
+```ts
+import {
+  provideKrnButtonOptions,
+  provideKrnIconButtonOptions,
+  provideKrnToggleButtonOptions,
+  provideKrnToggleGroupOptions,
+} from '@kern-ui/angular/kit';
+
+@Component({
+  providers: [
+    provideKrnButtonOptions({
+      size: 'lg',
+      variant: 'solid',
+      tone: 'brand',
+      loadingLabel: 'Saving workspace…',
+    }),
+    provideKrnIconButtonOptions({
+      size: 'md',
+      variant: 'ghost',
+      tone: 'neutral',
+    }),
+    provideKrnToggleButtonOptions({
+      pressedVariant: 'soft',
+      pressedTone: 'brand',
+      unpressedVariant: 'ghost',
+      unpressedTone: 'neutral',
+    }),
+    provideKrnToggleGroupOptions({
+      orientation: 'horizontal',
+      multiple: true,
+    }),
+  ],
+})
+export class WorkspaceActions {}
+```
+
+Native `type`, `disabled`, form ownership, accessible naming, descriptions, and pressed state stay
+on the host. The one reserved ARIA attribute is `aria-disabled`: Button, Icon Button, and Floating
+Action Button derive it from `loading` on every browser or server render pass while leaving the
+button focusable. Use native `disabled` for ordinary unavailability instead of supplying
+`aria-disabled` yourself.
+
+Toggle Button similarly reserves `aria-pressed` for effective standalone or Toggle Group state.
+Use `<button krnToggleButton value="bold" [(pressed)]="boldEnabled">Bold</button>` and do not bind a
+second, competing `aria-pressed` value.
+
+Use a labelled `<div krnToggleGroup>` when related native Toggle Buttons should share controlled
+string values and one toolbar tab stop. Arrow keys follow `orientation`, Home/End jump to the
+first/last enabled toggle, RTL is respected, and moving focus never changes selection. Use Radio
+Group or Segmented Control instead for an Angular form that requires exactly one value.
+
+For application-wide localization, prefer `provideKrn({translations: ...})`. Kern derives the
+lightweight `KRN_LOADING_LABEL`, `KRN_COPY_LABELS`, and `KRN_MORE_ACTIONS_LABEL` bridges from that
+shared registry so importing leaf actions does not retain the complete translation dictionary in
+a narrow bundle. A low-level nested locale boundary that provides `KRN_TRANSLATIONS` directly must
+also install `provideKrnTranslationBridge()` at that boundary; direct leaf-token overrides remain
+available from `@kern-ui/angular/i18n`. Component label inputs are the narrowest one-off override.
+
 The overlay host is resolved whenever Angular CDK requests its container, so a host rendered after
 bootstrap is supported; a missing host falls back to `document.body`. Use a dedicated host element
 without product content. During a modal interaction, Kern uses registered trigger-to-pane
@@ -165,17 +230,33 @@ internal DOM:
 ```ts
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import {
+  KrnButtonGroupHarness,
   KrnButtonHarness,
   KrnDataGridHarness,
   KrnDialogHarness,
   KrnFormControlHarness,
   KrnFormFieldHarness,
+  KrnIconButtonHarness,
   KrnSelectHarness,
+  KrnToggleButtonHarness,
+  KrnToggleGroupHarness,
 } from '@kern-ui/angular/testing';
 
 const loader = TestbedHarnessEnvironment.loader(fixture);
+const reviewActions = await loader.getHarness(
+  KrnButtonGroupHarness.with({ accessibleName: 'Review actions', connected: true }),
+);
 const save = await loader.getHarness(KrnButtonHarness.with({ text: 'Save', disabled: false }));
+const more = await loader.getHarness(KrnIconButtonHarness.with({ accessibleName: 'More actions' }));
+const bold = await loader.getHarness(KrnToggleButtonHarness.with({ value: 'bold', pressed: true }));
+const formatting = await loader.getHarness(
+  KrnToggleGroupHarness.with({ accessibleName: 'Formatting', multiple: true }),
+);
+const groupedButtons = await reviewActions.getButtons();
+const activeFormats = await formatting.getValues();
 await save.click();
+await more.click();
+await bold.click();
 ```
 
 `@kern-ui/angular/testing` is a physical, test-only secondary entry point. Its bundle imports no

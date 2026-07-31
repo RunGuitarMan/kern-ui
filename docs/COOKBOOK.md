@@ -113,7 +113,7 @@ the surface closes. An inner popup consumes Escape before its containing dialog.
 
 Menu, Popover, and Hover Card render their own semantic trigger button. Content marked with
 `krnMenuTrigger`, `krnPopoverTrigger`, or `krnHoverCardTrigger` is non-interactive label content;
-use a `span`, not another button, link, input, or `krn-button`.
+use a `span`, not another button, link, input, or `button[krnButton]`.
 
 For a custom Angular CDK overlay inside a KERN modal, register the trigger-to-pane relationship
 through `KrnOverlayCoordinator`. Use a dedicated `overlayHost` only when a shell or

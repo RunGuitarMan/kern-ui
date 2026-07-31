@@ -34,6 +34,10 @@ export interface KernCatalogItem {
   readonly dont: string;
 }
 
+type KernCatalogDocumentationOverride = Partial<
+  Pick<KernCatalogItem, 'summary' | 'states' | 'keyboard' | 'accessibility' | 'do' | 'dont'>
+>;
+
 const VISUAL_STATES = [
   'default',
   'overflow',
@@ -337,6 +341,17 @@ const VARIANT_OF: Readonly<Record<string, string>> = {
   'bulk-actions': 'crud-toolbar',
 };
 
+const SELECTOR_BY_ID: Readonly<Record<string, string>> = {
+  button: 'button[krnButton]',
+  'icon-button': 'button[krnIconButton]',
+  'button-group': 'div[krnButtonGroup]',
+  'floating-action-button': 'button[krnFab]',
+  'toggle-button': 'button[krnToggleButton]',
+  'toggle-group': 'div[krnToggleGroup]',
+  link: 'a[krnLink]',
+  tooltip: '[krnTooltip]',
+};
+
 function slugify(value: string): string {
   return value
     .toLowerCase()
@@ -375,12 +390,25 @@ const API_DESCRIPTIONS: Readonly<Record<string, string>> = {
   required: 'Marks the value as required and participates in Angular Forms validation.',
   invalid: 'Exposes an externally controlled invalid presentation state.',
   loading: 'Prevents duplicate actions and exposes an accessible busy state.',
+  connected: 'Joins adjacent action borders and radii without changing child semantics.',
+  orientation:
+    'Logical axis exposed by the component; behavior follows its documented keyboard contract.',
   value: 'Controlled component value.',
   open: 'Controlled disclosure or overlay state.',
   size: 'Semantic component size.',
   tone: 'Semantic intent; color is never the only state indicator.',
   variant: 'Visual emphasis within the component hierarchy.',
   appearance: 'Named visual treatment resolved through the appearance system.',
+  copyingLabel: 'Localized status announced while the clipboard operation is pending.',
+  copiedLabel: 'Localized confirmation announced with the visible success indicator.',
+  errorLabel: 'Localized failure feedback announced with the visible error indicator.',
+  copyLabel: 'Localized visible fallback used when no Copy Button action label is projected.',
+  feedbackDuration:
+    'Duration in milliseconds that copied or error feedback remains visible before returning to idle.',
+  pressedVariant: 'Visual emphasis used while the toggle is pressed.',
+  pressedTone: 'Semantic tone used while the toggle is pressed.',
+  unpressedVariant: 'Visual emphasis used while the toggle is not pressed.',
+  unpressedTone: 'Semantic tone used while the toggle is not pressed.',
   data: 'Immutable data supplied by the consumer.',
   emptyLabel: 'Human-readable empty state announced to assistive technology.',
 };
@@ -419,7 +447,170 @@ function keyboardFor(category: KernCategory): readonly string[] {
   return ['No custom keyboard behavior unless the composition is interactive'];
 }
 
-const COMPONENT_OVERRIDES: Readonly<Record<string, Partial<KernCatalogItem>>> = {
+const COMPONENT_OVERRIDES: Readonly<Record<string, KernCatalogDocumentationOverride>> = {
+  button: {
+    summary:
+      'Button. Enhances a native button with Kern hierarchy, visual defaults, and a focus-preserving loading state.',
+    keyboard: [
+      'Tab focuses the native button',
+      'Enter and Space dispatch the native click behavior',
+      'A loading button retains focus but suppresses click and form submission',
+    ],
+    accessibility: [
+      'Native type, disabled, name, value, form, accessible naming, descriptions, and pressed state stay on the host button.',
+      'Loading uses a persistent polite status and aria-disabled without removing the action from focus order.',
+      'aria-disabled is reserved for the derived loading state; use native disabled for ordinary unavailability.',
+      'Visible text supplies the accessible name unless the consumer provides a native aria-label.',
+    ],
+    do: 'Use <button krnButton> and keep native form and event semantics explicit at the call site.',
+    dont: 'Do not add role="button", proxy click through a custom output, or use Button as a pressed-state toggle.',
+  },
+  'icon-button': {
+    summary:
+      'Icon Button. Enhances a native button with a compact square action target, visual defaults, and a focus-preserving loading state.',
+    keyboard: [
+      'Tab focuses the native button',
+      'Enter and Space dispatch the native click behavior',
+      'A loading icon button retains focus but suppresses click and form submission',
+    ],
+    accessibility: [
+      'Every icon-only action has a native aria-label or aria-labelledby on the host button.',
+      'Native type, disabled, name, value, form, and aria-describedby relationships stay on the host button.',
+      'Loading uses a persistent polite status and aria-disabled without removing the action from focus order.',
+      'aria-disabled is reserved for the derived loading state; use native disabled for ordinary unavailability.',
+    ],
+    do: 'Use <button krnIconButton type="button"> with a native accessible name and native events or form attributes.',
+    dont: 'Do not add role="button", proxy native attributes through component inputs, or use Icon Button for managed toggle state; use Toggle Button.',
+  },
+  'floating-action-button': {
+    summary:
+      'Floating Action Button. Exposes one high-priority contextual action on a native button with extended or compact geometry.',
+    keyboard: [
+      'Tab focuses the native floating action',
+      'Enter and Space dispatch the native click behavior',
+      'A loading floating action retains focus but suppresses click and form submission',
+    ],
+    accessibility: [
+      'The projected label remains the accessible name in both extended and visually compact modes.',
+      'Native type, disabled, form, accessible naming, and description relationships stay on the host button.',
+      'Loading owns aria-disabled and a persistent polite status; use native disabled for ordinary unavailability.',
+    ],
+    do: 'Reserve <button krnFab> for one high-priority contextual action and keep its visible label meaningful.',
+    dont: 'Do not use Floating Action Button for navigation, multiple equal-priority actions, or consumer-owned aria-disabled state.',
+  },
+  'toggle-button': {
+    summary:
+      'Toggle Button. Enhances one native button with controlled pressed state, deterministic aria-pressed semantics, and scoped state appearances.',
+    keyboard: [
+      'Tab focuses the native button',
+      'Enter and Space dispatch the native click behavior',
+      'Activation toggles standalone pressed state or delegates to the owning Toggle Group',
+    ],
+    accessibility: [
+      'The native button retains form ownership, accessible naming, descriptions, focus, and click behavior.',
+      'aria-pressed is always derived from effective standalone or group state and must not be consumer-authored.',
+      'Native disabled state prevents activation; visible text supplies the accessible name unless native ARIA naming is provided.',
+      'Pressed state is communicated through aria-pressed and appearance, not color alone.',
+    ],
+    do: 'Use <button krnToggleButton> with a stable value and bind [(pressed)] for standalone controlled state.',
+    dont: 'Do not nest a button, link, or other interactive control inside Toggle Button, and do not bind aria-pressed independently.',
+  },
+  'toggle-group': {
+    summary:
+      'Toggle Group. Coordinates stable pressed values across native toggle buttons in a labelled, orientation-aware action toolbar.',
+    keyboard: [
+      'Tab enters or leaves the toolbar through one remembered roving tab stop',
+      'Arrow keys move focus on the configured axis without changing pressed state',
+      'Home and End move focus to the first or last enabled toggle; navigation wraps and respects RTL',
+      'Enter and Space activate only the focused native toggle button',
+    ],
+    accessibility: [
+      'The canonical <div krnToggleGroup> host exposes role="toolbar", aria-orientation, and a native aria-label or aria-labelledby.',
+      'Each direct <button krnToggleButton> retains its native accessible name, aria-pressed state, focus, and activation behavior.',
+      'Group disabled state is reflected as aria-disabled on the toolbar and native disabled on every toggle button.',
+      'Single mode exposes at most one effective pressed value; duplicate controlled values are canonicalized on the next user transition.',
+    ],
+    do: 'Use <div krnToggleGroup aria-label="Formatting"> with direct native Toggle Button children and stable unique values.',
+    dont: 'Do not use Toggle Group as an Angular form radio control or project arbitrary links and labels; use Radio Group or Segmented Control for a mandatory exclusive choice.',
+  },
+  'button-group': {
+    summary:
+      'Button Group. Labels and arranges independent native actions without owning their focus, activation, disabled, loading, or selection state.',
+    states: [...VISUAL_STATES, 'connected'],
+    keyboard: [
+      'Tab visits each enabled native action in document order',
+      'Enter and Space activate the focused native button',
+      'Orientation and connected styling do not add Arrow-key navigation or a roving tab stop',
+    ],
+    accessibility: [
+      'The canonical <div krnButtonGroup> host exposes role="group" and uses native aria-label or aria-labelledby for its accessible name.',
+      'Each child action owns its native accessible name, disabled, loading, form, and activation semantics.',
+      'Button Group does not expose selection; use Toggle Group or Segmented Control for a managed choice.',
+    ],
+    do: 'Use <div krnButtonGroup aria-label="Review actions"> for a small set of related, independent native actions.',
+    dont: 'Do not add Arrow-key navigation, selected state, or group-level disabled/loading behavior; use Toggle Group or Segmented Control when the group must own a choice.',
+  },
+  'copy-button': {
+    summary:
+      'Copy Button. Copies one explicit string through an injectable clipboard capability and exposes deterministic pending, copied, and error feedback without removing its native button from focus order.',
+    states: [
+      ...VISUAL_STATES,
+      'hover',
+      'focus-visible',
+      'active',
+      'idle',
+      'pending',
+      'copied',
+      'error',
+      'disabled',
+    ],
+    keyboard: [
+      'Tab focuses the inner native button',
+      'Enter and Space start one clipboard operation',
+      'A pending operation retains focus and suppresses duplicate activation',
+    ],
+    accessibility: [
+      'The visible action label supplies a stable accessible name; an explicit ariaLabel override must include that visible label.',
+      'One persistent polite sibling status announces pending, copied, and error copy without relying on descendants of the native button.',
+      'The inner native button defaults to type="button" and disabled uses native button semantics.',
+    ],
+    do: 'Pass the exact value, provide a context-specific visible action label, and handle copied or copyError when product behavior depends on the result.',
+    dont: 'Do not scrape projected DOM text, mutate navigator.clipboard in tests, or trigger another operation while data-pending="true".',
+  },
+  link: {
+    summary:
+      'Link. Enhances one native navigation anchor with KERN inline presentation while the browser or Angular Router owns its destination, relationships, focus, and activation.',
+    states: [...VISUAL_STATES, 'hover', 'focus-visible', 'active'],
+    keyboard: [
+      'Tab follows native document order when the anchor has href or RouterLink',
+      'Enter follows the native anchor destination',
+      'An anchor without a destination remains a non-navigation placeholder and is not made artificially disabled',
+    ],
+    accessibility: [
+      'href or RouterLink, target, rel, referrerpolicy, download, accessible naming, descriptions, focus, and click stay on the native anchor.',
+      'Visible anchor text normally supplies the accessible name; native aria-label or aria-labelledby remains available when context requires it.',
+      'KrnLink does not rewrite relationship tokens or referrer policy; external privacy requirements stay explicit at the call site.',
+    ],
+    do: 'Use <a krnLink> for navigation and keep href or RouterLink plus all native anchor semantics on that host.',
+    dont: 'Do not simulate disabled navigation or use Link for an action in the current context; omit unavailable navigation or use a native Button.',
+  },
+  'form-field': {
+    summary:
+      'Form Field. Coordinates one projected control with its visible label, optional copy, hints, errors, and Angular state without owning the control value.',
+    keyboard: [
+      'The projected control owns focus and keyboard behavior',
+      'Clicking the associated visible label moves focus to the projected control',
+      'Form Field itself does not add a tab stop or intercept control events',
+    ],
+    accessibility: [
+      'Exactly one registered control supplies the field identity and required, disabled, readonly, pending, valid, and invalid state.',
+      'A projected KrnLabel replaces the shorthand label so the field never renders two competing visible labels.',
+      'aria-describedby references only hints and errors that are currently mounted in the DOM.',
+      'Inline errors use a polite live region; the projected control remains the source of truth for Angular Forms state.',
+    ],
+    do: 'Keep identity and state on the projected control, and disable reactive controls through their FormControl.',
+    dont: 'Do not project multiple controls or proxy id, required, disabled, readonly, or state through Form Field.',
+  },
   tree: {
     summary:
       'Tree. Presents hierarchical data with one roving tab stop, expansion, selection, and locale-aware typeahead.',
@@ -597,7 +788,7 @@ function statusFor(id: string, category: KernCategory): KernComponentStatus {
 
 function createItem(name: string, category: KernCategory): KernCatalogItem {
   const id = slugify(name);
-  const selector = id === 'tooltip' ? '[krnTooltip]' : `krn-${id}`;
+  const selector = SELECTOR_BY_ID[id] ?? `krn-${id}`;
   const api = apiFor(selector);
 
   const item: KernCatalogItem = {

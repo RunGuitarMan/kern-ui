@@ -28,6 +28,9 @@ import {
 } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 
+/**
+ * @internalReviewWith kit:KrnTooltip
+ */
 @Component({
   selector: 'krn-tooltip-surface',
   standalone: true,

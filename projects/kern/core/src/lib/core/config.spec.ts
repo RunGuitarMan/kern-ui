@@ -3,8 +3,10 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { TestBed } from '@angular/core/testing';
 
 import { KRN_OVERLAY_HOST, KRN_PLATFORM } from '@kern-ui/angular/cdk';
+import { KRN_COPY_LABELS, KRN_LOADING_LABEL, KRN_MORE_ACTIONS_LABEL } from '@kern-ui/angular/i18n';
 import { KRN_CONFIG, KRN_DIRECTION, KRN_LOCALE, KRN_MOTION, provideKrn } from './config';
-import { KRN_TRANSLATIONS } from './i18n';
+import { createKrnTranslations, KRN_TRANSLATIONS } from './i18n';
+import { provideKrnTranslationBridge } from './translation-bridge';
 
 describe('provideKrn', () => {
   const rootAttributes = ['lang', 'dir', 'data-krn-motion', 'data-krn-theme', 'data-krn-density'];
@@ -31,8 +33,15 @@ describe('provideKrn', () => {
           persistPreferences: false,
           overlayHost: '[data-config-spec-overlay]',
           translations: {
+            actions: {
+              copying: 'Wird kopiert…',
+              moreActions: 'Weitere Aktionen',
+            },
             dataGrid: {
               empty: 'Keine Daten',
+            },
+            feedback: {
+              loadingInProgress: 'Wird geladen…',
             },
           },
         }),
@@ -50,6 +59,15 @@ describe('provideKrn', () => {
     expect(translations.dataGrid.empty).toBe('Keine Daten');
     expect(translations.dataGrid.nextPage).toBe('Next');
     expect(Object.isFrozen(translations.dataGrid)).toBe(true);
+    expect(TestBed.inject(KRN_LOADING_LABEL)).toBe('Wird geladen…');
+    expect(TestBed.inject(KRN_MORE_ACTIONS_LABEL)).toBe('Weitere Aktionen');
+    expect(TestBed.inject(KRN_COPY_LABELS)).toEqual({
+      copy: 'Copy to clipboard',
+      copied: 'Copied',
+      copying: 'Wird kopiert…',
+      failed: 'Could not copy',
+    });
+    expect(Object.isFrozen(TestBed.inject(KRN_COPY_LABELS))).toBe(true);
     expect(Object.isFrozen(TestBed.inject(KRN_CONFIG))).toBe(true);
     expect(TestBed.inject(KRN_OVERLAY_HOST)()).toBe(overlay);
     expect(document.documentElement.getAttribute('lang')).toBe('de-DE');
@@ -59,6 +77,57 @@ describe('provideKrn', () => {
     TestBed.tick();
     expect(document.documentElement.getAttribute('data-krn-theme')).toBe('dark');
     expect(document.documentElement.getAttribute('data-krn-density')).toBe('compact');
+  });
+
+  it('resolves loading copy from the final translation provider in the same injector', () => {
+    const translations = createKrnTranslations({
+      actions: {
+        copied: 'Final copied',
+        copying: 'Final copying…',
+        moreActions: 'Final more actions',
+      },
+      feedback: { loadingInProgress: 'Final registry copy…' },
+    });
+    TestBed.configureTestingModule({
+      providers: [
+        provideKrn({ persistPreferences: false }),
+        { provide: KRN_TRANSLATIONS, useValue: translations },
+      ],
+    });
+
+    expect(TestBed.inject(KRN_LOADING_LABEL)).toBe('Final registry copy…');
+    expect(TestBed.inject(KRN_MORE_ACTIONS_LABEL)).toBe('Final more actions');
+    expect(TestBed.inject(KRN_COPY_LABELS)).toMatchObject({
+      copied: 'Final copied',
+      copying: 'Final copying…',
+    });
+  });
+
+  it('bridges a low-level translation boundary explicitly', () => {
+    const translations = createKrnTranslations({
+      actions: {
+        copyFailed: 'Nested copy failed',
+        moreActions: 'Nested more actions',
+      },
+      feedback: { loadingInProgress: 'Nested registry copy…' },
+    });
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: KRN_TRANSLATIONS, useValue: translations },
+        provideKrnTranslationBridge(),
+      ],
+    });
+
+    expect(TestBed.inject(KRN_LOADING_LABEL)).toBe('Nested registry copy…');
+    expect(TestBed.inject(KRN_MORE_ACTIONS_LABEL)).toBe('Nested more actions');
+    expect(TestBed.inject(KRN_COPY_LABELS).failed).toBe('Nested copy failed');
+  });
+
+  it('exposes the translation bridge as an extensible aggregate provider set', () => {
+    const providers = provideKrnTranslationBridge();
+
+    expect(Array.isArray(providers)).toBe(true);
+    expect(providers).toHaveLength(3);
   });
 
   it('supports a replaceable platform adapter without browser globals', () => {
@@ -89,6 +158,50 @@ describe('provideKrn', () => {
     const container = TestBed.inject(OverlayContainer).getContainerElement();
     expect(container.parentElement).toBe(customPlatform.document.body);
     expect(customPlatform.document.querySelectorAll('.cdk-overlay-container')).toHaveLength(1);
+  });
+
+  it('always routes CDK overlays through the Kern host contract', () => {
+    const document = TestBed.inject(DOCUMENT);
+    const host = document.createElement('div');
+    host.setAttribute('data-config-spec-overlay', '');
+    document.body.append(host);
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        provideKrn({ persistPreferences: false }),
+        { provide: KRN_OVERLAY_HOST, useValue: () => host },
+      ],
+    });
+
+    const container = TestBed.inject(OverlayContainer).getContainerElement();
+    expect(container.parentElement).toBe(host);
+    expect(document.querySelectorAll('.cdk-overlay-container')).toHaveLength(1);
+  });
+
+  it('does not move the Angular overlay container across document boundaries', () => {
+    const angularDocument = TestBed.inject(DOCUMENT);
+    const defaultPlatform = TestBed.inject(KRN_PLATFORM);
+    const foreignDocument = angularDocument.implementation.createHTMLDocument('foreign');
+    const foreignPlatform = {
+      ...defaultPlatform,
+      document: foreignDocument,
+    };
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        provideKrn({
+          platform: foreignPlatform,
+          persistPreferences: false,
+        }),
+      ],
+    });
+
+    const container = TestBed.inject(OverlayContainer).getContainerElement();
+    expect(container.ownerDocument).toBe(angularDocument);
+    expect(container.parentElement).toBe(angularDocument.body);
+    expect(foreignDocument.querySelector('.cdk-overlay-container')).toBeNull();
   });
 
   it('moves one CDK overlay container into a late-rendered custom host', () => {

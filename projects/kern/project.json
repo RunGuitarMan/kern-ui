@@ -4,6 +4,11 @@
   "projectType": "library",
   "sourceRoot": "projects/kern",
   "prefix": "krn",
+  "cli": {
+    "cache": {
+      "enabled": false
+    }
+  },
   "tags": ["scope:kern", "type:library", "publishable:true"],
   "targets": {
     "build": {
@@ -22,7 +27,16 @@
     "test": {
       "executor": "@angular/build:unit-test",
       "options": {
+        "exclude": ["**/*.hydration.spec.ts"],
         "isolate": true,
+        "tsConfig": "projects/kern/tsconfig.spec.json"
+      }
+    },
+    "test-hydration": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "include": ["projects/kern/kit/src/lib/actions/toggle-group.hydration.spec.ts"],
+        "watch": false,
         "tsConfig": "projects/kern/tsconfig.spec.json"
       }
     },

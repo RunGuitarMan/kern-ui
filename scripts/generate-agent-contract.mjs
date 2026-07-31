@@ -7,9 +7,11 @@ import vm from 'node:vm';
 import { format, resolveConfig } from 'prettier';
 import ts from 'typescript';
 
+import { stableTypeText } from './lib/stable-type-text.mjs';
+
 const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const packageName = '@kern-ui/angular';
-const schemaVersion = '1.2.0';
+const schemaVersion = '1.3.0';
 const writeMode = process.argv.includes('--write');
 const verboseMode = process.argv.includes('--verbose');
 
@@ -29,14 +31,10 @@ const paths = {
   examplesRoot: resolve(workspaceRoot, 'metadata/agent/examples'),
   recipesRoot: resolve(workspaceRoot, 'metadata/agent/recipes'),
   lifecycle: resolve(workspaceRoot, 'projects/kern/api/lifecycle.json'),
+  deprecations: resolve(workspaceRoot, 'projects/kern/api/deprecations.json'),
   generated: resolve(workspaceRoot, 'metadata/agent/generated'),
   packageAgent: resolve(workspaceRoot, 'projects/kern/agent'),
 };
-
-const typeFormatFlags =
-  ts.TypeFormatFlags.NoTruncation |
-  ts.TypeFormatFlags.UseAliasDefinedOutsideCurrentScope |
-  ts.TypeFormatFlags.WriteArrayAsGenericType;
 
 const lifecycleDescriptions = {
   stable: 'Supported contract; the documented compatibility policy applies.',
@@ -259,10 +257,10 @@ function declarationType(checker, symbol, declaration) {
     if (symbol.flags & ts.SymbolFlags.Interface) return `interface ${symbol.getName()}`;
     if (symbol.flags & ts.SymbolFlags.TypeAlias) {
       const type = checker.getDeclaredTypeOfSymbol(symbol);
-      return checker.typeToString(type, declaration, typeFormatFlags);
+      return stableTypeText(checker, type, declaration);
     }
     const type = checker.getTypeOfSymbolAtLocation(symbol, declaration);
-    return checker.typeToString(type, declaration, typeFormatFlags);
+    return stableTypeText(checker, type, declaration);
   } catch {
     return symbol.getName();
   }
@@ -457,9 +455,9 @@ function signalValueType(checker, call, location) {
   }
   const valueType = typeArguments[0];
   if (valueType) {
-    return checker.typeToString(valueType, location, typeFormatFlags);
+    return stableTypeText(checker, valueType, location);
   }
-  const rendered = checker.typeToString(signalType, location, typeFormatFlags);
+  const rendered = stableTypeText(checker, signalType, location);
   const match = rendered.match(
     /^(?:InputSignal(?:WithTransform)?|ModelSignal|OutputEmitterRef)<(.+?)(?:, .+)?>$/,
   );
@@ -480,7 +478,12 @@ function baseClassDeclaration(checker, declaration) {
 function inferDescription(name, kind) {
   const explicit = {
     ariaLabel: 'Accessible name used when visible content is not sufficient.',
+    ariaLabelledBy:
+      'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+    ariaDescribedBy:
+      'Space-separated element ids composed with Form Field hints and validation descriptions.',
     accessibleLabel: 'Accessible name for the complete composite widget.',
+    autocomplete: 'Native autocomplete purpose forwarded to the editable control.',
     describedBy: 'Space-separated element ids that provide the accessible description.',
     disabled: 'Prevents user interaction and participates in the disabled-state contract.',
     readOnly: 'Keeps the value perceivable while preventing user edits.',
@@ -488,6 +491,11 @@ function inferDescription(name, kind) {
     required: 'Marks the value as required and participates in Angular Forms validation.',
     invalid: 'Exposes an externally controlled invalid presentation state.',
     loading: 'Prevents duplicate actions and exposes accessible busy state.',
+    checked: 'Controlled checked state rendered by the native choice control.',
+    indeterminate: 'Controlled mixed state rendered independently from the checked value.',
+    name: 'Native form-control name forwarded to the owned interactive element.',
+    customName: 'Native form-control name shared by every option in the group.',
+    tabIndex: 'Native sequential-focus order forwarded to the owned interactive element.',
     value: 'Controlled component value.',
     open: 'Controls whether the disclosure or overlay surface is visible.',
     data: 'Immutable data supplied by the consumer.',
@@ -593,6 +601,7 @@ function inferDescription(name, kind) {
     indeterminate: 'Represents an unknown progress value or a mixed selection state.',
     index: 'Zero-based position of the represented item in its ordered collection.',
     inputMode: 'Virtual-keyboard hint forwarded to the editable control.',
+    enterKeyHint: 'Native virtual-keyboard action hint forwarded to the editable control.',
     inset: 'Aligns the divider or content edge with surrounding inset content.',
     interactive: 'Enables the documented user interaction for an otherwise presentational item.',
     intrinsic: 'Preserves the media element’s intrinsic dimensions when space permits.',
@@ -614,6 +623,8 @@ function inferDescription(name, kind) {
     overlap: 'Allows the floating action surface to overlap its adjacent container edge.',
     position: 'Logical placement of the component relative to its owning surface.',
     pressed: 'Controlled toggle-button pressed state exposed through native button semantics.',
+    pressedTone: 'Semantic tone rendered while Toggle Button is pressed.',
+    pressedVariant: 'Visual emphasis rendered while Toggle Button is pressed.',
     railWidth: 'Inline size reserved for the application navigation rail.',
     recoveryHref: 'Destination URL for the error-state recovery action.',
     rel: 'Native link relationship tokens applied to the destination.',
@@ -642,6 +653,8 @@ function inferDescription(name, kind) {
     trend: 'Direction of change communicated by the statistic in addition to its numeric value.',
     type: 'Native action or input type forwarded to the owned interactive element.',
     until: 'Ending boundary of the represented range or interval.',
+    unpressedTone: 'Semantic tone rendered while Toggle Button is not pressed.',
+    unpressedVariant: 'Visual emphasis rendered while Toggle Button is not pressed.',
     variant: 'Named visual hierarchy treatment that preserves the component semantics.',
     width: 'Explicit inline size of the rendered surface.',
     wrap: 'Controls whether layout children wrap onto additional lines when space is constrained.',
@@ -805,7 +818,7 @@ function formValueType(checker, declaration, stack = new Set()) {
   if (baseName === 'KrnValueAccessor') {
     const valueType = typeNode.typeArguments?.[0];
     return valueType
-      ? checker.typeToString(checker.getTypeFromTypeNode(valueType), declaration, typeFormatFlags)
+      ? stableTypeText(checker, checker.getTypeFromTypeNode(valueType), declaration)
       : 'unknown';
   }
   const base = baseClassDeclaration(checker, declaration);
@@ -1196,6 +1209,7 @@ function publicComponentContract({
   decorated,
   symbolRecord,
   siblingItems,
+  selectorDeprecations,
   override,
   catalog,
   lifecycleRecord,
@@ -1225,6 +1239,7 @@ function publicComponentContract({
     kind: decorated.kind,
     selector: item.selector,
     selectors: [...decorated.selectors],
+    selectorDeprecations,
     symbol,
     canonicalSymbol: symbolRecord.name,
     canonicalId,
@@ -1284,19 +1299,34 @@ function publicComponentContract({
   return component;
 }
 
+function markdownTableCell(value) {
+  return String(value).replace(/\s+/g, ' ').trim().replaceAll('|', '\\|');
+}
+
 function markdownApi(api) {
   if (!api.length) return '_No signal inputs, models, or outputs._';
   const rows = api.map(
     (member) =>
-      `| \`${member.name}\` | ${member.kind} | \`${member.type.replaceAll('|', '\\|')}\` | ${
+      `| \`${markdownTableCell(member.name)}\` | ${markdownTableCell(member.kind)} | \`${markdownTableCell(member.type)}\` | ${
         member.required ? 'yes' : 'no'
-      } | \`${member.defaultValue.replaceAll('|', '\\|')}\` | ${member.description} |`,
+      } | \`${markdownTableCell(member.defaultValue)}\` | ${markdownTableCell(member.description)} |`,
   );
   return [
     '| Name | Kind | Type | Required | Default | Description |',
     '| --- | --- | --- | --- | --- | --- |',
     ...rows,
   ].join('\n');
+}
+
+function markdownSelectorDeprecations(component) {
+  if (!component.selectorDeprecations.length) return '_No deprecated selectors._';
+  return component.selectorDeprecations
+    .map(
+      (entry) =>
+        `- \`${entry.selector}\` — remove in \`${entry.removeIn}\`; replace with \`${entry.replacement}\`. ` +
+        `${entry.migration} Documentation: \`${entry.documentation}\`.`,
+    )
+    .join('\n');
 }
 
 function markdownPlaygroundBinding(binding) {
@@ -1408,6 +1438,10 @@ ${component.examples[0].code}
 ## API
 
 ${markdownApi(component.api)}
+
+## Deprecated selectors
+
+${markdownSelectorDeprecations(component)}
 
 ## Content slots
 
@@ -1701,6 +1735,7 @@ async function main() {
     migrations,
     examplesIndex,
     lifecycleSource,
+    deprecations,
   ] = await Promise.all([
     readJson(paths.packageJson),
     readJson(paths.runtimeEntrypoints),
@@ -1713,6 +1748,7 @@ async function main() {
     readJson(paths.migrations),
     readJson(paths.examplesIndex),
     readJson(paths.lifecycle),
+    readJson(paths.deprecations),
   ]);
   const overrides = Object.fromEntries(
     unique([...Object.keys(baseOverrides), ...Object.keys(nonStableContracts)]).map((id) => [
@@ -1735,6 +1771,33 @@ async function main() {
       }
       bySelector.set(selector, component);
     }
+  }
+  const selectorDeprecationsByComponent = new Map();
+  for (const entry of (deprecations.entries ?? []).filter(
+    (candidate) => candidate.kind === 'selector' && candidate.status === 'active',
+  )) {
+    const implementation = bySelector.get(entry.selector);
+    const owner = entry.entrypoint.replace(/^[.][/]/, '');
+    const symbolRecord = symbols.find(
+      (candidate) => candidate.owner === owner && candidate._exportNames.includes(entry.symbol),
+    );
+    if (!implementation || !symbolRecord || symbolRecord._target !== implementation.symbol) {
+      throw new Error(
+        `Active selector deprecation "${entry.id}" does not resolve to ${entry.entrypoint}:${entry.symbol}.`,
+      );
+    }
+    const records = selectorDeprecationsByComponent.get(implementation.symbol) ?? [];
+    records.push({
+      id: entry.id,
+      selector: entry.selector,
+      status: entry.status,
+      introducedIn: entry.introducedIn,
+      removeIn: entry.removeIn,
+      replacement: entry.replacement,
+      migration: entry.migration,
+      documentation: entry.documentation,
+    });
+    selectorDeprecationsByComponent.set(implementation.symbol, records);
   }
   const runtimeComponents = Object.fromEntries(
     [...bySelector].map(([selector, component]) => [
@@ -1880,6 +1943,9 @@ async function main() {
       decorated: implementation,
       symbolRecord,
       siblingItems,
+      selectorDeprecations: [
+        ...(selectorDeprecationsByComponent.get(implementation.symbol) ?? []),
+      ].sort((left, right) => left.selector.localeCompare(right.selector)),
       override: overrides[item.id],
       catalog,
       lifecycleRecord: lifecycleRecords.get(item.id),
@@ -2021,7 +2087,12 @@ async function main() {
       },
       playground: playgroundQueryContract(),
       entrypoints: entrypoints.map((entrypoint) => entrypoint.importPath),
-      sourceDigest: sourceDigest([catalogSource, playgroundSource, ...sourceTexts]),
+      sourceDigest: sourceDigest([
+        catalogSource,
+        playgroundSource,
+        JSON.stringify(deprecations),
+        ...sourceTexts,
+      ]),
     },
     components,
     symbols: cleanSymbols,

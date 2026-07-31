@@ -63,7 +63,12 @@ export default [
       '@angular-eslint/component-class-suffix': 'off',
       '@angular-eslint/component-selector': [
         'error',
-        { type: 'element', prefix: ['krn', 'kdocs', 'kshow'], style: 'kebab-case' },
+        [
+          { type: 'element', prefix: ['krn', 'kdocs', 'kshow'], style: 'kebab-case' },
+          // Components may enhance a native semantic host while retaining a
+          // template (for example, button[krnButton]).
+          { type: 'attribute', prefix: 'krn', style: 'camelCase' },
+        ],
       ],
       '@angular-eslint/directive-selector': [
         'error',
@@ -135,10 +140,44 @@ export default [
                 '@kern-ui/angular/addon-charts',
                 '@kern-ui/angular/addon-grid',
                 '@kern-ui/angular/core',
+                '@kern-ui/angular/i18n',
                 '@kern-ui/angular/kit',
                 '@kern-ui/angular/patterns',
               ],
               message: 'Kern CDK must not depend on higher-level library layers.',
+            },
+            {
+              group: ['@kern-ui/showcase', '@kern-ui/showcase/**'],
+              message: 'The publishable Kern package must not depend on the private showcase.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['projects/kern/i18n/src/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@kern-ui/angular',
+              message: 'Kern i18n must not import the compatibility root.',
+            },
+          ],
+          patterns: [
+            {
+              group: [
+                '@kern-ui/angular/addon-charts',
+                '@kern-ui/angular/addon-grid',
+                '@kern-ui/angular/cdk',
+                '@kern-ui/angular/core',
+                '@kern-ui/angular/kit',
+                '@kern-ui/angular/patterns',
+              ],
+              message: 'Kern i18n must remain an independent leaf-token layer.',
             },
             {
               group: ['@kern-ui/showcase', '@kern-ui/showcase/**'],
@@ -168,6 +207,7 @@ export default [
                 '@kern-ui/angular/addon-charts',
                 '@kern-ui/angular/addon-grid',
                 '@kern-ui/angular/cdk',
+                '@kern-ui/angular/i18n',
                 '@kern-ui/angular/kit',
                 '@kern-ui/angular/patterns',
               ],
@@ -202,7 +242,7 @@ export default [
                 '@kern-ui/angular/kit',
                 '@kern-ui/angular/patterns',
               ],
-              message: 'Kern core may depend only on Angular, CDK, and foundations.',
+              message: 'Kern core may depend only on Angular, CDK, i18n, and foundations.',
             },
             {
               group: ['@kern-ui/showcase', '@kern-ui/showcase/**'],

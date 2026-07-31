@@ -5,6 +5,7 @@ const internalButtonTriggerSlots = new Set([
   'krnMenuTrigger',
   'krnPopoverTrigger',
 ]);
+const interactiveAttributes = new Set(['krnButtonGroup', 'krnToggleGroup']);
 const interactiveElements = new Set([
   'a',
   'button',
@@ -16,7 +17,6 @@ const interactiveElements = new Set([
   'krn-bottom-navigation',
   'krn-bottom-sheet',
   'krn-breadcrumbs',
-  'krn-button',
   'krn-button-group',
   'krn-bulk-actions',
   'krn-calendar',
@@ -40,10 +40,7 @@ const interactiveElements = new Set([
   'krn-dropdown-button',
   'krn-file-upload',
   'krn-filter-bar',
-  'krn-floating-action-button',
   'krn-global-search',
-  'krn-icon-button',
-  'krn-link',
   'krn-login-form',
   'krn-menu',
   'krn-menubar',
@@ -78,7 +75,6 @@ const interactiveElements = new Set([
   'krn-text-input',
   'krn-textarea',
   'krn-time-picker',
-  'krn-toggle-button',
   'krn-toggle-group',
   'krn-tree',
   'krn-tree-navigation',
@@ -98,6 +94,11 @@ function descendantInteractiveElements(node) {
   const visit = (candidate) => {
     if (typeof candidate?.name === 'string' && interactiveElements.has(candidate.name)) {
       matches.push(candidate.name);
+    }
+    for (const attribute of elementAttributes(candidate)) {
+      if (interactiveAttributes.has(attribute)) {
+        matches.push(`[${attribute}]`);
+      }
     }
     for (const child of candidate?.children ?? []) visit(child);
   };

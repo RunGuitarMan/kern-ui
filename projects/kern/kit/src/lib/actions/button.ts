@@ -2,154 +2,127 @@ import {
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
-  computed,
+  DestroyRef,
+  ElementRef,
+  inject,
   input,
-  output,
+  Renderer2,
 } from '@angular/core';
-import type { KrnActionVariant, KrnButtonType, KrnSize, KrnTone } from './action-types';
+import { KRN_LOADING_LABEL } from '@kern-ui/angular/i18n';
+import type { KrnActionVariant, KrnSize, KrnTone } from './action-types';
+import { KRN_BUTTON_OPTIONS } from './button-options';
+import { KRN_FLOATING_ACTION_BUTTON_OPTIONS } from './floating-action-button-options';
+import { registerKrnLoadingActivationGuard } from './loading-action';
 
 @Component({
-  selector: 'krn-button',
+  selector: 'button[krnButton]',
   template: `
-    <button
-      class="krn-action"
-      [attr.aria-busy]="loading() || null"
-      [attr.aria-label]="ariaLabel() || null"
-      [attr.aria-pressed]="pressed() ?? null"
-      [attr.data-loading]="loading()"
-      [attr.data-size]="size()"
-      [attr.data-tone]="tone()"
-      [attr.data-variant]="variant()"
-      [disabled]="isDisabled()"
-      [name]="name() || ''"
-      [type]="type()"
-      [value]="value()"
-      (click)="activate($event)"
-    >
-      <span class="krn-action__icon" aria-hidden="true">
-        <ng-content select="[krnLeadingIcon]" />
-      </span>
-      <span class="krn-action__label"><ng-content /></span>
-      <span class="krn-action__icon" aria-hidden="true">
-        <ng-content select="[krnTrailingIcon]" />
-      </span>
-    </button>
+    <span class="krn-action__icon" aria-hidden="true">
+      <ng-content select="[krnLeadingIcon]" />
+    </span>
+    <span class="krn-action__label"><ng-content /></span>
+    <span class="krn-action__icon" aria-hidden="true">
+      <ng-content select="[krnTrailingIcon]" />
+    </span>
+    <span class="krn-action__status" role="status" aria-live="polite">
+      {{ loading() ? loadingLabel() : '' }}
+    </span>
   `,
+  host: {
+    class: 'krn-action',
+    type: 'button',
+    '[attr.data-loading]': 'loading()',
+    '[attr.data-size]': 'size()',
+    '[attr.data-tone]': 'tone()',
+    '[attr.data-variant]': 'variant()',
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnButton {
-  readonly size = input<KrnSize>('md');
-  readonly variant = input<KrnActionVariant>('solid');
-  readonly tone = input<KrnTone>('brand');
-  readonly type = input<KrnButtonType>('button');
-  readonly name = input('');
-  readonly value = input('');
-  readonly ariaLabel = input('');
-  readonly loading = input(false, { transform: booleanAttribute });
-  readonly disabled = input(false, { transform: booleanAttribute });
-  readonly pressed = input<boolean | undefined>(undefined, {
-    transform: (value: unknown) =>
-      value === undefined || value === null ? undefined : booleanAttribute(value),
-  });
-  readonly activated = output<MouseEvent>();
+  private readonly elementRef = inject<ElementRef<HTMLButtonElement>>(ElementRef);
+  private readonly renderer = inject(Renderer2);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly options = inject(KRN_BUTTON_OPTIONS);
+  private readonly defaultLoadingLabel = this.options.loadingLabel ?? inject(KRN_LOADING_LABEL);
+  private readonly syncLoadingAriaDisabled: () => void;
 
-  protected readonly isDisabled = computed(() => this.disabled() || this.loading());
-  protected activate(event: MouseEvent): void {
-    if (this.isDisabled()) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      return;
-    }
-    this.activated.emit(event);
+  readonly size = input<KrnSize>(this.options.size);
+  readonly variant = input<KrnActionVariant>(this.options.variant);
+  readonly tone = input<KrnTone>(this.options.tone);
+  /**
+   * Suppresses duplicate activation, owns `aria-disabled`, and updates the
+   * persistent polite status. Use native `disabled` for ordinary unavailability.
+   */
+  readonly loading = input(false, { transform: booleanAttribute });
+  /** Accessible loading copy; defaults to the application or closest scoped option. */
+  readonly loadingLabel = input(this.defaultLoadingLabel);
+
+  constructor() {
+    this.syncLoadingAriaDisabled = registerKrnLoadingActivationGuard({
+      destroyRef: this.destroyRef,
+      element: this.elementRef.nativeElement,
+      isLoading: this.loading,
+      renderer: this.renderer,
+    });
+  }
+
+  protected ngDoCheck(): void {
+    this.syncLoadingAriaDisabled();
   }
 }
 
 @Component({
-  selector: 'krn-icon-button',
+  selector: 'button[krnFab]',
   template: `
-    <button
-      class="krn-action krn-icon-action"
-      [attr.aria-busy]="loading() || null"
-      [attr.aria-label]="ariaLabel()"
-      [attr.aria-pressed]="pressed() ?? null"
-      [attr.data-loading]="loading()"
-      [attr.data-size]="size()"
-      [attr.data-tone]="tone()"
-      [attr.data-variant]="variant()"
-      [disabled]="isDisabled()"
-      [type]="type()"
-      (click)="activate($event)"
-    >
-      <span class="krn-action__icon" aria-hidden="true"><ng-content /></span>
-    </button>
+    <span class="krn-action__icon" aria-hidden="true">
+      <ng-content select="[krnFabIcon]" />
+    </span>
+    <span class="krn-action__label"><ng-content /></span>
+    <span class="krn-action__status" role="status" aria-live="polite">
+      {{ loading() ? loadingLabel() : '' }}
+    </span>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class KrnIconButton {
-  readonly ariaLabel = input.required<string>();
-  readonly size = input<KrnSize>('md');
-  readonly variant = input<KrnActionVariant>('ghost');
-  readonly tone = input<KrnTone>('neutral');
-  readonly type = input<KrnButtonType>('button');
-  readonly loading = input(false, { transform: booleanAttribute });
-  readonly disabled = input(false, { transform: booleanAttribute });
-  readonly pressed = input<boolean | undefined>(undefined, {
-    transform: (value: unknown) =>
-      value === undefined || value === null ? undefined : booleanAttribute(value),
-  });
-  readonly activated = output<MouseEvent>();
-
-  protected readonly isDisabled = computed(() => this.disabled() || this.loading());
-
-  protected activate(event: MouseEvent): void {
-    if (this.isDisabled()) {
-      event.preventDefault();
-      return;
-    }
-    this.activated.emit(event);
-  }
-}
-
-@Component({
-  selector: 'krn-floating-action-button',
-  template: `
-    <button
-      class="krn-action krn-fab"
-      [attr.aria-busy]="loading() || null"
-      [attr.aria-label]="ariaLabel() || null"
-      [attr.data-loading]="loading()"
-      [attr.data-size]="size()"
-      [attr.data-tone]="tone()"
-      [attr.data-variant]="variant()"
-      [disabled]="isDisabled()"
-      type="button"
-      (click)="activate($event)"
-    >
-      <span class="krn-action__icon" aria-hidden="true">
-        <ng-content select="[krnFabIcon]" />
-      </span>
-      @if (extended()) {
-        <span class="krn-action__label"><ng-content /></span>
-      }
-    </button>
-  `,
+  host: {
+    class: 'krn-action krn-fab',
+    type: 'button',
+    '[attr.data-extended]': 'extended()',
+    '[attr.data-loading]': 'loading()',
+    '[attr.data-size]': 'size()',
+    '[attr.data-tone]': 'tone()',
+    '[attr.data-variant]': 'variant()',
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnFloatingActionButton {
-  readonly ariaLabel = input.required<string>();
-  readonly size = input<KrnSize>('lg');
-  readonly variant = input<KrnActionVariant>('solid');
-  readonly tone = input<KrnTone>('brand');
-  readonly extended = input(true, { transform: booleanAttribute });
+  private readonly elementRef = inject<ElementRef<HTMLButtonElement>>(ElementRef);
+  private readonly renderer = inject(Renderer2);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly options = inject(KRN_FLOATING_ACTION_BUTTON_OPTIONS);
+  private readonly defaultLoadingLabel = this.options.loadingLabel ?? inject(KRN_LOADING_LABEL);
+  private readonly syncLoadingAriaDisabled: () => void;
+
+  readonly size = input<KrnSize>(this.options.size);
+  readonly variant = input<KrnActionVariant>(this.options.variant);
+  readonly tone = input<KrnTone>(this.options.tone);
+  readonly extended = input(this.options.extended, { transform: booleanAttribute });
+  /**
+   * Suppresses duplicate activation and owns `aria-disabled` while retaining
+   * focus. Use native `disabled` for ordinary unavailability.
+   */
   readonly loading = input(false, { transform: booleanAttribute });
-  readonly disabled = input(false, { transform: booleanAttribute });
-  readonly activated = output<MouseEvent>();
+  /** Accessible loading copy; defaults to the application or closest scoped option. */
+  readonly loadingLabel = input(this.defaultLoadingLabel);
 
-  protected readonly isDisabled = computed(() => this.disabled() || this.loading());
+  constructor() {
+    this.syncLoadingAriaDisabled = registerKrnLoadingActivationGuard({
+      destroyRef: this.destroyRef,
+      element: this.elementRef.nativeElement,
+      isLoading: this.loading,
+      renderer: this.renderer,
+    });
+  }
 
-  protected activate(event: MouseEvent): void {
-    if (!this.isDisabled()) {
-      this.activated.emit(event);
-    }
+  protected ngDoCheck(): void {
+    this.syncLoadingAriaDisabled();
   }
 }

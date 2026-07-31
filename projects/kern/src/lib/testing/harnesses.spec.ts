@@ -2,9 +2,11 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import {
+  KRN_CLIPBOARD_WRITER,
   KrnAutocomplete,
   KrnBarChart,
   KrnButton,
+  KrnButtonGroup,
   KrnCalendar,
   KrnChart,
   KrnCheckbox,
@@ -12,15 +14,20 @@ import {
   KrnColorPicker,
   KrnCombobox,
   KrnCommandPalette,
+  KrnCopyButton,
   KrnDataGrid,
   KrnDatePicker,
   KrnDateRangePicker,
   KrnDialog,
   KrnDonutChart,
   KrnDropUpload,
+  KrnDropdownButton,
   KrnFileUpload,
+  KrnFloatingActionButton,
   KrnFormField,
+  KrnIconButton,
   KrnLineChart,
+  KrnLink,
   KrnMenu,
   KrnMultiSelect,
   KrnOtpInput,
@@ -32,11 +39,14 @@ import {
   KrnResizeHandle,
   KrnSelect,
   KrnSegmentedControl,
+  KrnSplitButton,
   KrnTabs,
   KrnTextInput,
   KrnTimePicker,
   KrnToastService,
   KrnToastViewport,
+  KrnToggleButton,
+  KrnToggleGroup,
   KrnTree,
   KrnTreeNavigation,
 } from '../../public-api';
@@ -51,29 +61,38 @@ import type {
 import {
   KrnAutocompleteHarness,
   KrnBarChartHarness,
+  KrnButtonGroupHarness,
   KrnButtonHarness,
   KrnCalendarHarness,
   KrnChartHarness,
   KrnColorPickerHarness,
   KrnComboboxHarness,
   KrnCommandPaletteHarness,
+  KrnCopyButtonHarness,
   KrnDataGridHarness,
   KrnDatePickerHarness,
   KrnDateRangePickerHarness,
   KrnDialogHarness,
   KrnDonutChartHarness,
   KrnDropUploadHarness,
+  KrnDropdownButtonHarness,
   KrnFileUploadHarness,
+  KrnFloatingActionButtonHarness,
   KrnFormControlHarness,
   KrnFormFieldHarness,
+  KrnIconButtonHarness,
   KrnLineChartHarness,
+  KrnLinkHarness,
   KrnMenuHarness,
   KrnMultiSelectHarness,
   KrnResizablePanelsHarness,
   KrnSelectHarness,
+  KrnSplitButtonHarness,
   KrnTabsHarness,
   KrnTimePickerHarness,
   KrnToastViewportHarness,
+  KrnToggleButtonHarness,
+  KrnToggleGroupHarness,
   KrnTreeHarness,
   KrnTreeNavigationHarness,
 } from '../../../testing/src/public-api';
@@ -85,23 +104,126 @@ interface HarnessDemoRow extends Record<string, unknown> {
 }
 
 @Component({
-  imports: [KrnButton, KrnDataGrid, KrnDialog, KrnFormField, KrnSelect, KrnTextInput],
+  imports: [
+    KrnButton,
+    KrnButtonGroup,
+    KrnCopyButton,
+    KrnDataGrid,
+    KrnDialog,
+    KrnDropdownButton,
+    KrnFloatingActionButton,
+    KrnFormField,
+    KrnIconButton,
+    KrnLink,
+    KrnSelect,
+    KrnSplitButton,
+    KrnTextInput,
+    KrnToggleButton,
+    KrnToggleGroup,
+  ],
   template: `
-    <krn-button
-      ariaLabel="Save workspace"
+    <button
+      krnButton
+      aria-label="Save workspace"
       tone="brand"
       variant="outline"
-      (activated)="recordActivation()"
+      (click)="recordActivation()"
     >
       Save changes
-    </krn-button>
+    </button>
+
+    <span id="review-actions-label">Review actions</span>
+    <div krnButtonGroup aria-labelledby="review-actions-label" connected orientation="vertical">
+      <button krnButton type="button" variant="outline">Request changes</button>
+      <button krnIconButton type="button" aria-label="Approve review">✓</button>
+      <div>
+        <button krnButton type="button">Nested action</button>
+      </div>
+    </div>
+
+    <krn-button-group ariaLabel="Legacy actions">
+      <button krnButton type="button">Legacy action</button>
+    </krn-button-group>
+
+    <krn-copy-button value="CUS-2048" ariaLabel="Copy customer id" size="sm">
+      Copy customer id
+    </krn-copy-button>
+
+    <krn-dropdown-button>
+      <span krnLabel>Export report</span>
+      <button krnMenu type="button">CSV spreadsheet</button>
+      <button krnMenu type="button">JSON archive</button>
+    </krn-dropdown-button>
+
+    <krn-split-button
+      menuLabel="Open publishing options"
+      (primaryAction)="recordSplitPrimaryActivation()"
+    >
+      <span krnLabel>Publish changes</span>
+      <button krnMenu type="button">Publish now</button>
+      <button krnMenu type="button">Save as draft</button>
+    </krn-split-button>
+
+    <span id="workspace-menu-label">Open workspace menu</span>
+    <button
+      krnIconButton
+      aria-labelledby="workspace-menu-label"
+      name="workspace-action"
+      value="menu"
+      size="sm"
+      tone="neutral"
+      (click)="recordIconActivation()"
+    >
+      ⋯
+    </button>
+
+    <button
+      krnFab
+      aria-describedby="create-workspace-help"
+      extended="false"
+      name="workspace-action"
+      size="md"
+      value="create"
+      variant="soft"
+      (click)="recordFloatingActionActivation()"
+    >
+      <span krnFabIcon>+</span>
+      Create workspace
+    </button>
+    <span id="create-workspace-help">Creates a workspace from the current template.</span>
+
+    <span id="audit-report-label">Quarterly audit report</span>
+    <a
+      krnLink
+      aria-labelledby="audit-report-label"
+      download="audit.csv"
+      href="/reports/audit.csv"
+      referrerpolicy="strict-origin"
+      rel="alternate nofollow"
+      target="audit-window"
+      (click)="recordLinkActivation($event)"
+    >
+      Download report
+    </a>
+
+    <button
+      krnToggleButton
+      aria-label="Watch workspace changes"
+      [pressed]="true"
+      pressedTone="success"
+      value="watch"
+    >
+      Watch changes
+    </button>
+
+    <span id="visible-layers-label">Visible layers</span>
+    <div krnToggleGroup aria-labelledby="visible-layers-label" multiple orientation="horizontal">
+      <button krnToggleButton value="targets">Targets</button>
+      <button krnToggleButton value="forecast">Forecast</button>
+    </div>
 
     <krn-form-field label="Workspace name" hint="Visible to every member">
       <krn-text-input id="workspace-name" readonly required />
-    </krn-form-field>
-
-    <krn-form-field id="editable-workspace-field" label="Editable workspace">
-      <krn-text-input required />
     </krn-form-field>
 
     <krn-select ariaLabel="Plan" placeholder="Choose a plan" [options]="plans" />
@@ -129,6 +251,10 @@ interface HarnessDemoRow extends Record<string, unknown> {
 class HarnessDemo {
   readonly dialogOpen = signal(true);
   readonly activationCount = signal(0);
+  readonly iconActivationCount = signal(0);
+  readonly floatingActionActivationCount = signal(0);
+  readonly linkActivationCount = signal(0);
+  readonly splitPrimaryActivationCount = signal(0);
   readonly plans: readonly KrnSelectOption<string>[] = [
     { value: 'starter', label: 'Starter' },
     { value: 'enterprise', label: 'Enterprise' },
@@ -146,6 +272,23 @@ class HarnessDemo {
 
   recordActivation(): void {
     this.activationCount.update((count) => count + 1);
+  }
+
+  recordIconActivation(): void {
+    this.iconActivationCount.update((count) => count + 1);
+  }
+
+  recordFloatingActionActivation(): void {
+    this.floatingActionActivationCount.update((count) => count + 1);
+  }
+
+  recordLinkActivation(event: MouseEvent): void {
+    event.preventDefault();
+    this.linkActivationCount.update((count) => count + 1);
+  }
+
+  recordSplitPrimaryActivation(): void {
+    this.splitPrimaryActivationCount.update((count) => count + 1);
   }
 }
 
@@ -376,12 +519,7 @@ class AdvancedHarnessDemo {
 describe('@kern-ui/angular/testing', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        AdvancedHarnessDemo,
-        CompositeFormFieldHarnessDemo,
-        ExtendedHarnessDemo,
-        HarnessDemo,
-      ],
+      imports: [AdvancedHarnessDemo, ExtendedHarnessDemo, HarnessDemo],
     }).compileComponents();
   });
 
@@ -401,6 +539,283 @@ describe('@kern-ui/angular/testing', () => {
     expect(await button.isLoading()).toBe(false);
     await button.click();
     expect(fixture.componentInstance.activationCount()).toBe(1);
+  });
+
+  it('drives icon buttons through their native host and accessible-name predicate', async () => {
+    const fixture = TestBed.createComponent(HarnessDemo);
+    const loader = TestbedHarnessEnvironment.loader(fixture);
+    const button = await loader.getHarness(
+      KrnIconButtonHarness.with({
+        accessibleName: /workspace menu/i,
+        ariaLabelledBy: 'workspace-menu-label',
+        variant: 'ghost',
+        tone: 'neutral',
+        size: 'sm',
+        disabled: false,
+        loading: false,
+      }),
+    );
+
+    expect(await button.getType()).toBe('button');
+    expect(await button.getName()).toBe('workspace-action');
+    expect(await button.getValue()).toBe('menu');
+    expect(await button.getAriaLabel()).toBeNull();
+    expect(await button.getAriaLabelledBy()).toBe('workspace-menu-label');
+    expect(await button.getAccessibleName()).toBe('Open workspace menu');
+
+    await button.focus();
+    expect(await button.isFocused()).toBe(true);
+    await button.click();
+    expect(fixture.componentInstance.iconActivationCount()).toBe(1);
+  });
+
+  it('drives compact floating actions through their persistent native label', async () => {
+    const fixture = TestBed.createComponent(HarnessDemo);
+    const loader = TestbedHarnessEnvironment.loader(fixture);
+    const button = await loader.getHarness(
+      KrnFloatingActionButtonHarness.with({
+        accessibleName: 'Create workspace',
+        text: 'Create workspace',
+        variant: 'soft',
+        tone: 'brand',
+        size: 'md',
+        disabled: false,
+        loading: false,
+        extended: false,
+      }),
+    );
+
+    expect(await button.getType()).toBe('button');
+    expect(await button.getName()).toBe('workspace-action');
+    expect(await button.getValue()).toBe('create');
+    expect(await button.getAccessibleName()).toBe('Create workspace');
+    expect(await button.isExtended()).toBe(false);
+    expect(await (await button.getNativeButton()).getAttribute('aria-describedby')).toBe(
+      'create-workspace-help',
+    );
+
+    await button.focus();
+    expect(await button.isFocused()).toBe(true);
+    await button.click();
+    expect(fixture.componentInstance.floatingActionActivationCount()).toBe(1);
+  });
+
+  it('drives native links and filters browser-owned navigation attributes', async () => {
+    const fixture = TestBed.createComponent(HarnessDemo);
+    const loader = TestbedHarnessEnvironment.loader(fixture);
+    const link = await loader.getHarness(
+      KrnLinkHarness.with({
+        ariaLabelledBy: 'audit-report-label',
+        text: 'Download report',
+        href: '/reports/audit.csv',
+        target: 'audit-window',
+        rel: /nofollow/,
+        download: 'audit.csv',
+        hasHref: true,
+      }),
+    );
+
+    expect(await link.getAriaLabel()).toBeNull();
+    expect(await link.getAriaLabelledBy()).toBe('audit-report-label');
+    expect(await link.getReferrerPolicy()).toBe('strict-origin');
+    expect(await (await link.getNativeLink()).getAttribute('krnLink')).toBe('');
+
+    await link.focus();
+    expect(await link.isFocused()).toBe(true);
+    await link.click();
+    expect(fixture.componentInstance.linkActivationCount()).toBe(1);
+  });
+
+  it('drives effective pressed state through the native toggle-button host', async () => {
+    const fixture = TestBed.createComponent(HarnessDemo);
+    const loader = TestbedHarnessEnvironment.loader(fixture);
+    const button = await loader.getHarness(
+      KrnToggleButtonHarness.with({
+        ariaLabel: 'Watch workspace changes',
+        text: 'Watch changes',
+        value: 'watch',
+        pressed: true,
+        variant: 'soft',
+        tone: 'success',
+        size: 'md',
+        disabled: false,
+      }),
+    );
+
+    expect(await button.getType()).toBe('button');
+    expect(await button.getValue()).toBe('watch');
+    expect(await button.isPressed()).toBe(true);
+    await button.click();
+    expect(await button.isPressed()).toBe(false);
+  });
+
+  it('drives direct toggle children through the public toggle-group harness', async () => {
+    const fixture = TestBed.createComponent(HarnessDemo);
+    const loader = TestbedHarnessEnvironment.loader(fixture);
+    const group = await loader.getHarness(
+      KrnToggleGroupHarness.with({
+        accessibleName: 'Visible layers',
+        ariaLabelledBy: 'visible-layers-label',
+        orientation: 'horizontal',
+        multiple: true,
+        disabled: false,
+      }),
+    );
+
+    expect(await group.getAccessibleName()).toBe('Visible layers');
+    expect(await group.getValues()).toEqual([]);
+    const targets = await group.getToggleButtons({ text: 'Targets', value: 'targets' });
+    const forecast = await group.getToggleButtons({ text: 'Forecast', value: 'forecast' });
+    expect(targets).toHaveLength(1);
+    expect(forecast).toHaveLength(1);
+
+    await targets[0]?.click();
+    await forecast[0]?.click();
+    expect(await group.getValues()).toEqual(['targets', 'forecast']);
+  });
+
+  it('reads both button-group hosts and exposes only direct child action harnesses', async () => {
+    const fixture = TestBed.createComponent(HarnessDemo);
+    const loader = TestbedHarnessEnvironment.loader(fixture);
+    const group = await loader.getHarness(
+      KrnButtonGroupHarness.with({
+        accessibleName: 'Review actions',
+        ariaLabelledBy: 'review-actions-label',
+        orientation: 'vertical',
+        connected: true,
+      }),
+    );
+
+    expect(await group.getAriaLabel()).toBeNull();
+    expect(await group.getAriaLabelledBy()).toBe('review-actions-label');
+    expect(await group.getAccessibleName()).toBe('Review actions');
+    expect(await group.getOrientation()).toBe('vertical');
+    expect(await group.isConnected()).toBe(true);
+
+    const buttons = await group.getButtons({ text: 'Request changes', variant: 'outline' });
+    const iconButtons = await group.getIconButtons({ accessibleName: 'Approve review' });
+    expect(buttons).toHaveLength(1);
+    expect(await buttons[0]?.getText()).toBe('Request changes');
+    expect(iconButtons).toHaveLength(1);
+    expect(await iconButtons[0]?.getAccessibleName()).toBe('Approve review');
+    expect(await group.getButtons()).toHaveLength(1);
+
+    const legacy = await loader.getHarness(
+      KrnButtonGroupHarness.with({
+        ariaLabel: 'Legacy actions',
+        accessibleName: 'Legacy actions',
+        orientation: 'horizontal',
+        connected: false,
+      }),
+    );
+    expect(await legacy.getAccessibleName()).toBe('Legacy actions');
+    expect(await legacy.getButtons()).toHaveLength(1);
+  });
+
+  it('drives copy buttons through the clipboard boundary and exposes stable host state', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    TestBed.overrideProvider(KRN_CLIPBOARD_WRITER, { useValue: { writeText } });
+    const fixture = TestBed.createComponent(HarnessDemo);
+    const loader = TestbedHarnessEnvironment.loader(fixture);
+    const copyButton = await loader.getHarness(
+      KrnCopyButtonHarness.with({
+        accessibleName: /copy customer id/i,
+        text: 'Copy customer id',
+        state: 'idle',
+        size: 'sm',
+        variant: 'outline',
+        tone: 'neutral',
+        disabled: false,
+        pending: false,
+      }),
+    );
+
+    expect(await copyButton.getAccessibleName()).toBe('Copy customer id');
+    expect(await copyButton.getText()).toBe('Copy customer id');
+    expect(await copyButton.getState()).toBe('idle');
+    expect(await copyButton.getFeedbackText()).toBe('');
+    expect(await copyButton.getSize()).toBe('sm');
+    expect(await copyButton.getVariant()).toBe('outline');
+    expect(await copyButton.getTone()).toBe('neutral');
+    expect(await copyButton.isDisabled()).toBe(false);
+    expect(await copyButton.isPending()).toBe(false);
+    expect(await (await copyButton.getNativeButton()).getAttribute('krnButton')).toBe('');
+
+    await copyButton.focus();
+    expect(await copyButton.isFocused()).toBe(true);
+    await copyButton.click();
+
+    expect(writeText).toHaveBeenCalledOnce();
+    expect(writeText).toHaveBeenCalledWith('CUS-2048');
+    expect(await copyButton.getState()).toBe('copied');
+    expect(await copyButton.getFeedbackText()).toBe('Copied');
+    expect(await copyButton.isPending()).toBe(false);
+  });
+
+  it('follows aria-controls to operate a dropdown button menu in the overlay container', async () => {
+    const fixture = TestBed.createComponent(HarnessDemo);
+    const loader = TestbedHarnessEnvironment.loader(fixture);
+    const dropdown = await loader.getHarness(
+      KrnDropdownButtonHarness.with({
+        accessibleName: 'Export report',
+        menuAlign: 'end',
+        open: false,
+      }),
+    );
+
+    expect(await dropdown.getText()).toBe('Export report');
+    expect(await dropdown.isLoading()).toBe(false);
+    expect(await dropdown.isDisabled()).toBe(false);
+
+    await dropdown.open();
+
+    expect(await dropdown.isOpen()).toBe(true);
+    expect(await dropdown.getMenu()).not.toBeNull();
+    expect(await Promise.all((await dropdown.getMenuItems()).map((item) => item.text()))).toEqual([
+      'CSV spreadsheet',
+      'JSON archive',
+    ]);
+
+    await dropdown.clickItem(1);
+
+    expect(await dropdown.isOpen()).toBe(false);
+    expect(await dropdown.getMenu()).toBeNull();
+    expect(await dropdown.isFocused()).toBe(true);
+  });
+
+  it('operates both native split-button segments and follows its menu ownership', async () => {
+    const fixture = TestBed.createComponent(HarnessDemo);
+    const loader = TestbedHarnessEnvironment.loader(fixture);
+    const split = await loader.getHarness(
+      KrnSplitButtonHarness.with({
+        primaryText: 'Publish changes',
+        menuAccessibleName: 'Open publishing options',
+        menuAlign: 'end',
+        open: false,
+        disabled: false,
+        loading: false,
+      }),
+    );
+
+    expect(await split.getPrimaryAccessibleName()).toBe('Publish changes');
+    expect(await split.isMenuDisabled()).toBe(false);
+    expect(await (await split.getPrimary()).getAttribute('krnButton')).toBe('');
+    expect(await (await split.getMenuTrigger()).getAttribute('krnButton')).toBe('');
+
+    await split.clickPrimary();
+    expect(fixture.componentInstance.splitPrimaryActivationCount()).toBe(1);
+
+    await split.open();
+    expect(await split.isOpen()).toBe(true);
+    expect(await Promise.all((await split.getMenuItems()).map((item) => item.text()))).toEqual([
+      'Publish now',
+      'Save as draft',
+    ]);
+
+    await split.clickItem(1);
+    expect(await split.isOpen()).toBe(false);
+    expect(await split.getMenu()).toBeNull();
+    expect(await split.isMenuTriggerFocused()).toBe(true);
   });
 
   it('reads form-field state and its projected control contract', async () => {
@@ -425,14 +840,15 @@ describe('@kern-ui/angular/testing', () => {
 
     const control = await loader.getHarness(
       KrnFormControlHarness.with({
-        ancestor: '#editable-workspace-field',
+        ancestor: 'krn-form-field',
         required: true,
-        readonly: false,
+        readonly: true,
         invalid: false,
       }),
     );
     await control.setValue('Enterprise workspace');
     expect(await control.getValue()).toBe('Enterprise workspace');
+    expect(await control.getDescribedBy()).toEqual(['workspace-name-hint']);
   });
 
   it('resolves every registered composite root through the form-field harness', async () => {

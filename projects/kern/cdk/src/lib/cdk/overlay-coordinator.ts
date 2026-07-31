@@ -178,6 +178,40 @@ export class KrnOverlayCoordinator {
     if (this.stack.length > 0) this.syncBackground();
   }
 
+  /**
+   * Returns whether an event/focus target belongs to an overlay opened from
+   * `owner`, including recursively nested overlay branches.
+   *
+   * This is the active-zone boundary used by non-modal connected overlays:
+   * moving focus or a pointer into a child dropdown must not close its parent.
+   */
+  isOwnedBy(owner: HTMLElement, target: EventTarget | null): boolean {
+    if (!this.platform.isBrowser || !krnIsElement(this.platform, target)) {
+      return false;
+    }
+    if (owner.contains(target)) {
+      return true;
+    }
+
+    const element = krnIsHtmlElement(this.platform, target) ? target : target.parentElement;
+    let branch = element ? this.overlayContainerBranch(element) : null;
+    const visited = new Set<HTMLElement>();
+
+    while (branch && !visited.has(branch)) {
+      visited.add(branch);
+      const origin = this.overlayOrigins.get(branch);
+      if (!origin?.isConnected) {
+        return false;
+      }
+      if (owner.contains(origin)) {
+        return true;
+      }
+      branch = this.overlayContainerBranch(origin);
+    }
+
+    return false;
+  }
+
   focusInitial(panel: HTMLElement, initialFocus: KrnOverlayInitialFocus): void {
     if (!this.platform.isBrowser) return;
 

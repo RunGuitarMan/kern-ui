@@ -143,7 +143,11 @@ test.describe('Representative live specimen interactions', () => {
     await expect(publish).toBeEnabled();
     await publish.focus();
     await page.keyboard.press('Enter');
-    await expect(buttonSpecimen.getByRole('button', { name: 'Publishing' })).toBeDisabled();
+    const loading = buttonSpecimen.getByRole('button', { name: 'Publishing' });
+    await expect(loading).not.toHaveAttribute('disabled');
+    await expect(loading).not.toHaveAttribute('aria-busy');
+    await expect(loading).toHaveAttribute('aria-disabled', 'true');
+    await expect(loading.getByRole('status')).toHaveText('Loading…');
     await expect(buttonSpecimen.getByRole('button', { name: 'Unavailable' })).toBeDisabled();
 
     await openSpecimen(page, 'text-input');

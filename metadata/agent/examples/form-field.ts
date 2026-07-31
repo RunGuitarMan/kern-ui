@@ -18,7 +18,7 @@ import { KrnFormField, KrnHint, KrnLabel, KrnTextInput } from '@kern-ui/angular/
   template: `
     <krn-form-field>
       <krn-label for="account-name">Account name</krn-label>
-      <krn-text-input id="account-name" [formControl]="control" ariaLabel="Account name" />
+      <krn-text-input id="account-name" [formControl]="control" />
       <krn-hint>Use the legal customer name.</krn-hint>
     </krn-form-field>
   `,
