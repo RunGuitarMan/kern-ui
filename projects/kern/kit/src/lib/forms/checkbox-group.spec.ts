@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KrnCheckbox, KrnCheckboxGroup } from './selection-controls';
@@ -14,6 +14,7 @@ import { KrnCheckbox, KrnCheckboxGroup } from './selection-controls';
 })
 class StandaloneCheckboxGroupHost {
   readonly value = signal<readonly string[]>(['audit', 'audit']);
+  readonly group = viewChild.required(KrnCheckboxGroup);
 }
 
 @Component({
@@ -59,7 +60,9 @@ class TouchedCheckboxGroupHost {
     </krn-checkbox-group>
   `,
 })
-class AccessibleCheckboxGroupHost {}
+class AccessibleCheckboxGroupHost {
+  readonly group = viewChild.required(KrnCheckboxGroup);
+}
 
 describe('KrnCheckboxGroup', () => {
   afterEach(() => TestBed.resetTestingModule());
@@ -67,7 +70,7 @@ describe('KrnCheckboxGroup', () => {
   it('owns a normalized standalone value and suppresses no-op emissions', async () => {
     const fixture = TestBed.createComponent(StandaloneCheckboxGroupHost);
     await fixture.whenStable();
-    const group = fixture.debugElement.children[0]!.componentInstance as KrnCheckboxGroup;
+    const group = fixture.componentInstance.group();
     const valueChange = vi.fn();
     group.valueChange.subscribe(valueChange);
     const inputs = [
@@ -75,6 +78,7 @@ describe('KrnCheckboxGroup', () => {
     ];
 
     expect(inputs.map((input) => input.checked)).toEqual([true, false]);
+    const { Event } = inputs[0]!.ownerDocument.defaultView!;
     inputs[0]!.dispatchEvent(new Event('change', { bubbles: true }));
     await fixture.whenStable();
     expect(valueChange).not.toHaveBeenCalled();
@@ -120,7 +124,7 @@ describe('KrnCheckboxGroup', () => {
   it('composes group ARIA references and focuses the first enabled native option', async () => {
     const fixture = TestBed.createComponent(AccessibleCheckboxGroupHost);
     await fixture.whenStable();
-    const group = fixture.debugElement.children[0]!.componentInstance as KrnCheckboxGroup;
+    const group = fixture.componentInstance.group();
     const fieldset = fixture.nativeElement.querySelector('fieldset') as HTMLFieldSetElement;
     const inputs = [
       ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLInputElement>('input'),
@@ -132,6 +136,6 @@ describe('KrnCheckboxGroup', () => {
     expect(fieldset.querySelector('legend')?.textContent?.trim()).toBe('Features');
 
     group.focus();
-    expect(document.activeElement).toBe(inputs[1]);
+    expect(inputs[1]!.ownerDocument.activeElement).toBe(inputs[1]);
   });
 });

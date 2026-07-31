@@ -67,6 +67,7 @@ describe('KrnPasswordInput', () => {
     const toggle = fixture.nativeElement.querySelector('button') as HTMLButtonElement;
 
     fixture.componentInstance.focus();
+    const { MouseEvent } = toggle.ownerDocument.defaultView!;
     toggle.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, button: 0 }));
     toggle.click();
     await fixture.whenStable();
@@ -95,6 +96,7 @@ describe('KrnPasswordInput', () => {
     await fixture.whenStable();
     const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
 
+    const { Event } = input.ownerDocument.defaultView!;
     input.dispatchEvent(new Event('compositionstart', { bubbles: true }));
     input.value = 'に';
     input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -138,6 +140,7 @@ describe('KrnPasswordInput', () => {
     const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
     const shell = fixture.nativeElement.querySelector('.krn-control-shell') as HTMLElement;
 
+    const { MouseEvent } = shell.ownerDocument.defaultView!;
     shell.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, button: 0 }));
     expect(input.ownerDocument.activeElement).toBe(input);
 

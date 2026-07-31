@@ -35,9 +35,9 @@ describe('KrnTextInput', () => {
 
     expect(input.value).toBe('Initial');
 
-    input.dispatchEvent(new Event('input'));
+    input.dispatchEvent(new input.ownerDocument.defaultView!.Event('input'));
     input.value = 'Updated';
-    input.dispatchEvent(new Event('input'));
+    input.dispatchEvent(new input.ownerDocument.defaultView!.Event('input'));
     await fixture.whenStable();
 
     expect(valueChange).toHaveBeenCalledTimes(1);
@@ -74,6 +74,7 @@ describe('KrnTextInput', () => {
     await fixture.whenStable();
     const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
 
+    const { Event } = input.ownerDocument.defaultView!;
     input.dispatchEvent(new Event('compositionstart', { bubbles: true }));
     input.value = 'に';
     input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -120,6 +121,7 @@ describe('KrnTextInput', () => {
     const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
     const prefix = fixture.nativeElement.querySelector('[krnPrefix]') as HTMLElement;
 
+    const { MouseEvent } = prefix.ownerDocument.defaultView!;
     prefix.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, button: 0 }));
 
     expect(input.ownerDocument.activeElement).toBe(input);

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KrnRadio, KrnRadioGroup } from './selection-controls';
@@ -14,6 +14,7 @@ import { KrnRadio, KrnRadioGroup } from './selection-controls';
 })
 class StandaloneRadioGroupHost {
   readonly value = signal<string | null>('annual');
+  readonly group = viewChild.required(KrnRadioGroup);
 }
 
 @Component({
@@ -49,6 +50,7 @@ class AngularOwnedRadioGroupHost {
 })
 class AccessibleRadioGroupHost {
   readonly value = signal<string | null>('enterprise');
+  readonly group = viewChild.required(KrnRadioGroup);
 }
 
 describe('KrnRadioGroup', () => {
@@ -58,7 +60,7 @@ describe('KrnRadioGroup', () => {
     const fixture = TestBed.createComponent(StandaloneRadioGroupHost);
     fixture.detectChanges();
     await fixture.whenStable();
-    const group = fixture.debugElement.children[0]!.componentInstance as KrnRadioGroup;
+    const group = fixture.componentInstance.group();
     const valueChange = vi.fn();
     group.valueChange.subscribe(valueChange);
     const inputs = [
@@ -68,6 +70,7 @@ describe('KrnRadioGroup', () => {
     ];
 
     expect(inputs.map((input) => input.checked)).toEqual([false, true]);
+    const { Event } = inputs[1]!.ownerDocument.defaultView!;
     inputs[1]!.dispatchEvent(new Event('change', { bubbles: true }));
     await fixture.whenStable();
     expect(valueChange).not.toHaveBeenCalled();
@@ -102,7 +105,7 @@ describe('KrnRadioGroup', () => {
     const fixture = TestBed.createComponent(AccessibleRadioGroupHost);
     fixture.detectChanges();
     await fixture.whenStable();
-    const group = fixture.debugElement.children[0]!.componentInstance as KrnRadioGroup;
+    const group = fixture.componentInstance.group();
     const fieldset = fixture.nativeElement.querySelector('fieldset') as HTMLFieldSetElement;
     const inputs = [
       ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLInputElement>(
@@ -118,11 +121,11 @@ describe('KrnRadioGroup', () => {
     expect(fieldset.querySelector('legend')?.textContent?.trim()).toBe('Plans');
 
     group.focus();
-    expect(document.activeElement).toBe(inputs[2]);
+    expect(inputs[2]!.ownerDocument.activeElement).toBe(inputs[2]);
 
     fixture.componentInstance.value.set(null);
     await fixture.whenStable();
     group.focus();
-    expect(document.activeElement).toBe(inputs[1]);
+    expect(inputs[1]!.ownerDocument.activeElement).toBe(inputs[1]);
   });
 });

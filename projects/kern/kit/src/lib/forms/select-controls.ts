@@ -881,6 +881,9 @@ export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
   }
 }
 
+/**
+ * @internalReviewWith kit:KrnAutocomplete
+ */
 @Directive({
   selector: 'input[krnEditableComboboxSemantics]',
   host: {
@@ -1047,10 +1050,7 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
       this.cancelPendingEnterClose();
     });
     effect(() => {
-      if (
-        this.open() &&
-        (this.isDisabled() || this.isReadOnly() || !this.hasAutocompletePopup())
-      ) {
+      if (this.open() && (this.isDisabled() || this.isReadOnly() || !this.hasAutocompletePopup())) {
         this.setOpen(false);
       }
     });
@@ -1221,8 +1221,7 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
 
   protected setOpen(open: boolean): void {
     this.cancelPendingEnterClose();
-    const next =
-      open && this.hasAutocompletePopup() && !this.isDisabled() && !this.isReadOnly();
+    const next = open && this.hasAutocompletePopup() && !this.isDisabled() && !this.isReadOnly();
     this.comboboxDirective()?.expanded.set(next);
     if (!next && !this.allowCustomValue()) {
       this.restoreCommittedQuery();
