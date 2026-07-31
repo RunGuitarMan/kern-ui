@@ -113,6 +113,10 @@ contract or upgrade decision.
 - Strengthened Slider with deterministic standalone `value` ownership, finite native constraints,
   bounded progress, duplicate-free accepted changes, readonly-safe interaction, native form
   naming and tab order, and public focus and blur methods.
+- Strengthened Range Slider with deterministic standalone range ownership, finite constraints,
+  precise decimal pointer snapping, structural change deduplication, composite focus/touched
+  semantics, formatted accessible values, readonly-safe interaction, and public focus and blur
+  methods.
 
 ### Deprecated
 
