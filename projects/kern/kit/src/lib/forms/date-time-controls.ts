@@ -6,10 +6,12 @@ import {
   effect,
   inject,
   input,
+  model,
   numberAttribute,
   output,
   signal,
   type ElementRef,
+  untracked,
   viewChild,
   viewChildren,
 } from '@angular/core';
@@ -87,6 +89,11 @@ const consumeOpenEscape = (event: Event, open: boolean, close: () => void): void
   event.preventDefault();
   event.stopPropagation();
   close();
+};
+
+const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string | null => {
+  const ids = values.flatMap((value) => value?.split(/\s+/).filter(Boolean) ?? []);
+  return ids.length > 0 ? [...new Set(ids)].join(' ') : null;
 };
 
 const positionPickerPopover = (
@@ -184,17 +191,17 @@ const connectPickerPopover = (
           class="krn-picker__trigger"
           type="button"
           [attr.aria-controls]="calendarId()"
-          [attr.aria-describedby]="a11y.describedBy()"
+          [attr.aria-describedby]="effectiveDescribedBy()"
           [attr.aria-expanded]="open()"
           [attr.aria-haspopup]="'dialog'"
           [attr.aria-invalid]="a11y.invalid()"
-          [attr.aria-label]="a11y.labelledBy() ? null : pickerAriaLabel()"
-          [attr.aria-labelledby]="a11y.labelledBy()"
+          [attr.aria-label]="effectiveLabelledBy() ? null : pickerAriaLabel()"
+          [attr.aria-labelledby]="effectiveLabelledBy()"
           [attr.aria-required]="a11y.required()"
           [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
           [disabled]="isDisabled()"
           [id]="a11y.id()"
-          (blur)="touch()"
+          [tabIndex]="isDisabled() ? -1 : tabIndex()"
           (click)="toggleOpen()"
         >
           @if (controlValue()) {
@@ -292,6 +299,8 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
   private readonly translations = inject(KRN_TRANSLATIONS);
   readonly id = input('');
   readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
   readonly locale = input(inject(KRN_LOCALE));
   readonly today = input(toIsoDate(new Date(this.platform.now())));
   readonly weekStartsOn = input(0, { transform: clampWeekStartsOn });
@@ -305,8 +314,10 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
   });
   readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
+  readonly value = input<string | undefined>(undefined);
+  readonly open = model(false);
   readonly valueChange = output<string>();
-  protected readonly open = signal(false);
   protected readonly visibleMonth = signal(initialCalendarMonth('', new Date(this.platform.now())));
   protected readonly focusedDate = signal(this.today());
   protected readonly copy = computed(() => ({
@@ -321,6 +332,12 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
     required: this.required,
   });
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
+  protected readonly effectiveLabelledBy = computed(() =>
+    mergeAriaIds(this.ariaLabelledBy(), this.a11y.labelledBy()),
+  );
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(this.ariaDescribedBy(), this.a11y.describedBy()),
+  );
   protected readonly calendarId = computed(() => `${this.a11y.id()}-calendar`);
   protected readonly days = computed(() =>
     calendarDays(this.visibleMonth(), this.min(), this.max(), this.weekStartsOn(), this.today()),
@@ -336,6 +353,22 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
   private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
   private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
   private readonly dayButtons = viewChildren<ElementRef<HTMLButtonElement>>('dayButton');
+  private focusGeneration = 0;
+  private lastObservedOpen = this.open();
+  private readonly initializeControlledOpen = effect(() => {
+    const value = this.controlValue();
+    const open = this.open();
+    this.today();
+    this.min();
+    this.max();
+    if (open !== this.lastObservedOpen) {
+      this.lastObservedOpen = open;
+      this.focusGeneration += 1;
+    }
+    if (open) {
+      untracked(() => this.prepareOpen(value));
+    }
+  });
   private readonly syncPanel = effect((onCleanup) => {
     if (!this.open()) {
       return;
@@ -352,7 +385,12 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
     }
     const iso = this.focusedDate();
     const buttons = this.dayButtons();
-    this.platform.queueMicrotask(() => this.focusDayButton(iso, buttons));
+    const generation = this.focusGeneration;
+    this.platform.queueMicrotask(() => {
+      if (this.open() && this.focusGeneration === generation && this.focusedDate() === iso) {
+        this.focusDayButton(iso, buttons);
+      }
+    });
   });
   private readonly closeWhenBlocked = effect(() => {
     const disabled = this.isDisabled();
@@ -360,14 +398,15 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
     if (!this.open() || (!disabled && !readOnly)) {
       return;
     }
-    this.open.set(false);
+    const generation = this.setOpen(false);
     if (!disabled) {
-      this.platform.queueMicrotask(() => this.trigger()?.nativeElement.focus());
+      this.restoreTriggerFocus(generation);
     }
   });
 
   constructor() {
     super('');
+    this.bindStandaloneValue(this.value);
     this.watchValidationInputs(this.required, this.a11y.required, this.min, this.max);
   }
 
@@ -403,24 +442,13 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
       return;
     }
     const next = !this.open();
-    if (next) {
-      const referenceDate = parseIsoDate(this.today()) ?? new Date(this.platform.now());
-      this.visibleMonth.set(
-        clampCalendarMonth(
-          initialCalendarMonth(this.controlValue(), referenceDate),
-          this.min(),
-          this.max(),
-        ),
-      );
-      this.focusedDate.set(this.initialFocusDate());
-    }
-    this.open.set(next);
+    this.setOpen(next);
   }
 
   protected close(restoreFocus = true): void {
-    this.open.set(false);
+    const generation = this.setOpen(false);
     if (restoreFocus) {
-      this.platform.queueMicrotask(() => this.trigger()?.nativeElement.focus());
+      this.restoreTriggerFocus(generation);
     }
   }
 
@@ -429,7 +457,10 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
   }
 
   protected closeOnFocusOut(event: FocusEvent): void {
-    closeWhenFocusLeaves(event, () => this.close(false));
+    closeWhenFocusLeaves(event, () => {
+      this.touch();
+      this.close(false);
+    });
   }
 
   protected moveMonth(amount: number): void {
@@ -454,9 +485,9 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
     ) {
       return;
     }
-    this.commitValue(value);
-    this.valueChange.emit(value);
-    this.touch();
+    if (this.commitUserValue(value)) {
+      this.valueChange.emit(value);
+    }
     this.close(true);
   }
 
@@ -464,14 +495,17 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
     if (this.isDisabled() || this.a11y.readOnly()) {
       return;
     }
-    this.commitValue('');
-    this.valueChange.emit('');
-    this.touch();
+    if (this.commitUserValue('')) {
+      this.valueChange.emit('');
+    }
     this.close(true);
   }
 
   protected handleCalendarKeydown(event: KeyboardEvent, day: KrnCalendarDay): void {
     if (this.isDisabled() || this.a11y.readOnly()) {
+      return;
+    }
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) {
       return;
     }
     if (event.key === 'Enter' || event.key === ' ') {
@@ -487,8 +521,46 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
     this.focusDate(clampDate(next, this.min(), this.max()));
   }
 
-  private initialFocusDate(): string {
-    const preferred = this.controlValue() || this.today();
+  focus(options?: FocusOptions): void {
+    this.trigger()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    const trigger = this.trigger()?.nativeElement;
+    const panel = this.panel()?.nativeElement;
+    const active = trigger?.ownerDocument.activeElement;
+    if (active === trigger || (active && panel?.contains(active))) {
+      (active as HTMLElement).blur();
+    }
+  }
+
+  private prepareOpen(value = this.controlValue()): void {
+    const referenceDate = parseIsoDate(this.today()) ?? new Date(this.platform.now());
+    this.visibleMonth.set(
+      clampCalendarMonth(initialCalendarMonth(value, referenceDate), this.min(), this.max()),
+    );
+    this.focusedDate.set(this.initialFocusDate(value));
+  }
+
+  private setOpen(open: boolean): number {
+    if (this.open() !== open) {
+      this.focusGeneration += 1;
+      this.lastObservedOpen = open;
+      this.open.set(open);
+    }
+    return this.focusGeneration;
+  }
+
+  private restoreTriggerFocus(generation: number): void {
+    this.platform.queueMicrotask(() => {
+      if (!this.open() && this.focusGeneration === generation) {
+        this.trigger()?.nativeElement.focus();
+      }
+    });
+  }
+
+  private initialFocusDate(value = this.controlValue()): string {
+    const preferred = value || this.today();
     if (!dateIsDisabled(preferred, this.min(), this.max())) {
       return preferred;
     }

@@ -128,6 +128,9 @@ contract or upgrade decision.
   duplicate-free changes, composable group semantics, labelled custom content, horizontal and
   vertical orientation, focus-based disabled-skipping keyboard navigation, composite touched
   state, configurable tab order, and public focus and blur methods.
+- Strengthened Date Picker with deterministic standalone `value` ownership, controlled open state,
+  duplicate-free date commits, composable trigger semantics, shortcut-safe calendar navigation,
+  composite focus/touched behavior, configurable tab order, and public focus and blur methods.
 
 ### Deprecated
 
