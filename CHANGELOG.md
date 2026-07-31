@@ -103,6 +103,10 @@ contract or upgrade decision.
   duplicate-free canonical option commits, preserved disabled selections, non-interactive popup
   invariants, bounded token summaries, composable external/Form Field ARIA references, native-only
   tab order, and public trigger focus.
+- Strengthened Combobox with deterministic standalone `value` ownership, duplicate-free
+  enabled-option commits, disabled exact-match protection, non-interactive popup invariants,
+  form-safe Enter handling, composable external/Form Field ARIA references, native input naming
+  and tab order, and public focus, blur, and selection methods.
 
 ### Deprecated
 

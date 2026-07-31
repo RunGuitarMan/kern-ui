@@ -4,6 +4,7 @@ import {
   Component,
   computed,
   Directive,
+  DestroyRef,
   effect,
   inject,
   input,
@@ -889,9 +890,12 @@ const COMBOBOX_IMPORTS = [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Opti
 @Directive()
 export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   private readonly comboboxDirective = viewChild<Combobox>('combo');
+  private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('comboInput');
+  private readonly destroyRef = inject(DestroyRef);
   private readonly locale = inject(KRN_LOCALE);
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly queryEditing = signal(false);
+  private pendingEnterClose: ReturnType<typeof setTimeout> | undefined;
   protected readonly defaultAutocompleteMode: KrnAutocompleteMode = 'list';
   protected readonly defaultAllowCustomValue: boolean = false;
   protected readonly autocompleteModeInput = input<KrnAutocompleteMode | undefined>(undefined, {
@@ -914,7 +918,10 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
       '',
   );
   readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
   readonly toggleLabel = input(this.translations.forms.showOptions);
+  readonly name = input('');
   readonly options = input.required<readonly KrnSelectOption<string>[]>();
   /** Controls whether options are interactive or replaced by an announced loading/error state. */
   readonly optionsState = input<KrnOptionsState>('ready');
@@ -935,6 +942,8 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   });
   readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
+  readonly value = input<string | undefined>(undefined);
   readonly open = model(false);
   readonly valueChange = output<string>();
   /** Emits every user query so remote option sources can load and replace options. */
@@ -948,6 +957,13 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     required: this.required,
   });
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
+  protected readonly isReadOnly = computed(() => this.a11y.readOnly());
+  protected readonly effectiveLabelledBy = computed(() =>
+    mergeAriaIds(this.ariaLabelledBy(), this.a11y.labelledBy()),
+  );
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(this.ariaDescribedBy(), this.a11y.describedBy()),
+  );
   protected readonly filteredOptions = computed(() => {
     const rawQuery = this.query().trim();
     if (!rawQuery || !this.filterLocally()) {
@@ -983,7 +999,22 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
 
   protected constructor() {
     super('');
+    this.bindStandaloneValue(this.value);
     this.watchValidationInputs(this.required, this.a11y.required);
+    const openSubscription = this.open.subscribe(() => this.cancelPendingEnterClose());
+    this.destroyRef.onDestroy(() => {
+      openSubscription.unsubscribe();
+      this.cancelPendingEnterClose();
+    });
+    effect(() => {
+      this.open();
+      this.cancelPendingEnterClose();
+    });
+    effect(() => {
+      if (this.open() && (this.isDisabled() || this.isReadOnly())) {
+        this.setOpen(false);
+      }
+    });
     effect(() => {
       const value = this.controlValue();
       const option = this.options().find((item) => item.value === value);
@@ -1009,7 +1040,7 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     if (query === this.query()) {
       return;
     }
-    if (this.a11y.readOnly()) {
+    if (this.isDisabled() || this.isReadOnly()) {
       return;
     }
     this.queryEditing.set(true);
@@ -1023,32 +1054,49 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   }
 
   protected selectValues(values: string[]): void {
-    if (this.a11y.readOnly() || this.optionsState() !== 'ready') {
+    if (this.isDisabled() || this.isReadOnly() || this.optionsState() !== 'ready') {
       return;
     }
     const value = values.at(-1);
     const option = this.options().find((item) => item.value === value);
-    if (!option) {
+    if (values.length === 0) {
+      return;
+    }
+    if (!option || option.disabled) {
       return;
     }
     this.queryEditing.set(false);
     this.setQuery(option.label);
-    this.commitValue(option.value);
-    this.valueChange.emit(option.value);
-    this.optionSelected.emit(option);
-    this.open.set(false);
+    if (this.commitUserValue(option.value)) {
+      this.valueChange.emit(option.value);
+      this.optionSelected.emit(option);
+    }
+    this.setOpen(false);
   }
 
-  protected commitQuery(): void {
-    if (this.a11y.readOnly()) {
+  protected commitQuery(event?: Event): void {
+    if (event && this.open()) {
+      event.preventDefault();
+      this.cancelPendingEnterClose();
+      const pendingClose = setTimeout(() => {
+        if (this.pendingEnterClose === pendingClose) {
+          this.pendingEnterClose = undefined;
+          this.setOpen(false);
+        }
+      });
+      this.pendingEnterClose = pendingClose;
+      return;
+    }
+    if (this.isDisabled() || this.isReadOnly()) {
       return;
     }
     if (this.optionsState() !== 'ready') {
-      this.open.set(false);
+      this.setOpen(false);
       return;
     }
     const exact = this.filteredOptions().find(
       (option) =>
+        !option.disabled &&
         this.normalizeForSearch(option.label) === this.normalizeForSearch(this.query().trim()),
     );
     if (exact) {
@@ -1086,7 +1134,8 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   }
 
   protected setOpen(open: boolean): void {
-    const next = open && !this.isDisabled() && !this.a11y.readOnly();
+    this.cancelPendingEnterClose();
+    const next = open && !this.isDisabled() && !this.isReadOnly();
     if (!next && !this.allowCustomValue()) {
       this.restoreCommittedQuery();
     } else if (!next) {
@@ -1115,6 +1164,18 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     input.focus();
   }
 
+  protected closeSelectedOption(option: KrnSelectOption<string>): void {
+    if (
+      this.optionsState() === 'ready' &&
+      !this.isDisabled() &&
+      !this.isReadOnly() &&
+      !option.disabled &&
+      option.value === this.controlValue()
+    ) {
+      this.setOpen(false);
+    }
+  }
+
   private restoreCommittedQuery(): void {
     const option = this.options().find((item) => item.value === this.controlValue());
     const query = option?.label ?? (this.allowCustomValue() ? this.controlValue() : '');
@@ -1126,6 +1187,29 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     this.query.set(query);
     this.comboboxDirective()?.value.set(query);
   }
+
+  private cancelPendingEnterClose(): void {
+    if (this.pendingEnterClose !== undefined) {
+      clearTimeout(this.pendingEnterClose);
+      this.pendingEnterClose = undefined;
+    }
+  }
+
+  focus(options?: FocusOptions): void {
+    this.inputElement()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    this.inputElement()?.nativeElement.blur();
+  }
+
+  select(): void {
+    this.inputElement()?.nativeElement.select();
+  }
+
+  setSelectionRange(start: number, end: number, direction?: SelectionDirection): void {
+    this.inputElement()?.nativeElement.setSelectionRange(start, end, direction);
+  }
 }
 
 @Component({
@@ -1133,6 +1217,7 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   host: {
     class: 'krn-select-host',
     '[attr.id]': 'null',
+    '[attr.tabindex]': 'null',
   },
   imports: COMBOBOX_IMPORTS,
   providers: [...provideKrnFormControl(() => KrnCombobox)],
@@ -1150,6 +1235,7 @@ export class KrnCombobox extends KrnEditableComboboxBase {
   host: {
     class: 'krn-select-host',
     '[attr.id]': 'null',
+    '[attr.tabindex]': 'null',
   },
   imports: COMBOBOX_IMPORTS,
   providers: [...provideKrnFormControl(() => KrnAutocomplete)],
