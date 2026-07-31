@@ -73,7 +73,7 @@
       "@kern-ui/angular/patterns",
       "@kern-ui/angular/testing"
     ],
-    "sourceDigest": "sha256-4753752fa032df5f73df8f5906ddd9bfa7a2bc4ca82ef68c28ed7426992959ce"
+    "sourceDigest": "sha256-11a758f06660db3338f2b04bfdde127f0e1cfd53e8228800a0633bc67dcfa232"
   },
   "components": [
     {
@@ -2320,8 +2320,8 @@
           "type": "KrnLayoutSpace",
           "required": false,
           "defaultValue": "'4'",
-          "description": "Logical spacing inserted between adjacent layout children.",
-          "descriptionSource": "inferred"
+          "description": "Logical spacing between adjacent projected children.",
+          "descriptionSource": "source"
         },
         {
           "name": "align",
@@ -2330,8 +2330,8 @@
           "type": "KrnLayoutAlignment",
           "required": false,
           "defaultValue": "'stretch'",
-          "description": "Logical cross-axis alignment applied to children by the layout.",
-          "descriptionSource": "inferred"
+          "description": "Cross-axis alignment of projected children.",
+          "descriptionSource": "source"
         },
         {
           "name": "justify",
@@ -2340,8 +2340,8 @@
           "type": "KrnLayoutJustification",
           "required": false,
           "defaultValue": "'start'",
-          "description": "Logical main-axis distribution applied to layout children.",
-          "descriptionSource": "inferred"
+          "description": "Distribution of projected children along the block axis.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [
@@ -2425,7 +2425,7 @@
             "kind": "select",
             "defaultValue": "3",
             "testValue": "2",
-            "description": "Changes the vertical spacing between projected items.",
+            "description": "Changes the block-axis spacing between projected items.",
             "binding": {
               "kind": "input",
               "publicName": "gap",
@@ -2666,8 +2666,8 @@
           "type": "KrnLayoutSpace",
           "required": false,
           "defaultValue": "'3'",
-          "description": "Logical spacing inserted between adjacent layout children.",
-          "descriptionSource": "inferred"
+          "description": "Logical spacing between adjacent projected children and wrapped flex lines.",
+          "descriptionSource": "source"
         },
         {
           "name": "align",
@@ -2676,8 +2676,8 @@
           "type": "KrnLayoutAlignment",
           "required": false,
           "defaultValue": "'center'",
-          "description": "Logical cross-axis alignment applied to children by the layout.",
-          "descriptionSource": "inferred"
+          "description": "Cross-axis alignment of projected children within each flex line.",
+          "descriptionSource": "source"
         },
         {
           "name": "justify",
@@ -2686,8 +2686,8 @@
           "type": "KrnLayoutJustification",
           "required": false,
           "defaultValue": "'start'",
-          "description": "Logical main-axis distribution applied to layout children.",
-          "descriptionSource": "inferred"
+          "description": "Distribution of projected children along the inline axis.",
+          "descriptionSource": "source"
         },
         {
           "name": "wrap",
@@ -2696,8 +2696,8 @@
           "type": "boolean",
           "required": false,
           "defaultValue": "false",
-          "description": "Controls whether layout children wrap onto additional lines when space is constrained.",
-          "descriptionSource": "inferred"
+          "description": "Allows projected children to continue on additional flex lines.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [
@@ -2791,7 +2791,7 @@
             "kind": "boolean",
             "defaultValue": true,
             "testValue": false,
-            "description": "Allows inline items to wrap onto another row.",
+            "description": "Allows inline items to wrap onto another flex line.",
             "binding": {
               "kind": "input",
               "publicName": "wrap",
@@ -3027,8 +3027,8 @@
           "type": "KrnLayoutSpace",
           "required": false,
           "defaultValue": "'2'",
-          "description": "Logical spacing inserted between adjacent layout children.",
-          "descriptionSource": "inferred"
+          "description": "Default logical spacing between projected children and wrapped flex lines.",
+          "descriptionSource": "source"
         },
         {
           "name": "rowGap",
@@ -3037,8 +3037,8 @@
           "type": "KrnLayoutSpace | null",
           "required": false,
           "defaultValue": "null",
-          "description": "Logical spacing inserted between grid rows.",
-          "descriptionSource": "inferred"
+          "description": "Optional spacing override between wrapped flex lines.",
+          "descriptionSource": "source"
         },
         {
           "name": "columnGap",
@@ -3047,8 +3047,8 @@
           "type": "KrnLayoutSpace | null",
           "required": false,
           "defaultValue": "null",
-          "description": "Logical spacing inserted between grid columns.",
-          "descriptionSource": "inferred"
+          "description": "Optional spacing override between adjacent children within each flex line.",
+          "descriptionSource": "source"
         },
         {
           "name": "align",
@@ -3057,8 +3057,8 @@
           "type": "KrnLayoutAlignment",
           "required": false,
           "defaultValue": "'center'",
-          "description": "Logical cross-axis alignment applied to children by the layout.",
-          "descriptionSource": "inferred"
+          "description": "Cross-axis alignment of projected children within each flex line.",
+          "descriptionSource": "source"
         },
         {
           "name": "justify",
@@ -3067,8 +3067,8 @@
           "type": "KrnLayoutJustification",
           "required": false,
           "defaultValue": "'start'",
-          "description": "Logical main-axis distribution applied to layout children.",
-          "descriptionSource": "inferred"
+          "description": "Distribution of projected children along the inline axis.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [
@@ -4208,8 +4208,8 @@
           "type": "KrnLayoutSpace",
           "required": false,
           "defaultValue": "'md'",
-          "description": "Upper or lower bound applied to the width value.",
-          "descriptionSource": "inferred"
+          "description": "Maximum outer inline size as a container token, CSS length, or `full`.",
+          "descriptionSource": "source"
         },
         {
           "name": "gutters",
@@ -4218,8 +4218,8 @@
           "type": "KrnLayoutSpace",
           "required": false,
           "defaultValue": "'4'",
-          "description": "Enables the container-owned logical inline page gutters.",
-          "descriptionSource": "inferred"
+          "description": "Logical inline padding kept inside the maximum width.",
+          "descriptionSource": "source"
         },
         {
           "name": "intrinsic",
@@ -4228,8 +4228,8 @@
           "type": "boolean",
           "required": false,
           "defaultValue": "false",
-          "description": "Preserves the media element’s intrinsic dimensions when space permits.",
-          "descriptionSource": "inferred"
+          "description": "Centers projected children on the inline axis without changing text alignment.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [
@@ -4347,7 +4347,7 @@
             "label": "Gutters",
             "kind": "text",
             "defaultValue": "4",
-            "testValue": "4 · alternate",
+            "testValue": "20rem",
             "description": "Configures the component gutters contract.",
             "binding": {
               "kind": "input",
@@ -4488,18 +4488,18 @@
           "type": "KrnLayoutSpace",
           "required": false,
           "defaultValue": "'4'",
-          "description": "Named semantic size resolved through KERN density and sizing tokens.",
-          "descriptionSource": "inferred"
+          "description": "Fixed logical length reserved by the spacer.",
+          "descriptionSource": "source"
         },
         {
           "name": "axis",
           "property": "axis",
           "kind": "input",
-          "type": "\"horizontal\" | \"vertical\"",
+          "type": "KrnLayoutAxis",
           "required": false,
           "defaultValue": "'vertical'",
-          "description": "Chart axis represented by the data series and keyboard movement.",
-          "descriptionSource": "inferred"
+          "description": "Axis receiving space: horizontal maps to inline and vertical maps to block.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [],

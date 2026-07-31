@@ -53,8 +53,8 @@
       "type": "KrnLayoutSpace",
       "required": false,
       "defaultValue": "'3'",
-      "description": "Logical spacing inserted between adjacent layout children.",
-      "descriptionSource": "inferred"
+      "description": "Logical spacing between adjacent projected children and wrapped flex lines.",
+      "descriptionSource": "source"
     },
     {
       "name": "align",
@@ -63,8 +63,8 @@
       "type": "KrnLayoutAlignment",
       "required": false,
       "defaultValue": "'center'",
-      "description": "Logical cross-axis alignment applied to children by the layout.",
-      "descriptionSource": "inferred"
+      "description": "Cross-axis alignment of projected children within each flex line.",
+      "descriptionSource": "source"
     },
     {
       "name": "justify",
@@ -73,8 +73,8 @@
       "type": "KrnLayoutJustification",
       "required": false,
       "defaultValue": "'start'",
-      "description": "Logical main-axis distribution applied to layout children.",
-      "descriptionSource": "inferred"
+      "description": "Distribution of projected children along the inline axis.",
+      "descriptionSource": "source"
     },
     {
       "name": "wrap",
@@ -83,8 +83,8 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Controls whether layout children wrap onto additional lines when space is constrained.",
-      "descriptionSource": "inferred"
+      "description": "Allows projected children to continue on additional flex lines.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [
@@ -178,7 +178,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Allows inline items to wrap onto another row.",
+        "description": "Allows inline items to wrap onto another flex line.",
         "binding": {
           "kind": "input",
           "publicName": "wrap",

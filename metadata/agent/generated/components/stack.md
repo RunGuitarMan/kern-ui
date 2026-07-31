@@ -49,11 +49,11 @@ void bootstrapApplication(KernStackAgentExample);
 
 ## API
 
-| Name      | Kind  | Type                     | Required | Default     | Description                                                     |
-| --------- | ----- | ------------------------ | -------- | ----------- | --------------------------------------------------------------- |
-| `gap`     | input | `KrnLayoutSpace`         | no       | `'4'`       | Logical spacing inserted between adjacent layout children.      |
-| `align`   | input | `KrnLayoutAlignment`     | no       | `'stretch'` | Logical cross-axis alignment applied to children by the layout. |
-| `justify` | input | `KrnLayoutJustification` | no       | `'start'`   | Logical main-axis distribution applied to layout children.      |
+| Name      | Kind  | Type                     | Required | Default     | Description                                              |
+| --------- | ----- | ------------------------ | -------- | ----------- | -------------------------------------------------------- |
+| `gap`     | input | `KrnLayoutSpace`         | no       | `'4'`       | Logical spacing between adjacent projected children.     |
+| `align`   | input | `KrnLayoutAlignment`     | no       | `'stretch'` | Cross-axis alignment of projected children.              |
+| `justify` | input | `KrnLayoutJustification` | no       | `'start'`   | Distribution of projected children along the block axis. |
 
 ## Deprecated selectors
 
@@ -107,11 +107,11 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument  | Control | Default     | Test value | Binding                    | Description                                           |
-| --------- | ------- | ----------- | ---------- | -------------------------- | ----------------------------------------------------- |
-| `gap`     | select  | `"3"`       | `"2"`      | input `gap` (property)     | Changes the vertical spacing between projected items. |
-| `align`   | select  | `"stretch"` | `"start"`  | input `align` (property)   | Configures the component align contract.              |
-| `justify` | select  | `"start"`   | `"center"` | input `justify` (property) | Configures the component justify contract.            |
+| Argument  | Control | Default     | Test value | Binding                    | Description                                             |
+| --------- | ------- | ----------- | ---------- | -------------------------- | ------------------------------------------------------- |
+| `gap`     | select  | `"3"`       | `"2"`      | input `gap` (property)     | Changes the block-axis spacing between projected items. |
+| `align`   | select  | `"stretch"` | `"start"`  | input `align` (property)   | Configures the component align contract.                |
+| `justify` | select  | `"start"`   | `"center"` | input `justify` (property) | Configures the component justify contract.              |
 
 Exact API exclusions:
 

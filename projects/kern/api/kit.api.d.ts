@@ -250,8 +250,11 @@ declare class KrnContainer {
   >;
 }
 declare class KrnCenter {
+  /** Maximum outer inline size as a container token, CSS length, or `full`. */
   readonly maxWidth: _angular_core.InputSignal<KrnLayoutSpace>;
+  /** Logical inline padding kept inside the maximum width. */
   readonly gutters: _angular_core.InputSignal<KrnLayoutSpace>;
+  /** Centers projected children on the inline axis without changing text alignment. */
   readonly intrinsic: _angular_core.InputSignalWithTransform<boolean, unknown>;
   protected readonly resolvedMaxWidth: _angular_core.Signal<string>;
   protected readonly resolvedGutter: _angular_core.Signal<string>;
@@ -274,8 +277,11 @@ declare class KrnCenter {
 }
 
 declare class KrnStack {
+  /** Logical spacing between adjacent projected children. */
   readonly gap: _angular_core.InputSignal<KrnLayoutSpace>;
+  /** Cross-axis alignment of projected children. */
   readonly align: _angular_core.InputSignal<KrnLayoutAlignment>;
+  /** Distribution of projected children along the block axis. */
   readonly justify: _angular_core.InputSignal<KrnLayoutJustification>;
   protected readonly resolvedGap: _angular_core.Signal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnStack, never>;
@@ -296,9 +302,13 @@ declare class KrnStack {
   >;
 }
 declare class KrnInline {
+  /** Logical spacing between adjacent projected children and wrapped flex lines. */
   readonly gap: _angular_core.InputSignal<KrnLayoutSpace>;
+  /** Cross-axis alignment of projected children within each flex line. */
   readonly align: _angular_core.InputSignal<KrnLayoutAlignment>;
+  /** Distribution of projected children along the inline axis. */
   readonly justify: _angular_core.InputSignal<KrnLayoutJustification>;
+  /** Allows projected children to continue on additional flex lines. */
   readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
   protected readonly resolvedGap: _angular_core.Signal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnInline, never>;
@@ -320,11 +330,17 @@ declare class KrnInline {
   >;
 }
 declare class KrnCluster {
+  /** Default logical spacing between projected children and wrapped flex lines. */
   readonly gap: _angular_core.InputSignal<KrnLayoutSpace>;
+  /** Optional spacing override between wrapped flex lines. */
   readonly rowGap: _angular_core.InputSignal<KrnLayoutSpace | null>;
+  /** Optional spacing override between adjacent children within each flex line. */
   readonly columnGap: _angular_core.InputSignal<KrnLayoutSpace | null>;
+  /** Cross-axis alignment of projected children within each flex line. */
   readonly align: _angular_core.InputSignal<KrnLayoutAlignment>;
+  /** Distribution of projected children along the inline axis. */
   readonly justify: _angular_core.InputSignal<KrnLayoutJustification>;
+  protected readonly resolvedGap: _angular_core.Signal<string>;
   protected readonly resolvedRowGap: _angular_core.Signal<string>;
   protected readonly resolvedColumnGap: _angular_core.Signal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnCluster, never>;
@@ -347,8 +363,10 @@ declare class KrnCluster {
   >;
 }
 declare class KrnSpacer {
+  /** Fixed logical length reserved by the spacer. */
   readonly size: _angular_core.InputSignal<KrnLayoutSpace>;
-  readonly axis: _angular_core.InputSignal<'horizontal' | 'vertical'>;
+  /** Axis receiving space: horizontal maps to inline and vertical maps to block. */
+  readonly axis: _angular_core.InputSignal<KrnLayoutAxis>;
   protected readonly resolvedSize: _angular_core.Signal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnSpacer, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<

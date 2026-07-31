@@ -8885,7 +8885,7 @@ export const KERN_RUNTIME_COMPONENTS = {
         name: 'axis',
         property: 'axis',
         kind: 'input',
-        type: '"horizontal" | "vertical"',
+        type: 'KrnLayoutAxis',
         required: false,
         defaultValue: "'vertical'",
       },

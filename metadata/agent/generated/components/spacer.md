@@ -47,10 +47,10 @@ void bootstrapApplication(KernSpacerAgentExample);
 
 ## API
 
-| Name   | Kind  | Type                         | Required | Default      | Description                                                          |
-| ------ | ----- | ---------------------------- | -------- | ------------ | -------------------------------------------------------------------- |
-| `size` | input | `KrnLayoutSpace`             | no       | `'4'`        | Named semantic size resolved through KERN density and sizing tokens. |
-| `axis` | input | `"horizontal" \| "vertical"` | no       | `'vertical'` | Chart axis represented by the data series and keyboard movement.     |
+| Name   | Kind  | Type             | Required | Default      | Description                                                                 |
+| ------ | ----- | ---------------- | -------- | ------------ | --------------------------------------------------------------------------- |
+| `size` | input | `KrnLayoutSpace` | no       | `'4'`        | Fixed logical length reserved by the spacer.                                |
+| `axis` | input | `KrnLayoutAxis`  | no       | `'vertical'` | Axis receiving space: horizontal maps to inline and vertical maps to block. |
 
 ## Deprecated selectors
 

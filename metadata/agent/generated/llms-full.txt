@@ -2283,9 +2283,9 @@ void bootstrapApplication(KernStackAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `gap` | input | `KrnLayoutSpace` | no | `'4'` | Logical spacing inserted between adjacent layout children. |
-| `align` | input | `KrnLayoutAlignment` | no | `'stretch'` | Logical cross-axis alignment applied to children by the layout. |
-| `justify` | input | `KrnLayoutJustification` | no | `'start'` | Logical main-axis distribution applied to layout children. |
+| `gap` | input | `KrnLayoutSpace` | no | `'4'` | Logical spacing between adjacent projected children. |
+| `align` | input | `KrnLayoutAlignment` | no | `'stretch'` | Cross-axis alignment of projected children. |
+| `justify` | input | `KrnLayoutJustification` | no | `'start'` | Distribution of projected children along the block axis. |
 
 ## Deprecated selectors
 
@@ -2341,7 +2341,7 @@ component inputs or models.
 
 | Argument | Control | Default | Test value | Binding | Description |
 | --- | --- | --- | --- | --- | --- |
-| `gap` | select | `"3"` | `"2"` | input `gap` (property) | Changes the vertical spacing between projected items. |
+| `gap` | select | `"3"` | `"2"` | input `gap` (property) | Changes the block-axis spacing between projected items. |
 | `align` | select | `"stretch"` | `"start"` | input `align` (property) | Configures the component align contract. |
 | `justify` | select | `"start"` | `"center"` | input `justify` (property) | Configures the component justify contract. |
 
@@ -2437,10 +2437,10 @@ void bootstrapApplication(KernInlineAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `gap` | input | `KrnLayoutSpace` | no | `'3'` | Logical spacing inserted between adjacent layout children. |
-| `align` | input | `KrnLayoutAlignment` | no | `'center'` | Logical cross-axis alignment applied to children by the layout. |
-| `justify` | input | `KrnLayoutJustification` | no | `'start'` | Logical main-axis distribution applied to layout children. |
-| `wrap` | input | `boolean` | no | `false` | Controls whether layout children wrap onto additional lines when space is constrained. |
+| `gap` | input | `KrnLayoutSpace` | no | `'3'` | Logical spacing between adjacent projected children and wrapped flex lines. |
+| `align` | input | `KrnLayoutAlignment` | no | `'center'` | Cross-axis alignment of projected children within each flex line. |
+| `justify` | input | `KrnLayoutJustification` | no | `'start'` | Distribution of projected children along the inline axis. |
+| `wrap` | input | `boolean` | no | `false` | Allows projected children to continue on additional flex lines. |
 
 ## Deprecated selectors
 
@@ -2496,7 +2496,7 @@ component inputs or models.
 
 | Argument | Control | Default | Test value | Binding | Description |
 | --- | --- | --- | --- | --- | --- |
-| `wrap` | boolean | `true` | `false` | input `wrap` (property) | Allows inline items to wrap onto another row. |
+| `wrap` | boolean | `true` | `false` | input `wrap` (property) | Allows inline items to wrap onto another flex line. |
 | `align` | select | `"center"` | `"start"` | input `align` (property) | Configures the component align contract. |
 | `gap` | text | `"3"` | `"20rem"` | input `gap` (property) | Configures the component gap contract. |
 | `justify` | select | `"start"` | `"center"` | input `justify` (property) | Configures the component justify contract. |
@@ -2594,11 +2594,11 @@ void bootstrapApplication(KernClusterAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `gap` | input | `KrnLayoutSpace` | no | `'2'` | Logical spacing inserted between adjacent layout children. |
-| `rowGap` | input | `KrnLayoutSpace \| null` | no | `null` | Logical spacing inserted between grid rows. |
-| `columnGap` | input | `KrnLayoutSpace \| null` | no | `null` | Logical spacing inserted between grid columns. |
-| `align` | input | `KrnLayoutAlignment` | no | `'center'` | Logical cross-axis alignment applied to children by the layout. |
-| `justify` | input | `KrnLayoutJustification` | no | `'start'` | Logical main-axis distribution applied to layout children. |
+| `gap` | input | `KrnLayoutSpace` | no | `'2'` | Default logical spacing between projected children and wrapped flex lines. |
+| `rowGap` | input | `KrnLayoutSpace \| null` | no | `null` | Optional spacing override between wrapped flex lines. |
+| `columnGap` | input | `KrnLayoutSpace \| null` | no | `null` | Optional spacing override between adjacent children within each flex line. |
+| `align` | input | `KrnLayoutAlignment` | no | `'center'` | Cross-axis alignment of projected children within each flex line. |
+| `justify` | input | `KrnLayoutJustification` | no | `'start'` | Distribution of projected children along the inline axis. |
 
 ## Deprecated selectors
 
@@ -3073,9 +3073,9 @@ void bootstrapApplication(KernCenterAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `maxWidth` | input | `KrnLayoutSpace` | no | `'md'` | Upper or lower bound applied to the width value. |
-| `gutters` | input | `KrnLayoutSpace` | no | `'4'` | Enables the container-owned logical inline page gutters. |
-| `intrinsic` | input | `boolean` | no | `false` | Preserves the media element’s intrinsic dimensions when space permits. |
+| `maxWidth` | input | `KrnLayoutSpace` | no | `'md'` | Maximum outer inline size as a container token, CSS length, or `full`. |
+| `gutters` | input | `KrnLayoutSpace` | no | `'4'` | Logical inline padding kept inside the maximum width. |
+| `intrinsic` | input | `boolean` | no | `false` | Centers projected children on the inline axis without changing text alignment. |
 
 ## Deprecated selectors
 
@@ -3133,7 +3133,7 @@ component inputs or models.
 | --- | --- | --- | --- | --- | --- |
 | `intrinsic` | boolean | `true` | `false` | input `intrinsic` (property) | Centers the child using its intrinsic inline size. |
 | `maxWidth` | text | `"28rem"` | `"20rem"` | input `maxWidth` (property) | Constrains the centered content measure. |
-| `gutters` | text | `"4"` | `"4 · alternate"` | input `gutters` (property) | Configures the component gutters contract. |
+| `gutters` | text | `"4"` | `"20rem"` | input `gutters` (property) | Configures the component gutters contract. |
 
 Exact API exclusions:
 
@@ -3226,8 +3226,8 @@ void bootstrapApplication(KernSpacerAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `size` | input | `KrnLayoutSpace` | no | `'4'` | Named semantic size resolved through KERN density and sizing tokens. |
-| `axis` | input | `"horizontal" \| "vertical"` | no | `'vertical'` | Chart axis represented by the data series and keyboard movement. |
+| `size` | input | `KrnLayoutSpace` | no | `'4'` | Fixed logical length reserved by the spacer. |
+| `axis` | input | `KrnLayoutAxis` | no | `'vertical'` | Axis receiving space: horizontal maps to inline and vertical maps to block. |
 
 ## Deprecated selectors
 

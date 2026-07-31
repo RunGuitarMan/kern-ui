@@ -320,7 +320,7 @@ function textTestValue(key: string, defaultValue: string): string {
   if (normalized === 'accept') return '.png,.jpg';
   if (normalized.endsWith('offset')) return defaultValue === '0' ? '1rem' : '0';
   if (
-    /(width|height|gutter|gap|inset|indent|space|size)$/.test(normalized) ||
+    /(width|height|gutters?|gap|inset|indent|space|size)$/.test(normalized) ||
     /(?:rem|px|%|var\()/.test(defaultValue)
   ) {
     return '20rem';
@@ -915,14 +915,14 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
     ]),
   ],
   stack: [
-    select('gap', 'Gap', '3', 'Changes the vertical spacing between projected items.', [
+    select('gap', 'Gap', '3', 'Changes the block-axis spacing between projected items.', [
       '2',
       '3',
       '4',
       '8',
     ]),
   ],
-  inline: [boolean('wrap', 'Wrap', true, 'Allows inline items to wrap onto another row.')],
+  inline: [boolean('wrap', 'Wrap', true, 'Allows inline items to wrap onto another flex line.')],
   cluster: [
     select('gap', 'Gap', '2', 'Changes the spacing between clustered items.', ['1', '2', '4']),
     select(

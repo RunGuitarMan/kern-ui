@@ -48,11 +48,11 @@ void bootstrapApplication(KernCenterAgentExample);
 
 ## API
 
-| Name        | Kind  | Type             | Required | Default | Description                                                            |
-| ----------- | ----- | ---------------- | -------- | ------- | ---------------------------------------------------------------------- |
-| `maxWidth`  | input | `KrnLayoutSpace` | no       | `'md'`  | Upper or lower bound applied to the width value.                       |
-| `gutters`   | input | `KrnLayoutSpace` | no       | `'4'`   | Enables the container-owned logical inline page gutters.               |
-| `intrinsic` | input | `boolean`        | no       | `false` | Preserves the media element’s intrinsic dimensions when space permits. |
+| Name        | Kind  | Type             | Required | Default | Description                                                                    |
+| ----------- | ----- | ---------------- | -------- | ------- | ------------------------------------------------------------------------------ |
+| `maxWidth`  | input | `KrnLayoutSpace` | no       | `'md'`  | Maximum outer inline size as a container token, CSS length, or `full`.         |
+| `gutters`   | input | `KrnLayoutSpace` | no       | `'4'`   | Logical inline padding kept inside the maximum width.                          |
+| `intrinsic` | input | `boolean`        | no       | `false` | Centers projected children on the inline axis without changing text alignment. |
 
 ## Deprecated selectors
 
@@ -106,11 +106,11 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument    | Control | Default   | Test value        | Binding                      | Description                                        |
-| ----------- | ------- | --------- | ----------------- | ---------------------------- | -------------------------------------------------- |
-| `intrinsic` | boolean | `true`    | `false`           | input `intrinsic` (property) | Centers the child using its intrinsic inline size. |
-| `maxWidth`  | text    | `"28rem"` | `"20rem"`         | input `maxWidth` (property)  | Constrains the centered content measure.           |
-| `gutters`   | text    | `"4"`     | `"4 · alternate"` | input `gutters` (property)   | Configures the component gutters contract.         |
+| Argument    | Control | Default   | Test value | Binding                      | Description                                        |
+| ----------- | ------- | --------- | ---------- | ---------------------------- | -------------------------------------------------- |
+| `intrinsic` | boolean | `true`    | `false`    | input `intrinsic` (property) | Centers the child using its intrinsic inline size. |
+| `maxWidth`  | text    | `"28rem"` | `"20rem"`  | input `maxWidth` (property)  | Constrains the centered content measure.           |
+| `gutters`   | text    | `"4"`     | `"20rem"`  | input `gutters` (property)   | Configures the component gutters contract.         |
 
 Exact API exclusions:
 

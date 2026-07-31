@@ -53,8 +53,8 @@
       "type": "KrnLayoutSpace",
       "required": false,
       "defaultValue": "'4'",
-      "description": "Logical spacing inserted between adjacent layout children.",
-      "descriptionSource": "inferred"
+      "description": "Logical spacing between adjacent projected children.",
+      "descriptionSource": "source"
     },
     {
       "name": "align",
@@ -63,8 +63,8 @@
       "type": "KrnLayoutAlignment",
       "required": false,
       "defaultValue": "'stretch'",
-      "description": "Logical cross-axis alignment applied to children by the layout.",
-      "descriptionSource": "inferred"
+      "description": "Cross-axis alignment of projected children.",
+      "descriptionSource": "source"
     },
     {
       "name": "justify",
@@ -73,8 +73,8 @@
       "type": "KrnLayoutJustification",
       "required": false,
       "defaultValue": "'start'",
-      "description": "Logical main-axis distribution applied to layout children.",
-      "descriptionSource": "inferred"
+      "description": "Distribution of projected children along the block axis.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [
@@ -158,7 +158,7 @@
         "kind": "select",
         "defaultValue": "3",
         "testValue": "2",
-        "description": "Changes the vertical spacing between projected items.",
+        "description": "Changes the block-axis spacing between projected items.",
         "binding": {
           "kind": "input",
           "publicName": "gap",

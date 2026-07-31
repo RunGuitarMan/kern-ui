@@ -44,18 +44,18 @@
       "type": "KrnLayoutSpace",
       "required": false,
       "defaultValue": "'4'",
-      "description": "Named semantic size resolved through KERN density and sizing tokens.",
-      "descriptionSource": "inferred"
+      "description": "Fixed logical length reserved by the spacer.",
+      "descriptionSource": "source"
     },
     {
       "name": "axis",
       "property": "axis",
       "kind": "input",
-      "type": "\"horizontal\" | \"vertical\"",
+      "type": "KrnLayoutAxis",
       "required": false,
       "defaultValue": "'vertical'",
-      "description": "Chart axis represented by the data series and keyboard movement.",
-      "descriptionSource": "inferred"
+      "description": "Axis receiving space: horizontal maps to inline and vertical maps to block.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [],

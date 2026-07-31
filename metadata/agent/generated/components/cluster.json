@@ -53,8 +53,8 @@
       "type": "KrnLayoutSpace",
       "required": false,
       "defaultValue": "'2'",
-      "description": "Logical spacing inserted between adjacent layout children.",
-      "descriptionSource": "inferred"
+      "description": "Default logical spacing between projected children and wrapped flex lines.",
+      "descriptionSource": "source"
     },
     {
       "name": "rowGap",
@@ -63,8 +63,8 @@
       "type": "KrnLayoutSpace | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Logical spacing inserted between grid rows.",
-      "descriptionSource": "inferred"
+      "description": "Optional spacing override between wrapped flex lines.",
+      "descriptionSource": "source"
     },
     {
       "name": "columnGap",
@@ -73,8 +73,8 @@
       "type": "KrnLayoutSpace | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Logical spacing inserted between grid columns.",
-      "descriptionSource": "inferred"
+      "description": "Optional spacing override between adjacent children within each flex line.",
+      "descriptionSource": "source"
     },
     {
       "name": "align",
@@ -83,8 +83,8 @@
       "type": "KrnLayoutAlignment",
       "required": false,
       "defaultValue": "'center'",
-      "description": "Logical cross-axis alignment applied to children by the layout.",
-      "descriptionSource": "inferred"
+      "description": "Cross-axis alignment of projected children within each flex line.",
+      "descriptionSource": "source"
     },
     {
       "name": "justify",
@@ -93,8 +93,8 @@
       "type": "KrnLayoutJustification",
       "required": false,
       "defaultValue": "'start'",
-      "description": "Logical main-axis distribution applied to layout children.",
-      "descriptionSource": "inferred"
+      "description": "Distribution of projected children along the inline axis.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [

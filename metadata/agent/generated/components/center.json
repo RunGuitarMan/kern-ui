@@ -53,8 +53,8 @@
       "type": "KrnLayoutSpace",
       "required": false,
       "defaultValue": "'md'",
-      "description": "Upper or lower bound applied to the width value.",
-      "descriptionSource": "inferred"
+      "description": "Maximum outer inline size as a container token, CSS length, or `full`.",
+      "descriptionSource": "source"
     },
     {
       "name": "gutters",
@@ -63,8 +63,8 @@
       "type": "KrnLayoutSpace",
       "required": false,
       "defaultValue": "'4'",
-      "description": "Enables the container-owned logical inline page gutters.",
-      "descriptionSource": "inferred"
+      "description": "Logical inline padding kept inside the maximum width.",
+      "descriptionSource": "source"
     },
     {
       "name": "intrinsic",
@@ -73,8 +73,8 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Preserves the media element’s intrinsic dimensions when space permits.",
-      "descriptionSource": "inferred"
+      "description": "Centers projected children on the inline axis without changing text alignment.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [
@@ -192,7 +192,7 @@
         "label": "Gutters",
         "kind": "text",
         "defaultValue": "4",
-        "testValue": "4 · alternate",
+        "testValue": "20rem",
         "description": "Configures the component gutters contract.",
         "binding": {
           "kind": "input",

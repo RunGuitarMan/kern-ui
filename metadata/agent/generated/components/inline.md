@@ -48,12 +48,12 @@ void bootstrapApplication(KernInlineAgentExample);
 
 ## API
 
-| Name      | Kind  | Type                     | Required | Default    | Description                                                                            |
-| --------- | ----- | ------------------------ | -------- | ---------- | -------------------------------------------------------------------------------------- |
-| `gap`     | input | `KrnLayoutSpace`         | no       | `'3'`      | Logical spacing inserted between adjacent layout children.                             |
-| `align`   | input | `KrnLayoutAlignment`     | no       | `'center'` | Logical cross-axis alignment applied to children by the layout.                        |
-| `justify` | input | `KrnLayoutJustification` | no       | `'start'`  | Logical main-axis distribution applied to layout children.                             |
-| `wrap`    | input | `boolean`                | no       | `false`    | Controls whether layout children wrap onto additional lines when space is constrained. |
+| Name      | Kind  | Type                     | Required | Default    | Description                                                                 |
+| --------- | ----- | ------------------------ | -------- | ---------- | --------------------------------------------------------------------------- |
+| `gap`     | input | `KrnLayoutSpace`         | no       | `'3'`      | Logical spacing between adjacent projected children and wrapped flex lines. |
+| `align`   | input | `KrnLayoutAlignment`     | no       | `'center'` | Cross-axis alignment of projected children within each flex line.           |
+| `justify` | input | `KrnLayoutJustification` | no       | `'start'`  | Distribution of projected children along the inline axis.                   |
+| `wrap`    | input | `boolean`                | no       | `false`    | Allows projected children to continue on additional flex lines.             |
 
 ## Deprecated selectors
 
@@ -107,12 +107,12 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument  | Control | Default    | Test value | Binding                    | Description                                   |
-| --------- | ------- | ---------- | ---------- | -------------------------- | --------------------------------------------- |
-| `wrap`    | boolean | `true`     | `false`    | input `wrap` (property)    | Allows inline items to wrap onto another row. |
-| `align`   | select  | `"center"` | `"start"`  | input `align` (property)   | Configures the component align contract.      |
-| `gap`     | text    | `"3"`      | `"20rem"`  | input `gap` (property)     | Configures the component gap contract.        |
-| `justify` | select  | `"start"`  | `"center"` | input `justify` (property) | Configures the component justify contract.    |
+| Argument  | Control | Default    | Test value | Binding                    | Description                                         |
+| --------- | ------- | ---------- | ---------- | -------------------------- | --------------------------------------------------- |
+| `wrap`    | boolean | `true`     | `false`    | input `wrap` (property)    | Allows inline items to wrap onto another flex line. |
+| `align`   | select  | `"center"` | `"start"`  | input `align` (property)   | Configures the component align contract.            |
+| `gap`     | text    | `"3"`      | `"20rem"`  | input `gap` (property)     | Configures the component gap contract.              |
+| `justify` | select  | `"start"`  | `"center"` | input `justify` (property) | Configures the component justify contract.          |
 
 Exact API exclusions:
 

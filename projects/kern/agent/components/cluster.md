@@ -49,13 +49,13 @@ void bootstrapApplication(KernClusterAgentExample);
 
 ## API
 
-| Name        | Kind  | Type                     | Required | Default    | Description                                                     |
-| ----------- | ----- | ------------------------ | -------- | ---------- | --------------------------------------------------------------- |
-| `gap`       | input | `KrnLayoutSpace`         | no       | `'2'`      | Logical spacing inserted between adjacent layout children.      |
-| `rowGap`    | input | `KrnLayoutSpace \| null` | no       | `null`     | Logical spacing inserted between grid rows.                     |
-| `columnGap` | input | `KrnLayoutSpace \| null` | no       | `null`     | Logical spacing inserted between grid columns.                  |
-| `align`     | input | `KrnLayoutAlignment`     | no       | `'center'` | Logical cross-axis alignment applied to children by the layout. |
-| `justify`   | input | `KrnLayoutJustification` | no       | `'start'`  | Logical main-axis distribution applied to layout children.      |
+| Name        | Kind  | Type                     | Required | Default    | Description                                                                |
+| ----------- | ----- | ------------------------ | -------- | ---------- | -------------------------------------------------------------------------- |
+| `gap`       | input | `KrnLayoutSpace`         | no       | `'2'`      | Default logical spacing between projected children and wrapped flex lines. |
+| `rowGap`    | input | `KrnLayoutSpace \| null` | no       | `null`     | Optional spacing override between wrapped flex lines.                      |
+| `columnGap` | input | `KrnLayoutSpace \| null` | no       | `null`     | Optional spacing override between adjacent children within each flex line. |
+| `align`     | input | `KrnLayoutAlignment`     | no       | `'center'` | Cross-axis alignment of projected children within each flex line.          |
+| `justify`   | input | `KrnLayoutJustification` | no       | `'start'`  | Distribution of projected children along the inline axis.                  |
 
 ## Deprecated selectors
 

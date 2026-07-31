@@ -544,6 +544,13 @@ describe('KERN playground registry', () => {
         expect.objectContaining({ key: 'required', defaultValue: true }),
       ]),
     );
+    expect(definition('center').controls).toContainEqual(
+      expect.objectContaining({
+        key: 'gutters',
+        defaultValue: '4',
+        testValue: '20rem',
+      }),
+    );
     expect(definition('tags-input').controls).toContainEqual(
       expect.objectContaining({
         key: 'tabindex',
