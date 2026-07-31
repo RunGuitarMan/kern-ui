@@ -945,12 +945,6 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
     text('gap', 'Gap', '3', 'Sets the grid gutter.'),
   ],
   'split-layout': [
-    boolean(
-      'reverseCollapsed',
-      'Reverse when collapsed',
-      false,
-      'Reverses pane order after the layout collapses.',
-    ),
     select('ratio', 'Ratio', '1:2', 'Changes the primary-to-secondary pane ratio.', [
       '1:1',
       '1:2',

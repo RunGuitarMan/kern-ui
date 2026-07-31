@@ -9,6 +9,7 @@ import { KrnAppShell, KrnHeader, KrnSidebar } from './app-shell';
 import { KrnCluster, KrnInline, KrnSpacer, KrnStack } from './flex-layout';
 import { KrnGrid } from './grid';
 import { KrnResizablePanel, KrnResizablePanels, KrnResizeHandle } from './resizable-panels';
+import { KrnSplitLayout } from './split-layout';
 
 @Component({
   selector: 'krn-test-resizable-host',
@@ -26,6 +27,19 @@ class ResizableHost {
   readonly sizes = signal<readonly number[]>([50, 50]);
   readonly disabled = signal(false);
 }
+
+@Component({
+  selector: 'krn-test-split-layout-host',
+  standalone: true,
+  imports: [KrnSplitLayout],
+  template: `
+    <krn-split-layout collapseAt="sm">
+      <button krnSplitPrimary type="button">Primary action</button>
+      <button krnSplitSecondary type="button">Secondary action</button>
+    </krn-split-layout>
+  `,
+})
+class SplitLayoutHost {}
 
 function pointerEvent(type: string, clientX: number): PointerEvent {
   const event = new MouseEvent(type, {
@@ -240,6 +254,92 @@ describe('Kern layout primitives', () => {
 
     host.hidden = true;
     expect(getComputedStyle(host).display).toBe('none');
+  });
+
+  it('normalizes split ratios and contains both panels at responsive boundaries', () => {
+    const fixture = TestBed.createComponent(KrnSplitLayout);
+    fixture.componentRef.setInput('ratio', '2fr 1fr');
+    fixture.componentRef.setInput('gap', 12);
+    fixture.componentRef.setInput('align', 'stretch');
+    fixture.componentRef.setInput('collapseAt', 'lg');
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const layout = host.querySelector<HTMLElement>('.krn-split')!;
+    const panels = Array.from(
+      host.querySelectorAll<HTMLElement>('.krn-split__primary, .krn-split__secondary'),
+    );
+    const style = getComputedStyle(host);
+    const layoutStyle = getComputedStyle(layout);
+
+    expect(host.style.getPropertyValue('--krn-split-columns')).toBe(
+      'minmax(0, 2fr) minmax(0, 1fr)',
+    );
+    expect(host.style.getPropertyValue('--krn-split-gap')).toBe('12px');
+    expect(host.style.getPropertyValue('--krn-split-align')).toBe('stretch');
+    expect(host.getAttribute('data-collapse-at')).toBe('lg');
+    expect(style.boxSizing).toBe('border-box');
+    expect(style.maxInlineSize).toBe('100%');
+    expect(style.minInlineSize).toBe('0px');
+    expect(style.minBlockSize).toBe('0px');
+    expect(layoutStyle.display).toBe('grid');
+    expect(layoutStyle.boxSizing).toBe('border-box');
+    expect(layoutStyle.maxInlineSize).toBe('100%');
+    expect(layoutStyle.minInlineSize).toBe('0px');
+    expect(layoutStyle.minBlockSize).toBe('0px');
+    for (const panel of panels) {
+      const panelStyle = getComputedStyle(panel);
+      expect(panelStyle.boxSizing).toBe('border-box');
+      expect(panelStyle.maxInlineSize).toBe('100%');
+      expect(panelStyle.minInlineSize).toBe('0px');
+      expect(panelStyle.minBlockSize).toBe('0px');
+    }
+
+    const compiledStyles = Array.from(document.head.querySelectorAll('style'))
+      .map((element) => element.textContent ?? '')
+      .join('\n');
+    expect(compiledStyles).toContain('container: krn-split / inline-size');
+    expect(compiledStyles).toContain('@container krn-split (max-inline-size: 36rem)');
+    expect(compiledStyles).toContain('@container krn-split (max-inline-size: 48rem)');
+    expect(compiledStyles).toContain('@container krn-split (max-inline-size: 64rem)');
+  });
+
+  it('falls back to equal split tracks and preserves native hidden semantics', () => {
+    const fixture = TestBed.createComponent(KrnSplitLayout);
+    fixture.componentRef.setInput('ratio', 'invalid');
+    fixture.componentRef.setInput('gap', '');
+    fixture.componentRef.setInput('collapseAt', 'none');
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+
+    expect(host.style.getPropertyValue('--krn-split-columns')).toBe(
+      'minmax(0, 1fr) minmax(0, 1fr)',
+    );
+    expect(host.style.getPropertyValue('--krn-split-gap')).toBe('var(--krn-space-6)');
+    expect(host.getAttribute('data-collapse-at')).toBe('none');
+
+    host.hidden = true;
+    expect(getComputedStyle(host).display).toBe('none');
+  });
+
+  it('keeps projected reading and focus order aligned when panels collapse', () => {
+    const fixture = TestBed.createComponent(SplitLayoutHost);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const panels = Array.from(
+      host.querySelectorAll<HTMLElement>('.krn-split__primary, .krn-split__secondary'),
+    );
+    const actions = Array.from(host.querySelectorAll<HTMLButtonElement>('button'));
+
+    expect(panels[0].classList.contains('krn-split__primary')).toBe(true);
+    expect(panels[1].classList.contains('krn-split__secondary')).toBe(true);
+    expect(actions.map((action) => action.textContent?.trim())).toEqual([
+      'Primary action',
+      'Secondary action',
+    ]);
+    expect(actions.every((action) => action.tabIndex === 0)).toBe(true);
+    expect(
+      Boolean(actions[0].compareDocumentPosition(actions[1]) & Node.DOCUMENT_POSITION_FOLLOWING),
+    ).toBe(true);
   });
 
   it('provides a controlled modal navigation drawer at the mobile breakpoint', async () => {

@@ -198,7 +198,6 @@ export const KERN_SPECIMEN_CURATED_RENDERER_CONTROLS = Object.freeze({
   inline: rendererControls('wrap'),
   cluster: rendererControls('gap'),
   grid: rendererControls('responsive'),
-  'split-layout': rendererControls('reverseCollapsed'),
   center: rendererControls('intrinsic'),
   spacer: rendererControls('axis'),
   divider: rendererControls('orientation'),

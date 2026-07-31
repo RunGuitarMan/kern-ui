@@ -20,6 +20,16 @@
     "automatic": false
   },
   {
+    "id": "split-layout-source-order",
+    "from": "KrnSplitLayout.reverseCollapsed",
+    "to": "Primary and secondary content declared in the intended reading and focus order",
+    "summary": "Remove reverseCollapsed and keep the visual panel sequence aligned with DOM, assistive-technology, and keyboard focus order. If secondary content must precede primary content, declare it as primary content and choose the matching ratio.",
+    "components": ["split-layout"],
+    "before": "<krn-split-layout reverseCollapsed>\n  <main krnSplitPrimary>Primary</main>\n  <aside krnSplitSecondary>Secondary first when stacked</aside>\n</krn-split-layout>",
+    "after": "<krn-split-layout ratio=\"1:2\">\n  <aside krnSplitPrimary>Secondary first in every reading mode</aside>\n  <main krnSplitSecondary>Primary second in every reading mode</main>\n</krn-split-layout>",
+    "automatic": false
+  },
+  {
     "id": "form-field-control-owned-state",
     "from": "KrnFormField id, required, disabled, readonly, and state inputs",
     "to": "The projected control id/native state and its Angular FormControl status",

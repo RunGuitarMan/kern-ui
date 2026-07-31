@@ -184,6 +184,10 @@ contract or upgrade decision.
 
 ### Removed
 
+- Removed the pre-1.0 `KrnSplitLayout.reverseCollapsed` input because CSS-only panel reordering
+  diverged from DOM, assistive-technology, and keyboard focus order. Primary content now always
+  precedes secondary content; swap the `krnSplitPrimary` and `krnSplitSecondary` slot roles when a
+  different meaningful sequence is required.
 - Removed the pre-1.0 Form Field control-state proxies (`id`, `required`, `disabled`, `readonly`,
   and `state`). Keep those semantics on the projected control or its Angular `FormControl`; use
   the `form-field-control-owned-state` migration recipe.
