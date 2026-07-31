@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { vi } from 'vitest';
 
-import { KrnChart, type KrnChartLabels, KrnLineChart } from './charts';
+import { KrnBarChart, KrnChart, type KrnChartLabels, KrnLineChart } from './charts';
 
 describe('KrnChart', () => {
   it('creates readable line geometry and a source-data summary', async () => {
@@ -500,6 +500,35 @@ describe('KrnLineChart', () => {
   it('exposes controlled table and active-datum state in both directions', async () => {
     await TestBed.configureTestingModule({ imports: [KrnLineChart] }).compileComponents();
     const fixture = TestBed.createComponent(KrnLineChart);
+    fixture.componentRef.setInput('title', 'Revenue');
+    fixture.componentRef.setInput('data', [
+      { id: 'jan', label: 'January', value: 12 },
+      { id: 'feb', label: 'February', value: 18 },
+    ]);
+    fixture.componentRef.setInput('tableVisible', true);
+    fixture.componentRef.setInput('activeIndex', 1);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('table')).not.toBeNull();
+    expect(element.querySelector('.chart-tooltip')?.textContent).toContain('February');
+
+    element.querySelector<HTMLButtonElement>('.data-toggle')?.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.tableVisible()).toBe(false);
+
+    const chart = fixture.debugElement.query(By.directive(KrnChart)).componentInstance as KrnChart;
+    chart.activeIndex.set(0);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.activeIndex()).toBe(0);
+  });
+});
+
+describe('KrnBarChart', () => {
+  it('keeps controlled disclosure and active state synchronized with its chart', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnBarChart] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnBarChart);
     fixture.componentRef.setInput('title', 'Revenue');
     fixture.componentRef.setInput('data', [
       { id: 'jan', label: 'January', value: 12 },

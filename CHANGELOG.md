@@ -56,7 +56,7 @@ contract or upgrade decision.
   retryable lazy-child state for Tree and Tree Navigation.
 - Strengthened Charts with stable datum identity, finite-value validation, negative-value policy,
   explicit empty state, bounded accessible summaries, and two-way source-table and active-datum
-  state on `KrnLineChart`.
+  state on `KrnLineChart` and `KrnBarChart`.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned

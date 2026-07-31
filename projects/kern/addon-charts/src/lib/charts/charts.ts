@@ -1222,7 +1222,18 @@ export class KrnLineChart {
       [datumIdentity]="datumIdentity()"
       [negativeValuePolicy]="negativeValuePolicy()"
       [summaryItemLimit]="summaryItemLimit()"
+      [(tableVisible)]="tableVisible"
+      [(activeIndex)]="activeIndex"
     />
+  `,
+  styles: `
+    :host {
+      display: block;
+      min-inline-size: 0;
+    }
+    :host([hidden]) {
+      display: none;
+    }
   `,
 })
 export class KrnBarChart {
@@ -1243,6 +1254,10 @@ export class KrnBarChart {
   readonly negativeValuePolicy = input<KrnChartNegativeValuePolicy>('clamp');
   /** Limits the accessible text summary while the full data table remains available. */
   readonly summaryItemLimit = input(12);
+  /** Controls source-data disclosure and reflects user toggles. */
+  readonly tableVisible = model(false);
+  /** Controls the disclosed datum and reflects pointer or keyboard interaction. */
+  readonly activeIndex = model<number | null>(null);
 }
 
 @Component({
