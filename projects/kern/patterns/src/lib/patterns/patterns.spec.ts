@@ -1,8 +1,10 @@
+import { InteractivityChecker } from '@angular/cdk/a11y';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { vi } from 'vitest';
 
+import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
 import { KRN_ENGLISH_TRANSLATIONS, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import { KrnDrawer } from '@kern-ui/angular/kit';
 
@@ -17,6 +19,7 @@ import {
   type KrnNotification,
   KrnNotificationCenter,
   KrnPageHeader,
+  KrnResponsiveApplicationShell,
   KrnSettingsPanel,
   KrnUserMenu,
 } from './product-patterns';
@@ -928,5 +931,110 @@ describe('Kern product patterns', () => {
     expect(componentStyles).toContain('> button:disabled');
     expect(componentStyles).toContain('overflow-x: auto');
     expect(componentStyles).toContain('@media (forced-colors: active)');
+  });
+
+  it('coordinates responsive shell navigation as a focus-safe mobile modal', async () => {
+    const defaultPlatform = TestBed.inject(KRN_PLATFORM);
+    TestBed.resetTestingModule();
+    let viewportListener: ((event: MediaQueryListEvent) => void) | undefined;
+    const mediaQuery = {
+      matches: true,
+      media: '(max-width: 48rem)',
+      onchange: null,
+      addListener: () => undefined,
+      removeListener: () => undefined,
+      addEventListener: (_type: string, listener: EventListenerOrEventListenerObject) => {
+        viewportListener = listener as (event: MediaQueryListEvent) => void;
+      },
+      removeEventListener: () => undefined,
+      dispatchEvent: () => true,
+    } as MediaQueryList;
+    await TestBed.configureTestingModule({
+      imports: [KrnResponsiveApplicationShell],
+      providers: [
+        { provide: KRN_PLATFORM, useValue: { ...defaultPlatform, matchMedia: () => mediaQuery } },
+        {
+          provide: InteractivityChecker,
+          useValue: {
+            isFocusable: (element: HTMLElement) =>
+              !element.hasAttribute('disabled') && element.tabIndex >= 0,
+          },
+        },
+      ],
+    }).compileComponents();
+
+    const restoreTarget = document.createElement('button');
+    restoreTarget.type = 'button';
+    document.body.append(restoreTarget);
+    const fixture = TestBed.createComponent(KrnResponsiveApplicationShell);
+    document.body.append(fixture.nativeElement);
+    fixture.componentRef.setInput('mainId', 'workspace-main');
+    fixture.componentRef.setInput('navigationLabel', '   ');
+    fixture.componentRef.setInput('closeNavigationLabel', '   ');
+    fixture.detectChanges();
+    restoreTarget.focus();
+
+    fixture.componentInstance.navigationOpen.set(true);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise<void>((resolve) => queueMicrotask(resolve));
+
+    const element = fixture.nativeElement as HTMLElement;
+    const overlay = element.querySelector('.navigation-overlay') as HTMLElement;
+    const dialog = element.querySelector('aside') as HTMLElement;
+    const main = element.querySelector('main') as HTMLElement;
+    const close = element.querySelector('.navigation-close') as HTMLButtonElement;
+    expect(dialog.getAttribute('role')).toBe('dialog');
+    expect(dialog.getAttribute('aria-modal')).toBe('true');
+    expect(dialog.getAttribute('aria-label')?.trim()).toBeTruthy();
+    expect(close.getAttribute('aria-label')?.trim()).toBeTruthy();
+    expect(main.id).toBe('workspace-main');
+    expect(document.activeElement).toBe(close);
+    expect(overlay.inert).not.toBe(true);
+    expect(main.inert).toBe(true);
+
+    overlay.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise<void>((resolve) => queueMicrotask(resolve));
+    expect(fixture.componentInstance.navigationOpen()).toBe(false);
+    expect(document.activeElement).toBe(restoreTarget);
+
+    restoreTarget.focus();
+    fixture.componentInstance.navigationOpen.set(true);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise<void>((resolve) => queueMicrotask(resolve));
+    document.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+    );
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise<void>((resolve) => queueMicrotask(resolve));
+    expect(fixture.componentInstance.navigationOpen()).toBe(false);
+    expect(document.activeElement).toBe(restoreTarget);
+
+    fixture.componentInstance.navigationOpen.set(true);
+    fixture.detectChanges();
+    viewportListener?.({ matches: false } as MediaQueryListEvent);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.navigationOpen()).toBe(false);
+
+    const invalidId = TestBed.createComponent(KrnResponsiveApplicationShell);
+    invalidId.componentRef.setInput('mainId', 'bad id');
+    expect(() => invalidId.detectChanges()).toThrowError(/non-whitespace DOM id token/);
+
+    const componentStyles = (
+      KrnResponsiveApplicationShell as unknown as { ɵcmp: { styles: readonly string[] } }
+    ).ɵcmp.styles.join('\n');
+    expect(componentStyles).toMatch(/visibility: hidden;[\s\S]*pointer-events: none;/);
+    expect(componentStyles).toContain('inset-inline-start: 0');
+    expect(componentStyles).toMatch(/data-krn-motion=["']reduce["'][\s\S]*transition: none;/);
+    expect(componentStyles).toContain('@media (forced-colors: active)');
+
+    invalidId.destroy();
+    fixture.destroy();
+    fixture.nativeElement.remove();
+    restoreTarget.remove();
   });
 });

@@ -83,6 +83,9 @@ contract or upgrade decision.
   removed the unreachable `emptyStepLabel` input because empty step collections are now rejected.
 - Modernized Mobile Navigation with normalized landmark naming, component-scoped projected-item
   styles, complete `aria-current` support, focus/high-contrast states, and overflow-safe touch layout.
+- Rebuilt Responsive Application Shell mobile navigation as a labelled modal surface with responsive
+  state reconciliation, focus trap/restore, inert background, scroll lock, Escape/backdrop close,
+  instance-safe main IDs, and customizable `navigationLabel`/`closeNavigationLabel` inputs.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned
