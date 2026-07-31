@@ -272,6 +272,30 @@ describe('Kern navigation', () => {
     expect(fixture.componentInstance.page()).toBe(6);
   });
 
+  it('normalizes invalid pagination numbers and preserves accessible fallback labels', async () => {
+    const fixture = await create(KrnPagination, {
+      totalItems: Number.POSITIVE_INFINITY,
+      pageSize: Number.NaN,
+      siblingCount: Number.POSITIVE_INFINITY,
+      page: Number.NaN,
+      ariaLabel: '   ',
+      previousLabel: '   ',
+      nextLabel: '   ',
+      pageLabel: '   ',
+      emptyLabel: '   ',
+    });
+    const element = fixture.nativeElement as HTMLElement;
+    const directions = element.querySelectorAll<HTMLButtonElement>('.direction');
+
+    expect(fixture.componentInstance.page()).toBe(1);
+    expect(element.querySelectorAll('.desktop-pages button')).toHaveLength(1);
+    expect(element.querySelector('.desktop-pages button')?.getAttribute('aria-label')).toBeTruthy();
+    expect(element.querySelector('nav')?.getAttribute('aria-label')).toBeTruthy();
+    expect(directions[0]?.textContent?.trim()).toBeTruthy();
+    expect(directions[1]?.textContent?.trim()).toBeTruthy();
+    expect(element.querySelector('.summary')?.textContent?.trim()).toBeTruthy();
+  });
+
   it('preserves legacy pagination translation patches', async () => {
     const patch = {
       navigation: {
@@ -326,22 +350,69 @@ describe('Kern navigation', () => {
       page: 1,
     });
 
-    for (const page of [1, 3, 8]) {
+    for (const page of [1, 3, 4, 8]) {
       fixture.componentRef.setInput('page', page);
       fixture.detectChanges();
 
-      expect(fixture.nativeElement.querySelectorAll('ol > li')).toHaveLength(7);
-      expect(fixture.nativeElement.querySelectorAll('ol > li[data-mobile-visible]')).toHaveLength(
-        5,
-      );
-      expect(
-        fixture.nativeElement.querySelector('ol > li[data-current] button')?.textContent?.trim(),
-      ).toBe(`${page}`);
+      expect(fixture.nativeElement.querySelectorAll('.mobile-pages > li')).toHaveLength(5);
       expect(
         fixture.nativeElement
-          .querySelector('ol > li[data-current]')
-          ?.hasAttribute('data-mobile-visible'),
-      ).toBe(true);
+          .querySelector('.mobile-pages > li[data-current] button')
+          ?.textContent?.trim(),
+      ).toBe(`${page}`);
+
+      if (page === 4) {
+        const visibleTokens = Array.from(
+          fixture.nativeElement.querySelectorAll('.mobile-pages > li'),
+          (item: Element) => item.textContent?.trim(),
+        );
+        expect(visibleTokens).toEqual(['1', '…', '4', '…', '10']);
+      }
+    }
+  });
+
+  it('keeps mobile pagination bounded for wide desktop sibling ranges', async () => {
+    const fixture = await create(KrnPagination, {
+      totalItems: 500,
+      pageSize: 20,
+      siblingCount: 10,
+      page: 13,
+    });
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(
+      Array.from(element.querySelectorAll('.desktop-pages > li'), (item) =>
+        item.textContent?.trim(),
+      ),
+    ).toHaveLength(25);
+    expect(
+      Array.from(element.querySelectorAll('.mobile-pages > li'), (item) =>
+        item.textContent?.trim(),
+      ),
+    ).toEqual(['1', '…', '13', '…', '25']);
+  });
+
+  it('keeps expanded sibling boundaries current in the mobile token list', async () => {
+    const fixture = await create(KrnPagination, {
+      totalItems: 400,
+      pageSize: 20,
+      siblingCount: 2,
+      page: 4,
+    });
+    const element = fixture.nativeElement as HTMLElement;
+
+    for (const page of [4, 17]) {
+      fixture.componentRef.setInput('page', page);
+      fixture.detectChanges();
+
+      expect(
+        Array.from(element.querySelectorAll('.mobile-pages > li'), (item) =>
+          item.textContent?.trim(),
+        ),
+      ).toEqual(['1', '…', `${page}`, '…', '20']);
+      expect(
+        element.querySelector('.mobile-pages > li[data-current] button')?.textContent?.trim(),
+      ).toBe(`${page}`);
     }
   });
 

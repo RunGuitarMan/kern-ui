@@ -8,6 +8,7 @@ import {
   model,
   numberAttribute,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { KRN_TRANSLATIONS, krnFormatTranslation } from '@kern-ui/angular/core';
 
 type PageToken = number | 'ellipsis';
@@ -15,23 +16,22 @@ type PageToken = number | 'ellipsis';
 @Component({
   selector: 'krn-pagination',
   standalone: true,
+  imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <nav class="pagination" [attr.aria-label]="ariaLabel()">
+    <nav class="pagination" [attr.aria-label]="resolvedAriaLabel()">
       <button
         type="button"
         class="direction"
         [disabled]="currentPage() <= 1"
         (click)="goTo(currentPage() - 1)"
       >
-        <span aria-hidden="true">←</span><span class="direction-label">{{ previousLabel() }}</span>
+        <span aria-hidden="true">←</span
+        ><span class="direction-label">{{ resolvedPreviousLabel() }}</span>
       </button>
-      <ol [attr.data-mobile-window]="pageTokens().length > mobileSlotCount ? '' : null">
-        @for (token of pageTokens(); track $index) {
-          <li
-            [attr.data-current]="token !== 'ellipsis' && currentPage() === token ? '' : null"
-            [attr.data-mobile-visible]="mobileVisibleIndexes().has($index) ? '' : null"
-          >
+      <ng-template #pageItems let-tokens>
+        @for (token of tokens; track $index) {
+          <li [attr.data-current]="token !== 'ellipsis' && currentPage() === token ? '' : null">
             @if (token === 'ellipsis') {
               <span class="ellipsis" aria-hidden="true">…</span>
             } @else {
@@ -46,6 +46,18 @@ type PageToken = number | 'ellipsis';
             }
           </li>
         }
+      </ng-template>
+      <ol class="desktop-pages">
+        <ng-container
+          [ngTemplateOutlet]="pageItems"
+          [ngTemplateOutletContext]="{ $implicit: pageTokens() }"
+        />
+      </ol>
+      <ol class="mobile-pages">
+        <ng-container
+          [ngTemplateOutlet]="pageItems"
+          [ngTemplateOutletContext]="{ $implicit: mobilePageTokens() }"
+        />
       </ol>
       <button
         type="button"
@@ -53,7 +65,7 @@ type PageToken = number | 'ellipsis';
         [disabled]="currentPage() >= pageCount()"
         (click)="goTo(currentPage() + 1)"
       >
-        <span class="direction-label">{{ nextLabel() }}</span
+        <span class="direction-label">{{ resolvedNextLabel() }}</span
         ><span aria-hidden="true">→</span>
       </button>
       <p class="summary" aria-live="polite">{{ summary() }}</p>
@@ -62,6 +74,9 @@ type PageToken = number | 'ellipsis';
   styles: `
     :host {
       display: block;
+    }
+    :host([hidden]) {
+      display: none;
     }
     .pagination {
       display: flex;
@@ -78,6 +93,9 @@ type PageToken = number | 'ellipsis';
       margin: 0;
       padding: 0;
       list-style: none;
+    }
+    .mobile-pages {
+      display: none;
     }
     button,
     .ellipsis {
@@ -135,11 +153,11 @@ type PageToken = number | 'ellipsis';
       transform: scaleX(-1);
     }
     @media (max-width: 35rem) {
-      ol[data-mobile-window] {
-        grid-template-columns: repeat(5, var(--krn-control-height-sm));
-      }
-      ol[data-mobile-window] li:not([data-mobile-visible]) {
+      .desktop-pages {
         display: none;
+      }
+      .mobile-pages {
+        display: grid;
       }
       .direction-label {
         position: absolute;
@@ -149,11 +167,18 @@ type PageToken = number | 'ellipsis';
         clip-path: inset(50%);
       }
     }
+    @media (forced-colors: active) {
+      button[aria-current='page'] {
+        border-color: Highlight;
+      }
+      button:focus-visible {
+        outline-color: Highlight;
+      }
+    }
   `,
 })
 export class KrnPagination {
   private readonly translations = inject(KRN_TRANSLATIONS);
-  protected readonly mobileSlotCount = 5;
   readonly totalItems = input(0, { transform: numberAttribute });
   readonly pageSize = input(20, { transform: numberAttribute });
   readonly siblingCount = input(1, { transform: numberAttribute });
@@ -172,19 +197,43 @@ export class KrnPagination {
   readonly rangeLabelFormatter = input<
     ((start: number, end: number, total: number) => string) | undefined
   >(undefined);
-  protected readonly safePageSize = computed(() => Math.max(1, this.pageSize()));
-  protected readonly pageCount = computed(() =>
-    Math.max(1, Math.ceil(this.totalItems() / this.safePageSize())),
-  );
-  protected readonly currentPage = computed(() =>
-    Math.min(Math.max(1, this.page()), this.pageCount()),
-  );
-  protected readonly summary = computed(() => {
+  protected readonly safeTotalItems = computed(() => {
     const total = this.totalItems();
-    if (total === 0) return this.emptyLabel();
+    return Number.isFinite(total) ? Math.max(0, Math.trunc(total)) : 0;
+  });
+  protected readonly safePageSize = computed(() => {
+    const pageSize = this.pageSize();
+    return Number.isFinite(pageSize) && pageSize > 0 ? Math.max(1, Math.trunc(pageSize)) : 20;
+  });
+  protected readonly safeSiblingCount = computed(() => {
+    const siblingCount = this.siblingCount();
+    return Number.isFinite(siblingCount) ? Math.min(10, Math.max(0, Math.trunc(siblingCount))) : 1;
+  });
+  protected readonly resolvedAriaLabel = computed(
+    () => this.ariaLabel()?.trim() || this.translations.navigation.pagination.trim() || null,
+  );
+  protected readonly resolvedPreviousLabel = computed(
+    () => this.previousLabel()?.trim() || this.translations.navigation.previous.trim(),
+  );
+  protected readonly resolvedNextLabel = computed(
+    () => this.nextLabel()?.trim() || this.translations.navigation.next.trim(),
+  );
+  protected readonly pageCount = computed(() =>
+    Math.max(1, Math.ceil(this.safeTotalItems() / this.safePageSize())),
+  );
+  protected readonly currentPage = computed(() => {
+    const requested = this.page();
+    const page = Number.isFinite(requested) ? Math.trunc(requested) : 1;
+    return Math.min(Math.max(1, page), this.pageCount());
+  });
+  protected readonly summary = computed(() => {
+    const total = this.safeTotalItems();
+    if (total === 0) {
+      return this.emptyLabel()?.trim() || this.translations.navigation.noResults.trim();
+    }
     const start = (this.currentPage() - 1) * this.safePageSize() + 1;
     const end = Math.min(total, this.currentPage() * this.safePageSize());
-    return krnFormatTranslation(
+    const formatted = krnFormatTranslation(
       this.rangeLabel(),
       { start, end, total },
       this.rangeLabelFormatter() ??
@@ -195,11 +244,22 @@ export class KrnPagination {
       end,
       total,
     );
+    return (
+      formatted.trim() ||
+      krnFormatTranslation(
+        this.translations.navigation.resultRangeLabel,
+        { start, end, total },
+        this.translations.navigation.formatResultRangeLabel,
+        start,
+        end,
+        total,
+      )
+    );
   });
   protected readonly pageTokens = computed<readonly PageToken[]>(() => {
     const total = this.pageCount();
     const current = this.currentPage();
-    const sibling = Math.max(0, this.siblingCount());
+    const sibling = this.safeSiblingCount();
     const visibleSlotCount = sibling * 2 + 5;
 
     if (total <= visibleSlotCount) {
@@ -207,11 +267,11 @@ export class KrnPagination {
     }
 
     const edgePageCount = sibling * 2 + 3;
-    if (current <= sibling + 3) {
+    if (current <= sibling + 2) {
       return [...Array.from({ length: edgePageCount }, (_, index) => index + 1), 'ellipsis', total];
     }
 
-    if (current >= total - sibling - 2) {
+    if (current >= total - sibling - 1) {
       const firstTrailingPage = total - edgePageCount + 1;
       return [
         1,
@@ -228,47 +288,31 @@ export class KrnPagination {
       total,
     ];
   });
-  protected readonly mobileVisibleIndexes = computed<ReadonlySet<number>>(() => {
-    const tokens = this.pageTokens();
-    if (tokens.length <= this.mobileSlotCount) {
-      return new Set(tokens.map((_, index) => index));
-    }
-
-    const lastIndex = tokens.length - 1;
-    const currentIndex = tokens.findIndex((token) => token === this.currentPage());
-    const visible = new Set<number>([0, lastIndex, Math.max(0, currentIndex)]);
-    const candidates = Array.from(
-      { length: Math.max(0, tokens.length - 2) },
-      (_, index) => index + 1,
-    )
-      .filter((index) => !visible.has(index))
-      .sort((left, right) => {
-        const distance = Math.abs(left - currentIndex) - Math.abs(right - currentIndex);
-        return distance || left - right;
-      });
-
-    for (const index of candidates) {
-      if (visible.size >= this.mobileSlotCount) break;
-      visible.add(index);
-    }
-    return visible;
+  protected readonly mobilePageTokens = computed<readonly PageToken[]>(() => {
+    const total = this.pageCount();
+    const current = this.currentPage();
+    if (total <= 5) return Array.from({ length: total }, (_, index) => index + 1);
+    if (current <= 3) return [1, 2, 3, 'ellipsis', total];
+    if (current >= total - 2) return [1, 'ellipsis', total - 2, total - 1, total];
+    return [1, 'ellipsis', current, 'ellipsis', total];
   });
 
   constructor() {
     effect(() => {
       const clamped = this.currentPage();
-      if (clamped !== this.page()) this.page.set(clamped);
+      if (!Object.is(clamped, this.page())) this.page.set(clamped);
     });
   }
 
   protected goTo(value: number): void {
-    const next = Math.min(Math.max(1, value), this.pageCount());
+    const requested = Number.isFinite(value) ? Math.trunc(value) : 1;
+    const next = Math.min(Math.max(1, requested), this.pageCount());
     if (next === this.currentPage()) return;
     this.page.set(next);
   }
 
   protected pageAriaLabel(page: number): string {
-    return krnFormatTranslation(
+    const formatted = krnFormatTranslation(
       this.pageLabel(),
       { page },
       this.pageLabelFormatter() ??
@@ -276,6 +320,15 @@ export class KrnPagination {
           ? this.translations.navigation.formatPageLabel
           : undefined),
       page,
+    );
+    return (
+      formatted.trim() ||
+      krnFormatTranslation(
+        this.translations.navigation.pageLabel,
+        { page },
+        this.translations.navigation.formatPageLabel,
+        page,
+      )
     );
   }
 }
