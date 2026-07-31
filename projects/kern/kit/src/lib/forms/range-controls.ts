@@ -3,12 +3,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  type ElementRef,
   effect,
   inject,
   input,
   numberAttribute,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 import { KRN_PLATFORM, krnIsHtmlElement } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
@@ -21,6 +23,17 @@ import {
   provideKrnFormControl,
   useKrnControlA11y,
 } from './value-accessor';
+
+const sliderInteractionKeys = new Set([
+  'ArrowDown',
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowUp',
+  'End',
+  'Home',
+  'PageDown',
+  'PageUp',
+]);
 
 @Component({
   selector: 'krn-slider',
@@ -39,22 +52,28 @@ import {
         </div>
       }
       <input
+        #input
         class="krn-range"
         type="range"
         [attr.aria-describedby]="a11y.describedBy()"
         [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="label() ? null : ariaLabel()"
-        [attr.aria-labelledby]="label() ? labelId() : null"
+        [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel()"
+        [attr.aria-labelledby]="effectiveLabelledBy()"
         [attr.aria-readonly]="a11y.readOnly()"
         [attr.aria-valuetext]="formattedValue()"
+        [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
+        [attr.name]="name() || null"
         [disabled]="isDisabled()"
         [id]="a11y.id()"
-        [max]="max()"
-        [min]="min()"
-        [step]="step()"
+        [max]="effectiveMax()"
+        [min]="effectiveMin()"
+        [step]="effectiveStep()"
+        [tabIndex]="isDisabled() ? -1 : tabIndex()"
         [value]="controlValue()"
         (blur)="touch()"
         (input)="updateValue($event)"
+        (keydown)="protectReadOnlyKeyboard($event)"
+        (pointerdown)="protectReadOnlyPointer($event)"
       />
     </div>
   `,
@@ -62,7 +81,9 @@ import {
 })
 export class KrnSlider extends KrnValueAccessor<number> {
   private readonly translations = inject(KRN_TRANSLATIONS);
+  private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('input');
   readonly id = input('');
+  readonly name = input('');
   readonly label = input('');
   readonly ariaLabel = input(this.translations.forms.value);
   readonly min = input(0, { transform: numberAttribute });
@@ -75,6 +96,8 @@ export class KrnSlider extends KrnValueAccessor<number> {
   });
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly showValue = input(true, { transform: booleanAttribute });
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
+  readonly value = input<number | undefined>(undefined);
   readonly valueFormatter = input<((value: number) => string) | undefined>(undefined);
   readonly valueChange = output<number>();
 
@@ -83,17 +106,38 @@ export class KrnSlider extends KrnValueAccessor<number> {
     readOnly: this.readOnly,
   });
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
+  protected readonly effectiveMin = computed(() => (Number.isFinite(this.min()) ? this.min() : 0));
+  protected readonly effectiveMax = computed(() => {
+    const min = this.effectiveMin();
+    const max = this.max();
+    return Number.isFinite(max) && max >= min ? max : min;
+  });
+  protected readonly effectiveStep = computed(() => {
+    const step = this.step();
+    return Number.isFinite(step) && step > 0 ? step : 1;
+  });
   protected readonly labelId = computed(() => `${this.a11y.id()}-label`);
+  protected readonly effectiveLabelledBy = computed(() => {
+    const ids = [this.a11y.labelledBy(), this.label() ? this.labelId() : null].filter(
+      (id): id is string => Boolean(id),
+    );
+    return ids.length > 0 ? [...new Set(ids)].join(' ') : null;
+  });
   protected readonly formattedValue = computed(
     () => this.valueFormatter()?.(this.controlValue()) ?? `${this.controlValue()}`,
   );
   protected readonly valuePercent = computed(() => {
-    const span = this.max() - this.min();
-    return span > 0 ? ((this.controlValue() - this.min()) / span) * 100 : 0;
+    const span = this.effectiveMax() - this.effectiveMin();
+    if (span <= 0) {
+      return 0;
+    }
+    const percent = ((this.controlValue() - this.effectiveMin()) / span) * 100;
+    return Math.min(100, Math.max(0, percent));
   });
 
   constructor() {
     super(0);
+    this.bindStandaloneValue(this.value);
     effect(() => {
       const current = this.controlValue();
       const normalized = this.clamp(current);
@@ -106,11 +150,14 @@ export class KrnSlider extends KrnValueAccessor<number> {
 
   protected override normalizeIncomingValue(value: unknown): number {
     const numeric = Number(value);
-    return Number.isFinite(numeric) ? this.clamp(numeric) : this.min();
+    return Number.isFinite(numeric) ? this.clamp(numeric) : this.effectiveMin();
   }
 
   protected override validateValue(value: unknown) {
-    return mergeValidationErrors(minError(value, this.min()), maxError(value, this.max()));
+    return mergeValidationErrors(
+      minError(value, this.effectiveMin()),
+      maxError(value, this.effectiveMax()),
+    );
   }
 
   protected updateValue(event: Event): void {
@@ -120,12 +167,37 @@ export class KrnSlider extends KrnValueAccessor<number> {
       return;
     }
     const value = this.clamp(input.valueAsNumber);
-    this.commitValue(value);
-    this.valueChange.emit(value);
+    input.value = `${value}`;
+    if (this.commitUserValue(value)) {
+      this.valueChange.emit(value);
+    }
+  }
+
+  protected protectReadOnlyKeyboard(event: KeyboardEvent): void {
+    if (this.a11y.readOnly() && sliderInteractionKeys.has(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  protected protectReadOnlyPointer(event: PointerEvent): void {
+    if (!this.a11y.readOnly() || event.button !== 0) {
+      return;
+    }
+    event.preventDefault();
+    this.inputElement()?.nativeElement.focus({ preventScroll: true });
+  }
+
+  focus(options?: FocusOptions): void {
+    this.inputElement()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    this.inputElement()?.nativeElement.blur();
   }
 
   private clamp(value: number): number {
-    return Math.min(this.max(), Math.max(this.min(), value));
+    const finiteValue = Number.isFinite(value) ? value : this.effectiveMin();
+    return Math.min(this.effectiveMax(), Math.max(this.effectiveMin(), finiteValue));
   }
 }
 

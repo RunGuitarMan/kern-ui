@@ -110,6 +110,9 @@ contract or upgrade decision.
 - Made Autocomplete modes behavioral rather than decorative, with popup-free inline/none modes,
   stable ARIA autocomplete semantics, effective-filter inline completion, preserved free-text
   editing, and duplicate-free custom-value commits.
+- Strengthened Slider with deterministic standalone `value` ownership, finite native constraints,
+  bounded progress, duplicate-free accepted changes, readonly-safe interaction, native form
+  naming and tab order, and public focus and blur methods.
 
 ### Deprecated
 
