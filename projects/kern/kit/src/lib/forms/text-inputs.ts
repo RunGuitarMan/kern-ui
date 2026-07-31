@@ -476,15 +476,23 @@ export class KrnTextarea extends KrnValueAccessor<string> {
       [attr.data-disabled]="isDisabled()"
       [attr.data-invalid]="a11y.invalid()"
       [attr.data-readonly]="a11y.readOnly()"
+      (pointerdown)="focusFromShell($event)"
     >
       <input
+        #inputElement
         class="krn-input"
         [type]="revealed() ? 'text' : 'password'"
-        [attr.aria-describedby]="a11y.describedBy()"
+        autocapitalize="none"
+        spellcheck="false"
+        [attr.aria-describedby]="describedBy()"
         [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="ariaLabel() || null"
-        [attr.autocomplete]="autocomplete()"
+        [attr.aria-label]="labelledBy() ? null : ariaLabel() || null"
+        [attr.aria-labelledby]="labelledBy()"
+        [attr.autocomplete]="autocomplete() || null"
+        [attr.maxlength]="maxLength() ?? null"
+        [attr.minlength]="minLength() ?? null"
         [attr.name]="name() || null"
+        [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
         [disabled]="isDisabled()"
         [id]="a11y.id()"
         [placeholder]="placeholder()"
@@ -492,15 +500,18 @@ export class KrnTextarea extends KrnValueAccessor<string> {
         [required]="a11y.required()"
         [value]="controlValue()"
         (blur)="touch()"
+        (compositionend)="endComposition($event)"
+        (compositionstart)="startComposition()"
         (input)="updatePassword($event)"
       />
       <button
         class="krn-inline-action"
         type="button"
+        [attr.aria-controls]="a11y.id()"
         [attr.aria-label]="revealed() ? hideLabel() : showLabel()"
-        [attr.aria-pressed]="revealed()"
         [disabled]="isDisabled()"
         (click)="revealed.update(toggle)"
+        (pointerdown)="retainInputFocus($event)"
       >
         {{ revealed() ? hideText() : showText() }}
       </button>
@@ -510,11 +521,24 @@ export class KrnTextarea extends KrnValueAccessor<string> {
 })
 export class KrnPasswordInput extends KrnValueAccessor<string> {
   private readonly translations = inject(KRN_TRANSLATIONS);
+  private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('inputElement');
+  private angularOwnsValue = false;
+  private composing = false;
+
   readonly id = input('');
   readonly name = input('');
   readonly placeholder = input('');
   readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
   readonly autocomplete = input('current-password');
+  readonly value = input<string | undefined>(undefined);
+  readonly minLength = input<number | undefined>(undefined, {
+    transform: optionalTextLength,
+  });
+  readonly maxLength = input<number | undefined>(undefined, {
+    transform: optionalTextLength,
+  });
   readonly showLabel = input(this.translations.forms.showPassword);
   readonly hideLabel = input(this.translations.forms.hidePassword);
   readonly showText = input(this.translations.forms.show);
@@ -535,21 +559,114 @@ export class KrnPasswordInput extends KrnValueAccessor<string> {
     readOnly: this.readOnly,
     required: this.required,
   });
+  protected readonly labelledBy = computed(() =>
+    mergeAriaIds(
+      this.ariaLabelledBy(),
+      (
+        this.a11y as typeof this.a11y & {
+          readonly labelledBy?: () => string | null;
+        }
+      ).labelledBy?.(),
+    ),
+  );
+  protected readonly describedBy = computed(() =>
+    mergeAriaIds(this.ariaDescribedBy(), this.a11y.describedBy()),
+  );
+  protected readonly isFormFieldControl = computed(
+    () =>
+      (
+        this.a11y as typeof this.a11y & {
+          readonly isFormFieldControl?: () => boolean;
+        }
+      ).isFormFieldControl?.() ?? false,
+  );
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
 
   constructor() {
     super('');
-    this.watchValidationInputs(this.required, this.a11y.required);
+    effect(() => {
+      const value = this.value();
+      if (value !== undefined && !this.angularOwnsValue) {
+        this.controlValue.set(this.normalizeIncomingValue(value));
+      }
+    });
+    this.watchValidationInputs(this.required, this.a11y.required, this.minLength, this.maxLength);
+  }
+
+  override writeValue(value: unknown): void {
+    this.angularOwnsValue = true;
+    super.writeValue(value);
+  }
+
+  override registerOnChange(fn: (value: string) => void): void {
+    this.angularOwnsValue = true;
+    super.registerOnChange(fn);
+  }
+
+  focus(options?: FocusOptions): void {
+    this.inputElement()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    this.inputElement()?.nativeElement.blur();
+  }
+
+  select(): void {
+    this.inputElement()?.nativeElement.select();
   }
 
   protected override validateValue(value: unknown) {
-    return requiredError(value, this.a11y.required());
+    return mergeValidationErrors(
+      requiredError(value, this.a11y.required()),
+      minLengthError(value, this.minLength()),
+      maxLengthError(value, this.maxLength()),
+    );
   }
 
   protected updatePassword(event: Event): void {
+    if (this.composing) {
+      return;
+    }
+
     const value = (event.target as HTMLInputElement).value;
+    if (Object.is(this.controlValue(), value)) {
+      return;
+    }
     this.commitValue(value);
     this.valueChange.emit(value);
+  }
+
+  protected startComposition(): void {
+    this.composing = true;
+  }
+
+  protected endComposition(event: Event): void {
+    this.composing = false;
+    this.updatePassword(event);
+  }
+
+  protected focusFromShell(event: PointerEvent): void {
+    const target = event.target;
+
+    if (
+      event.button !== 0 ||
+      !(target instanceof Element) ||
+      target.closest('input,button,a,select,textarea,[contenteditable],[tabindex]')
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    this.focus();
+  }
+
+  protected retainInputFocus(event: PointerEvent): void {
+    if (event.button !== 0) {
+      return;
+    }
+
+    event.preventDefault();
+    this.focus();
   }
 }
 
