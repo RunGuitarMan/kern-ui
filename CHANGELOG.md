@@ -149,6 +149,11 @@ contract or upgrade decision.
   readonly-safe interaction, composable external/Form Field/local and localized required
   descriptions, configurable tab order, public focus and blur methods, and state-aware testing
   harness filters.
+- Strengthened Drag and Drop Upload with deterministic standalone file-list ownership,
+  duplicate-free accepted drops, blocked-state drag reset, explicit rejected drop effects, a
+  single visible focus target, readonly-safe interaction, composed drop/local/Form Field
+  descriptions, configurable tab order, public focus and blur methods, and state-aware testing
+  harness filters.
 
 ### Deprecated
 

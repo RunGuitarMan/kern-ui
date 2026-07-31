@@ -6,6 +6,7 @@ import {
   Component,
   computed,
   Directive,
+  effect,
   inject,
   input,
   numberAttribute,
@@ -388,27 +389,39 @@ export class KrnFileUpload extends KrnUploadBase {
         class="krn-upload__input"
         type="file"
         [accept]="accept()"
-        [attr.aria-describedby]="a11y.describedBy()"
-        [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="a11y.labelledBy() ? null : label()"
-        [attr.aria-labelledby]="a11y.labelledBy()"
-        [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
+        aria-hidden="true"
         [disabled]="isDisabled() || a11y.readOnly()"
-        [id]="a11y.id()"
+        [id]="nativeInputId()"
         [multiple]="multiple()"
-        [required]="a11y.required() && controlValue().length === 0"
+        tabindex="-1"
         (change)="selectFromInput($event)"
       />
-      <strong>{{ dropLabel() }}</strong>
-      <span class="krn-message">{{ description() }}</span>
+      <strong [id]="dropLabelId()">{{ dropLabel() }}</strong>
+      @if (description()) {
+        <span class="krn-message" [id]="descriptionId()">{{ description() }}</span>
+      }
       <button
+        #action
         class="krn-upload__button"
         type="button"
-        [disabled]="isDisabled() || a11y.readOnly()"
+        [attr.aria-describedby]="effectiveDescribedBy()"
+        [attr.aria-disabled]="a11y.readOnly() ? 'true' : null"
+        [attr.aria-invalid]="a11y.invalid()"
+        [attr.aria-labelledby]="effectiveLabelledBy()"
+        [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
+        [disabled]="isDisabled()"
+        [id]="a11y.id()"
+        [tabIndex]="isDisabled() ? -1 : tabIndex()"
+        (blur)="touch()"
         (click)="openPicker()"
       >
         {{ label() }}
       </button>
+      @if (a11y.required()) {
+        <span class="krn-visually-hidden" [id]="requiredDescriptionId()">
+          {{ translations.forms.fileSelectionRequired }}
+        </span>
+      }
 
       @if (controlValue().length) {
         <ul class="krn-file-list" [attr.aria-label]="translations.forms.selectedFiles">
@@ -442,19 +455,51 @@ export class KrnFileUpload extends KrnUploadBase {
 })
 export class KrnDropUpload extends KrnUploadBase {
   readonly dropLabel = input(this.translations.forms.dropFilesHere);
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
+  readonly value = input<readonly File[] | undefined>(undefined);
   protected readonly dragging = signal(false);
+  protected readonly nativeInputId = computed(() => `${this.a11y.id()}-native`);
+  protected readonly dropLabelId = computed(() => `${this.a11y.id()}-drop-label`);
+  protected readonly descriptionId = computed(() => `${this.a11y.id()}-description`);
+  protected readonly requiredDescriptionId = computed(() => `${this.a11y.id()}-required`);
+  protected readonly effectiveLabelledBy = computed(() =>
+    mergeAriaIds(this.ariaLabelledBy(), this.a11y.labelledBy()),
+  );
+  protected readonly effectiveDescribedBy = computed(() =>
+    mergeAriaIds(
+      this.ariaDescribedBy(),
+      this.a11y.describedBy(),
+      this.dropLabelId(),
+      this.description() ? this.descriptionId() : null,
+      this.a11y.required() ? this.requiredDescriptionId() : null,
+    ),
+  );
+  private readonly action = viewChild<ElementRef<HTMLButtonElement>>('action');
+  private readonly resetDraggingWhenBlocked = effect(() => {
+    if (this.isDisabled() || this.a11y.readOnly()) {
+      this.dragging.set(false);
+    }
+  });
 
   constructor() {
     super();
+    this.bindStandaloneValue(this.value);
   }
 
   protected enterDrag(event: DragEvent): void {
     event.preventDefault();
-    if (!this.isDisabled() && !this.a11y.readOnly()) {
-      this.dragging.set(true);
+    if (this.isDisabled() || this.a11y.readOnly()) {
+      this.dragging.set(false);
       if (event.dataTransfer) {
-        event.dataTransfer.dropEffect = 'copy';
+        event.dataTransfer.dropEffect = 'none';
       }
+      return;
+    }
+    this.dragging.set(true);
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'copy';
     }
   }
 
@@ -475,6 +520,14 @@ export class KrnDropUpload extends KrnUploadBase {
     event.preventDefault();
     this.dragging.set(false);
     this.acceptFiles(Array.from(event.dataTransfer?.files ?? []));
+  }
+
+  focus(options?: FocusOptions): void {
+    this.action()?.nativeElement.focus(options);
+  }
+
+  blur(): void {
+    this.action()?.nativeElement.blur();
   }
 }
 

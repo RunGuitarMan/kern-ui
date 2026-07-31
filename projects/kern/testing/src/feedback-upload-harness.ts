@@ -11,6 +11,10 @@ export interface KrnFileUploadHarnessFilters extends BaseHarnessFilters {
   readonly readonly?: boolean;
 }
 
+export interface KrnDropUploadHarnessFilters extends KrnFileUploadHarnessFilters {
+  readonly dropLabel?: KrnHarnessText;
+}
+
 /** Harness for `krn-toast-viewport`. */
 export class KrnToastViewportHarness extends ComponentHarness {
   static readonly hostSelector = 'krn-toast, krn-toast-viewport, krn-snackbar';
@@ -132,4 +136,34 @@ export class KrnFileUploadHarness extends KrnUploadHarness {
 /** Harness for `krn-drop-upload` and its documented alias. */
 export class KrnDropUploadHarness extends KrnUploadHarness {
   static readonly hostSelector = 'krn-drop-upload, krn-drag-drop-upload';
+
+  static with(options: KrnDropUploadHarnessFilters = {}): HarnessPredicate<KrnDropUploadHarness> {
+    return new HarnessPredicate(KrnDropUploadHarness, options)
+      .addOption('label', options.label, (harness, value) => textMatches(harness.getLabel(), value))
+      .addOption('dropLabel', options.dropLabel, (harness, value) =>
+        textMatches(harness.getDropLabel(), value),
+      )
+      .addOption('accept', options.accept, (harness, value) =>
+        textMatches(harness.getAccept(), value),
+      )
+      .addOption(
+        'multiple',
+        options.multiple,
+        async (harness, value) => (await harness.isMultiple()) === value,
+      )
+      .addOption(
+        'disabled',
+        options.disabled,
+        async (harness, value) => (await harness.isDisabled()) === value,
+      )
+      .addOption(
+        'readonly',
+        options.readonly,
+        async (harness, value) => (await harness.isReadonly()) === value,
+      );
+  }
+
+  async getDropLabel(): Promise<string> {
+    return (await this.locatorFor('.krn-upload > strong')()).text();
+  }
 }
