@@ -49,13 +49,13 @@ void bootstrapApplication(KernGridAgentExample);
 
 ## API
 
-| Name             | Kind  | Type                 | Required | Default     | Description                                                           |
-| ---------------- | ----- | -------------------- | -------- | ----------- | --------------------------------------------------------------------- |
-| `columns`        | input | `"auto" \| number`   | no       | `'auto'`    | Typed column definitions with stable keys.                            |
-| `minColumnWidth` | input | `KrnLayoutSpace`     | no       | `'16rem'`   | Upper or lower bound applied to the column width value.               |
-| `gap`            | input | `KrnLayoutSpace`     | no       | `'4'`       | Logical spacing inserted between adjacent layout children.            |
-| `align`          | input | `KrnLayoutAlignment` | no       | `'stretch'` | Logical cross-axis alignment applied to children by the layout.       |
-| `responsive`     | input | `boolean`            | no       | `true`      | Enables the component’s documented container-responsive presentation. |
+| Name             | Kind  | Type                 | Required | Default     | Description                                                                 |
+| ---------------- | ----- | -------------------- | -------- | ----------- | --------------------------------------------------------------------------- |
+| `columns`        | input | `"auto" \| number`   | no       | `'auto'`    | Fixed column count clamped to 1–12, or `auto` for fluid auto-fit columns.   |
+| `minColumnWidth` | input | `KrnLayoutSpace`     | no       | `'16rem'`   | Minimum fluid column width used when columns is `auto`.                     |
+| `gap`            | input | `KrnLayoutSpace`     | no       | `'4'`       | Logical spacing between rows and columns.                                   |
+| `align`          | input | `KrnLayoutAlignment` | no       | `'stretch'` | Block-axis alignment of items within their grid areas.                      |
+| `responsive`     | input | `boolean`            | no       | `true`      | Collapses fixed columns below the component-owned 36rem container boundary. |
 
 ## Deprecated selectors
 

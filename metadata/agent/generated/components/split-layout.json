@@ -50,11 +50,11 @@
       "name": "ratio",
       "property": "ratio",
       "kind": "input",
-      "type": "string",
+      "type": "KrnSplitRatio",
       "required": false,
       "defaultValue": "'1:1'",
-      "description": "Required width-to-height ratio maintained by the layout.",
-      "descriptionSource": "inferred"
+      "description": "Sets the relative primary-to-secondary track sizes. Accepts presets, `3:2`, or `3fr 2fr`.",
+      "descriptionSource": "source"
     },
     {
       "name": "gap",
@@ -63,8 +63,8 @@
       "type": "KrnLayoutSpace",
       "required": false,
       "defaultValue": "'6'",
-      "description": "Logical spacing inserted between adjacent layout children.",
-      "descriptionSource": "inferred"
+      "description": "Sets the space between the two panels using a spacing token, number of pixels, or CSS length.",
+      "descriptionSource": "source"
     },
     {
       "name": "collapseAt",
@@ -73,18 +73,8 @@
       "type": "KrnResponsiveBreakpoint",
       "required": false,
       "defaultValue": "'md'",
-      "description": "Controls whether the component applies the collapse at behavior.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "reverseCollapsed",
-      "property": "reverseCollapsed",
-      "kind": "input",
-      "type": "boolean",
-      "required": false,
-      "defaultValue": "false",
-      "description": "Collapses the logical end panel instead of the logical start panel.",
-      "descriptionSource": "inferred"
+      "description": "Stacks the panels when the split layout's inline size reaches the selected breakpoint.",
+      "descriptionSource": "source"
     },
     {
       "name": "align",
@@ -93,8 +83,8 @@
       "type": "\"center\" | \"end\" | \"start\" | \"stretch\"",
       "required": false,
       "defaultValue": "'start'",
-      "description": "Logical cross-axis alignment applied to children by the layout.",
-      "descriptionSource": "inferred"
+      "description": "Aligns the panels within the split layout's block axis.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [
@@ -160,7 +150,6 @@
     "ratio",
     "gap",
     "collapseAt",
-    "reverseCollapsed",
     "align"
   ],
   "guidance": {
@@ -189,19 +178,6 @@
     "route": "preview/split-layout",
     "scenarios": ["default"],
     "controls": [
-      {
-        "key": "reverseCollapsed",
-        "label": "Reverse when collapsed",
-        "kind": "boolean",
-        "defaultValue": false,
-        "testValue": true,
-        "description": "Reverses pane order after the layout collapses.",
-        "binding": {
-          "kind": "input",
-          "publicName": "reverseCollapsed",
-          "syntax": "property"
-        }
-      },
       {
         "key": "ratio",
         "label": "Ratio",
@@ -391,8 +367,8 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 5,
-      "controlled": 5,
+      "publicInputsAndModels": 4,
+      "controlled": 4,
       "excluded": 0,
       "unclassified": 0
     },

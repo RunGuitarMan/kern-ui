@@ -572,12 +572,12 @@ invariant(
   `Playground control binding provenance is invalid:\n- ${bindingIssues.join('\n- ')}`,
 );
 invariant(
-  apiCoverage.publicInputsAndModels === 1023,
-  `Expected 1023 public inputs/models, received ${apiCoverage.publicInputsAndModels}.`,
+  apiCoverage.publicInputsAndModels === 1022,
+  `Expected 1022 public inputs/models, received ${apiCoverage.publicInputsAndModels}.`,
 );
 invariant(
-  apiCoverage.controlled === 645,
-  `Expected 645 directly controlled public inputs/models, received ${apiCoverage.controlled}.`,
+  apiCoverage.controlled === 644,
+  `Expected 644 directly controlled public inputs/models, received ${apiCoverage.controlled}.`,
 );
 invariant(
   apiCoverage.excluded === 378,

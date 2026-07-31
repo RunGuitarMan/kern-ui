@@ -830,14 +830,14 @@ describe('@kern-ui/angular/testing', () => {
     const handle = (
       await panels.getHandles({
         ariaLabel: 'Resize workspace panels',
-        orientation: 'horizontal',
+        orientation: 'vertical',
         value: 35,
         disabled: false,
       })
     )[0];
     expect(handle).toBeDefined();
-    expect(await handle?.getMinimum()).toBe(0);
-    expect(await handle?.getMaximum()).toBe(100);
+    expect(await handle?.getMinimum()).toBe(20);
+    expect(await handle?.getMaximum()).toBe(80);
     expect(await handle?.getValueText()).toBe('35%');
 
     await handle?.setToMaximum();

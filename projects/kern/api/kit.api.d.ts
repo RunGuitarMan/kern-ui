@@ -386,10 +386,15 @@ declare class KrnSpacer {
 }
 
 declare class KrnGrid {
+  /** Fixed column count clamped to 1–12, or `auto` for fluid auto-fit columns. */
   readonly columns: _angular_core.InputSignalWithTransform<number | 'auto', unknown>;
+  /** Minimum fluid column width used when columns is `auto`. */
   readonly minColumnWidth: _angular_core.InputSignal<KrnLayoutSpace>;
+  /** Logical spacing between rows and columns. */
   readonly gap: _angular_core.InputSignal<KrnLayoutSpace>;
+  /** Block-axis alignment of items within their grid areas. */
   readonly align: _angular_core.InputSignal<KrnLayoutAlignment>;
+  /** Collapses fixed columns below the component-owned 36rem container boundary. */
   readonly responsive: _angular_core.InputSignalWithTransform<boolean, unknown>;
   protected readonly resolvedColumns: _angular_core.Signal<number>;
   protected readonly resolvedMinColumnWidth: _angular_core.Signal<string>;
@@ -415,9 +420,14 @@ declare class KrnGrid {
 }
 
 declare class KrnDivider {
+  /** Sets the separator and visual line orientation. Invalid runtime values fall back to horizontal. */
   readonly orientation: _angular_core.InputSignal<'horizontal' | 'vertical'>;
+  /** Insets both ends of the divider along its length using a spacing token, pixels, or CSS length. */
   readonly inset: _angular_core.InputSignal<KrnLayoutSpace>;
+  /** Adds a visible label and uses its trimmed text as the separator's accessible name. */
   readonly label: _angular_core.InputSignal<string | null>;
+  protected readonly resolvedOrientation: _angular_core.Signal<'horizontal' | 'vertical'>;
+  protected readonly resolvedLabel: _angular_core.Signal<string | null>;
   protected readonly resolvedInset: _angular_core.Signal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDivider, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
@@ -437,8 +447,11 @@ declare class KrnDivider {
   >;
 }
 declare class KrnAspectRatio {
+  /** Sets a positive width-to-height ratio as a number, `16 / 9`, or `16:9`. */
   readonly ratio: _angular_core.InputSignal<string | number>;
+  /** Controls how direct projected media fills the ratio box. Invalid runtime values use cover. */
   readonly fit: _angular_core.InputSignal<'none' | 'cover' | 'contain' | 'fill'>;
+  protected readonly resolvedFit: _angular_core.Signal<'none' | 'cover' | 'contain' | 'fill'>;
   protected readonly resolvedRatio: _angular_core.Signal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnAspectRatio, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
@@ -458,12 +471,19 @@ declare class KrnAspectRatio {
 }
 declare class KrnScrollArea {
   private readonly translations;
+  /** Selects the scrollable axis. Invalid runtime values fall back to vertical. */
   readonly axis: _angular_core.InputSignal<'horizontal' | 'vertical' | 'both'>;
   readonly maxBlockSize: _angular_core.InputSignal<KrnLayoutSpace>;
   readonly maxInlineSize: _angular_core.InputSignal<KrnLayoutSpace>;
+  /** Keeps the native viewport keyboard-scrollable when enabled. */
   readonly keyboardAccessible: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Names the scrollable region. Blank values omit the region role and accessible name. */
   readonly ariaLabel: _angular_core.InputSignal<string | null>;
+  /** Controls native scrollbar visibility and gutter allocation. */
   readonly scrollbar: _angular_core.InputSignal<'auto' | 'hidden' | 'stable'>;
+  protected readonly resolvedAxis: _angular_core.Signal<'horizontal' | 'vertical' | 'both'>;
+  protected readonly resolvedScrollbar: _angular_core.Signal<'auto' | 'hidden' | 'stable'>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
   protected readonly resolvedMaxBlockSize: _angular_core.Signal<string>;
   protected readonly resolvedMaxInlineSize: _angular_core.Signal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnScrollArea, never>;
@@ -488,9 +508,15 @@ declare class KrnScrollArea {
 }
 type KrnResponsiveDisplay = 'block' | 'inline' | 'contents' | 'flex' | 'grid';
 declare class KrnShow {
+  /** Shows content at this viewport width and above. */
   readonly from: _angular_core.InputSignal<KrnResponsiveBreakpoint>;
+  /** Shows content below this viewport width. */
   readonly until: _angular_core.InputSignal<KrnResponsiveBreakpoint>;
+  /** Restores this display mode while the component is visible. */
   readonly display: _angular_core.InputSignal<KrnResponsiveDisplay>;
+  protected readonly resolvedFrom: _angular_core.Signal<KrnResponsiveBreakpoint>;
+  protected readonly resolvedUntil: _angular_core.Signal<KrnResponsiveBreakpoint>;
+  protected readonly resolvedDisplay: _angular_core.Signal<KrnResponsiveDisplay>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnShow, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnShow,
@@ -509,9 +535,15 @@ declare class KrnShow {
   >;
 }
 declare class KrnHide {
+  /** Hides content at this viewport width and above. */
   readonly from: _angular_core.InputSignal<KrnResponsiveBreakpoint>;
+  /** Hides content below this viewport width. */
   readonly until: _angular_core.InputSignal<KrnResponsiveBreakpoint>;
+  /** Restores this display mode while the component is visible. */
   readonly display: _angular_core.InputSignal<KrnResponsiveDisplay>;
+  protected readonly resolvedFrom: _angular_core.Signal<KrnResponsiveBreakpoint>;
+  protected readonly resolvedUntil: _angular_core.Signal<KrnResponsiveBreakpoint>;
+  protected readonly resolvedDisplay: _angular_core.Signal<KrnResponsiveDisplay>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnHide, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnHide,
@@ -536,17 +568,22 @@ declare class KrnResizablePanels {
   private readonly panelChildren;
   private readonly handleChildren;
   private session;
+  /** Sets the panel flow axis: horizontal follows inline, vertical follows block. */
   readonly orientation: _angular_core.InputSignal<KrnLayoutAxis>;
   readonly sizes: _angular_core.ModelSignal<readonly number[]>;
+  /** Sets the keyboard resize increment in percentage points, with a 0.25 minimum. */
   readonly step: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly resizeEnd: _angular_core.OutputEmitterRef<readonly number[]>;
   private readonly resizingState;
   readonly resizing: _angular_core.Signal<boolean>;
+  protected readonly physicalAxis: _angular_core.WritableSignal<'x' | 'y'>;
+  protected readonly resolvedOrientation: _angular_core.Signal<KrnLayoutAxis>;
+  private readonly resolvedStep;
   private readonly normalizedSizes;
   private readonly requestedSizes;
   constructor();
-  startPointerResize(event: PointerEvent, handle: KrnResizeHandle): void;
+  startPointerResize(event: PointerEvent, handle: KrnResizeHandle): boolean;
   movePointerResize(event: PointerEvent): void;
   endPointerResize(event: PointerEvent): void;
   cancelPointerResize(event: PointerEvent): void;
@@ -554,8 +591,11 @@ declare class KrnResizablePanels {
   resetPair(handle: KrnResizeHandle): void;
   private resizePair;
   private finishResize;
+  private pairBounds;
+  private cancelActiveResize;
   private coordinate;
-  private inlineDirection;
+  private axisMetrics;
+  protected refreshAxisMetadata(orientation?: KrnLayoutAxis): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnResizablePanels, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnResizablePanels,
@@ -578,12 +618,21 @@ declare class KrnResizablePanel {
   private readonly managedSize;
   protected readonly managedOrientation: _angular_core.WritableSignal<KrnLayoutAxis>;
   readonly id: _angular_core.InputSignal<string | null>;
+  /** Sets the initial percentage weight when every sibling panel provides a size. */
   readonly size: _angular_core.InputSignalWithTransform<number | null, unknown>;
+  /** Sets the minimum percentage size used while resizing. */
   readonly minSize: _angular_core.InputSignalWithTransform<number, unknown>;
+  /** Sets the maximum percentage size used while resizing. */
   readonly maxSize: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly overflow: _angular_core.InputSignal<'auto' | 'visible' | 'clip'>;
   readonly ariaLabel: _angular_core.InputSignal<string | null>;
+  private readonly resolvedBounds;
+  protected readonly resolvedId: _angular_core.Signal<string | null>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
+  protected readonly resolvedOverflow: _angular_core.Signal<'auto' | 'visible' | 'clip'>;
   protected readonly resolvedSize: _angular_core.Signal<string>;
+  readonly effectiveMinSize: _angular_core.Signal<number>;
+  readonly effectiveMaxSize: _angular_core.Signal<number>;
   setManagedLayout(size: number, orientation: KrnLayoutAxis): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnResizablePanel, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
@@ -609,11 +658,26 @@ declare class KrnResizeHandle {
   private readonly translations;
   private readonly parent;
   protected readonly managedOrientation: _angular_core.WritableSignal<KrnLayoutAxis>;
+  protected readonly managedAriaOrientation: _angular_core.WritableSignal<
+    'horizontal' | 'vertical'
+  >;
+  protected readonly managedPhysicalAxis: _angular_core.WritableSignal<'x' | 'y'>;
+  protected readonly managedMin: _angular_core.WritableSignal<number>;
+  protected readonly managedMax: _angular_core.WritableSignal<number>;
   protected readonly managedValue: _angular_core.WritableSignal<number>;
   protected readonly managedDisabled: _angular_core.WritableSignal<boolean>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly ariaValueText: _angular_core.InputSignal<string | null>;
-  setManagedState(orientation: KrnLayoutAxis, value: number, disabled: boolean): void;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
+  protected readonly resolvedAriaValueText: _angular_core.Signal<string>;
+  setManagedState(
+    orientation: KrnLayoutAxis,
+    ariaOrientation: 'horizontal' | 'vertical',
+    value: number,
+    min: number,
+    max: number,
+    disabled: boolean,
+  ): void;
   protected onPointerDown(event: PointerEvent): void;
   protected onPointerMove(event: PointerEvent): void;
   protected onPointerUp(event: PointerEvent): void;
@@ -637,12 +701,15 @@ declare class KrnResizeHandle {
   >;
 }
 
-type KrnSplitRatio = '1:1' | '1:2' | '2:1' | 'golden' | string;
+type KrnSplitRatio = '1:1' | '1:2' | '2:1' | 'golden' | (string & {});
 declare class KrnSplitLayout {
-  readonly ratio: _angular_core.InputSignal<string>;
+  /** Sets the relative primary-to-secondary track sizes. Accepts presets, `3:2`, or `3fr 2fr`. */
+  readonly ratio: _angular_core.InputSignal<KrnSplitRatio>;
+  /** Sets the space between the two panels using a spacing token, number of pixels, or CSS length. */
   readonly gap: _angular_core.InputSignal<KrnLayoutSpace>;
+  /** Stacks the panels when the split layout's inline size reaches the selected breakpoint. */
   readonly collapseAt: _angular_core.InputSignal<KrnResponsiveBreakpoint>;
-  readonly reverseCollapsed: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Aligns the panels within the split layout's block axis. */
   readonly align: _angular_core.InputSignal<'start' | 'center' | 'end' | 'stretch'>;
   protected readonly resolvedColumns: _angular_core.Signal<string>;
   protected readonly resolvedGap: _angular_core.Signal<string>;
@@ -655,7 +722,6 @@ declare class KrnSplitLayout {
       ratio: { alias: 'ratio'; required: false; isSignal: true };
       gap: { alias: 'gap'; required: false; isSignal: true };
       collapseAt: { alias: 'collapseAt'; required: false; isSignal: true };
-      reverseCollapsed: { alias: 'reverseCollapsed'; required: false; isSignal: true };
       align: { alias: 'align'; required: false; isSignal: true };
     },
     {},

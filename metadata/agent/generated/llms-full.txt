@@ -2753,11 +2753,11 @@ void bootstrapApplication(KernGridAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `columns` | input | `"auto" \| number` | no | `'auto'` | Typed column definitions with stable keys. |
-| `minColumnWidth` | input | `KrnLayoutSpace` | no | `'16rem'` | Upper or lower bound applied to the column width value. |
-| `gap` | input | `KrnLayoutSpace` | no | `'4'` | Logical spacing inserted between adjacent layout children. |
-| `align` | input | `KrnLayoutAlignment` | no | `'stretch'` | Logical cross-axis alignment applied to children by the layout. |
-| `responsive` | input | `boolean` | no | `true` | Enables the component’s documented container-responsive presentation. |
+| `columns` | input | `"auto" \| number` | no | `'auto'` | Fixed column count clamped to 1–12, or `auto` for fluid auto-fit columns. |
+| `minColumnWidth` | input | `KrnLayoutSpace` | no | `'16rem'` | Minimum fluid column width used when columns is `auto`. |
+| `gap` | input | `KrnLayoutSpace` | no | `'4'` | Logical spacing between rows and columns. |
+| `align` | input | `KrnLayoutAlignment` | no | `'stretch'` | Block-axis alignment of items within their grid areas. |
+| `responsive` | input | `boolean` | no | `true` | Collapses fixed columns below the component-owned 36rem container boundary. |
 
 ## Deprecated selectors
 
@@ -2914,11 +2914,10 @@ void bootstrapApplication(KernSplitLayoutAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `ratio` | input | `string` | no | `'1:1'` | Required width-to-height ratio maintained by the layout. |
-| `gap` | input | `KrnLayoutSpace` | no | `'6'` | Logical spacing inserted between adjacent layout children. |
-| `collapseAt` | input | `KrnResponsiveBreakpoint` | no | `'md'` | Controls whether the component applies the collapse at behavior. |
-| `reverseCollapsed` | input | `boolean` | no | `false` | Collapses the logical end panel instead of the logical start panel. |
-| `align` | input | `"center" \| "end" \| "start" \| "stretch"` | no | `'start'` | Logical cross-axis alignment applied to children by the layout. |
+| `ratio` | input | `KrnSplitRatio` | no | `'1:1'` | Sets the relative primary-to-secondary track sizes. Accepts presets, `3:2`, or `3fr 2fr`. |
+| `gap` | input | `KrnLayoutSpace` | no | `'6'` | Sets the space between the two panels using a spacing token, number of pixels, or CSS length. |
+| `collapseAt` | input | `KrnResponsiveBreakpoint` | no | `'md'` | Stacks the panels when the split layout's inline size reaches the selected breakpoint. |
+| `align` | input | `"center" \| "end" \| "start" \| "stretch"` | no | `'start'` | Aligns the panels within the split layout's block axis. |
 
 ## Deprecated selectors
 
@@ -2966,7 +2965,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/split-layout`
 
 Scenarios: `default`.
-Public API coverage: 5/5
+Public API coverage: 4/4
 directly controlled; 0 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -2975,7 +2974,6 @@ component inputs or models.
 
 | Argument | Control | Default | Test value | Binding | Description |
 | --- | --- | --- | --- | --- | --- |
-| `reverseCollapsed` | boolean | `false` | `true` | input `reverseCollapsed` (property) | Reverses pane order after the layout collapses. |
 | `ratio` | select | `"1:2"` | `"1:1"` | input `ratio` (property) | Changes the primary-to-secondary pane ratio. |
 | `gap` | text | `"4"` | `"20rem"` | input `gap` (property) | Sets the separation between panes. |
 | `align` | select | `"start"` | `"center"` | input `align` (property) | Configures the component align contract. |
@@ -3369,9 +3367,9 @@ void bootstrapApplication(KernDividerAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `orientation` | input | `"horizontal" \| "vertical"` | no | `'horizontal'` | Defines the logical axis used by layout and keyboard navigation. |
-| `inset` | input | `KrnLayoutSpace` | no | `'0'` | Aligns the divider or content edge with surrounding inset content. |
-| `label` | input | `string \| null` | no | `null` | Visible text that names the control or data value. |
+| `orientation` | input | `"horizontal" \| "vertical"` | no | `'horizontal'` | Sets the separator and visual line orientation. Invalid runtime values fall back to horizontal. |
+| `inset` | input | `KrnLayoutSpace` | no | `'0'` | Insets both ends of the divider along its length using a spacing token, pixels, or CSS length. |
+| `label` | input | `string \| null` | no | `null` | Adds a visible label and uses its trimmed text as the separator's accessible name. |
 
 ## Deprecated selectors
 
@@ -3518,8 +3516,8 @@ void bootstrapApplication(KernAspectRatioAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `ratio` | input | `number \| string` | no | `16 / 9` | Required width-to-height ratio maintained by the layout. |
-| `fit` | input | `"contain" \| "cover" \| "fill" \| "none"` | no | `'cover'` | Media fitting strategy used when intrinsic and container ratios differ. |
+| `ratio` | input | `number \| string` | no | `16 / 9` | Sets a positive width-to-height ratio as a number, `16 / 9`, or `16:9`. |
+| `fit` | input | `"contain" \| "cover" \| "fill" \| "none"` | no | `'cover'` | Controls how direct projected media fills the ratio box. Invalid runtime values use cover. |
 
 ## Deprecated selectors
 
@@ -3675,12 +3673,12 @@ void bootstrapApplication(KernScrollAreaAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `axis` | input | `"both" \| "horizontal" \| "vertical"` | no | `'vertical'` | Chart axis represented by the data series and keyboard movement. |
+| `axis` | input | `"both" \| "horizontal" \| "vertical"` | no | `'vertical'` | Selects the scrollable axis. Invalid runtime values fall back to vertical. |
 | `maxBlockSize` | input | `KrnLayoutSpace` | no | `'100%'` | Upper or lower bound applied to the block size value. |
 | `maxInlineSize` | input | `KrnLayoutSpace` | no | `'100%'` | Upper or lower bound applied to the inline size value. |
-| `keyboardAccessible` | input | `boolean` | no | `true` | Confirms that the custom rendered action participates in keyboard interaction. |
-| `ariaLabel` | input | `string \| null` | no | `this.translations.layout.scrollableContent` | Accessible name used when visible content is not sufficient. |
-| `scrollbar` | input | `"auto" \| "hidden" \| "stable"` | no | `'auto'` | Controls whether the scroll area uses native or visually hidden scrollbars. |
+| `keyboardAccessible` | input | `boolean` | no | `true` | Keeps the native viewport keyboard-scrollable when enabled. |
+| `ariaLabel` | input | `string \| null` | no | `this.translations.layout.scrollableContent` | Names the scrollable region. Blank values omit the region role and accessible name. |
+| `scrollbar` | input | `"auto" \| "hidden" \| "stable"` | no | `'auto'` | Controls native scrollbar visibility and gutter allocation. |
 
 ## Deprecated selectors
 
@@ -3835,9 +3833,9 @@ void bootstrapApplication(KernResponsiveShowHideAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `from` | input | `KrnResponsiveBreakpoint` | no | `'none'` | Starting boundary of the represented range or interval. |
-| `until` | input | `KrnResponsiveBreakpoint` | no | `'none'` | Ending boundary of the represented range or interval. |
-| `display` | input | `KrnResponsiveDisplay` | no | `'block'` | Named presentation strategy used to render the supplied value. |
+| `from` | input | `KrnResponsiveBreakpoint` | no | `'none'` | Shows content at this viewport width and above. |
+| `until` | input | `KrnResponsiveBreakpoint` | no | `'none'` | Shows content below this viewport width. |
+| `display` | input | `KrnResponsiveDisplay` | no | `'block'` | Restores this display mode while the component is visible. |
 
 ## Deprecated selectors
 
@@ -3992,9 +3990,9 @@ void bootstrapApplication(KernResizablePanelsAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `orientation` | input | `KrnLayoutAxis` | no | `'horizontal'` | Defines the logical axis used by layout and keyboard navigation. |
+| `orientation` | input | `KrnLayoutAxis` | no | `'horizontal'` | Sets the panel flow axis: horizontal follows inline, vertical follows block. |
 | `sizes` | model | `ReadonlyArray<number>` | no | `[]` | Controlled sizes state with a matching Angular model-change output. |
-| `step` | input | `number` | no | `2` | Increment applied by keyboard and pointer value adjustments. |
+| `step` | input | `number` | no | `2` | Sets the keyboard resize increment in percentage points, with a 0.25 minimum. |
 | `disabled` | input | `boolean` | no | `false` | Prevents user interaction and participates in the disabled-state contract. |
 | `resizeEnd` | output | `ReadonlyArray<number>` | no | `undefined` | Notifies the consumer after the resize end interaction completes. |
 

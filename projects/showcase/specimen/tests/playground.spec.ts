@@ -576,8 +576,8 @@ describe('KERN playground registry', () => {
 
   it('classifies every public input/model as one real control or one exact exclusion', () => {
     expect(KERN_PLAYGROUND_API_COVERAGE).toEqual({
-      publicInputsAndModels: 1023,
-      controlled: 645,
+      publicInputsAndModels: 1022,
+      controlled: 644,
       excluded: 378,
       unclassified: 0,
     });
