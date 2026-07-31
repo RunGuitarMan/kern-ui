@@ -9,6 +9,7 @@ import { KrnDrawer } from '@kern-ui/angular/kit';
 import { KrnLoginForm, KrnMultiStepForm, KrnProfileForm } from './form-patterns';
 import {
   KrnCrudToolbar,
+  KrnDashboardWidget,
   KrnFilterBar,
   KrnGlobalSearch,
   KrnMasterDetailLayout,
@@ -311,6 +312,35 @@ describe('Kern product patterns', () => {
     expect(componentStyles).toMatch(
       /container-type: inline-size;[\s\S]*?@container \(max-width: 42rem\) \{[\s\S]*?\.layout[^{]*\{\s*grid-template-columns: 1fr;/,
     );
+  });
+
+  it('provides a labelled, height-filling dashboard widget without an empty footer gap', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnDashboardWidget] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnDashboardWidget);
+    fixture.componentRef.setInput('heading', '  Annual recurring revenue  ');
+    fixture.componentRef.setInput('eyebrow', '  Portfolio  ');
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.getAttribute('role')).toBe('region');
+    expect(element.getAttribute('aria-label')).toBe('Annual recurring revenue');
+    expect(element.querySelector('h3')?.textContent?.trim()).toBe('Annual recurring revenue');
+    expect(element.querySelector('.eyebrow')?.textContent?.trim()).toBe('Portfolio');
+    expect(element.querySelector('.footer')?.matches(':empty')).toBe(true);
+
+    const componentStyles = (
+      KrnDashboardWidget as unknown as { ɵcmp: { styles: readonly string[] } }
+    ).ɵcmp.styles.join('\n');
+    expect(componentStyles).toMatch(/\[hidden\][^{]*\{\s*display: none;/);
+    expect(componentStyles).toMatch(/\.footer[^{]*\{[^}]*margin-block-start: auto;/);
+    expect(componentStyles).toContain('@media (forced-colors: active)');
+  });
+
+  it('rejects a blank dashboard-widget heading', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnDashboardWidget] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnDashboardWidget);
+    fixture.componentRef.setInput('heading', '   ');
+    expect(() => fixture.detectChanges()).toThrowError(/heading must be a non-empty string/);
   });
 
   it('opens the user menu, moves focus to its first action, and closes on selection', async () => {

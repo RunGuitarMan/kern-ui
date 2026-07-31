@@ -71,6 +71,8 @@ contract or upgrade decision.
   selection announcements, normalized labels, and wrap-safe high-contrast states.
 - Fixed Master Detail Layout container responsiveness, replaced nested main landmarks with labelled
   detail regions, and normalized pane labels.
+- Strengthened Dashboard Widget with non-empty normalized headings, labelled region semantics,
+  bottom-aligned optional footers, and resilient narrow/high-contrast layout behavior.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
   toast interaction timing.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned
