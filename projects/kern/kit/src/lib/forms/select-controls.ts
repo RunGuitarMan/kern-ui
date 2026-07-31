@@ -1,4 +1,5 @@
 import {
+  afterRenderEffect,
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
@@ -11,6 +12,7 @@ import {
   model,
   numberAttribute,
   output,
+  Renderer2,
   signal,
   type ElementRef,
   type TemplateRef,
@@ -879,7 +881,28 @@ export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
   }
 }
 
-const COMBOBOX_IMPORTS = [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option];
+@Directive({
+  selector: 'input[krnEditableComboboxSemantics]',
+  host: {
+    '[attr.aria-autocomplete]': 'mode()',
+    '[attr.aria-expanded]': 'expanded()',
+  },
+})
+export class KrnEditableComboboxSemantics {
+  readonly mode = input.required<KrnAutocompleteMode>({
+    alias: 'krnEditableComboboxSemantics',
+  });
+  readonly expanded = input.required<boolean>({ alias: 'krnComboboxSemanticsExpanded' });
+}
+
+const COMBOBOX_IMPORTS = [
+  Combobox,
+  ComboboxPopup,
+  ComboboxWidget,
+  Listbox,
+  Option,
+  KrnEditableComboboxSemantics,
+];
 
 /**
  * Base contract for editable KERN combobox implementations.
@@ -893,15 +916,19 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('comboInput');
   private readonly destroyRef = inject(DestroyRef);
   private readonly locale = inject(KRN_LOCALE);
+  private readonly renderer = inject(Renderer2);
   private readonly translations = inject(KRN_TRANSLATIONS);
+  protected readonly inputFocused = signal(false);
   private readonly queryEditing = signal(false);
+  private inlineRenderRevision = 0;
   private pendingEnterClose: ReturnType<typeof setTimeout> | undefined;
+  private renderedAutocompleteMode: KrnAutocompleteMode | undefined;
   protected readonly defaultAutocompleteMode: KrnAutocompleteMode = 'list';
   protected readonly defaultAllowCustomValue: boolean = false;
-  protected readonly autocompleteModeInput = input<KrnAutocompleteMode | undefined>(undefined, {
+  readonly autocompleteModeInput = input<KrnAutocompleteMode | undefined>(undefined, {
     alias: 'autocompleteMode',
   });
-  protected readonly allowCustomValueInput = input<boolean | undefined, unknown>(undefined, {
+  readonly allowCustomValueInput = input<boolean | undefined, unknown>(undefined, {
     alias: 'allowCustomValue',
     transform: optionalBooleanAttribute,
   });
@@ -932,6 +959,10 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   protected readonly autocompleteMode = computed(
     () => this.autocompleteModeInput() ?? this.defaultAutocompleteMode,
   );
+  protected readonly hasAutocompletePopup = computed(() => {
+    const mode = this.autocompleteMode();
+    return mode === 'list' || mode === 'both';
+  });
   protected readonly allowCustomValue = computed(
     () => this.allowCustomValueInput() ?? this.defaultAllowCustomValue,
   );
@@ -978,7 +1009,7 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
       this.normalizeForSearch(`${option.label} ${option.description ?? ''}`).includes(query),
     );
   });
-  protected readonly inlineSuggestion = computed(() => {
+  private readonly inlineSuggestedOption = computed(() => {
     if (this.optionsState() !== 'ready') {
       return undefined;
     }
@@ -987,11 +1018,16 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
       return undefined;
     }
 
-    const query = this.normalizeForSearch(this.query().trim());
-    return this.options().find(
+    const rawQuery = this.query();
+    if (!rawQuery.trim()) {
+      return undefined;
+    }
+    const query = this.normalizeForSearch(rawQuery);
+    return this.filteredOptions().find(
       (option) => !option.disabled && this.normalizeForSearch(option.label).startsWith(query),
-    )?.label;
+    );
   });
+  protected readonly inlineSuggestion = computed(() => this.inlineSuggestedOption()?.label);
   protected readonly selectedValues = computed(() => {
     const value = this.controlValue();
     return this.options().some((option) => option.value === value) ? [value] : [];
@@ -1011,16 +1047,64 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
       this.cancelPendingEnterClose();
     });
     effect(() => {
-      if (this.open() && (this.isDisabled() || this.isReadOnly())) {
+      if (
+        this.open() &&
+        (this.isDisabled() || this.isReadOnly() || !this.hasAutocompletePopup())
+      ) {
         this.setOpen(false);
       }
     });
     effect(() => {
       const value = this.controlValue();
       const option = this.options().find((item) => item.value === value);
-      if ((!this.queryEditing() || !this.open()) && option && this.query() !== option.label) {
+      const restoreConstrainedPopup =
+        !this.open() && this.hasAutocompletePopup() && !this.allowCustomValue();
+      if (
+        (!this.queryEditing() || restoreConstrainedPopup) &&
+        option &&
+        this.query() !== option.label
+      ) {
+        this.queryEditing.set(false);
         this.setQuery(option.label);
       }
+    });
+    afterRenderEffect({
+      write: () => {
+        const input = this.inputElement()?.nativeElement;
+        const mode = this.autocompleteMode();
+        const hasPopup = this.hasAutocompletePopup();
+        const suggestion = this.inlineSuggestion();
+        const expanded = this.open() && hasPopup;
+        if (!input) {
+          return;
+        }
+        this.renderer.setAttribute(input, 'aria-autocomplete', mode);
+        this.renderer.setAttribute(input, 'aria-expanded', String(expanded));
+        const leavingInline = this.renderedAutocompleteMode === 'inline' && mode !== 'inline';
+        this.renderedAutocompleteMode = mode;
+        if (mode !== 'inline' && !leavingInline) {
+          this.inlineRenderRevision += 1;
+          return;
+        }
+        const query = this.query();
+        const canSuggest =
+          mode === 'inline' &&
+          this.inputFocused() &&
+          !this.isDisabled() &&
+          !this.isReadOnly() &&
+          suggestion !== undefined &&
+          this.normalizeForSearch(suggestion).startsWith(this.normalizeForSearch(query));
+        const revision = ++this.inlineRenderRevision;
+        queueMicrotask(() => {
+          if (this.destroyRef.destroyed || revision !== this.inlineRenderRevision) {
+            return;
+          }
+          this.renderer.setProperty(input, 'value', canSuggest ? suggestion : query);
+          if (canSuggest) {
+            input.setSelectionRange(query.length, suggestion.length);
+          }
+        });
+      },
     });
   }
 
@@ -1046,9 +1130,8 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     this.queryEditing.set(true);
     this.setQuery(query);
     this.queryChange.emit(query);
-    this.open.set(true);
-    if (this.allowCustomValue()) {
-      this.commitValue(query);
+    this.open.set(this.hasAutocompletePopup());
+    if (this.allowCustomValue() && this.commitUserValue(query)) {
       this.valueChange.emit(query);
     }
   }
@@ -1075,6 +1158,9 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   }
 
   protected commitQuery(event?: Event): void {
+    if (event && this.autocompleteMode() === 'inline' && this.acceptInlineSuggestion()) {
+      return;
+    }
     if (event && this.open()) {
       event.preventDefault();
       this.cancelPendingEnterClose();
@@ -1135,7 +1221,9 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
 
   protected setOpen(open: boolean): void {
     this.cancelPendingEnterClose();
-    const next = open && !this.isDisabled() && !this.isReadOnly();
+    const next =
+      open && this.hasAutocompletePopup() && !this.isDisabled() && !this.isReadOnly();
+    this.comboboxDirective()?.expanded.set(next);
     if (!next && !this.allowCustomValue()) {
       this.restoreCommittedQuery();
     } else if (!next) {
@@ -1162,6 +1250,20 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   protected toggleOptions(input: HTMLInputElement): void {
     this.setOpen(!this.open());
     input.focus();
+  }
+
+  protected acceptInlineCompletion(input: HTMLInputElement): void {
+    const option = this.inlineSuggestedOption();
+    const end = option?.label.length;
+    if (
+      option &&
+      this.query().length < option.label.length &&
+      input.value === option.label &&
+      input.selectionStart === end &&
+      input.selectionEnd === end
+    ) {
+      this.acceptInlineSuggestion();
+    }
   }
 
   protected closeSelectedOption(option: KrnSelectOption<string>): void {
@@ -1193,6 +1295,15 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
       clearTimeout(this.pendingEnterClose);
       this.pendingEnterClose = undefined;
     }
+  }
+
+  private acceptInlineSuggestion(): boolean {
+    const option = this.inlineSuggestedOption();
+    if (!option || this.isDisabled() || this.isReadOnly()) {
+      return false;
+    }
+    this.selectValues([option.value]);
+    return true;
   }
 
   focus(options?: FocusOptions): void {

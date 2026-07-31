@@ -107,6 +107,9 @@ contract or upgrade decision.
   enabled-option commits, disabled exact-match protection, non-interactive popup invariants,
   form-safe Enter handling, composable external/Form Field ARIA references, native input naming
   and tab order, and public focus, blur, and selection methods.
+- Made Autocomplete modes behavioral rather than decorative, with popup-free inline/none modes,
+  stable ARIA autocomplete semantics, effective-filter inline completion, preserved free-text
+  editing, and duplicate-free custom-value commits.
 
 ### Deprecated
 

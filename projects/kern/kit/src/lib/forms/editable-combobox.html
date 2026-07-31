@@ -9,6 +9,8 @@
       #comboInput
       #combo="ngCombobox"
       ngCombobox
+      [krnEditableComboboxSemantics]="autocompleteMode()"
+      [krnComboboxSemanticsExpanded]="open() && hasAutocompletePopup()"
       class="krn-input"
       type="text"
       role="combobox"
@@ -24,7 +26,7 @@
       [attr.disabled]="isDisabled() ? '' : null"
       [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
       [disabled]="isDisabled()"
-      [expanded]="open()"
+      [expanded]="open() && hasAutocompletePopup()"
       [id]="a11y.id()"
       [inlineSuggestion]="inlineSuggestion()"
       [name]="name()"
@@ -34,22 +36,28 @@
       [tabindex]="isDisabled() ? -1 : tabIndex()"
       [value]="query()"
       (expandedChange)="setOpen($event)"
+      (blur)="inputFocused.set(false)"
       (click)="openOptions()"
+      (focus)="inputFocused.set(true)"
+      (keyup.arrowright)="acceptInlineCompletion(comboInput)"
+      (keyup.end)="acceptInlineCompletion(comboInput)"
       (valueChange)="updateQuery($event)"
       (keydown.enter)="commitQuery($event)"
     />
-    <button
-      class="krn-combobox-toggle"
-      type="button"
-      [attr.aria-expanded]="open()"
-      [attr.aria-label]="toggleLabel()"
-      [disabled]="isDisabled() || isReadOnly()"
-      [tabindex]="-1"
-      (click)="toggleOptions(comboInput)"
-      (pointerdown)="$event.preventDefault()"
-    >
-      <span class="krn-select-chevron"></span>
-    </button>
+    @if (hasAutocompletePopup()) {
+      <button
+        class="krn-combobox-toggle"
+        type="button"
+        [attr.aria-expanded]="open()"
+        [attr.aria-label]="toggleLabel()"
+        [disabled]="isDisabled() || isReadOnly()"
+        [tabindex]="-1"
+        (click)="toggleOptions(comboInput)"
+        (pointerdown)="$event.preventDefault()"
+      >
+        <span class="krn-select-chevron"></span>
+      </button>
+    }
   </span>
   @if (open() && optionsState() !== 'ready') {
     <span
@@ -62,65 +70,67 @@
     </span>
   }
 
-  <ng-template ngComboboxPopup popupType="listbox" [combobox]="combo">
-    <ul
-      #listbox="ngListbox"
-      ngComboboxWidget
-      ngListbox
-      class="krn-listbox"
-      focusMode="activedescendant"
-      selectionMode="explicit"
-      [activeDescendant]="listbox.activeDescendant()"
-      [attr.aria-busy]="optionsState() === 'loading' ? 'true' : null"
-      [attr.aria-invalid]="optionsState() === 'error' ? 'true' : null"
-      [disabled]="isDisabled()"
-      [value]="selectedValues()"
-      (valueChange)="selectValues($event)"
-    >
-      @if (optionsState() === 'ready') {
-        @for (option of filteredOptions(); track option.value) {
-          <li
-            ngOption
-            class="krn-option"
-            [disabled]="option.disabled"
-            [label]="option.label"
-            [value]="option.value"
-            (click)="closeSelectedOption(option)"
-          >
-            <span class="krn-option__copy">
-              <span>{{ option.label }}</span>
-              @if (option.description) {
-                <span class="krn-option__description">
-                  {{ option.description }}
-                </span>
+  @if (hasAutocompletePopup()) {
+    <ng-template ngComboboxPopup popupType="listbox" [combobox]="combo">
+      <ul
+        #listbox="ngListbox"
+        ngComboboxWidget
+        ngListbox
+        class="krn-listbox"
+        focusMode="activedescendant"
+        selectionMode="explicit"
+        [activeDescendant]="listbox.activeDescendant()"
+        [attr.aria-busy]="optionsState() === 'loading' ? 'true' : null"
+        [attr.aria-invalid]="optionsState() === 'error' ? 'true' : null"
+        [disabled]="isDisabled()"
+        [value]="selectedValues()"
+        (valueChange)="selectValues($event)"
+      >
+        @if (optionsState() === 'ready') {
+          @for (option of filteredOptions(); track option.value) {
+            <li
+              ngOption
+              class="krn-option"
+              [disabled]="option.disabled"
+              [label]="option.label"
+              [value]="option.value"
+              (click)="closeSelectedOption(option)"
+            >
+              <span class="krn-option__copy">
+                <span>{{ option.label }}</span>
+                @if (option.description) {
+                  <span class="krn-option__description">
+                    {{ option.description }}
+                  </span>
+                }
+              </span>
+              @if (controlValue() === option.value) {
+                <span class="krn-option__check" aria-hidden="true">✓</span>
               }
-            </span>
-            @if (controlValue() === option.value) {
-              <span class="krn-option__check" aria-hidden="true">✓</span>
-            }
-          </li>
-        } @empty {
+            </li>
+          } @empty {
+            <li
+              class="krn-option"
+              role="option"
+              aria-disabled="true"
+              aria-selected="false"
+              data-options-state="empty"
+            >
+              {{ emptyText() }}
+            </li>
+          }
+        } @else {
           <li
             class="krn-option"
             role="option"
             aria-disabled="true"
             aria-selected="false"
-            data-options-state="empty"
+            [attr.data-options-state]="optionsState()"
           >
-            {{ emptyText() }}
+            {{ optionsState() === 'loading' ? loadingText() : errorText() }}
           </li>
         }
-      } @else {
-        <li
-          class="krn-option"
-          role="option"
-          aria-disabled="true"
-          aria-selected="false"
-          [attr.data-options-state]="optionsState()"
-        >
-          {{ optionsState() === 'loading' ? loadingText() : errorText() }}
-        </li>
-      }
-    </ul>
-  </ng-template>
+      </ul>
+    </ng-template>
+  }
 </div>

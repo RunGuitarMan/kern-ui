@@ -268,4 +268,26 @@ describe('KrnCombobox', () => {
     fixture.destroy();
     expect(() => vi.runAllTimers()).not.toThrow();
   });
+
+  it('restores the committed query when a controlled popup closes', async () => {
+    const fixture = TestBed.createComponent(ControlledOpenComboboxHost);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const host = fixture.componentInstance;
+    const combobox = host.combobox();
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    combobox.writeValue('alpha');
+    host.open.set(true);
+    fixture.detectChanges();
+
+    input.value = 'B';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await fixture.whenStable();
+    expect(input.value).toBe('B');
+
+    host.open.set(false);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(input.value).toBe('Alpha');
+  });
 });
