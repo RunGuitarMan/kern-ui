@@ -91,7 +91,7 @@ class AspectRatioHost {
   readonly fit = signal<'cover' | 'contain' | 'fill' | 'none'>('contain');
 }
 
-function pointerEvent(type: string, clientX: number, clientY = 0): PointerEvent {
+function pointerEvent(type: string, clientX: number, clientY = 0, isPrimary = true): PointerEvent {
   const event = new MouseEvent(type, {
     bubbles: true,
     button: 0,
@@ -100,7 +100,7 @@ function pointerEvent(type: string, clientX: number, clientY = 0): PointerEvent 
     clientY,
   });
   Object.defineProperties(event, {
-    isPrimary: { value: true },
+    isPrimary: { value: isPrimary },
     pointerId: { value: 7 },
     pointerType: { value: 'mouse' },
   });
@@ -760,6 +760,26 @@ describe('KrnResizablePanels', () => {
     const handle = fixture.nativeElement.querySelector('krn-resize-handle') as HTMLElement;
     expect(handle.getAttribute('aria-disabled')).toBe('true');
     expect(handle.getAttribute('tabindex')).toBe('-1');
+    expect(getComputedStyle(handle).touchAction).toBe('auto');
+  });
+
+  it('keeps a standalone resize handle inert and accessibly named', () => {
+    const handleFixture = TestBed.createComponent(KrnResizeHandle);
+    handleFixture.componentRef.setInput('ariaLabel', '   ');
+    handleFixture.componentRef.setInput('ariaValueText', '   ');
+    handleFixture.detectChanges();
+    const handle = handleFixture.nativeElement as HTMLElement;
+
+    expect(handle.getAttribute('role')).toBe('separator');
+    expect(handle.getAttribute('tabindex')).toBe('-1');
+    expect(handle.getAttribute('aria-disabled')).toBe('true');
+    expect(handle.getAttribute('aria-label')?.trim().length).toBeGreaterThan(0);
+    expect(handle.getAttribute('aria-valuetext')).toBe('50%');
+    expect(getComputedStyle(handle).boxSizing).toBe('border-box');
+    expect(getComputedStyle(handle).touchAction).toBe('auto');
+
+    handle.hidden = true;
+    expect(getComputedStyle(handle).display).toBe('none');
   });
 
   it('normalizes a labelled panel host and its percentage constraints', () => {
@@ -941,10 +961,11 @@ describe('KrnResizablePanels', () => {
     const groupDebug = fixture.debugElement.query(By.directive(KrnResizablePanels));
     const group = groupDebug.componentInstance as KrnResizablePanels;
     const handle = fixture.nativeElement.querySelector('krn-resize-handle') as HTMLElement;
+    const setPointerCapture = vi.fn();
     Object.defineProperties(handle, {
       hasPointerCapture: { value: vi.fn(() => true) },
       releasePointerCapture: { value: vi.fn() },
-      setPointerCapture: { value: vi.fn() },
+      setPointerCapture: { value: setPointerCapture },
     });
     vi.spyOn(groupDebug.nativeElement as HTMLElement, 'getBoundingClientRect').mockReturnValue({
       bottom: 100,
@@ -957,6 +978,10 @@ describe('KrnResizablePanels', () => {
       y: 0,
       toJSON: () => ({}),
     });
+
+    handle.dispatchEvent(pointerEvent('pointerdown', 250, 0, false));
+    expect(setPointerCapture).not.toHaveBeenCalled();
+    expect(group.resizing()).toBe(false);
 
     handle.dispatchEvent(pointerEvent('pointerdown', 250));
     handle.dispatchEvent(pointerEvent('pointermove', 300));
@@ -981,5 +1006,6 @@ describe('KrnResizablePanels', () => {
     TestBed.tick();
     expect(fixture.componentInstance.sizes()).toEqual([50, 50]);
     expect(group.resizing()).toBe(false);
+    expect(setPointerCapture).toHaveBeenCalledTimes(3);
   });
 });

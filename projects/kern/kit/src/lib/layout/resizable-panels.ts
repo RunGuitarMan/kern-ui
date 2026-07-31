@@ -186,20 +186,20 @@ export class KrnResizablePanels {
     });
   }
 
-  startPointerResize(event: PointerEvent, handle: KrnResizeHandle): void {
+  startPointerResize(event: PointerEvent, handle: KrnResizeHandle): boolean {
     if (
       this.session ||
       this.disabled() ||
       !event.isPrimary ||
       (event.button !== 0 && event.pointerType !== 'touch')
     ) {
-      return;
+      return false;
     }
 
     const handleIndex = this.handleChildren().indexOf(handle);
     const sizes = this.normalizedSizes();
     if (handleIndex < 0 || handleIndex >= this.panelChildren().length - 1) {
-      return;
+      return false;
     }
 
     const orientation = this.resolvedOrientation();
@@ -208,7 +208,7 @@ export class KrnResizablePanels {
     const rect = this.host.nativeElement.getBoundingClientRect();
     const trackSize = axis === 'x' ? rect.width : rect.height;
     if (trackSize <= 0) {
-      return;
+      return false;
     }
 
     this.session = {
@@ -224,6 +224,7 @@ export class KrnResizablePanels {
     };
     this.resizingState.set(true);
     event.preventDefault();
+    return true;
   }
 
   movePointerResize(event: PointerEvent): void {
@@ -511,8 +512,8 @@ export class KrnResizablePanel {
     '[attr.aria-valuemin]': 'managedMin()',
     '[attr.aria-valuemax]': 'managedMax()',
     '[attr.aria-valuenow]': 'managedValue()',
-    '[attr.aria-valuetext]': 'ariaValueText() ?? managedValue() + "%"',
-    '[attr.aria-label]': 'ariaLabel()',
+    '[attr.aria-valuetext]': 'resolvedAriaValueText()',
+    '[attr.aria-label]': 'resolvedAriaLabel()',
     '[attr.aria-disabled]': 'managedDisabled() ? "true" : null',
     '[attr.data-orientation]': 'managedOrientation()',
     '[attr.data-resize-axis]': 'managedPhysicalAxis()',
@@ -530,11 +531,16 @@ export class KrnResizablePanel {
       position: relative;
       z-index: 1;
       display: grid;
+      box-sizing: border-box;
       flex: 0 0 auto;
       place-items: center;
       color: var(--krn-color-border-strong);
       outline: none;
       touch-action: none;
+    }
+
+    :host([hidden]) {
+      display: none;
     }
 
     :host([data-orientation='horizontal']) {
@@ -608,6 +614,7 @@ export class KrnResizablePanel {
     :host(.krn-resize-handle--disabled) {
       cursor: default;
       opacity: var(--krn-opacity-disabled);
+      touch-action: auto;
     }
 
     @media (pointer: coarse) {
@@ -642,10 +649,16 @@ export class KrnResizeHandle {
   protected readonly managedMin = signal(0);
   protected readonly managedMax = signal(100);
   protected readonly managedValue = signal(50);
-  protected readonly managedDisabled = signal(false);
+  protected readonly managedDisabled = signal(!this.parent);
 
   readonly ariaLabel = input(this.translations.layout.resizeAdjacentPanels);
   readonly ariaValueText = input<string | null>(null);
+  protected readonly resolvedAriaLabel = computed(
+    () => this.ariaLabel()?.trim() || this.translations.layout.resizeAdjacentPanels.trim() || null,
+  );
+  protected readonly resolvedAriaValueText = computed(
+    () => this.ariaValueText()?.trim() || `${this.managedValue()}%`,
+  );
 
   setManagedState(
     orientation: KrnLayoutAxis,
@@ -668,8 +681,15 @@ export class KrnResizeHandle {
     if (!this.parent || this.managedDisabled()) {
       return;
     }
-    (event.currentTarget as HTMLElement | null)?.setPointerCapture(event.pointerId);
-    this.parent.startPointerResize(event, this);
+    if (!this.parent.startPointerResize(event, this)) {
+      return;
+    }
+    const target = event.currentTarget as HTMLElement | null;
+    try {
+      target?.setPointerCapture(event.pointerId);
+    } catch {
+      this.parent.cancelPointerResize(event);
+    }
   }
 
   protected onPointerMove(event: PointerEvent): void {
