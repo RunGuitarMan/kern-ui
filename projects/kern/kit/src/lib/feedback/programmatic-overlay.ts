@@ -96,7 +96,7 @@ export type KrnOverlayConfig<Data = undefined> = {
   readonly initialFocus?: KrnOverlayInitialFocus;
   /** `undefined` captures the current/pointer origin; `false` disables restoration. */
   readonly restoreFocus?: HTMLElement | false;
-  /** Logical Angular owner for the host and content portal. Required for templates. */
+  /** Logical Angular owner for content. Required for templates. */
   readonly viewContainerRef?: ViewContainerRef;
   /** Explicit parent injector for content. Wins over `viewContainerRef.injector`. */
   readonly injector?: Injector;
@@ -408,11 +408,7 @@ export class KrnOverlayService {
     let record: ActiveOverlayRecord | null = null;
     try {
       hostRef = overlayRef.attach(
-        new ComponentPortal(
-          KrnProgrammaticOverlayHost,
-          config.viewContainerRef ?? null,
-          hostInjector,
-        ),
+        new ComponentPortal(KrnProgrammaticOverlayHost, null, hostInjector),
       );
       hostRef.changeDetectorRef.detectChanges();
       record = {

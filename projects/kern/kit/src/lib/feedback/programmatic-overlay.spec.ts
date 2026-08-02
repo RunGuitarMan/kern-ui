@@ -287,22 +287,36 @@ describe('KrnOverlayService', () => {
   });
 
   it('settles as destroyed when its logical view owner is destroyed', async () => {
+    const opener = document.createElement('button');
+    document.body.append(opener);
+    const focusSpy = vi.spyOn(opener, 'focus');
+    opener.focus();
     const owner = TestBed.createComponent(ViewOwner);
+    let ownerDestroyed = false;
     owner.detectChanges();
     const service = TestBed.inject(KrnOverlayService);
     const ref = service.open(PassiveOverlayContent, {
+      restoreFocus: opener,
       title: 'Owned overlay',
       viewContainerRef: owner.componentInstance.viewContainerRef,
     });
     const outcomes: Array<KrnOverlayOutcome<void>> = [];
     ref.closed.subscribe((outcome) => outcomes.push(outcome));
 
-    await stabilize();
-    owner.destroy();
-    await stabilize();
+    try {
+      await stabilize();
+      focusSpy.mockClear();
+      owner.destroy();
+      ownerDestroyed = true;
+      await stabilize();
 
-    expect(outcomes).toEqual([{ kind: 'dismissed', reason: 'destroy' }]);
-    expect(document.querySelector('krn-programmatic-overlay-host')).toBeNull();
+      expect(outcomes).toEqual([{ kind: 'dismissed', reason: 'destroy' }]);
+      expect(document.querySelector('krn-programmatic-overlay-host')).toBeNull();
+      expect(focusSpy).not.toHaveBeenCalled();
+    } finally {
+      if (!ownerDestroyed) owner.destroy();
+      opener.remove();
+    }
   });
 
   it('waits for the modal surface after only its content view is destroyed', async () => {
