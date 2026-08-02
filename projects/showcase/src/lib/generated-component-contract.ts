@@ -428,7 +428,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-accordion': {
     className: 'KrnAccordion',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/disclosure.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -968,7 +968,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-avatar': {
     className: 'KrnAvatar',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/avatar.ts',
     api: [
       {
         name: 'alt',
@@ -1031,7 +1031,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-avatar-group': {
     className: 'KrnAvatarGroup',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/avatar.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -1085,7 +1085,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-badge': {
     className: 'KrnBadge',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/badge.ts',
     api: [
       {
         name: 'status',
@@ -1495,7 +1495,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-bulk-actions': {
     className: 'KrnCrudToolbar',
     kind: 'component',
-    source: 'projects/kern/patterns/src/lib/patterns/product-patterns.ts',
+    source: 'projects/kern/patterns/src/lib/patterns/crud-toolbar.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -1660,7 +1660,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-card': {
     className: 'KrnCard',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/card.ts',
     api: [
       {
         name: 'eyebrow',
@@ -2096,7 +2096,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-chip': {
     className: 'KrnChip',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/badge.ts',
     api: [
       {
         name: 'accessibleLabel',
@@ -2253,7 +2253,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-code-block': {
     className: 'KrnCodeBlock',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/code-block.ts',
     api: [
       {
         name: 'code',
@@ -3030,7 +3030,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-crud-toolbar': {
     className: 'KrnCrudToolbar',
     kind: 'component',
-    source: 'projects/kern/patterns/src/lib/patterns/product-patterns.ts',
+    source: 'projects/kern/patterns/src/lib/patterns/crud-toolbar.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -3061,7 +3061,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-dashboard-widget': {
     className: 'KrnDashboardWidget',
     kind: 'component',
-    source: 'projects/kern/patterns/src/lib/patterns/product-patterns.ts',
+    source: 'projects/kern/patterns/src/lib/patterns/dashboard-widget.ts',
     api: [
       {
         name: 'eyebrow',
@@ -3944,7 +3944,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-description-item': {
     className: 'KrnDescriptionItem',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/description-list.ts',
     api: [
       {
         name: 'term',
@@ -3959,7 +3959,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-description-list': {
     className: 'KrnDescriptionList',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/description-list.ts',
     api: [],
   },
   'krn-dialog': {
@@ -4076,7 +4076,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-disclosure': {
     className: 'KrnDisclosure',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/disclosure.ts',
     api: [
       {
         name: 'heading',
@@ -4979,7 +4979,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-filter-bar': {
     className: 'KrnFilterBar',
     kind: 'component',
-    source: 'projects/kern/patterns/src/lib/patterns/product-patterns.ts',
+    source: 'projects/kern/patterns/src/lib/patterns/filter-bar.ts',
     api: [
       {
         name: 'activeLabel',
@@ -5073,7 +5073,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-global-search': {
     className: 'KrnGlobalSearch',
     kind: 'component',
-    source: 'projects/kern/patterns/src/lib/patterns/product-patterns.ts',
+    source: 'projects/kern/patterns/src/lib/patterns/global-search.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -5425,7 +5425,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-keyboard-shortcut': {
     className: 'KrnKeyboardShortcut',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/code-block.ts',
     api: [
       {
         name: 'keys',
@@ -5582,7 +5582,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-list': {
     className: 'KrnList',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/list.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -5605,7 +5605,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-list-item': {
     className: 'KrnListItem',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/list.ts',
     api: [
       {
         name: 'heading',
@@ -5770,7 +5770,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-master-detail-layout': {
     className: 'KrnMasterDetailLayout',
     kind: 'component',
-    source: 'projects/kern/patterns/src/lib/patterns/product-patterns.ts',
+    source: 'projects/kern/patterns/src/lib/patterns/master-detail-layout.ts',
     api: [
       {
         name: 'detailLabel',
@@ -5911,7 +5911,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-meter': {
     className: 'KrnMeter',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/meter.ts',
     api: [
       {
         name: 'high',
@@ -5982,7 +5982,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-mobile-navigation': {
     className: 'KrnMobileNavigation',
     kind: 'component',
-    source: 'projects/kern/patterns/src/lib/patterns/product-patterns.ts',
+    source: 'projects/kern/patterns/src/lib/patterns/mobile-navigation.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -6523,7 +6523,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-notification-center': {
     className: 'KrnNotificationCenter',
     kind: 'component',
-    source: 'projects/kern/patterns/src/lib/patterns/product-patterns.ts',
+    source: 'projects/kern/patterns/src/lib/patterns/notification-center.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -6896,7 +6896,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-page-header': {
     className: 'KrnPageHeader',
     kind: 'component',
-    source: 'projects/kern/patterns/src/lib/patterns/product-patterns.ts',
+    source: 'projects/kern/patterns/src/lib/patterns/page-header.ts',
     api: [
       {
         name: 'description',
@@ -7751,7 +7751,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-rating': {
     className: 'KrnRating',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/meter.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -7923,7 +7923,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-responsive-application-shell': {
     className: 'KrnResponsiveApplicationShell',
     kind: 'component',
-    source: 'projects/kern/patterns/src/lib/patterns/product-patterns.ts',
+    source: 'projects/kern/patterns/src/lib/patterns/responsive-application-shell.ts',
     api: [
       {
         name: 'closeNavigationLabel',
@@ -7962,7 +7962,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-responsive-media': {
     className: 'KrnResponsiveMedia',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/responsive-media.ts',
     api: [
       {
         name: 'aspectRatio',
@@ -8574,7 +8574,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-settings-panel': {
     className: 'KrnSettingsPanel',
     kind: 'component',
-    source: 'projects/kern/patterns/src/lib/patterns/product-patterns.ts',
+    source: 'projects/kern/patterns/src/lib/patterns/settings-panel.ts',
     api: [
       {
         name: 'closeLabel',
@@ -9194,7 +9194,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-stat': {
     className: 'KrnStat',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/card.ts',
     api: [
       {
         name: 'detail',
@@ -9233,7 +9233,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-status-badge': {
     className: 'KrnBadge',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/badge.ts',
     api: [
       {
         name: 'status',
@@ -9556,7 +9556,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-tag': {
     className: 'KrnChip',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/badge.ts',
     api: [
       {
         name: 'accessibleLabel',
@@ -10239,7 +10239,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-timeline': {
     className: 'KrnTimeline',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/timeline.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -10254,7 +10254,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-timeline-item': {
     className: 'KrnTimelineItem',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/timeline.ts',
     api: [
       {
         name: 'heading',
@@ -10457,7 +10457,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-tree': {
     className: 'KrnTree',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/display.ts',
+    source: 'projects/kern/kit/src/lib/data-display/tree.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -10575,7 +10575,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-user-menu': {
     className: 'KrnUserMenu',
     kind: 'component',
-    source: 'projects/kern/patterns/src/lib/patterns/product-patterns.ts',
+    source: 'projects/kern/patterns/src/lib/patterns/user-menu.ts',
     api: [
       {
         name: 'detail',

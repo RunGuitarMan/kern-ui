@@ -1,0 +1,98 @@
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  ViewEncapsulation,
+} from '@angular/core';
+import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+
+@Component({
+  selector: 'krn-mobile-navigation',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    role: 'navigation',
+    '[attr.aria-label]': 'resolvedAriaLabel()',
+  },
+  template: `<ng-content />`,
+  styles: `
+    krn-mobile-navigation {
+      position: sticky;
+      z-index: var(--krn-z-sticky, 300);
+      inset-block-end: 0;
+      display: grid;
+      grid-auto-columns: minmax(3.5rem, 1fr);
+      grid-auto-flow: column;
+      min-block-size: 3.75rem;
+      padding: 0.375rem max(0.375rem, env(safe-area-inset-right))
+        max(0.375rem, env(safe-area-inset-bottom)) max(0.375rem, env(safe-area-inset-left));
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      border-block-start: 1px solid var(--krn-color-border, #cdd1d7);
+      color: var(--krn-color-text, #252932);
+      background: var(--krn-color-surface, #fff);
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    krn-mobile-navigation[hidden] {
+      display: none;
+    }
+    krn-mobile-navigation::-webkit-scrollbar {
+      display: none;
+    }
+    krn-mobile-navigation > :where(a, button) {
+      display: grid;
+      min-inline-size: 3.5rem;
+      min-block-size: 3rem;
+      place-items: center;
+      padding-inline: 0.375rem;
+      border: 0;
+      border-radius: var(--krn-radius-control, 0.375rem);
+      color: var(--krn-color-text-muted, #626a76);
+      background: transparent;
+      font: 600 0.6875rem/1rem var(--krn-font-family-ui, sans-serif);
+      overflow-wrap: anywhere;
+      text-decoration: none;
+      touch-action: manipulation;
+    }
+    krn-mobile-navigation > :where(a, button):focus-visible {
+      outline: var(--krn-focus-ring, 2px solid #4f6feb);
+      outline-offset: -2px;
+    }
+    krn-mobile-navigation > button:disabled {
+      opacity: var(--krn-opacity-disabled, 0.48);
+      cursor: not-allowed;
+    }
+    krn-mobile-navigation
+      > :where([aria-current]:not([aria-current='false']):not([aria-current=''])) {
+      box-shadow: inset 0 3px 0 var(--krn-color-brand-solid, #4f6feb);
+      color: var(--krn-color-text, #252932);
+      background: var(--krn-color-brand-surface, #fff0e8);
+    }
+    @media (forced-colors: active) {
+      krn-mobile-navigation {
+        border-color: CanvasText;
+      }
+      krn-mobile-navigation
+        > :where([aria-current]:not([aria-current='false']):not([aria-current=''])) {
+        outline: 2px solid Highlight;
+        outline-offset: -2px;
+      }
+    }
+  `,
+})
+export class KrnMobileNavigation {
+  private readonly translations = inject(KRN_TRANSLATIONS);
+  readonly ariaLabel = input(this.translations.patterns.mobileNavigation);
+  protected readonly resolvedAriaLabel = computed(() => {
+    const label = this.normalizeText(this.ariaLabel());
+    const fallback = this.normalizeText(this.translations.patterns.mobileNavigation);
+    return label || fallback || 'Mobile navigation';
+  });
+
+  private normalizeText(value: string): string {
+    return typeof value === 'string' ? value.trim() : '';
+  }
+}

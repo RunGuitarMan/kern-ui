@@ -275,6 +275,7 @@ interface KrnFilterDefinition {
   readonly label: string;
   readonly options: readonly KrnFilterOption[];
 }
+
 declare class KrnUserMenu {
   private readonly platform;
   private readonly translations;
@@ -319,6 +320,7 @@ declare class KrnUserMenu {
     never
   >;
 }
+
 declare class KrnNotificationCenter {
   private readonly translations;
   protected readonly notificationsId: string;
@@ -362,6 +364,7 @@ declare class KrnNotificationCenter {
     never
   >;
 }
+
 declare class KrnGlobalSearch {
   private readonly ids;
   private readonly generatedResultsId;
@@ -431,6 +434,7 @@ declare class KrnGlobalSearch {
     never
   >;
 }
+
 declare class KrnFilterBar {
   private readonly translations;
   private readonly filterSelects;
@@ -472,6 +476,7 @@ declare class KrnFilterBar {
     never
   >;
 }
+
 declare class KrnPageHeader {
   private readonly ids;
   protected readonly headingId: string;
@@ -503,6 +508,7 @@ declare class KrnPageHeader {
     never
   >;
 }
+
 declare class KrnSettingsPanel {
   private readonly translations;
   readonly heading: _angular_core.InputSignal<string>;
@@ -535,6 +541,7 @@ declare class KrnSettingsPanel {
     never
   >;
 }
+
 declare class KrnCrudToolbar {
   private readonly translations;
   readonly ariaLabel: _angular_core.InputSignal<string>;
@@ -592,6 +599,7 @@ declare class KrnMasterDetailLayout {
     never
   >;
 }
+
 declare class KrnDashboardWidget {
   readonly eyebrow: _angular_core.InputSignal<string>;
   readonly heading: _angular_core.InputSignal<string>;
@@ -614,6 +622,7 @@ declare class KrnDashboardWidget {
     never
   >;
 }
+
 declare class KrnMobileNavigation {
   private readonly translations;
   readonly ariaLabel: _angular_core.InputSignal<string>;
@@ -632,6 +641,7 @@ declare class KrnMobileNavigation {
     never
   >;
 }
+
 declare class KrnResponsiveApplicationShell {
   private readonly platform;
   private readonly coordinator;

@@ -73,7 +73,7 @@
       "@kern-ui/angular/patterns",
       "@kern-ui/angular/testing"
     ],
-    "sourceDigest": "sha256-e9d6d40d13d8dd6bf068f4423a5b05307ec88d4fefe269559a7126fca360b610"
+    "sourceDigest": "sha256-9717e03fe16cc7bf1e491dbaa13dc7aaafe1c3e8bf499d8cd3259b4e04e1eaf9"
   },
   "components": [
     {
@@ -65932,7 +65932,7 @@
       "type": "class KrnAccordion",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/disclosure.ts",
       "componentIds": ["accordion"]
     },
     {
@@ -66028,7 +66028,7 @@
       "type": "class KrnAvatar",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/avatar.ts",
       "componentIds": ["avatar"]
     },
     {
@@ -66040,7 +66040,7 @@
       "type": "class KrnAvatarGroup",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/avatar.ts",
       "componentIds": ["avatar-group"]
     },
     {
@@ -66064,7 +66064,7 @@
       "type": "class KrnBadge",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/badge.ts",
       "componentIds": ["badge", "status-badge"]
     },
     {
@@ -66208,7 +66208,7 @@
       "type": "class KrnCard",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/card.ts",
       "componentIds": ["card"]
     },
     {
@@ -66256,7 +66256,7 @@
       "type": "class KrnChip",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/badge.ts",
       "componentIds": ["chip", "tag"]
     },
     {
@@ -66292,7 +66292,7 @@
       "type": "class KrnCodeBlock",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/code-block.ts",
       "componentIds": ["code-block"]
     },
     {
@@ -66544,7 +66544,7 @@
       "type": "class KrnDescriptionItem",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/description-list.ts",
       "componentIds": []
     },
     {
@@ -66556,7 +66556,7 @@
       "type": "class KrnDescriptionList",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/description-list.ts",
       "componentIds": ["description-list"]
     },
     {
@@ -66580,7 +66580,7 @@
       "type": "class KrnDisclosure",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/disclosure.ts",
       "componentIds": ["disclosure"]
     },
     {
@@ -66592,7 +66592,7 @@
       "type": "KrnDisplayTone",
       "deprecated": false,
       "description": "Public type owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/badge.ts",
       "componentIds": []
     },
     {
@@ -66868,7 +66868,7 @@
       "type": "class KrnKeyboardShortcut",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/code-block.ts",
       "componentIds": ["keyboard-shortcut"]
     },
     {
@@ -66952,7 +66952,7 @@
       "type": "class KrnList",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/list.ts",
       "componentIds": ["list"]
     },
     {
@@ -66964,7 +66964,7 @@
       "type": "class KrnListItem",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/list.ts",
       "componentIds": ["list-item"]
     },
     {
@@ -67060,7 +67060,7 @@
       "type": "class KrnMeter",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/meter.ts",
       "componentIds": ["meter"]
     },
     {
@@ -67360,7 +67360,7 @@
       "type": "class KrnRating",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/meter.ts",
       "componentIds": ["rating"]
     },
     {
@@ -67432,7 +67432,7 @@
       "type": "class KrnResponsiveMedia",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/responsive-media.ts",
       "componentIds": ["responsive-media"]
     },
     {
@@ -67708,7 +67708,7 @@
       "type": "class KrnStat",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/card.ts",
       "componentIds": ["stat"]
     },
     {
@@ -67840,7 +67840,7 @@
       "type": "class KrnTimeline",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/timeline.ts",
       "componentIds": ["timeline"]
     },
     {
@@ -67852,7 +67852,7 @@
       "type": "class KrnTimelineItem",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/timeline.ts",
       "componentIds": []
     },
     {
@@ -68032,7 +68032,7 @@
       "type": "class KrnTree",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/tree.ts",
       "componentIds": ["tree"]
     },
     {
@@ -68080,7 +68080,7 @@
       "type": "interface KrnTreeNode",
       "deprecated": false,
       "description": "Public interface owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/data-display/display.ts",
+      "source": "projects/kern/kit/src/lib/data-display/tree.ts",
       "componentIds": []
     },
     {
@@ -68236,7 +68236,7 @@
       "type": "class KrnCrudToolbar",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/patterns.",
-      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "source": "projects/kern/patterns/src/lib/patterns/crud-toolbar.ts",
       "componentIds": ["bulk-actions", "crud-toolbar"]
     },
     {
@@ -68248,7 +68248,7 @@
       "type": "class KrnDashboardWidget",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/patterns.",
-      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "source": "projects/kern/patterns/src/lib/patterns/dashboard-widget.ts",
       "componentIds": ["dashboard-widget"]
     },
     {
@@ -68260,7 +68260,7 @@
       "type": "class KrnFilterBar",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/patterns.",
-      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "source": "projects/kern/patterns/src/lib/patterns/filter-bar.ts",
       "componentIds": ["filter-bar"]
     },
     {
@@ -68272,7 +68272,7 @@
       "type": "interface KrnFilterDefinition",
       "deprecated": false,
       "description": "Public interface owned by @kern-ui/angular/patterns.",
-      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "source": "projects/kern/patterns/src/lib/patterns/product-types.ts",
       "componentIds": []
     },
     {
@@ -68284,7 +68284,7 @@
       "type": "interface KrnFilterOption",
       "deprecated": false,
       "description": "Public interface owned by @kern-ui/angular/patterns.",
-      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "source": "projects/kern/patterns/src/lib/patterns/product-types.ts",
       "componentIds": []
     },
     {
@@ -68308,7 +68308,7 @@
       "type": "class KrnGlobalSearch",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/patterns.",
-      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "source": "projects/kern/patterns/src/lib/patterns/global-search.ts",
       "componentIds": ["global-search"]
     },
     {
@@ -68344,7 +68344,7 @@
       "type": "class KrnMasterDetailLayout",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/patterns.",
-      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "source": "projects/kern/patterns/src/lib/patterns/master-detail-layout.ts",
       "componentIds": ["master-detail-layout"]
     },
     {
@@ -68356,7 +68356,7 @@
       "type": "class KrnMobileNavigation",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/patterns.",
-      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "source": "projects/kern/patterns/src/lib/patterns/mobile-navigation.ts",
       "componentIds": ["mobile-navigation"]
     },
     {
@@ -68380,7 +68380,7 @@
       "type": "interface KrnNotification",
       "deprecated": false,
       "description": "Public interface owned by @kern-ui/angular/patterns.",
-      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "source": "projects/kern/patterns/src/lib/patterns/product-types.ts",
       "componentIds": []
     },
     {
@@ -68392,7 +68392,7 @@
       "type": "class KrnNotificationCenter",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/patterns.",
-      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "source": "projects/kern/patterns/src/lib/patterns/notification-center.ts",
       "componentIds": ["notification-center"]
     },
     {
@@ -68404,7 +68404,7 @@
       "type": "class KrnPageHeader",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/patterns.",
-      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "source": "projects/kern/patterns/src/lib/patterns/page-header.ts",
       "componentIds": ["page-header"]
     },
     {
@@ -68440,7 +68440,7 @@
       "type": "class KrnResponsiveApplicationShell",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/patterns.",
-      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "source": "projects/kern/patterns/src/lib/patterns/responsive-application-shell.ts",
       "componentIds": ["responsive-application-shell"]
     },
     {
@@ -68452,7 +68452,7 @@
       "type": "interface KrnSearchResult",
       "deprecated": false,
       "description": "Public interface owned by @kern-ui/angular/patterns.",
-      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "source": "projects/kern/patterns/src/lib/patterns/product-types.ts",
       "componentIds": []
     },
     {
@@ -68464,7 +68464,7 @@
       "type": "class KrnSettingsPanel",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/patterns.",
-      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "source": "projects/kern/patterns/src/lib/patterns/settings-panel.ts",
       "componentIds": ["settings-panel"]
     },
     {
@@ -68476,7 +68476,7 @@
       "type": "class KrnUserMenu",
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/patterns.",
-      "source": "projects/kern/patterns/src/lib/patterns/product-patterns.ts",
+      "source": "projects/kern/patterns/src/lib/patterns/user-menu.ts",
       "componentIds": ["user-menu"]
     },
     {

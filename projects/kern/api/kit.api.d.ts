@@ -5366,6 +5366,7 @@ declare class KrnChip {
     never
   >;
 }
+
 declare class KrnAvatar {
   readonly locale: _angular_core.InputSignal<string>;
   readonly src: _angular_core.InputSignal<string | undefined>;
@@ -5416,6 +5417,7 @@ declare class KrnAvatarGroup {
     never
   >;
 }
+
 declare class KrnCard {
   readonly eyebrow: _angular_core.InputSignal<string>;
   readonly heading: _angular_core.InputSignal<string>;
@@ -5460,6 +5462,7 @@ declare class KrnStat {
     never
   >;
 }
+
 declare class KrnDescriptionList {
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDescriptionList, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
@@ -5489,6 +5492,7 @@ declare class KrnDescriptionItem {
     never
   >;
 }
+
 declare class KrnList {
   private readonly translations;
   readonly role: _angular_core.InputSignal<'list' | 'listbox'>;
@@ -5528,6 +5532,7 @@ declare class KrnListItem {
     never
   >;
 }
+
 declare class KrnDisclosure {
   readonly heading: _angular_core.InputSignal<string>;
   readonly open: _angular_core.ModelSignal<boolean>;
@@ -5564,6 +5569,7 @@ declare class KrnAccordion {
     never
   >;
 }
+
 declare class KrnTimeline {
   private readonly translations;
   readonly ariaLabel: _angular_core.InputSignal<string>;
@@ -5599,6 +5605,7 @@ declare class KrnTimelineItem {
     never
   >;
 }
+
 interface KrnTreeNode {
   readonly id: string;
   readonly label: string;
@@ -5651,6 +5658,7 @@ declare class KrnTree {
     never
   >;
 }
+
 type KrnCodeTokenKind =
   | 'plain'
   | 'comment'
@@ -5713,6 +5721,7 @@ declare class KrnKeyboardShortcut {
     never
   >;
 }
+
 declare class KrnMeter {
   readonly locale: _angular_core.InputSignal<string | string[]>;
   readonly label: _angular_core.InputSignal<string>;
@@ -5782,6 +5791,7 @@ declare class KrnRating {
     never
   >;
 }
+
 declare class KrnResponsiveMedia {
   readonly aspectRatio: _angular_core.InputSignal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnResponsiveMedia, never>;

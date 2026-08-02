@@ -1,0 +1,69 @@
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  model,
+  output,
+} from '@angular/core';
+import { type KrnOverlayInitialFocus } from '@kern-ui/angular/cdk';
+import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { KrnDrawer, type KrnOverlayCloseReason } from '@kern-ui/angular/kit';
+
+@Component({
+  selector: 'krn-settings-panel',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [KrnDrawer],
+  host: {
+    '[attr.data-open]': 'open() ? "" : null',
+  },
+  template: `
+    <ng-template #content>
+      <ng-content />
+    </ng-template>
+    <ng-template #actions>
+      <ng-content select="[krnSettingsActions]" />
+    </ng-template>
+    <krn-drawer
+      [open]="open()"
+      (openChange)="open.set($event)"
+      (closed)="closed.emit($event)"
+      [title]="resolvedHeading()"
+      [closeLabel]="resolvedCloseLabel()"
+      [ariaLabel]="resolvedHeading()"
+      [initialFocus]="initialFocus()"
+      [closeOnEscape]="closeOnEscape()"
+      [closeOnOutside]="closeOnOutside()"
+      [contentTemplate]="content"
+      [actionsTemplate]="actions"
+    />
+  `,
+})
+export class KrnSettingsPanel {
+  private readonly translations = inject(KRN_TRANSLATIONS);
+  readonly heading = input(this.translations.patterns.settings);
+  readonly closeLabel = input(this.translations.patterns.closeSettings);
+  readonly initialFocus = input<KrnOverlayInitialFocus>('first-tabbable');
+  readonly closeOnEscape = input(true, { transform: booleanAttribute });
+  readonly closeOnOutside = input(true, { transform: booleanAttribute });
+  readonly open = model(false);
+  readonly closed = output<KrnOverlayCloseReason>();
+  protected readonly resolvedHeading = computed(() =>
+    this.requiredLabel(this.heading(), this.translations.patterns.settings, 'Settings'),
+  );
+  protected readonly resolvedCloseLabel = computed(() =>
+    this.requiredLabel(
+      this.closeLabel(),
+      this.translations.patterns.closeSettings,
+      'Close settings',
+    ),
+  );
+
+  private requiredLabel(value: string, fallback: string, hardFallback: string): string {
+    const normalized = typeof value === 'string' ? value.trim() : '';
+    const normalizedFallback = typeof fallback === 'string' ? fallback.trim() : '';
+    return normalized || normalizedFallback || hardFallback;
+  }
+}
