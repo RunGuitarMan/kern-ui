@@ -14,6 +14,10 @@ const generatedContractPath = resolve(
   'projects/showcase/src/lib/generated-component-contract.ts',
 );
 const catalogPath = resolve(workspaceRoot, 'projects/showcase/src/lib/catalog.ts');
+const catalogIndexPath = resolve(
+  workspaceRoot,
+  'projects/showcase/catalog-index/src/lib/catalog-index.ts',
+);
 const playgroundPath = resolve(workspaceRoot, 'projects/showcase/specimen/src/lib/playground.ts');
 const templatePath = resolve(
   workspaceRoot,
@@ -63,10 +67,15 @@ async function evaluateTypeScript(filePath, dependencies = new Map()) {
 }
 
 const generatedContract = await evaluateTypeScript(generatedContractPath);
-const showcase = await evaluateTypeScript(
+const catalogIndex = await evaluateTypeScript(catalogIndexPath);
+const catalogModule = await evaluateTypeScript(
   catalogPath,
-  new Map([['./generated-component-contract', generatedContract]]),
+  new Map([
+    ['./generated-component-contract', generatedContract],
+    ['@kern-ui/showcase/catalog-index', catalogIndex],
+  ]),
 );
+const showcase = { ...catalogIndex, ...catalogModule };
 const playground = await evaluateTypeScript(
   playgroundPath,
   new Map([['@kern-ui/showcase', showcase]]),

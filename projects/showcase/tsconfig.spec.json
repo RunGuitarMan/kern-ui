@@ -4,8 +4,11 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/showcase-spec",
-    "rootDir": "./src",
+    "rootDir": ".",
+    "paths": {
+      "@kern-ui/showcase/catalog-index": ["./catalog-index/src/public-api.ts"]
+    },
     "types": ["vitest/globals"]
   },
-  "include": ["src/**/*.d.ts", "src/**/*.spec.ts"]
+  "include": ["src/**/*.d.ts", "src/**/*.spec.ts", "catalog-index/src/**/*.ts"]
 }

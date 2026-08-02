@@ -21,6 +21,7 @@ const paths = {
   runtimeEntrypoints: resolve(workspaceRoot, 'projects/kern/api/runtime-entrypoints.json'),
   testingPublicApi: resolve(workspaceRoot, 'projects/kern/testing/src/public-api.ts'),
   catalog: resolve(workspaceRoot, 'projects/showcase/src/lib/catalog.ts'),
+  catalogIndex: resolve(workspaceRoot, 'projects/showcase/catalog-index/src/lib/catalog-index.ts'),
   playground: resolve(workspaceRoot, 'projects/showcase/specimen/src/lib/playground.ts'),
   schema: resolve(workspaceRoot, 'metadata/agent/schema/component-manifest.schema.json'),
   overrides: resolve(workspaceRoot, 'metadata/agent/curated/component-overrides.json'),
@@ -863,7 +864,21 @@ async function decoratedComponents(program, checker) {
   return records;
 }
 
-function executeCatalog(sourceText, runtimeComponents) {
+function executeCatalog(sourceText, indexSourceText, runtimeComponents) {
+  const compiledIndex = ts.transpileModule(indexSourceText, {
+    compilerOptions: {
+      module: ts.ModuleKind.CommonJS,
+      target: ts.ScriptTarget.ES2022,
+      esModuleInterop: true,
+    },
+    fileName: paths.catalogIndex,
+  }).outputText;
+  const indexModule = { exports: {} };
+  vm.runInNewContext(
+    compiledIndex,
+    { module: indexModule, exports: indexModule.exports, console, Object, Set },
+    { filename: paths.catalogIndex, timeout: 2_000 },
+  );
   const compiled = ts.transpileModule(sourceText, {
     compilerOptions: {
       module: ts.ModuleKind.CommonJS,
@@ -879,6 +894,9 @@ function executeCatalog(sourceText, runtimeComponents) {
     require: (specifier) => {
       if (specifier === './generated-component-contract') {
         return { KERN_RUNTIME_COMPONENTS: runtimeComponents };
+      }
+      if (specifier === '@kern-ui/showcase/catalog-index') {
+        return indexModule.exports;
       }
       throw new Error(`Catalog evaluation rejected unexpected import ${specifier}`);
     },
@@ -1727,6 +1745,7 @@ async function main() {
     packageJson,
     runtimeConfig,
     catalogSource,
+    catalogIndexSource,
     playgroundSource,
     schema,
     baseOverrides,
@@ -1740,6 +1759,7 @@ async function main() {
     readJson(paths.packageJson),
     readJson(paths.runtimeEntrypoints),
     readFile(paths.catalog, 'utf8'),
+    readFile(paths.catalogIndex, 'utf8'),
     readFile(paths.playground, 'utf8'),
     readJson(paths.schema),
     readJson(paths.overrides),
@@ -1810,7 +1830,7 @@ async function main() {
       },
     ]),
   );
-  const catalog = executeCatalog(catalogSource, runtimeComponents);
+  const catalog = executeCatalog(catalogSource, catalogIndexSource, runtimeComponents);
   const {
     definitions: playgroundDefinitions,
     exclusions: playgroundExclusions,
@@ -2089,6 +2109,7 @@ async function main() {
       entrypoints: entrypoints.map((entrypoint) => entrypoint.importPath),
       sourceDigest: sourceDigest([
         catalogSource,
+        catalogIndexSource,
         playgroundSource,
         JSON.stringify(deprecations),
         ...sourceTexts,

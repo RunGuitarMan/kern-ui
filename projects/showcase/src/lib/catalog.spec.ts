@@ -1,12 +1,25 @@
 import { describe, expect, it } from 'vitest';
+import { KERN_CATALOG_INDEX, KERN_CATEGORIES } from '@kern-ui/showcase/catalog-index';
 
-import { KERN_CATALOG, KERN_CATEGORIES, KERN_COVERAGE, findKernComponent } from './catalog';
+import { KERN_CATALOG, KERN_COVERAGE, findKernComponent } from './catalog';
 import { KERN_RUNTIME_COMPONENTS } from './generated-component-contract';
 
 describe('Kern showcase catalog', () => {
   it('keeps ids and selectors unique', () => {
     expect(new Set(KERN_CATALOG.map((item) => item.id)).size).toBe(KERN_CATALOG.length);
     expect(new Set(KERN_CATALOG.map((item) => item.selector)).size).toBe(KERN_CATALOG.length);
+  });
+
+  it('keeps the lightweight navigation index in exact parity with the full catalog', () => {
+    expect(KERN_CATALOG_INDEX).toEqual(
+      KERN_CATALOG.map(({ id, name, category, status, variantOf }) => ({
+        id,
+        name,
+        category,
+        status,
+        ...(variantOf ? { variantOf } : {}),
+      })),
+    );
   });
 
   it('covers every category with docs and state metadata', () => {

@@ -19,16 +19,17 @@
         <i aria-hidden="true"></i>
         <small>Angular UI</small>
       </a>
-      <krn-global-search
-        #docsSearch
-        ariaLabel="Search Kern components"
-        placeholder="Jump to a component…"
-        [results]="searchResults()"
-        (resultSelected)="openResult($event)"
-      />
+      @defer (on idle) {
+        <kdocs-global-search />
+      } @placeholder {
+        <div class="search-placeholder" aria-hidden="true">
+          <i>⌕</i>
+          <span>Jump to a component…</span>
+        </div>
+      }
       <nav aria-label="Project links">
         <a routerLink="/accessibility">WCAG 2.2 AA</a>
-        <krn-badge status tone="success">Angular 22</krn-badge>
+        <span class="angular-version"><i aria-hidden="true"></i>Angular 22</span>
       </nav>
     </header>
 

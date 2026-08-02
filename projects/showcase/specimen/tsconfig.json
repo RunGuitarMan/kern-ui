@@ -12,7 +12,8 @@
       "@kern-ui/angular/i18n": ["../../kern/i18n/src/public-api.ts"],
       "@kern-ui/angular/kit": ["../../kern/kit/src/public-api.ts"],
       "@kern-ui/angular/patterns": ["../../kern/patterns/src/public-api.ts"],
-      "@kern-ui/showcase": ["../src/public-api.ts"]
+      "@kern-ui/showcase": ["../src/public-api.ts"],
+      "@kern-ui/showcase/catalog-index": ["../catalog-index/src/public-api.ts"]
     }
   },
   "include": ["src/**/*.ts"]

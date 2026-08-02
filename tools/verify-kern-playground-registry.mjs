@@ -11,6 +11,10 @@ const generatedContractPath = resolve(
   'projects/showcase/src/lib/generated-component-contract.ts',
 );
 const catalogPath = resolve(workspaceRoot, 'projects/showcase/src/lib/catalog.ts');
+const catalogIndexPath = resolve(
+  workspaceRoot,
+  'projects/showcase/catalog-index/src/lib/catalog-index.ts',
+);
 const playgroundPath = resolve(workspaceRoot, 'projects/showcase/specimen/src/lib/playground.ts');
 const agentManifestPath = resolve(
   workspaceRoot,
@@ -84,10 +88,15 @@ async function evaluateTypeScript(filePath, dependencies = new Map()) {
 }
 
 const generatedContract = await evaluateTypeScript(generatedContractPath);
-const showcase = await evaluateTypeScript(
+const catalogIndex = await evaluateTypeScript(catalogIndexPath);
+const catalogModule = await evaluateTypeScript(
   catalogPath,
-  new Map([['./generated-component-contract', generatedContract]]),
+  new Map([
+    ['./generated-component-contract', generatedContract],
+    ['@kern-ui/showcase/catalog-index', catalogIndex],
+  ]),
 );
+const showcase = { ...catalogIndex, ...catalogModule };
 const playground = await evaluateTypeScript(
   playgroundPath,
   new Map([['@kern-ui/showcase', showcase]]),
@@ -572,16 +581,16 @@ invariant(
   `Playground control binding provenance is invalid:\n- ${bindingIssues.join('\n- ')}`,
 );
 invariant(
-  apiCoverage.publicInputsAndModels === 1034,
-  `Expected 1034 public inputs/models, received ${apiCoverage.publicInputsAndModels}.`,
+  apiCoverage.publicInputsAndModels === 1038,
+  `Expected 1038 public inputs/models, received ${apiCoverage.publicInputsAndModels}.`,
 );
 invariant(
   apiCoverage.controlled === 649,
   `Expected 649 directly controlled public inputs/models, received ${apiCoverage.controlled}.`,
 );
 invariant(
-  apiCoverage.excluded === 385,
-  `Expected 385 exact API exclusions, received ${apiCoverage.excluded}.`,
+  apiCoverage.excluded === 389,
+  `Expected 389 exact API exclusions, received ${apiCoverage.excluded}.`,
 );
 invariant(apiCoverage.unclassified === 0, 'Public playground API contains unclassified members.');
 invariant(

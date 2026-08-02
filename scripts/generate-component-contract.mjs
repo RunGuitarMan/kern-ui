@@ -18,6 +18,10 @@ const runtimeConfigPath = resolve(workspaceRoot, 'projects/kern/api/runtime-entr
 const lifecyclePath = resolve(workspaceRoot, 'projects/kern/api/lifecycle.json');
 const deprecationsPath = resolve(workspaceRoot, 'projects/kern/api/deprecations.json');
 const catalogPath = resolve(workspaceRoot, 'projects/showcase/src/lib/catalog.ts');
+const catalogIndexPath = resolve(
+  workspaceRoot,
+  'projects/showcase/catalog-index/src/lib/catalog-index.ts',
+);
 const packageManifestPath = resolve(workspaceRoot, 'projects/kern/package.json');
 const tsconfigPath = resolve(workspaceRoot, 'projects/kern/tsconfig.lib.json');
 export function normalizeRepositoryPath(path) {
@@ -231,7 +235,11 @@ export function extractCatalogFromSource(sourceText, sourcePath = catalogPath) {
 }
 
 async function extractCatalog() {
-  return extractCatalogFromSource(await readFile(catalogPath, 'utf8'));
+  const [indexSource, catalogSource] = await Promise.all([
+    readFile(catalogIndexPath, 'utf8'),
+    readFile(catalogPath, 'utf8'),
+  ]);
+  return extractCatalogFromSource(`${indexSource}\n${catalogSource}`, catalogPath);
 }
 
 function objectProperty(object, name, sourceFile) {

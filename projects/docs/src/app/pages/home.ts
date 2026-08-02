@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { KERN_CATALOG, KERN_COVERAGE } from '@kern-ui/showcase';
-import { KrnCodeBlock } from '@kern-ui/angular/kit';
+import { KERN_CATALOG_INDEX } from '@kern-ui/showcase/catalog-index';
 
 import { DocsPreferences, type DocsDensity, type DocsTheme } from '../preferences';
 
@@ -17,7 +16,7 @@ interface StartRoute {
 @Component({
   selector: 'kdocs-home-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, KrnCodeBlock],
+  imports: [RouterLink],
   template: `
     <article class="home">
       <section class="hero" aria-labelledby="home-title">
@@ -74,10 +73,11 @@ interface StartRoute {
               </div>
             </li>
           </ol>
-          <krn-code-block
-            language="typescript"
-            [code]="'import { provideKrn } from \\'@kern-ui/angular/core\\';\\n\\nexport const appConfig = {\\n  providers: [provideKrn({ theme: \\'system\\', density: \\'comfortable\\' })],\\n};'"
-          />
+          <pre
+            class="quick-code"
+            tabindex="0"
+            aria-label="Kern provider setup"
+          ><code [textContent]="providerSetup"></code></pre>
         </aside>
       </section>
 
@@ -184,7 +184,12 @@ interface StartRoute {
 })
 export class HomePage {
   protected readonly prefs = inject(DocsPreferences);
-  protected readonly coverage = KERN_COVERAGE;
+  protected readonly coverage = { components: KERN_CATALOG_INDEX.length } as const;
+  protected readonly providerSetup = `import { provideKrn } from '@kern-ui/angular/core';
+
+export const appConfig = {
+  providers: [provideKrn({ theme: 'system', density: 'comfortable' })],
+};`;
   protected readonly themes: readonly DocsTheme[] = ['system', 'light', 'dark', 'contrast'];
   protected readonly densities: readonly DocsDensity[] = ['compact', 'comfortable', 'spacious'];
   protected readonly toggleDirection = (value: 'ltr' | 'rtl'): 'ltr' | 'rtl' =>
@@ -225,8 +230,8 @@ export class HomePage {
     'data-grid',
     'responsive-application-shell',
   ]
-    .map((id) => KERN_CATALOG.find((item) => item.id === id))
-    .filter((item): item is (typeof KERN_CATALOG)[number] => Boolean(item));
+    .map((id) => KERN_CATALOG_INDEX.find((item) => item.id === id))
+    .filter((item): item is (typeof KERN_CATALOG_INDEX)[number] => Boolean(item));
 
   protected setDensity(event: Event): void {
     this.prefs.density.set((event.currentTarget as HTMLSelectElement).value as DocsDensity);

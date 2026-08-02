@@ -26,6 +26,9 @@ export default defineConfig({
         new URL('../../../../dist/kern/fesm2022/kern-ui-angular-patterns.mjs', import.meta.url),
       ),
       '@kern-ui/angular': fileURLToPath(new URL('../../../../dist/kern', import.meta.url)),
+      '@kern-ui/showcase/catalog-index': fileURLToPath(
+        new URL('../../catalog-index/src/public-api.ts', import.meta.url),
+      ),
       '@kern-ui/showcase': fileURLToPath(new URL('../../src/public-api.ts', import.meta.url)),
     },
   },

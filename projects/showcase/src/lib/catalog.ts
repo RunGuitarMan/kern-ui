@@ -3,11 +3,12 @@ import {
   type KernRuntimeApiKind,
   type KernRuntimeComponentContract,
 } from './generated-component-contract';
-
-export type KernCategory =
-  'Layout' | 'Actions' | 'Forms' | 'Navigation' | 'Feedback' | 'Data display' | 'Patterns';
-
-export type KernComponentStatus = 'stable' | 'beta' | 'experimental' | 'recipe' | 'deprecated';
+import {
+  KERN_CATALOG_INDEX,
+  type KernCatalogIndexItem,
+  type KernCategory,
+  type KernComponentStatus,
+} from '@kern-ui/showcase/catalog-index';
 
 export interface KernApiRow {
   readonly name: string;
@@ -60,8 +61,13 @@ const NON_TEXT_VISUAL_STATES = [
 
 const INTERACTION_STATES = ['hover', 'focus-visible', 'active', 'disabled'] as const;
 
-const FORM_FOUNDATION_IDS = new Set(['form-field', 'label', 'hint', 'validation-message']);
-const OVERLAY_IDS = new Set([
+const FORM_FOUNDATION_IDS = /* @__PURE__ */ new Set([
+  'form-field',
+  'label',
+  'hint',
+  'validation-message',
+]);
+const OVERLAY_IDS = /* @__PURE__ */ new Set([
   'tooltip',
   'popover',
   'hover-card',
@@ -74,7 +80,7 @@ const OVERLAY_IDS = new Set([
   'dropdown-button',
   'command-palette',
 ]);
-const INTERACTIVE_DATA_IDS = new Set([
+const INTERACTIVE_DATA_IDS = /* @__PURE__ */ new Set([
   'accordion',
   'disclosure',
   'tree',
@@ -86,7 +92,12 @@ const INTERACTIVE_DATA_IDS = new Set([
   'bar-chart',
   'donut-chart',
 ]);
-const NON_TEXT_LAYOUT_IDS = new Set(['aspect-ratio', 'divider', 'responsive-show-hide', 'spacer']);
+const NON_TEXT_LAYOUT_IDS = /* @__PURE__ */ new Set([
+  'aspect-ratio',
+  'divider',
+  'responsive-show-hide',
+  'spacer',
+]);
 
 function statesFor(
   id: string,
@@ -185,162 +196,6 @@ function statesFor(
   return [...new Set(states)];
 }
 
-const GROUPS: Readonly<Record<KernCategory, readonly string[]>> = {
-  Layout: [
-    'App Shell',
-    'Header',
-    'Sidebar',
-    'Navigation Rail',
-    'Container',
-    'Stack',
-    'Inline',
-    'Cluster',
-    'Grid',
-    'Split Layout',
-    'Center',
-    'Spacer',
-    'Divider',
-    'Aspect Ratio',
-    'Scroll Area',
-    'Responsive Show Hide',
-    'Resizable Panels',
-  ],
-  Actions: [
-    'Button',
-    'Icon Button',
-    'Button Group',
-    'Split Button',
-    'Floating Action Button',
-    'Toggle Button',
-    'Toggle Group',
-    'Copy Button',
-    'Link',
-    'Dropdown Button',
-  ],
-  Forms: [
-    'Form Field',
-    'Label',
-    'Hint',
-    'Validation Message',
-    'Text Input',
-    'Textarea',
-    'Password Input',
-    'Search Input',
-    'Number Input',
-    'Checkbox',
-    'Checkbox Group',
-    'Radio',
-    'Radio Group',
-    'Switch',
-    'Select',
-    'Native Select',
-    'Multi Select',
-    'Combobox',
-    'Autocomplete',
-    'Slider',
-    'Range Slider',
-    'Segmented Control',
-    'Date Picker',
-    'Date Range Picker',
-    'Time Picker',
-    'Color Picker',
-    'File Upload',
-    'Drag Drop Upload',
-    'Verification Code',
-    'Tags Input',
-  ],
-  Navigation: [
-    'Breadcrumbs',
-    'Tabs',
-    'Vertical Tabs',
-    'Pagination',
-    'Stepper',
-    'Menu',
-    'Menubar',
-    'Context Menu',
-    'Tree Navigation',
-    'Bottom Navigation',
-    'Command Palette',
-    'Table of Contents',
-    'Back Button',
-    'Skip Link',
-  ],
-  Feedback: [
-    'Alert',
-    'Banner',
-    'Toast',
-    'Tooltip',
-    'Popover',
-    'Hover Card',
-    'Dialog',
-    'Alert Dialog',
-    'Drawer',
-    'Bottom Sheet',
-    'Loading Overlay',
-    'Progress Bar',
-    'Circular Progress',
-    'Spinner',
-    'Skeleton',
-    'Empty State',
-    'Error State',
-    'Success State',
-    'Confirmation Pattern',
-  ],
-  'Data display': [
-    'Badge',
-    'Status Badge',
-    'Chip',
-    'Tag',
-    'Avatar',
-    'Avatar Group',
-    'Card',
-    'Stat',
-    'Description List',
-    'List',
-    'List Item',
-    'Accordion',
-    'Disclosure',
-    'Timeline',
-    'Tree',
-    'Data Table',
-    'Data Grid',
-    'Calendar',
-    'Code Block',
-    'Keyboard Shortcut',
-    'Meter',
-    'Rating',
-    'Line Chart',
-    'Bar Chart',
-    'Donut Chart',
-    'Responsive Media',
-  ],
-  Patterns: [
-    'User Menu',
-    'Notification Center',
-    'Global Search',
-    'Filter Bar',
-    'Page Header',
-    'Settings Panel',
-    'CRUD Toolbar',
-    'Bulk Actions',
-    'Master Detail Layout',
-    'Dashboard Widget',
-    'Login Form',
-    'Profile Form',
-    'Multi Step Form',
-    'Mobile Navigation',
-    'Responsive Application Shell',
-  ],
-};
-
-const VARIANT_OF: Readonly<Record<string, string>> = {
-  'vertical-tabs': 'tabs',
-  'status-badge': 'badge',
-  tag: 'chip',
-  'data-table': 'data-grid',
-  'bulk-actions': 'crud-toolbar',
-};
-
 const SELECTOR_BY_ID: Readonly<Record<string, string>> = {
   button: 'button[krnButton]',
   'icon-button': 'button[krnIconButton]',
@@ -351,13 +206,6 @@ const SELECTOR_BY_ID: Readonly<Record<string, string>> = {
   link: 'a[krnLink]',
   tooltip: '[krnTooltip]',
 };
-
-function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
-}
 
 function summaryFor(name: string, category: KernCategory): string {
   const summaries: Readonly<Record<KernCategory, string>> = {
@@ -755,39 +603,8 @@ const COMPONENT_OVERRIDES: Readonly<Record<string, KernCatalogDocumentationOverr
   },
 };
 
-const BETA_COMPONENTS = new Set([
-  'autocomplete',
-  'color-picker',
-  'combobox',
-  'command-palette',
-  'data-grid',
-  'data-table',
-  'date-picker',
-  'date-range-picker',
-  'dialog',
-  'drawer',
-  'bottom-sheet',
-  'multi-select',
-  'select',
-  'time-picker',
-  'tree',
-  'tree-navigation',
-  'line-chart',
-  'bar-chart',
-  'donut-chart',
-]);
-
-const EXPERIMENTAL_COMPONENTS = new Set(['resizable-panels']);
-
-function statusFor(id: string, category: KernCategory): KernComponentStatus {
-  if (category === 'Patterns') return 'recipe';
-  if (EXPERIMENTAL_COMPONENTS.has(id)) return 'experimental';
-  if (BETA_COMPONENTS.has(id)) return 'beta';
-  return 'stable';
-}
-
-function createItem(name: string, category: KernCategory): KernCatalogItem {
-  const id = slugify(name);
+function createItem(indexItem: KernCatalogIndexItem): KernCatalogItem {
+  const { id, name, category, status, variantOf } = indexItem;
   const selector = SELECTOR_BY_ID[id] ?? `krn-${id}`;
   const api = apiFor(selector);
 
@@ -796,9 +613,9 @@ function createItem(name: string, category: KernCategory): KernCatalogItem {
     name,
     category,
     selector,
-    variantOf: VARIANT_OF[id],
+    variantOf,
     summary: summaryFor(name, category),
-    status: statusFor(id, category),
+    status,
     states: statesFor(id, category, api),
     keyboard: keyboardFor(category),
     accessibility: [
@@ -813,11 +630,9 @@ function createItem(name: string, category: KernCategory): KernCatalogItem {
   return { ...item, ...COMPONENT_OVERRIDES[id] };
 }
 
-export const KERN_CATALOG: readonly KernCatalogItem[] = (
-  Object.entries(GROUPS) as readonly [KernCategory, readonly string[]][]
-).flatMap(([category, names]) => names.map((name) => createItem(name, category)));
-
-export const KERN_CATEGORIES: readonly KernCategory[] = Object.keys(GROUPS) as KernCategory[];
+export const KERN_CATALOG: readonly KernCatalogItem[] = /* @__PURE__ */ KERN_CATALOG_INDEX.map(
+  (item) => createItem(item),
+);
 
 export function findKernComponent(id: string): KernCatalogItem | undefined {
   return KERN_CATALOG.find((item) => item.id === id);
@@ -831,5 +646,5 @@ export const KERN_COVERAGE = {
   components: KERN_CATALOG.length,
   documented: KERN_CATALOG.length,
   stateMatrices: KERN_CATALOG.length,
-  keyboardContracts: KERN_CATALOG.filter((item) => item.keyboard.length > 0).length,
+  keyboardContracts: /* @__PURE__ */ KERN_CATALOG.filter((item) => item.keyboard.length > 0).length,
 } as const;

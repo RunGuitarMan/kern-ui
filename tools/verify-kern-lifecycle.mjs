@@ -12,6 +12,10 @@ const workspaceRoot = resolve(dirname(modulePath), '..');
 const defaultLifecyclePath = resolve(workspaceRoot, 'projects/kern/api/lifecycle.json');
 const defaultDeprecationsPath = resolve(workspaceRoot, 'projects/kern/api/deprecations.json');
 const catalogPath = resolve(workspaceRoot, 'projects/showcase/src/lib/catalog.ts');
+const catalogIndexPath = resolve(
+  workspaceRoot,
+  'projects/showcase/catalog-index/src/lib/catalog-index.ts',
+);
 const componentContractPath = resolve(
   workspaceRoot,
   'projects/showcase/src/lib/generated-component-contract.ts',
@@ -126,7 +130,11 @@ export function discoverLifecycleCatalogFromSource(sourceText, sourcePath = cata
 }
 
 async function discoverCatalog() {
-  return discoverLifecycleCatalogFromSource(await readFile(catalogPath, 'utf8'));
+  const [indexSource, catalogSource] = await Promise.all([
+    readFile(catalogIndexPath, 'utf8'),
+    readFile(catalogPath, 'utf8'),
+  ]);
+  return discoverLifecycleCatalogFromSource(`${indexSource}\n${catalogSource}`, catalogPath);
 }
 
 function declarationName(node, sourceFile) {

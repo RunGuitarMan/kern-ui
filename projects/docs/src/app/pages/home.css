@@ -256,9 +256,21 @@ h1 {
   white-space: nowrap;
 }
 
-.quick-start krn-code-block {
-  display: block;
+.quick-code {
   margin: 0.75rem;
+  padding: 1rem;
+  overflow: auto;
+  border: 1px solid var(--krn-color-border);
+  border-radius: var(--krn-radius-control);
+  color: var(--krn-color-text);
+  background: var(--krn-color-surface-sunken);
+  font: 500 0.75rem/1.6 var(--krn-font-family-mono);
+  white-space: pre;
+}
+
+.quick-code:focus-visible {
+  outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
+  outline-offset: 2px;
 }
 
 .start-here,

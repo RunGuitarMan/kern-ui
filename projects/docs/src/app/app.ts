@@ -5,36 +5,33 @@ import {
   effect,
   inject,
   signal,
-  viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import {
   KERN_CATEGORIES,
-  KERN_CATALOG,
-  catalogByCategory,
+  KERN_CATALOG_INDEX,
+  catalogIndexByCategory,
   type KernCategory,
-} from '@kern-ui/showcase';
-import { KrnBadge } from '@kern-ui/angular/kit';
-import { KrnGlobalSearch, type KrnSearchResult } from '@kern-ui/angular/patterns';
+} from '@kern-ui/showcase/catalog-index';
 import { filter, map, startWith } from 'rxjs';
 
+import { DocsGlobalSearch } from './docs-global-search';
 import { DocsPreferences } from './preferences';
 import { KERN_DOCS_RELEASE_STATE_LABEL, KERN_DOCS_VERSION_LABEL } from './release-identity';
 
 @Component({
   selector: 'kdocs-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, KrnBadge, KrnGlobalSearch],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, DocsGlobalSearch],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
   private readonly router = inject(Router);
   protected readonly prefs = inject(DocsPreferences);
-  private readonly docsSearch = viewChild<KrnGlobalSearch>('docsSearch');
   protected readonly categories = KERN_CATEGORIES;
-  protected readonly catalog = KERN_CATALOG;
+  protected readonly catalog = KERN_CATALOG_INDEX;
   protected readonly docsVersionLabel = KERN_DOCS_VERSION_LABEL;
   protected readonly docsReleaseStateLabel = KERN_DOCS_RELEASE_STATE_LABEL;
   protected readonly essentials = [
@@ -64,22 +61,12 @@ export class App {
     const match = this.currentUrl().match(/^\/components\/([^/?#]+)/);
     return this.catalog.find((item) => item.id === match?.[1])?.category ?? null;
   });
-  protected readonly searchResults = computed<readonly KrnSearchResult[]>(() =>
-    this.catalog.map((item) => ({
-      id: item.id,
-      label: item.name,
-      description: item.summary,
-      group: item.category,
-      keywords: [item.selector, item.category],
-    })),
-  );
 
   constructor() {
     effect(() => {
       this.currentUrl();
       const active = this.activeCategory();
       this.prefs.navigationOpen.set(false);
-      this.docsSearch()?.query.set('');
       if (!active) return;
       this.expandedCategories.update((current) => {
         if (current.has(active)) return current;
@@ -91,12 +78,7 @@ export class App {
   }
 
   protected itemsFor(category: KernCategory) {
-    return catalogByCategory(category);
-  }
-
-  protected openResult(result: KrnSearchResult): void {
-    this.docsSearch()?.query.set('');
-    void this.router.navigate(['/components', result.id]);
+    return catalogIndexByCategory(category);
   }
 
   protected toggleNavigation(): void {
