@@ -318,6 +318,13 @@
     },
     {
       "entrypoint": "./cdk",
+      "status": "beta",
+      "owner": "kern/cdk",
+      "rationale": "Status follows the beta modal lifecycle and programmatic overlay contract.",
+      "symbols": ["KrnCloseWatcher", "KrnCloseWatcherFactory"]
+    },
+    {
+      "entrypoint": "./cdk",
       "status": "stable",
       "owner": "kern/cdk",
       "symbols": [
@@ -454,6 +461,7 @@
       "owner": "kern/kit",
       "rationale": "Status follows beta components and their dedicated supporting contracts.",
       "symbols": [
+        "KRN_OVERLAY_DATA",
         "KrnAutocomplete",
         "KrnAutocompleteMode",
         "KrnBottomSheet",
@@ -470,6 +478,13 @@
         "KrnDrawer",
         "KrnIdentityMatcher",
         "KrnMultiSelect",
+        "KrnOverlayConfig",
+        "KrnOverlayDismissReason",
+        "KrnOverlayOutcome",
+        "KrnOverlayRef",
+        "KrnOverlayService",
+        "KrnOverlayTemplateContext",
+        "KrnOverlayVariant",
         "KrnOptionDisabledHandler",
         "KrnOptionFilter",
         "KrnOptionStringifier",
@@ -483,7 +498,8 @@
         "KrnTreeChildrenState",
         "KrnTreeNavigation",
         "KrnTreeNavigationItem",
-        "KrnTreeNode"
+        "KrnTreeNode",
+        "injectKrnOverlayData"
       ]
     },
     {

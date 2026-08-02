@@ -391,13 +391,13 @@ test('component and agent generators share the stable type serializer', async ()
 test('committed lifecycle and manual evidence registries verify', () => {
   const lifecycle = run(lifecycleScript);
   assert.equal(lifecycle.status, 0, lifecycle.stderr);
-  assert.match(lifecycle.stdout, /131 catalog entries, 466 public symbols/);
+  assert.match(lifecycle.stdout, /131 catalog entries, 477 public symbols/);
 
   const componentInventory = run(componentInventoryScript);
   assert.equal(componentInventory.status, 0, componentInventory.stderr);
   assert.match(
     componentInventory.stdout,
-    /135 public review units \(126 catalog \+ 9 supporting\), 2 internal, 150 selectors/,
+    /135 public review units \(126 catalog \+ 9 supporting\), 3 internal, 151 selectors/,
   );
 
   const accessibility = run(accessibilityScript);
