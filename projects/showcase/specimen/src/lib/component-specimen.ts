@@ -717,7 +717,10 @@ export class KernComponentSpecimen {
   private readonly clipboardWriter = inject(KernSpecimenClipboardWriter);
   protected readonly translations = inject(KRN_TRANSLATIONS);
   private readonly contextMenuTarget = viewChild<ElementRef<HTMLElement>>('contextMenuTarget');
-  private readonly copyButtonTarget = viewChild<ElementRef<HTMLElement>>('copyButtonTarget');
+  private readonly copyButtonTarget = viewChild<unknown, ElementRef<HTMLElement>>(
+    'copyButtonTarget',
+    { read: ElementRef },
+  );
   protected readonly copyFixtureState = computed<KernCopyFixtureState>(() => {
     const state = this.stringArgument<KernCopyFixtureState>('copyState', 'live');
     return state === 'idle' || state === 'pending' || state === 'copied' || state === 'error'

@@ -439,7 +439,7 @@ test.describe('WCAG automated checks', () => {
     const mark = specimen.locator('[role="button"][aria-label="Mon: 42"]');
     await mark.focus();
     await expect(mark).toBeFocused();
-    await expect(specimen.getByRole('status')).toContainText('Mon');
+    await expect(specimen.locator('.chart-tooltip[role="status"]')).toContainText('Mon');
 
     await page.goto(
       previewUrl({

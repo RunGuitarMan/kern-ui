@@ -141,7 +141,10 @@ test.describe('Tier 1 browser contract', () => {
     assertNoRuntimeErrors();
   });
 
-  test('keeps the native connected button-group contract across browsers', async ({ page }) => {
+  test('keeps the native connected button-group contract across browsers', async ({
+    browserName,
+    page,
+  }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
 
     await page.goto(
@@ -186,7 +189,8 @@ test.describe('Tier 1 browser contract', () => {
     await requestChanges.focus();
     await requestChanges.press('ArrowRight');
     await expect(requestChanges).toBeFocused();
-    await page.keyboard.press('Tab');
+    const nativeButtonTab = browserName === 'webkit' ? 'Alt+Tab' : 'Tab';
+    await page.keyboard.press(nativeButtonTab);
     await expect(approve).toBeFocused();
 
     const focusAndOverflow = await approve.evaluate((element) => {
@@ -204,7 +208,7 @@ test.describe('Tier 1 browser contract', () => {
     expect(focusAndOverflow.overflowX).not.toMatch(/hidden|clip/);
     expect(focusAndOverflow.overflowY).not.toMatch(/hidden|clip/);
 
-    await page.keyboard.press('Tab');
+    await page.keyboard.press(nativeButtonTab);
     await expect(more).toBeFocused();
 
     const iconRect = await more.evaluate((element) => {
