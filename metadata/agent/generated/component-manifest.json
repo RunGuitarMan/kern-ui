@@ -73,7 +73,7 @@
       "@kern-ui/angular/patterns",
       "@kern-ui/angular/testing"
     ],
-    "sourceDigest": "sha256-425c7e3043ef89bca64d9f35b1456eb1f4c454c708ab1ef33c9b0cc6e7bf854e"
+    "sourceDigest": "sha256-e21ca0d589c1c07c085ea9770d020d235005c79bc5838684afc68d3736661382"
   },
   "components": [
     {
