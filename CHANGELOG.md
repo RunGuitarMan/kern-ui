@@ -93,6 +93,9 @@ contract or upgrade decision.
   toast interaction timing. Modal close requests now use one platform `CloseWatcher` when
   available (including Android Back), fall back to unhandled Escape, and retain modal ownership
   until exit motion completes.
+- Kept programmatic overlay hosts service-owned while `viewContainerRef` owns only their content,
+  so destroying a logical content owner dismisses its overlay without restoring focus into stale
+  UI. Existing `KrnOverlayService.open` call sites require no migration.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned
   Popover/Hover Card semantics with disclosure and non-modal preview behavior.
 - Strengthened App Shell with canonical responsive drawer state, composed dialog naming and
