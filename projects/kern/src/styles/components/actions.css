@@ -181,7 +181,7 @@
   --_action-bg: var(--_tone-soft);
   --_action-border: transparent;
   --_action-fg: var(--_tone-soft-fg);
-  --_action-shadow: none;
+  --_action-shadow: 0 0 0 0 transparent;
 }
 
 .krn-action[data-variant='soft']:hover:not(:disabled):not([aria-disabled='true']) {
@@ -192,14 +192,14 @@
   --_action-bg: transparent;
   --_action-border: var(--_tone-border);
   --_action-fg: var(--_tone-soft-fg);
-  --_action-shadow: none;
+  --_action-shadow: 0 0 0 0 transparent;
 }
 
 .krn-action[data-variant='ghost'] {
   --_action-bg: transparent;
   --_action-border: transparent;
   --_action-fg: var(--_tone-soft-fg);
-  --_action-shadow: none;
+  --_action-shadow: 0 0 0 0 transparent;
 }
 
 .krn-action:is([data-variant='outline'], [data-variant='ghost']):hover:not(:disabled):not(
@@ -522,6 +522,10 @@
   align-items: center;
   display: inline-flex;
   gap: var(--krn-space-2, 0.5rem);
+  min-inline-size: 0;
+}
+
+.krn-copy-button {
   min-inline-size: 0;
 }
 

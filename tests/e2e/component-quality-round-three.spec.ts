@@ -291,7 +291,7 @@ test.describe('Round three: form behavior', () => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
 
     let specimen = await openSpecimen(page, 'time-picker');
-    const trigger = specimen.getByRole('button', { name: 'Digest time' });
+    const trigger = specimen.getByRole('button', { name: 'Daily digest' });
     await trigger.click();
     const dialog = specimen.getByRole('dialog', { name: 'Digest time' });
     await expect(dialog.locator('.krn-time-list')).toHaveCount(0);
@@ -304,7 +304,7 @@ test.describe('Round three: form behavior', () => {
     await expect(trigger).toContainText('17:30');
 
     specimen = await openSpecimen(page, 'tags-input');
-    const tagInput = specimen.getByRole('textbox', { name: 'Add tag' });
+    const tagInput = specimen.getByRole('textbox', { name: 'Workspace tags' });
     await tagInput.fill('operations');
     await tagInput.press('Enter');
     await expect(specimen.locator('.krn-token')).toContainText('operations');
@@ -342,11 +342,11 @@ test.describe('Round three: navigation behavior', () => {
 
     let specimen = await openSpecimen(page, 'context-menu');
     await specimen.locator('.context-target').click({ button: 'right' });
-    const rootMenu = specimen.getByRole('menu', { name: 'Canvas actions' });
+    const rootMenu = page.getByRole('menu', { name: 'Canvas actions' });
     const moveTo = rootMenu.getByRole('menuitem', { name: 'Move to' });
     await moveTo.hover();
     await expect(moveTo).toHaveAttribute('aria-expanded', 'true');
-    const submenu = specimen.getByRole('menu', { name: 'Move to' });
+    const submenu = page.getByRole('menu', { name: 'Move to' });
     await expect(submenu).toBeVisible();
     await expect(submenu.getByRole('menuitem', { name: 'Operations' })).toBeVisible();
     await expect(submenu.locator('.item-icon').first()).toHaveText('O');

@@ -14,7 +14,6 @@
 }
 
 html {
-  min-inline-size: 20rem;
   background: var(--krn-color-canvas);
   scroll-behavior: smooth;
   scroll-padding-block-start: calc(var(--docs-header-height) + 3.25rem);

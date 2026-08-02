@@ -3,7 +3,7 @@
 
 @layer krn.base {
   :where(html) {
-    min-inline-size: 20rem;
+    min-inline-size: min(20rem, 100%);
     background: var(--krn-color-canvas, #f7f7f5);
     color: var(--krn-color-text, #202126);
     font-family: var(--krn-font-family-sans);

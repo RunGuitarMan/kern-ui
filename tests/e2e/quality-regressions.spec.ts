@@ -73,6 +73,11 @@ function boxShadowLayerCount(value: string): number {
   return value === 'none' ? 0 : value.split(/,(?![^(]*\))/).length;
 }
 
+async function expectNoHorizontalOverflow(locator: Locator, label: string): Promise<void> {
+  const overflow = await locator.evaluate((element) => element.scrollWidth - element.clientWidth);
+  expect(overflow, `${label} overflowed horizontally by ${overflow}px`).toBeLessThanOrEqual(1);
+}
+
 test.describe('Quality regressions: layout primitives', () => {
   test('divider keeps physical orientation and a visible standalone vertical line', async ({
     page,
@@ -410,6 +415,7 @@ test.describe('Quality regressions: menus and focus treatment', () => {
     ]);
     expect(zoomedRows.length, 'separated actions wrap under 200% text zoom').toBeGreaterThan(1);
     await expectNoPageOverflow(page);
+    await expectNoHorizontalOverflow(page.locator('.preview-panel'), 'button-group preview');
     assertNoRuntimeErrors();
   });
 
@@ -453,6 +459,7 @@ test.describe('Quality regressions: menus and focus treatment', () => {
     await page.setViewportSize({ width: 480, height: 900 });
     await page.addStyleTag({ content: 'html { font-size: 200% !important; }' });
     await expectNoPageOverflow(page);
+    await expectNoHorizontalOverflow(page.locator('.preview-panel'), 'toggle-group preview');
     const toolbarRect = await elementRect(group);
     const specimenRect = await elementRect(specimen);
     expect(toolbarRect.width).toBeLessThanOrEqual(specimenRect.width + 1);
@@ -573,6 +580,7 @@ test.describe('Quality regressions: menus and focus treatment', () => {
     const canvasRect = await elementRect(page.locator('.specimen-canvas'));
     expect(copyRect.width).toBeLessThanOrEqual(canvasRect.width + 1);
     await expectNoPageOverflow(page);
+    await expectNoHorizontalOverflow(page.locator('.preview-panel'), 'copy-button preview');
     assertNoRuntimeErrors();
   });
 
@@ -645,6 +653,7 @@ test.describe('Quality regressions: menus and focus treatment', () => {
         triggerName: 'More actions',
         firstItem: 'Publish now',
         lastItem: 'Save as draft',
+        typeaheadItem: 'Schedule…',
         typeaheadKey: 's',
       },
       {
@@ -653,6 +662,7 @@ test.describe('Quality regressions: menus and focus treatment', () => {
         triggerName: 'Export',
         firstItem: 'CSV spreadsheet',
         lastItem: 'JSON archive',
+        typeaheadItem: 'JSON archive',
         typeaheadKey: 'j',
       },
     ] as const) {
@@ -668,6 +678,7 @@ test.describe('Quality regressions: menus and focus treatment', () => {
       const menu = page.getByRole('menu');
       const firstItem = menu.getByRole('menuitem', { name: config.firstItem });
       const lastItem = menu.getByRole('menuitem', { name: config.lastItem });
+      const typeaheadItem = menu.getByRole('menuitem', { name: config.typeaheadItem });
       await expect(menu).toBeVisible();
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       await expect(firstItem).toBeFocused();
@@ -708,8 +719,8 @@ test.describe('Quality regressions: menus and focus treatment', () => {
       expect(itemMetrics.width).toBeGreaterThanOrEqual(menuRect.width - 10);
 
       await firstItem.press(config.typeaheadKey);
-      await expect(lastItem).toBeFocused();
-      await lastItem.press('Home');
+      await expect(typeaheadItem).toBeFocused();
+      await typeaheadItem.press('Home');
       await expect(firstItem).toBeFocused();
       await firstItem.press('End');
       await expect(lastItem).toBeFocused();
@@ -1165,7 +1176,7 @@ test.describe('Quality regressions: form controls', () => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
     let specimen = await openSpecimen(page, 'time-picker');
     await expect(specimen.locator('input[type="time"]')).toHaveCount(0);
-    const timeTrigger = specimen.getByRole('button', { name: 'Digest time' });
+    const timeTrigger = specimen.getByRole('button', { name: 'Daily digest' });
     await timeTrigger.click();
     let dialog = specimen.getByRole('dialog', { name: 'Digest time' });
     await expect(dialog).toBeVisible();
@@ -1184,7 +1195,7 @@ test.describe('Quality regressions: form controls', () => {
 
     specimen = await openSpecimen(page, 'color-picker');
     await expect(specimen.locator('input[type="color"]')).toHaveCount(0);
-    const colorTrigger = specimen.getByRole('button', { name: 'Choose brand accent' });
+    const colorTrigger = specimen.getByRole('button', { name: 'Brand accent' });
     await colorTrigger.click();
     dialog = specimen.getByRole('dialog', { name: 'Choose brand accent' });
     await expect(dialog).toBeVisible();

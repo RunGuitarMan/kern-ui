@@ -480,29 +480,27 @@ test.describe('Round two: form behavior and geometry', () => {
   test('verification code rejects letters without trapping deletion or focus', async ({ page }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
     const specimen = await openSpecimen(page, 'verification-code');
-    const inputs = specimen.locator('.krn-otp input');
+    const input = specimen.getByRole('textbox', {
+      name: 'Enter the 6-digit verification code',
+    });
 
-    await inputs.nth(0).focus();
-    await inputs.nth(0).press('a');
-    await expect(inputs.nth(0)).toHaveValue('');
-    await expect(inputs.nth(0)).toBeFocused();
+    await input.focus();
+    await input.press('a');
+    await expect(input).toHaveValue('');
+    await expect(input).toBeFocused();
 
-    await inputs.nth(0).press('8');
-    await expect(inputs.nth(0)).toHaveValue('8');
-    await expect(inputs.nth(1)).toBeFocused();
-    await inputs.nth(1).press('x');
-    await expect(inputs.nth(1)).toHaveValue('');
-    await expect(inputs.nth(1)).toBeFocused();
+    await input.press('8');
+    await expect(input).toHaveValue('8');
+    await expect(input).toBeFocused();
+    await input.press('x');
+    await expect(input).toHaveValue('8');
+    await expect(input).toBeFocused();
 
-    await inputs.nth(1).press('Backspace');
-    await expect(inputs.nth(0)).toBeFocused();
-    await expect(inputs.nth(0)).toHaveValue('');
-    await inputs.nth(0).pressSequentially('123456');
-    expect(
-      await inputs.evaluateAll((elements) =>
-        elements.map((element) => (element as HTMLInputElement).value),
-      ),
-    ).toEqual(['1', '2', '3', '4', '5', '6']);
+    await input.press('Backspace');
+    await expect(input).toBeFocused();
+    await expect(input).toHaveValue('');
+    await input.pressSequentially('123456');
+    await expect(input).toHaveValue('123456');
     assertNoRuntimeErrors();
   });
 });
@@ -560,8 +558,9 @@ test.describe('Round two: navigation and layout geometry', () => {
     }
 
     await page.setViewportSize({ width: 375, height: 812 });
-    await expect(navigation.locator('[aria-current="page"]')).toBeVisible();
-    await expect(navigation.locator('[aria-current="page"]')).toHaveText('8');
+    const mobileCurrentPage = navigation.locator('.mobile-pages [aria-current="page"]');
+    await expect(mobileCurrentPage).toBeVisible();
+    await expect(mobileCurrentPage).toHaveText('8');
     assertNoRuntimeErrors();
   });
 

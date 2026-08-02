@@ -325,7 +325,7 @@ input[type='color'] {
 
 .preview-stage {
   inline-size: 100%;
-  min-inline-size: 20rem;
+  min-inline-size: min(20rem, 100%);
   min-block-size: 28rem;
   margin-inline: auto;
   color: var(--krn-color-text);

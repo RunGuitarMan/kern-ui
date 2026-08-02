@@ -191,7 +191,7 @@ test.describe('Representative live specimen interactions', () => {
 
     await openSpecimen(page, 'toast');
     await page.getByRole('button', { name: 'Show success toast' }).click();
-    const toast = page.getByRole('status');
+    const toast = page.locator('.toast[role="status"]');
     await expect(toast).toContainText('Changes saved');
     await expect(toast).toContainText('Workspace settings were published.');
     await page.getByRole('button', { name: 'Dismiss notification' }).click();

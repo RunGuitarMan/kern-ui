@@ -337,9 +337,10 @@ test.describe('Docs preview smoke contracts', () => {
     await expectQueryParam(page, 'arg.loading', null);
     await expect(stage).toHaveAttribute('data-state', 'loading');
     await expect(specimen).toHaveAttribute('data-scenario', 'default');
-    await expect(primaryAction).toHaveAttribute('aria-busy', 'true');
+    await expect(primaryAction).not.toHaveAttribute('aria-busy');
     await expect(primaryAction).toHaveAttribute('aria-disabled', 'true');
     await expect(primaryAction).not.toHaveAttribute('disabled');
+    await expect(primaryAction.getByRole('status')).toHaveText('Loading…');
     assertNoRuntimeErrors();
   });
 
@@ -423,7 +424,8 @@ test.describe('Docs preview smoke contracts', () => {
       .getByTestId('component-specimen-button')
       .getByRole('button', { name: 'Publish changes' });
     await expect(primaryAction).toHaveAttribute('data-variant', 'soft');
-    await expect(primaryAction).toHaveAttribute('aria-busy', 'true');
+    await expect(primaryAction).not.toHaveAttribute('aria-busy');
+    await expect(primaryAction.getByRole('status')).toHaveText('Загрузка…');
     await expect(page.getByTestId('specimen-stage')).toHaveAttribute('data-state', 'loading');
     await expect(page.getByTestId('specimen-stage')).toHaveAttribute('data-krn-motion', 'reduce');
     await expect(page.getByTestId('brand-color-control')).toHaveValue('#d95831');
@@ -436,7 +438,8 @@ test.describe('Docs preview smoke contracts', () => {
     await expect(page.getByTestId('motion-control')).toHaveValue('reduce');
     await expect(page.getByTestId('brand-color-control')).toHaveValue('#d95831');
     await expect(primaryAction).toHaveAttribute('data-variant', 'soft');
-    await expect(primaryAction).toHaveAttribute('aria-busy', 'true');
+    await expect(primaryAction).not.toHaveAttribute('aria-busy');
+    await expect(primaryAction.getByRole('status')).toHaveText('Загрузка…');
 
     await page.goto(
       `${DOCS_URL}/preview/button?theme=sepia&density=tiny&direction=sideways&locale=xx-YY` +
@@ -454,7 +457,7 @@ test.describe('Docs preview smoke contracts', () => {
     await expect(page.getByTestId('viewport-control')).toHaveValue('responsive');
     await expect(page.getByTestId('scenario-control')).toHaveValue('default');
     await expect(page.getByRole('combobox', { name: 'Variant' })).toHaveValue('solid');
-    await expect(page.getByRole('checkbox', { name: 'Disabled' })).not.toBeChecked();
+    await expect(page.getByRole('checkbox', { name: 'Loading' })).not.toBeChecked();
     await expect(primaryAction).toHaveAttribute('data-variant', 'solid');
     await expect(primaryAction).toBeEnabled();
     await expect(page.getByTestId('specimen-stage')).toHaveAttribute('data-state', 'default');

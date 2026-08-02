@@ -182,7 +182,7 @@ test.describe('Enterprise browser acceptance contracts', () => {
     const wed = specimen.locator('[role="button"][aria-label="Wed: 49"]');
     await wed.focus();
     await expect(wed).toBeFocused();
-    await expect(specimen.getByRole('status')).toContainText('Wed');
+    await expect(specimen.locator('.chart-tooltip[role="status"]')).toContainText('Wed');
     await wed.evaluate((element) => {
       (element as Element & { __kernIdentityProbe?: string }).__kernIdentityProbe = 'wed';
     });
@@ -201,7 +201,7 @@ test.describe('Enterprise browser acceptance contracts', () => {
         ),
       )
       .toBe('wed');
-    await expect(specimen.getByRole('status')).toContainText('Wed');
+    await expect(specimen.locator('.chart-tooltip[role="status"]')).toContainText('Wed');
 
     specimen = await openPreviewSpecimen(page, 'line-chart', 'stress');
     const chart = specimen.locator('svg[role="group"][aria-label*="Weekly active users"]');
