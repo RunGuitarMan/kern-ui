@@ -122,7 +122,15 @@ host appears. Each Kern CDK overlay registers its origin and pane/backdrop branc
 overlay coordinator. The coordinator follows that ownership chain, so only overlays originating
 inside the top modal remain interactive; both pre-existing and late programmatic background panes
 are isolated. It consumes handled Escape events at the top layer and restores pre-existing
-`inert`, `aria-hidden`, scroll, and focus state exactly.
+`inert`, `aria-hidden`, scroll, and focus state exactly. One platform `CloseWatcher` follows the
+top closable modal, with an unhandled-Escape fallback where the API is unavailable; global modal
+ownership is released only after exit motion completes.
+
+`KrnOverlayService` is the Kit-level imperative policy over that CDK infrastructure. Component and
+`TemplateRef` content receive typed data and a `KrnOverlayRef`; the first close source wins, owned
+children settle before their parent, and views/providers are disposed before the replayed outcome
+emits. Server calls render no overlay DOM and settle as `ssr`; declarative surfaces remain the
+contract for server-visible initially open content.
 
 ## Styling and theming
 
@@ -211,9 +219,10 @@ checks, and a focused cross-engine matrix. See [COMPONENTS.md](COMPONENTS.md) an
 - Locale-aware components accept locale, complete English/Russian packs, typed shared-copy
   overrides, and label configuration. Product teams own other language dictionaries and all
   product-specific visible and accessible copy.
-- Programmatic overlay results and externally controlled picker popup state remain outside the
-  beta contract until the focus, provider, SSR, disposal, and result model in
-  [ADR 0004](adr/0004-programmatic-overlays-and-picker-state.md) is accepted.
+- Typed programmatic modal results are part of the beta contract described by
+  [ADR 0004](adr/0004-programmatic-overlays-and-picker-state.md). Externally controlled picker
+  popup state remains outside the contract until it can reuse the same ownership model without
+  duplicating picker keyboard, validation, and Forms state.
 
 The staged pre-split decision is recorded in historical
 [ADR 0001](adr/0001-runtime-boundaries.md). The implemented physical ownership model is recorded

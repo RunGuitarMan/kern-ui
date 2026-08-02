@@ -15,7 +15,7 @@ const sharedStyles = [
     path: join(sourceRoot, 'styles/components/forms.css'),
   },
 ];
-const maxRuntimeBundleBytes = 1_425_000;
+const maxRuntimeBundleBytes = 1_440_000;
 const failures = [];
 
 function walk(directory, extension) {

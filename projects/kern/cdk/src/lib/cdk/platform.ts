@@ -3,6 +3,15 @@ import { inject, InjectionToken, PLATFORM_ID } from '@angular/core';
 
 export type KrnScheduledHandle = ReturnType<typeof globalThis.setTimeout>;
 
+/** Minimal browser CloseWatcher surface used without depending on lib.dom support. */
+export interface KrnCloseWatcher {
+  addEventListener(type: 'close', listener: EventListener): void;
+  removeEventListener(type: 'close', listener: EventListener): void;
+  destroy(): void;
+}
+
+export type KrnCloseWatcherFactory = () => KrnCloseWatcher | null;
+
 /**
  * The browser capabilities Kern uses at runtime.
  *
@@ -15,6 +24,8 @@ export interface KrnPlatformAdapter {
   readonly isBrowser: boolean;
   readonly window: (Window & typeof globalThis) | null;
   readonly localStorage: Storage | null;
+  /** Creates a native close-request source, or returns null when unsupported. */
+  readonly createCloseWatcher?: KrnCloseWatcherFactory;
   matchMedia(query: string): MediaQueryList | null;
   requestAnimationFrame(callback: FrameRequestCallback): number | null;
   cancelAnimationFrame(handle: number | null): void;
@@ -85,6 +96,39 @@ function safeLocalStorage(view: Window | null): Storage | null {
   }
 }
 
+interface KrnCloseWatcherConstructor {
+  new (): KrnCloseWatcher;
+}
+
+function createSafeCloseWatcher(view: Window | null): KrnCloseWatcher | null {
+  const candidate = (view as (Window & { readonly CloseWatcher?: unknown }) | null)?.CloseWatcher;
+  if (typeof candidate !== 'function') {
+    return null;
+  }
+
+  let watcher: KrnCloseWatcher;
+  try {
+    watcher = new (candidate as KrnCloseWatcherConstructor)();
+  } catch {
+    return null;
+  }
+
+  let destroyed = false;
+  return {
+    addEventListener: (type, listener): void => {
+      if (!destroyed) watcher.addEventListener(type, listener);
+    },
+    removeEventListener: (type, listener): void => {
+      watcher.removeEventListener(type, listener);
+    },
+    destroy: (): void => {
+      if (destroyed) return;
+      destroyed = true;
+      watcher.destroy();
+    },
+  };
+}
+
 function createDefaultPlatformAdapter(): KrnPlatformAdapter {
   const document = inject(DOCUMENT);
   const browser = isPlatformBrowser(inject(PLATFORM_ID));
@@ -95,6 +139,7 @@ function createDefaultPlatformAdapter(): KrnPlatformAdapter {
     isBrowser: browser,
     window: view,
     localStorage: safeLocalStorage(view),
+    createCloseWatcher: (): KrnCloseWatcher | null => createSafeCloseWatcher(view),
     matchMedia: (query: string): MediaQueryList | null => {
       return view && typeof view.matchMedia === 'function' ? view.matchMedia(query) : null;
     },

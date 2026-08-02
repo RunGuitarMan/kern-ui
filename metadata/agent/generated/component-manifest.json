@@ -73,7 +73,7 @@
       "@kern-ui/angular/patterns",
       "@kern-ui/angular/testing"
     ],
-    "sourceDigest": "sha256-9717e03fe16cc7bf1e491dbaa13dc7aaafe1c3e8bf499d8cd3259b4e04e1eaf9"
+    "sourceDigest": "sha256-440e80c61173b61fd844b2b65921854482aa1f028e90066625cebb0bb6cd4005"
   },
   "components": [
     {
@@ -40797,6 +40797,16 @@
           "descriptionSource": "inferred"
         },
         {
+          "name": "restoreFocus",
+          "property": "restoreFocus",
+          "kind": "input",
+          "type": "HTMLElement | false | null",
+          "required": false,
+          "defaultValue": "null",
+          "description": "Explicit focus return target, or `false` to disable focus restoration.",
+          "descriptionSource": "source"
+        },
+        {
           "name": "contentTemplate",
           "property": "contentTemplate",
           "kind": "input",
@@ -40825,6 +40835,16 @@
           "defaultValue": "undefined",
           "description": "Notifies the consumer after the closed interaction completes.",
           "descriptionSource": "inferred"
+        },
+        {
+          "name": "afterExited",
+          "property": "afterExited",
+          "kind": "output",
+          "type": "void",
+          "required": false,
+          "defaultValue": "undefined",
+          "description": "Emits after exit motion and global modal cleanup have completed.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [],
@@ -40901,9 +40921,11 @@
         "closeOnEscape",
         "closeOnOutside",
         "initialFocus",
+        "restoreFocus",
         "contentTemplate",
         "actionsTemplate",
-        "closed"
+        "closed",
+        "afterExited"
       ],
       "guidance": {
         "useWhen": "Use Dialog for a focused modal decision or form that must temporarily block interaction with the page.",
@@ -41164,9 +41186,9 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 12,
+          "publicInputsAndModels": 13,
           "controlled": 7,
-          "excluded": 5,
+          "excluded": 6,
           "unclassified": 0
         },
         "exclusions": [
@@ -41228,6 +41250,18 @@
             "evidence": {
               "category": "a11y-test",
               "pointer": "tests/a11y/accessibility.spec.ts#dialog"
+            }
+          },
+          {
+            "componentId": "dialog",
+            "publicName": "restoreFocus",
+            "kind": "input",
+            "type": "HTMLElement | false | null",
+            "code": "complex-data",
+            "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+            "evidence": {
+              "category": "specimen-fixture",
+              "pointer": "preview/dialog?state=default"
             }
           }
         ]
@@ -41386,6 +41420,16 @@
           "descriptionSource": "inferred"
         },
         {
+          "name": "restoreFocus",
+          "property": "restoreFocus",
+          "kind": "input",
+          "type": "HTMLElement | false | null",
+          "required": false,
+          "defaultValue": "null",
+          "description": "Explicit focus return target, or `false` to disable focus restoration.",
+          "descriptionSource": "source"
+        },
+        {
           "name": "contentTemplate",
           "property": "contentTemplate",
           "kind": "input",
@@ -41414,6 +41458,16 @@
           "defaultValue": "undefined",
           "description": "Notifies the consumer after the closed interaction completes.",
           "descriptionSource": "inferred"
+        },
+        {
+          "name": "afterExited",
+          "property": "afterExited",
+          "kind": "output",
+          "type": "void",
+          "required": false,
+          "defaultValue": "undefined",
+          "description": "Emits after exit motion and global modal cleanup have completed.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [],
@@ -41476,9 +41530,11 @@
         "closeOnEscape",
         "closeOnOutside",
         "initialFocus",
+        "restoreFocus",
         "contentTemplate",
         "actionsTemplate",
-        "closed"
+        "closed",
+        "afterExited"
       ],
       "guidance": {
         "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
@@ -41738,9 +41794,9 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 12,
+          "publicInputsAndModels": 13,
           "controlled": 7,
-          "excluded": 5,
+          "excluded": 6,
           "unclassified": 0
         },
         "exclusions": [
@@ -41802,6 +41858,18 @@
             "evidence": {
               "category": "a11y-test",
               "pointer": "tests/a11y/accessibility.spec.ts#alert-dialog"
+            }
+          },
+          {
+            "componentId": "alert-dialog",
+            "publicName": "restoreFocus",
+            "kind": "input",
+            "type": "HTMLElement | false | null",
+            "code": "complex-data",
+            "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+            "evidence": {
+              "category": "specimen-fixture",
+              "pointer": "preview/alert-dialog?state=default"
             }
           }
         ]
@@ -41972,6 +42040,16 @@
           "descriptionSource": "inferred"
         },
         {
+          "name": "restoreFocus",
+          "property": "restoreFocus",
+          "kind": "input",
+          "type": "HTMLElement | false | null",
+          "required": false,
+          "defaultValue": "null",
+          "description": "Explicit focus return target, or `false` to disable focus restoration.",
+          "descriptionSource": "source"
+        },
+        {
           "name": "contentTemplate",
           "property": "contentTemplate",
           "kind": "input",
@@ -42000,6 +42078,16 @@
           "defaultValue": "undefined",
           "description": "Notifies the consumer after the closed interaction completes.",
           "descriptionSource": "inferred"
+        },
+        {
+          "name": "afterExited",
+          "property": "afterExited",
+          "kind": "output",
+          "type": "void",
+          "required": false,
+          "defaultValue": "undefined",
+          "description": "Emits after exit motion and global modal cleanup have completed.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [],
@@ -42074,9 +42162,11 @@
         "closeOnEscape",
         "closeOnOutside",
         "initialFocus",
+        "restoreFocus",
         "contentTemplate",
         "actionsTemplate",
-        "closed"
+        "closed",
+        "afterExited"
       ],
       "guidance": {
         "useWhen": "Use Drawer for a focused modal workflow whose spatial relationship is naturally anchored to a viewport side.",
@@ -42336,9 +42426,9 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 12,
+          "publicInputsAndModels": 13,
           "controlled": 7,
-          "excluded": 5,
+          "excluded": 6,
           "unclassified": 0
         },
         "exclusions": [
@@ -42400,6 +42490,18 @@
             "evidence": {
               "category": "a11y-test",
               "pointer": "tests/a11y/accessibility.spec.ts#drawer"
+            }
+          },
+          {
+            "componentId": "drawer",
+            "publicName": "restoreFocus",
+            "kind": "input",
+            "type": "HTMLElement | false | null",
+            "code": "complex-data",
+            "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+            "evidence": {
+              "category": "specimen-fixture",
+              "pointer": "preview/drawer?state=default"
             }
           }
         ]
@@ -42570,6 +42672,16 @@
           "descriptionSource": "inferred"
         },
         {
+          "name": "restoreFocus",
+          "property": "restoreFocus",
+          "kind": "input",
+          "type": "HTMLElement | false | null",
+          "required": false,
+          "defaultValue": "null",
+          "description": "Explicit focus return target, or `false` to disable focus restoration.",
+          "descriptionSource": "source"
+        },
+        {
           "name": "contentTemplate",
           "property": "contentTemplate",
           "kind": "input",
@@ -42598,6 +42710,16 @@
           "defaultValue": "undefined",
           "description": "Notifies the consumer after the closed interaction completes.",
           "descriptionSource": "inferred"
+        },
+        {
+          "name": "afterExited",
+          "property": "afterExited",
+          "kind": "output",
+          "type": "void",
+          "required": false,
+          "defaultValue": "undefined",
+          "description": "Emits after exit motion and global modal cleanup have completed.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [],
@@ -42661,9 +42783,11 @@
         "closeOnEscape",
         "closeOnOutside",
         "initialFocus",
+        "restoreFocus",
         "contentTemplate",
         "actionsTemplate",
-        "closed"
+        "closed",
+        "afterExited"
       ],
       "guidance": {
         "useWhen": "Use Bottom Sheet for a focused modal task that must remain reachable on narrow touch layouts.",
@@ -42922,9 +43046,9 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 12,
+          "publicInputsAndModels": 13,
           "controlled": 7,
-          "excluded": 5,
+          "excluded": 6,
           "unclassified": 0
         },
         "exclusions": [
@@ -42986,6 +43110,18 @@
             "evidence": {
               "category": "a11y-test",
               "pointer": "tests/a11y/accessibility.spec.ts#bottom-sheet"
+            }
+          },
+          {
+            "componentId": "bottom-sheet",
+            "publicName": "restoreFocus",
+            "kind": "input",
+            "type": "HTMLElement | false | null",
+            "code": "complex-data",
+            "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+            "evidence": {
+              "category": "specimen-fixture",
+              "pointer": "preview/bottom-sheet?state=default"
             }
           }
         ]
@@ -64568,6 +64704,30 @@
       "componentIds": []
     },
     {
+      "name": "KrnCloseWatcher",
+      "aliases": [],
+      "owner": "cdk",
+      "importPath": "@kern-ui/angular/cdk",
+      "kind": "interface",
+      "type": "interface KrnCloseWatcher",
+      "deprecated": false,
+      "description": "Minimal browser CloseWatcher surface used without depending on lib.dom support.",
+      "source": "projects/kern/cdk/src/lib/cdk/platform.ts",
+      "componentIds": []
+    },
+    {
+      "name": "KrnCloseWatcherFactory",
+      "aliases": [],
+      "owner": "cdk",
+      "importPath": "@kern-ui/angular/cdk",
+      "kind": "type",
+      "type": "KrnCloseWatcherFactory",
+      "deprecated": false,
+      "description": "Public type owned by @kern-ui/angular/cdk.",
+      "source": "projects/kern/cdk/src/lib/cdk/platform.ts",
+      "componentIds": []
+    },
+    {
       "name": "KrnContent",
       "aliases": [],
       "owner": "cdk",
@@ -65732,6 +65892,18 @@
       "componentIds": []
     },
     {
+      "name": "injectKrnOverlayData",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "function",
+      "type": "<Data>() => Data",
+      "deprecated": false,
+      "description": "Typed access to `KRN_OVERLAY_DATA` from programmatic component content.",
+      "source": "projects/kern/kit/src/lib/feedback/programmatic-overlay.ts",
+      "componentIds": []
+    },
+    {
       "name": "KRN_BUTTON_DEFAULT_OPTIONS",
       "aliases": [],
       "owner": "kit",
@@ -65873,6 +66045,18 @@
       "deprecated": false,
       "description": "Scoped defaults shared by Dropdown Button and Split Button.\n\nEach provider merges a partial immutable patch with the closest ancestor\nconfiguration.",
       "source": "projects/kern/kit/src/lib/actions/dropdown-button-options.ts",
+      "componentIds": []
+    },
+    {
+      "name": "KRN_OVERLAY_DATA",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "constant",
+      "type": "InjectionToken<unknown>",
+      "deprecated": false,
+      "description": "Data injected into component content opened by `KrnOverlayService`.",
+      "source": "projects/kern/kit/src/lib/feedback/programmatic-overlay.ts",
       "componentIds": []
     },
     {
@@ -67227,8 +67411,44 @@
       "kind": "type",
       "type": "KrnOverlayCloseReason",
       "deprecated": false,
-      "description": "Public type owned by @kern-ui/angular/kit.",
+      "description": "Declarative overlay close source. `escape` also represents the platform close\nrequest (for example Android Back or an assistive-technology dismiss gesture).",
       "source": "projects/kern/kit/src/lib/feedback/feedback.types.ts",
+      "componentIds": []
+    },
+    {
+      "name": "KrnOverlayConfig",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "type",
+      "type": "KrnOverlayConfig<Data>",
+      "deprecated": false,
+      "description": "Typed configuration for a programmatically opened overlay.",
+      "source": "projects/kern/kit/src/lib/feedback/programmatic-overlay.ts",
+      "componentIds": []
+    },
+    {
+      "name": "KrnOverlayDismissReason",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "type",
+      "type": "KrnOverlayDismissReason",
+      "deprecated": false,
+      "description": "Reasons that settle a programmatically opened overlay without a result.",
+      "source": "projects/kern/kit/src/lib/feedback/programmatic-overlay.ts",
+      "componentIds": []
+    },
+    {
+      "name": "KrnOverlayOutcome",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "type",
+      "type": "KrnOverlayOutcome<Result, DismissReason>",
+      "deprecated": false,
+      "description": "The single terminal value produced by a programmatic overlay.",
+      "source": "projects/kern/kit/src/lib/feedback/programmatic-overlay.ts",
       "componentIds": []
     },
     {
@@ -67244,6 +67464,30 @@
       "componentIds": []
     },
     {
+      "name": "KrnOverlayRef",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "class",
+      "type": "class KrnOverlayRef",
+      "deprecated": false,
+      "description": "Controls and observes one programmatic overlay.\n\n`close` and `dismiss` return `true` only for the first terminal request. The\n`closed` stream emits once after the surface has exited and all owned views\nhave been disposed, then completes. It replays that value to late subscribers.",
+      "source": "projects/kern/kit/src/lib/feedback/programmatic-overlay.ts",
+      "componentIds": []
+    },
+    {
+      "name": "KrnOverlayService",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "class",
+      "type": "class KrnOverlayService",
+      "deprecated": false,
+      "description": "Opens typed component or template content in one of Kern's modal surfaces.",
+      "source": "projects/kern/kit/src/lib/feedback/programmatic-overlay.ts",
+      "componentIds": []
+    },
+    {
       "name": "KrnOverlaySurface",
       "aliases": [],
       "owner": "kit",
@@ -67253,6 +67497,30 @@
       "deprecated": false,
       "description": "Public class owned by @kern-ui/angular/kit.",
       "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
+      "componentIds": []
+    },
+    {
+      "name": "KrnOverlayTemplateContext",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "interface",
+      "type": "interface KrnOverlayTemplateContext",
+      "deprecated": false,
+      "description": "Context stamped into programmatic `TemplateRef` content.",
+      "source": "projects/kern/kit/src/lib/feedback/programmatic-overlay.ts",
+      "componentIds": []
+    },
+    {
+      "name": "KrnOverlayVariant",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "type",
+      "type": "KrnOverlayVariant",
+      "deprecated": false,
+      "description": "Public type owned by @kern-ui/angular/kit.",
+      "source": "projects/kern/kit/src/lib/feedback/programmatic-overlay.ts",
       "componentIds": []
     },
     {

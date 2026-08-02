@@ -151,6 +151,16 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "restoreFocus",
+      "property": "restoreFocus",
+      "kind": "input",
+      "type": "HTMLElement | false | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Explicit focus return target, or `false` to disable focus restoration.",
+      "descriptionSource": "source"
+    },
+    {
       "name": "contentTemplate",
       "property": "contentTemplate",
       "kind": "input",
@@ -179,6 +189,16 @@
       "defaultValue": "undefined",
       "description": "Notifies the consumer after the closed interaction completes.",
       "descriptionSource": "inferred"
+    },
+    {
+      "name": "afterExited",
+      "property": "afterExited",
+      "kind": "output",
+      "type": "void",
+      "required": false,
+      "defaultValue": "undefined",
+      "description": "Emits after exit motion and global modal cleanup have completed.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [],
@@ -241,9 +261,11 @@
     "closeOnEscape",
     "closeOnOutside",
     "initialFocus",
+    "restoreFocus",
     "contentTemplate",
     "actionsTemplate",
-    "closed"
+    "closed",
+    "afterExited"
   ],
   "guidance": {
     "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
@@ -503,9 +525,9 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 12,
+      "publicInputsAndModels": 13,
       "controlled": 7,
-      "excluded": 5,
+      "excluded": 6,
       "unclassified": 0
     },
     "exclusions": [
@@ -567,6 +589,18 @@
         "evidence": {
           "category": "a11y-test",
           "pointer": "tests/a11y/accessibility.spec.ts#alert-dialog"
+        }
+      },
+      {
+        "componentId": "alert-dialog",
+        "publicName": "restoreFocus",
+        "kind": "input",
+        "type": "HTMLElement | false | null",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/alert-dialog?state=default"
         }
       }
     ]

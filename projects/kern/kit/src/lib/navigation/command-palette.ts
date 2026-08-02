@@ -13,12 +13,7 @@ import {
   viewChildren,
 } from '@angular/core';
 import { A11yModule, LiveAnnouncer } from '@angular/cdk/a11y';
-import {
-  KRN_PLATFORM,
-  KrnIdService,
-  KrnOverlayCoordinator,
-  krnIsHtmlElement,
-} from '@kern-ui/angular/cdk';
+import { KRN_PLATFORM, KrnIdService, KrnOverlayCoordinator } from '@kern-ui/angular/cdk';
 import { KRN_LOCALE, KRN_TRANSLATIONS, krnFormatTranslation } from '@kern-ui/angular/core';
 import type { KrnCommandItem } from './navigation.types';
 
@@ -443,10 +438,9 @@ export class KrnCommandPalette {
   constructor() {
     effect((onCleanup) => {
       if (!this.open() || !this.platform.isBrowser) return;
-      const previousFocus = krnIsHtmlElement(this.platform, this.platform.document.activeElement)
-        ? this.platform.document.activeElement
-        : null;
-      this.overlayCoordinator.activate(this.overlayId, this.host.nativeElement, previousFocus);
+      this.overlayCoordinator.activate(this.overlayId, this.host.nativeElement, null, () =>
+        this.close('escape'),
+      );
       this.activeIndex.set(0);
       const focus = (): void => {
         const panel = this.panel()?.nativeElement;
@@ -505,13 +499,6 @@ export class KrnCommandPalette {
   }
 
   protected onKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Escape') {
-      if (event.defaultPrevented || !this.overlayCoordinator.isTop(this.overlayId)) return;
-      event.preventDefault();
-      event.stopPropagation();
-      this.close('escape');
-      return;
-    }
     const items = this.filteredItems();
     if (event.key === 'Enter' && items[this.activeIndex()]) {
       event.preventDefault();

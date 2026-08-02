@@ -945,6 +945,12 @@
       "owner": "core",
       "kind": "function"
     },
+    "injectKrnOverlayData": {
+      "canonicalSymbol": "injectKrnOverlayData",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "function"
+    },
     "isKrnComponentContent": {
       "canonicalSymbol": "isKrnComponentContent",
       "importPath": "@kern-ui/angular/cdk",
@@ -1129,6 +1135,12 @@
       "canonicalSymbol": "KRN_MOTION",
       "importPath": "@kern-ui/angular/core",
       "owner": "core",
+      "kind": "constant"
+    },
+    "KRN_OVERLAY_DATA": {
+      "canonicalSymbol": "KRN_OVERLAY_DATA",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
       "kind": "constant"
     },
     "KRN_OVERLAY_HOST": {
@@ -1580,6 +1592,18 @@
       "importPath": "@kern-ui/angular/cdk",
       "owner": "cdk",
       "kind": "interface"
+    },
+    "KrnCloseWatcher": {
+      "canonicalSymbol": "KrnCloseWatcher",
+      "importPath": "@kern-ui/angular/cdk",
+      "owner": "cdk",
+      "kind": "interface"
+    },
+    "KrnCloseWatcherFactory": {
+      "canonicalSymbol": "KrnCloseWatcherFactory",
+      "importPath": "@kern-ui/angular/cdk",
+      "owner": "cdk",
+      "kind": "type"
     },
     "KrnCluster": {
       "canonicalSymbol": "KrnCluster",
@@ -2781,11 +2805,23 @@
       "owner": "kit",
       "kind": "type"
     },
+    "KrnOverlayConfig": {
+      "canonicalSymbol": "KrnOverlayConfig",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "type"
+    },
     "KrnOverlayCoordinator": {
       "canonicalSymbol": "KrnOverlayCoordinator",
       "importPath": "@kern-ui/angular/cdk",
       "owner": "cdk",
       "kind": "class"
+    },
+    "KrnOverlayDismissReason": {
+      "canonicalSymbol": "KrnOverlayDismissReason",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "type"
     },
     "KrnOverlayHarness": {
       "canonicalSymbol": "KrnOverlayHarness",
@@ -2817,17 +2853,47 @@
       "owner": "cdk",
       "kind": "type"
     },
+    "KrnOverlayOutcome": {
+      "canonicalSymbol": "KrnOverlayOutcome",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "type"
+    },
     "KrnOverlayPosition": {
       "canonicalSymbol": "KrnOverlayPosition",
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "type"
     },
+    "KrnOverlayRef": {
+      "canonicalSymbol": "KrnOverlayRef",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "class"
+    },
+    "KrnOverlayService": {
+      "canonicalSymbol": "KrnOverlayService",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "class"
+    },
     "KrnOverlaySurface": {
       "canonicalSymbol": "KrnOverlaySurface",
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "class"
+    },
+    "KrnOverlayTemplateContext": {
+      "canonicalSymbol": "KrnOverlayTemplateContext",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "interface"
+    },
+    "KrnOverlayVariant": {
+      "canonicalSymbol": "KrnOverlayVariant",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "type"
     },
     "KrnPageHeader": {
       "canonicalSymbol": "KrnPageHeader",

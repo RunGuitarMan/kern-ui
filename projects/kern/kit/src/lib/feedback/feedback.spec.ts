@@ -391,6 +391,7 @@ describe('Kern feedback', () => {
     const preExistingBackgroundBranch = inertAncestor(backgroundPane);
     expect(preExistingBackgroundBranch).not.toBeNull();
     expect(preExistingBackgroundBranch?.getAttribute('aria-hidden')).toBe('true');
+    expect(preExistingBackgroundBranch?.hasAttribute('data-krn-modal-background')).toBe(true);
 
     fixture.componentInstance.showLateBackground.set(true);
     fixture.detectChanges();
@@ -438,6 +439,7 @@ describe('Kern feedback', () => {
     fixture.detectChanges();
     await fixture.whenStable();
     expect(inertAncestor(lateBackgroundPane ?? null)).toBeNull();
+    expect(preExistingBackgroundBranch?.hasAttribute('data-krn-modal-background')).toBe(false);
 
     fixture.destroy();
     fixture.nativeElement.remove();
@@ -565,6 +567,45 @@ describe('Kern feedback', () => {
     fixture.nativeElement.remove();
   });
 
+  it('restores focus when controlled markup removes a closing dialog', async () => {
+    @Component({
+      imports: [KrnDialog],
+      template: `
+        <button type="button" class="conditional-trigger" (click)="open.set(true)">
+          Open dialog
+        </button>
+        @if (open()) {
+          <krn-dialog title="Edit profile" [(open)]="open" />
+        }
+      `,
+    })
+    class ConditionalDialogHost {
+      readonly open = signal(false);
+    }
+
+    await TestBed.configureTestingModule({ imports: [ConditionalDialogHost] }).compileComponents();
+    const fixture = TestBed.createComponent(ConditionalDialogHost);
+    document.body.append(fixture.nativeElement);
+    fixture.detectChanges();
+    const trigger = fixture.nativeElement.querySelector(
+      '.conditional-trigger',
+    ) as HTMLButtonElement;
+    trigger.focus();
+    trigger.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('[role="dialog"]')).not.toBeNull();
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    fixture.detectChanges();
+    await new Promise<void>((resolve) => queueMicrotask(resolve));
+
+    expect(fixture.nativeElement.querySelector('[role="dialog"]')).toBeNull();
+    expect(document.activeElement).toBe(trigger);
+    fixture.destroy();
+    fixture.nativeElement.remove();
+  });
+
   it('keeps only the top modal interactive and restores the shared scroll lock', async () => {
     await TestBed.configureTestingModule({ imports: [KrnDialog] }).compileComponents();
     const first = TestBed.createComponent(KrnDialog);
@@ -625,9 +666,16 @@ describe('Kern feedback', () => {
           dispatchEvent: () => true,
         }) as MediaQueryList,
     );
+    const trigger = document.createElement('button');
+    trigger.textContent = 'Open workspace settings';
+    document.body.append(trigger);
+    trigger.focus();
+    const previousOverflow = document.body.style.overflow;
     const fixture = await create(KrnDrawer, { open: true, title: 'Workspace settings' });
     const closeReasons: string[] = [];
+    let exitCount = 0;
     fixture.componentInstance.closed.subscribe((reason) => closeReasons.push(reason));
+    fixture.componentInstance.afterExited.subscribe(() => (exitCount += 1));
 
     (fixture.nativeElement.querySelector('.close') as HTMLButtonElement).click();
     fixture.detectChanges();
@@ -638,6 +686,17 @@ describe('Kern feedback', () => {
     expect(closingBackdrop.dataset['state']).toBe('closing');
     expect(closingBackdrop.getAttribute('aria-hidden')).toBe('true');
     expect(closingBackdrop.hasAttribute('inert')).toBe(true);
+    expect(trigger.inert).toBe(true);
+    expect(document.body.style.overflow).toBe('hidden');
+    expect(exitCount).toBe(0);
+
+    const nestedSurface = document.createElement('div');
+    nestedSurface.classList.add('surface');
+    closingBackdrop.querySelector('.body')?.append(nestedSurface);
+    nestedSurface.dispatchEvent(new Event('animationend', { bubbles: true }));
+    fixture.detectChanges();
+    expect(closingBackdrop.dataset['state']).toBe('closing');
+    expect(exitCount).toBe(0);
 
     fixture.componentInstance.open.set(true);
     fixture.detectChanges();
@@ -645,6 +704,7 @@ describe('Kern feedback', () => {
     expect(reopenedBackdrop.dataset['state']).toBe('open');
     expect(reopenedBackdrop.hasAttribute('aria-hidden')).toBe(false);
     expect(reopenedBackdrop.hasAttribute('inert')).toBe(false);
+    expect(exitCount).toBe(0);
 
     (fixture.nativeElement.querySelector('.close') as HTMLButtonElement).click();
     fixture.detectChanges();
@@ -654,6 +714,12 @@ describe('Kern feedback', () => {
     fixture.detectChanges();
     expect(closeReasons).toEqual(['action', 'action']);
     expect(fixture.nativeElement.querySelector('.backdrop')).toBeNull();
+    expect(trigger.inert).toBe(false);
+    expect(document.body.style.overflow).toBe(previousOverflow);
+    expect(exitCount).toBe(1);
+    await new Promise<void>((resolve) => queueMicrotask(resolve));
+    expect(document.activeElement).toBe(trigger);
+    trigger.remove();
     vi.unstubAllGlobals();
   });
 

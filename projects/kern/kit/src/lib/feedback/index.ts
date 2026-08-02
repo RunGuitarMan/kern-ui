@@ -11,3 +11,16 @@ export {
   KrnDrawer,
   KrnOverlaySurface,
 } from './modal-overlays';
+export {
+  KRN_OVERLAY_DATA,
+  KrnOverlayRef,
+  KrnOverlayService,
+  injectKrnOverlayData,
+} from './programmatic-overlay';
+export type {
+  KrnOverlayConfig,
+  KrnOverlayDismissReason,
+  KrnOverlayOutcome,
+  KrnOverlayTemplateContext,
+  KrnOverlayVariant,
+} from './programmatic-overlay';

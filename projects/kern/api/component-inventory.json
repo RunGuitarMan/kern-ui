@@ -14,16 +14,16 @@
     "projects/showcase/src/lib/catalog.ts"
   ],
   "summary": {
-    "selectorCount": 150,
-    "implementationCount": 137,
-    "componentCount": 132,
+    "selectorCount": 151,
+    "implementationCount": 138,
+    "componentCount": 133,
     "directiveCount": 5,
     "catalogEntryCount": 131,
     "catalogReviewUnitCount": 126,
     "catalogAliasEntryCount": 5,
     "publicReviewUnitCount": 135,
     "supportingReviewUnitCount": 9,
-    "internalImplementationCount": 2,
+    "internalImplementationCount": 3,
     "selectorAliasCount": 13
   },
   "units": [
@@ -2017,6 +2017,30 @@
       "canonicalSelector": "krn-tooltip-surface",
       "publicSymbols": [],
       "selectors": ["krn-tooltip-surface"],
+      "selectorDeprecations": [],
+      "catalog": [],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnProgrammaticOverlayHost",
+      "symbol": "KrnProgrammaticOverlayHost",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": null,
+      "family": "feedback",
+      "source": "projects/kern/kit/src/lib/feedback/programmatic-overlay.ts",
+      "visibility": "internal",
+      "role": "internal",
+      "reviewWith": "kit:KrnDialog",
+      "lifecycle": null,
+      "canonicalPublicSymbol": null,
+      "canonicalSelector": "krn-programmatic-overlay-host",
+      "publicSymbols": [],
+      "selectors": ["krn-programmatic-overlay-host"],
       "selectorDeprecations": [],
       "catalog": [],
       "aliases": {

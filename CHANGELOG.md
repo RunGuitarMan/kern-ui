@@ -20,6 +20,9 @@ contract or upgrade decision.
 - Cross-cutting `provideKrn` configuration for locale, direction, theme, density, motion,
   preference persistence, overlay host, platform adaptation, and typed translation overrides.
 - Shared SSR-safe platform, deterministic-ID, overlay-coordination, and typed-content primitives.
+- A typed `KrnOverlayService` for component and `TemplateRef` dialogs, alert dialogs, drawers, and
+  bottom sheets, with injected data, close-once results, navigation/parent/destroy outcomes, and
+  deterministic SSR dismissal.
 - Physical `/cdk`, `/i18n`, `/core`, `/kit`, `/addon-grid`, `/addon-charts`, and `/patterns`
   runtime entrypoints with a compatibility-only package root and strict mixed-import identity
   gates.
@@ -87,7 +90,9 @@ contract or upgrade decision.
   state reconciliation, focus trap/restore, inert background, scroll lock, Escape/backdrop close,
   instance-safe main IDs, and customizable `navigationLabel`/`closeNavigationLabel` inputs.
 - Unified overlay stacking, inert background handling, scroll locking, focus restoration, and
-  toast interaction timing.
+  toast interaction timing. Modal close requests now use one platform `CloseWatcher` when
+  available (including Android Back), fall back to unhandled Escape, and retain modal ownership
+  until exit motion completes.
 - Made AppShell navigation modal and keyboard-operable at mobile breakpoints, and aligned
   Popover/Hover Card semantics with disclosure and non-modal preview behavior.
 - Strengthened App Shell with canonical responsive drawer state, composed dialog naming and

@@ -90,6 +90,13 @@ interface KrnClipboardWriter {
 declare const KRN_CLIPBOARD_WRITER: InjectionToken<KrnClipboardWriter>;
 
 type KrnScheduledHandle = ReturnType<typeof globalThis.setTimeout>;
+/** Minimal browser CloseWatcher surface used without depending on lib.dom support. */
+interface KrnCloseWatcher {
+  addEventListener(type: 'close', listener: EventListener): void;
+  removeEventListener(type: 'close', listener: EventListener): void;
+  destroy(): void;
+}
+type KrnCloseWatcherFactory = () => KrnCloseWatcher | null;
 /**
  * The browser capabilities Kern uses at runtime.
  *
@@ -102,6 +109,8 @@ interface KrnPlatformAdapter {
   readonly isBrowser: boolean;
   readonly window: (Window & typeof globalThis) | null;
   readonly localStorage: Storage | null;
+  /** Creates a native close-request source, or returns null when unsupported. */
+  readonly createCloseWatcher?: KrnCloseWatcherFactory;
   matchMedia(query: string): MediaQueryList | null;
   requestAnimationFrame(callback: FrameRequestCallback): number | null;
   cancelAnimationFrame(handle: number | null): void;
@@ -149,11 +158,23 @@ declare class KrnOverlayCoordinator {
   private readonly stack;
   private readonly background;
   private readonly overlayOrigins;
+  private closeBindingId;
+  private closeBindingRequest;
+  private closeWatcher;
+  private closeWatcherListener;
+  private fallbackEscapeListener;
   private previousOverflow;
   private recentPointerOrigin;
   constructor();
-  activate(id: string, host?: HTMLElement | null, restoreFocus?: HTMLElement | null): void;
-  deactivate(id: string, focusRestoreDelay?: number): void;
+  activate(
+    id: string,
+    host?: HTMLElement | null,
+    restoreFocus?: HTMLElement | false | null,
+    closeRequest?: (() => void) | null,
+  ): void;
+  deactivate(id: string, focusRestoreDelay?: number, shouldRestoreFocus?: boolean): void;
+  /** Updates close behavior without changing the overlay's position in the active stack. */
+  updateCloseRequest(id: string, closeRequest: (() => void) | null): void;
   isTop(id: string): boolean;
   /**
    * Associates a CDK overlay branch with the element that opened it.
@@ -178,6 +199,8 @@ declare class KrnOverlayCoordinator {
   focusInitial(panel: HTMLElement, initialFocus: KrnOverlayInitialFocus): void;
   private firstTabbable;
   private resolveRestoreFocus;
+  private syncCloseRequestBinding;
+  private clearCloseRequestBinding;
   private queryWithin;
   private syncBackground;
   private belongsToTopOverlay;
@@ -207,6 +230,8 @@ export {
 };
 export type {
   KrnClipboardWriter,
+  KrnCloseWatcher,
+  KrnCloseWatcherFactory,
   KrnContent,
   KrnItemContentContext,
   KrnOverlayHostResolver,

@@ -35,7 +35,10 @@
     "test-hydration": {
       "executor": "@angular/build:unit-test",
       "options": {
-        "include": ["projects/kern/kit/src/lib/actions/toggle-group.hydration.spec.ts"],
+        "include": [
+          "projects/kern/kit/src/lib/actions/toggle-group.hydration.spec.ts",
+          "projects/kern/kit/src/lib/feedback/modal-overlays.hydration.spec.ts"
+        ],
         "watch": false,
         "tsConfig": "projects/kern/tsconfig.spec.json"
       }

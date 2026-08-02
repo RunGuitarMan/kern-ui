@@ -12,12 +12,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import {
-  KRN_PLATFORM,
-  KrnIdService,
-  KrnOverlayCoordinator,
-  krnIsHtmlElement,
-} from '@kern-ui/angular/cdk';
+import { KRN_PLATFORM, KrnIdService, KrnOverlayCoordinator } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 
 @Component({
@@ -245,9 +240,7 @@ export class KrnResponsiveApplicationShell {
       if (!panel || !overlay) {
         return;
       }
-      const activeElement = this.platform.document.activeElement;
-      const restoreFocus = krnIsHtmlElement(this.platform, activeElement) ? activeElement : null;
-      this.coordinator.activate(this.overlayId, overlay, restoreFocus);
+      this.coordinator.activate(this.overlayId, overlay, null, () => this.closeNavigation());
       this.platform.queueMicrotask(() => {
         if (
           this.isMobileNavigationOpen() &&
@@ -258,21 +251,7 @@ export class KrnResponsiveApplicationShell {
           this.coordinator.focusInitial(panel, 'first-tabbable');
         }
       });
-      const onKeydown = (event: KeyboardEvent): void => {
-        if (
-          event.key !== 'Escape' ||
-          event.defaultPrevented ||
-          !this.coordinator.isTop(this.overlayId)
-        ) {
-          return;
-        }
-        event.preventDefault();
-        event.stopPropagation();
-        this.closeNavigation();
-      };
-      this.platform.document.addEventListener('keydown', onKeydown);
       onCleanup(() => {
-        this.platform.document.removeEventListener('keydown', onKeydown);
         this.coordinator.deactivate(this.overlayId);
       });
     });

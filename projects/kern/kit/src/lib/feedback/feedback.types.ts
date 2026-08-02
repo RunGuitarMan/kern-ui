@@ -18,5 +18,9 @@ export interface KrnToastRecord extends KrnToastOptions {
   readonly createdAt: number;
 }
 
+/**
+ * Declarative overlay close source. `escape` also represents the platform close
+ * request (for example Android Back or an assistive-technology dismiss gesture).
+ */
 export type KrnOverlayCloseReason = 'api' | 'escape' | 'outside' | 'action';
 export type KrnOverlayPosition = 'center' | 'inline-end' | 'bottom';

@@ -67,9 +67,11 @@ void bootstrapApplication(KernDialogAgentExample);
 | `closeOnEscape`   | input  | `boolean`                      | no       | `true`                              | Allows Escape to dismiss the topmost owned overlay.                      |
 | `closeOnOutside`  | input  | `boolean \| null`              | no       | `null`                              | Allows an interaction outside the owned overlay to dismiss it.           |
 | `initialFocus`    | input  | `string`                       | no       | `'first-tabbable'`                  | Identifies the element that receives focus when the modal surface opens. |
+| `restoreFocus`    | input  | `HTMLElement \| false \| null` | no       | `null`                              | Explicit focus return target, or `false` to disable focus restoration.   |
 | `contentTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`                              | Template used to render the component body with its typed context.       |
 | `actionsTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`                              | Template used to render product-owned actions in the designated slot.    |
 | `closed`          | output | `KrnOverlayCloseReason`        | no       | `undefined`                         | Notifies the consumer after the closed interaction completes.            |
+| `afterExited`     | output | `void`                         | no       | `undefined`                         | Emits after exit motion and global modal cleanup have completed.         |
 
 ## Deprecated selectors
 
@@ -122,8 +124,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/dialog`
 
 Scenarios: `default`.
-Public API coverage: 7/12
-directly controlled; 5 exact exclusions; 0 unclassified.
+Public API coverage: 7/13
+directly controlled; 6 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -148,6 +150,7 @@ Exact API exclusions:
 | `closeLabel`      | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#dialog`          | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 | `contentTemplate` | template           | `component-example:agent/components/dialog.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control.                                                           |
 | `initialFocus`    | dom-wiring         | `a11y-test:tests/a11y/accessibility.spec.ts#dialog`          | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid.                                                        |
+| `restoreFocus`    | complex-data       | `specimen-fixture:preview/dialog?state=default`              | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                     |
 
 Presets:
 

@@ -15,5 +15,11 @@ export { KrnOverlayCoordinator } from './overlay-coordinator';
 
 export type { KrnContent, KrnItemContentContext } from './content';
 export type { KrnClipboardWriter } from './clipboard';
-export type { KrnOverlayHostResolver, KrnPlatformAdapter, KrnScheduledHandle } from './platform';
+export type {
+  KrnCloseWatcher,
+  KrnCloseWatcherFactory,
+  KrnOverlayHostResolver,
+  KrnPlatformAdapter,
+  KrnScheduledHandle,
+} from './platform';
 export type { KrnOverlayInitialFocus } from './overlay-coordinator';

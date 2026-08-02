@@ -359,27 +359,15 @@ export class KrnAppShell {
         activeElement.isConnected &&
         activeElement !== this.platform.document.body &&
         activeElement !== this.platform.document.documentElement
-          ? activeElement
+          ? null
           : (this.mobileTrigger()?.nativeElement ?? null);
-      this.coordinator.activate(this.overlayId, panel, restoreFocus);
+      this.coordinator.activate(this.overlayId, panel, restoreFocus, () =>
+        this.closeMobileNavigation(),
+      );
       this.platform.queueMicrotask(() =>
         this.coordinator.focusInitial(panel, this.mobileNavigationInitialFocus()),
       );
-      const onKeydown = (event: KeyboardEvent): void => {
-        if (
-          event.key !== 'Escape' ||
-          event.defaultPrevented ||
-          !this.coordinator.isTop(this.overlayId)
-        ) {
-          return;
-        }
-        event.preventDefault();
-        event.stopPropagation();
-        this.closeMobileNavigation();
-      };
-      this.platform.document.addEventListener('keydown', onKeydown);
       onCleanup(() => {
-        this.platform.document.removeEventListener('keydown', onKeydown);
         this.coordinator.deactivate(this.overlayId);
       });
     });

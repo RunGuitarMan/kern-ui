@@ -20,7 +20,6 @@ import {
   KRN_PLATFORM,
   KrnIdService,
   KrnOverlayCoordinator,
-  krnIsHtmlElement,
   krnPrefersReducedMotion,
   type KrnOverlayInitialFocus,
   type KrnScheduledHandle,
@@ -44,6 +43,7 @@ const OVERLAY_TEMPLATE = `
       [attr.aria-hidden]="!open() ? 'true' : null"
       [attr.inert]="!open() ? '' : null"
       (pointerdown)="onBackdropPointerdown($event)"
+      (animationend)="onBackdropAnimationEnd($event)"
       (transitionend)="onBackdropTransitionEnd($event)"
     >
       <section
@@ -196,6 +196,9 @@ export abstract class KrnOverlaySurface {
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
   private exitTimer: KrnScheduledHandle | null = null;
+  private focusTimer: KrnScheduledHandle | null = null;
+  private lifecycle: 'closed' | 'open' | 'exiting' = 'closed';
+  private coordinatorActive = false;
   readonly open = model(false);
   readonly title = input('');
   readonly description = input('');
@@ -208,9 +211,13 @@ export abstract class KrnOverlaySurface {
     transform: nullableBooleanAttribute,
   });
   readonly initialFocus = input<KrnOverlayInitialFocus>('first-tabbable');
+  /** Explicit focus return target, or `false` to disable focus restoration. */
+  readonly restoreFocus = input<HTMLElement | false | null>(null);
   readonly contentTemplate = input<TemplateRef<unknown> | null>(null);
   readonly actionsTemplate = input<TemplateRef<unknown> | null>(null);
   readonly closed = output<KrnOverlayCloseReason>();
+  /** Emits after exit motion and global modal cleanup have completed. */
+  readonly afterExited = output<void>();
   protected readonly rendered = signal(false);
   protected readonly closing = signal(false);
   private readonly overlayId = this.ids.next('overlay');
@@ -221,72 +228,20 @@ export abstract class KrnOverlaySurface {
     effect(() => {
       const open = this.open();
       if (open) {
-        this.cancelExit();
-        this.rendered.set(true);
-        this.closing.set(false);
+        this.beginOpen(this.closeOnEscape());
         return;
       }
-      if (!this.rendered()) return;
-      this.closing.set(true);
-      if (
-        !this.platform.isBrowser ||
-        !this.supportsExitAnimation() ||
-        this.prefersReducedMotion()
-      ) {
-        this.finishExit();
-        return;
-      }
-      const view = this.platform.window;
-      if (!view) {
-        this.finishExit();
-        return;
-      }
-      this.exitTimer = this.platform.schedule(() => this.finishExit(), overlayExitDuration);
+      if (this.lifecycle === 'open') this.beginExit();
     });
 
-    effect((onCleanup) => {
-      if (!this.open() || !this.platform.isBrowser) return;
-      const document = this.platform.document;
-      const previousFocus = krnIsHtmlElement(this.platform, document.activeElement)
-        ? document.activeElement
-        : null;
-      this.coordinator.activate(this.overlayId, this.host.nativeElement, previousFocus);
-      const focus = (): void => {
-        const panel = this.panel()?.nativeElement;
-        if (panel && this.coordinator.isTop(this.overlayId)) {
-          this.coordinator.focusInitial(panel, this.initialFocus());
-        }
-      };
-      const focusTimer = this.platform.schedule(focus);
-      if (focusTimer === null) focus();
-      const onKeydown = (event: KeyboardEvent): void => {
-        if (
-          event.key !== 'Escape' ||
-          event.defaultPrevented ||
-          !this.open() ||
-          !this.closeOnEscape() ||
-          !this.coordinator.isTop(this.overlayId)
-        ) {
-          return;
-        }
-        event.preventDefault();
-        event.stopPropagation();
-        this.close('escape');
-      };
-      document.addEventListener('keydown', onKeydown);
-      onCleanup(() => {
-        this.platform.cancelScheduled(focusTimer);
-        document.removeEventListener('keydown', onKeydown);
-        this.coordinator.deactivate(
-          this.overlayId,
-          this.supportsExitAnimation() && !this.prefersReducedMotion()
-            ? overlayExitDuration + 20
-            : 0,
-        );
-      });
+    this.destroyRef.onDestroy(() => {
+      this.cancelFocus();
+      this.cancelExit();
+      if (this.coordinatorActive) {
+        this.coordinator.deactivate(this.overlayId, 0, this.restoreFocus() !== false);
+        this.coordinatorActive = false;
+      }
     });
-
-    this.destroyRef.onDestroy(() => this.cancelExit());
   }
 
   protected abstract surfacePosition(): KrnOverlayPosition;
@@ -300,7 +255,7 @@ export abstract class KrnOverlaySurface {
   }
 
   protected supportsExitAnimation(): boolean {
-    return false;
+    return true;
   }
 
   protected close(reason: KrnOverlayCloseReason): void {
@@ -319,6 +274,12 @@ export abstract class KrnOverlaySurface {
     }
   }
 
+  protected onBackdropAnimationEnd(event: AnimationEvent): void {
+    if (this.closing() && event.target === this.panel()?.nativeElement) {
+      this.finishExit();
+    }
+  }
+
   protected onBackdropPointerdown(event: PointerEvent): void {
     if (
       event.target === event.currentTarget &&
@@ -332,21 +293,89 @@ export abstract class KrnOverlaySurface {
     return krnPrefersReducedMotion(this.platform);
   }
 
+  private beginOpen(closeOnEscape: boolean): void {
+    const wasClosed = this.lifecycle === 'closed';
+    this.cancelExit();
+    this.lifecycle = 'open';
+    this.rendered.set(true);
+    this.closing.set(false);
+
+    if (!this.platform.isBrowser) return;
+
+    const requestClose = closeOnEscape ? () => this.close('escape') : null;
+    if (this.coordinatorActive) {
+      this.coordinator.updateCloseRequest(this.overlayId, requestClose);
+      return;
+    }
+
+    this.coordinator.activate(
+      this.overlayId,
+      this.host.nativeElement,
+      this.restoreFocus(),
+      requestClose,
+    );
+    this.coordinatorActive = true;
+
+    if (!wasClosed) return;
+    const focus = (): void => {
+      this.focusTimer = null;
+      const panel = this.panel()?.nativeElement;
+      if (panel && this.open() && this.coordinator.isTop(this.overlayId)) {
+        this.coordinator.focusInitial(panel, this.initialFocus());
+      }
+    };
+    this.focusTimer = this.platform.schedule(focus);
+    if (this.focusTimer === null) focus();
+  }
+
+  private beginExit(): void {
+    this.lifecycle = 'exiting';
+    this.cancelFocus();
+    if (this.coordinatorActive) {
+      this.coordinator.updateCloseRequest(this.overlayId, null);
+    }
+    this.closing.set(true);
+    if (
+      !this.platform.isBrowser ||
+      !this.supportsExitAnimation() ||
+      this.prefersReducedMotion() ||
+      !this.platform.window
+    ) {
+      this.finishExit();
+      return;
+    }
+    this.exitTimer = this.platform.schedule(() => this.finishExit(), overlayExitDuration);
+    if (this.exitTimer === null) this.finishExit();
+  }
+
   private finishExit(): void {
+    if (this.lifecycle !== 'exiting') return;
     this.cancelExit();
     if (this.open()) return;
+    this.lifecycle = 'closed';
     this.closing.set(false);
+    if (this.coordinatorActive) {
+      this.coordinator.deactivate(this.overlayId, 0, this.restoreFocus() !== false);
+      this.coordinatorActive = false;
+    }
     const retainClosedSurface =
       this.surfacePosition() === 'center' && this.surfaceRole() === 'dialog';
     if (!retainClosedSurface) {
       this.rendered.set(false);
     }
+    this.afterExited.emit();
   }
 
   private cancelExit(): void {
     if (this.exitTimer === null) return;
     this.platform.cancelScheduled(this.exitTimer);
     this.exitTimer = null;
+  }
+
+  private cancelFocus(): void {
+    if (this.focusTimer === null) return;
+    this.platform.cancelScheduled(this.focusTimer);
+    this.focusTimer = null;
   }
 }
 
@@ -397,10 +426,6 @@ export class KrnAlertDialog extends KrnOverlaySurface {
 export class KrnDrawer extends KrnOverlaySurface {
   protected override surfacePosition(): KrnOverlayPosition {
     return 'inline-end';
-  }
-
-  protected override supportsExitAnimation(): boolean {
-    return true;
   }
 }
 

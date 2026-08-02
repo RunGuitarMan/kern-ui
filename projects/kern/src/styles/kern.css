@@ -16,3 +16,14 @@
 .cdk-overlay-container {
   inline-size: 100vw !important;
 }
+
+/*
+ * The container intentionally sits above in-tree modal surfaces so a dropdown
+ * opened from the active modal can escape its stacking context. Coordinator-
+ * owned background branches must therefore also disappear visually and stop
+ * hit testing when they are made inert.
+ */
+.cdk-overlay-container > [data-krn-modal-background] {
+  visibility: hidden;
+  pointer-events: none;
+}

@@ -1,7 +1,7 @@
 import { InteractivityChecker } from '@angular/cdk/a11y';
 import { DestroyRef, Injectable, inject } from '@angular/core';
 import { KRN_PLATFORM, krnIsElement, krnIsHtmlElement } from './platform';
-import type { KrnPlatformAdapter } from './platform';
+import type { KrnCloseWatcher, KrnPlatformAdapter } from './platform';
 
 export type KrnOverlayInitialFocus = 'first-tabbable' | 'surface' | string;
 
@@ -9,11 +9,14 @@ interface ActiveOverlay {
   readonly id: string;
   readonly host: HTMLElement | null;
   readonly restoreFocus: HTMLElement | null;
+  readonly closeRequest: (() => void) | null;
 }
 
 interface BackgroundState {
   readonly inert: boolean;
+  readonly inertAttribute: boolean;
   readonly ariaHidden: string | null;
+  readonly modalBackground: string | null;
 }
 
 const tabbableSelector = [
@@ -28,6 +31,7 @@ const tabbableSelector = [
 ].join(',');
 
 const overlayObservers = new WeakMap<object, MutationObserver>();
+const modalBackgroundAttribute = 'data-krn-modal-background';
 
 function startObservingOverlayBranches(
   owner: object,
@@ -69,6 +73,11 @@ export class KrnOverlayCoordinator {
   private readonly stack: ActiveOverlay[] = [];
   private readonly background = new Map<HTMLElement, BackgroundState>();
   private readonly overlayOrigins = new WeakMap<HTMLElement, HTMLElement>();
+  private closeBindingId: string | null = null;
+  private closeBindingRequest: (() => void) | null = null;
+  private closeWatcher: KrnCloseWatcher | null = null;
+  private closeWatcherListener: EventListener | null = null;
+  private fallbackEscapeListener: ((event: KeyboardEvent) => void) | null = null;
   private previousOverflow = '';
   private recentPointerOrigin: { readonly element: HTMLElement; readonly at: number } | null = null;
 
@@ -92,14 +101,21 @@ export class KrnOverlayCoordinator {
     this.destroyRef.onDestroy(() => {
       this.platform.document.removeEventListener('pointerdown', rememberPointerOrigin, true);
       this.platform.document.removeEventListener('mousedown', rememberPointerOrigin, true);
+      this.clearCloseRequestBinding();
       stopObservingOverlayBranches(this);
+      if (this.stack.length > 0) {
+        this.stack.length = 0;
+        this.restoreBackground();
+        this.platform.document.body.style.overflow = this.previousOverflow;
+      }
     });
   }
 
   activate(
     id: string,
     host: HTMLElement | null = null,
-    restoreFocus: HTMLElement | null = null,
+    restoreFocus: HTMLElement | false | null = null,
+    closeRequest: (() => void) | null = null,
   ): void {
     if (!this.platform.isBrowser) return;
     const document = this.platform.document;
@@ -117,18 +133,21 @@ export class KrnOverlayCoordinator {
     this.stack.push({
       id,
       host,
-      restoreFocus: existing?.restoreFocus ?? this.resolveRestoreFocus(restoreFocus),
+      restoreFocus: existing ? existing.restoreFocus : this.resolveRestoreFocus(restoreFocus),
+      closeRequest,
     });
     this.syncBackground();
+    this.syncCloseRequestBinding();
   }
 
-  deactivate(id: string, focusRestoreDelay = 0): void {
+  deactivate(id: string, focusRestoreDelay = 0, shouldRestoreFocus = true): void {
     if (!this.platform.isBrowser) return;
 
     const index = this.stack.findIndex((entry) => entry.id === id);
     if (index < 0) return;
     const wasTop = index === this.stack.length - 1;
     const [entry] = this.stack.splice(index, 1);
+    this.syncCloseRequestBinding();
 
     if (!this.stack.length) {
       stopObservingOverlayBranches(this);
@@ -138,7 +157,7 @@ export class KrnOverlayCoordinator {
       this.syncBackground();
     }
 
-    if (wasTop && entry?.restoreFocus) {
+    if (shouldRestoreFocus && wasTop && entry?.restoreFocus) {
       const restoreFocus = (): void => {
         if (entry.restoreFocus?.isConnected && !this.isInert(entry.restoreFocus)) {
           entry.restoreFocus.focus({ preventScroll: true });
@@ -152,6 +171,17 @@ export class KrnOverlayCoordinator {
         this.platform.queueMicrotask(restoreFocus);
       }
     }
+  }
+
+  /** Updates close behavior without changing the overlay's position in the active stack. */
+  updateCloseRequest(id: string, closeRequest: (() => void) | null): void {
+    if (!this.platform.isBrowser) return;
+
+    const index = this.stack.findIndex((entry) => entry.id === id);
+    const entry = this.stack[index];
+    if (!entry || entry.closeRequest === closeRequest) return;
+    this.stack[index] = { ...entry, closeRequest };
+    this.syncCloseRequestBinding();
   }
 
   isTop(id: string): boolean {
@@ -232,9 +262,23 @@ export class KrnOverlayCoordinator {
     );
   }
 
-  private resolveRestoreFocus(activeElement: HTMLElement | null): HTMLElement | null {
-    const document = this.platform.document;
+  private resolveRestoreFocus(activeElement: HTMLElement | false | null): HTMLElement | null {
     const pointerOrigin = this.recentPointerOrigin;
+    this.recentPointerOrigin = null;
+
+    if (activeElement === false) {
+      return null;
+    }
+
+    const document = this.platform.document;
+    if (
+      activeElement?.isConnected &&
+      activeElement !== document.body &&
+      activeElement !== document.documentElement
+    ) {
+      return activeElement;
+    }
+
     if (
       pointerOrigin &&
       this.platform.now() - pointerOrigin.at <= 1_000 &&
@@ -243,14 +287,112 @@ export class KrnOverlayCoordinator {
       return pointerOrigin.element;
     }
 
+    const documentActiveElement = document.activeElement;
     if (
-      activeElement?.isConnected &&
-      activeElement !== document.body &&
-      activeElement !== document.documentElement
+      krnIsHtmlElement(this.platform, documentActiveElement) &&
+      documentActiveElement.isConnected &&
+      documentActiveElement !== document.body &&
+      documentActiveElement !== document.documentElement
     ) {
-      return activeElement;
+      return documentActiveElement;
     }
     return null;
+  }
+
+  private syncCloseRequestBinding(): void {
+    const top = this.stack.at(-1);
+    const closeRequest = top?.closeRequest ?? null;
+    if (
+      top &&
+      closeRequest &&
+      this.closeBindingId === top.id &&
+      this.closeBindingRequest === closeRequest
+    ) {
+      return;
+    }
+
+    this.clearCloseRequestBinding();
+    if (!top || !closeRequest) return;
+
+    this.closeBindingId = top.id;
+    this.closeBindingRequest = closeRequest;
+
+    let watcher: KrnCloseWatcher | null = null;
+    try {
+      watcher = this.platform.createCloseWatcher?.() ?? null;
+    } catch {
+      watcher = null;
+    }
+
+    if (watcher) {
+      const listener: EventListener = () => {
+        const active = this.stack.at(-1);
+        if (active?.id !== top.id || active.closeRequest !== closeRequest) return;
+        try {
+          closeRequest();
+        } finally {
+          if (this.closeWatcher === watcher) {
+            this.clearCloseRequestBinding();
+            this.syncCloseRequestBinding();
+          }
+        }
+      };
+      try {
+        watcher.addEventListener('close', listener);
+        this.closeWatcher = watcher;
+        this.closeWatcherListener = listener;
+        return;
+      } catch {
+        try {
+          watcher.destroy();
+        } catch {
+          // A custom adapter must not prevent the keyboard fallback.
+        }
+      }
+    }
+
+    const listener = (event: KeyboardEvent): void => {
+      const active = this.stack.at(-1);
+      if (
+        event.key !== 'Escape' ||
+        event.defaultPrevented ||
+        active?.id !== top.id ||
+        active.closeRequest !== closeRequest
+      ) {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      closeRequest();
+    };
+    this.fallbackEscapeListener = listener;
+    this.platform.document.addEventListener('keydown', listener);
+  }
+
+  private clearCloseRequestBinding(): void {
+    if (this.closeWatcher && this.closeWatcherListener) {
+      try {
+        this.closeWatcher.removeEventListener('close', this.closeWatcherListener);
+      } catch {
+        // Cleanup remains best-effort for application-supplied structural adapters.
+      }
+    }
+    if (this.closeWatcher) {
+      try {
+        this.closeWatcher.destroy();
+      } catch {
+        // Cleanup remains best-effort for application-supplied structural adapters.
+      }
+    }
+    if (this.fallbackEscapeListener) {
+      this.platform.document.removeEventListener('keydown', this.fallbackEscapeListener);
+    }
+
+    this.closeBindingId = null;
+    this.closeBindingRequest = null;
+    this.closeWatcher = null;
+    this.closeWatcherListener = null;
+    this.fallbackEscapeListener = null;
   }
 
   private queryWithin(panel: HTMLElement, selector: string): HTMLElement | null {
@@ -268,6 +410,9 @@ export class KrnOverlayCoordinator {
     if (!top?.host) return;
 
     const hideBackgroundBranch = (element: HTMLElement): void => {
+      if (this.belongsToTopOverlay(element, top)) {
+        return;
+      }
       if (element.classList.contains('cdk-overlay-container')) {
         for (const child of element.children) {
           if (krnIsHtmlElement(this.platform, child) && !this.belongsToTopOverlay(child, top)) {
@@ -336,17 +481,25 @@ export class KrnOverlayCoordinator {
     if (this.background.has(element)) return;
     this.background.set(element, {
       inert: element.inert === true,
+      inertAttribute: element.hasAttribute('inert'),
       ariaHidden: element.getAttribute('aria-hidden'),
+      modalBackground: element.getAttribute(modalBackgroundAttribute),
     });
     element.inert = true;
+    element.setAttribute('inert', '');
     element.setAttribute('aria-hidden', 'true');
+    element.setAttribute(modalBackgroundAttribute, '');
   }
 
   private restoreBackground(): void {
     for (const [element, state] of this.background) {
       element.inert = state.inert;
+      if (state.inertAttribute) element.setAttribute('inert', '');
+      else element.removeAttribute('inert');
       if (state.ariaHidden === null) element.removeAttribute('aria-hidden');
       else element.setAttribute('aria-hidden', state.ariaHidden);
+      if (state.modalBackground === null) element.removeAttribute(modalBackgroundAttribute);
+      else element.setAttribute(modalBackgroundAttribute, state.modalBackground);
     }
     this.background.clear();
   }

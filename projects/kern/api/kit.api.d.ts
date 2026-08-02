@@ -6,7 +6,18 @@
  */
 
 import * as _angular_core from '@angular/core';
-import { OnInit, Signal, WritableSignal, TemplateRef, ElementRef } from '@angular/core';
+import {
+  OnInit,
+  Signal,
+  WritableSignal,
+  TemplateRef,
+  ElementRef,
+  InjectionToken,
+  ViewContainerRef,
+  Injector,
+  Provider,
+  Type,
+} from '@angular/core';
 import * as _kern_ui_angular_core from '@kern-ui/angular/core';
 import {
   KrnSpace,
@@ -21,6 +32,8 @@ import * as _angular_forms from '@angular/forms';
 import { ControlValueAccessor, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
 import * as _kern_ui_angular_kit from '@kern-ui/angular/kit';
 import * as _kern_ui_angular_cdk from '@kern-ui/angular/cdk';
+import { KrnOverlayInitialFocus } from '@kern-ui/angular/cdk';
+import { Observable } from 'rxjs';
 
 type KrnLayoutSpace = KrnSpace | number | (string & {});
 type KrnLayoutAlignment = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
@@ -1525,7 +1538,7 @@ declare class KrnFormField {
   protected readonly disabled: Signal<boolean>;
   protected readonly readOnly: Signal<boolean>;
   protected readonly valid: Signal<boolean>;
-  protected readonly state: Signal<'invalid' | 'default' | 'valid' | 'pending'>;
+  protected readonly state: Signal<'default' | 'invalid' | 'valid' | 'pending'>;
   constructor();
   protected focusControl(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnFormField, never>;
@@ -4608,6 +4621,10 @@ interface KrnToastRecord extends KrnToastOptions {
   readonly message: string;
   readonly createdAt: number;
 }
+/**
+ * Declarative overlay close source. `escape` also represents the platform close
+ * request (for example Android Back or an assistive-technology dismiss gesture).
+ */
 type KrnOverlayCloseReason = 'api' | 'escape' | 'outside' | 'action';
 type KrnOverlayPosition = 'center' | 'inline-end' | 'bottom';
 
@@ -5114,6 +5131,9 @@ declare abstract class KrnOverlaySurface {
   private readonly translations;
   private readonly panel;
   private exitTimer;
+  private focusTimer;
+  private lifecycle;
+  private coordinatorActive;
   readonly open: _angular_core.ModelSignal<boolean>;
   readonly title: _angular_core.InputSignal<string>;
   readonly description: _angular_core.InputSignal<string>;
@@ -5124,9 +5144,13 @@ declare abstract class KrnOverlaySurface {
   readonly closeOnEscape: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly closeOnOutside: _angular_core.InputSignalWithTransform<boolean | null, unknown>;
   readonly initialFocus: _angular_core.InputSignal<string>;
+  /** Explicit focus return target, or `false` to disable focus restoration. */
+  readonly restoreFocus: _angular_core.InputSignal<false | HTMLElement | null>;
   readonly contentTemplate: _angular_core.InputSignal<TemplateRef<unknown> | null>;
   readonly actionsTemplate: _angular_core.InputSignal<TemplateRef<unknown> | null>;
   readonly closed: _angular_core.OutputEmitterRef<KrnOverlayCloseReason>;
+  /** Emits after exit motion and global modal cleanup have completed. */
+  readonly afterExited: _angular_core.OutputEmitterRef<void>;
   protected readonly rendered: _angular_core.WritableSignal<boolean>;
   protected readonly closing: _angular_core.WritableSignal<boolean>;
   private readonly overlayId;
@@ -5139,10 +5163,14 @@ declare abstract class KrnOverlaySurface {
   protected supportsExitAnimation(): boolean;
   protected close(reason: KrnOverlayCloseReason): void;
   protected onBackdropTransitionEnd(event: TransitionEvent): void;
+  protected onBackdropAnimationEnd(event: AnimationEvent): void;
   protected onBackdropPointerdown(event: PointerEvent): void;
   private prefersReducedMotion;
+  private beginOpen;
+  private beginExit;
   private finishExit;
   private cancelExit;
+  private cancelFocus;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnOverlaySurface, never>;
   static ɵdir: _angular_core.ɵɵDirectiveDeclaration<
     KrnOverlaySurface,
@@ -5159,10 +5187,11 @@ declare abstract class KrnOverlaySurface {
       closeOnEscape: { alias: 'closeOnEscape'; required: false; isSignal: true };
       closeOnOutside: { alias: 'closeOnOutside'; required: false; isSignal: true };
       initialFocus: { alias: 'initialFocus'; required: false; isSignal: true };
+      restoreFocus: { alias: 'restoreFocus'; required: false; isSignal: true };
       contentTemplate: { alias: 'contentTemplate'; required: false; isSignal: true };
       actionsTemplate: { alias: 'actionsTemplate'; required: false; isSignal: true };
     },
-    { open: 'openChange'; closed: 'closed' },
+    { open: 'openChange'; closed: 'closed'; afterExited: 'afterExited' },
     never,
     never,
     true,
@@ -5203,7 +5232,6 @@ declare class KrnAlertDialog extends KrnOverlaySurface {
 }
 declare class KrnDrawer extends KrnOverlaySurface {
   protected surfacePosition(): KrnOverlayPosition;
-  protected supportsExitAnimation(): boolean;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDrawer, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnDrawer,
@@ -5231,6 +5259,110 @@ declare class KrnBottomSheet extends KrnOverlaySurface {
     true,
     never
   >;
+}
+
+type KrnOverlayVariant = 'dialog' | 'alert-dialog' | 'drawer' | 'bottom-sheet';
+/** Reasons that settle a programmatically opened overlay without a result. */
+type KrnOverlayDismissReason = KrnOverlayCloseReason | 'navigation' | 'destroy' | 'parent' | 'ssr';
+/** The single terminal value produced by a programmatic overlay. */
+type KrnOverlayOutcome<Result, DismissReason extends string = KrnOverlayDismissReason> =
+  | {
+      readonly kind: 'closed';
+      readonly result: Result;
+    }
+  | {
+      readonly kind: 'dismissed';
+      readonly reason: DismissReason;
+    };
+/**
+ * Controls and observes one programmatic overlay.
+ *
+ * `close` and `dismiss` return `true` only for the first terminal request. The
+ * `closed` stream emits once after the surface has exited and all owned views
+ * have been disposed, then completes. It replays that value to late subscribers.
+ */
+declare abstract class KrnOverlayRef<
+  Result = void,
+  DismissReason extends string = KrnOverlayDismissReason,
+> {
+  abstract readonly id: string;
+  abstract readonly closed: Observable<KrnOverlayOutcome<Result, DismissReason>>;
+  abstract close(result: Result): boolean;
+  abstract dismiss(reason: DismissReason): boolean;
+}
+/** Data injected into component content opened by `KrnOverlayService`. */
+declare const KRN_OVERLAY_DATA: InjectionToken<unknown>;
+/** Typed access to `KRN_OVERLAY_DATA` from programmatic component content. */
+declare function injectKrnOverlayData<Data>(): Data;
+/** Context stamped into programmatic `TemplateRef` content. */
+interface KrnOverlayTemplateContext<
+  Data,
+  Result,
+  DismissReason extends string = KrnOverlayDismissReason,
+> {
+  readonly $implicit: Data;
+  readonly data: Data;
+  readonly overlayRef: KrnOverlayRef<Result, DismissReason>;
+}
+/** Typed configuration for a programmatically opened overlay. */
+type KrnOverlayConfig<Data = undefined> = {
+  readonly variant?: KrnOverlayVariant;
+  readonly title?: string;
+  readonly description?: string;
+  readonly ariaLabel?: string;
+  readonly showClose?: boolean;
+  readonly closeOnEscape?: boolean;
+  readonly closeOnOutside?: boolean | null;
+  readonly closeOnNavigation?: boolean;
+  readonly initialFocus?: KrnOverlayInitialFocus;
+  /** `undefined` captures the current/pointer origin; `false` disables restoration. */
+  readonly restoreFocus?: HTMLElement | false;
+  /** Logical Angular owner for the host and content portal. Required for templates. */
+  readonly viewContainerRef?: ViewContainerRef;
+  /** Explicit parent injector for content. Wins over `viewContainerRef.injector`. */
+  readonly injector?: Injector;
+  /** Providers scoped to content and destroyed with this overlay. */
+  readonly providers?: readonly Provider[];
+} & ([Data] extends [undefined]
+  ? {
+      readonly data?: undefined;
+    }
+  : {
+      readonly data: Data;
+    });
+/** Opens typed component or template content in one of Kern's modal surfaces. */
+declare class KrnOverlayService {
+  private readonly injector;
+  private readonly platform;
+  private readonly ids;
+  private readonly translations;
+  private readonly destroyRef;
+  private readonly records;
+  private destroying;
+  constructor();
+  open<Result = void, CustomDismissReason extends string = never>(
+    content: Type<unknown>,
+    config?: KrnOverlayConfig<undefined>,
+  ): KrnOverlayRef<Result, KrnOverlayDismissReason | CustomDismissReason>;
+  open<Data, Result = void, CustomDismissReason extends string = never>(
+    content: Type<unknown>,
+    config: KrnOverlayConfig<Data>,
+  ): KrnOverlayRef<Result, KrnOverlayDismissReason | CustomDismissReason>;
+  open<Data, Result = void, CustomDismissReason extends string = never>(
+    content: TemplateRef<
+      KrnOverlayTemplateContext<Data, Result, KrnOverlayDismissReason | CustomDismissReason>
+    >,
+    config: KrnOverlayConfig<Data> & {
+      readonly viewContainerRef: ViewContainerRef;
+    },
+  ): KrnOverlayRef<Result, KrnOverlayDismissReason | CustomDismissReason>;
+  private normalizeConfig;
+  private beginExit;
+  private startExit;
+  private maybeFinalize;
+  private finalizeRecord;
+  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnOverlayService, never>;
+  static ɵprov: _angular_core.ɵɵInjectableDeclaration<KrnOverlayService>;
 }
 
 interface KrnCalendarDay {
@@ -5821,6 +5953,7 @@ export {
   KRN_ICON_BUTTON_OPTIONS,
   KRN_MENU_BUTTON_DEFAULT_OPTIONS,
   KRN_MENU_BUTTON_OPTIONS,
+  KRN_OVERLAY_DATA,
   KRN_TOGGLE_BUTTON_DEFAULT_OPTIONS,
   KRN_TOGGLE_BUTTON_OPTIONS,
   KRN_TOGGLE_GROUP_DEFAULT_OPTIONS,
@@ -5898,6 +6031,8 @@ export {
   KrnNavigationRail,
   KrnNumberInput,
   KrnOtpInput,
+  KrnOverlayRef,
+  KrnOverlayService,
   KrnOverlaySurface,
   KrnPagination,
   KrnPasswordInput,
@@ -5954,6 +6089,7 @@ export {
   KrnValueAccessor,
   KrnOtpInput as KrnVerificationCode,
   KrnTabs as KrnVerticalTabs,
+  injectKrnOverlayData,
   krnCssLength,
   provideKrnButtonGroupOptions,
   provideKrnButtonOptions,
@@ -6002,7 +6138,12 @@ export type {
   KrnOptionsState,
   KrnOrientation,
   KrnOverlayCloseReason,
+  KrnOverlayConfig,
+  KrnOverlayDismissReason,
+  KrnOverlayOutcome,
   KrnOverlayPosition,
+  KrnOverlayTemplateContext,
+  KrnOverlayVariant,
   KrnRangeValue,
   KrnResponsiveBreakpoint,
   KrnResponsiveDisplay,
