@@ -8,18 +8,17 @@ import { KrnToggleGroup } from './toggle-group';
   selector: 'krn-hydrated-toggle-group-host',
   imports: [KrnToggleButton, KrnToggleGroup],
   template: `
-    <krn-toggle-group [attr.aria-label]="nativeLabel()" [ariaLabel]="legacyLabel()">
+    <div krnToggleGroup [attr.aria-label]="nativeLabel()">
       <button krnToggleButton value="bold">Bold</button>
-    </krn-toggle-group>
+    </div>
   `,
 })
 class HydratedToggleGroupHost {
   readonly nativeLabel = signal('Native formatting');
-  readonly legacyLabel = signal<string | undefined>('Legacy formatting');
 }
 
 describe('KrnToggleGroup hydration', () => {
-  it('restores a consumer-owned native name after an SSR to hydration legacy transition', async () => {
+  it('hydrates the canonical host and keeps native naming consumer-owned', async () => {
     const html = await renderApplication(
       (context) =>
         bootstrapApplication(
@@ -35,12 +34,9 @@ describe('KrnToggleGroup hydration', () => {
       },
     );
     const serverDocument = new DOMParser().parseFromString(html, 'text/html');
-    const serverGroup = serverDocument.querySelector('krn-toggle-group');
+    const serverGroup = serverDocument.querySelector('div[krnToggleGroup]');
 
-    expect(serverGroup?.getAttribute('aria-label')).toBe('Legacy formatting');
-    expect(serverGroup?.getAttribute('data-krn-legacy-aria-label-before')).toBe(
-      JSON.stringify('Native formatting'),
-    );
+    expect(serverGroup?.getAttribute('aria-label')).toBe('Native formatting');
 
     const originalHead = document.head.innerHTML;
     const originalBody = document.body.innerHTML;
@@ -51,24 +47,23 @@ describe('KrnToggleGroup hydration', () => {
     try {
       document.head.innerHTML = serverDocument.head.innerHTML;
       document.body.innerHTML = serverDocument.body.innerHTML;
-      const serverNode = document.querySelector('krn-toggle-group');
+      const serverNode = document.querySelector('div[krnToggleGroup]');
       application = await bootstrapApplication(HydratedToggleGroupHost, {
         providers: [provideClientHydration()],
       });
       await application.whenStable();
       const instance = application.components[0]?.instance as HydratedToggleGroupHost;
-      const hydratedGroup = document.querySelector('krn-toggle-group');
+      const hydratedGroup = document.querySelector('div[krnToggleGroup]');
 
       expect(hydratedGroup).toBe(serverNode);
       expect(
         [...consoleWarn.mock.calls, ...consoleError.mock.calls].flat().join(' '),
       ).not.toContain('NG0505');
 
-      instance.legacyLabel.set(undefined);
+      instance.nativeLabel.set('Updated formatting');
       await application.whenStable();
 
-      expect(hydratedGroup?.getAttribute('aria-label')).toBe('Native formatting');
-      expect(hydratedGroup?.getAttribute('data-krn-legacy-aria-label-before')).toBeNull();
+      expect(hydratedGroup?.getAttribute('aria-label')).toBe('Updated formatting');
     } finally {
       application?.destroy();
       consoleWarn.mockRestore();

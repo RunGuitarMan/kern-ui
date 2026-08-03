@@ -42,7 +42,7 @@ class KrnDirectChildHarnessPredicate<T extends ComponentHarness> extends Harness
 }
 
 /**
- * Harness for the canonical `div[krnButtonGroup]` host and its legacy element alias.
+ * Harness for the canonical `div[krnButtonGroup]` host.
  *
  * Button Group is a stateless semantic and layout container. Selection belongs
  * to Toggle Group or Segmented Control, so this harness intentionally exposes
@@ -51,7 +51,7 @@ class KrnDirectChildHarnessPredicate<T extends ComponentHarness> extends Harness
  * @publicApi
  */
 export class KrnButtonGroupHarness extends ComponentHarness {
-  static readonly hostSelector = 'div[krnButtonGroup], krn-button-group';
+  static readonly hostSelector = 'div[krnButtonGroup]';
 
   static with(options: KrnButtonGroupHarnessFilters = {}): HarnessPredicate<KrnButtonGroupHarness> {
     return new HarnessPredicate(KrnButtonGroupHarness, options)

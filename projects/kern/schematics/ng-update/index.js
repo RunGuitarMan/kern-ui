@@ -118,77 +118,180 @@ function migrateRootImports(content, file, logger) {
     );
 }
 
-function hasMode(tag) {
-  return /(?:\[mode\]|\bmode)\s*=/.test(tag);
-}
-
 function removeAttribute(tag, pattern) {
   return tag.replace(pattern, '');
 }
 
+const PAGINATION_ATTRIBUTE =
+  /\s+(?:\[pagination\]|pagination)(?=\s|=|\/?>)(?:\s*=\s*["']([^"']*)["'])?/;
+const VIRTUALIZE_ATTRIBUTE =
+  /\s+(?:\[virtualize\]|virtualize)(?=\s|=|\/?>)(?:\s*=\s*["']([^"']*)["'])?/;
+const MODE_ATTRIBUTE = /\s+(\[mode\]|mode)(?=\s|=|\/?>)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'))?/;
+
+function unwrapExpression(expression) {
+  let current = expression;
+  while (
+    ts.isParenthesizedExpression(current) ||
+    ts.isAsExpression(current) ||
+    ts.isTypeAssertionExpression(current) ||
+    ts.isSatisfiesExpression(current)
+  ) {
+    current = current.expression;
+  }
+  return current;
+}
+
+function modeBindingKind(tag) {
+  const match = tag.match(MODE_ATTRIBUTE);
+  if (!match) {
+    return { kind: 'absent', match: null };
+  }
+  if (match[1] !== '[mode]' || (match[2] === undefined && match[3] === undefined)) {
+    return { kind: 'dynamic', match };
+  }
+
+  const value = (match[2] ?? match[3]).trim();
+  const source = ts.createSourceFile(
+    'krn-grid-mode.ts',
+    `const krnGridMode = (${value});`,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS,
+  );
+  const statement = source.statements[0];
+  const declaration = ts.isVariableStatement(statement)
+    ? statement.declarationList.declarations[0]
+    : undefined;
+  if (!declaration?.initializer || source.parseDiagnostics.length > 0) {
+    return { kind: 'dynamic', match };
+  }
+
+  const expression = unwrapExpression(declaration.initializer);
+  if (
+    expression.kind === ts.SyntaxKind.NullKeyword ||
+    (ts.isIdentifier(expression) && expression.text === 'undefined') ||
+    (ts.isVoidExpression(expression) && ts.isNumericLiteral(expression.expression))
+  ) {
+    return { kind: 'nullish', match };
+  }
+  return { kind: ts.isObjectLiteralExpression(expression) ? 'static' : 'dynamic', match };
+}
+
+function staticBoolean(match) {
+  if (!match) {
+    return undefined;
+  }
+  const value = match[1]?.trim();
+  if (value === undefined || value === '' || value === 'true') {
+    return true;
+  }
+  if (value === 'false') {
+    return false;
+  }
+  return null;
+}
+
+function removeLegacyGridInputs(tag) {
+  return removeAttribute(removeAttribute(tag, PAGINATION_ATTRIBUTE), VIRTUALIZE_ATTRIBUTE);
+}
+
+function appendMode(tag, mode) {
+  return tag.replace(/\s*(\/?>)$/, ` [mode]="${mode}"$1`);
+}
+
+function openingTagPattern(elementNamePattern) {
+  return new RegExp(`<${elementNamePattern}\\b(?:[^>"']|"[^"]*"|'[^']*')*>`, 'g');
+}
+
 function migrateDataGridTag(tag, file, logger) {
-  const pagination = tag.match(
-    /\s+(?:\[pagination\]|pagination)(?=\s|=|\/?>)(?:\s*=\s*["']([^"']*)["'])?/,
-  );
-  const virtualize = tag.match(
-    /\s+(?:\[virtualize\]|virtualize)(?=\s|=|\/?>)(?:\s*=\s*["']([^"']*)["'])?/,
-  );
+  const pagination = tag.match(PAGINATION_ATTRIBUTE);
+  const virtualize = tag.match(VIRTUALIZE_ATTRIBUTE);
+  const mode = modeBindingKind(tag);
   if (!pagination && !virtualize) {
+    if (mode.kind === 'nullish') {
+      return removeAttribute(tag, MODE_ATTRIBUTE);
+    }
+    if (mode.kind === 'dynamic') {
+      logger.warn(
+        `${MIGRATION_CODE} ${file}: dynamic mode binding requires review because KrnDataGrid.mode is now non-null; coalesce null or undefined to an explicit discriminated mode.`,
+      );
+    }
     return tag;
   }
 
-  const paginationValue = pagination?.[1]?.trim();
-  const virtualizeValue = virtualize?.[1]?.trim();
-  const explicitMode = hasMode(tag);
-  if (explicitMode) {
-    return removeAttribute(
-      removeAttribute(
-        tag,
-        /\s+(?:\[pagination\]|pagination)(?=\s|=|\/?>)(?:\s*=\s*["'][^"']*["'])?/,
-      ),
-      /\s+(?:\[virtualize\]|virtualize)(?=\s|=|\/?>)(?:\s*=\s*["'][^"']*["'])?/,
+  if (mode.kind === 'static') {
+    return removeLegacyGridInputs(tag);
+  }
+  if (mode.kind === 'dynamic') {
+    logger.warn(
+      `${MIGRATION_CODE} ${file}: pagination/virtualize was left unchanged because the existing mode binding may resolve to null; migrate the fallback to one discriminated mode expression.`,
     );
+    return tag;
+  }
+  if (mode.kind === 'nullish') {
+    tag = removeAttribute(tag, MODE_ATTRIBUTE);
   }
 
-  const virtualEnabled =
-    Boolean(virtualize) &&
-    (virtualizeValue === undefined || virtualizeValue === '' || virtualizeValue === 'true');
-  const paginationDefault =
-    Boolean(pagination) &&
-    (paginationValue === undefined || paginationValue === '' || paginationValue === 'true');
-  const paginationDisabled = Boolean(pagination) && paginationValue === 'false';
+  const virtualState = staticBoolean(virtualize);
+  const paginationState = staticBoolean(pagination);
 
-  if (virtualEnabled || (!virtualize && (paginationDefault || paginationDisabled))) {
-    let next = removeAttribute(
-      removeAttribute(
-        tag,
-        /\s+(?:\[pagination\]|pagination)(?=\s|=|\/?>)(?:\s*=\s*["'][^"']*["'])?/,
-      ),
-      /\s+(?:\[virtualize\]|virtualize)(?=\s|=|\/?>)(?:\s*=\s*["'][^"']*["'])?/,
-    );
-    if (virtualEnabled) {
-      next = next.replace(/\s*(\/?>)$/, ` [mode]="{ kind: 'virtual' }"$1`);
-    } else if (paginationDisabled) {
-      next = next.replace(/\s*(\/?>)$/, ` [mode]="{ kind: 'client', pagination: false }"$1`);
-    }
-    return next;
+  // The legacy virtual input took precedence over pagination. A statically enabled virtual mode is
+  // therefore safe even when the now-irrelevant pagination binding is dynamic.
+  if (virtualState === true) {
+    return appendMode(removeLegacyGridInputs(tag), "{ kind: 'virtual' }");
   }
 
-  logger.warn(
-    `${MIGRATION_CODE} ${file}: dynamic pagination/virtualize binding was left unchanged; migrate it to the discriminated mode input.`,
+  if (virtualState === null || paginationState === null) {
+    logger.warn(
+      `${MIGRATION_CODE} ${file}: dynamic pagination/virtualize binding was left unchanged; migrate it to the discriminated mode input.`,
+    );
+    return tag;
+  }
+
+  // `virtualize=false` selected client mode. Pagination kept its explicit value and defaulted to
+  // true when it was absent, so always emit the complete client mode instead of relying on defaults.
+  return appendMode(
+    removeLegacyGridInputs(tag),
+    `{ kind: 'client', pagination: ${paginationState ?? true} }`,
   );
-  return tag;
+}
+
+function migrateGroupAriaLabel(tag) {
+  return tag
+    .replace(/(\s)\[ariaLabel\](?=\s*=)/g, '$1[attr.aria-label]')
+    .replace(/(\s)ariaLabel(?=\s|=|\/?>)/g, '$1aria-label');
+}
+
+function migrateGroupHosts(content, elementName, directiveName) {
+  const openingTag = openingTagPattern(elementName);
+  const closingTag = new RegExp(`</${elementName}\\s*>`, 'g');
+  const directiveHost = new RegExp(`\\b${directiveName}(?=\\s|=|/?>)`);
+  let next = content.replace(openingTag, (tag) => {
+    const selfClosing = /\/\s*>$/.test(tag);
+    let migrated = migrateGroupAriaLabel(
+      tag.replace(new RegExp(`^<${elementName}\\b`), `<div ${directiveName}`),
+    );
+    if (selfClosing) {
+      migrated = migrated.replace(/\s*\/\s*>$/, '></div>');
+    }
+    return migrated;
+  });
+  next = next.replace(closingTag, '</div>');
+  return next.replace(openingTagPattern('div'), (tag) =>
+    directiveHost.test(tag) ? migrateGroupAriaLabel(tag) : tag,
+  );
 }
 
 function migrateTemplates(content, file, logger) {
-  let next = content.replace(/<krn-(?:data-grid|data-table)\b[\s\S]*?>/g, (tag) =>
+  let next = migrateGroupHosts(content, 'krn-button-group', 'krnButtonGroup');
+  next = migrateGroupHosts(next, 'krn-toggle-group', 'krnToggleGroup');
+  next = next.replace(openingTagPattern('krn-(?:data-grid|data-table)'), (tag) =>
     migrateDataGridTag(tag, file, logger),
   );
-  if (
-    /<krn-menu\b[\s\S]*?(?:\[hasProjectedTrigger\]|\bhasProjectedTrigger)\s*(?:=|\s|\/?>)/.test(
-      next,
-    )
-  ) {
+  const menuNeedsManualMigration = [...next.matchAll(openingTagPattern('krn-menu'))].some((match) =>
+    /(?:\[hasProjectedTrigger\]|\bhasProjectedTrigger)\s*(?:=|\s|\/?>)/.test(match[0]),
+  );
+  if (menuNeedsManualMigration) {
     logger.warn(
       `${MIGRATION_CODE} ${file}: hasProjectedTrigger requires a manual KrnMenuTrigger directive migration.`,
     );

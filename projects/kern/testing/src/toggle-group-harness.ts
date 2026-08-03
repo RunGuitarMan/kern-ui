@@ -31,7 +31,7 @@ class KrnDirectToggleHarnessPredicate extends HarnessPredicate<KrnToggleButtonHa
 }
 
 /**
- * Harness for the canonical `div[krnToggleGroup]` toolbar and its legacy element alias.
+ * Harness for the canonical `div[krnToggleGroup]` toolbar.
  *
  * It exposes effective pressed values and direct native toggle children without
  * coupling tests to the private item-registration or roving-focus implementation.
@@ -39,7 +39,7 @@ class KrnDirectToggleHarnessPredicate extends HarnessPredicate<KrnToggleButtonHa
  * @publicApi
  */
 export class KrnToggleGroupHarness extends ComponentHarness {
-  static readonly hostSelector = 'div[krnToggleGroup], krn-toggle-group';
+  static readonly hostSelector = 'div[krnToggleGroup]';
 
   static with(options: KrnToggleGroupHarnessFilters = {}): HarnessPredicate<KrnToggleGroupHarness> {
     return new HarnessPredicate(KrnToggleGroupHarness, options)

@@ -38,12 +38,10 @@ class NativeGroupHost {}
       [orientation]="orientation()"
       [connected]="connected()"
     ></div>
-    <krn-button-group data-testid="legacy" [ariaLabel]="legacyLabel()" />
   `,
 })
 class DynamicGroupHost {
   readonly nativeLabel = signal('Native actions');
-  readonly legacyLabel = signal<string | undefined>('Legacy actions');
   readonly orientation = signal<'horizontal' | 'vertical'>('horizontal');
   readonly connected = signal(false);
 }
@@ -132,29 +130,21 @@ describe('KrnButtonGroup', () => {
     expect(group.querySelector('button button')).toBeNull();
   });
 
-  it('preserves native naming and keeps a dynamic compatibility bridge for ariaLabel', async () => {
+  it('preserves native naming while layout inputs change', async () => {
     const fixture = TestBed.createComponent(DynamicGroupHost);
     await fixture.whenStable();
     const host = fixture.componentInstance;
     const native = fixture.nativeElement.querySelector('[data-testid="native"]') as HTMLElement;
-    const legacy = fixture.nativeElement.querySelector('[data-testid="legacy"]') as HTMLElement;
 
     expect(native.getAttribute('aria-label')).toBe('Native actions');
-    expect(legacy.getAttribute('aria-label')).toBe('Legacy actions');
 
     host.nativeLabel.set('Updated native actions');
-    host.legacyLabel.set('');
     host.orientation.set('vertical');
     host.connected.set(true);
     await fixture.whenStable();
 
     expect(native.getAttribute('aria-label')).toBe('Updated native actions');
     expect(native.dataset).toMatchObject({ connected: 'true', orientation: 'vertical' });
-    expect(legacy.getAttribute('aria-label')).toBeNull();
-
-    host.legacyLabel.set(undefined);
-    await fixture.whenStable();
-    expect(legacy.getAttribute('aria-label')).toBeNull();
   });
 
   it('inherits immutable scoped layout defaults and lets instances override them', async () => {

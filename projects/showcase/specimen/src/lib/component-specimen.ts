@@ -160,6 +160,7 @@ import {
   type KrnChartDatum,
   type KrnContextMenuItem,
   type KrnDataColumn,
+  type KrnDataGridMode,
   type KrnFilterDefinition,
   type KrnFormStep,
   type KrnNavigationItem,
@@ -404,6 +405,7 @@ export const KERN_SPECIMEN_CURATED_RENDERER_CONTROLS = Object.freeze({
     'dataState',
     'selectable',
     'expandable',
+    'virtualize',
     'filterable',
     'resizable',
     'pagination',
@@ -486,6 +488,13 @@ export function resolveKernSpecimenFilterValues(
 
 export function resolveKernSpecimenShortcutKeys(platform: string): readonly string[] {
   return platform === 'Windows' ? ['Ctrl', 'K'] : ['⌘', 'K'];
+}
+
+export function resolveKernSpecimenGridMode(
+  pagination: boolean,
+  virtualize = false,
+): KrnDataGridMode {
+  return virtualize ? { kind: 'virtual' } : { kind: 'client', pagination };
 }
 
 type KernCopyFixtureState = 'live' | 'idle' | 'pending' | 'copied' | 'error';
@@ -1189,7 +1198,15 @@ export class KernComponentSpecimen {
   protected readonly gridError = computed(() =>
     this.gridDataState() === 'error' ? 'Workspace data could not be loaded.' : '',
   );
-  protected readonly virtualGridMode = { kind: 'virtual' } as const;
+  protected readonly dataTableGridMode = computed(() =>
+    resolveKernSpecimenGridMode(this.booleanArgument('pagination', false)),
+  );
+  protected readonly dataGridMode = computed(() =>
+    resolveKernSpecimenGridMode(
+      this.booleanArgument('pagination', true),
+      this.effectiveScenario() === 'virtual' || this.booleanArgument('virtualize', false),
+    ),
+  );
   protected readonly specimenColumns: readonly KrnDataColumn<SpecimenRow>[] = [
     { key: 'workspace', label: 'Workspace', sortable: true, priority: 'primary' },
     { key: 'owner', label: 'Owner', sortable: true },

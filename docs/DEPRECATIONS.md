@@ -6,16 +6,16 @@ with every `@deprecated` declaration in the committed public API baselines and r
 selector entries to their compiler-derived public component or directive. A deprecation without a
 replacement, migration, documentation link, and removal version fails the lifecycle gate.
 
-The `0.1.0` line is not yet published. Maintainers should prefer removing accidental compatibility
-APIs before the first release. If the entries below ship, their registered `0.2.0` removal window
-becomes part of the consumer contract and must be reflected in release notes.
+The `0.1.0` line is not yet published. The entries below were removed before the first release, so
+they are retained only as migration history and are not part of the shipped compatibility surface.
 
 <a id="krn-button-group-element-selector"></a>
 
 ## `KrnButtonGroup` element selector
 
 - Introduced: `0.1.0`
-- Planned removal: `0.2.0`
+- Status: removed before publication
+- Original removal target: `0.2.0`
 - Deprecated selector: `<krn-button-group>`
 - Replacement: `<div krnButtonGroup>`
 
@@ -39,7 +39,8 @@ child action, its native attributes, and its event handlers on the child itself:
 ## `KrnButtonGroup.ariaLabel`
 
 - Introduced: `0.1.0`
-- Planned removal: `0.2.0`
+- Status: removed before publication
+- Original removal target: `0.2.0`
 - Replacement: native `aria-label` or `aria-labelledby` on `<div krnButtonGroup>`
 
 Replace the legacy custom element and compatibility input:
@@ -69,7 +70,8 @@ Segmented Control when the composition must own selection or Arrow-key navigatio
 ## `KrnToggleGroup` element selector
 
 - Introduced: `0.1.0`
-- Planned removal: `0.2.0`
+- Status: removed before publication
+- Original removal target: `0.2.0`
 - Deprecated selector: `<krn-toggle-group>`
 - Replacement: `<div krnToggleGroup>`
 
@@ -93,16 +95,13 @@ Toggle Button children and their stable values:
 ## `KrnToggleGroup.ariaLabel`
 
 - Introduced: `0.1.0`
-- Planned removal: `0.2.0`
+- Status: removed before publication
+- Original removal target: `0.2.0`
 - Replacement: native `aria-label` or `aria-labelledby` on `<div krnToggleGroup>`
 
 Replace static `ariaLabel` with `aria-label`, or bind a dynamic accessible name through
 `[attr.aria-label]`. The canonical host exposes `role="toolbar"` and `aria-orientation`; Arrow,
 Home, and End move its one roving focus target without changing pressed values.
-
-During an incremental migration, keep `ariaLabel` stable for the complete server render. If both
-legacy and native naming are temporarily present, switch or clear the deprecated input only after
-client hydration; the compatibility bridge then restores the latest consumer-owned native name.
 
 ```html
 <div krnToggleGroup [attr.aria-label]="formattingLabel" [(values)]="formats">
@@ -116,47 +115,67 @@ client hydration; the compatibility bridge then restores the latest consumer-own
 ## `KrnDataGrid.pagination`
 
 - Introduced: `0.1.0`
-- Planned removal: `0.2.0`
-- Replacement: `mode="{ kind: 'client', pagination: true }"`
+- Status: removed before publication
+- Original removal target: `0.2.0`
+- Replacement: `[mode]="{ kind: 'client', pagination: true | false }"`
 
-Replace:
+Preserve the old boolean value explicitly:
 
 ```html
+<!-- Before -->
 <krn-data-grid [pagination]="true" />
-```
-
-with:
-
-```html
+<!-- After -->
 <krn-data-grid [mode]="{ kind: 'client', pagination: true }" />
+
+<!-- Before -->
+<krn-data-grid [pagination]="false" />
+<!-- After -->
+<krn-data-grid [mode]="{ kind: 'client', pagination: false }" />
 ```
+
+The update schematic performs both static conversions. A dynamic pagination expression requires a
+manual `mode` expression because its value determines the discriminated mode object.
 
 <a id="krn-data-grid-virtualize"></a>
 
 ## `KrnDataGrid.virtualize`
 
 - Introduced: `0.1.0`
-- Planned removal: `0.2.0`
-- Replacement: `mode="{ kind: 'virtual' }"`
+- Status: removed before publication
+- Original removal target: `0.2.0`
+- Replacement: `[mode]="{ kind: 'virtual' }"` when enabled; explicit client `mode` when disabled
 
-Replace:
+Preserve the legacy boolean semantics:
 
 ```html
+<!-- Before: virtualize=true always took precedence over pagination -->
 <krn-data-grid [virtualize]="true" />
-```
-
-with:
-
-```html
+<!-- After -->
 <krn-data-grid [mode]="{ kind: 'virtual' }" />
+
+<!-- Before: virtualize=false retained client pagination=false -->
+<krn-data-grid [virtualize]="false" [pagination]="false" />
+<!-- After -->
+<krn-data-grid [mode]="{ kind: 'client', pagination: false }" />
 ```
+
+When `virtualize` was `false` and `pagination` was absent, client pagination defaulted to `true`;
+the update schematic therefore emits `{ kind: 'client', pagination: true }`. Dynamic virtualize or
+pagination expressions require a manual `mode` expression.
+
+`mode` is now non-null and defaults to `{ kind: 'client', pagination: true }`. The update schematic
+removes a static `null`/`undefined` binding so that default applies. A dynamic nullable binding must
+coalesce explicitly, for example
+`[mode]="maybeMode ?? { kind: 'client', pagination: true }"`; the schematic emits `KRN-DX-030`
+instead of guessing.
 
 <a id="krn-menu-has-projected-trigger"></a>
 
 ## `KrnMenu.hasProjectedTrigger`
 
 - Introduced: `0.1.0`
-- Planned removal: `0.2.0`
+- Status: removed before publication
+- Original removal target: `0.2.0`
 - Replacement: the `KrnMenuTrigger` directive on the projected trigger
 
 Replace the boolean compatibility input with an explicit trigger directive:
@@ -166,5 +185,18 @@ Replace the boolean compatibility input with an explicit trigger directive:
 ```
 
 `KrnMenu` owns the actual button semantics; the directive marks non-interactive projected label
-content. Consumers should not also set `hasProjectedTrigger` or project another button or link
-inside the menu trigger.
+content. Do not project another button or link inside the menu trigger.
+
+<a id="krn-value-accessor-removal"></a>
+
+## `KrnValueAccessor`
+
+- Status: experimental export removed before publication
+- Replacement: Angular's `ControlValueAccessor` and `Validator` contracts, or composition of a
+  concrete Kern control
+
+Applications should not subclass Kern's internal form-state machinery. Existing custom controls
+that extended `KrnValueAccessor` must own their Angular Forms callbacks and validation directly,
+or wrap a concrete Kern control and bind through `formControl`/`ngModel`. Kern's built-in controls
+now share the same behavior through an internal DI adapter, so this removal does not change their
+documented inputs, outputs, focus methods, or Angular Forms integration.

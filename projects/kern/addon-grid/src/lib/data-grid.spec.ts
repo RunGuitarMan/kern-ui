@@ -35,7 +35,7 @@ const columns: readonly KrnDataColumn<DemoRow>[] = [
       [columns]="columns"
       [rowIdentity]="rowIdentity"
       [defaultCellTemplate]="cell"
-      [pagination]="false"
+      [mode]="mode"
     />
   `,
 })
@@ -43,6 +43,7 @@ class TemplateGridHost {
   readonly rows = rows;
   readonly columns = columns;
   readonly rowIdentity = (row: DemoRow): number => row.id;
+  readonly mode = { kind: 'client', pagination: false } as const;
 }
 
 @Component({
@@ -62,7 +63,7 @@ class TemplateGridHost {
       [columns]="columns"
       [rowIdentity]="rowIdentity"
       [defaultCellTemplate]="cell"
-      [pagination]="false"
+      [mode]="mode"
     />
     <button type="button" class="after-grid">After grid</button>
   `,
@@ -71,6 +72,7 @@ class InteractiveGridHost {
   readonly rows = rows;
   readonly columns = columns;
   readonly rowIdentity = (row: DemoRow): number => row.id;
+  readonly mode = { kind: 'client', pagination: false } as const;
 }
 
 @Component({
@@ -95,7 +97,7 @@ class InteractiveGridHost {
       [defaultCellTemplate]="cell"
       [expandedTemplate]="detail"
       [expanded]="expanded"
-      [pagination]="false"
+      [mode]="mode"
       expandable
     />
   `,
@@ -105,6 +107,7 @@ class ExpandedInteractiveGridHost {
   readonly columns = columns.slice(0, 1);
   readonly rowIdentity = (row: DemoRow): number => row.id;
   readonly expanded = new Set([1]);
+  readonly mode = { kind: 'client', pagination: false } as const;
 }
 
 @Component({

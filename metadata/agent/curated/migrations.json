@@ -93,21 +93,21 @@
     "id": "toggle-group-native-host",
     "from": "<krn-toggle-group> and the ariaLabel input",
     "to": "<div krnToggleGroup> and native aria-label or aria-labelledby attributes",
-    "summary": "Move Toggle Group coordination onto the canonical labelled toolbar host. The legacy element and ariaLabel input remain deprecated compatibility bridges; direct native Toggle Button children participate in roving focus and controlled values.",
+    "summary": "Move Toggle Group coordination onto the canonical labelled toolbar host. The legacy element and ariaLabel input were removed before publication; direct native Toggle Button children participate in roving focus and controlled values.",
     "components": ["toggle-group", "toggle-button"],
     "before": "<krn-toggle-group [ariaLabel]=\"formattingLabel\" [(values)]=\"formats\">\n  <button krnToggleButton value=\"bold\">Bold</button>\n  <button krnToggleButton value=\"italic\">Italic</button>\n</krn-toggle-group>",
     "after": "<div krnToggleGroup [attr.aria-label]=\"formattingLabel\" [(values)]=\"formats\">\n  <button krnToggleButton value=\"bold\">Bold</button>\n  <button krnToggleButton value=\"italic\">Italic</button>\n</div>",
-    "automatic": false
+    "automatic": true
   },
   {
     "id": "button-group-native-host",
     "from": "<krn-button-group> and the ariaLabel input",
     "to": "<div krnButtonGroup> and native aria-label or aria-labelledby attributes",
-    "summary": "Move Button Group layout onto the canonical directive host and keep accessible naming on the native element. The legacy element and ariaLabel input remain deprecated compatibility bridges; orientation and connected affect layout only.",
+    "summary": "Move Button Group layout onto the canonical directive host and keep accessible naming on the native element. The legacy element and ariaLabel input were removed before publication; orientation and connected affect layout only.",
     "components": ["button-group"],
     "before": "<krn-button-group [ariaLabel]=\"reviewActionsLabel\">\n  <button krnButton>Request changes</button>\n  <button krnButton>Approve</button>\n</krn-button-group>",
     "after": "<div krnButtonGroup [attr.aria-label]=\"reviewActionsLabel\">\n  <button krnButton type=\"button\">Request changes</button>\n  <button krnButton type=\"button\">Approve</button>\n</div>",
-    "automatic": false
+    "automatic": true
   },
   {
     "id": "copy-button-lightweight-i18n-bridge",
@@ -133,7 +133,7 @@
     "id": "data-grid-pagination-mode",
     "from": "KrnDataGrid.pagination",
     "to": "KrnDataGrid.mode",
-    "summary": "Replace the compatibility pagination input with an explicit client-mode object.",
+    "summary": "Replace the removed pagination input with an explicit client-mode object while preserving its static boolean value.",
     "components": ["data-grid", "data-table"],
     "before": "<krn-data-grid [pagination]=\"true\" />",
     "after": "<krn-data-grid [mode]=\"{ kind: 'client', pagination: true }\" />",
@@ -143,17 +143,27 @@
     "id": "data-grid-virtual-mode",
     "from": "KrnDataGrid.virtualize",
     "to": "KrnDataGrid.mode",
-    "summary": "Replace the compatibility virtualize input with the discriminated virtual-mode object.",
+    "summary": "Replace the removed virtualize input with virtual mode when enabled or the equivalent client mode when disabled.",
     "components": ["data-grid", "data-table"],
     "before": "<krn-data-grid [virtualize]=\"true\" />",
     "after": "<krn-data-grid [mode]=\"{ kind: 'virtual' }\" />",
     "automatic": true
   },
   {
+    "id": "data-grid-non-null-mode",
+    "from": "KrnDataGrid.mode: KrnDataGridMode | null",
+    "to": "KrnDataGrid.mode: KrnDataGridMode",
+    "summary": "Coalesce nullable mode state to an explicit discriminated mode. The update schematic removes static null/undefined bindings so the default client mode applies and warns for dynamic bindings that need manual review.",
+    "components": ["data-grid", "data-table"],
+    "before": "<krn-data-grid [mode]=\"maybeMode\" />",
+    "after": "<krn-data-grid [mode]=\"maybeMode ?? { kind: 'client', pagination: true }\" />",
+    "automatic": false
+  },
+  {
     "id": "menu-trigger-directive",
     "from": "KrnMenu.hasProjectedTrigger",
     "to": "KrnMenuTrigger",
-    "summary": "Apply the explicit trigger directive to projected menu trigger content.",
+    "summary": "Replace the removed boolean input by applying the explicit trigger directive to projected menu trigger content.",
     "components": ["menu"],
     "before": "<krn-menu [hasProjectedTrigger]=\"true\">...</krn-menu>",
     "after": "<span krnMenuTrigger>Actions</span>",

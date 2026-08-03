@@ -44,31 +44,6 @@ class ControlledToggleGroupHost {
 @Component({
   imports: [KrnToggleButton, KrnToggleGroup],
   template: `
-    <krn-toggle-group [ariaLabel]="label()">
-      <button krnToggleButton value="legacy">Legacy</button>
-    </krn-toggle-group>
-  `,
-})
-class LegacyToggleGroupHost {
-  readonly label = signal<string | null | undefined>('Legacy formatting');
-}
-
-@Component({
-  imports: [KrnToggleButton, KrnToggleGroup],
-  template: `
-    <krn-toggle-group [attr.aria-label]="nativeLabel()" [ariaLabel]="label()">
-      <button krnToggleButton value="legacy">Legacy</button>
-    </krn-toggle-group>
-  `,
-})
-class TransitionalToggleGroupHost {
-  readonly nativeLabel = signal('Native formatting');
-  readonly label = signal<string | null | undefined>('Temporary legacy formatting');
-}
-
-@Component({
-  imports: [KrnToggleButton, KrnToggleGroup],
-  template: `
     <div krnToggleGroup aria-label="Reorder controls">
       @for (item of items(); track item) {
         <button krnToggleButton [value]="item">{{ item }}</button>
@@ -299,7 +274,7 @@ describe('KrnToggleGroup', () => {
     expect(afterRemoval.map((button) => button.tabIndex)).toEqual([0, -1]);
   });
 
-  it('keeps the deprecated ariaLabel bridge isolated from native naming attributes', async () => {
+  it('keeps native naming attributes consumer-owned', async () => {
     const nativeFixture = TestBed.createComponent(ControlledToggleGroupHost);
     await nativeFixture.whenStable();
     const nativeGroup = nativeFixture.nativeElement.querySelector(
@@ -307,42 +282,6 @@ describe('KrnToggleGroup', () => {
     ) as HTMLElement;
     expect(nativeGroup.getAttribute('aria-labelledby')).toBe('formatting-label');
     expect(nativeGroup.getAttribute('aria-label')).toBeNull();
-
-    const legacyFixture = TestBed.createComponent(LegacyToggleGroupHost);
-    await legacyFixture.whenStable();
-    const legacyGroup = legacyFixture.nativeElement.querySelector(
-      'krn-toggle-group',
-    ) as HTMLElement;
-    expect(legacyGroup.getAttribute('aria-label')).toBe('Legacy formatting');
-
-    legacyFixture.componentInstance.label.set(undefined);
-    await legacyFixture.whenStable();
-    expect(legacyGroup.getAttribute('aria-label')).toBeNull();
-
-    const transitionalFixture = TestBed.createComponent(TransitionalToggleGroupHost);
-    await transitionalFixture.whenStable();
-    const transitionalGroup = transitionalFixture.nativeElement.querySelector(
-      'krn-toggle-group',
-    ) as HTMLElement;
-    expect(transitionalGroup.getAttribute('aria-label')).toBe('Temporary legacy formatting');
-
-    transitionalFixture.componentInstance.nativeLabel.set('Updated native formatting');
-    await transitionalFixture.whenStable();
-    expect(transitionalGroup.getAttribute('aria-label')).toBe('Updated native formatting');
-
-    transitionalFixture.componentInstance.label.set(undefined);
-    await transitionalFixture.whenStable();
-    expect(transitionalGroup.getAttribute('aria-label')).toBe('Updated native formatting');
-
-    transitionalFixture.componentInstance.label.set('Collision label');
-    await transitionalFixture.whenStable();
-    expect(transitionalGroup.getAttribute('aria-label')).toBe('Collision label');
-
-    transitionalFixture.componentInstance.nativeLabel.set('Collision label');
-    transitionalFixture.componentInstance.label.set(undefined);
-    await transitionalFixture.whenStable();
-    expect(transitionalGroup.getAttribute('aria-label')).toBe('Collision label');
-    expect(transitionalGroup.getAttribute('data-krn-legacy-aria-label-before')).toBeNull();
   });
 
   it('resolves frozen scoped defaults and preserves explicit instance overrides', async () => {

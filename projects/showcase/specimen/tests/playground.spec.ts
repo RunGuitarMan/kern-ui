@@ -4,6 +4,7 @@ import { KERN_CATALOG } from '../../src/public-api';
 import {
   KERN_SPECIMEN_RENDERER_CONTROLS,
   resolveKernSpecimenFilterValues,
+  resolveKernSpecimenGridMode,
   resolveKernSpecimenMenubarItems,
   resolveKernSpecimenNotifications,
   resolveKernSpecimenShortcutKeys,
@@ -425,12 +426,6 @@ describe('KERN playground registry', () => {
     expect(buttonGroup.presets.map(({ id }) => id)).not.toEqual(
       expect.arrayContaining(['hover', 'focus-visible', 'active', 'disabled', 'loading']),
     );
-    expect(
-      KERN_PLAYGROUND_API_EXCLUSIONS.find(
-        ({ componentId, publicName }) =>
-          componentId === 'button-group' && publicName === 'ariaLabel',
-      )?.reason,
-    ).toContain('Deprecated compatibility input');
     expect(KERN_SPECIMEN_RENDERER_CONTROLS['button-group']).toEqual(['orientation', 'connected']);
   });
 
@@ -505,6 +500,15 @@ describe('KERN playground registry', () => {
     expect(
       definition('data-grid').controls.find(({ key }) => key === 'dataState')?.binding,
     ).toMatchObject({ kind: 'fixture', target: 'data' });
+    expect(
+      definition('data-table').controls.find(({ key }) => key === 'pagination')?.binding,
+    ).toMatchObject({ kind: 'fixture', target: 'interaction' });
+    expect(
+      definition('data-grid').controls.find(({ key }) => key === 'virtualize')?.binding,
+    ).toMatchObject({ kind: 'fixture', target: 'interaction' });
+    expect(
+      definition('data-grid').controls.find(({ key }) => key === 'pagination')?.binding,
+    ).toMatchObject({ kind: 'fixture', target: 'interaction' });
     expect(definition('tabs').controls.find(({ key }) => key === 'selected')?.binding).toEqual({
       kind: 'model',
       publicName: 'value',
@@ -574,14 +578,20 @@ describe('KERN playground registry', () => {
     );
   });
 
+  it('composes the data-grid mode from fixture pagination and virtualization controls', () => {
+    expect(resolveKernSpecimenGridMode(false)).toEqual({ kind: 'client', pagination: false });
+    expect(resolveKernSpecimenGridMode(true)).toEqual({ kind: 'client', pagination: true });
+    expect(resolveKernSpecimenGridMode(true, true)).toEqual({ kind: 'virtual' });
+  });
+
   it('classifies every public input/model as one real control or one exact exclusion', () => {
     expect(KERN_PLAYGROUND_API_COVERAGE).toEqual({
-      publicInputsAndModels: 1038,
-      controlled: 649,
-      excluded: 389,
+      publicInputsAndModels: 1031,
+      controlled: 644,
+      excluded: 387,
       unclassified: 0,
     });
-    expect(KERN_PLAYGROUND_API_EXCLUSIONS).toHaveLength(389);
+    expect(KERN_PLAYGROUND_API_EXCLUSIONS).toHaveLength(387);
     expect(Object.values(KERN_PLAYGROUND_AUTO_CONTROL_KEYS).flat().length).toBeGreaterThan(0);
 
     for (const item of KERN_CATALOG) {

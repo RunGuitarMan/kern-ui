@@ -1005,7 +1005,7 @@ export const imports = [KrnButton, KrnDataGrid];
     assert.equal(second.readText('/projects/app/src/app/app.html'), template);
   });
 
-  it('migrates canonical imports and safe deprecated grid inputs idempotently', async () => {
+  it('migrates canonical imports and safe deprecated template APIs idempotently', async () => {
     const runner = new SchematicTestRunner('@kern-ui/angular', collectionPath);
     const tree = addStandaloneApplication(workspace());
     tree.overwrite(
@@ -1033,7 +1033,24 @@ export class App {
     tree.overwrite(
       '/src/app/app.html',
       `<krn-data-grid [pagination]="false" />
+<krn-data-grid [pagination]="true" />
+<krn-data-grid [virtualize]="false" />
+<krn-data-grid [virtualize]="false" [pagination]="false" />
+<krn-data-grid [pagination]="true" [virtualize]="false" />
+<krn-data-grid [pagination]="false" [virtualize]="true" />
+<krn-data-grid [virtualize]="true" [pagination]="true" />
+<krn-data-grid [pageSize]="items.length > 1 ? 20 : 10" [virtualize]="false" />
 <krn-data-table virtualize />
+<krn-button-group ariaLabel="Review actions">
+  <button krnButton>Approve</button>
+</krn-button-group>
+<krn-button-group />
+<krn-toggle-group [ariaLabel]="formattingLabel">
+  <button krnToggleButton value="bold">Bold</button>
+</krn-toggle-group>
+<krn-toggle-group [multiple]="items.length > 1" [ariaLabel]="conditionalLabel"></krn-toggle-group>
+<div krnButtonGroup [ariaLabel]="secondaryActionsLabel"></div>
+<div krnToggleGroup ariaLabel="Alignment"></div>
 <krn-menu hasProjectedTrigger />
 `,
     );
@@ -1048,12 +1065,78 @@ export class App {
     assert.match(firstSource, /from '@kern-ui\/angular\/core'/);
     assert.match(firstSource, /from '@kern-ui\/angular\/kit'/);
     assert.match(firstSource, /from '@kern-ui\/angular\/patterns'/);
-    assert.match(firstTemplate, /\[mode\]="\{ kind: 'client', pagination: false \}"/);
-    assert.match(firstTemplate, /\[mode\]="\{ kind: 'virtual' \}"/);
+    assert.equal(count(firstTemplate, /\[mode\]="\{ kind: 'client', pagination: false \}"/g), 2);
+    assert.equal(count(firstTemplate, /\[mode\]="\{ kind: 'client', pagination: true \}"/g), 4);
+    assert.equal(count(firstTemplate, /\[mode\]="\{ kind: 'virtual' \}"/g), 3);
+    assert.doesNotMatch(firstTemplate, /\[?(?:pagination|virtualize)\]?\s*=/);
+    assert.match(firstTemplate, /<div krnButtonGroup aria-label="Review actions">/);
+    assert.match(firstTemplate, /<div krnButtonGroup><\/div>/);
+    assert.match(firstTemplate, /<div krnToggleGroup \[attr\.aria-label\]="formattingLabel">/);
+    assert.match(
+      firstTemplate,
+      /<div krnToggleGroup \[multiple\]="items\.length > 1" \[attr\.aria-label\]="conditionalLabel"><\/div>/,
+    );
+    assert.match(
+      firstTemplate,
+      /<div krnButtonGroup \[attr\.aria-label\]="secondaryActionsLabel"><\/div>/,
+    );
+    assert.match(firstTemplate, /<div krnToggleGroup aria-label="Alignment"><\/div>/);
+    assert.doesNotMatch(firstTemplate, /<\/?krn-(?:button|toggle)-group\b/);
+    assert.doesNotMatch(firstTemplate, /\[?ariaLabel\]?/);
     assert.match(firstTemplate, /hasProjectedTrigger/);
     assert.equal(second.readText('/src/app/app.ts'), firstSource);
     assert.equal(second.readText('/src/app/app.html'), firstTemplate);
     assertTypeScriptSyntax(firstSource, 'app.ts');
+  });
+
+  it('preserves nullable mode fallbacks and only removes legacy grid flags when safe', async () => {
+    const runner = new SchematicTestRunner('@kern-ui/angular', collectionPath);
+    const tree = addStandaloneApplication(workspace());
+    tree.overwrite(
+      '/src/app/app.html',
+      `<krn-data-grid [mode]="maybeMode" [pagination]="false" />
+<krn-data-grid [mode]="mode()" [virtualize]="true" />
+<krn-data-grid [mode]="null" [pagination]="false" />
+<krn-data-grid [mode]="undefined as KrnDataGridMode | undefined" [virtualize]="true" />
+<krn-data-grid [mode]="{ kind: 'client', pagination: true }" [pagination]="false" />
+<krn-data-grid [mode]="standaloneMaybeMode" />
+<krn-data-grid [mode]="null" />
+<krn-data-grid [mode]="{ kind: 'virtual' }" />
+`,
+    );
+
+    const { result: first, events } = await runWithLogs(
+      runner,
+      'ng-update',
+      { project: 'app' },
+      tree,
+    );
+    const template = first.readText('/src/app/app.html');
+    const second = await runner.runSchematic('ng-update', { project: 'app' }, first);
+
+    assert.match(template, /\[mode\]="maybeMode" \[pagination\]="false"/);
+    assert.match(template, /\[mode\]="mode\(\)" \[virtualize\]="true"/);
+    assert.match(template, /\[mode\]="\{ kind: 'client', pagination: false \}"/);
+    assert.match(template, /\[mode\]="\{ kind: 'virtual' \}"/);
+    assert.match(template, /\[mode\]="\{ kind: 'client', pagination: true \}"/);
+    assert.match(template, /\[mode\]="standaloneMaybeMode"/);
+    assert.match(template, /<krn-data-grid \/>/);
+    assert.match(template, /\[mode\]="\{ kind: 'virtual' \}" \/>/);
+    assert.equal(
+      events.filter(
+        ({ level, message }) =>
+          level === 'warn' && message.includes('existing mode binding may resolve to null'),
+      ).length,
+      2,
+    );
+    assert.equal(
+      events.filter(
+        ({ level, message }) =>
+          level === 'warn' && message.includes('KrnDataGrid.mode is now non-null'),
+      ).length,
+      1,
+    );
+    assert.equal(second.readText('/src/app/app.html'), template);
   });
 
   it('migrates every compiler-visible root export to its generated owner idempotently', async () => {

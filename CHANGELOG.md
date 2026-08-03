@@ -46,15 +46,23 @@ contract or upgrade decision.
 - Migrated contributor orchestration from the Angular CLI workspace to Nx while preserving the
   published package entrypoints and consumer setup; consolidated component exploration in Docs
   and removed the legacy Lab application.
+
 - Rebuilt Docs previews around a shareable component workbench with complete theme, contrast,
   density, direction, locale, motion, brand, canvas, state, preset, and public-API controls.
 - Consolidated repeated action and form structure into the required global `styles/kern.css`
   composition, reducing duplicated runtime CSS.
 - Strengthened form-field projection, typed selection controls, date/calendar keyboard behavior,
   and Angular Forms contracts.
+- Stabilized `createKrnOptions` after adoption across the action families. The template-coupled
+  `KrnMenuButtonBase`, `KrnEditableComboboxBase`, and `KrnUploadBase` variant bases remain
+  explicitly experimental until their extension hooks become independently consumable.
+- Added the experimental `provideKrnFormControl()` adapter provider required by third-party
+  subclasses of the editable-combobox and upload variant bases.
 - Strengthened data-grid identity, typed rendering, responsive column access, virtual focus, and
   column-management contracts, including nested-control action mode, density-measured fixed-height
   virtual rows, logical start/end pinning, and a cancellable controlled data source.
+- Made Data Grid `mode` non-null with an explicit paginated-client default; the update schematic
+  removes static nullish bindings and warns when dynamic nullable state needs an explicit fallback.
 - Added explicit async loading/error states and server-query control to selection components, plus
   retryable lazy-child state for Tree and Tree Navigation.
 - Strengthened Charts with stable datum identity, finite-value validation, negative-value policy,
@@ -251,18 +259,18 @@ contract or upgrade decision.
   semantics, composed external and Form Field ARIA references, configurable autocomplete and tab
   order, focus recovery after removal, and public focus and blur methods.
 
-### Deprecated
-
-- `KrnDataGrid.pagination`; use the discriminated client `mode` with `pagination: true`.
-- `KrnDataGrid.virtualize`; use `{ kind: 'virtual' }` through the `mode` input.
-- `KrnMenu.hasProjectedTrigger`; apply `KrnMenuTrigger` to the projected trigger instead.
-- The legacy `<krn-button-group>` host and `KrnButtonGroup.ariaLabel`; use
-  `<div krnButtonGroup>` with native `aria-label` or `aria-labelledby`.
-- The legacy `<krn-toggle-group>` host and `KrnToggleGroup.ariaLabel`; use
-  `<div krnToggleGroup>` with native `aria-label` or `aria-labelledby`.
-
 ### Removed
 
+- Removed the unpublished `KrnValueAccessor` extension export; concrete form components now use
+  a composable Angular Forms adapter instead of inheriting their state machinery. Experimental
+  variant-base subclasses install the same scoped adapter with `provideKrnFormControl()`.
+- Removed the unpublished Button Group and Toggle Group custom-element selectors and `ariaLabel`
+  bridges; use the canonical native `div[krnButtonGroup]` and `div[krnToggleGroup]` hosts with
+  native accessible-name attributes.
+- Removed the unpublished Data Grid `pagination` and `virtualize` boolean inputs; configure the
+  discriminated `mode` input instead.
+- Removed the unpublished Menu `hasProjectedTrigger` input; apply `KrnMenuTrigger` directly to
+  projected trigger content.
 - Removed the pre-1.0 `KrnSplitLayout.reverseCollapsed` input because CSS-only panel reordering
   diverged from DOM, assistive-technology, and keyboard focus order. Primary content now always
   precedes secondary content; swap the `krnSplitPrimary` and `krnSplitSecondary` slot roles when a

@@ -650,16 +650,6 @@ function publicApiExclusion(
     type: normalizedType,
   } as const;
 
-  if (item.id === 'button-group' && api.name === 'ariaLabel') {
-    return Object.freeze({
-      ...base,
-      code: 'accessibility-copy',
-      reason:
-        'Deprecated compatibility input; the canonical div[krnButtonGroup] host uses native aria-label or aria-labelledby.',
-      evidence: exclusionEvidence(item.id, 'accessibility-copy'),
-    });
-  }
-
   if (/TemplateRef</.test(type)) {
     return Object.freeze({
       ...base,
@@ -2127,7 +2117,13 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
       fixtureBinding('data', 'Selects the table row fixture; it is not a KrnDataGrid input.'),
     ),
     boolean('resizable', 'Resizable', false, 'Allows pointer and keyboard column resizing.'),
-    boolean('pagination', 'Pagination', false, 'Paginates the table rows.'),
+    boolean(
+      'pagination',
+      'Pagination',
+      false,
+      'Paginates the table rows.',
+      fixtureBinding('interaction', 'Composes the discriminated client mode for the specimen.'),
+    ),
     boolean('compact', 'Compact', false, 'Uses the compact row treatment.'),
     number('pageSize', 'Page size', 4, 'Sets rows per page.', 1, 100),
     text('filter', 'Filter', '', 'Changes the active row filter.', modelBinding('filter')),
@@ -2169,10 +2165,17 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
       'Virtualize',
       false,
       'Virtualizes rows and turns row expansion off because both modes are incompatible.',
+      fixtureBinding('interaction', 'Composes virtual or client mode for the specimen.'),
     ),
     boolean('filterable', 'Filterable', true, 'Shows the quick filter.'),
     boolean('resizable', 'Resizable', true, 'Allows pointer and keyboard column resizing.'),
-    boolean('pagination', 'Pagination', true, 'Paginates non-virtual data.'),
+    boolean(
+      'pagination',
+      'Pagination',
+      true,
+      'Paginates non-virtual data.',
+      fixtureBinding('interaction', 'Composes the discriminated client mode for the specimen.'),
+    ),
     boolean('compact', 'Compact', false, 'Uses the compact row treatment.'),
     number('pageSize', 'Page size', 3, 'Sets rows per page.', 1, 100),
     number(

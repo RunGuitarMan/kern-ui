@@ -141,10 +141,6 @@ interface HarnessDemoRow extends Record<string, unknown> {
       </div>
     </div>
 
-    <krn-button-group ariaLabel="Legacy actions">
-      <button krnButton type="button">Legacy action</button>
-    </krn-button-group>
-
     <krn-copy-button value="CUS-2048" ariaLabel="Copy customer id" size="sm">
       Copy customer id
     </krn-copy-button>
@@ -674,7 +670,7 @@ describe('@kern-ui/angular/testing', () => {
     expect(await group.getValues()).toEqual(['targets', 'forecast']);
   });
 
-  it('reads both button-group hosts and exposes only direct child action harnesses', async () => {
+  it('reads the canonical button-group host and exposes only direct child action harnesses', async () => {
     const fixture = TestBed.createComponent(HarnessDemo);
     const loader = TestbedHarnessEnvironment.loader(fixture);
     const group = await loader.getHarness(
@@ -699,17 +695,6 @@ describe('@kern-ui/angular/testing', () => {
     expect(iconButtons).toHaveLength(1);
     expect(await iconButtons[0]?.getAccessibleName()).toBe('Approve review');
     expect(await group.getButtons()).toHaveLength(1);
-
-    const legacy = await loader.getHarness(
-      KrnButtonGroupHarness.with({
-        ariaLabel: 'Legacy actions',
-        accessibleName: 'Legacy actions',
-        orientation: 'horizontal',
-        connected: false,
-      }),
-    );
-    expect(await legacy.getAccessibleName()).toBe('Legacy actions');
-    expect(await legacy.getButtons()).toHaveLength(1);
   });
 
   it('drives copy buttons through the clipboard boundary and exposes stable host state', async () => {

@@ -16,15 +16,12 @@ import { KrnIconButton } from './icon-button';
       <button krnIconButton aria-label="More review actions">···</button>
     </div>
     <p id="review-help">Independent commands for the current review.</p>
-    <krn-button-group ariaLabel="Legacy actions" connected="false">
-      <button krnButton>Legacy command</button>
-    </krn-button-group>
   `,
 })
 class SsrButtonGroupHost {}
 
 describe('KrnButtonGroup SSR', () => {
-  it('serializes native naming, scoped layout, direct actions, and the legacy bridge', async () => {
+  it('serializes native naming, scoped layout, and direct actions', async () => {
     const html = await renderApplication(
       (context) =>
         bootstrapApplication(
@@ -48,7 +45,6 @@ describe('KrnButtonGroup SSR', () => {
     );
     const document = new DOMParser().parseFromString(html, 'text/html');
     const group = document.querySelector('div[krnButtonGroup]') as HTMLDivElement | null;
-    const legacy = document.querySelector('krn-button-group') as HTMLElement | null;
 
     expect(group?.getAttribute('role')).toBe('group');
     expect(group?.getAttribute('aria-labelledby')).toBe('review-label');
@@ -58,11 +54,5 @@ describe('KrnButtonGroup SSR', () => {
     expect(group?.getAttribute('data-connected')).toBe('true');
     expect(group?.querySelectorAll(':scope > button')).toHaveLength(2);
     expect(group?.querySelector('button button')).toBeNull();
-
-    expect(legacy?.getAttribute('role')).toBe('group');
-    expect(legacy?.getAttribute('aria-label')).toBe('Legacy actions');
-    expect(legacy?.getAttribute('data-orientation')).toBe('vertical');
-    expect(legacy?.hasAttribute('data-connected')).toBe(false);
-    expect(legacy?.querySelectorAll(':scope > button')).toHaveLength(1);
   });
 });

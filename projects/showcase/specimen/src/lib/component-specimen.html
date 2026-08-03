@@ -1384,7 +1384,6 @@
                   menuAriaLabel="Workspace actions"
                   [items]="navigationItems"
                   [(open)]="actionMenuOpen"
-                  [hasProjectedTrigger]="booleanArgument('hasProjectedTrigger', false)"
                 />
                 <p>Open, then use ↑ ↓ Home End and Escape.</p>
               </div>
@@ -2057,7 +2056,7 @@
                 [data]="activeSpecimenRows()"
                 [columns]="activeSpecimenColumns()"
                 [rowIdentity]="rowIdentity"
-                [pagination]="booleanArgument('pagination')"
+                [mode]="dataTableGridMode()"
                 [resizable]="booleanArgument('resizable')"
                 [compact]="booleanArgument('compact')"
                 [pageSize]="numberArgument('pageSize', 4)"
@@ -2078,7 +2077,6 @@
                 [loading]="booleanArgument('loading', false)"
                 [selectable]="booleanArgument('selectable', false)"
                 [viewportHeight]="numberArgument('viewportHeight', 360)"
-                [virtualize]="booleanArgument('virtualize', false)"
               />
             }
             @case ('data-grid') {
@@ -2096,12 +2094,10 @@
                 [expandedContent]="expandedRow"
                 [filterable]="booleanArgument('filterable', true)"
                 [resizable]="booleanArgument('resizable', true)"
-                [pagination]="booleanArgument('pagination', true)"
                 [compact]="booleanArgument('compact')"
                 [pageSize]="numberArgument('pageSize', 3)"
-                [mode]="effectiveScenario() === 'virtual' ? virtualGridMode : null"
+                [mode]="dataGridMode()"
                 [viewportHeight]="numberArgument('viewportHeight', 360)"
-                [virtualize]="booleanArgument('virtualize', false)"
                 [(filter)]="gridFilter"
                 [filterPlaceholder]="
                   stringArgumentOverride(

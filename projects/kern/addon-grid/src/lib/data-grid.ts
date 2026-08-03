@@ -1153,11 +1153,7 @@ export class KrnDataGrid<T> implements AfterViewChecked {
   private readonly measuredColumnWidths = signal<Readonly<Record<string, number>>>({});
   private readonly managedTabIndexes = new Map<KrnDataGridActionElement, string | null>();
   private readonly effectiveMode = computed<KrnDataGridMode>(() => {
-    const mode =
-      this.mode() ??
-      (this.virtualize()
-        ? ({ kind: 'virtual' } as const)
-        : ({ kind: 'client', pagination: this.pagination() } as const));
+    const mode = this.mode();
     if (mode.kind === 'virtual' && this.expandable()) {
       throw new Error(
         'KrnDataGrid virtual mode uses fixed-height rows and does not support row expansion. Disable `expandable` or use client/controlled mode.',
@@ -1204,7 +1200,7 @@ export class KrnDataGrid<T> implements AfterViewChecked {
   readonly data = input.required<readonly T[]>();
   readonly columns = input.required<readonly KrnDataColumn<T>[]>();
   readonly rowIdentity = input.required<(row: T, index: number) => KrnDataRowKey>();
-  readonly mode = input<KrnDataGridMode | null>(null);
+  readonly mode = input<KrnDataGridMode>({ kind: 'client', pagination: true });
   readonly labels = input<Partial<KrnDataGridTranslations>>({});
   readonly ariaLabel = input(this.translations.dataGrid.ariaLabel);
   readonly loading = input(false, { transform: booleanAttribute });
@@ -1220,11 +1216,7 @@ export class KrnDataGrid<T> implements AfterViewChecked {
   readonly defaultCellTemplate = input<TemplateRef<KrnDataCellContext<T>> | null>(null);
   readonly defaultHeaderTemplate = input<TemplateRef<KrnDataHeaderContext<T>> | null>(null);
   readonly resizable = input(true, { transform: booleanAttribute });
-  /** @deprecated Prefer the discriminated `mode` input. */
-  readonly pagination = input(true, { transform: booleanAttribute });
   readonly compact = input(false, { transform: booleanAttribute });
-  /** @deprecated Prefer `{ kind: 'virtual' }` through the `mode` input. */
-  readonly virtualize = input(false, { transform: booleanAttribute });
   readonly viewportHeight = input(360, { transform: numberAttribute });
   readonly pageSize = input(10, { transform: numberAttribute });
   readonly columnChooser = input(false, { transform: booleanAttribute });

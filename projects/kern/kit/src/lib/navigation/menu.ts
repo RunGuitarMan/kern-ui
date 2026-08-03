@@ -4,7 +4,6 @@ import {
   Directive,
   ElementRef,
   HostListener,
-  booleanAttribute,
   computed,
   contentChild,
   effect,
@@ -273,18 +272,12 @@ export class KrnMenu {
   readonly triggerAriaLabel = input(this.translations.navigation.openMenu);
   readonly menuAriaLabel = input(this.translations.navigation.actions);
   readonly emptyLabel = input(this.translations.navigation.menuEmpty);
-  /**
-   * @deprecated Import and apply `KrnMenuTrigger` to projected trigger content instead.
-   */
-  readonly hasProjectedTrigger = input(false, { transform: booleanAttribute });
   readonly itemSelected = output<KrnNavigationItem>();
   readonly closed = output<'escape' | 'outside' | 'detach' | 'selection'>();
   protected readonly activeIndex = signal(0);
   protected readonly panelId = signal<string | null>(null);
   protected readonly hasEnabledItems = computed(() => this.items().some((item) => !item.disabled));
-  protected readonly showDefaultTrigger = computed(
-    () => !this.hasProjectedTrigger() && !this.projectedTrigger(),
-  );
+  protected readonly showDefaultTrigger = computed(() => !this.projectedTrigger());
   protected readonly resolvedTriggerLabel = computed(
     () => this.triggerLabel()?.trim() || this.translations.navigation.actions.trim(),
   );
