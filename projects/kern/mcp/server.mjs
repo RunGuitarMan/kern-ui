@@ -8,19 +8,23 @@ import { fileURLToPath } from 'node:url';
 import { createKernAgentApi, loadManifest, toolDefinitions } from './lib.mjs';
 
 const toolRoot = dirname(fileURLToPath(import.meta.url));
-const workspaceRoot = resolve(toolRoot, '../..');
-const packagedManifestPath = resolve(toolRoot, '../agent/component-manifest.json');
-const repositoryManifestPath = resolve(
-  workspaceRoot,
-  'metadata/agent/generated/component-manifest.json',
-);
+const manifestCandidates = [
+  resolve(toolRoot, 'agent/component-manifest.json'),
+  resolve(toolRoot, '../agent/component-manifest.json'),
+  resolve(toolRoot, '../../metadata/agent/generated/component-manifest.json'),
+  resolve(toolRoot, '../../../metadata/agent/generated/component-manifest.json'),
+];
+const defaultManifestPath = manifestCandidates.find((path) => existsSync(path));
 const manifestFlag = process.argv.indexOf('--manifest');
 const manifestPath =
   manifestFlag >= 0 && process.argv[manifestFlag + 1]
     ? resolve(process.argv[manifestFlag + 1])
-    : existsSync(packagedManifestPath)
-      ? packagedManifestPath
-      : repositoryManifestPath;
+    : defaultManifestPath;
+if (!manifestPath) {
+  throw new Error(
+    'Could not locate the Kern component manifest. Pass an explicit --manifest path.',
+  );
+}
 const manifest = await loadManifest(manifestPath);
 const api = createKernAgentApi(manifest);
 

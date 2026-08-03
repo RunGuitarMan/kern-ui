@@ -13,6 +13,9 @@ const releaseVerifier = resolve(workspaceRoot, 'tools/verify-kern-release-artifa
 const sourceManifest = JSON.parse(
   await readFile(resolve(workspaceRoot, 'projects/kern/package.json'), 'utf8'),
 );
+const companionSourceManifest = JSON.parse(
+  await readFile(resolve(workspaceRoot, 'projects/kern-mcp/package.json'), 'utf8'),
+);
 const workspaceManifest = JSON.parse(
   await readFile(resolve(workspaceRoot, 'package.json'), 'utf8'),
 );
@@ -287,83 +290,106 @@ test('versioned documentation verification rejects release identity drift', asyn
   }
 });
 
-test('release verification binds versioned documentation to the approved checksum set', async () => {
+test('release verification binds both packages and versioned documentation to checksums', async () => {
   const temporary = await mkdtemp(join(tmpdir(), 'kern-versioned-docs-release-'));
   const input = join(temporary, 'input');
   const release = join(temporary, 'release');
-  const packageRoot = join(temporary, 'package-root/package');
   try {
     await fixture(input);
     const prepared = run('prepare', input, release);
     assert.equal(prepared.status, 0, prepared.stderr);
 
-    await mkdir(packageRoot, { recursive: true });
-    await writeFile(
-      join(packageRoot, 'package.json'),
-      `${JSON.stringify(sourceManifest, null, 2)}\n`,
-    );
-    const tarballName = `kern-ui-angular-${version}.tgz`;
-    const tarballPath = join(release, tarballName);
-    const packed = spawnSync(
-      'tar',
-      ['-czf', tarballPath, '-C', join(temporary, 'package-root'), 'package/package.json'],
-      { encoding: 'utf8' },
-    );
-    assert.equal(packed.status, 0, packed.stderr);
-
-    const sbomName = `kern-ui-angular-${version}.cdx.json`;
-    const sbomPath = join(release, sbomName);
-    const sbom = {
-      bomFormat: 'CycloneDX',
-      specVersion: '1.6',
-      metadata: {
-        tools: [{ name: 'npm', version: '11.12.1' }],
-        component: {
-          name: releasePolicy.packageName,
-          version,
-          type: 'library',
-          purl: `pkg:npm/%40kern-ui/angular@${version}`,
+    const packageFixtures = [
+      {
+        dependencies: {
+          ...releasePolicy.dependencies,
+          ...releasePolicy.peerDependencies,
         },
+        manifest: sourceManifest,
+        name: releasePolicy.packageName,
+        slug: 'kern-ui-angular',
       },
-      components: [
-        ...Object.keys(releasePolicy.dependencies),
-        ...Object.keys(releasePolicy.peerDependencies),
-      ].map((name) => ({
-        name,
-        version: '0.0.0-test',
-        licenses: [{ expression: 'MIT' }],
-      })),
-    };
-    await writeFile(sbomPath, `${JSON.stringify(sbom, null, 2)}\n`);
+      {
+        dependencies: releasePolicy.companionPackage.dependencies,
+        manifest: companionSourceManifest,
+        name: releasePolicy.companionPackage.packageName,
+        slug: 'kern-ui-mcp',
+      },
+    ];
+    for (const packageFixture of packageFixtures) {
+      const root = join(temporary, `${packageFixture.slug}-root`);
+      const packageRoot = join(root, 'package');
+      await mkdir(packageRoot, { recursive: true });
+      await writeFile(
+        join(packageRoot, 'package.json'),
+        `${JSON.stringify(packageFixture.manifest, null, 2)}\n`,
+      );
+      packageFixture.tarballName = `${packageFixture.slug}-${version}.tgz`;
+      packageFixture.tarballPath = join(release, packageFixture.tarballName);
+      const packed = spawnSync(
+        'tar',
+        ['-czf', packageFixture.tarballPath, '-C', root, 'package/package.json'],
+        { encoding: 'utf8' },
+      );
+      assert.equal(packed.status, 0, packed.stderr);
+
+      packageFixture.sbomName = `${packageFixture.slug}-${version}.cdx.json`;
+      packageFixture.sbomPath = join(release, packageFixture.sbomName);
+      const sbom = {
+        bomFormat: 'CycloneDX',
+        specVersion: '1.6',
+        metadata: {
+          tools: [{ name: 'npm', version: '11.12.1' }],
+          component: {
+            name: packageFixture.name,
+            version,
+            type: 'library',
+            purl: `pkg:npm/${packageFixture.name.replace('@', '%40')}@${version}`,
+          },
+        },
+        components: Object.keys(packageFixture.dependencies).map((name) => ({
+          name,
+          version: '0.0.0-test',
+          licenses: [{ expression: 'MIT' }],
+        })),
+      };
+      await writeFile(packageFixture.sbomPath, `${JSON.stringify(sbom, null, 2)}\n`);
+      packageFixture.tarballHash = hash(await readFile(packageFixture.tarballPath));
+      packageFixture.sbomHash = hash(await readFile(packageFixture.sbomPath));
+    }
 
     const docsArchiveName = `kern-docs-${version}.tgz`;
     const docsManifestName = `kern-docs-${version}.manifest.json`;
     const artifactHashes = {
-      tarball: hash(await readFile(tarballPath)),
-      sbom: hash(await readFile(sbomPath)),
       docsArchive: hash(await readFile(join(release, docsArchiveName))),
       docsManifest: hash(await readFile(join(release, docsManifestName))),
     };
     const releaseManifest = {
-      schemaVersion: 1,
-      package: {
-        name: releasePolicy.packageName,
+      schemaVersion: 2,
+      release: {
         version,
         tag,
         npmDistTag: 'latest',
       },
+      packages: packageFixtures.map((packageFixture) => ({
+        name: packageFixture.name,
+        version,
+        tarball: {
+          file: packageFixture.tarballName,
+          sha256: packageFixture.tarballHash,
+        },
+        sbom: {
+          file: packageFixture.sbomName,
+          format: releasePolicy.sbom.format,
+          sha256: packageFixture.sbomHash,
+        },
+      })),
       source: {
         repository: releasePolicy.repository,
         commit,
         workflowRunId: null,
       },
       artifacts: {
-        tarball: { file: tarballName, sha256: artifactHashes.tarball },
-        sbom: {
-          file: sbomName,
-          format: releasePolicy.sbom.format,
-          sha256: artifactHashes.sbom,
-        },
         documentation: {
           archive: {
             file: docsArchiveName,
@@ -390,30 +416,45 @@ test('release verification binds versioned documentation to the approved checksu
       `${hash(await readFile(releaseManifestPath))}  release-manifest.json`,
       `${artifactHashes.docsArchive}  ${docsArchiveName}`,
       `${artifactHashes.docsManifest}  ${docsManifestName}`,
-      `${artifactHashes.sbom}  ${sbomName}`,
-      `${artifactHashes.tarball}  ${tarballName}`,
+      ...packageFixtures.flatMap((packageFixture) => [
+        `${packageFixture.sbomHash}  ${packageFixture.sbomName}`,
+        `${packageFixture.tarballHash}  ${packageFixture.tarballName}`,
+      ]),
     ].sort();
     await writeFile(join(release, 'SHA256SUMS'), `${checksums.join('\n')}\n`);
 
-    const verified = spawnSync(
-      process.execPath,
-      [
-        releaseVerifier,
-        'verify',
-        `--version=${version}`,
-        `--tag=${tag}`,
-        `--commit=${commit}`,
-        '--npm-tag=latest',
-        `--artifact-dir=${release}`,
-      ],
-      {
-        cwd: workspaceRoot,
-        encoding: 'utf8',
-        maxBuffer: 4 * 1024 * 1024,
-      },
-    );
+    const verifyRelease = () =>
+      spawnSync(
+        process.execPath,
+        [
+          releaseVerifier,
+          'verify',
+          `--version=${version}`,
+          `--tag=${tag}`,
+          `--commit=${commit}`,
+          '--npm-tag=latest',
+          `--artifact-dir=${release}`,
+        ],
+        {
+          cwd: workspaceRoot,
+          encoding: 'utf8',
+          maxBuffer: 4 * 1024 * 1024,
+        },
+      );
+    const verified = verifyRelease();
     assert.equal(verified.status, 0, verified.stderr);
     assert.match(verified.stdout, /release artifacts verified/);
+    assert.deepEqual(
+      releaseManifest.packages.map(({ name }) => name),
+      ['@kern-ui/angular', '@kern-ui/mcp'],
+    );
+
+    const companionSbom = packageFixtures.find(({ name }) => name === '@kern-ui/mcp');
+    assert.ok(companionSbom);
+    await writeFile(companionSbom.sbomPath, `${await readFile(companionSbom.sbomPath, 'utf8')}\n`);
+    const tampered = verifyRelease();
+    assert.notEqual(tampered.status, 0);
+    assert.match(tampered.stderr, /SHA256SUMS does not exactly match/);
   } finally {
     await rm(temporary, { recursive: true, force: true });
   }

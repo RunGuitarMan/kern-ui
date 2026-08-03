@@ -14,14 +14,8 @@
     },
     {
       "input": "agent",
-      "glob": "**/*",
-      "ignore": ["**/tsconfig.json"],
-      "output": "agent"
-    },
-    {
-      "input": "mcp",
-      "glob": "{lib,server}.mjs",
-      "output": "mcp"
+      "glob": "root-export-map.json",
+      "output": "schematics/shared"
     }
   ],
   "lib": {

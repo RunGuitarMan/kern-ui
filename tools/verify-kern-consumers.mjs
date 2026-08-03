@@ -144,26 +144,18 @@ async function verifyInstalledPackage(consumerRoot, requiredSubpaths) {
     fail(`Packed schematics collection is missing: ${manifest.schematics}.`);
   }
 
-  const mcpExecutable = manifest.bin?.['kern-mcp'];
-  if (typeof mcpExecutable !== 'string' || !existsSync(packagePath(installedRoot, mcpExecutable))) {
-    fail('Packed manifest must expose the self-contained kern-mcp executable.');
-  } else {
-    const output = run(process.execPath, [packagePath(installedRoot, mcpExecutable)], {
-      cwd: consumerRoot,
-      input: `${JSON.stringify({
-        jsonrpc: '2.0',
-        id: 1,
-        method: 'initialize',
-        params: { protocolVersion: '2025-06-18' },
-      })}\n`,
-    });
-    const initialized = JSON.parse(output);
-    if (
-      initialized.id !== 1 ||
-      initialized.result?.serverInfo?.name !== 'kern-agent-contract' ||
-      initialized.result?.serverInfo?.version !== manifest.version
-    ) {
-      fail('Packed kern-mcp executable did not initialize against its bundled manifest.');
+  if ('bin' in manifest) {
+    fail('Packed Angular runtime must not expose tooling executables.');
+  }
+  for (const path of installedFiles) {
+    if (path.startsWith('agent/') || path.startsWith('mcp/')) {
+      fail(`Packed Angular runtime contains optional AI tooling asset "${path}".`);
+      break;
+    }
+  }
+  for (const subpath of Object.keys(manifest.exports ?? {})) {
+    if (/^\.\/(agent|mcp)/.test(subpath)) {
+      fail(`Packed Angular runtime exposes optional AI tooling subpath "${subpath}".`);
     }
   }
 
@@ -195,8 +187,12 @@ async function filesWithExtension(directory, extension) {
 
 async function measureBuild(outputRoot) {
   const javascriptFiles = await filesWithExtension(outputRoot, '.js');
+  const stylesheetFiles = await filesWithExtension(outputRoot, '.css');
   if (!javascriptFiles.length) {
     throw new Error(`Consumer build emitted no JavaScript under ${outputRoot}.`);
+  }
+  if (!stylesheetFiles.length) {
+    throw new Error(`Consumer build emitted no CSS under ${outputRoot}.`);
   }
 
   let bytes = 0;
@@ -209,12 +205,38 @@ async function measureBuild(outputRoot) {
     source += content.toString('utf8');
   }
 
-  return { bytes, gzipBytes, source, files: javascriptFiles.length };
+  let cssBytes = 0;
+  let cssGzipBytes = 0;
+  for (const path of stylesheetFiles) {
+    const content = await readFile(path);
+    cssBytes += (await stat(path)).size;
+    cssGzipBytes += gzipSync(content, { level: 9 }).byteLength;
+  }
+
+  return {
+    bytes,
+    gzipBytes,
+    source,
+    files: javascriptFiles.length,
+    cssBytes,
+    cssGzipBytes,
+    cssFiles: stylesheetFiles.length,
+  };
 }
 
 function validateCases(value) {
   if (!value || typeof value !== 'object' || !Array.isArray(value.cases)) {
     throw new Error('tests/consumer-fixtures/cases.json must contain a "cases" array.');
+  }
+  if (
+    !value.styleBudget ||
+    typeof value.styleBudget !== 'object' ||
+    !Number.isSafeInteger(value.styleBudget.maximumCssBytes) ||
+    value.styleBudget.maximumCssBytes <= 0 ||
+    !Number.isSafeInteger(value.styleBudget.maximumCssGzipBytes) ||
+    value.styleBudget.maximumCssGzipBytes <= 0
+  ) {
+    throw new Error('tests/consumer-fixtures/cases.json must define a positive styleBudget.');
   }
 
   const names = new Set();
@@ -272,7 +294,7 @@ function validateCases(value) {
       throw new Error(`Consumer case "${entry.name}" has invalid compareWith target.`);
     }
   }
-  return cases;
+  return { cases, styleBudget: value.styleBudget };
 }
 
 async function main() {
@@ -285,7 +307,7 @@ async function main() {
     }
   }
 
-  const cases = validateCases(
+  const { cases, styleBudget } = validateCases(
     JSON.parse(await readFile(join(fixtureTemplateRoot, 'cases.json'), 'utf8')),
   );
   const runtimeEntrypointsConfig = JSON.parse(await readFile(runtimeEntrypointsConfigPath, 'utf8'));
@@ -444,6 +466,9 @@ void bootstrapApplication(GeneratedSchematicsConsumer);
         bytes: measurement.bytes,
         gzipBytes: measurement.gzipBytes,
         files: measurement.files,
+        cssBytes: measurement.cssBytes,
+        cssGzipBytes: measurement.cssGzipBytes,
+        cssFiles: measurement.cssFiles,
       });
 
       if (measurement.bytes > consumerCase.maximumJsBytes) {
@@ -456,6 +481,18 @@ void bootstrapApplication(GeneratedSchematicsConsumer);
         fail(
           `${consumerCase.name} emitted ${measurement.gzipBytes} gzip JS bytes; ` +
             `budget is ${consumerCase.maximumGzipBytes}.`,
+        );
+      }
+      if (measurement.cssBytes > styleBudget.maximumCssBytes) {
+        fail(
+          `${consumerCase.name} emitted ${measurement.cssBytes} CSS bytes; ` +
+            `shared-style budget is ${styleBudget.maximumCssBytes}.`,
+        );
+      }
+      if (measurement.cssGzipBytes > styleBudget.maximumCssGzipBytes) {
+        fail(
+          `${consumerCase.name} emitted ${measurement.cssGzipBytes} gzip CSS bytes; ` +
+            `shared-style budget is ${styleBudget.maximumCssGzipBytes}.`,
         );
       }
       for (const marker of consumerCase.requiredMarkers) {
@@ -477,7 +514,9 @@ void bootstrapApplication(GeneratedSchematicsConsumer);
     for (const summary of summaries) {
       console.log(
         `${summary.name.padEnd(summaryNameWidth)} ${String(summary.bytes).padStart(7)} B JS · ` +
-          `${String(summary.gzipBytes).padStart(6)} B gzip · ${summary.files} file(s)`,
+          `${String(summary.gzipBytes).padStart(6)} B gzip · ${summary.files} JS · ` +
+          `${String(summary.cssBytes).padStart(6)} B CSS · ` +
+          `${String(summary.cssGzipBytes).padStart(5)} B gzip · ${summary.cssFiles} CSS`,
       );
     }
 

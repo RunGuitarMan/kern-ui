@@ -1,7 +1,8 @@
 # Versioning and compatibility
 
-Kern versions the publishable `@kern-ui/angular` package with Semantic Versioning. The version in
-`projects/kern/package.json` is authoritative; workspace applications are not published products.
+Kern versions the publishable `@kern-ui/angular` and `@kern-ui/mcp` packages together with Semantic
+Versioning. Their source manifests must contain the same version; workspace applications are not
+published products.
 
 ## Compatibility matrix
 
@@ -20,6 +21,7 @@ The compatibility contract includes:
 - the `@kern-ui/angular` compatibility entry point; the `/cdk`, `/i18n`, `/core`, `/kit`,
   `/addon-grid`, `/addon-charts`, `/patterns`, and `/testing` entry points; declared style
   subpaths; and their exported declarations;
+- the optional `@kern-ui/mcp` executable, programmatic API, and declared agent-contract subpaths;
 - component and directive selectors;
 - inputs, models, outputs, defaults, required state, and generic type behavior;
 - public injection tokens, providers, and intentional imperative methods;
@@ -103,15 +105,15 @@ Release tags use `vMAJOR.MINOR.PATCH`; prereleases use identifiers such as
 `v1.0.0-rc.1`. A release candidate must:
 
 1. be dispatched from an exact protected tag whose commit belongs to the default branch;
-2. have matching source and built package versions;
+2. have matching source and built Angular, MCP, and documentation versions;
 3. pass lifecycle, evidence, `npm run verify`, and complete Playwright gates;
 4. include an updated `CHANGELOG.md`;
-5. include the exact npm tarball, versioned SSR documentation tarball and file manifest, npm
-   CycloneDX SBOM, release manifest, and SHA-256 checksums;
+5. include both exact npm tarballs and CycloneDX SBOMs, the versioned SSR documentation tarball
+   and file manifest, release manifest, and SHA-256 checksums;
 6. wait for approval in the protected `npm-production` GitHub environment.
 
-After approval, npm trusted publishing uses GitHub OIDC and `--provenance` to publish the exact
-verified tarball; no long-lived npm token is required. The same evidence is attached to the GitHub
-release. Repository and npm configuration requirements are in [RELEASING.md](RELEASING.md).
+After approval, npm trusted publishing uses GitHub OIDC and `--provenance` to publish both exact
+verified tarballs; no long-lived npm token is required. The same evidence is attached to the
+GitHub release. Repository and npm configuration requirements are in [RELEASING.md](RELEASING.md).
 The provider-neutral documentation artifact contract is in
 [VERSIONED_DOCUMENTATION.md](VERSIONED_DOCUMENTATION.md).

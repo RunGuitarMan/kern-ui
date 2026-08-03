@@ -1,12 +1,17 @@
 'use strict';
 
+const { existsSync } = require('node:fs');
+const { resolve } = require('node:path');
 const ts = require('typescript');
 const { getWorkspace, projectFiles, resolveDoctorProjects } = require('../shared/workspace');
 const { parse } = require('../shared/source');
 
 const KERN_ROOT = '@kern-ui/angular';
 const MIGRATION_CODE = 'KRN-DX-030';
-const ROOT_EXPORT_CONTRACT = require('../../agent/root-export-map.json');
+const rootExportMapPath = existsSync(resolve(__dirname, '../shared/root-export-map.json'))
+  ? '../shared/root-export-map.json'
+  : '../../agent/root-export-map.json';
+const ROOT_EXPORT_CONTRACT = require(rootExportMapPath);
 
 function rootExportOwnership(contract) {
   if (

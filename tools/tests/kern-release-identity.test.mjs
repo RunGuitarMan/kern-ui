@@ -6,6 +6,8 @@ import { dirname, join, resolve } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import { assertDistTagVersion, publicationDecision } from '../publish-kern-release-package.mjs';
+
 const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const verifier = resolve(workspaceRoot, 'tools/verify-kern-release-identity.mjs');
 const fixtures = resolve(workspaceRoot, 'tools/tests/fixtures/release-identity');
@@ -195,12 +197,69 @@ test('release workflow verifies source identity in both candidate and approved p
     'node tools/verify-kern-release-identity.mjs',
     publishJob,
   );
-  const npmPublication = workflow.indexOf('npm publish ', publishJob);
+  const npmPublication = workflow.indexOf(
+    'node tools/publish-kern-release-package.mjs',
+    publishJob,
+  );
 
   assert.equal(invocations.length, 2);
   assert.ok(publishJob >= 0, 'release workflow must define the approved publish job');
   assert.ok(
     publishVerification > publishJob && publishVerification < npmPublication,
     'approved publication must reverify release identity before npm publish',
+  );
+  for (const packageSlug of ['kern-ui-angular', 'kern-ui-mcp']) {
+    assert.ok(
+      workflow.includes(`release/${packageSlug}-${'${RELEASE_VERSION}'}.tgz`),
+      `${packageSlug} tarball must be part of the immutable release candidate`,
+    );
+    assert.ok(
+      workflow.includes(`release/${packageSlug}-${'${RELEASE_VERSION}'}.cdx.json`),
+      `${packageSlug} SBOM must be part of the immutable release candidate`,
+    );
+    assert.ok(
+      workflow.includes(`--tarball=release/${packageSlug}-${'${RELEASE_VERSION}'}.tgz`),
+      `${packageSlug} must be published from the verified tarball`,
+    );
+  }
+  assert.equal(
+    workflow.match(/node tools\/publish-kern-release-package\.mjs/g)?.length,
+    2,
+    'both npm packages must use the resumable publisher',
+  );
+  const publisher = await readFile(
+    resolve(workspaceRoot, 'tools/publish-kern-release-package.mjs'),
+    'utf8',
+  );
+  assert.match(publisher, /'--provenance'/);
+  assert.match(publisher, /dist\.integrity/);
+  const tagVerification = workflow.indexOf(
+    'node tools/verify-kern-release-dist-tags.mjs',
+    npmPublication,
+  );
+  const githubPublication = workflow.indexOf('Publish GitHub release with evidence', publishJob);
+  assert.ok(
+    tagVerification > workflow.lastIndexOf('node tools/publish-kern-release-package.mjs'),
+    'the workflow must verify distribution tags after both package publications',
+  );
+  assert.ok(
+    tagVerification < githubPublication,
+    'the public GitHub release must follow both npm publications',
+  );
+  assert.match(workflow, /concurrency:\n  group: kern-release\n/);
+});
+
+test('resumable publisher skips exact bytes and rejects an occupied mismatched version', () => {
+  const integrity = 'sha512-exact';
+  assert.equal(publicationDecision(null, integrity), 'publish');
+  assert.equal(publicationDecision(integrity, integrity), 'skip');
+  assert.throws(
+    () => publicationDecision('sha512-different', integrity),
+    /registry already contains different bytes/,
+  );
+  assert.doesNotThrow(() => assertDistTagVersion('next', '1.2.3', '1.2.3'));
+  assert.throws(
+    () => assertDistTagVersion('latest', '1.2.2', '1.2.3'),
+    /dist-tag latest points to 1\.2\.2, expected 1\.2\.3/,
   );
 });

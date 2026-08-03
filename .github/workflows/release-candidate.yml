@@ -19,7 +19,7 @@ on:
 permissions: {}
 
 concurrency:
-  group: kern-release-${{ inputs.version }}
+  group: kern-release
   cancel-in-progress: false
 
 env:
@@ -62,7 +62,8 @@ jobs:
           node -e '
             const { readFileSync } = require("node:fs");
             const requested = process.env.RELEASE_VERSION;
-            const source = JSON.parse(readFileSync("projects/kern/package.json", "utf8")).version;
+            const angular = JSON.parse(readFileSync("projects/kern/package.json", "utf8"));
+            const mcp = JSON.parse(readFileSync("projects/kern-mcp/package.json", "utf8"));
             const semver = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?$/;
             if (!semver.test(requested)) throw new Error(`Invalid release version: ${requested}`);
             if (process.env.RELEASE_REF_TYPE !== "tag") {
@@ -71,8 +72,11 @@ jobs:
             if (process.env.RELEASE_TAG !== `v${requested}`) {
               throw new Error(`Expected tag v${requested}, received ${process.env.RELEASE_TAG}`);
             }
-            if (source !== requested) {
-              throw new Error(`Requested ${requested}, but projects/kern/package.json is ${source}`);
+            if (angular.version !== requested || mcp.version !== requested) {
+              throw new Error(
+                `Requested ${requested}, but package sources are ` +
+                  `${angular.name}@${angular.version} and ${mcp.name}@${mcp.version}`,
+              );
             }
             if (requested.includes("-") && process.env.NPM_DIST_TAG === "latest") {
               throw new Error("Prereleases cannot use the latest npm distribution tag.");
@@ -109,9 +113,16 @@ jobs:
         run: |
           node -e '
             const { readFileSync } = require("node:fs");
-            const built = JSON.parse(readFileSync("dist/kern/package.json", "utf8")).version;
-            if (built !== process.env.RELEASE_VERSION) {
-              throw new Error(`Requested ${process.env.RELEASE_VERSION}, but built package is ${built}`);
+            const packages = ["dist/kern/package.json", "dist/kern-mcp/package.json"].map((path) =>
+              JSON.parse(readFileSync(path, "utf8")),
+            );
+            for (const built of packages) {
+              if (built.version !== process.env.RELEASE_VERSION) {
+                throw new Error(
+                  `Requested ${process.env.RELEASE_VERSION}, but built package is ` +
+                    `${built.name}@${built.version}`,
+                );
+              }
             }
           '
 
@@ -128,10 +139,11 @@ jobs:
             "--input-dir=dist/versioned-docs" \
             "--base-path=/versions/${RELEASE_VERSION}/"
 
-      - name: Pack the exact npm tarball
+      - name: Pack the exact npm tarballs
         run: |
           mkdir release
           npm pack ./dist/kern --pack-destination release
+          npm pack ./dist/kern-mcp --pack-destination release
 
       - name: Prepare deterministic documentation archive and file manifest
         run: |
@@ -143,19 +155,31 @@ jobs:
             "--input-dir=dist/versioned-docs" \
             "--artifact-dir=release"
 
-      - name: Resolve final dependency graph and enforce vulnerability policy
+      - name: Resolve Angular package dependency graph and enforce vulnerability policy
         working-directory: dist/kern
         run: |
           npm install --package-lock-only --ignore-scripts --audit=false --include=peer
           npm audit --package-lock-only --omit=dev --audit-level=high
 
-      - name: Generate npm CycloneDX SBOM
+      - name: Generate Angular package CycloneDX SBOM
         working-directory: dist/kern
         run: |
           npm sbom --package-lock-only --sbom-format cyclonedx --sbom-type library > \
             "../../release/kern-ui-angular-${RELEASE_VERSION}.cdx.json"
 
-      - name: Bind package, documentation, SBOM, tag, commit, and checksums
+      - name: Resolve MCP package dependency graph and enforce vulnerability policy
+        working-directory: dist/kern-mcp
+        run: |
+          npm install --package-lock-only --ignore-scripts --audit=false
+          npm audit --package-lock-only --omit=dev --audit-level=high
+
+      - name: Generate MCP package CycloneDX SBOM
+        working-directory: dist/kern-mcp
+        run: |
+          npm sbom --package-lock-only --sbom-format cyclonedx --sbom-type library > \
+            "../../release/kern-ui-mcp-${RELEASE_VERSION}.cdx.json"
+
+      - name: Bind packages, documentation, SBOMs, tag, commit, and checksums
         run: |
           node tools/verify-kern-release-artifacts.mjs prepare \
             "--version=${RELEASE_VERSION}" \
@@ -166,7 +190,7 @@ jobs:
 
       - name: Define immutable artifact name
         id: artifact-name
-        run: echo "value=kern-angular-${RELEASE_VERSION}-${RELEASE_COMMIT}" >> "$GITHUB_OUTPUT"
+        run: echo "value=kern-packages-${RELEASE_VERSION}-${RELEASE_COMMIT}" >> "$GITHUB_OUTPUT"
 
       - name: Upload immutable release candidate
         id: upload
@@ -219,30 +243,52 @@ jobs:
             "--npm-tag=${NPM_DIST_TAG}" \
             "--artifact-dir=release"
 
-      - name: Create draft GitHub release with evidence
+      - name: Publish exact tarballs with npm OIDC provenance
+        run: |
+          node tools/publish-kern-release-package.mjs \
+            --package=@kern-ui/angular \
+            "--version=${RELEASE_VERSION}" \
+            "--tarball=release/kern-ui-angular-${RELEASE_VERSION}.tgz" \
+            "--tag=${NPM_DIST_TAG}"
+          node tools/publish-kern-release-package.mjs \
+            --package=@kern-ui/mcp \
+            "--version=${RELEASE_VERSION}" \
+            "--tarball=release/kern-ui-mcp-${RELEASE_VERSION}.tgz" \
+            "--tag=${NPM_DIST_TAG}"
+
+      - name: Verify synchronized npm distribution tags
+        run: |
+          node tools/verify-kern-release-dist-tags.mjs \
+            "--version=${RELEASE_VERSION}" \
+            "--tag=${NPM_DIST_TAG}"
+
+      - name: Publish GitHub release with evidence
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$RELEASE_TAG" \
-            "release/SHA256SUMS" \
-            "release/release-manifest.json" \
-            "release/kern-docs-${RELEASE_VERSION}.manifest.json" \
-            "release/kern-docs-${RELEASE_VERSION}.tgz" \
-            "release/kern-ui-angular-${RELEASE_VERSION}.cdx.json" \
-            "release/kern-ui-angular-${RELEASE_VERSION}.tgz" \
-            --draft \
-            --generate-notes \
-            --title "Kern ${RELEASE_TAG}" \
-            --verify-tag
-
-      - name: Publish exact tarball with npm OIDC provenance
-        run: |
-          npm publish "release/kern-ui-angular-${RELEASE_VERSION}.tgz" \
-            --access public \
-            --tag "$NPM_DIST_TAG" \
-            --provenance
-
-      - name: Publish GitHub release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh release edit "$RELEASE_TAG" --draft=false
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" \
+              "release/SHA256SUMS" \
+              "release/release-manifest.json" \
+              "release/kern-docs-${RELEASE_VERSION}.manifest.json" \
+              "release/kern-docs-${RELEASE_VERSION}.tgz" \
+              "release/kern-ui-angular-${RELEASE_VERSION}.cdx.json" \
+              "release/kern-ui-angular-${RELEASE_VERSION}.tgz" \
+              "release/kern-ui-mcp-${RELEASE_VERSION}.cdx.json" \
+              "release/kern-ui-mcp-${RELEASE_VERSION}.tgz" \
+              --clobber
+            gh release edit "$RELEASE_TAG" --draft=false
+          else
+            gh release create "$RELEASE_TAG" \
+              "release/SHA256SUMS" \
+              "release/release-manifest.json" \
+              "release/kern-docs-${RELEASE_VERSION}.manifest.json" \
+              "release/kern-docs-${RELEASE_VERSION}.tgz" \
+              "release/kern-ui-angular-${RELEASE_VERSION}.cdx.json" \
+              "release/kern-ui-angular-${RELEASE_VERSION}.tgz" \
+              "release/kern-ui-mcp-${RELEASE_VERSION}.cdx.json" \
+              "release/kern-ui-mcp-${RELEASE_VERSION}.tgz" \
+              --generate-notes \
+              --title "Kern ${RELEASE_TAG}" \
+              --verify-tag
+          fi

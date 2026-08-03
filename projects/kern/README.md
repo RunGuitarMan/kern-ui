@@ -280,24 +280,25 @@ and ambiguous deprecated inputs remain explicit manual review items.
 
 ## Agent contract
 
-The npm package distributes the same compiler-derived contract used by Kern's documentation and
-CI:
+The optional `@kern-ui/mcp` package distributes the compiler-derived contract used by Kern's
+documentation and CI without adding an MCP-only Angular compiler dependency or multi-megabyte AI
+assets to Angular applications. TypeScript remains an optional Angular-package peer because the
+published schematics parse consumer code:
 
-- `@kern-ui/angular/agent/component-manifest.json`
-- `@kern-ui/angular/agent/root-export-map.json`
-- `@kern-ui/angular/agent/llms.txt` and `llms-full.txt`
-- `@kern-ui/angular/agent/components/<component>.json`
-- `@kern-ui/angular/agent/components/<component>.md`
-- `@kern-ui/angular/agent/recipes/<recipe>.ts`
+- `@kern-ui/mcp/agent/component-manifest.json`
+- `@kern-ui/mcp/agent/root-export-map.json`
+- `@kern-ui/mcp/agent/llms.txt` and `llms-full.txt`
+- `@kern-ui/mcp/agent/components/<component>.json`
+- `@kern-ui/mcp/agent/components/<component>.md`
+- `@kern-ui/mcp/agent/recipes/<recipe>.ts`
 
 Each catalog component has canonical ownership, typed public API, lifecycle, accessibility and SSR
 notes, mistakes, checklist, and a compile-verified example. The root export map is the
 compiler-generated source of truth used by `ng update` to narrow compatibility imports. The
 13 curated enterprise recipes are complete standalone sources verified through the same packed
-strict-AOT consumer gate. The package exposes the read-only MCP server as
-`npx --no-install kern-mcp`; it reads the manifest from the installed tarball, parses imports with
-the TypeScript AST, and never evaluates consumer code. Angular compiler and TypeScript are optional
-tooling peers, so runtime-only consumers do not install them through Kern. The documentation build
+strict-AOT consumer gate. Install `@kern-ui/mcp` as a development dependency, then run
+`npx --no-install kern-mcp`; it reads the manifest from its own tarball, parses imports with the
+TypeScript AST, and never evaluates consumer code. The documentation build
 exposes the same files as `llms.txt`, `component-manifest.json`, and `agent/`
 at its deployment root so web agents do not need repository knowledge to discover the contract.
 Manifest artifact fields (`documentation.json`, `documentation.markdown`, example `source`, and
@@ -313,8 +314,8 @@ bundle budgets. See the
 [consumer quality gates](https://github.com/RunGuitarMan/kern-ui/blob/main/docs/CONSUMER_QUALITY_GATES.md).
 
 Official releases are produced from a protected Git tag by an approval-gated GitHub environment
-and npm trusted publishing. The exact tarball is linked to its source commit and tag by a release
-manifest, SHA-256 checksums, npm provenance, and a CycloneDX SBOM. See the
+and npm trusted publishing. The exact Angular and MCP tarballs are linked to their source commit
+and tag by a release manifest, SHA-256 checksums, npm provenance, and separate CycloneDX SBOMs. See the
 [release policy](https://github.com/RunGuitarMan/kern-ui/blob/main/docs/RELEASING.md).
 
 See the workspace

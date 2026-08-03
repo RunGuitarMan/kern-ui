@@ -9,7 +9,6 @@
     "tslib": "^2.3.0"
   },
   "peerDependencies": {
-    "@angular/compiler": "^22.0.0",
     "@angular/aria": "^22.0.0",
     "@angular/cdk": "^22.0.0",
     "@angular/common": "^22.0.0",
@@ -17,6 +16,27 @@
     "@angular/forms": "^22.0.0",
     "rxjs": "^7.4.0",
     "typescript": ">=6.0.0 <6.1.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
+  "companionPackage": {
+    "packageName": "@kern-ui/mcp",
+    "directory": "projects/kern-mcp",
+    "dependencies": {
+      "@angular/compiler": "^22.0.0",
+      "typescript": ">=6.0.0 <6.1.0"
+    },
+    "peerDependencies": {
+      "@kern-ui/angular": "0.1.0"
+    },
+    "peerDependenciesMeta": {
+      "@kern-ui/angular": {
+        "optional": true
+      }
+    }
   },
   "allowedLicenses": ["0BSD", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "MIT"],
   "sbom": {

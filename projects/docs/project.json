@@ -7,7 +7,8 @@
   "prefix": "kdocs",
   "cli": {
     "cache": {
-      "enabled": false
+      "enabled": true,
+      "environment": "local"
     }
   },
   "implicitDependencies": ["kern", "showcase"],
@@ -78,6 +79,9 @@
     },
     "serve": {
       "executor": "@angular/build:dev-server",
+      "options": {
+        "prebundle": true
+      },
       "configurations": {
         "production": {
           "buildTarget": "docs:build:production"

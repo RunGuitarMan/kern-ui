@@ -70,7 +70,7 @@ consumer case.
 7. production-builds isolated Button, Form, Select, Grid, and Charts applications from both the
    root compatibility API and their direct `kit` or `addon-*` subpaths, plus a Button with a
    direct lightweight `i18n` override;
-8. enforces raw and gzip JavaScript budgets;
+8. enforces per-case raw/gzip JavaScript budgets and one shared raw/gzip CSS budget;
 9. limits each root/direct bundle pair to a 1 KiB raw and 512 byte gzip difference;
 10. checks retained and forbidden component markers to catch tree-shaking regressions.
 
@@ -81,6 +81,10 @@ silently regain a Core dependency.
 Fixtures and budgets live in `tests/consumer-fixtures`. A budget increase must be supported by an
 intentional feature or dependency change and reviewed alongside the before/after measured sizes.
 Do not raise a limit merely to make CI pass.
+
+Every styled fixture also imports the mandatory `styles/kern.css` bundle. Its shared ceiling is
+105,000 raw bytes and 18,000 gzip bytes, so growth in global tokens, foundations, or projected
+content bridges is visible even when component JavaScript still tree-shakes correctly.
 
 The current complex-entrypoint limits were calibrated after the enterprise API pass:
 
@@ -140,9 +144,10 @@ manual-a11y records, 131 explicit Docs preview renderers, and 131 examples AOT-c
 the packed npm artifact. A pending manual record remains non-certifying evidence rather than
 being inferred from automated browser tests.
 
-The release workflow additionally packs the npm library and versioned SSR documentation, generates
-an npm CycloneDX SBOM, audits the resolved production graph, enforces package and license policy,
-and verifies exact SHA-256 linkage before and after the approval boundary. The documentation
-archive has its own complete per-file manifest and is smoke-tested at its version mount. See
+The release workflow additionally packs the Angular and MCP packages plus versioned SSR
+documentation, generates a CycloneDX SBOM for each package, audits both resolved production
+graphs, enforces package and license policy, and verifies exact SHA-256 linkage before and after
+the approval boundary. The documentation archive has its own complete per-file manifest and is
+smoke-tested at its version mount. See
 [RELEASING.md](RELEASING.md) and
 [VERSIONED_DOCUMENTATION.md](VERSIONED_DOCUMENTATION.md).

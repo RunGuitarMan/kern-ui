@@ -7,10 +7,11 @@ changing files. It uses the TypeScript parser already required by the KERN works
 node tools/kern-mcp/server.mjs
 ```
 
-The published Angular package also exposes the same server as the `kern-mcp` executable. Run it
-from an Angular workspace with `npx --no-install kern-mcp`; its default manifest is the immutable
-contract packed beside the executable. `@angular/compiler` and `typescript` are optional peers
-because they are already present in normal Angular development workspaces.
+The published `@kern-ui/mcp` companion package exposes the same server as the `kern-mcp`
+executable. Install it as a development dependency and run `npx --no-install kern-mcp`; its
+default manifest is the immutable contract packed beside the executable. The Angular runtime
+package intentionally contains neither these assets nor the MCP-only Angular compiler dependency;
+TypeScript remains an optional peer because the published Angular schematics parse consumer code.
 
 The repository executable reads `metadata/agent/generated/component-manifest.json`. A packed or
 external manifest can be selected explicitly:

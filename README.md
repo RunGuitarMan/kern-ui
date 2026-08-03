@@ -206,10 +206,10 @@ the [package README](projects/kern/README.md).
 
 ## Developer and agent discovery
 
-The package ships a compiler-derived component manifest, per-component Markdown/JSON, `llms.txt`,
-an import map, 131 standalone component examples, and 13 complete enterprise recipe sources.
-Every source is installed from the packed tarball and strict-AOT compiled in an isolated consumer.
-The repository's read-only MCP server searches and validates usage against the same contract:
+The optional `@kern-ui/mcp` package ships the compiler-derived manifest, per-component
+Markdown/JSON, `llms.txt`, import map, 131 standalone examples, and 13 enterprise recipes without
+adding them to `@kern-ui/angular`. Every source is installed from its packed tarball and
+strict-AOT compiled in an isolated consumer. The repository server uses the same contract:
 
 ```bash
 node tools/kern-mcp/server.mjs
@@ -264,14 +264,15 @@ contract, extension guidance, and known trade-offs. Browser and assistive-techno
 defined separately in [`docs/BROWSER_SUPPORT.md`](docs/BROWSER_SUPPORT.md).
 Task-oriented guidance for selection, forms, server Grid data, date/time, trees, overlays, charts,
 locales, testing, and performance is collected in [`docs/COOKBOOK.md`](docs/COOKBOOK.md).
-The installed package also exposes its immutable agent contract through the read-only
-`npx --no-install kern-mcp` executable.
+Install `@kern-ui/mcp` as a development dependency to expose the immutable agent contract through
+the read-only `npx --no-install kern-mcp` executable.
 
 ## Release
 
-The repository prepares one immutable release candidate and publishes its exact tarball through a
-protected GitHub environment and npm trusted publishing. It verifies checksums, dependency policy,
-provenance metadata, and a CycloneDX SBOM. Local validation remains available:
+The repository prepares one immutable release candidate and publishes the exact synchronized
+Angular and MCP tarballs through a protected GitHub environment and npm trusted publishing. It
+verifies checksums, dependency policy, provenance metadata, and CycloneDX SBOMs. Local validation
+remains available:
 
 ```bash
 npm run build:kern

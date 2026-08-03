@@ -824,13 +824,13 @@ export const appConfig: ApplicationConfig = {
     const incompatiblePeers = new Set(
       report.diagnostics.filter((item) => item.code === 'KRN-DX-011').map((item) => item.package),
     );
-    assert.ok(incompatiblePeers.has('@angular/compiler'));
     assert.ok(incompatiblePeers.has('@angular/core'));
     assert.ok(incompatiblePeers.has('rxjs'));
+    assert.ok(!incompatiblePeers.has('@angular/compiler'));
     assert.ok(incompatiblePeers.has('typescript'));
   });
 
-  it('accepts every real package-exported agent asset and rejects unknown deep imports', async () => {
+  it('keeps AI assets out of the runtime package and rejects former deep imports', async () => {
     const runner = new SchematicTestRunner('@kern-ui/angular', collectionPath);
     const tree = addCompatiblePackage(
       addStandaloneApplication(
@@ -838,13 +838,11 @@ export const appConfig: ApplicationConfig = {
       ),
     );
     const exportedSpecifiers = actualAgentExportSpecifiers();
-    assert.ok(exportedSpecifiers.includes('@kern-ui/angular/agent/examples/index.json'));
-    assert.ok(exportedSpecifiers.includes('@kern-ui/angular/agent/examples/button.ts'));
-    assert.ok(exportedSpecifiers.includes('@kern-ui/angular/agent/root-export-map.json'));
+    assert.deepEqual(exportedSpecifiers, []);
     tree.overwrite(
       '/src/app/app.ts',
       [
-        ...exportedSpecifiers.map((specifier) => `import '${specifier}';`),
+        "import '@kern-ui/angular/agent/examples/button.ts';",
         "import '@kern-ui/angular/agent/examples/missing.ts';",
         "import '@kern-ui/angular/agent/examples/nested/button.ts';",
         "import '@kern-ui/angular/kit/internal';",
@@ -860,6 +858,7 @@ export const appConfig: ApplicationConfig = {
       .sort();
 
     assert.deepEqual(rejectedImports, [
+      '@kern-ui/angular/agent/examples/button.ts',
       '@kern-ui/angular/agent/examples/missing.ts',
       '@kern-ui/angular/agent/examples/nested/button.ts',
       '@kern-ui/angular/kit/internal',

@@ -10,6 +10,8 @@ const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const defaultArtifactDirectory = resolve(workspaceRoot, 'release');
 const sourceManifestPath = resolve(workspaceRoot, 'projects/kern/package.json');
 const builtManifestPath = resolve(workspaceRoot, 'dist/kern/package.json');
+const companionSourceManifestPath = resolve(workspaceRoot, 'projects/kern-mcp/package.json');
+const companionBuiltManifestPath = resolve(workspaceRoot, 'dist/kern-mcp/package.json');
 const policyPath = resolve(workspaceRoot, 'projects/kern/api/release-policy.json');
 const versionedDocsVerifierPath = resolve(workspaceRoot, 'tools/verify-kern-versioned-docs.mjs');
 const issues = [];
@@ -41,17 +43,49 @@ function semver(value) {
   );
 }
 
-function validateManifest(manifest, policy, label, version) {
-  if (manifest.name !== policy.packageName) {
-    report(`${label} name must be ${policy.packageName}.`);
+function packagePurl(packageName, version) {
+  return `pkg:npm/${packageName.replace('@', '%40')}@${version}`;
+}
+
+function packageDefinitions(policy) {
+  const companion = policy.companionPackage;
+  return [
+    {
+      builtManifestPath,
+      dependencies: policy.dependencies,
+      directory: 'projects/kern',
+      key: 'angular',
+      packageName: policy.packageName,
+      peerDependencies: policy.peerDependencies,
+      peerDependenciesMeta: policy.peerDependenciesMeta ?? {},
+      slug: 'kern-ui-angular',
+      sourceManifestPath,
+    },
+    {
+      builtManifestPath: companionBuiltManifestPath,
+      dependencies: companion.dependencies,
+      directory: companion.directory,
+      key: 'mcp',
+      packageName: companion.packageName,
+      peerDependencies: companion.peerDependencies ?? {},
+      peerDependenciesMeta: companion.peerDependenciesMeta ?? {},
+      slug: 'kern-ui-mcp',
+      sourceManifestPath: companionSourceManifestPath,
+    },
+  ];
+}
+
+function validateManifest(manifest, policy, packageDefinition, label, version) {
+  if (manifest.name !== packageDefinition.packageName) {
+    report(`${label} name must be ${packageDefinition.packageName}.`);
   }
   if (manifest.version !== version) report(`${label} version must be ${version}.`);
   if (manifest.license !== policy.license) report(`${label} license must be ${policy.license}.`);
   if (manifest.repository?.url !== `git+${policy.repository}`) {
     report(`${label} repository URL must be git+${policy.repository}.`);
   }
-  if (manifest.repository?.directory !== 'projects/kern') {
-    report(`${label} repository directory must be projects/kern.`);
+  if (manifest.repository?.directory !== packageDefinition.directory) {
+    report(`${label} repository directory must be ${packageDefinition.directory}.`);
   }
   if (manifest.homepage !== 'https://github.com/RunGuitarMan/kern-ui#readme') {
     report(`${label} homepage is missing or unexpected.`);
@@ -66,11 +100,16 @@ function validateManifest(manifest, policy, label, version) {
   ) {
     report(`${label} publishConfig must require public npm provenance publication.`);
   }
-  if (!isDeepStrictEqual(manifest.dependencies, policy.dependencies)) {
+  if (!isDeepStrictEqual(manifest.dependencies ?? {}, packageDefinition.dependencies)) {
     report(`${label} dependencies differ from release-policy.json.`);
   }
-  if (!isDeepStrictEqual(manifest.peerDependencies, policy.peerDependencies)) {
+  if (!isDeepStrictEqual(manifest.peerDependencies ?? {}, packageDefinition.peerDependencies)) {
     report(`${label} peerDependencies differ from release-policy.json.`);
+  }
+  if (
+    !isDeepStrictEqual(manifest.peerDependenciesMeta ?? {}, packageDefinition.peerDependenciesMeta)
+  ) {
+    report(`${label} peerDependenciesMeta differs from release-policy.json.`);
   }
   for (const forbidden of ['devDependencies', 'bundledDependencies', 'bundleDependencies']) {
     if (forbidden in manifest) report(`${label} must not contain ${forbidden}.`);
@@ -98,7 +137,7 @@ function licenseExpressions(component) {
   });
 }
 
-function validateSbom(sbom, policy, version) {
+function validateSbom(sbom, policy, packageDefinition, version) {
   if (sbom.bomFormat !== policy.sbom.format) {
     report(`SBOM format must be ${policy.sbom.format}.`);
   }
@@ -116,12 +155,14 @@ function validateSbom(sbom, policy, version) {
   }
   const root = sbom.metadata?.component;
   if (
-    root?.name !== policy.packageName ||
+    root?.name !== packageDefinition.packageName ||
     root?.version !== version ||
     root?.type !== 'library' ||
-    root?.purl !== `pkg:npm/%40kern-ui/angular@${version}`
+    root?.purl !== packagePurl(packageDefinition.packageName, version)
   ) {
-    report('SBOM root component does not identify the exact release package.');
+    report(
+      `${packageDefinition.packageName} SBOM root component does not identify the exact release package.`,
+    );
   }
 
   const allowedLicenses = new Set(policy.allowedLicenses);
@@ -144,26 +185,28 @@ function validateSbom(sbom, policy, version) {
       }
     }
   }
-  for (const dependency of [
-    ...Object.keys(policy.dependencies),
-    ...Object.keys(policy.peerDependencies),
-  ]) {
+  const requiredPeers = Object.keys(packageDefinition.peerDependencies).filter(
+    (name) => packageDefinition.peerDependenciesMeta[name]?.optional !== true,
+  );
+  for (const dependency of [...Object.keys(packageDefinition.dependencies), ...requiredPeers]) {
     if (!componentNames.has(dependency)) {
-      report(`SBOM does not contain declared package dependency ${dependency}.`);
+      report(
+        `${packageDefinition.packageName} SBOM does not contain declared package dependency ${dependency}.`,
+      );
     }
   }
 }
 
-function normalizeSbom(sbom, policy, version) {
+function normalizeSbom(sbom, packageDefinition, version) {
   const normalized = structuredClone(sbom);
   normalized.metadata ??= {};
   normalized.metadata.lifecycles = [{ phase: 'post-build' }];
   normalized.metadata.component ??= {};
-  normalized.metadata.component.name = policy.packageName;
+  normalized.metadata.component.name = packageDefinition.packageName;
   normalized.metadata.component.version = version;
   normalized.metadata.component.type = 'library';
-  normalized.metadata.component['bom-ref'] = `${policy.packageName}@${version}`;
-  normalized.metadata.component.purl = `pkg:npm/%40kern-ui/angular@${version}`;
+  normalized.metadata.component['bom-ref'] = `${packageDefinition.packageName}@${version}`;
+  normalized.metadata.component.purl = packagePurl(packageDefinition.packageName, version);
   return normalized;
 }
 
@@ -199,17 +242,11 @@ async function validateInputs() {
   return { artifactDirectory, command, commit, npmTag, tag, version };
 }
 
-async function validateArtifacts(context, policy, sourceManifest, builtManifest) {
-  const tarballName = `kern-ui-angular-${context.version}.tgz`;
-  const sbomName = `kern-ui-angular-${context.version}.cdx.json`;
+async function validateArtifacts(context, policy, sourceManifests, builtManifests) {
   const docsArchiveName = `kern-docs-${context.version}.tgz`;
   const docsManifestName = `kern-docs-${context.version}.manifest.json`;
-  const tarballPath = resolve(context.artifactDirectory, tarballName);
-  const sbomPath = resolve(context.artifactDirectory, sbomName);
   const docsArchivePath = resolve(context.artifactDirectory, docsArchiveName);
   const docsManifestPath = resolve(context.artifactDirectory, docsManifestName);
-  if (!existsSync(tarballPath)) throw new Error(`Release tarball is missing: ${tarballPath}`);
-  if (!existsSync(sbomPath)) throw new Error(`Release SBOM is missing: ${sbomPath}`);
   if (!existsSync(docsArchivePath)) {
     throw new Error(`Versioned documentation archive is missing: ${docsArchivePath}`);
   }
@@ -242,64 +279,109 @@ async function validateArtifacts(context, policy, sourceManifest, builtManifest)
     );
   }
 
-  const packedManifest = tarballManifest(tarballPath);
-  validateManifest(sourceManifest, policy, 'Source package manifest', context.version);
-  validateManifest(packedManifest, policy, 'Packed package manifest', context.version);
-  if (builtManifest) {
-    validateManifest(builtManifest, policy, 'Built package manifest', context.version);
-    if (!isDeepStrictEqual(builtManifest, packedManifest)) {
-      report('Packed package.json is not byte-equivalent in meaning to dist/kern/package.json.');
-    }
-  }
+  const packages = [];
+  for (const packageDefinition of packageDefinitions(policy)) {
+    const tarballName = `${packageDefinition.slug}-${context.version}.tgz`;
+    const sbomName = `${packageDefinition.slug}-${context.version}.cdx.json`;
+    const tarballPath = resolve(context.artifactDirectory, tarballName);
+    const sbomPath = resolve(context.artifactDirectory, sbomName);
+    if (!existsSync(tarballPath)) throw new Error(`Release tarball is missing: ${tarballPath}`);
+    if (!existsSync(sbomPath)) throw new Error(`Release SBOM is missing: ${sbomPath}`);
 
-  let sbom = await readJson(sbomPath, 'Release SBOM');
-  if (context.command === 'prepare') {
-    sbom = normalizeSbom(sbom, policy, context.version);
-    await writeFile(sbomPath, `${JSON.stringify(sbom, null, 2)}\n`, 'utf8');
+    const sourceManifest = sourceManifests.get(packageDefinition.key);
+    const builtManifest = builtManifests?.get(packageDefinition.key);
+    const packedManifest = tarballManifest(tarballPath);
+    const packageLabel = packageDefinition.packageName;
+    validateManifest(
+      sourceManifest,
+      policy,
+      packageDefinition,
+      `${packageLabel} source package manifest`,
+      context.version,
+    );
+    validateManifest(
+      packedManifest,
+      policy,
+      packageDefinition,
+      `${packageLabel} packed package manifest`,
+      context.version,
+    );
+    if (builtManifest) {
+      validateManifest(
+        builtManifest,
+        policy,
+        packageDefinition,
+        `${packageLabel} built package manifest`,
+        context.version,
+      );
+      if (!isDeepStrictEqual(builtManifest, packedManifest)) {
+        report(
+          `${packageLabel} packed package.json is not byte-equivalent in meaning to its built package.json.`,
+        );
+      }
+    }
+
+    let sbom = await readJson(sbomPath, `${packageLabel} release SBOM`);
+    if (context.command === 'prepare') {
+      sbom = normalizeSbom(sbom, packageDefinition, context.version);
+      await writeFile(sbomPath, `${JSON.stringify(sbom, null, 2)}\n`, 'utf8');
+    }
+    validateSbom(sbom, policy, packageDefinition, context.version);
+    packages.push({
+      packageDefinition,
+      sbomName,
+      sbomPath,
+      tarballName,
+      tarballPath,
+    });
   }
-  validateSbom(sbom, policy, context.version);
 
   return {
     docsArchiveName,
     docsArchivePath,
     docsManifestName,
     docsManifestPath,
-    sbomName,
-    sbomPath,
-    tarballName,
-    tarballPath,
+    packages,
   };
 }
 
 async function prepare(context, policy, artifacts) {
-  const tarballHash = await sha256(artifacts.tarballPath);
-  const sbomHash = await sha256(artifacts.sbomPath);
+  const packageArtifacts = await Promise.all(
+    artifacts.packages.map(async (artifact) => ({
+      ...artifact,
+      sbomHash: await sha256(artifact.sbomPath),
+      tarballHash: await sha256(artifact.tarballPath),
+    })),
+  );
   const docsArchiveHash = await sha256(artifacts.docsArchivePath);
   const docsManifestHash = await sha256(artifacts.docsManifestPath);
   const manifestPath = resolve(context.artifactDirectory, 'release-manifest.json');
   const manifest = {
-    schemaVersion: 1,
-    package: {
-      name: policy.packageName,
+    schemaVersion: 2,
+    release: {
       version: context.version,
       tag: context.tag,
       npmDistTag: context.npmTag,
     },
+    packages: packageArtifacts.map((artifact) => ({
+      name: artifact.packageDefinition.packageName,
+      version: context.version,
+      tarball: {
+        file: artifact.tarballName,
+        sha256: artifact.tarballHash,
+      },
+      sbom: {
+        file: artifact.sbomName,
+        format: policy.sbom.format,
+        sha256: artifact.sbomHash,
+      },
+    })),
     source: {
       repository: policy.repository,
       commit: context.commit,
       workflowRunId: process.env.GITHUB_RUN_ID ?? null,
     },
     artifacts: {
-      tarball: {
-        file: artifacts.tarballName,
-        sha256: tarballHash,
-      },
-      sbom: {
-        file: artifacts.sbomName,
-        format: policy.sbom.format,
-        sha256: sbomHash,
-      },
       documentation: {
         archive: {
           file: artifacts.docsArchiveName,
@@ -326,8 +408,10 @@ async function prepare(context, policy, artifacts) {
     `${manifestHash}  release-manifest.json`,
     `${docsArchiveHash}  ${artifacts.docsArchiveName}`,
     `${docsManifestHash}  ${artifacts.docsManifestName}`,
-    `${sbomHash}  ${artifacts.sbomName}`,
-    `${tarballHash}  ${artifacts.tarballName}`,
+    ...packageArtifacts.flatMap((artifact) => [
+      `${artifact.sbomHash}  ${artifact.sbomName}`,
+      `${artifact.tarballHash}  ${artifact.tarballName}`,
+    ]),
   ].sort();
   await writeFile(
     resolve(context.artifactDirectory, 'SHA256SUMS'),
@@ -341,22 +425,26 @@ async function verify(context, policy, artifacts) {
   const checksumsPath = resolve(context.artifactDirectory, 'SHA256SUMS');
   const manifest = await readJson(manifestPath, 'Release manifest');
   if (
-    manifest.package?.name !== policy.packageName ||
-    manifest.package?.version !== context.version ||
-    manifest.package?.tag !== context.tag ||
-    manifest.package?.npmDistTag !== context.npmTag ||
+    manifest.schemaVersion !== 2 ||
+    manifest.release?.version !== context.version ||
+    manifest.release?.tag !== context.tag ||
+    manifest.release?.npmDistTag !== context.npmTag ||
     manifest.source?.repository !== policy.repository ||
     manifest.source?.commit !== context.commit
   ) {
-    report('Release manifest does not match the requested package, tag, npm tag, and commit.');
+    report('Release manifest does not match the requested packages, tag, npm tag, and commit.');
   }
 
   const expectedHashes = new Map([
     ['release-manifest.json', await sha256(manifestPath)],
     [artifacts.docsArchiveName, await sha256(artifacts.docsArchivePath)],
     [artifacts.docsManifestName, await sha256(artifacts.docsManifestPath)],
-    [artifacts.sbomName, await sha256(artifacts.sbomPath)],
-    [artifacts.tarballName, await sha256(artifacts.tarballPath)],
+    ...(await Promise.all(
+      artifacts.packages.flatMap((artifact) => [
+        sha256(artifact.sbomPath).then((hash) => [artifact.sbomName, hash]),
+        sha256(artifact.tarballPath).then((hash) => [artifact.tarballName, hash]),
+      ]),
+    )),
   ]);
   const checksumLines = (await readFile(checksumsPath, 'utf8')).trim().split('\n');
   const recordedHashes = new Map(
@@ -366,16 +454,29 @@ async function verify(context, policy, artifacts) {
       return [match[2], match[1]];
     }),
   );
-  if (!isDeepStrictEqual(expectedHashes, recordedHashes)) {
+  if (
+    checksumLines.length !== recordedHashes.size ||
+    !isDeepStrictEqual(expectedHashes, recordedHashes)
+  ) {
     report(
-      'SHA256SUMS does not exactly match the release manifest, documentation, SBOM, and npm tarball.',
+      'SHA256SUMS does not exactly match the release manifest, documentation, SBOMs, and npm tarballs.',
     );
   }
+  const expectedPackages = artifacts.packages.map((artifact) => ({
+    name: artifact.packageDefinition.packageName,
+    version: context.version,
+    tarball: {
+      file: artifact.tarballName,
+      sha256: expectedHashes.get(artifact.tarballName),
+    },
+    sbom: {
+      file: artifact.sbomName,
+      format: policy.sbom.format,
+      sha256: expectedHashes.get(artifact.sbomName),
+    },
+  }));
   if (
-    manifest.artifacts?.tarball?.file !== artifacts.tarballName ||
-    manifest.artifacts?.tarball?.sha256 !== expectedHashes.get(artifacts.tarballName) ||
-    manifest.artifacts?.sbom?.file !== artifacts.sbomName ||
-    manifest.artifacts?.sbom?.sha256 !== expectedHashes.get(artifacts.sbomName) ||
+    !isDeepStrictEqual(manifest.packages, expectedPackages) ||
     manifest.artifacts?.documentation?.archive?.file !== artifacts.docsArchiveName ||
     manifest.artifacts?.documentation?.archive?.format !== 'tar+gzip' ||
     manifest.artifacts?.documentation?.archive?.sha256 !==
@@ -394,8 +495,7 @@ async function verify(context, policy, artifacts) {
     'SHA256SUMS',
     artifacts.docsArchiveName,
     artifacts.docsManifestName,
-    artifacts.sbomName,
-    artifacts.tarballName,
+    ...artifacts.packages.flatMap((artifact) => [artifact.sbomName, artifact.tarballName]),
     'release-manifest.json',
   ].sort();
   if (!isDeepStrictEqual(files, expectedFiles)) {
@@ -405,19 +505,45 @@ async function verify(context, policy, artifacts) {
 
 async function main() {
   const context = await validateInputs();
-  const [policy, sourceManifest] = await Promise.all([
-    readJson(policyPath, 'Release policy'),
-    readJson(sourceManifestPath, 'Source package manifest'),
-  ]);
-  const builtManifest =
-    context.command === 'prepare'
-      ? await readJson(builtManifestPath, 'Built package manifest')
-      : null;
+  const policy = await readJson(policyPath, 'Release policy');
   if (policy.schemaVersion !== 1) report('Release policy schemaVersion must be 1.');
+  if (
+    typeof policy.companionPackage?.packageName !== 'string' ||
+    typeof policy.companionPackage?.directory !== 'string' ||
+    !policy.companionPackage?.dependencies
+  ) {
+    throw new Error('Release policy requires a complete companionPackage contract.');
+  }
   if (!Array.isArray(policy.allowedLicenses) || policy.allowedLicenses.length === 0) {
     report('Release policy requires an explicit allowedLicenses list.');
   }
-  const artifacts = await validateArtifacts(context, policy, sourceManifest, builtManifest);
+  const packageDefinitionList = packageDefinitions(policy);
+  const sourceManifests = new Map(
+    await Promise.all(
+      packageDefinitionList.map(async (packageDefinition) => [
+        packageDefinition.key,
+        await readJson(
+          packageDefinition.sourceManifestPath,
+          `${packageDefinition.packageName} source package manifest`,
+        ),
+      ]),
+    ),
+  );
+  const builtManifests =
+    context.command === 'prepare'
+      ? new Map(
+          await Promise.all(
+            packageDefinitionList.map(async (packageDefinition) => [
+              packageDefinition.key,
+              await readJson(
+                packageDefinition.builtManifestPath,
+                `${packageDefinition.packageName} built package manifest`,
+              ),
+            ]),
+          ),
+        )
+      : null;
+  const artifacts = await validateArtifacts(context, policy, sourceManifests, builtManifests);
   if (context.command === 'prepare' && issues.length === 0) {
     await prepare(context, policy, artifacts);
   } else if (context.command === 'verify') {
@@ -431,7 +557,8 @@ async function main() {
   }
   console.log(
     `Kern release artifacts ${context.command === 'prepare' ? 'prepared' : 'verified'}: ` +
-      `${policy.packageName}@${context.version}, ${context.tag}, ${context.commit}.`,
+      `${packageDefinitionList.map(({ packageName }) => `${packageName}@${context.version}`).join(', ')}, ` +
+      `${context.tag}, ${context.commit}.`,
   );
 }
 

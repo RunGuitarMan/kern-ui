@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync } from 'node:fs';
-import { cp, mkdir, mkdtemp, readFile, readdir, rm, stat } from 'node:fs/promises';
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import { basename, join, relative, resolve } from 'node:path';
 
 import ts from 'typescript';
@@ -15,7 +15,8 @@ import { internalButtonTriggerViolations } from './agent-dx/trigger-slot-policy.
 
 const workspaceRoot = resolve(import.meta.dirname, '..');
 const packageName = '@kern-ui/angular';
-const distRoot = join(workspaceRoot, 'dist/kern');
+const angularDistRoot = join(workspaceRoot, 'dist/kern');
+const distRoot = join(workspaceRoot, 'dist/kern-mcp');
 const repositoryManifestPath = join(
   workspaceRoot,
   'metadata/agent/generated/component-manifest.json',
@@ -52,6 +53,7 @@ function run(command, args, options = {}) {
       FORCE_COLOR: '0',
     },
     maxBuffer: 50 * 1024 * 1024,
+    input: options.input,
   });
   if (result.status !== 0) {
     const output = [result.stdout, result.stderr].filter(Boolean).join('\n').trim();
@@ -459,6 +461,13 @@ async function copyFixture(destination) {
 
 async function assertPackedAgentAssets(installedRoot, repositoryIndex) {
   const packageManifest = await readJson(join(installedRoot, 'package.json'));
+  if (
+    packageManifest.types !== './lib.d.mts' ||
+    packageManifest.exports?.['.']?.types !== './lib.d.mts' ||
+    !existsSync(join(installedRoot, 'lib.d.mts'))
+  ) {
+    fail('Packed MCP package does not expose typed programmatic root API.');
+  }
   if (packageManifest.exports?.['./agent/examples/index.json'] !== './agent/examples/index.json') {
     fail('Packed package does not export ./agent/examples/index.json.');
   }
@@ -472,6 +481,28 @@ async function assertPackedAgentAssets(installedRoot, repositoryIndex) {
     packageManifest.exports?.['./agent/root-export-map.json'] !== './agent/root-export-map.json'
   ) {
     fail('Packed package does not export ./agent/root-export-map.json.');
+  }
+  const mcpExecutable = packageManifest.bin?.['kern-mcp'];
+  if (typeof mcpExecutable !== 'string' || !existsSync(join(installedRoot, mcpExecutable))) {
+    fail('Packed MCP package does not expose the kern-mcp executable.');
+  } else {
+    const output = run(process.execPath, [join(installedRoot, mcpExecutable)], {
+      cwd: installedRoot,
+      input: `${JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'initialize',
+        params: { protocolVersion: '2025-06-18' },
+      })}\n`,
+    });
+    const initialized = JSON.parse(output);
+    if (
+      initialized.id !== 1 ||
+      initialized.result?.serverInfo?.name !== 'kern-agent-contract' ||
+      initialized.result?.serverInfo?.version !== packageManifest.version
+    ) {
+      fail('Packed kern-mcp executable did not initialize against its bundled manifest.');
+    }
   }
   const repositoryRootExportMap = await readJson(repositoryRootExportMapPath);
   const packedRootExportMap = await readJson(join(installedRoot, 'agent/root-export-map.json'));
@@ -530,8 +561,8 @@ async function countEmittedExamples(outputRoot) {
 }
 
 async function verifyPackedCompilation(repositoryIndex) {
-  if (!existsSync(distRoot)) {
-    throw new Error('dist/kern is missing. Run "npm run build:kern" first.');
+  if (!existsSync(distRoot) || !existsSync(angularDistRoot)) {
+    throw new Error('dist/kern or dist/kern-mcp is missing. Run "npm run build:kern" first.');
   }
   await mkdir(artifactsRoot, { recursive: true });
   const stagingRoot = await mkdtemp(join(artifactsRoot, 'kern-agent-dx-'));
@@ -540,6 +571,18 @@ async function verifyPackedCompilation(repositoryIndex) {
   try {
     await copyFixture(consumerRoot);
     run(npmCommand, ['ci', '--offline', '--no-audit', '--no-fund'], { cwd: consumerRoot });
+    const angularPackOutput = run(npmCommand, [
+      'pack',
+      angularDistRoot,
+      '--json',
+      '--pack-destination',
+      stagingRoot,
+    ]);
+    const angularPackReport = JSON.parse(angularPackOutput);
+    const angularArchiveName = angularPackReport[0]?.filename;
+    if (typeof angularArchiveName !== 'string') {
+      throw new Error(`npm pack did not report an Angular archive: ${angularPackOutput}`);
+    }
     const packOutput = run(npmCommand, [
       'pack',
       distRoot,
@@ -556,6 +599,7 @@ async function verifyPackedCompilation(repositoryIndex) {
       npmCommand,
       [
         'install',
+        join(stagingRoot, angularArchiveName),
         join(stagingRoot, archiveName),
         '--ignore-scripts',
         '--save-exact',
@@ -566,7 +610,7 @@ async function verifyPackedCompilation(repositoryIndex) {
       { cwd: consumerRoot },
     );
 
-    const installedRoot = join(consumerRoot, 'node_modules/@kern-ui/angular');
+    const installedRoot = join(consumerRoot, 'node_modules/@kern-ui/mcp');
     const {
       manifest: packedManifest,
       packedExamplesRoot,
@@ -574,8 +618,31 @@ async function verifyPackedCompilation(repositoryIndex) {
     } = await assertPackedAgentAssets(installedRoot, repositoryIndex);
     const sourceRoot = join(consumerRoot, 'src/examples');
     const recipeSourceRoot = join(consumerRoot, 'src/recipes');
+    const apiProbeRoot = join(consumerRoot, 'src/mcp');
     await mkdir(sourceRoot, { recursive: true });
     await mkdir(recipeSourceRoot, { recursive: true });
+    await mkdir(apiProbeRoot, { recursive: true });
+    await writeFile(
+      join(apiProbeRoot, 'api.ts'),
+      `import {
+  createKernAgentApi,
+  loadManifest,
+  toolDefinitions,
+  type KrnMcpManifest,
+} from '@kern-ui/mcp';
+
+export async function inspectKernContract(path: string): Promise<number> {
+  const manifest: KrnMcpManifest = await loadManifest(path);
+  const api = createKernAgentApi(manifest);
+  const result = api.callTool('get_overview');
+  const schema: string = manifest.schemaVersion;
+  const framework: string = api.getOverview().framework.name;
+  void result.structuredContent;
+  void toolDefinitions;
+  return api.getOverview().totals.components + schema.length + framework.length;
+}
+`,
+    );
     const packedSources = await regularFiles(packedExamplesRoot, '.ts');
     for (const source of packedSources) {
       await cp(source, join(sourceRoot, basename(source)));
@@ -595,7 +662,7 @@ async function verifyPackedCompilation(repositoryIndex) {
     run(process.execPath, [compilerPath, '-p', 'tsconfig.json'], { cwd: consumerRoot });
 
     const emittedCount = await countEmittedExamples(join(consumerRoot, 'out-tsc'));
-    const expectedEmittedCount = repositoryIndex.total + packedManifest.recipes.length;
+    const expectedEmittedCount = repositoryIndex.total + packedManifest.recipes.length + 1;
     if (emittedCount !== expectedEmittedCount) {
       fail(
         `Packed-package AOT emitted ${emittedCount} agent modules; expected ${expectedEmittedCount}.`,
@@ -618,7 +685,7 @@ async function verifyPackedCompilation(repositoryIndex) {
     const archiveStats = await stat(join(stagingRoot, archiveName));
     console.log(
       `Packed artifact ${archiveName}: ${archiveStats.size} bytes; ${emittedCount} strict AOT modules emitted ` +
-        `(${repositoryIndex.total} component examples + ${packedManifest.recipes.length} enterprise recipes).`,
+        `(${repositoryIndex.total} component examples + ${packedManifest.recipes.length} enterprise recipes + 1 typed MCP API probe).`,
     );
   } finally {
     if (process.env['KRN_KEEP_AGENT_DX_FIXTURE'] === '1') {

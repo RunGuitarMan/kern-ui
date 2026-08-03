@@ -1,8 +1,9 @@
-# Releasing `@kern-ui/angular`
+# Releasing `@kern-ui/angular` and `@kern-ui/mcp`
 
 Kern publishes through `.github/workflows/release-candidate.yml`. The workflow builds one
-candidate, pauses at the protected `npm-production` environment, and publishes the exact
-downloaded tarball only after maintainer approval. It does not use a long-lived `NPM_TOKEN`.
+candidate containing both version-aligned packages, pauses at the protected `npm-production`
+environment, and publishes the exact downloaded tarballs only after maintainer approval. It does
+not use a long-lived `NPM_TOKEN`.
 
 ## One-time repository configuration
 
@@ -11,8 +12,9 @@ Maintainers must configure these controls before enabling publication:
 1. Create a GitHub environment named `npm-production`, require designated reviewers, prevent
    self-review where the organization supports it, and restrict deployment to protected release
    tags.
-2. Configure npm trusted publishing for package `@kern-ui/angular`, this repository, workflow file
-   `release-candidate.yml`, and environment `npm-production`.
+2. Configure npm trusted publishing independently for packages `@kern-ui/angular` and
+   `@kern-ui/mcp`, this repository, workflow file `release-candidate.yml`, and environment
+   `npm-production`.
 3. Protect `v*` release tags so only release maintainers can create or update them.
 4. Keep default-branch protection and required CI checks enabled.
 
@@ -22,8 +24,11 @@ read-only repository access.
 ## Release procedure
 
 1. Prepare one release-identity change on the default branch:
-   - set `projects/kern/package.json` and `KERN_DOCS_VERSION` in
+   - set `projects/kern/package.json`, `projects/kern-mcp/package.json`, and `KERN_DOCS_VERSION` in
      `projects/docs/src/app/release-identity.ts` to the exact same version;
+   - set `projects/kern-mcp/package.json#peerDependencies.@kern-ui/angular` and the matching
+     `projects/kern/api/release-policy.json#companionPackage.peerDependencies` entry to that exact
+     version;
    - set `KERN_DOCS_RELEASE_STATE` to `released`;
    - move the relevant entries out of `[Unreleased]` into an exact
      `## [MAJOR.MINOR.PATCH] - YYYY-MM-DD` section in `CHANGELOG.md`;
@@ -50,21 +55,23 @@ The candidate job first proves that package version, tag, documentation version,
 dated changelog section, release bullets, and HTTPS tag link describe the same release. It then
 runs lifecycle, deprecation, manual-evidence, workspace, consumer, and browser gates before it:
 
-- packs `dist/kern` once;
+- packs `dist/kern` and `dist/kern-mcp` once each;
 - builds and smoke-tests the hydrated SSR documentation at `/versions/<version>/`;
 - creates a deterministic documentation archive and a per-file SHA-256 manifest;
-- resolves the final runtime and peer dependency graph;
+- resolves each package's final runtime and peer dependency graph;
 - runs `npm audit` at the registered `high` threshold;
-- generates a CycloneDX SBOM with npm;
+- generates a separate CycloneDX SBOM for each package with npm;
 - enforces the package dependency and license allow-list;
-- binds package name, version, npm distribution tag, Git tag, full commit, npm tarball,
-  documentation archive, documentation manifest, and SBOM in `release-manifest.json`;
+- binds both package names, versions, npm distribution tag, Git tag, full commit, both npm
+  tarballs, documentation archive, documentation manifest, and both SBOMs in
+  `release-manifest.json`;
 - writes SHA-256 hashes to `SHA256SUMS`.
 
-The publish job downloads that artifact, recomputes every hash, rereads the package manifest, SBOM,
-and complete documentation archive, creates a draft GitHub release, and invokes
-`npm publish <exact-tarball> --provenance` through npm trusted publishing. The GitHub release
-becomes public only after npm accepts the package.
+The publish job downloads that artifact, recomputes every hash, and rereads both package manifests
+and SBOMs plus the complete documentation archive. Its resumable publisher queries the registry
+integrity for each exact version: matching approved bytes are skipped, an occupied version with
+different bytes is rejected, and a missing version is published with provenance. The GitHub
+release is created or updated only after npm accepts both packages.
 
 The workflow attaches the versioned documentation evidence to the GitHub release but does not
 deploy it to an unspecified provider. The immutable artifact and hosting contract are documented
@@ -76,10 +83,12 @@ Do not rebuild under the same version after approval. npm versions are immutable
 
 - failure before npm publication: fix the source, choose a new version/tag when artifacts change,
   and rerun;
-- failure after creating the draft GitHub release: keep it draft or delete it before a controlled
-  retry;
-- npm succeeded but GitHub release publication failed: verify npm provenance and hashes, then
-  publish the existing draft without replacing its assets;
+- one npm package succeeded but the other failed: rerun the failed approved publish job with the
+  same immutable artifact; the exact already-published integrity is verified and skipped before
+  the missing package is retried;
+- npm succeeded but GitHub release publication failed: rerun the approved publish job; both exact
+  npm artifacts are verified and skipped, then the release assets are created or replaced from the
+  approved candidate;
 - suspected credential, tag, or artifact compromise: stop, follow `SECURITY.md`, and do not approve
   the environment.
 

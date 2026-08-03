@@ -33,8 +33,9 @@ contract or upgrade decision.
 - Complete English and Russian locale packs with schema-parity verification.
 - Generated component input/model/output metadata and curated lifecycle status for all catalog
   entries.
-- A package-distributed component manifest, per-component agent guidance, `llms.txt`, runnable
-  recipes, and a packed read-only `kern-mcp` executable.
+- A separately installable `@kern-ui/mcp` companion package containing the component manifest,
+  per-component agent guidance, `llms.txt`, runnable recipes, and the read-only `kern-mcp`
+  executable without increasing the Angular runtime package.
 - Typed form, data-grid, CRUD/master-detail, doctor, install, and versioned migration schematics.
 - A cancellable, latest-request-wins server data-source adapter for controlled Data Grid use.
 - Runtime performance budgets for large Grid, Tree, Select, Chart, 200-field Forms, frame latency,
@@ -53,11 +54,9 @@ contract or upgrade decision.
   composition, reducing duplicated runtime CSS.
 - Strengthened form-field projection, typed selection controls, date/calendar keyboard behavior,
   and Angular Forms contracts.
-- Stabilized `createKrnOptions` after adoption across the action families. The template-coupled
-  `KrnMenuButtonBase`, `KrnEditableComboboxBase`, and `KrnUploadBase` variant bases remain
-  explicitly experimental until their extension hooks become independently consumable.
-- Added the experimental `provideKrnFormControl()` adapter provider required by third-party
-  subclasses of the editable-combobox and upload variant bases.
+- Stabilized `createKrnOptions` after adoption across the action families. Concrete action, form,
+  upload, and modal variants now compose internal signal controllers instead of publishing
+  template-coupled inheritance APIs.
 - Strengthened data-grid identity, typed rendering, responsive column access, virtual focus, and
   column-management contracts, including nested-control action mode, density-measured fixed-height
   virtual rows, logical start/end pinning, and a cancellable controlled data source.
@@ -138,9 +137,8 @@ contract or upgrade decision.
 - Rebuilt Dropdown Button and Split Button around native `KrnButton` triggers, deterministic menu
   ownership, controlled disabled/loading invariants, dynamic ARIA-menu navigation, nested-overlay
   ownership, scoped appearance/position options, lightweight localized labels, and public
-  component harnesses. `KrnMenuButtonBase` now exposes `getFocusReturnTarget()` as a protected
-  extension hook so compound variants can preserve focus without coupling the shared menu behavior
-  to variant-specific DOM.
+  component harnesses. Their private signal controller preserves compound-trigger focus without
+  exposing inheritance hooks or coupling shared menu behavior to variant-specific DOM.
 - Moved Floating Action Button onto a native `button[krnFab]` host with native form,
   accessible-name, and description semantics, a compact label that remains in the accessibility
   tree, focus-retaining loading, density-aware geometry, scoped defaults, and a public component
@@ -261,9 +259,18 @@ contract or upgrade decision.
 
 ### Removed
 
-- Removed the unpublished `KrnValueAccessor` extension export; concrete form components now use
-  a composable Angular Forms adapter instead of inheriting their state machinery. Experimental
-  variant-base subclasses install the same scoped adapter with `provideKrnFormControl()`.
+- Removed `KrnMenuButtonBase`, `KrnEditableComboboxBase`, `KrnUploadBase`, and
+  `KrnOverlaySurface`; use the concrete components or `KrnOverlayService` and compose behavior
+  around them instead of subclassing component implementation details.
+- Removed the MCP executable, the MCP-only Angular compiler peer, and `./agent/*` exports from
+  `@kern-ui/angular`, including the programmatic `@kern-ui/angular/mcp` subpath; install
+  `@kern-ui/mcp` as a development dependency, import its API from `@kern-ui/mcp`, and import assets
+  from `@kern-ui/mcp/agent/*`.
+
+- Removed the unpublished `KrnValueAccessor` extension export and the experimental public
+  `provideKrnFormControl()` hook; Kern controls now use a private composable Angular Forms adapter
+  instead of exposing coupled state machinery. Application controls should implement Angular's
+  public `ControlValueAccessor`/`Validator` contracts or compose concrete Kern controls.
 - Removed the unpublished Button Group and Toggle Group custom-element selectors and `ariaLabel`
   bridges; use the canonical native `div[krnButtonGroup]` and `div[krnToggleGroup]` hosts with
   native accessible-name attributes.

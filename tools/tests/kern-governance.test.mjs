@@ -18,6 +18,7 @@ import { stableTypeText } from '../../scripts/lib/stable-type-text.mjs';
 import {
   componentStatusIssues,
   discoverLifecycleCatalogFromSource,
+  symbolDependencyStatusIssues,
 } from '../verify-kern-lifecycle.mjs';
 import './kern-release-identity.test.mjs';
 import './kern-versioned-docs.test.mjs';
@@ -120,6 +121,24 @@ test('lifecycle component matching consumes the shared attribute selector regist
     ]),
   );
   assert.deepEqual(issues, []);
+});
+
+test('lifecycle dependency closure rejects stable and beta symbols coupled to less mature API', () => {
+  const discovered = new Map([
+    ['./kit:StableControl', { dependencies: new Set(['./kit:BetaController']) }],
+    ['./kit:BetaController', { dependencies: new Set(['./kit:ExperimentalState']) }],
+    ['./kit:ExperimentalState', { dependencies: new Set(['./kit:BetaController']) }],
+  ]);
+  const registered = new Map([
+    ['./kit:StableControl', { status: 'stable' }],
+    ['./kit:BetaController', { status: 'beta' }],
+    ['./kit:ExperimentalState', { status: 'experimental' }],
+  ]);
+
+  assert.deepEqual(symbolDependencyStatusIssues(discovered, registered), [
+    'Public stable symbol "./kit:StableControl" depends on less mature beta symbol "./kit:BetaController".',
+    'Public beta symbol "./kit:BetaController" depends on less mature experimental symbol "./kit:ExperimentalState".',
+  ]);
 });
 
 test('catalog documentation overrides cannot bypass the selector literal registry', () => {
@@ -405,7 +424,7 @@ test('component and agent generators share the stable type serializer', async ()
 test('committed lifecycle and manual evidence registries verify', () => {
   const lifecycle = run(lifecycleScript);
   assert.equal(lifecycle.status, 0, lifecycle.stderr);
-  assert.match(lifecycle.stdout, /131 catalog entries, 477 public symbols/);
+  assert.match(lifecycle.stdout, /131 catalog entries, 472 public symbols/);
 
   const componentInventory = run(componentInventoryScript);
   assert.equal(componentInventory.status, 0, componentInventory.stderr);
@@ -563,7 +582,7 @@ test('lifecycle verification rejects an unregistered public symbol', async () =>
   }
 });
 
-test('Angular projects disable the Angular CLI persistent cache under Nx', async () => {
+test('Angular CLI caching is local-only where Vite prebundling needs it', async () => {
   const projectsResult = runNx('show', 'projects', '--json');
   assert.equal(projectsResult.status, 0, projectsResult.stderr);
   const projectNames = JSON.parse(projectsResult.stdout);
@@ -578,13 +597,43 @@ test('Angular projects disable the Angular CLI persistent cache under Nx', async
     angularProjects.push(name);
     const path = `${resolvedProject.root}/project.json`;
     const project = JSON.parse(await readFile(resolve(workspaceRoot, path), 'utf8'));
-    assert.equal(
-      project.cli?.cache?.enabled,
-      false,
-      `${path} must leave Nx as the sole persistent task-cache owner`,
+    const developmentServer = Object.values(project.targets ?? {}).find(
+      (target) => (target.executor ?? target.builder) === '@angular/build:dev-server',
     );
+    if (developmentServer) {
+      assert.equal(project.cli?.cache?.enabled, true, `${path} must enable Vite prebundling`);
+      assert.equal(
+        project.cli?.cache?.environment,
+        'local',
+        `${path} must not introduce a second CI cache owner`,
+      );
+      assert.equal(
+        developmentServer.options?.prebundle,
+        true,
+        `${path} must explicitly keep Vite dependency prebundling enabled`,
+      );
+    } else {
+      assert.equal(
+        project.cli?.cache?.enabled,
+        false,
+        `${path} must leave Nx as the sole persistent task-cache owner`,
+      );
+    }
   }
   assert.ok(angularProjects.length > 0, 'Nx must discover at least one Angular project');
+
+  const smoke = await readFile(resolve(workspaceRoot, 'tools/smoke-kern-vite-dev.mjs'), 'utf8');
+  assert.match(smoke, /CI: 'false'/, 'the dedicated smoke must exercise local CLI caching in CI');
+  assert.match(
+    smoke,
+    /Prebundling has been configured but will not be used/,
+    'the smoke must fail when Angular disables configured prebundling',
+  );
+  assert.match(
+    smoke,
+    /node_modules\/nx\/dist\/bin\/nx\.js/,
+    'the smoke must use the portable Nx CLI',
+  );
 });
 
 test('lifecycle verification rejects an active member not tagged deprecated in the API', async () => {
@@ -716,11 +765,11 @@ test('package policy rejects publication without provenance', async () => {
   }
 });
 
-test('package policy requires the optional MCP TypeScript peer to cover the exact verified workspace version', async () => {
+test('package policy requires the MCP TypeScript dependency to cover the exact verified workspace version', async () => {
   const policy = JSON.parse(
     await readFile(resolve(workspaceRoot, 'projects/kern/api/release-policy.json'), 'utf8'),
   );
-  policy.peerDependencies.typescript = '>=7.0.0 <8.0.0';
+  policy.companionPackage.dependencies.typescript = '>=7.0.0 <8.0.0';
   const temporary = await temporaryJson('release-policy.json', policy);
   try {
     const result = run(packagePolicyScript, `--policy=${temporary.path}`);
@@ -734,11 +783,11 @@ test('package policy requires the optional MCP TypeScript peer to cover the exac
   }
 });
 
-test('package policy rejects a TypeScript MCP peer wider than Angular supports', async () => {
+test('package policy rejects a TypeScript MCP dependency wider than Angular supports', async () => {
   const policy = JSON.parse(
     await readFile(resolve(workspaceRoot, 'projects/kern/api/release-policy.json'), 'utf8'),
   );
-  policy.peerDependencies.typescript = '>=6.0.0 <8.0.0';
+  policy.companionPackage.dependencies.typescript = '>=6.0.0 <8.0.0';
   const temporary = await temporaryJson('release-policy.json', policy);
   try {
     const result = run(packagePolicyScript, `--policy=${temporary.path}`);

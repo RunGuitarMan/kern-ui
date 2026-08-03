@@ -11,6 +11,9 @@ const workspaceManifestPath = resolve(workspaceRoot, 'package.json');
 const workspaceLockPath = resolve(workspaceRoot, 'package-lock.json');
 const readmePath = resolve(workspaceRoot, 'projects/kern/README.md');
 const licensePath = resolve(workspaceRoot, 'projects/kern/LICENSE');
+const companionManifestPath = resolve(workspaceRoot, 'projects/kern-mcp/package.json');
+const companionReadmePath = resolve(workspaceRoot, 'projects/kern-mcp/README.md');
+const companionTypesPath = resolve(workspaceRoot, 'projects/kern-mcp/lib.d.mts');
 const issues = [];
 
 function option(name, fallback) {
@@ -75,12 +78,15 @@ function rangeWithin(candidateRange, supportedRange) {
 async function main() {
   const manifestPath = option('manifest', defaultManifestPath);
   const policyPath = option('policy', defaultPolicyPath);
-  const [manifest, policy, workspaceManifest, workspaceLock] = await Promise.all([
-    readJson(manifestPath),
-    readJson(policyPath),
-    readJson(workspaceManifestPath),
-    readJson(workspaceLockPath),
-  ]);
+  const [manifest, companionManifest, policy, workspaceManifest, workspaceLock] = await Promise.all(
+    [
+      readJson(manifestPath),
+      readJson(companionManifestPath),
+      readJson(policyPath),
+      readJson(workspaceManifestPath),
+      readJson(workspaceLockPath),
+    ],
+  );
   const angularBuildTypeScriptRange =
     workspaceLock.packages?.['node_modules/@angular/build']?.peerDependencies?.typescript;
   const expectedRepository = {
@@ -92,10 +98,6 @@ async function main() {
     access: 'public',
     registry: policy.registry,
     provenance: true,
-  };
-  const expectedOptionalPeers = {
-    '@angular/compiler': { optional: true },
-    typescript: { optional: true },
   };
 
   if (policy.schemaVersion !== 1) report('release-policy.json schemaVersion must be 1.');
@@ -119,9 +121,12 @@ async function main() {
   if (!isDeepStrictEqual(manifest.peerDependencies, policy.peerDependencies)) {
     report('Package peerDependencies differ from release policy.');
   }
+  if (!isDeepStrictEqual(manifest.peerDependenciesMeta, policy.peerDependenciesMeta)) {
+    report('Package optional peer metadata differs from release policy.');
+  }
   if (
     !supportsVersion(
-      policy.peerDependencies?.typescript,
+      policy.companionPackage?.dependencies?.typescript,
       workspaceManifest.devDependencies?.typescript,
     )
   ) {
@@ -134,14 +139,29 @@ async function main() {
   ) {
     report('Workspace TypeScript version must satisfy the installed Angular build peer range.');
   }
+  if (
+    !rangeWithin(policy.companionPackage?.dependencies?.typescript, angularBuildTypeScriptRange)
+  ) {
+    report('Published TypeScript MCP dependency must stay within the Angular build peer range.');
+  }
+  if (
+    !supportsVersion(
+      policy.peerDependencies?.typescript,
+      workspaceManifest.devDependencies?.typescript,
+    )
+  ) {
+    report(
+      'Angular schematics TypeScript peer range must include the exact TypeScript version used by the verified workspace.',
+    );
+  }
   if (!rangeWithin(policy.peerDependencies?.typescript, angularBuildTypeScriptRange)) {
-    report('Published TypeScript MCP peer range must stay within the Angular build peer range.');
+    report('Angular schematics TypeScript peer must stay within the Angular build peer range.');
   }
-  if (!isDeepStrictEqual(manifest.peerDependenciesMeta, expectedOptionalPeers)) {
-    report('MCP parser peers must remain explicitly optional for runtime-only consumers.');
-  }
-  if (manifest.bin?.['kern-mcp'] !== './mcp/server.mjs') {
-    report('Publishable package must expose the bundled kern-mcp executable.');
+  if (
+    'bin' in manifest ||
+    Object.keys(manifest.exports ?? {}).some((key) => /^\.\/(agent|mcp)/.test(key))
+  ) {
+    report('Angular runtime package must not contain AI contracts or the MCP executable.');
   }
   if (manifest.private === true) report('Publishable package must not be private.');
   for (const forbidden of [
@@ -159,6 +179,77 @@ async function main() {
     report('Package README.md and LICENSE must exist before publication.');
   }
 
+  if (companionManifest.name !== policy.companionPackage?.packageName) {
+    report(`Companion package name must be ${policy.companionPackage?.packageName}.`);
+  }
+  if (companionManifest.version !== manifest.version) {
+    report('Angular and MCP package versions must remain aligned.');
+  }
+  if (!isDeepStrictEqual(companionManifest.dependencies, policy.companionPackage?.dependencies)) {
+    report('MCP package dependencies differ from release policy.');
+  }
+  if (
+    !isDeepStrictEqual(
+      companionManifest.peerDependencies,
+      policy.companionPackage?.peerDependencies,
+    ) ||
+    !isDeepStrictEqual(
+      companionManifest.peerDependenciesMeta,
+      policy.companionPackage?.peerDependenciesMeta,
+    )
+  ) {
+    report('MCP package optional Angular peer differs from release policy.');
+  }
+  if (companionManifest.peerDependencies?.['@kern-ui/angular'] !== manifest.version) {
+    report('MCP package must declare its aligned Angular version as an optional peer.');
+  }
+  if (
+    !isDeepStrictEqual(companionManifest.repository, {
+      type: 'git',
+      url: `git+${policy.repository}`,
+      directory: policy.companionPackage?.directory,
+    })
+  ) {
+    report('MCP package repository metadata differs from release policy.');
+  }
+  if (companionManifest.license !== policy.license) {
+    report(`MCP package license must be ${policy.license}.`);
+  }
+  if (!isDeepStrictEqual(companionManifest.publishConfig, expectedPublishConfig)) {
+    report('MCP package publishConfig must require public npm provenance publication.');
+  }
+  if (companionManifest.bin?.['kern-mcp'] !== './server.mjs') {
+    report('MCP package must expose the self-contained kern-mcp executable.');
+  }
+  if (
+    companionManifest.exports?.['./agent/component-manifest.json'] !==
+    './agent/component-manifest.json'
+  ) {
+    report('MCP package must export its immutable component manifest.');
+  }
+  if (
+    companionManifest.types !== './lib.d.mts' ||
+    companionManifest.exports?.['.']?.types !== './lib.d.mts' ||
+    companionManifest.exports?.['.']?.default !== './lib.mjs' ||
+    !existsSync(companionTypesPath)
+  ) {
+    report('MCP package must publish typed programmatic root exports.');
+  }
+  if (companionManifest.private === true) report('MCP package must not be private.');
+  for (const forbidden of [
+    'devDependencies',
+    'bundledDependencies',
+    'bundleDependencies',
+    'scripts',
+  ]) {
+    if (forbidden in companionManifest) {
+      report(`MCP package must not contain ${forbidden}.`);
+    }
+  }
+  if (!existsSync(companionReadmePath)) {
+    report('MCP package README.md must exist before publication.');
+  }
+
   if (issues.length) {
     console.error(`Kern package policy verification failed:\n- ${issues.join('\n- ')}`);
     process.exitCode = 1;
@@ -167,7 +258,8 @@ async function main() {
   console.log(
     `Kern package policy verified: ${manifest.name}@${manifest.version}, ` +
       `${Object.keys(manifest.dependencies).length} runtime dependency, ` +
-      `${Object.keys(manifest.peerDependencies).length} peer dependencies.`,
+      `${Object.keys(manifest.peerDependencies).length} peer dependencies; ` +
+      `${companionManifest.name} owns AI tooling.`,
   );
 }
 

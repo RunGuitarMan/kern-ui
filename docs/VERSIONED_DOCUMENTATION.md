@@ -1,8 +1,8 @@
 # Versioned documentation artifacts
 
-Every package release produces one immutable documentation artifact from the same Git tag and
-commit as `@kern-ui/angular`. The artifact is a complete Angular SSR application with hydration;
-it is not a source snapshot or a browser-only export.
+Every release produces one immutable documentation artifact from the same Git tag and commit as
+`@kern-ui/angular` and `@kern-ui/mcp`. The artifact is a complete Angular SSR application with
+hydration; it is not a source snapshot or a browser-only export.
 
 The repository deliberately does not choose a hosting provider. Publication infrastructure must
 deploy the released bytes without rebuilding them and preserve the manifest mount path. Selecting
@@ -15,10 +15,10 @@ For version `X`, the release contains:
 - `kern-docs-X.tgz`: deterministic archive rooted at `kern-docs/`;
 - `kern-docs-X.manifest.json`: identical to
   `kern-docs/versioned-docs-manifest.json` inside the archive;
-- `release-manifest.json`: binds both documentation files to package `X`, tag `vX`, the full Git
-  commit, and `/versions/X/`;
-- `SHA256SUMS`: exact hashes of the npm tarball, SBOM, documentation archive, documentation
-  manifest, and release manifest.
+- `release-manifest.json`: binds both documentation files and both package artifacts to version
+  `X`, tag `vX`, the full Git commit, and `/versions/X/`;
+- `SHA256SUMS`: exact hashes of both npm tarballs and SBOMs, the documentation archive,
+  documentation manifest, and release manifest.
 
 The documentation manifest contains every SSR/browser file path, byte length, SHA-256 hash, an
 aggregate content hash, package identity, source identity, and runtime entry point. It marks

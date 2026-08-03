@@ -15,8 +15,11 @@ const { lineAndColumn, parse } = require('../shared/source');
 const KERN_ROOT = '@kern-ui/angular';
 const KERN_PACKAGE_ROOT = resolve(__dirname, '../..');
 const KERN_PACKAGE = require('../../package.json');
-const KERN_AGENT_MANIFEST = require('../../agent/component-manifest.json');
-const RUNTIME_ENTRYPOINTS = new Set(KERN_AGENT_MANIFEST.library.entrypoints);
+const rootExportMapPath = existsSync(resolve(__dirname, '../shared/root-export-map.json'))
+  ? '../shared/root-export-map.json'
+  : '../../agent/root-export-map.json';
+const KERN_ROOT_EXPORT_MAP = require(rootExportMapPath);
+const RUNTIME_ENTRYPOINTS = new Set(KERN_ROOT_EXPORT_MAP.entrypoints);
 const FALLBACK_PEER_RANGES = Object.freeze({
   '@angular/aria': '^22.0.0',
   '@angular/cdk': '^22.0.0',

@@ -37,13 +37,19 @@ brand, and preference persistence are needed.
 
 Nx owns the workspace project graph and target orchestration. The allowed dependency direction is
 `docs → showcase → kern` (with Docs also consuming Kern directly); project tags and ESLint module
-boundaries reject reverse dependencies. Nx is the sole persistent task-cache owner. Every Angular
-`project.json` explicitly sets `cli.cache.enabled` to `false`; governance discovers the Nx project
-graph, inspects every project with an Angular executor, and rejects drift back to Angular CLI's
-separate persistent cache.
+boundaries reject reverse dependencies. Nx is the sole persistent CI task-cache owner. Library
+projects disable Angular CLI caching; the Docs dev server enables it only in the `local`
+environment so Angular's Vite dependency prebundling remains active without introducing a second
+CI cache. Governance verifies both sides of that boundary, and a startup smoke test exercises the
+configured Vite development server.
 
-- `kern` is the only publishable package. `/cdk`, `/i18n`, `/core`, `/kit`, `/addon-grid`,
-  `/addon-charts`, `/patterns`, and `/testing` are its supported physical entrypoints.
+- `kern` publishes the browser/runtime package `@kern-ui/angular`. `/cdk`, `/i18n`, `/core`,
+  `/kit`, `/addon-grid`, `/addon-charts`, `/patterns`, and `/testing` are its supported physical
+  entrypoints.
+- `kern-mcp` publishes the optional `@kern-ui/mcp` tooling package. It owns the MCP executable,
+  generated AI contracts, recipes, and examples so parser/tooling dependencies and multi-megabyte
+  agent assets never enter application bundles. Both npm packages share one version and immutable
+  release candidate, but retain independent manifests, dependency graphs, SBOMs, and provenance.
 - The package root is a compatibility-only aggregator. It declares no runtime implementation and
   preserves strict object identity with every direct entrypoint.
 - `@kern-ui/angular/testing` contains CDK harnesses but no Kern runtime imports, services, or
@@ -114,9 +120,10 @@ must verify their own overlay host, locale registration, deferred content, CSP, 
 platform adapter.
 
 Release builds bind that application to the immutable `/versions/<semver>/` mount, package the
-complete browser and server output deterministically, and record every file hash. The Express
-entry point accepts the same mount through `KERN_DOCS_BASE_PATH`; hosting remains an external
-deployment choice. See [VERSIONED_DOCUMENTATION.md](VERSIONED_DOCUMENTATION.md).
+complete browser and server output deterministically, and record every file hash alongside both
+synchronously versioned npm tarballs and their independent SBOMs. The Express entry point accepts
+the same mount through `KERN_DOCS_BASE_PATH`; hosting remains an external deployment choice. See
+[VERSIONED_DOCUMENTATION.md](VERSIONED_DOCUMENTATION.md).
 
 `provideKrn` supplies the package-wide Angular CDK `OverlayContainer`. Its host resolver is
 evaluated on access, falls back to `document.body`, and preserves a single container when a late
