@@ -29,11 +29,11 @@ import type {
 import { createKrnId } from './form-field';
 import {
   type KrnControlStateInputs,
-  KrnValueAccessor,
   provideKrnFormControl,
   requiredError,
   requiredTrueError,
   useKrnControlA11y,
+  useKrnFormControl,
 } from './value-accessor';
 
 interface KrnCheckboxGroupController {
@@ -61,7 +61,7 @@ const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string
   host: {
     '[attr.id]': 'null',
   },
-  providers: [CHECKBOX_GROUP_PROVIDER, ...provideKrnFormControl(() => KrnCheckboxGroup)],
+  providers: [CHECKBOX_GROUP_PROVIDER, ...provideKrnFormControl()],
   template: `
     <fieldset
       #fieldset
@@ -87,12 +87,8 @@ const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnCheckboxGroup
-  extends KrnValueAccessor<readonly string[]>
-  implements KrnCheckboxGroupController
-{
+export class KrnCheckboxGroup implements KrnCheckboxGroupController {
   private readonly fieldset = viewChild<ElementRef<HTMLFieldSetElement>>('fieldset');
-  private angularOwnsValue = false;
 
   readonly id = input('');
   readonly label = input('');
@@ -110,6 +106,19 @@ export class KrnCheckboxGroup
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly describedBy = input('');
   readonly valueChange = output<readonly string[]>();
+
+  private readonly formControl = useKrnFormControl(this, [] as readonly string[], {
+    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+    validateValue: (value) => this.validateValue(value),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
 
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'checkbox-group', {
     disabled: this.disabled,
@@ -143,33 +152,17 @@ export class KrnCheckboxGroup
   );
 
   constructor() {
-    super([]);
-    effect(() => {
-      const value = this.value();
-      if (value !== undefined && !this.angularOwnsValue) {
-        this.controlValue.set(this.normalizeIncomingValue(value));
-      }
-    });
-    this.watchValidationInputs(this.required, this.a11y.required);
+    this.formControl.bindStandaloneValue(this.value);
+    this.formControl.watchValidationInputs(this.required, this.a11y.required);
   }
 
-  override writeValue(value: unknown): void {
-    this.angularOwnsValue = true;
-    super.writeValue(value);
-  }
-
-  override registerOnChange(fn: (value: readonly string[]) => void): void {
-    this.angularOwnsValue = true;
-    super.registerOnChange(fn);
-  }
-
-  protected override normalizeIncomingValue(value: unknown): readonly string[] {
+  private normalizeIncomingValue(value: unknown): readonly string[] {
     return Array.isArray(value)
       ? [...new Set(value.filter((item): item is string => typeof item === 'string'))]
       : [];
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     return requiredError(value, this.a11y.required());
   }
 
@@ -178,7 +171,7 @@ export class KrnCheckboxGroup
   }
 
   markTouched(): void {
-    this.touch();
+    this.formControl.touch();
   }
 
   toggle(value: string, checked: boolean): void {
@@ -191,7 +184,7 @@ export class KrnCheckboxGroup
       return;
     }
     const next = checked ? [...current, value] : current.filter((item) => item !== value);
-    this.commitValue(next);
+    this.formControl.commitValue(next);
     this.valueChange.emit(next);
   }
 
@@ -208,7 +201,7 @@ export class KrnCheckboxGroup
     '[attr.id]': 'null',
     '[attr.tabindex]': 'null',
   },
-  providers: [...provideKrnFormControl(() => KrnCheckbox)],
+  providers: [...provideKrnFormControl()],
   template: `
     <label
       class="krn-choice"
@@ -258,11 +251,10 @@ export class KrnCheckboxGroup
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnCheckbox extends KrnValueAccessor<boolean | null> {
+export class KrnCheckbox {
   private readonly group = inject(KRN_CHECKBOX_GROUP, { optional: true });
   private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('input');
   private readonly indeterminateOverride = signal<boolean | null>(null);
-  private angularOwnsChecked = false;
 
   readonly id = input('');
   readonly name = input('');
@@ -283,6 +275,20 @@ export class KrnCheckbox extends KrnValueAccessor<boolean | null> {
   readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
   readonly checkedChange = output<boolean>();
   readonly indeterminateChange = output<boolean>();
+
+  private readonly formControl = useKrnFormControl(this, false as boolean | null, {
+    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+    onAngularWrite: () => this.indeterminateOverride.set(null),
+    validateValue: (value) => this.validateValue(value),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
 
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'checkbox', {
     disabled: this.disabled,
@@ -338,36 +344,19 @@ export class KrnCheckbox extends KrnValueAccessor<boolean | null> {
   );
 
   constructor() {
-    super(false);
-    effect(() => {
-      const checked = this.checked();
-      if (checked !== undefined && !this.angularOwnsChecked) {
-        this.controlValue.set(this.normalizeIncomingValue(checked));
-      }
-    });
-    this.watchValidationInputs(this.required, this.a11y.required);
+    this.formControl.bindStandaloneValue(this.checked);
+    this.formControl.watchValidationInputs(this.required, this.a11y.required);
     effect(() => {
       this.indeterminate();
       untracked(() => this.indeterminateOverride.set(null));
     });
   }
 
-  override writeValue(value: unknown): void {
-    this.angularOwnsChecked = true;
-    this.indeterminateOverride.set(null);
-    super.writeValue(value);
-  }
-
-  override registerOnChange(fn: (value: boolean | null) => void): void {
-    this.angularOwnsChecked = true;
-    super.registerOnChange(fn);
-  }
-
-  protected override normalizeIncomingValue(value: unknown): boolean | null {
+  private normalizeIncomingValue(value: unknown): boolean | null {
     return value === null ? null : Boolean(value);
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     return requiredTrueError(value, this.a11y.required());
   }
 
@@ -397,12 +386,12 @@ export class KrnCheckbox extends KrnValueAccessor<boolean | null> {
     if (Object.is(this.controlValue(), next)) {
       return;
     }
-    this.commitValue(next);
+    this.formControl.commitValue(next);
     this.checkedChange.emit(next);
   }
 
   protected blurred(): void {
-    this.touch();
+    this.formControl.touch();
     this.group?.markTouched();
   }
 
@@ -436,7 +425,7 @@ const RADIO_GROUP_PROVIDER: Provider = {
   host: {
     '[attr.id]': 'null',
   },
-  providers: [RADIO_GROUP_PROVIDER, ...provideKrnFormControl(() => KrnRadioGroup)],
+  providers: [RADIO_GROUP_PROVIDER, ...provideKrnFormControl()],
   template: `
     <fieldset
       #fieldset
@@ -463,13 +452,9 @@ const RADIO_GROUP_PROVIDER: Provider = {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnRadioGroup
-  extends KrnValueAccessor<string | null>
-  implements KrnRadioGroupController
-{
+export class KrnRadioGroup implements KrnRadioGroupController {
   private readonly generatedName = createKrnId('radio-group');
   private readonly fieldset = viewChild<ElementRef<HTMLFieldSetElement>>('fieldset');
-  private angularOwnsValue = false;
 
   readonly id = input('');
   readonly label = input('');
@@ -488,6 +473,19 @@ export class KrnRadioGroup
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly describedBy = input('');
   readonly valueChange = output<string | null>();
+
+  private readonly formControl = useKrnFormControl(this, null as string | null, {
+    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+    validateValue: (value) => this.validateValue(value),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
 
   readonly name = computed(() => this.customName() || this.generatedName);
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'radio-group', {
@@ -527,31 +525,15 @@ export class KrnRadioGroup
   );
 
   constructor() {
-    super(null);
-    effect(() => {
-      const value = this.value();
-      if (value !== undefined && !this.angularOwnsValue) {
-        this.controlValue.set(this.normalizeIncomingValue(value));
-      }
-    });
-    this.watchValidationInputs(this.required, this.a11y.required);
+    this.formControl.bindStandaloneValue(this.value);
+    this.formControl.watchValidationInputs(this.required, this.a11y.required);
   }
 
-  override writeValue(value: unknown): void {
-    this.angularOwnsValue = true;
-    super.writeValue(value);
-  }
-
-  override registerOnChange(fn: (value: string | null) => void): void {
-    this.angularOwnsValue = true;
-    super.registerOnChange(fn);
-  }
-
-  protected override normalizeIncomingValue(value: unknown): string | null {
+  private normalizeIncomingValue(value: unknown): string | null {
     return typeof value === 'string' ? value : null;
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     return requiredError(value, this.a11y.required());
   }
 
@@ -563,12 +545,12 @@ export class KrnRadioGroup
     if (this.isDisabled() || this.isReadOnly() || this.isSelected(value)) {
       return;
     }
-    this.commitValue(value);
+    this.formControl.commitValue(value);
     this.valueChange.emit(value);
   }
 
   markTouched(): void {
-    this.touch();
+    this.formControl.touch();
   }
 
   focus(options?: FocusOptions): void {
@@ -725,7 +707,7 @@ export class KrnRadio {
     '[attr.id]': 'null',
     '[attr.tabindex]': 'null',
   },
-  providers: [...provideKrnFormControl(() => KrnSwitch)],
+  providers: [...provideKrnFormControl()],
   template: `
     <label
       class="krn-choice krn-switch"
@@ -767,9 +749,8 @@ export class KrnRadio {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnSwitch extends KrnValueAccessor<boolean> {
+export class KrnSwitch {
   private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('input');
-  private angularOwnsChecked = false;
 
   readonly id = input('');
   readonly name = input('');
@@ -787,6 +768,20 @@ export class KrnSwitch extends KrnValueAccessor<boolean> {
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
   readonly checkedChange = output<boolean>();
+
+  private readonly formControl = useKrnFormControl(this, false, {
+    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+    validateValue: (value) => this.validateValue(value),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  protected readonly touch = this.formControl.touch;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
 
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'switch', {
     disabled: this.disabled,
@@ -830,31 +825,15 @@ export class KrnSwitch extends KrnValueAccessor<boolean> {
   );
 
   constructor() {
-    super(false);
-    effect(() => {
-      const checked = this.checked();
-      if (checked !== undefined && !this.angularOwnsChecked) {
-        this.controlValue.set(this.normalizeIncomingValue(checked));
-      }
-    });
-    this.watchValidationInputs(this.required, this.a11y.required);
+    this.formControl.bindStandaloneValue(this.checked);
+    this.formControl.watchValidationInputs(this.required, this.a11y.required);
   }
 
-  override writeValue(value: unknown): void {
-    this.angularOwnsChecked = true;
-    super.writeValue(value);
-  }
-
-  override registerOnChange(fn: (value: boolean) => void): void {
-    this.angularOwnsChecked = true;
-    super.registerOnChange(fn);
-  }
-
-  protected override normalizeIncomingValue(value: unknown): boolean {
+  private normalizeIncomingValue(value: unknown): boolean {
     return Boolean(value);
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     return requiredTrueError(value, this.a11y.required());
   }
 
@@ -868,7 +847,7 @@ export class KrnSwitch extends KrnValueAccessor<boolean> {
     if (checked === this.renderedChecked()) {
       return;
     }
-    this.commitValue(checked);
+    this.formControl.commitValue(checked);
     this.checkedChange.emit(checked);
   }
 
@@ -893,7 +872,7 @@ export class KrnSwitch extends KrnValueAccessor<boolean> {
     '[attr.id]': 'null',
   },
   imports: [NgTemplateOutlet],
-  providers: [...provideKrnFormControl(() => KrnSegmentedControl)],
+  providers: [...provideKrnFormControl()],
   template: `
     <div
       class="krn-segmented"
@@ -937,7 +916,7 @@ export class KrnSwitch extends KrnValueAccessor<boolean> {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null> {
+export class KrnSegmentedControl<T = string> {
   private readonly segmentButtons = viewChildren<ElementRef<HTMLButtonElement>>('segment');
   private readonly translations = inject(KRN_TRANSLATIONS);
 
@@ -964,6 +943,20 @@ export class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null> 
   readonly value = input<T | null | undefined>(undefined);
   readonly valueChange = output<T | null>();
 
+  private readonly formControl = useKrnFormControl<T | null>(this, null, {
+    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+    validateValue: (value) => this.validateValue(value),
+    valuesEqual: (current, next) => this.valuesEqual(current, next),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
+
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'segmented', {
     disabled: this.disabled,
     labelStrategy: 'group',
@@ -979,20 +972,19 @@ export class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null> 
   );
 
   constructor() {
-    super(null);
-    this.bindStandaloneValue(this.value);
-    this.watchValidationInputs(this.required, this.a11y.required);
+    this.formControl.bindStandaloneValue(this.value);
+    this.formControl.watchValidationInputs(this.required, this.a11y.required);
   }
 
-  protected override normalizeIncomingValue(value: unknown): T | null {
+  private normalizeIncomingValue(value: unknown): T | null {
     return value === null || value === undefined ? null : (value as T);
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     return requiredError(value, this.a11y.required());
   }
 
-  protected override valuesEqual(current: T | null, next: T | null): boolean {
+  private valuesEqual(current: T | null, next: T | null): boolean {
     return current === null || next === null
       ? current === next
       : this.identityMatcher()(current, next);
@@ -1016,7 +1008,7 @@ export class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null> 
     if (!option || this.disabledHandler()(option)) {
       return;
     }
-    if (this.commitUserValue(option.value)) {
+    if (this.formControl.commitUserValue(option.value)) {
       this.valueChange.emit(option.value);
     }
   }
@@ -1086,7 +1078,7 @@ export class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null> 
     if (next && group.contains(next)) {
       return;
     }
-    this.touch();
+    this.formControl.touch();
   }
 
   focus(options?: FocusOptions): void {

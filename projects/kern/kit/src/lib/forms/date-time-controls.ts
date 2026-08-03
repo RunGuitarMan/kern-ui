@@ -40,11 +40,11 @@ import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnColorPickerTranslations, KrnTimePickerTranslations } from '@kern-ui/angular/core';
 import type { KrnDatePickerLabels, KrnDateRangeValue } from './form-types';
 import {
-  KrnValueAccessor,
   mergeValidationErrors,
   provideKrnFormControl,
   requiredError,
   useKrnControlA11y,
+  useKrnFormControl,
 } from './value-accessor';
 
 interface KrnHslColor {
@@ -186,7 +186,7 @@ const connectPickerPopover = (
     class: 'krn-picker-host',
     '[attr.id]': 'null',
   },
-  providers: [...provideKrnFormControl(() => KrnDatePicker)],
+  providers: [...provideKrnFormControl()],
   template: `
     <div
       class="krn-picker"
@@ -307,7 +307,7 @@ const connectPickerPopover = (
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnDatePicker extends KrnValueAccessor<string> {
+export class KrnDatePicker {
   private readonly platform = inject(KRN_PLATFORM);
   private readonly translations = inject(KRN_TRANSLATIONS);
   readonly id = input('');
@@ -333,6 +333,20 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
   readonly valueChange = output<string>();
   protected readonly visibleMonth = signal(initialCalendarMonth('', new Date(this.platform.now())));
   protected readonly focusedDate = signal(this.today());
+
+  private readonly formControl = useKrnFormControl(this, '', {
+    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+    onAngularWrite: (value) => this.syncVisibleMonth(value),
+    validateValue: (value) => this.validateValue(value),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
   protected readonly copy = computed(() => ({
     ...this.translations.datePicker,
     ...this.labels(),
@@ -418,24 +432,22 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
   });
 
   constructor() {
-    super('');
-    this.bindStandaloneValue(this.value);
-    this.watchValidationInputs(this.required, this.a11y.required, this.min, this.max);
+    this.formControl.bindStandaloneValue(this.value);
+    this.formControl.watchValidationInputs(this.required, this.a11y.required, this.min, this.max);
   }
 
-  override writeValue(value: unknown): void {
-    super.writeValue(value);
-    const parsed = parseIsoDate(this.controlValue());
+  private syncVisibleMonth(value: string): void {
+    const parsed = parseIsoDate(value);
     if (parsed) {
       this.visibleMonth.set(startOfMonth(parsed));
     }
   }
 
-  protected override normalizeIncomingValue(value: unknown): string {
+  private normalizeIncomingValue(value: unknown): string {
     return isIsoDate(value) ? value : '';
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     const parsed =
       value === '' || value === null || value === undefined ? null : parseIsoDate(value);
     return mergeValidationErrors(
@@ -471,7 +483,7 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
 
   protected closeOnFocusOut(event: FocusEvent): void {
     closeWhenFocusLeaves(event, () => {
-      this.touch();
+      this.formControl.touch();
       this.close(false);
     });
   }
@@ -498,7 +510,7 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
     ) {
       return;
     }
-    if (this.commitUserValue(value)) {
+    if (this.formControl.commitUserValue(value)) {
       this.valueChange.emit(value);
     }
     this.close(true);
@@ -508,7 +520,7 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
     if (this.isDisabled() || this.a11y.readOnly()) {
       return;
     }
-    if (this.commitUserValue('')) {
+    if (this.formControl.commitUserValue('')) {
       this.valueChange.emit('');
     }
     this.close(true);
@@ -597,7 +609,7 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
     class: 'krn-picker-host',
     '[attr.id]': 'null',
   },
-  providers: [...provideKrnFormControl(() => KrnDateRangePicker)],
+  providers: [...provideKrnFormControl()],
   template: `
     <div
       class="krn-picker"
@@ -746,7 +758,7 @@ export class KrnDatePicker extends KrnValueAccessor<string> {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
+export class KrnDateRangePicker {
   private readonly platform = inject(KRN_PLATFORM);
   private readonly translations = inject(KRN_TRANSLATIONS);
   readonly id = input('');
@@ -774,6 +786,25 @@ export class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
   readonly valueChange = output<KrnDateRangeValue>();
   protected readonly visibleMonth = signal(initialCalendarMonth('', new Date(this.platform.now())));
   protected readonly focusedDate = signal(this.today());
+
+  private readonly formControl = useKrnFormControl<KrnDateRangeValue>(
+    this,
+    { start: '', end: '' },
+    {
+      normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+      onAngularWrite: (value) => this.syncVisibleMonth(value),
+      validateValue: (value) => this.validateValue(value),
+      valuesEqual: (current, next) => this.valuesEqual(current, next),
+    },
+  );
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
   protected readonly copy = computed(() => ({
     ...this.translations.datePicker,
     ...this.labels(),
@@ -885,20 +916,18 @@ export class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
   });
 
   constructor() {
-    super({ start: '', end: '' });
-    this.bindStandaloneValue(this.value);
-    this.watchValidationInputs(this.required, this.a11y.required, this.min, this.max);
+    this.formControl.bindStandaloneValue(this.value);
+    this.formControl.watchValidationInputs(this.required, this.a11y.required, this.min, this.max);
   }
 
-  override writeValue(value: unknown): void {
-    super.writeValue(value);
-    const parsed = parseIsoDate(this.controlValue().start || this.controlValue().end);
+  private syncVisibleMonth(value: KrnDateRangeValue): void {
+    const parsed = parseIsoDate(value.start || value.end);
     if (parsed) {
       this.visibleMonth.set(startOfMonth(parsed));
     }
   }
 
-  protected override normalizeIncomingValue(value: unknown): KrnDateRangeValue {
+  private normalizeIncomingValue(value: unknown): KrnDateRangeValue {
     if (typeof value !== 'object' || value === null || !('start' in value) || !('end' in value)) {
       return { start: '', end: '' };
     }
@@ -910,11 +939,11 @@ export class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
     return start && end && end < start ? { start: end, end: start } : { start, end };
   }
 
-  protected override valuesEqual(current: KrnDateRangeValue, next: KrnDateRangeValue): boolean {
+  private valuesEqual(current: KrnDateRangeValue, next: KrnDateRangeValue): boolean {
     return current.start === next.start && current.end === next.end;
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     if (typeof value !== 'object' || value === null) {
       return requiredError(value, this.a11y.required());
     }
@@ -960,7 +989,7 @@ export class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
 
   protected closeOnFocusOut(event: FocusEvent): void {
     closeWhenFocusLeaves(event, () => {
-      this.touch();
+      this.formControl.touch();
       this.close(false);
     });
   }
@@ -1095,7 +1124,7 @@ export class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
     if (this.isDisabled() || this.a11y.readOnly()) {
       return;
     }
-    if (this.commitUserValue(value)) {
+    if (this.formControl.commitUserValue(value)) {
       this.lastUserCommittedValue = value;
       this.valueChange.emit(value);
     }
@@ -1108,7 +1137,7 @@ export class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
     class: 'krn-picker-host',
     '[attr.id]': 'null',
   },
-  providers: [...provideKrnFormControl(() => KrnTimePicker)],
+  providers: [...provideKrnFormControl()],
   template: `
     <div
       class="krn-picker"
@@ -1257,7 +1286,7 @@ export class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnTimePicker extends KrnValueAccessor<string> {
+export class KrnTimePicker {
   private readonly platform = inject(KRN_PLATFORM);
   private readonly translations = inject(KRN_TRANSLATIONS);
   readonly id = input('');
@@ -1281,6 +1310,19 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
   readonly valueChange = output<string>();
   protected readonly hourDraft = signal('');
   protected readonly minuteDraft = signal('');
+
+  private readonly formControl = useKrnFormControl(this, '', {
+    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+    validateValue: (value) => this.validateValue(value),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
   protected readonly copy = computed(() => ({
     ...this.translations.timePicker,
     ...this.labels(),
@@ -1402,16 +1444,21 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
   });
 
   constructor() {
-    super('');
-    this.bindStandaloneValue(this.value);
-    this.watchValidationInputs(this.required, this.a11y.required, this.min, this.max, this.step);
+    this.formControl.bindStandaloneValue(this.value);
+    this.formControl.watchValidationInputs(
+      this.required,
+      this.a11y.required,
+      this.min,
+      this.max,
+      this.step,
+    );
   }
 
-  protected override normalizeIncomingValue(value: unknown): string {
+  private normalizeIncomingValue(value: unknown): string {
     return isTime(value) ? value : '';
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     const valid = value === '' || value === null || value === undefined || isTime(value);
     const normalized = typeof value === 'string' ? value.slice(0, 5) : '';
     const min = isTime(this.min()) ? this.min().slice(0, 5) : '';
@@ -1459,7 +1506,7 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
 
   protected closeOnFocusOut(event: FocusEvent): void {
     closeWhenFocusLeaves(event, () => {
-      this.touch();
+      this.formControl.touch();
       this.close(false);
     });
   }
@@ -1548,7 +1595,7 @@ export class KrnTimePicker extends KrnValueAccessor<string> {
     if (this.isDisabled() || this.a11y.readOnly()) {
       return;
     }
-    if (this.commitUserValue(value)) {
+    if (this.formControl.commitUserValue(value)) {
       this.valueChange.emit(value);
     }
   }
@@ -1712,7 +1759,7 @@ const relativeLuminance = (value: string): number => {
     class: 'krn-picker-host',
     '[attr.id]': 'null',
   },
-  providers: [...provideKrnFormControl(() => KrnColorPicker)],
+  providers: [...provideKrnFormControl()],
   template: `
     <div
       class="krn-picker"
@@ -1874,7 +1921,7 @@ const relativeLuminance = (value: string): number => {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnColorPicker extends KrnValueAccessor<string> {
+export class KrnColorPicker {
   private readonly platform = inject(KRN_PLATFORM);
   private readonly translations = inject(KRN_TRANSLATIONS);
   readonly id = input('');
@@ -1896,6 +1943,19 @@ export class KrnColorPicker extends KrnValueAccessor<string> {
   protected readonly hue = signal(226);
   protected readonly saturation = signal(66);
   protected readonly lightness = signal(56);
+
+  private readonly formControl = useKrnFormControl(this, DEFAULT_COLOR, {
+    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+    validateValue: (value) => this.validateValue(value),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
   protected readonly copy = computed(() => ({
     ...this.translations.colorPicker,
     chooseColor: this.pickerLabel(),
@@ -1990,15 +2050,14 @@ export class KrnColorPicker extends KrnValueAccessor<string> {
   });
 
   constructor() {
-    super(DEFAULT_COLOR);
-    this.bindStandaloneValue(this.value);
+    this.formControl.bindStandaloneValue(this.value);
   }
 
-  protected override normalizeIncomingValue(value: unknown): string {
+  private normalizeIncomingValue(value: unknown): string {
     return normalizeColorValue(value);
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     return isHexColor(value) ? null : { color: true };
   }
 
@@ -2029,7 +2088,7 @@ export class KrnColorPicker extends KrnValueAccessor<string> {
 
   protected closeOnFocusOut(event: FocusEvent): void {
     closeWhenFocusLeaves(event, () => {
-      this.touch();
+      this.formControl.touch();
       this.close(false);
     });
   }
@@ -2071,7 +2130,7 @@ export class KrnColorPicker extends KrnValueAccessor<string> {
       return;
     }
     const value = normalizeColorValue((event.target as HTMLInputElement).value.trim());
-    if (this.commitUserValue(value)) {
+    if (this.formControl.commitUserValue(value)) {
       this.valueChange.emit(value);
     }
     this.syncHsl(value);
@@ -2086,7 +2145,7 @@ export class KrnColorPicker extends KrnValueAccessor<string> {
       return;
     }
     const normalized = normalizeColorValue(value);
-    if (this.commitUserValue(normalized)) {
+    if (this.formControl.commitUserValue(normalized)) {
       this.valueChange.emit(normalized);
     }
   }

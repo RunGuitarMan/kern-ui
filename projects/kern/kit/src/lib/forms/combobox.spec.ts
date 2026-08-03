@@ -1,7 +1,12 @@
 import { Component, signal, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import {
+  KRN_PLATFORM,
+  type KrnPlatformAdapter,
+  type KrnScheduledHandle,
+} from '@kern-ui/angular/cdk';
 import { KrnFormField } from './form-field';
-import { KrnCombobox } from './select-controls';
+import { KrnAutocomplete, KrnCombobox } from './select-controls';
 
 const options = [
   { value: 'alpha', label: 'Alpha' },
@@ -16,6 +21,56 @@ const selectValues = (combobox: KrnCombobox, values: string[]): void => {
     }
   ).selectValues(values);
 };
+
+function createControlledPlatform(): {
+  readonly platform: KrnPlatformAdapter;
+  readonly cancelScheduled: ReturnType<typeof vi.fn>;
+  flushMicrotasks(): void;
+  latestHandle(): KrnScheduledHandle;
+  run(handle: KrnScheduledHandle): void;
+} {
+  let nextHandle = 0;
+  const scheduled = new Map<KrnScheduledHandle, () => void>();
+  const handles: KrnScheduledHandle[] = [];
+  const microtasks: Array<() => void> = [];
+  const cancelScheduled = vi.fn((handle: KrnScheduledHandle | null): void => {
+    if (handle !== null) scheduled.delete(handle);
+  });
+  const platform: KrnPlatformAdapter = {
+    document,
+    isBrowser: true,
+    window,
+    localStorage: null,
+    matchMedia: () => null,
+    requestAnimationFrame: () => null,
+    cancelAnimationFrame: () => undefined,
+    schedule: (callback) => {
+      const handle = ++nextHandle as unknown as KrnScheduledHandle;
+      handles.push(handle);
+      scheduled.set(handle, callback);
+      return handle;
+    },
+    cancelScheduled,
+    queueMicrotask: (callback) => microtasks.push(callback),
+    now: () => 0,
+  };
+
+  return {
+    platform,
+    cancelScheduled,
+    flushMicrotasks: () => microtasks.splice(0).forEach((callback) => callback()),
+    latestHandle: () => {
+      const handle = handles.at(-1);
+      if (handle === undefined) throw new Error('Expected editable combobox work to be scheduled.');
+      return handle;
+    },
+    run: (handle) => {
+      const callback = scheduled.get(handle);
+      scheduled.delete(handle);
+      callback?.();
+    },
+  };
+}
 
 @Component({
   imports: [KrnCombobox],
@@ -229,14 +284,40 @@ describe('KrnCombobox', () => {
     expect(input.tabIndex).toBe(-1);
   });
 
-  it('cancels deferred Enter closing when the popup state advances or the component dies', async () => {
+  it('routes inline completion through the injected platform microtask queue', async () => {
+    const scheduler = createControlledPlatform();
+    TestBed.configureTestingModule({
+      providers: [{ provide: KRN_PLATFORM, useValue: scheduler.platform }],
+    });
+    const fixture = TestBed.createComponent(KrnAutocomplete);
+    fixture.componentRef.setInput('options', options);
+    fixture.componentRef.setInput('autocompleteMode', 'inline');
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+
+    input.focus();
+    input.value = 'Al';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    fixture.detectChanges();
+    expect(input.value).toBe('Al');
+
+    scheduler.flushMicrotasks();
+    expect(input.value).toBe('Alpha');
+    expect(input.selectionStart).toBe(2);
+    expect(input.selectionEnd).toBe(5);
+  });
+
+  it('cancels platform-scheduled Enter closing when popup state advances or it dies', async () => {
+    const scheduler = createControlledPlatform();
+    TestBed.configureTestingModule({
+      providers: [{ provide: KRN_PLATFORM, useValue: scheduler.platform }],
+    });
     const fixture = TestBed.createComponent(ControlledOpenComboboxHost);
     fixture.detectChanges();
     await fixture.whenStable();
     const host = fixture.componentInstance;
     const combobox = fixture.componentInstance.combobox();
     const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
-    vi.useFakeTimers();
 
     host.open.set(true);
     fixture.detectChanges();
@@ -247,14 +328,15 @@ describe('KrnCombobox', () => {
         cancelable: true,
       }),
     );
-    expect(vi.getTimerCount()).toBeGreaterThan(0);
+    const firstHandle = scheduler.latestHandle();
 
     host.open.set(false);
     fixture.detectChanges();
     host.open.set(true);
     fixture.detectChanges();
     expect(combobox.open()).toBe(true);
-    vi.runAllTimers();
+    expect(scheduler.cancelScheduled).toHaveBeenCalledWith(firstHandle);
+    scheduler.run(firstHandle);
     expect(combobox.open()).toBe(true);
 
     input.dispatchEvent(
@@ -264,9 +346,10 @@ describe('KrnCombobox', () => {
         cancelable: true,
       }),
     );
-    expect(vi.getTimerCount()).toBeGreaterThan(0);
+    const destroyHandle = scheduler.latestHandle();
     fixture.destroy();
-    expect(() => vi.runAllTimers()).not.toThrow();
+    expect(scheduler.cancelScheduled).toHaveBeenCalledWith(destroyHandle);
+    scheduler.run(destroyHandle);
   });
 
   it('restores the committed query when a controlled popup closes', async () => {

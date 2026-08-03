@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import type { ElementRef } from '@angular/core';
+import type { ElementRef, Signal } from '@angular/core';
 import {
   booleanAttribute,
   ChangeDetectionStrategy,
@@ -18,12 +18,12 @@ import { KRN_PLATFORM, krnIsNode } from '@kern-ui/angular/cdk';
 import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnUploadRejection } from './form-types';
 import {
-  KrnValueAccessor,
   maxLengthError,
   mergeValidationErrors,
   provideKrnFormControl,
   requiredError,
   useKrnControlA11y,
+  useKrnFormControl,
 } from './value-accessor';
 
 const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string | null => {
@@ -38,13 +38,13 @@ const sameFile = (left: File, right: File): boolean =>
   left.lastModified === right.lastModified;
 
 /**
- * Base contract for custom KERN upload controls.
+ * Shared contract for KERN upload variants.
  *
  * @publicApi
- * @experimental
+ * @experimental The required file-input template contract is not stable yet.
  */
 @Directive()
-export abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
+export abstract class KrnUploadBase {
   protected readonly platform = inject(KRN_PLATFORM);
   protected readonly translations = inject(KRN_TRANSLATIONS);
   protected readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
@@ -72,6 +72,21 @@ export abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
   readonly rejected = output<readonly KrnUploadRejection[]>();
   protected readonly rejections = signal<readonly KrnUploadRejection[]>([]);
 
+  private readonly formControl = useKrnFormControl(this, [] as readonly File[], {
+    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+    validateValue: (value) => this.validateValue(value),
+    valuesEqual: (current, next) => this.valuesEqual(current, next),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  protected readonly touch = this.formControl.touch;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
+
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'file-upload', {
     disabled: this.disabled,
     readOnly: this.readOnly,
@@ -80,8 +95,7 @@ export abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
 
   protected constructor() {
-    super([]);
-    this.watchValidationInputs(
+    this.formControl.watchValidationInputs(
       this.required,
       this.a11y.required,
       this.accept,
@@ -90,14 +104,18 @@ export abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
     );
   }
 
-  protected override normalizeIncomingValue(value: unknown): readonly File[] {
+  protected bindStandaloneFiles(value: Signal<readonly File[] | undefined>): void {
+    this.formControl.bindStandaloneValue(value);
+  }
+
+  private normalizeIncomingValue(value: unknown): readonly File[] {
     if (!Array.isArray(value)) {
       return [];
     }
     return value.filter((item): item is File => this.isFile(item));
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     const files = Array.isArray(value)
       ? value.filter((item): item is File => this.isFile(item))
       : [];
@@ -118,7 +136,7 @@ export abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
     );
   }
 
-  protected override valuesEqual(current: readonly File[], next: readonly File[]): boolean {
+  private valuesEqual(current: readonly File[], next: readonly File[]): boolean {
     return (
       current.length === next.length && current.every((file, index) => sameFile(file, next[index]!))
     );
@@ -178,8 +196,8 @@ export abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
     }
 
     this.rejections.set(rejections);
-    const changed = this.commitUserValue(accepted);
-    this.touch();
+    const changed = this.formControl.commitUserValue(accepted);
+    this.formControl.touch();
     if (changed) {
       this.filesChange.emit(accepted);
     }
@@ -193,8 +211,8 @@ export abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
       return;
     }
     const next = this.controlValue().filter((_, itemIndex) => itemIndex !== index);
-    const changed = this.commitUserValue(next);
-    this.touch();
+    const changed = this.formControl.commitUserValue(next);
+    this.formControl.touch();
     if (changed) {
       this.filesChange.emit(next);
     }
@@ -251,7 +269,7 @@ export abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
     '[attr.id]': 'null',
   },
   imports: [NgTemplateOutlet],
-  providers: [...provideKrnFormControl(() => KrnFileUpload)],
+  providers: [...provideKrnFormControl()],
   template: `
     <div
       class="krn-upload"
@@ -354,7 +372,7 @@ export class KrnFileUpload extends KrnUploadBase {
 
   constructor() {
     super();
-    this.bindStandaloneValue(this.value);
+    this.bindStandaloneFiles(this.value);
   }
 
   focus(options?: FocusOptions): void {
@@ -371,7 +389,7 @@ export class KrnFileUpload extends KrnUploadBase {
   host: {
     '[attr.id]': 'null',
   },
-  providers: [...provideKrnFormControl(() => KrnDropUpload)],
+  providers: [...provideKrnFormControl()],
   template: `
     <div
       class="krn-upload"
@@ -485,7 +503,7 @@ export class KrnDropUpload extends KrnUploadBase {
 
   constructor() {
     super();
-    this.bindStandaloneValue(this.value);
+    this.bindStandaloneFiles(this.value);
   }
 
   protected enterDrag(event: DragEvent): void {

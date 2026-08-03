@@ -16,13 +16,13 @@ import {
 import { KRN_PLATFORM, type KrnScheduledHandle } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import {
-  KrnValueAccessor,
   maxLengthError,
   mergeValidationErrors,
   minLengthError,
   provideKrnFormControl,
   requiredError,
   useKrnControlA11y,
+  useKrnFormControl,
 } from './value-accessor';
 
 interface KrnTagFeedback {
@@ -41,7 +41,7 @@ const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string
   host: {
     '[attr.id]': 'null',
   },
-  providers: [...provideKrnFormControl(() => KrnOtpInput)],
+  providers: [...provideKrnFormControl()],
   template: `
     <div class="krn-otp-control">
       @if (!effectiveLabelledBy()) {
@@ -96,7 +96,7 @@ const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnOtpInput extends KrnValueAccessor<string> {
+export class KrnOtpInput {
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('otpInput');
   private readonly slotElements = viewChildren<ElementRef<HTMLElement>>('otpSlot');
@@ -122,6 +122,19 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
   protected readonly focused = signal(false);
   protected readonly activeIndex = signal(0);
 
+  private readonly formControl = useKrnFormControl(this, '', {
+    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+    validateValue: (value) => this.validateValue(value),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
+
   protected readonly safeLength = computed(() => {
     const length = Math.trunc(this.length());
     return Number.isFinite(length) ? Math.min(12, Math.max(1, length)) : 6;
@@ -144,9 +157,8 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
   );
 
   constructor() {
-    super('');
-    this.bindStandaloneValue(this.value);
-    this.watchValidationInputs(
+    this.formControl.bindStandaloneValue(this.value);
+    this.formControl.watchValidationInputs(
       this.required,
       this.a11y.required,
       this.safeLength,
@@ -154,11 +166,11 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
     );
   }
 
-  protected override normalizeIncomingValue(value: unknown): string {
+  private normalizeIncomingValue(value: unknown): string {
     return this.sanitize(typeof value === 'string' ? value : '').slice(0, this.safeLength());
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     const text = typeof value === 'string' ? value : '';
     return mergeValidationErrors(
       requiredError(text, this.a11y.required()),
@@ -187,7 +199,7 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
     input.value = next;
     input.setSelectionRange(normalizedSelection, normalizedSelection);
     this.syncSelection();
-    if (!this.commitUserValue(next)) {
+    if (!this.formControl.commitUserValue(next)) {
       return;
     }
     this.valueChange.emit(next);
@@ -207,7 +219,7 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
 
   protected handleBlur(): void {
     this.focused.set(false);
-    this.touch();
+    this.formControl.touch();
   }
 
   protected selectSlot(event: PointerEvent): void {
@@ -256,7 +268,7 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
   host: {
     '[attr.id]': 'null',
   },
-  providers: [...provideKrnFormControl(() => KrnTagsInput)],
+  providers: [...provideKrnFormControl()],
   template: `
     <div
       #tagsShell
@@ -329,7 +341,7 @@ export class KrnOtpInput extends KrnValueAccessor<string> {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
+export class KrnTagsInput {
   private readonly destroyRef = inject(DestroyRef);
   private readonly platform = inject(KRN_PLATFORM);
   protected readonly translations = inject(KRN_TRANSLATIONS);
@@ -369,6 +381,19 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
   protected readonly announcement = signal('');
   protected readonly visualFeedback = signal<KrnTagFeedback | null>(null);
 
+  private readonly formControl = useKrnFormControl(this, [] as readonly string[], {
+    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+    validateValue: (value) => this.validateValue(value),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
+
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'tags', {
     disabled: this.disabled,
     readOnly: this.readOnly,
@@ -387,21 +412,20 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
   );
 
   constructor() {
-    super([]);
-    this.bindStandaloneValue(this.value);
-    this.watchValidationInputs(this.required, this.a11y.required, this.safeMaxTags);
+    this.formControl.bindStandaloneValue(this.value);
+    this.formControl.watchValidationInputs(this.required, this.a11y.required, this.safeMaxTags);
     this.destroyRef.onDestroy(() => {
       this.platform.cancelScheduled(this.feedbackTimer);
     });
   }
 
-  protected override normalizeIncomingValue(value: unknown): readonly string[] {
+  private normalizeIncomingValue(value: unknown): readonly string[] {
     return Array.isArray(value)
       ? value.filter((item): item is string => typeof item === 'string')
       : [];
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     return mergeValidationErrors(
       requiredError(value, this.a11y.required()),
       maxLengthError(value, this.safeMaxTags()),
@@ -456,7 +480,7 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
       return;
     }
     const next = this.controlValue().filter((_, itemIndex) => itemIndex !== index);
-    if (!this.commitUserValue(next)) {
+    if (!this.formControl.commitUserValue(next)) {
       return;
     }
     this.valueChange.emit(next);
@@ -517,7 +541,7 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
       return;
     }
     const next = [...current, ...accepted];
-    if (!this.commitUserValue(next)) {
+    if (!this.formControl.commitUserValue(next)) {
       return;
     }
     this.valueChange.emit(next);
@@ -535,7 +559,7 @@ export class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
     if (this.addOnBlur()) {
       this.commitDraft();
     }
-    this.touch();
+    this.formControl.touch();
   }
 
   private showFeedback(announcement: string, text: string, kind: KrnTagFeedback['kind']): void {

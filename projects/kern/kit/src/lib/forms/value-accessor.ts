@@ -1,11 +1,11 @@
-import type { Provider, Signal, Type, WritableSignal } from '@angular/core';
+import type { Provider, Signal, WritableSignal } from '@angular/core';
 import {
   computed,
   DestroyRef,
   ElementRef,
   effect,
-  forwardRef,
   inject,
+  InjectionToken,
   isDevMode,
   signal,
   untracked,
@@ -32,218 +32,239 @@ interface KrnAngularControlState {
   eventSubscription: { unsubscribe(): void } | null;
 }
 
-const angularControlStates = new WeakMap<object, KrnAngularControlState>();
+type KrnFormValueOwner = 'angular' | 'internal' | 'standalone';
 
-function angularControlState(owner: object): KrnAngularControlState {
-  const state = angularControlStates.get(owner);
-  if (!state) {
-    throw new Error('KERN form control state must be initialized before a11y bindings.');
-  }
-  return state;
+interface KrnFormControlOptions<T, TControl = T> {
+  readonly fromControlValue?: (value: TControl | null | undefined) => T;
+  readonly toControlValue?: (value: T) => TControl;
+  readonly normalizeIncomingValue?: (value: unknown) => T;
+  readonly normalizeStandaloneValue?: (value: T) => T;
+  readonly validateValue?: (value: unknown) => ValidationErrors | null;
+  readonly valuesEqual?: (current: T, next: T) => boolean;
+  readonly onAngularWrite?: (value: T) => void;
 }
 
-export function provideKrnFormControl(type: () => Type<unknown>): Provider[] {
+/**
+ * Component-owned form state. Angular Forms talks to the adapter registered by
+ * `provideKrnFormControl`; controls use this object only for view state and user commits.
+ *
+ * @internal
+ */
+interface KrnFormControlState<T, TControl = T> extends ControlValueAccessor, Validator {
+  readonly controlValue: WritableSignal<T>;
+  readonly formDisabled: WritableSignal<boolean>;
+  readonly valueOwner: Signal<KrnFormValueOwner>;
+  writeValue(value: unknown): void;
+  registerOnChange(fn: (value: TControl) => void): void;
+  registerOnTouched(fn: () => void): void;
+  setDisabledState(disabled: boolean): void;
+  registerOnValidatorChange(fn: () => void): void;
+  bindStandaloneValue(value: Signal<T | undefined>): void;
+  watchValidationInputs(...dependencies: readonly Signal<unknown>[]): void;
+  commitValue(value: T): void;
+  commitUserValue(value: T): boolean;
+  touch(): void;
+}
+
+const KRN_FORM_CONTROL_ADAPTER = new InjectionToken<KrnFormControlAdapter<unknown, unknown>>(
+  'KRN_FORM_CONTROL_ADAPTER',
+);
+
+/**
+ * Installs the Angular Forms adapter required by Kern's experimental form-control variant bases.
+ *
+ * Add the returned providers to a component that extends `KrnEditableComboboxBase` or
+ * `KrnUploadBase`. The adapter remains component-scoped and is shared by `NG_VALUE_ACCESSOR` and
+ * `NG_VALIDATORS` without making the component inherit form-state machinery.
+ *
+ * @publicApi
+ * @experimental The custom-control extension contract may change before Kern 1.0.
+ */
+export function provideKrnFormControl(): Provider[] {
   return [
     {
+      provide: KRN_FORM_CONTROL_ADAPTER,
+      useClass: KrnFormControlAdapter,
+    },
+    {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(type),
+      useExisting: KRN_FORM_CONTROL_ADAPTER,
       multi: true,
     },
     {
       provide: NG_VALIDATORS,
-      useExisting: forwardRef(type),
+      useExisting: KRN_FORM_CONTROL_ADAPTER,
       multi: true,
     },
   ];
 }
 
-/**
- * Base ControlValueAccessor and Validator contract for custom KERN form controls.
- *
- * @publicApi
- * @experimental
- */
-export abstract class KrnValueAccessor<T, TControl = T> implements ControlValueAccessor, Validator {
-  protected readonly controlValue: WritableSignal<T>;
-  protected readonly formDisabled = signal(false);
-  private readonly valueOwnerState = signal<'angular' | 'internal' | 'standalone'>('internal');
-  protected readonly valueOwner = this.valueOwnerState.asReadonly();
-  private readonly accessorDestroyRef = inject(DestroyRef);
-  private readonly initialValue: T;
-  private onChange: (value: TControl) => void = () => undefined;
-  private onTouched: () => void = () => undefined;
-  private onValidatorChange: () => void = () => undefined;
-  private mixedOwnershipReported = false;
+class KrnFormControlAdapter<T, TControl = T> implements ControlValueAccessor, Validator {
+  readonly #destroyRef = inject(DestroyRef);
+  readonly controlValue = signal<T>(undefined as T);
+  readonly formDisabled = signal(false);
+  readonly angularState: KrnAngularControlState = {
+    control: null,
+    invalid: signal(false),
+    required: signal(false),
+    disabled: signal(false),
+    pending: signal(false),
+    valid: signal(false),
+    touched: signal(false),
+    dirty: signal(false),
+    eventSubscription: null,
+  };
+  readonly #valueOwnerState = signal<KrnFormValueOwner>('internal');
+  #initialValue!: T;
+  #options: KrnFormControlOptions<T, TControl> = {};
+  #onChange: (value: TControl) => void = () => undefined;
+  #onTouched: () => void = () => undefined;
+  #onValidatorChange: () => void = () => undefined;
+  #mixedOwnershipReported = false;
 
-  protected constructor(initialValue: T) {
-    this.initialValue = initialValue;
-    this.controlValue = signal(initialValue);
-    const state: KrnAngularControlState = {
-      control: null,
-      invalid: signal(false),
-      required: signal(false),
-      disabled: signal(false),
-      pending: signal(false),
-      valid: signal(false),
-      touched: signal(false),
-      dirty: signal(false),
-      eventSubscription: null,
-    };
-    angularControlStates.set(this, state);
-    this.accessorDestroyRef.onDestroy(() => {
-      state.eventSubscription?.unsubscribe();
-      angularControlStates.delete(this);
-    });
+  constructor() {
+    this.#destroyRef.onDestroy(() => this.angularState.eventSubscription?.unsubscribe());
   }
 
-  writeValue(value: unknown): void {
-    this.claimAngularOwnership();
-    this.controlValue.set(this.fromControlValue(value as TControl | null | undefined));
+  configure(
+    _owner: object,
+    initialValue: T,
+    options: KrnFormControlOptions<T, TControl>,
+  ): KrnFormControlState<T, TControl> {
+    this.#initialValue = initialValue;
+    this.#options = options;
+    this.controlValue.set(initialValue);
+
+    return this as KrnFormControlAdapter<T, TControl>;
   }
 
-  registerOnChange(fn: (value: TControl) => void): void {
-    this.claimAngularOwnership();
-    this.onChange = fn;
+  get valueOwner(): Signal<KrnFormValueOwner> {
+    return this.#valueOwnerState.asReadonly();
   }
 
-  registerOnTouched(fn: () => void): void {
-    this.claimAngularOwnership();
-    this.onTouched = fn;
-  }
+  writeValue = (value: unknown): void => {
+    this.#claimAngularOwnership();
+    const normalized = this.#fromControlValue(value as TControl | null | undefined);
+    this.controlValue.set(normalized);
+    this.#options.onAngularWrite?.(normalized);
+  };
 
-  setDisabledState(disabled: boolean): void {
-    this.claimAngularOwnership();
+  registerOnChange = (fn: (value: TControl) => void): void => {
+    this.#claimAngularOwnership();
+    this.#onChange = fn;
+  };
+
+  registerOnTouched = (fn: () => void): void => {
+    this.#claimAngularOwnership();
+    this.#onTouched = fn;
+  };
+
+  setDisabledState = (disabled: boolean): void => {
+    this.#claimAngularOwnership();
     this.formDisabled.set(disabled);
-  }
+  };
 
-  validate(control: AbstractControl): ValidationErrors | null {
-    const state = this.bindAngularControl(control);
-    const errors = this.validateValue(control.value);
+  validate = (control: AbstractControl): ValidationErrors | null => {
+    const state = this.#bindAngularControl(control);
+    const errors = this.#options.validateValue?.(control.value) ?? null;
     state.invalid.set(Boolean(control.invalid || errors));
     return errors;
-  }
+  };
 
-  registerOnValidatorChange(fn: () => void): void {
-    this.onValidatorChange = fn;
-  }
+  registerOnValidatorChange = (fn: () => void): void => {
+    this.#onValidatorChange = fn;
+  };
 
-  /**
-   * Converts an Angular Forms value into the component's view-value domain.
-   *
-   * Override together with `toControlValue` when the form model and the rendered component use
-   * different value types. Existing controls can continue overriding `normalizeIncomingValue`.
-   */
-  protected fromControlValue(value: TControl | null | undefined): T {
-    return this.normalizeIncomingValue(value);
-  }
-
-  /**
-   * Converts a committed view value into the Angular Forms value domain.
-   */
-  protected toControlValue(value: T): TControl {
-    return value as unknown as TControl;
-  }
-
-  protected normalizeIncomingValue(value: unknown): T {
-    return (value ?? this.initialValue) as T;
-  }
-
-  /**
-   * Normalizes a declarative standalone value without claiming Angular Forms ownership.
-   */
-  protected normalizeStandaloneValue(value: T): T {
-    return this.normalizeIncomingValue(value);
-  }
-
-  /**
-   * Binds an optional declarative value source to this accessor.
-   *
-   * `undefined` means that no standalone owner is present. Once Angular Forms registers the
-   * accessor it remains the deterministic owner and later standalone writes are ignored.
-   * Incoming writes are always silent: they never call `onChange`, touch the control, or emit a
-   * component output.
-   */
-  protected bindStandaloneValue(value: Signal<T | undefined>): void {
+  bindStandaloneValue = (value: Signal<T | undefined>): void => {
     effect(() => {
       const next = value();
       if (next === undefined) {
         return;
       }
 
-      const owner = untracked(this.valueOwner);
+      const owner = untracked(this.#valueOwnerState);
       if (owner === 'angular') {
-        this.reportMixedOwnership();
+        this.#reportMixedOwnership();
         return;
       }
 
       if (owner !== 'standalone') {
-        this.valueOwnerState.set('standalone');
+        this.#valueOwnerState.set('standalone');
       }
-      this.controlValue.set(this.normalizeStandaloneValue(next));
+      this.controlValue.set(this.#normalizeStandaloneValue(next));
     });
-  }
+  };
 
-  protected validateValue(_value: unknown): ValidationErrors | null {
-    return null;
-  }
-
-  protected watchValidationInputs(...dependencies: readonly Signal<unknown>[]): void {
+  watchValidationInputs = (...dependencies: readonly Signal<unknown>[]): void => {
     effect(() => {
       for (const dependency of dependencies) {
         dependency();
       }
-      this.onValidatorChange();
+      this.#onValidatorChange();
     });
-  }
+  };
 
-  protected commitValue(value: T): void {
+  commitValue = (value: T): void => {
     this.controlValue.set(value);
-    this.onChange(this.toControlValue(value));
-  }
+    this.#onChange(this.#toControlValue(value));
+  };
 
-  /**
-   * Commits one user-originated value when it differs from the rendered value.
-   *
-   * The boolean result lets a concrete component emit its existing public output only for an
-   * accepted change. The legacy `commitValue` method deliberately keeps its historical
-   * always-notify behavior until concrete controls migrate one by one.
-   */
-  protected commitUserValue(value: T): boolean {
-    if (this.valuesEqual(this.controlValue(), value)) {
+  commitUserValue = (value: T): boolean => {
+    if (this.#valuesEqual(this.controlValue(), value)) {
       return false;
     }
 
     this.controlValue.set(value);
-    this.onChange(this.toControlValue(value));
+    this.#onChange(this.#toControlValue(value));
     return true;
+  };
+
+  touch = (): void => {
+    this.#onTouched();
+  };
+
+  #fromControlValue(value: TControl | null | undefined): T {
+    return this.#options.fromControlValue
+      ? this.#options.fromControlValue(value)
+      : this.#normalizeIncomingValue(value);
   }
 
-  /**
-   * Equality policy for user commits. Reference-valued controls can override this with their
-   * domain identity contract.
-   */
-  protected valuesEqual(current: T, next: T): boolean {
-    return Object.is(current, next);
+  #toControlValue(value: T): TControl {
+    return this.#options.toControlValue
+      ? this.#options.toControlValue(value)
+      : (value as unknown as TControl);
   }
 
-  protected touch(): void {
-    this.onTouched();
+  #normalizeIncomingValue(value: unknown): T {
+    return this.#options.normalizeIncomingValue
+      ? this.#options.normalizeIncomingValue(value)
+      : ((value ?? this.#initialValue) as T);
   }
 
-  private bindAngularControl(control: AbstractControl): KrnAngularControlState {
-    const state = angularControlState(this);
+  #normalizeStandaloneValue(value: T): T {
+    return this.#options.normalizeStandaloneValue
+      ? this.#options.normalizeStandaloneValue(value)
+      : this.#normalizeIncomingValue(value);
+  }
+
+  #valuesEqual(current: T, next: T): boolean {
+    return this.#options.valuesEqual?.(current, next) ?? Object.is(current, next);
+  }
+
+  #bindAngularControl(control: AbstractControl): KrnAngularControlState {
+    const state = this.angularState;
     if (state.control !== control) {
       state.eventSubscription?.unsubscribe();
       state.control = control;
       state.eventSubscription = (control.events ?? control.statusChanges).subscribe(() => {
-        this.syncAngularControlState(control, state);
+        this.#syncAngularControlState(control, state);
       });
     }
-    this.syncAngularControlState(control, state);
+    this.#syncAngularControlState(control, state);
     return state;
   }
 
-  private syncAngularControlState(control: AbstractControl, state: KrnAngularControlState): void {
+  #syncAngularControlState(control: AbstractControl, state: KrnAngularControlState): void {
     if (state.control !== control) {
       return;
     }
@@ -258,26 +279,37 @@ export abstract class KrnValueAccessor<T, TControl = T> implements ControlValueA
     );
   }
 
-  private claimAngularOwnership(): void {
-    const owner = this.valueOwnerState();
+  #claimAngularOwnership(): void {
+    const owner = this.#valueOwnerState();
     if (owner === 'standalone') {
-      this.reportMixedOwnership();
+      this.#reportMixedOwnership();
     }
     if (owner !== 'angular') {
-      this.valueOwnerState.set('angular');
+      this.#valueOwnerState.set('angular');
     }
   }
 
-  private reportMixedOwnership(): void {
-    if (!isDevMode() || this.mixedOwnershipReported) {
+  #reportMixedOwnership(): void {
+    if (!isDevMode() || this.#mixedOwnershipReported) {
       return;
     }
-    this.mixedOwnershipReported = true;
+    this.#mixedOwnershipReported = true;
     console.warn(
       'KERN form control received both a standalone value binding and Angular Forms. ' +
         'Angular Forms owns the value; standalone writes are ignored.',
     );
   }
+}
+
+/** @internal */
+export function useKrnFormControl<T, TControl = T>(
+  owner: object,
+  initialValue: T,
+  options: KrnFormControlOptions<T, TControl> = {},
+): KrnFormControlState<T, TControl> {
+  return (
+    inject(KRN_FORM_CONTROL_ADAPTER, { self: true }) as KrnFormControlAdapter<T, TControl>
+  ).configure(owner, initialValue, options);
 }
 
 export interface KrnControlA11y {
@@ -301,7 +333,7 @@ export interface KrnControlStateInputs {
 }
 
 export function useKrnControlA11y(
-  owner: object,
+  _owner: object,
   explicitId: Signal<string>,
   ownInvalid: Signal<boolean>,
   prefix: string,
@@ -312,7 +344,9 @@ export function useKrnControlA11y(
   const generatedId = createKrnId(prefix);
   const destroyRef = inject(DestroyRef);
   const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  const angular = angularControlState(owner);
+  const angular = (
+    inject(KRN_FORM_CONTROL_ADAPTER, { self: true }) as KrnFormControlAdapter<unknown, unknown>
+  ).angularState;
   const controlRequired = computed(() => Boolean(state.required?.() || angular.required()));
   const controlDisabled = computed(() => Boolean(state.disabled?.() || angular.disabled()));
   const controlReadOnly = computed(() => Boolean(state.readOnly?.()));

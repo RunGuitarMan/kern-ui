@@ -5,7 +5,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   input,
   numberAttribute,
@@ -16,7 +15,6 @@ import {
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnControlSize, KrnInputMode } from './form-types';
 import {
-  KrnValueAccessor,
   maxError,
   maxLengthError,
   mergeValidationErrors,
@@ -25,6 +23,7 @@ import {
   provideKrnFormControl,
   requiredError,
   useKrnControlA11y,
+  useKrnFormControl,
 } from './value-accessor';
 
 const optionalNumber = (value: unknown): number | undefined => {
@@ -65,7 +64,7 @@ const isElementTarget = (target: EventTarget | null): target is Element =>
 
 @Component({
   selector: 'krn-text-input',
-  providers: [...provideKrnFormControl(() => KrnTextInput)],
+  providers: [...provideKrnFormControl()],
   host: {
     '[attr.id]': 'null',
     '[attr.data-size]': 'size()',
@@ -114,9 +113,8 @@ const isElementTarget = (target: EventTarget | null): target is Element =>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnTextInput extends KrnValueAccessor<string> {
+export class KrnTextInput {
   private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('inputElement');
-  private angularOwnsValue = false;
   private composing = false;
 
   readonly id = input('');
@@ -145,6 +143,19 @@ export class KrnTextInput extends KrnValueAccessor<string> {
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly valueChange = output<string>();
 
+  private readonly formControl = useKrnFormControl(this, '', {
+    validateValue: (value) => this.validateValue(value),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  protected readonly touch = this.formControl.touch;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
+
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'text-input', {
     disabled: this.disabled,
     readOnly: this.readOnly,
@@ -166,24 +177,13 @@ export class KrnTextInput extends KrnValueAccessor<string> {
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
 
   constructor() {
-    super('');
-    effect(() => {
-      const value = this.value();
-      if (value !== undefined && !this.angularOwnsValue) {
-        this.controlValue.set(this.normalizeIncomingValue(value));
-      }
-    });
-    this.watchValidationInputs(this.required, this.a11y.required, this.minLength, this.maxLength);
-  }
-
-  override writeValue(value: unknown): void {
-    this.angularOwnsValue = true;
-    super.writeValue(value);
-  }
-
-  override registerOnChange(fn: (value: string) => void): void {
-    this.angularOwnsValue = true;
-    super.registerOnChange(fn);
+    this.formControl.bindStandaloneValue(this.value);
+    this.formControl.watchValidationInputs(
+      this.required,
+      this.a11y.required,
+      this.minLength,
+      this.maxLength,
+    );
   }
 
   focus(options?: FocusOptions): void {
@@ -198,7 +198,7 @@ export class KrnTextInput extends KrnValueAccessor<string> {
     this.inputElement()?.nativeElement.select();
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     return mergeValidationErrors(
       requiredError(value, this.a11y.required()),
       minLengthError(value, this.minLength()),
@@ -216,7 +216,7 @@ export class KrnTextInput extends KrnValueAccessor<string> {
     if (Object.is(this.controlValue(), value)) {
       return;
     }
-    this.commitValue(value);
+    this.formControl.commitValue(value);
     this.valueChange.emit(value);
   }
 
@@ -247,7 +247,7 @@ export class KrnTextInput extends KrnValueAccessor<string> {
 
 @Component({
   selector: 'krn-textarea',
-  providers: [...provideKrnFormControl(() => KrnTextarea)],
+  providers: [...provideKrnFormControl()],
   host: {
     '[attr.id]': 'null',
     '[attr.data-size]': 'size()',
@@ -295,9 +295,8 @@ export class KrnTextInput extends KrnValueAccessor<string> {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnTextarea extends KrnValueAccessor<string> {
+export class KrnTextarea {
   private readonly textareaElement = viewChild<ElementRef<HTMLTextAreaElement>>('textareaElement');
-  private angularOwnsValue = false;
   private composing = false;
 
   readonly id = input('');
@@ -328,6 +327,19 @@ export class KrnTextarea extends KrnValueAccessor<string> {
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly valueChange = output<string>();
 
+  private readonly formControl = useKrnFormControl(this, '', {
+    validateValue: (value) => this.validateValue(value),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  protected readonly touch = this.formControl.touch;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
+
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'textarea', {
     disabled: this.disabled,
     readOnly: this.readOnly,
@@ -357,13 +369,7 @@ export class KrnTextarea extends KrnValueAccessor<string> {
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
 
   constructor() {
-    super('');
-    effect(() => {
-      const value = this.value();
-      if (value !== undefined && !this.angularOwnsValue) {
-        this.controlValue.set(this.normalizeIncomingValue(value));
-      }
-    });
+    this.formControl.bindStandaloneValue(this.value);
     afterRenderEffect(() => {
       const autoResize = this.autoResize();
       if (autoResize) {
@@ -392,17 +398,12 @@ export class KrnTextarea extends KrnValueAccessor<string> {
       observer.observe(textarea);
       onCleanup(() => observer.disconnect());
     });
-    this.watchValidationInputs(this.required, this.a11y.required, this.minLength, this.maxLength);
-  }
-
-  override writeValue(value: unknown): void {
-    this.angularOwnsValue = true;
-    super.writeValue(value);
-  }
-
-  override registerOnChange(fn: (value: string) => void): void {
-    this.angularOwnsValue = true;
-    super.registerOnChange(fn);
+    this.formControl.watchValidationInputs(
+      this.required,
+      this.a11y.required,
+      this.minLength,
+      this.maxLength,
+    );
   }
 
   focus(options?: FocusOptions): void {
@@ -417,7 +418,7 @@ export class KrnTextarea extends KrnValueAccessor<string> {
     this.textareaElement()?.nativeElement.select();
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     return mergeValidationErrors(
       requiredError(value, this.a11y.required()),
       minLengthError(value, this.minLength()),
@@ -435,7 +436,7 @@ export class KrnTextarea extends KrnValueAccessor<string> {
     if (Object.is(this.controlValue(), value)) {
       return;
     }
-    this.commitValue(value);
+    this.formControl.commitValue(value);
     this.valueChange.emit(value);
   }
 
@@ -483,7 +484,7 @@ export class KrnTextarea extends KrnValueAccessor<string> {
   host: {
     '[attr.id]': 'null',
   },
-  providers: [...provideKrnFormControl(() => KrnPasswordInput)],
+  providers: [...provideKrnFormControl()],
   template: `
     <span
       class="krn-control-shell"
@@ -533,10 +534,9 @@ export class KrnTextarea extends KrnValueAccessor<string> {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnPasswordInput extends KrnValueAccessor<string> {
+export class KrnPasswordInput {
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('inputElement');
-  private angularOwnsValue = false;
   private composing = false;
 
   readonly id = input('');
@@ -566,6 +566,19 @@ export class KrnPasswordInput extends KrnValueAccessor<string> {
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly valueChange = output<string>();
   protected readonly revealed = signal(false);
+
+  private readonly formControl = useKrnFormControl(this, '', {
+    validateValue: (value) => this.validateValue(value),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  protected readonly touch = this.formControl.touch;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
 
   protected readonly toggle = (value: boolean): boolean => !value;
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'password', {
@@ -597,24 +610,13 @@ export class KrnPasswordInput extends KrnValueAccessor<string> {
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
 
   constructor() {
-    super('');
-    effect(() => {
-      const value = this.value();
-      if (value !== undefined && !this.angularOwnsValue) {
-        this.controlValue.set(this.normalizeIncomingValue(value));
-      }
-    });
-    this.watchValidationInputs(this.required, this.a11y.required, this.minLength, this.maxLength);
-  }
-
-  override writeValue(value: unknown): void {
-    this.angularOwnsValue = true;
-    super.writeValue(value);
-  }
-
-  override registerOnChange(fn: (value: string) => void): void {
-    this.angularOwnsValue = true;
-    super.registerOnChange(fn);
+    this.formControl.bindStandaloneValue(this.value);
+    this.formControl.watchValidationInputs(
+      this.required,
+      this.a11y.required,
+      this.minLength,
+      this.maxLength,
+    );
   }
 
   focus(options?: FocusOptions): void {
@@ -629,7 +631,7 @@ export class KrnPasswordInput extends KrnValueAccessor<string> {
     this.inputElement()?.nativeElement.select();
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     return mergeValidationErrors(
       requiredError(value, this.a11y.required()),
       minLengthError(value, this.minLength()),
@@ -646,7 +648,7 @@ export class KrnPasswordInput extends KrnValueAccessor<string> {
     if (Object.is(this.controlValue(), value)) {
       return;
     }
-    this.commitValue(value);
+    this.formControl.commitValue(value);
     this.valueChange.emit(value);
   }
 
@@ -689,7 +691,7 @@ export class KrnPasswordInput extends KrnValueAccessor<string> {
   host: {
     '[attr.id]': 'null',
   },
-  providers: [...provideKrnFormControl(() => KrnSearchInput)],
+  providers: [...provideKrnFormControl()],
   template: `
     <span
       class="krn-control-shell"
@@ -744,10 +746,9 @@ export class KrnPasswordInput extends KrnValueAccessor<string> {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnSearchInput extends KrnValueAccessor<string> {
+export class KrnSearchInput {
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('inputElement');
-  private angularOwnsValue = false;
   private composing = false;
 
   readonly id = input('');
@@ -776,6 +777,19 @@ export class KrnSearchInput extends KrnValueAccessor<string> {
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly valueChange = output<string>();
   readonly searchSubmitted = output<string>();
+
+  private readonly formControl = useKrnFormControl(this, '', {
+    validateValue: (value) => this.validateValue(value),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  protected readonly touch = this.formControl.touch;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
 
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'search', {
     disabled: this.disabled,
@@ -806,24 +820,13 @@ export class KrnSearchInput extends KrnValueAccessor<string> {
   protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
 
   constructor() {
-    super('');
-    effect(() => {
-      const value = this.value();
-      if (value !== undefined && !this.angularOwnsValue) {
-        this.controlValue.set(this.normalizeIncomingValue(value));
-      }
-    });
-    this.watchValidationInputs(this.required, this.a11y.required, this.minLength, this.maxLength);
-  }
-
-  override writeValue(value: unknown): void {
-    this.angularOwnsValue = true;
-    super.writeValue(value);
-  }
-
-  override registerOnChange(fn: (value: string) => void): void {
-    this.angularOwnsValue = true;
-    super.registerOnChange(fn);
+    this.formControl.bindStandaloneValue(this.value);
+    this.formControl.watchValidationInputs(
+      this.required,
+      this.a11y.required,
+      this.minLength,
+      this.maxLength,
+    );
   }
 
   focus(options?: FocusOptions): void {
@@ -838,7 +841,7 @@ export class KrnSearchInput extends KrnValueAccessor<string> {
     this.inputElement()?.nativeElement.select();
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     return mergeValidationErrors(
       requiredError(value, this.a11y.required()),
       minLengthError(value, this.minLength()),
@@ -855,12 +858,12 @@ export class KrnSearchInput extends KrnValueAccessor<string> {
     if (Object.is(this.controlValue(), value)) {
       return;
     }
-    this.commitValue(value);
+    this.formControl.commitValue(value);
     this.valueChange.emit(value);
   }
 
   protected clear(): void {
-    this.commitValue('');
+    this.formControl.commitValue('');
     this.valueChange.emit('');
     this.focus();
   }
@@ -912,7 +915,7 @@ export class KrnSearchInput extends KrnValueAccessor<string> {
   host: {
     '[attr.id]': 'null',
   },
-  providers: [...provideKrnFormControl(() => KrnNumberInput)],
+  providers: [...provideKrnFormControl()],
   template: `
     <span
       class="krn-control-shell krn-number-control"
@@ -975,10 +978,9 @@ export class KrnSearchInput extends KrnValueAccessor<string> {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnNumberInput extends KrnValueAccessor<number | null> {
+export class KrnNumberInput {
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('inputElement');
-  private angularOwnsValue = false;
 
   readonly id = input('');
   readonly name = input('');
@@ -1007,6 +1009,20 @@ export class KrnNumberInput extends KrnValueAccessor<number | null> {
   readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly valueChange = output<number | null>();
+
+  private readonly formControl = useKrnFormControl(this, null, {
+    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+    validateValue: (value) => this.validateValue(value),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  protected readonly touch = this.formControl.touch;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
 
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'number', {
     disabled: this.disabled,
@@ -1059,24 +1075,8 @@ export class KrnNumberInput extends KrnValueAccessor<number | null> {
   });
 
   constructor() {
-    super(null);
-    effect(() => {
-      const value = this.value();
-      if (value !== undefined && !this.angularOwnsValue) {
-        this.controlValue.set(this.normalizeIncomingValue(value));
-      }
-    });
-    this.watchValidationInputs(this.required, this.a11y.required, this.min, this.max);
-  }
-
-  override writeValue(value: unknown): void {
-    this.angularOwnsValue = true;
-    super.writeValue(value);
-  }
-
-  override registerOnChange(fn: (value: number | null) => void): void {
-    this.angularOwnsValue = true;
-    super.registerOnChange(fn);
+    this.formControl.bindStandaloneValue(this.value);
+    this.formControl.watchValidationInputs(this.required, this.a11y.required, this.min, this.max);
   }
 
   focus(options?: FocusOptions): void {
@@ -1087,7 +1087,7 @@ export class KrnNumberInput extends KrnValueAccessor<number | null> {
     this.inputElement()?.nativeElement.blur();
   }
 
-  protected override normalizeIncomingValue(value: unknown): number | null {
+  private normalizeIncomingValue(value: unknown): number | null {
     const numeric = Number(value);
     return value === null || value === undefined || value === ''
       ? null
@@ -1096,7 +1096,7 @@ export class KrnNumberInput extends KrnValueAccessor<number | null> {
         : null;
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     return mergeValidationErrors(
       requiredError(value, this.a11y.required()),
       minError(value, this.min()),
@@ -1113,7 +1113,7 @@ export class KrnNumberInput extends KrnValueAccessor<number | null> {
     if (Object.is(this.controlValue(), value)) {
       return;
     }
-    this.commitValue(value);
+    this.formControl.commitValue(value);
     this.valueChange.emit(value);
   }
 
@@ -1125,7 +1125,7 @@ export class KrnNumberInput extends KrnValueAccessor<number | null> {
     if (Object.is(this.controlValue(), value)) {
       return;
     }
-    this.commitValue(value);
+    this.formControl.commitValue(value);
     this.valueChange.emit(value);
     this.focus();
   }

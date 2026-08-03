@@ -14,11 +14,4 @@ export * from './selection-controls';
 export * from './text-inputs';
 export * from './upload-controls';
 export { KrnFormField, KrnHint, KrnLabel, KrnValidationMessage } from './form-field';
-
-/**
- * Advanced extension API. These contracts may evolve before KERN 1.0.
- *
- * @publicApi
- * @experimental
- */
-export { KrnValueAccessor } from './value-accessor';
+export { provideKrnFormControl } from './value-accessor';

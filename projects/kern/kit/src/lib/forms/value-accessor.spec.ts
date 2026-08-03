@@ -1,13 +1,89 @@
 import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import type { AbstractControl } from '@angular/forms';
-import { FormControl, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormsModule,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  NgModel,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { KrnValueAccessor, provideKrnFormControl } from './value-accessor';
+import { provideKrnFormControl } from './index';
+import { KrnEditableComboboxBase } from './select-controls';
+import { KrnUploadBase } from './upload-controls';
+import { useKrnControlA11y, useKrnFormControl } from './value-accessor';
+
+@Component({
+  selector: 'krn-external-combobox-base-test',
+  providers: [...provideKrnFormControl()],
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ExternalComboboxBaseFixture extends KrnEditableComboboxBase {
+  constructor() {
+    super();
+  }
+}
+
+@Component({
+  selector: 'krn-external-upload-base-test',
+  providers: [...provideKrnFormControl()],
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ExternalUploadBaseFixture extends KrnUploadBase {
+  constructor() {
+    super();
+  }
+}
+
+@Component({
+  selector: 'krn-missing-form-adapter-test',
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class MissingFormAdapterFixture {
+  private readonly formControl = useKrnFormControl(this, '');
+
+  readValue(): string {
+    return this.formControl.controlValue();
+  }
+}
+
+@Component({
+  selector: 'krn-missing-a11y-adapter-test',
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class MissingA11yAdapterFixture {
+  readonly id = input('');
+  readonly invalid = input(false);
+  readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'missing-adapter');
+}
+
+@Component({
+  selector: 'krn-form-adapter-ancestor-test',
+  imports: [MissingFormAdapterFixture],
+  providers: [...provideKrnFormControl()],
+  template: '<krn-missing-form-adapter-test />',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class FormAdapterAncestorFixture {}
+
+@Component({
+  selector: 'krn-a11y-adapter-ancestor-test',
+  imports: [MissingA11yAdapterFixture],
+  providers: [...provideKrnFormControl()],
+  template: '<krn-missing-a11y-adapter-test />',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class A11yAdapterAncestorFixture {}
 
 @Component({
   selector: 'krn-value-accessor-test',
-  providers: [...provideKrnFormControl(() => TestValueAccessor)],
+  providers: [...provideKrnFormControl()],
   template: `
     <input
       [disabled]="formDisabled()"
@@ -18,13 +94,22 @@ import { KrnValueAccessor, provideKrnFormControl } from './value-accessor';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class TestValueAccessor extends KrnValueAccessor<string> {
+class TestValueAccessor {
   readonly value = input<string | undefined>(undefined);
   readonly valueChange = output<string>();
 
+  private readonly formControl = useKrnFormControl(this, '');
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
+
   constructor() {
-    super('');
-    this.bindStandaloneValue(this.value);
+    this.formControl.bindStandaloneValue(this.value);
   }
 
   readValue(): string {
@@ -32,19 +117,19 @@ class TestValueAccessor extends KrnValueAccessor<string> {
   }
 
   readOwner(): 'angular' | 'internal' | 'standalone' {
-    return this.valueOwner();
+    return this.formControl.valueOwner();
   }
 
   userCommit(value: string): boolean {
-    const committed = this.commitUserValue(value);
+    const committed = this.formControl.commitUserValue(value);
     if (committed) {
       this.valueChange.emit(value);
     }
     return committed;
   }
 
-  legacyCommit(value: string): void {
-    this.commitValue(value);
+  forceCommit(value: string): void {
+    this.formControl.commitValue(value);
   }
 
   protected updateFromUser(event: Event): void {
@@ -52,29 +137,32 @@ class TestValueAccessor extends KrnValueAccessor<string> {
   }
 
   protected touchFromUser(): void {
-    this.touch();
+    this.formControl.touch();
   }
 }
 
 @Component({
   selector: 'krn-comparable-value-accessor-test',
+  providers: [...provideKrnFormControl()],
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class ComparableValueAccessor extends KrnValueAccessor<readonly string[]> {
-  constructor() {
-    super([]);
-  }
+class ComparableValueAccessor {
+  private readonly formControl = useKrnFormControl(this, [] as readonly string[], {
+    valuesEqual: (current, next) => this.valuesEqual(current, next),
+  });
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
 
   readValue(): readonly string[] {
-    return this.controlValue();
+    return this.formControl.controlValue();
   }
 
   userCommit(value: readonly string[]): boolean {
-    return this.commitUserValue(value);
+    return this.formControl.commitUserValue(value);
   }
 
-  protected override valuesEqual(current: readonly string[], next: readonly string[]): boolean {
+  private valuesEqual(current: readonly string[], next: readonly string[]): boolean {
     return (
       current.length === next.length &&
       current.every((value, index) => Object.is(value, next[index]))
@@ -84,28 +172,32 @@ class ComparableValueAccessor extends KrnValueAccessor<readonly string[]> {
 
 @Component({
   selector: 'krn-transformed-value-accessor-test',
+  providers: [...provideKrnFormControl()],
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class TransformedValueAccessor extends KrnValueAccessor<number, string> {
-  constructor() {
-    super(0);
-  }
+class TransformedValueAccessor {
+  private readonly formControl = useKrnFormControl<number, string>(this, 0, {
+    fromControlValue: (value) => this.fromControlValue(value),
+    toControlValue: (value) => this.toControlValue(value),
+  });
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
 
   readValue(): number {
-    return this.controlValue();
+    return this.formControl.controlValue();
   }
 
   userCommit(value: number): boolean {
-    return this.commitUserValue(value);
+    return this.formControl.commitUserValue(value);
   }
 
-  protected override fromControlValue(value: string | null | undefined): number {
+  private fromControlValue(value: string | null | undefined): number {
     const parsed = Number(value);
     return Number.isFinite(parsed) ? parsed : 0;
   }
 
-  protected override toControlValue(value: number): string {
+  private toControlValue(value: number): string {
     return `${value}`;
   }
 }
@@ -119,7 +211,31 @@ function testAccessor(fixture: {
     .componentInstance as TestValueAccessor;
 }
 
-describe('KrnValueAccessor ownership contract', () => {
+describe('KRN form-control composition ownership contract', () => {
+  it('keeps external experimental base subclasses consumable through the public provider', () => {
+    const comboboxFixture = TestBed.createComponent(ExternalComboboxBaseFixture);
+    comboboxFixture.componentRef.setInput('options', []);
+    comboboxFixture.detectChanges();
+    const uploadFixture = TestBed.createComponent(ExternalUploadBaseFixture);
+    uploadFixture.detectChanges();
+
+    const comboboxAccessors = comboboxFixture.debugElement.injector.get(NG_VALUE_ACCESSOR);
+    const uploadAccessors = uploadFixture.debugElement.injector.get(NG_VALUE_ACCESSOR);
+    expect(comboboxAccessors).toHaveLength(1);
+    expect(uploadAccessors).toHaveLength(1);
+    expect(comboboxAccessors[0]).not.toBe(comboboxFixture.componentInstance);
+    expect(uploadAccessors[0]).not.toBe(uploadFixture.componentInstance);
+  });
+
+  it('fails fast instead of borrowing an ancestor adapter when the component provider is missing', () => {
+    expect(() => TestBed.createComponent(FormAdapterAncestorFixture)).toThrow(
+      /KRN_FORM_CONTROL_ADAPTER|No provider/i,
+    );
+    expect(() => TestBed.createComponent(A11yAdapterAncestorFixture)).toThrow(
+      /KRN_FORM_CONTROL_ADAPTER|No provider/i,
+    );
+  });
+
   it('silently follows a standalone owner and emits only accepted user commits', async () => {
     @Component({
       selector: 'krn-standalone-value-host-test',
@@ -152,7 +268,7 @@ describe('KrnValueAccessor ownership contract', () => {
     expect(fixture.componentInstance.changes).toEqual(['gamma']);
   });
 
-  it('keeps writeValue silent and preserves the legacy always-notify commit path', () => {
+  it('keeps writeValue silent and preserves the explicit always-notify commit path', () => {
     const fixture = TestBed.createComponent(TestValueAccessor);
     const accessor = fixture.componentInstance;
     const onChange = vi.fn();
@@ -166,7 +282,7 @@ describe('KrnValueAccessor ownership contract', () => {
     expect(onChange).not.toHaveBeenCalled();
     expect(valueChange).not.toHaveBeenCalled();
 
-    accessor.legacyCommit('external');
+    accessor.forceCommit('external');
     expect(onChange).toHaveBeenCalledOnce();
     expect(onChange).toHaveBeenLastCalledWith('external');
   });
@@ -244,7 +360,18 @@ describe('KrnValueAccessor ownership contract', () => {
   });
 });
 
-describe('KrnValueAccessor Angular Forms contract', () => {
+describe('KRN form-control composition Angular Forms contract', () => {
+  it('registers one shared adapter instead of the component instance', () => {
+    const fixture = TestBed.createComponent(TestValueAccessor);
+    const accessors = fixture.debugElement.injector.get(NG_VALUE_ACCESSOR);
+    const validators = fixture.debugElement.injector.get(NG_VALIDATORS);
+
+    expect(accessors).toHaveLength(1);
+    expect(validators).toHaveLength(1);
+    expect(accessors[0]).toBe(validators[0]);
+    expect(accessors[0]).not.toBe(fixture.componentInstance);
+  });
+
   it('handles reactive reset, nullable values, and disabled state', async () => {
     @Component({
       selector: 'krn-reactive-value-host-test',

@@ -16,12 +16,12 @@ import { KRN_PLATFORM, krnIsHtmlElement } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnRangeValue } from './form-types';
 import {
-  KrnValueAccessor,
   maxError,
   mergeValidationErrors,
   minError,
   provideKrnFormControl,
   useKrnControlA11y,
+  useKrnFormControl,
 } from './value-accessor';
 
 const sliderInteractionKeys = new Set([
@@ -40,7 +40,7 @@ const sliderInteractionKeys = new Set([
   host: {
     '[attr.id]': 'null',
   },
-  providers: [...provideKrnFormControl(() => KrnSlider)],
+  providers: [...provideKrnFormControl()],
   template: `
     <div class="krn-slider" [style.--krn-slider-progress]="valuePercent() + '%'">
       @if (label() || showValue()) {
@@ -79,7 +79,7 @@ const sliderInteractionKeys = new Set([
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnSlider extends KrnValueAccessor<number> {
+export class KrnSlider {
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('input');
   readonly id = input('');
@@ -100,6 +100,20 @@ export class KrnSlider extends KrnValueAccessor<number> {
   readonly value = input<number | undefined>(undefined);
   readonly valueFormatter = input<((value: number) => string) | undefined>(undefined);
   readonly valueChange = output<number>();
+
+  private readonly formControl = useKrnFormControl(this, 0, {
+    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+    validateValue: (value) => this.validateValue(value),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  protected readonly touch = this.formControl.touch;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
 
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'slider', {
     disabled: this.disabled,
@@ -136,8 +150,7 @@ export class KrnSlider extends KrnValueAccessor<number> {
   });
 
   constructor() {
-    super(0);
-    this.bindStandaloneValue(this.value);
+    this.formControl.bindStandaloneValue(this.value);
     effect(() => {
       const current = this.controlValue();
       const normalized = this.clamp(current);
@@ -145,15 +158,15 @@ export class KrnSlider extends KrnValueAccessor<number> {
         this.controlValue.set(normalized);
       }
     });
-    this.watchValidationInputs(this.min, this.max);
+    this.formControl.watchValidationInputs(this.min, this.max);
   }
 
-  protected override normalizeIncomingValue(value: unknown): number {
+  private normalizeIncomingValue(value: unknown): number {
     const numeric = Number(value);
     return Number.isFinite(numeric) ? this.clamp(numeric) : this.effectiveMin();
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     return mergeValidationErrors(
       minError(value, this.effectiveMin()),
       maxError(value, this.effectiveMax()),
@@ -168,7 +181,7 @@ export class KrnSlider extends KrnValueAccessor<number> {
     }
     const value = this.clamp(input.valueAsNumber);
     input.value = `${value}`;
-    if (this.commitUserValue(value)) {
+    if (this.formControl.commitUserValue(value)) {
       this.valueChange.emit(value);
     }
   }
@@ -206,7 +219,7 @@ export class KrnSlider extends KrnValueAccessor<number> {
   host: {
     '[attr.id]': 'null',
   },
-  providers: [...provideKrnFormControl(() => KrnRangeSlider)],
+  providers: [...provideKrnFormControl()],
   template: `
     <div
       class="krn-slider krn-range-pair"
@@ -281,7 +294,7 @@ export class KrnSlider extends KrnValueAccessor<number> {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
+export class KrnRangeSlider {
   private readonly platform = inject(KRN_PLATFORM);
   private readonly startInput = viewChild<ElementRef<HTMLInputElement>>('startInput');
   private readonly endInput = viewChild<ElementRef<HTMLInputElement>>('endInput');
@@ -306,6 +319,24 @@ export class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
   protected readonly activeThumb = signal<'start' | 'end'>('end');
   protected readonly draggingThumb = signal<'start' | 'end' | null>(null);
   private activePointerId: number | null = null;
+
+  private readonly formControl = useKrnFormControl<KrnRangeValue>(
+    this,
+    { start: 0, end: 100 },
+    {
+      normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+      validateValue: (value) => this.validateValue(value),
+      valuesEqual: (current, next) => this.valuesEqual(current, next),
+    },
+  );
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
 
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'range-slider', {
     disabled: this.disabled,
@@ -333,8 +364,7 @@ export class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
   protected readonly endPercent = computed(() => this.toPercent(this.controlValue().end));
 
   constructor() {
-    super({ start: 0, end: 100 });
-    this.bindStandaloneValue(this.value);
+    this.formControl.bindStandaloneValue(this.value);
     effect(() => {
       const current = this.controlValue();
       const normalized = this.normalizeRange(current.start, current.end);
@@ -342,10 +372,10 @@ export class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
         this.controlValue.set(normalized);
       }
     });
-    this.watchValidationInputs(this.min, this.max);
+    this.formControl.watchValidationInputs(this.min, this.max);
   }
 
-  protected override normalizeIncomingValue(value: unknown): KrnRangeValue {
+  private normalizeIncomingValue(value: unknown): KrnRangeValue {
     if (typeof value !== 'object' || value === null || !('start' in value) || !('end' in value)) {
       return { start: this.effectiveMin(), end: this.effectiveMax() };
     }
@@ -354,7 +384,7 @@ export class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
     return this.normalizeRange(start, end);
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     if (typeof value !== 'object' || value === null || !('start' in value) || !('end' in value)) {
       return { range: true };
     }
@@ -367,7 +397,7 @@ export class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
     );
   }
 
-  protected override valuesEqual(current: KrnRangeValue, next: KrnRangeValue): boolean {
+  private valuesEqual(current: KrnRangeValue, next: KrnRangeValue): boolean {
     return current.start === next.start && current.end === next.end;
   }
 
@@ -482,7 +512,7 @@ export class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
     ) {
       return;
     }
-    this.touch();
+    this.formControl.touch();
   }
 
   focus(options?: FocusOptions): void {
@@ -514,7 +544,7 @@ export class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
   }
 
   private emitRange(value: KrnRangeValue): void {
-    if (this.commitUserValue(value)) {
+    if (this.formControl.commitUserValue(value)) {
       this.valueChange.emit(value);
     }
   }

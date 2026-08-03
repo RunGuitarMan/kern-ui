@@ -33,11 +33,12 @@ import type {
   KrnSelectOptionContext,
 } from './form-types';
 import {
-  KrnValueAccessor,
   provideKrnFormControl,
   requiredError,
   useKrnControlA11y,
+  useKrnFormControl,
 } from './value-accessor';
+import { KRN_PLATFORM, type KrnScheduledHandle } from '@kern-ui/angular/cdk';
 import { KRN_ENGLISH_TRANSLATIONS, KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 
 const optionalBooleanAttribute = (value: unknown): boolean | undefined =>
@@ -78,7 +79,7 @@ const focusStayedWithin = (event: FocusEvent): boolean => {
     '[attr.id]': 'null',
     '[attr.tabindex]': 'null',
   },
-  providers: [...provideKrnFormControl(() => KrnNativeSelect)],
+  providers: [...provideKrnFormControl()],
   template: `
     <span
       class="krn-control-shell"
@@ -132,7 +133,7 @@ const focusStayedWithin = (event: FocusEvent): boolean => {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
+export class KrnNativeSelect<T = string> {
   private readonly select = viewChild<ElementRef<HTMLSelectElement>>('select');
   readonly id = input('');
   readonly name = input('');
@@ -158,6 +159,21 @@ export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
   readonly value = input<T | null | undefined>(undefined);
   readonly valueChange = output<T | null>();
 
+  private readonly formControl = useKrnFormControl<T | null>(this, null, {
+    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+    validateValue: (value) => this.validateValue(value),
+    valuesEqual: (current, next) => this.valuesEqual(current, next),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  protected readonly touch = this.formControl.touch;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
+
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'native-select', {
     disabled: this.disabled,
     readOnly: this.readOnly,
@@ -182,20 +198,19 @@ export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
   });
 
   constructor() {
-    super(null);
-    this.bindStandaloneValue(this.value);
-    this.watchValidationInputs(this.required, this.a11y.required);
+    this.formControl.bindStandaloneValue(this.value);
+    this.formControl.watchValidationInputs(this.required, this.a11y.required);
   }
 
-  protected override normalizeIncomingValue(value: unknown): T | null {
+  private normalizeIncomingValue(value: unknown): T | null {
     return value === null || value === undefined ? null : (value as T);
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     return requiredError(value, this.a11y.required());
   }
 
-  protected override valuesEqual(current: T | null, next: T | null): boolean {
+  private valuesEqual(current: T | null, next: T | null): boolean {
     return current === null || next === null
       ? current === next
       : this.identityMatcher()(current, next);
@@ -225,7 +240,7 @@ export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
       return;
     }
     const value = option?.value ?? null;
-    if (this.commitUserValue(value)) {
+    if (this.formControl.commitUserValue(value)) {
       this.valueChange.emit(value);
     }
   }
@@ -285,7 +300,7 @@ export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
     '[attr.tabindex]': 'null',
   },
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, NgTemplateOutlet, Option],
-  providers: [...provideKrnFormControl(() => KrnSelect)],
+  providers: [...provideKrnFormControl()],
   template: `
     <div
       class="krn-combobox"
@@ -418,17 +433,17 @@ export class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
-  private readonly translations = inject(KRN_TRANSLATIONS);
+export class KrnSelect<T = string> {
+  readonly #translations = inject(KRN_TRANSLATIONS);
   private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
   readonly id = input('');
-  readonly placeholder = input(this.translations.forms.selectOption);
-  readonly emptyText = input(this.translations.forms.noOptions);
+  readonly placeholder = input(this.#translations.forms.selectOption);
+  readonly emptyText = input(this.#translations.forms.noOptions);
   readonly loadingText = input(
-    this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? '',
+    this.#translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? '',
   );
   readonly errorText = input(
-    this.translations.forms.optionsLoadFailed ??
+    this.#translations.forms.optionsLoadFailed ??
       KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??
       '',
   );
@@ -459,6 +474,20 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
   readonly valueChange = output<T | null>();
   readonly selectionChange = output<KrnSelectOption<T> | null>();
 
+  readonly #formControl = useKrnFormControl<T | null>(this, null, {
+    normalizeIncomingValue: (value) => this.#normalizeIncomingValue(value),
+    validateValue: (value) => this.#validateValue(value),
+    valuesEqual: (current, next) => this.#valuesEqual(current, next),
+  });
+  protected readonly controlValue = this.#formControl.controlValue;
+  protected readonly formDisabled = this.#formControl.formDisabled;
+  readonly writeValue = this.#formControl.writeValue;
+  readonly registerOnChange = this.#formControl.registerOnChange;
+  readonly registerOnTouched = this.#formControl.registerOnTouched;
+  readonly setDisabledState = this.#formControl.setDisabledState;
+  readonly validate = this.#formControl.validate;
+  readonly registerOnValidatorChange = this.#formControl.registerOnValidatorChange;
+
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'select', {
     disabled: this.disabled,
     readOnly: this.readOnly,
@@ -485,25 +514,24 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
   });
 
   constructor() {
-    super(null);
-    this.bindStandaloneValue(this.value);
+    this.#formControl.bindStandaloneValue(this.value);
     effect(() => {
       if (this.open() && (this.isDisabled() || this.isReadOnly())) {
         this.open.set(false);
       }
     });
-    this.watchValidationInputs(this.required, this.a11y.required);
+    this.#formControl.watchValidationInputs(this.required, this.a11y.required);
   }
 
-  protected override normalizeIncomingValue(value: unknown): T | null {
+  #normalizeIncomingValue(value: unknown): T | null {
     return value === null || value === undefined ? null : (value as T);
   }
 
-  protected override validateValue(value: unknown) {
+  #validateValue(value: unknown) {
     return requiredError(value, this.a11y.required());
   }
 
-  protected override valuesEqual(current: T | null, next: T | null): boolean {
+  #valuesEqual(current: T | null, next: T | null): boolean {
     return current === null || next === null
       ? current === next
       : this.identityMatcher()(current, next);
@@ -517,7 +545,7 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
 
   protected close(): void {
     this.open.set(false);
-    this.touch();
+    this.#formControl.touch();
   }
 
   protected onEscape(event: Event): void {
@@ -545,7 +573,7 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
       return;
     }
     const value = option?.value ?? null;
-    if (this.commitUserValue(value)) {
+    if (this.#formControl.commitUserValue(value)) {
       this.valueChange.emit(value);
       this.selectionChange.emit(option);
     }
@@ -578,7 +606,7 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
     '[attr.tabindex]': 'null',
   },
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, NgTemplateOutlet, Option],
-  providers: [...provideKrnFormControl(() => KrnMultiSelect)],
+  providers: [...provideKrnFormControl()],
   template: `
     <div
       class="krn-combobox"
@@ -719,7 +747,7 @@ export class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
+export class KrnMultiSelect<T = string> {
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
   readonly id = input('');
@@ -760,6 +788,20 @@ export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
   readonly open = model(false);
   readonly valueChange = output<readonly T[]>();
 
+  private readonly formControl = useKrnFormControl<readonly T[]>(this, [], {
+    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+    validateValue: (value) => this.validateValue(value),
+    valuesEqual: (current, next) => this.valuesEqual(current, next),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
+
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'multi-select', {
     disabled: this.disabled,
     readOnly: this.readOnly,
@@ -791,25 +833,24 @@ export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
   );
 
   constructor() {
-    super([]);
-    this.bindStandaloneValue(this.value);
+    this.formControl.bindStandaloneValue(this.value);
     effect(() => {
       if (this.open() && (this.isDisabled() || this.isReadOnly())) {
         this.open.set(false);
       }
     });
-    this.watchValidationInputs(this.required, this.a11y.required);
+    this.formControl.watchValidationInputs(this.required, this.a11y.required);
   }
 
-  protected override normalizeIncomingValue(value: unknown): readonly T[] {
+  private normalizeIncomingValue(value: unknown): readonly T[] {
     return Array.isArray(value) ? (value as T[]) : [];
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     return requiredError(value, this.a11y.required());
   }
 
-  protected override valuesEqual(current: readonly T[], next: readonly T[]): boolean {
+  private valuesEqual(current: readonly T[], next: readonly T[]): boolean {
     return (
       current.length === next.length &&
       current.every((value, index) => this.identityMatcher()(value, next[index]!))
@@ -824,7 +865,7 @@ export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
 
   protected close(): void {
     this.open.set(false);
-    this.touch();
+    this.formControl.touch();
   }
 
   protected onEscape(event: Event): void {
@@ -859,7 +900,7 @@ export class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
       }
       return result;
     }, []);
-    if (this.commitUserValue(canonical)) {
+    if (this.formControl.commitUserValue(canonical)) {
       this.valueChange.emit(canonical);
     }
   }
@@ -908,23 +949,24 @@ const COMBOBOX_IMPORTS = [
 ];
 
 /**
- * Base contract for editable KERN combobox implementations.
+ * Shared contract for editable KERN combobox variants.
  *
  * @publicApi
- * @experimental
+ * @experimental The required editable-combobox template contract is not stable yet.
  */
 @Directive()
-export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
+export abstract class KrnEditableComboboxBase {
   private readonly comboboxDirective = viewChild<Combobox>('combo');
   private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('comboInput');
   private readonly destroyRef = inject(DestroyRef);
   private readonly locale = inject(KRN_LOCALE);
+  private readonly platform = inject(KRN_PLATFORM);
   private readonly renderer = inject(Renderer2);
   private readonly translations = inject(KRN_TRANSLATIONS);
   protected readonly inputFocused = signal(false);
   private readonly queryEditing = signal(false);
   private inlineRenderRevision = 0;
-  private pendingEnterClose: ReturnType<typeof setTimeout> | undefined;
+  private pendingEnterClose: KrnScheduledHandle | null = null;
   private renderedAutocompleteMode: KrnAutocompleteMode | undefined;
   protected readonly defaultAutocompleteMode: KrnAutocompleteMode = 'list';
   protected readonly defaultAllowCustomValue: boolean = false;
@@ -985,6 +1027,19 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   readonly optionSelected = output<KrnSelectOption<string>>();
   protected readonly query = signal('');
 
+  private readonly formControl = useKrnFormControl(this, '', {
+    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+    validateValue: (value) => this.validateValue(value),
+  });
+  protected readonly controlValue = this.formControl.controlValue;
+  protected readonly formDisabled = this.formControl.formDisabled;
+  readonly writeValue = this.formControl.writeValue;
+  readonly registerOnChange = this.formControl.registerOnChange;
+  readonly registerOnTouched = this.formControl.registerOnTouched;
+  readonly setDisabledState = this.formControl.setDisabledState;
+  readonly validate = this.formControl.validate;
+  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
+
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'combobox', {
     disabled: this.disabled,
     readOnly: this.readOnly,
@@ -1037,9 +1092,8 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   });
 
   protected constructor() {
-    super('');
-    this.bindStandaloneValue(this.value);
-    this.watchValidationInputs(this.required, this.a11y.required);
+    this.formControl.bindStandaloneValue(this.value);
+    this.formControl.watchValidationInputs(this.required, this.a11y.required);
     const openSubscription = this.open.subscribe(() => this.cancelPendingEnterClose());
     this.destroyRef.onDestroy(() => {
       openSubscription.unsubscribe();
@@ -1095,7 +1149,7 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
           suggestion !== undefined &&
           this.normalizeForSearch(suggestion).startsWith(this.normalizeForSearch(query));
         const revision = ++this.inlineRenderRevision;
-        queueMicrotask(() => {
+        this.platform.queueMicrotask(() => {
           if (this.destroyRef.destroyed || revision !== this.inlineRenderRevision) {
             return;
           }
@@ -1108,7 +1162,7 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     });
   }
 
-  protected override normalizeIncomingValue(value: unknown): string {
+  private normalizeIncomingValue(value: unknown): string {
     const normalized = typeof value === 'string' ? value : '';
     const option = this.options().find((item) => item.value === normalized);
     this.queryEditing.set(false);
@@ -1116,7 +1170,7 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     return normalized;
   }
 
-  protected override validateValue(value: unknown) {
+  private validateValue(value: unknown) {
     return requiredError(value, this.a11y.required());
   }
 
@@ -1131,7 +1185,7 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     this.setQuery(query);
     this.queryChange.emit(query);
     this.open.set(this.hasAutocompletePopup());
-    if (this.allowCustomValue() && this.commitUserValue(query)) {
+    if (this.allowCustomValue() && this.formControl.commitUserValue(query)) {
       this.valueChange.emit(query);
     }
   }
@@ -1150,7 +1204,7 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     }
     this.queryEditing.set(false);
     this.setQuery(option.label);
-    if (this.commitUserValue(option.value)) {
+    if (this.formControl.commitUserValue(option.value)) {
       this.valueChange.emit(option.value);
       this.optionSelected.emit(option);
     }
@@ -1164,12 +1218,16 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     if (event && this.open()) {
       event.preventDefault();
       this.cancelPendingEnterClose();
-      const pendingClose = setTimeout(() => {
+      const pendingClose = this.platform.schedule(() => {
         if (this.pendingEnterClose === pendingClose) {
-          this.pendingEnterClose = undefined;
+          this.pendingEnterClose = null;
           this.setOpen(false);
         }
       });
+      if (pendingClose === null) {
+        this.setOpen(false);
+        return;
+      }
       this.pendingEnterClose = pendingClose;
       return;
     }
@@ -1196,7 +1254,7 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     } else if (this.allowCustomValue()) {
       const query = this.query();
       if (this.controlValue() !== query) {
-        this.commitValue(query);
+        this.formControl.commitValue(query);
         this.valueChange.emit(query);
       }
       this.queryEditing.set(false);
@@ -1212,7 +1270,7 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
       return;
     }
     this.commitQuery();
-    this.touch();
+    this.formControl.touch();
   }
 
   private normalizeForSearch(value: string): string {
@@ -1290,9 +1348,9 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
   }
 
   private cancelPendingEnterClose(): void {
-    if (this.pendingEnterClose !== undefined) {
-      clearTimeout(this.pendingEnterClose);
-      this.pendingEnterClose = undefined;
+    if (this.pendingEnterClose !== null) {
+      this.platform.cancelScheduled(this.pendingEnterClose);
+      this.pendingEnterClose = null;
     }
   }
 
@@ -1330,7 +1388,7 @@ export abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
     '[attr.tabindex]': 'null',
   },
   imports: COMBOBOX_IMPORTS,
-  providers: [...provideKrnFormControl(() => KrnCombobox)],
+  providers: [...provideKrnFormControl()],
   templateUrl: './editable-combobox.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -1348,7 +1406,7 @@ export class KrnCombobox extends KrnEditableComboboxBase {
     '[attr.tabindex]': 'null',
   },
   imports: COMBOBOX_IMPORTS,
-  providers: [...provideKrnFormControl(() => KrnAutocomplete)],
+  providers: [...provideKrnFormControl()],
   templateUrl: './editable-combobox.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
