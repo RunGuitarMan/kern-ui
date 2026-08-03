@@ -9,17 +9,26 @@ import * as i0 from '@angular/core';
 import { TemplateRef, Type, InjectionToken, FactoryProvider } from '@angular/core';
 
 /**
- * Application-scoped, SSR-safe ID generation.
+ * Document- and application-scoped, SSR-safe ID generation.
  *
- * `next` is appropriate when server and client instantiate the same view tree
- * in the same order. `fromKey` is order-independent and should be preferred for
- * data-driven content with a stable application key.
+ * `next` shares its counters across Angular roots and records server allocations
+ * on the owning component host. Hydration consumes that local ledger, preserving
+ * even base IDs that only appear through derived `tab-*` or `title-*` IDs when
+ * roots hydrate out of order. `fromKey` remains order-independent.
  */
 declare class KrnIdService {
   private readonly applicationId;
-  private readonly counters;
+  private readonly platform;
+  private readonly state;
   next(prefix?: string): string;
   fromKey(prefix: string, key: string | number): string;
+  private currentHost;
+  private claimHydratedId;
+  private recordServerId;
+  private reserveHydrationLedgers;
+  private readLedger;
+  private writeLedger;
+  private sequentialCount;
   static ɵfac: i0.ɵɵFactoryDeclaration<KrnIdService, never>;
   static ɵprov: i0.ɵɵInjectableDeclaration<KrnIdService>;
 }
@@ -145,27 +154,14 @@ declare const KRN_OVERLAY_HOST: InjectionToken<KrnOverlayHostResolver>;
 
 type KrnOverlayInitialFocus = 'first-tabbable' | 'surface' | string;
 /**
- * Coordinates modal surfaces rendered in the application tree.
+ * Injector-scoped facade over the modal coordinator shared by one `Document`.
  *
- * The coordinator deliberately owns global side effects so that nested dialogs
- * share one scroll lock, only the top surface receives Escape, and background
- * content is restored to its exact previous state.
+ * Multiple Angular roots therefore share one stack, one close watcher, one
+ * scroll lock and one background state, while identical local overlay IDs stay
+ * isolated by the facade lease.
  */
 declare class KrnOverlayCoordinator {
-  private readonly platform;
-  private readonly interactivity;
-  private readonly destroyRef;
-  private readonly stack;
-  private readonly background;
-  private readonly overlayOrigins;
-  private closeBindingId;
-  private closeBindingRequest;
-  private closeWatcher;
-  private closeWatcherCancelListener;
-  private closeWatcherCloseListener;
-  private fallbackEscapeListener;
-  private previousOverflow;
-  private recentPointerOrigin;
+  #private;
   constructor();
   activate(
     id: string,
@@ -198,18 +194,6 @@ declare class KrnOverlayCoordinator {
    */
   isOwnedBy(owner: HTMLElement, target: EventTarget | null): boolean;
   focusInitial(panel: HTMLElement, initialFocus: KrnOverlayInitialFocus): void;
-  private firstTabbable;
-  private resolveRestoreFocus;
-  private syncCloseRequestBinding;
-  private clearCloseRequestBinding;
-  private queryWithin;
-  private syncBackground;
-  private belongsToTopOverlay;
-  private originBelongsToHost;
-  private overlayContainerBranch;
-  private hide;
-  private restoreBackground;
-  private isInert;
   static ɵfac: i0.ɵɵFactoryDeclaration<KrnOverlayCoordinator, never>;
   static ɵprov: i0.ɵɵInjectableDeclaration<KrnOverlayCoordinator>;
 }

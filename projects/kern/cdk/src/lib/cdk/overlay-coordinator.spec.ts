@@ -1,4 +1,5 @@
 import { InteractivityChecker } from '@angular/cdk/a11y';
+import { EnvironmentInjector, createEnvironmentInjector } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
 
@@ -57,6 +58,21 @@ function createCoordinator(platform: KrnPlatformAdapter): KrnOverlayCoordinator 
     ],
   });
   return TestBed.inject(KrnOverlayCoordinator);
+}
+
+function createCoordinatorRoot(platform: KrnPlatformAdapter): {
+  readonly coordinator: KrnOverlayCoordinator;
+  readonly injector: EnvironmentInjector;
+} {
+  const injector = createEnvironmentInjector(
+    [
+      KrnOverlayCoordinator,
+      { provide: KRN_PLATFORM, useValue: platform },
+      { provide: InteractivityChecker, useValue: { isFocusable: () => true } },
+    ],
+    TestBed.inject(EnvironmentInjector),
+  );
+  return { coordinator: injector.get(KrnOverlayCoordinator), injector };
 }
 
 describe('KrnOverlayCoordinator close requests', () => {
@@ -273,5 +289,88 @@ describe('KrnOverlayCoordinator close requests', () => {
     expect(watcher.destroyCalls).toBe(1);
     expect(document.body.style.overflow).toBe('clip');
     document.body.style.overflow = previousOverflow;
+  });
+
+  it('does not rewrite document state when an unused root is destroyed', () => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'clip';
+    createCoordinator(createPlatform());
+
+    TestBed.resetTestingModule();
+
+    expect(document.body.style.overflow).toBe('clip');
+    document.body.style.overflow = previousOverflow;
+  });
+
+  it('shares one document stack across roots and releases only the destroyed root lease', () => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'clip';
+    const watchers: TestCloseWatcher[] = [];
+    const platform = createPlatform(() => {
+      const watcher = new TestCloseWatcher();
+      watchers.push(watcher);
+      return watcher;
+    });
+    const background = document.createElement('main');
+    const firstHost = document.createElement('section');
+    const secondHost = document.createElement('section');
+    document.body.append(background, firstHost, secondHost);
+    const firstRoot = createCoordinatorRoot(platform);
+    const runtimeRegistryKey = Symbol.for('@kern-ui/angular/cdk/document-runtime-registry/v1');
+    const overlayChannelKey = Symbol.for('@kern-ui/angular/cdk/overlay-broker/v1');
+    const runtimeRegistry = (
+      document as unknown as Record<
+        symbol,
+        { readonly channels: Map<symbol, unknown>; readonly version: number } | undefined
+      >
+    )[runtimeRegistryKey];
+    if (!runtimeRegistry) throw new Error('Expected a document-owned Kern runtime registry.');
+    const sharedBroker = runtimeRegistry.channels.get(overlayChannelKey);
+    const secondRoot = createCoordinatorRoot(platform);
+    let firstDestroyed = false;
+    let secondDestroyed = false;
+
+    try {
+      expect(runtimeRegistry.version).toBe(1);
+      expect(sharedBroker).toBeDefined();
+      expect(runtimeRegistry.channels.get(overlayChannelKey)).toBe(sharedBroker);
+      firstRoot.coordinator.activate('shared-local-id', firstHost, false, vi.fn());
+      secondRoot.coordinator.activate('shared-local-id', secondHost, false, vi.fn());
+
+      expect(firstRoot.coordinator.isTop('shared-local-id')).toBe(false);
+      expect(secondRoot.coordinator.isTop('shared-local-id')).toBe(true);
+      expect(document.body.style.overflow).toBe('hidden');
+      expect(watchers).toHaveLength(2);
+      expect(watchers[0]?.destroyCalls).toBe(1);
+      expect(firstHost.inert).toBe(true);
+      expect(secondHost.inert).toBe(false);
+
+      secondRoot.injector.destroy();
+      secondDestroyed = true;
+
+      expect(firstRoot.coordinator.isTop('shared-local-id')).toBe(true);
+      expect(document.body.style.overflow).toBe('hidden');
+      expect(watchers[1]?.destroyCalls).toBe(1);
+      expect(watchers).toHaveLength(3);
+      expect(firstHost.inert).toBe(false);
+      expect(secondHost.inert).toBe(true);
+
+      firstRoot.injector.destroy();
+      firstDestroyed = true;
+
+      expect(watchers[2]?.destroyCalls).toBe(1);
+      expect(document.body.style.overflow).toBe('clip');
+      expect(background.inert).toBe(false);
+      expect(firstHost.inert).toBe(false);
+      expect(secondHost.inert).toBe(false);
+      expect(runtimeRegistry.channels.has(overlayChannelKey)).toBe(false);
+    } finally {
+      if (!firstDestroyed) firstRoot.injector.destroy();
+      if (!secondDestroyed) secondRoot.injector.destroy();
+      background.remove();
+      firstHost.remove();
+      secondHost.remove();
+      document.body.style.overflow = previousOverflow;
+    }
   });
 });
