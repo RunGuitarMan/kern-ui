@@ -97,7 +97,7 @@
     "@angular/compiler-cli": "22.0.8",
     "@axe-core/playwright": "4.12.1",
     "@nx/angular": "23.1.0",
-    "@nx/eslint-plugin": "23.1.0",
+    "@nx/eslint-plugin": "23.1.1",
     "@nx/workspace": "23.1.0",
     "@playwright/test": "1.62.0",
     "@schematics/angular": "22.0.8",
