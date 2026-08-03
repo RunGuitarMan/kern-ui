@@ -36,6 +36,7 @@
       "executor": "@angular/build:unit-test",
       "options": {
         "include": [
+          "projects/kern/src/lib/beta-components.hydration.spec.ts",
           "projects/kern/kit/src/lib/actions/toggle-group.hydration.spec.ts",
           "projects/kern/kit/src/lib/feedback/modal-overlays.hydration.spec.ts"
         ],
