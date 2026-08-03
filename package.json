@@ -99,7 +99,7 @@
     "@nx/angular": "23.1.0",
     "@nx/eslint-plugin": "23.1.0",
     "@nx/workspace": "23.1.0",
-    "@playwright/test": "1.62.0",
+    "@playwright/test": "1.62.1",
     "@schematics/angular": "22.0.8",
     "@types/express": "^5.0.1",
     "@types/node": "26.1.2",
