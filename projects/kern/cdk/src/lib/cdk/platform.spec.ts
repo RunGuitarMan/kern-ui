@@ -102,8 +102,14 @@ describe('Kern platform boundary', () => {
     try {
       const platform = TestBed.inject(KRN_PLATFORM);
       const watcher = platform.createCloseWatcher?.() as KrnCloseWatcher;
+      const cancel = vi.fn((event: Event) => event.preventDefault());
       const close = vi.fn();
+      watcher.addEventListener('cancel', cancel);
       watcher.addEventListener('close', close);
+      const cancelEvent = new Event('cancel', { cancelable: true });
+      nativeWatchers[0]?.dispatchEvent(cancelEvent);
+      expect(cancel).toHaveBeenCalledOnce();
+      expect(cancelEvent.defaultPrevented).toBe(true);
       nativeWatchers[0]?.dispatchEvent(new Event('close'));
       expect(close).toHaveBeenCalledOnce();
 

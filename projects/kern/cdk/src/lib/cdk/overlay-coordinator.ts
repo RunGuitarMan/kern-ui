@@ -76,7 +76,8 @@ export class KrnOverlayCoordinator {
   private closeBindingId: string | null = null;
   private closeBindingRequest: (() => void) | null = null;
   private closeWatcher: KrnCloseWatcher | null = null;
-  private closeWatcherListener: EventListener | null = null;
+  private closeWatcherCancelListener: EventListener | null = null;
+  private closeWatcherCloseListener: EventListener | null = null;
   private fallbackEscapeListener: ((event: KeyboardEvent) => void) | null = null;
   private previousOverflow = '';
   private recentPointerOrigin: { readonly element: HTMLElement; readonly at: number } | null = null;
@@ -302,17 +303,12 @@ export class KrnOverlayCoordinator {
   private syncCloseRequestBinding(): void {
     const top = this.stack.at(-1);
     const closeRequest = top?.closeRequest ?? null;
-    if (
-      top &&
-      closeRequest &&
-      this.closeBindingId === top.id &&
-      this.closeBindingRequest === closeRequest
-    ) {
+    if (top && this.closeBindingId === top.id && this.closeBindingRequest === closeRequest) {
       return;
     }
 
     this.clearCloseRequestBinding();
-    if (!top || !closeRequest) return;
+    if (!top) return;
 
     this.closeBindingId = top.id;
     this.closeBindingRequest = closeRequest;
@@ -325,11 +321,16 @@ export class KrnOverlayCoordinator {
     }
 
     if (watcher) {
-      const listener: EventListener = () => {
+      const cancelListener: EventListener = (event) => {
+        const active = this.stack.at(-1);
+        if (active?.id !== top.id || active.closeRequest !== closeRequest) return;
+        if (!closeRequest && event.cancelable) event.preventDefault();
+      };
+      const closeListener: EventListener = () => {
         const active = this.stack.at(-1);
         if (active?.id !== top.id || active.closeRequest !== closeRequest) return;
         try {
-          closeRequest();
+          closeRequest?.();
         } finally {
           if (this.closeWatcher === watcher) {
             this.clearCloseRequestBinding();
@@ -338,9 +339,11 @@ export class KrnOverlayCoordinator {
         }
       };
       try {
-        watcher.addEventListener('close', listener);
+        watcher.addEventListener('cancel', cancelListener);
+        watcher.addEventListener('close', closeListener);
         this.closeWatcher = watcher;
-        this.closeWatcherListener = listener;
+        this.closeWatcherCancelListener = cancelListener;
+        this.closeWatcherCloseListener = closeListener;
         return;
       } catch {
         try {
@@ -363,16 +366,23 @@ export class KrnOverlayCoordinator {
       }
       event.preventDefault();
       event.stopPropagation();
-      closeRequest();
+      closeRequest?.();
     };
     this.fallbackEscapeListener = listener;
     this.platform.document.addEventListener('keydown', listener);
   }
 
   private clearCloseRequestBinding(): void {
-    if (this.closeWatcher && this.closeWatcherListener) {
+    if (this.closeWatcher && this.closeWatcherCancelListener) {
       try {
-        this.closeWatcher.removeEventListener('close', this.closeWatcherListener);
+        this.closeWatcher.removeEventListener('cancel', this.closeWatcherCancelListener);
+      } catch {
+        // Cleanup remains best-effort for application-supplied structural adapters.
+      }
+    }
+    if (this.closeWatcher && this.closeWatcherCloseListener) {
+      try {
+        this.closeWatcher.removeEventListener('close', this.closeWatcherCloseListener);
       } catch {
         // Cleanup remains best-effort for application-supplied structural adapters.
       }
@@ -391,7 +401,8 @@ export class KrnOverlayCoordinator {
     this.closeBindingId = null;
     this.closeBindingRequest = null;
     this.closeWatcher = null;
-    this.closeWatcherListener = null;
+    this.closeWatcherCancelListener = null;
+    this.closeWatcherCloseListener = null;
     this.fallbackEscapeListener = null;
   }
 

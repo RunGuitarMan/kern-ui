@@ -31,7 +31,12 @@ import type {
 } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import type { Observable } from 'rxjs';
-import { KRN_PLATFORM, KrnIdService, type KrnOverlayInitialFocus } from '@kern-ui/angular/cdk';
+import {
+  KRN_PLATFORM,
+  KrnIdService,
+  KrnOverlayCoordinator,
+  type KrnOverlayInitialFocus,
+} from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnOverlayCloseReason } from './feedback.types';
 import { KrnAlertDialog, KrnBottomSheet, KrnDialog, KrnDrawer } from './modal-overlays';
@@ -312,6 +317,7 @@ interface ActiveOverlayRecord {
 export class KrnOverlayService {
   private readonly injector = inject(Injector);
   private readonly platform = inject(KRN_PLATFORM);
+  private readonly coordinator = inject(KrnOverlayCoordinator);
   private readonly ids = inject(KrnIdService);
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly destroyRef = inject(DestroyRef);
@@ -366,8 +372,8 @@ export class KrnOverlayService {
       throw new Error('KrnOverlayService: TemplateRef content requires viewContainerRef.');
     }
 
-    const normalized = this.normalizeConfig(config);
     const parentInjector = config.injector ?? config.viewContainerRef?.injector ?? this.injector;
+    const normalized = this.normalizeConfig(config, parentInjector);
     const parentRef = parentInjector.get(KrnOverlayRef, null) as KrnOverlayRefImpl | null;
     const parent = parentRef ? (this.records.get(parentRef.id) ?? null) : null;
     if (parent && !parent.ref.acceptsChildren()) {
@@ -377,10 +383,13 @@ export class KrnOverlayService {
     }
     const hostInjector = Injector.create({
       name: `KrnProgrammaticOverlayHost(${ref.id})`,
-      parent: this.injector,
+      parent: parentInjector,
       providers: [
         { provide: KRN_PROGRAMMATIC_OVERLAY_CONFIG, useValue: normalized },
         { provide: KrnOverlayRef, useValue: publicRef },
+        // The pane belongs to this service's root CDK Overlay; its document/runtime pair must too.
+        { provide: KRN_PLATFORM, useValue: this.platform },
+        { provide: KrnOverlayCoordinator, useValue: this.coordinator },
       ],
     });
     const contentInjector = Injector.create({
@@ -494,12 +503,16 @@ export class KrnOverlayService {
     }
   }
 
-  private normalizeConfig(config: KrnOverlayBaseConfig): NormalizedOverlayConfig {
+  private normalizeConfig(
+    config: KrnOverlayBaseConfig,
+    parentInjector: Injector,
+  ): NormalizedOverlayConfig {
+    const translations = parentInjector.get(KRN_TRANSLATIONS, this.translations);
     return Object.freeze({
       variant: config.variant ?? 'dialog',
       title: config.title ?? '',
       description: config.description ?? '',
-      ariaLabel: config.ariaLabel ?? this.translations.feedback.dialog,
+      ariaLabel: config.ariaLabel ?? translations.feedback.dialog,
       showClose: config.showClose ?? true,
       closeOnEscape: config.closeOnEscape ?? true,
       closeOnOutside: config.closeOnOutside ?? null,

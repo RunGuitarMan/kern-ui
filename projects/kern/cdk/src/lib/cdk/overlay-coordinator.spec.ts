@@ -13,6 +13,13 @@ import {
 class TestCloseWatcher extends EventTarget implements KrnCloseWatcher {
   destroyCalls = 0;
 
+  emitRequest(cancelable = true): Event {
+    const cancel = new Event('cancel', { cancelable });
+    this.dispatchEvent(cancel);
+    if (!cancel.defaultPrevented) this.emitClose();
+    return cancel;
+  }
+
   emitClose(): void {
     this.dispatchEvent(new Event('close'));
   }
@@ -119,16 +126,49 @@ describe('KrnOverlayCoordinator close requests', () => {
 
     coordinator.updateCloseRequest('second', null);
     expect(watchers[1]?.destroyCalls).toBe(1);
+    expect(watchers).toHaveLength(3);
     watchers[1]?.emitClose();
     expect(secondRequest).not.toHaveBeenCalled();
     expect(replacementFirstRequest).not.toHaveBeenCalled();
+    expect(watchers[2]?.emitRequest().defaultPrevented).toBe(true);
 
     const closeSecond = vi.fn(() => coordinator.updateCloseRequest('second', null));
     coordinator.updateCloseRequest('second', closeSecond);
-    expect(watchers).toHaveLength(3);
-    watchers[2]?.emitClose();
+    expect(watchers).toHaveLength(4);
+    watchers[3]?.emitClose();
     expect(closeSecond).toHaveBeenCalledOnce();
     expect(replacementFirstRequest).not.toHaveBeenCalled();
+  });
+
+  it('consumes platform close requests while the top modal is not dismissible', () => {
+    const watchers: TestCloseWatcher[] = [];
+    const coordinator = createCoordinator(
+      createPlatform(() => {
+        const watcher = new TestCloseWatcher();
+        watchers.push(watcher);
+        return watcher;
+      }),
+    );
+    const parentRequest = vi.fn(() => coordinator.deactivate('parent', 0, false));
+
+    coordinator.activate('parent', null, false, parentRequest);
+    coordinator.activate('locked', null, false, null);
+
+    const cancelableRequest = watchers[1]?.emitRequest();
+    expect(cancelableRequest?.defaultPrevented).toBe(true);
+    expect(parentRequest).not.toHaveBeenCalled();
+    expect(watchers).toHaveLength(2);
+
+    const forcedRequest = watchers[1]?.emitRequest(false);
+    expect(forcedRequest?.defaultPrevented).toBe(false);
+    expect(parentRequest).not.toHaveBeenCalled();
+    expect(watchers[1]?.destroyCalls).toBe(1);
+    expect(watchers).toHaveLength(3);
+
+    coordinator.deactivate('locked', 0, false);
+    expect(watchers).toHaveLength(4);
+    watchers[3]?.emitClose();
+    expect(parentRequest).toHaveBeenCalledOnce();
   });
 
   it('uses a document Escape fallback only when no native watcher exists', () => {
@@ -158,6 +198,20 @@ describe('KrnOverlayCoordinator close requests', () => {
       new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
     );
     expect(closeRequest).toHaveBeenCalledOnce();
+  });
+
+  it('consumes fallback Escape while the top modal is not dismissible', () => {
+    const coordinator = createCoordinator(createPlatform(() => null));
+    coordinator.activate('locked', null, false, null);
+
+    const escape = new KeyboardEvent('keydown', {
+      key: 'Escape',
+      bubbles: true,
+      cancelable: true,
+    });
+    document.dispatchEvent(escape);
+
+    expect(escape.defaultPrevented).toBe(true);
   });
 
   it('prioritizes explicit focus, consumes pointer origins and supports suppression', () => {

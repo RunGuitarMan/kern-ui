@@ -7,6 +7,7 @@ import {
   Component,
   type EmbeddedViewRef,
   Injectable,
+  InjectionToken,
   Injector,
   ViewContainerRef,
   inject,
@@ -15,7 +16,8 @@ import {
 } from '@angular/core';
 import type { TemplateRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideKrn } from '@kern-ui/angular/core';
+import { KRN_PLATFORM, KrnOverlayCoordinator, type KrnPlatformAdapter } from '@kern-ui/angular/cdk';
+import { KRN_TRANSLATIONS, provideKrn } from '@kern-ui/angular/core';
 import { KrnDropdownButton } from '../actions/dropdown-button';
 import { KrnDialog } from './modal-overlays';
 import {
@@ -89,6 +91,17 @@ class TemplateOwner {
   template: `<p class="passive-content">Passive content</p>`,
 })
 class PassiveOverlayContent {}
+
+const SCOPED_OVERLAY_VALUE = new InjectionToken<string>('SCOPED_OVERLAY_VALUE');
+
+@Component({
+  selector: 'krn-programmatic-scoped-content-spec',
+  standalone: true,
+  template: `<p class="scoped-content">{{ value }}</p>`,
+})
+class ScopedOverlayContent {
+  protected readonly value = inject(SCOPED_OVERLAY_VALUE);
+}
 
 @Component({
   selector: 'krn-programmatic-nested-menu-content-spec',
@@ -167,6 +180,7 @@ describe('KrnOverlayService', () => {
         EditOverlayContent,
         TemplateOwner,
         PassiveOverlayContent,
+        ScopedOverlayContent,
         NestedMenuOverlayContent,
         ConstructorCloseContent,
         ParentOverlayContent,
@@ -211,6 +225,59 @@ describe('KrnOverlayService', () => {
     const replayed: Array<KrnOverlayOutcome<string>> = [];
     ref.closed.subscribe((outcome) => replayed.push(outcome));
     expect(replayed).toEqual(outcomes);
+  });
+
+  it('inherits caller labels and content providers without replacing root overlay runtime', async () => {
+    const rootInjector = TestBed.inject(Injector);
+    const translations = TestBed.inject(KRN_TRANSLATIONS);
+    const scopedPlatformRead = vi.fn(() => false);
+    const scopedCoordinator = {
+      activate: vi.fn(() => {
+        throw new Error('Scoped coordinator must not own a root overlay pane.');
+      }),
+    };
+    const scopedPlatform = {
+      get isBrowser(): boolean {
+        return scopedPlatformRead();
+      },
+    } as KrnPlatformAdapter;
+    const scopedInjector = Injector.create({
+      parent: rootInjector,
+      providers: [
+        { provide: KRN_PLATFORM, useValue: scopedPlatform },
+        { provide: KrnOverlayCoordinator, useValue: scopedCoordinator },
+        { provide: SCOPED_OVERLAY_VALUE, useValue: 'Scoped content' },
+        {
+          provide: KRN_TRANSLATIONS,
+          useValue: {
+            ...translations,
+            feedback: {
+              ...translations.feedback,
+              close: 'Scoped close',
+              dialog: 'Scoped dialog',
+            },
+          },
+        },
+      ],
+    });
+    const ref = TestBed.inject(KrnOverlayService).open(ScopedOverlayContent, {
+      injector: scopedInjector,
+    });
+
+    try {
+      await stabilize();
+      expect(document.querySelector('[role="dialog"]')?.getAttribute('aria-label')).toBe(
+        'Scoped dialog',
+      );
+      expect(document.querySelector('.close')?.getAttribute('aria-label')).toBe('Scoped close');
+      expect(document.querySelector('.scoped-content')?.textContent).toContain('Scoped content');
+      expect(scopedPlatformRead).not.toHaveBeenCalled();
+      expect(scopedCoordinator.activate).not.toHaveBeenCalled();
+    } finally {
+      ref.dismiss('api');
+      await stabilize();
+      scopedInjector.destroy();
+    }
   });
 
   it('stamps a typed TemplateRef context in its explicit logical owner', async () => {

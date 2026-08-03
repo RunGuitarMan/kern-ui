@@ -5,8 +5,8 @@ export type KrnScheduledHandle = ReturnType<typeof globalThis.setTimeout>;
 
 /** Minimal browser CloseWatcher surface used without depending on lib.dom support. */
 export interface KrnCloseWatcher {
-  addEventListener(type: 'close', listener: EventListener): void;
-  removeEventListener(type: 'close', listener: EventListener): void;
+  addEventListener(type: 'cancel' | 'close', listener: EventListener): void;
+  removeEventListener(type: 'cancel' | 'close', listener: EventListener): void;
   destroy(): void;
 }
 
