@@ -85,7 +85,7 @@ type KrnIconSize = 'sm' | 'md' | 'lg' | number;
 declare const KRN_ICONS: InjectionToken<readonly (readonly KrnIconDefinition[])[]>;
 declare function provideKrnIcons(...icons: readonly KrnIconDefinition[]): readonly Provider[];
 declare class KrnIconRegistry {
-  private readonly definitions;
+  #private;
   constructor();
   register(...icons: readonly KrnIconDefinition[]): void;
   resolve(name: string): KrnIconDefinition | undefined;

@@ -168,5 +168,36 @@
     "before": "<krn-menu [hasProjectedTrigger]=\"true\">...</krn-menu>",
     "after": "<span krnMenuTrigger>Actions</span>",
     "automatic": false
+  },
+  {
+    "id": "compose-concrete-variants",
+    "from": "KrnMenuButtonBase, KrnEditableComboboxBase, KrnUploadBase, or KrnOverlaySurface subclasses; provideKrnFormControl custom extensions",
+    "to": "Concrete Kern components composed with application services, directives, and projected templates",
+    "summary": "Stop inheriting template-coupled component implementations or installing Kern's private form adapter. Use the concrete Dropdown/Split Button, Combobox/Autocomplete, File/Drag Drop Upload, or Dialog/Alert Dialog/Drawer/Bottom Sheet components; use KrnOverlayService for custom programmatic overlay content and Angular ControlValueAccessor/Validator for application-owned controls.",
+    "components": [
+      "dropdown-button",
+      "split-button",
+      "combobox",
+      "autocomplete",
+      "file-upload",
+      "drag-drop-upload",
+      "dialog",
+      "alert-dialog",
+      "drawer",
+      "bottom-sheet"
+    ],
+    "before": "export class AccountDialog extends KrnOverlaySurface { /* inherited component internals */ }",
+    "after": "const ref = inject(KrnOverlayService).open(AccountDialogContent, { variant: 'dialog', data: account });",
+    "automatic": false
+  },
+  {
+    "id": "mcp-companion-package",
+    "from": "@kern-ui/angular/mcp, @kern-ui/angular/agent/* exports, and the kern-mcp executable bundled with @kern-ui/angular",
+    "to": "@kern-ui/mcp, @kern-ui/mcp/agent/* exports, and the kern-mcp executable from @kern-ui/mcp",
+    "summary": "Install @kern-ui/mcp as a development dependency, import the programmatic API from @kern-ui/mcp, and move AI-contract imports there. Runtime-only Angular applications no longer install parser dependencies or multi-megabyte agent assets.",
+    "components": [],
+    "before": "import manifest from '@kern-ui/angular/agent/component-manifest.json';",
+    "after": "import manifest from '@kern-ui/mcp/agent/component-manifest.json';",
+    "automatic": false
   }
 ]

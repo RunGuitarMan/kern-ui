@@ -5,7 +5,6 @@ export * from './range-controls';
 export {
   KrnAutocomplete,
   KrnCombobox,
-  KrnEditableComboboxBase,
   KrnMultiSelect,
   KrnNativeSelect,
   KrnSelect,
@@ -14,4 +13,3 @@ export * from './selection-controls';
 export * from './text-inputs';
 export * from './upload-controls';
 export { KrnFormField, KrnHint, KrnLabel, KrnValidationMessage } from './form-field';
-export { provideKrnFormControl } from './value-accessor';

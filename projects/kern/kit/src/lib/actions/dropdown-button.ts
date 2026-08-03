@@ -1,12 +1,12 @@
-import type { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import type { CdkConnectedOverlay, ConnectedPosition } from '@angular/cdk/overlay';
 import { OverlayModule } from '@angular/cdk/overlay';
+import type { ModelSignal, Signal } from '@angular/core';
 import {
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   computed,
   DestroyRef,
-  Directive,
   effect,
   ElementRef,
   inject,
@@ -53,23 +53,25 @@ const TYPEAHEAD_RESET_DELAY = 500;
 
 type KrnRequestedMenuFocus = 'first' | 'last';
 
-/**
- * Shared behavior for menu-button variants.
- *
- * Prefer `KrnDropdownButton` or `KrnSplitButton` unless a custom menu-button primitive is needed.
- *
- * @experimental The required trigger and panel template contract is not stable yet.
- */
-@Directive()
-export abstract class KrnMenuButtonBase {
+interface KrnMenuButtonHost {
+  readonly disabled: Signal<boolean>;
+  readonly loading: Signal<boolean>;
+  readonly open: ModelSignal<boolean>;
+  readonly menuAlign: Signal<KrnMenuAlignment>;
+  readonly menuOffset: Signal<number>;
+  readonly closeOnSelection: Signal<boolean>;
+}
+
+/** Internal signal controller shared by the two public menu-button components. */
+class KrnMenuButtonController {
   private readonly platform = inject(KRN_PLATFORM);
   private readonly overlayCoordinator = inject(KrnOverlayCoordinator);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly ids = inject(KrnIdService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly renderer = inject(Renderer2);
-  private readonly options = inject(KRN_MENU_BUTTON_OPTIONS);
-  private readonly menuPanel = viewChild<ElementRef<HTMLElement>>('menuPanel');
+  private resolveMenuPanel: () => HTMLElement | undefined = () => undefined;
+  private resolveFocusReturnTarget: (() => HTMLButtonElement | null) | undefined;
   private readonly capturedPanelClickItems = new WeakMap<Event, HTMLElement>();
   private requestedFocus: KrnRequestedMenuFocus | null = null;
   private typeaheadBuffer = '';
@@ -79,73 +81,59 @@ export abstract class KrnMenuButtonBase {
   private lastFocusedItemIndex = 0;
   private stopPanelActivationGuard: (() => void) | undefined;
 
-  readonly size = input<KrnSize>(this.options.size);
-  readonly variant = input<KrnActionVariant>(this.options.variant);
-  readonly tone = input<KrnTone>(this.options.tone);
-  readonly disabled = input(false, { transform: booleanAttribute });
-  readonly loading = input(false, { transform: booleanAttribute });
-  readonly open = model(false);
-  /** Logical horizontal alignment used before the CDK collision fallbacks. */
-  readonly menuAlign = input<KrnMenuAlignment>(this.options.menuAlign);
-  /** Non-negative logical gap in CSS pixels between the trigger and menu. */
-  readonly menuOffset = input(this.options.menuOffset, { transform: numberAttribute });
-  /** Makes the connected overlay exactly as wide as the complete trigger origin. */
-  readonly matchTriggerWidth = input(this.options.matchTriggerWidth, {
-    transform: booleanAttribute,
-  });
-  /** Closes after an enabled menu item activates; use the keep-open marker for one item. */
-  readonly closeOnSelection = input(true, { transform: booleanAttribute });
+  readonly triggerId = this.ids.next('menu-button-trigger');
+  readonly menuId = this.ids.next('menu');
+  readonly isDisabled: Signal<boolean>;
+  readonly effectiveOpen: Signal<boolean>;
+  readonly menuPositions: Signal<ConnectedPosition[]>;
 
-  protected readonly triggerId = this.ids.next('menu-button-trigger');
-  protected readonly menuId = this.ids.next('menu');
-  protected readonly isDisabled = computed(() => this.disabled() || this.loading());
-  protected readonly effectiveOpen = computed(() => this.open() && !this.isDisabled());
-  protected readonly menuPositions = computed(() => {
-    const alignment: KrnMenuAlignment = this.menuAlign() === 'start' ? 'start' : 'end';
-    const fallbackAlignment: KrnMenuAlignment = alignment === 'start' ? 'end' : 'start';
-    const configuredOffset = this.menuOffset();
-    const offset =
-      Number.isFinite(configuredOffset) && configuredOffset >= 0
-        ? configuredOffset
-        : KRN_MENU_BUTTON_DEFAULT_OPTIONS.menuOffset;
+  constructor(private readonly menuHost: KrnMenuButtonHost) {
+    this.isDisabled = computed(() => this.menuHost.disabled() || this.menuHost.loading());
+    this.effectiveOpen = computed(() => this.menuHost.open() && !this.isDisabled());
+    this.menuPositions = computed(() => {
+      const alignment: KrnMenuAlignment = this.menuHost.menuAlign() === 'start' ? 'start' : 'end';
+      const fallbackAlignment: KrnMenuAlignment = alignment === 'start' ? 'end' : 'start';
+      const configuredOffset = this.menuHost.menuOffset();
+      const offset =
+        Number.isFinite(configuredOffset) && configuredOffset >= 0
+          ? configuredOffset
+          : KRN_MENU_BUTTON_DEFAULT_OPTIONS.menuOffset;
 
-    return [
-      {
-        originX: alignment,
-        originY: 'bottom' as const,
-        overlayX: alignment,
-        overlayY: 'top' as const,
-        offsetY: offset,
-      },
-      {
-        originX: alignment,
-        originY: 'top' as const,
-        overlayX: alignment,
-        overlayY: 'bottom' as const,
-        offsetY: -offset,
-      },
-      {
-        originX: fallbackAlignment,
-        originY: 'bottom' as const,
-        overlayX: fallbackAlignment,
-        overlayY: 'top' as const,
-        offsetY: offset,
-      },
-      {
-        originX: fallbackAlignment,
-        originY: 'top' as const,
-        overlayX: fallbackAlignment,
-        overlayY: 'bottom' as const,
-        offsetY: -offset,
-      },
-    ];
-  });
-
-  constructor() {
+      return [
+        {
+          originX: alignment,
+          originY: 'bottom' as const,
+          overlayX: alignment,
+          overlayY: 'top' as const,
+          offsetY: offset,
+        },
+        {
+          originX: alignment,
+          originY: 'top' as const,
+          overlayX: alignment,
+          overlayY: 'bottom' as const,
+          offsetY: -offset,
+        },
+        {
+          originX: fallbackAlignment,
+          originY: 'bottom' as const,
+          overlayX: fallbackAlignment,
+          overlayY: 'top' as const,
+          offsetY: offset,
+        },
+        {
+          originX: fallbackAlignment,
+          originY: 'top' as const,
+          overlayX: fallbackAlignment,
+          overlayY: 'bottom' as const,
+          offsetY: -offset,
+        },
+      ];
+    });
     effect(() => {
-      if (this.open() && this.isDisabled()) {
+      if (this.menuHost.open() && this.isDisabled()) {
         const restoreFocusableLoadingTrigger =
-          this.loading() && !this.disabled() && this.menuButtonOwnsFocus();
+          this.menuHost.loading() && !this.menuHost.disabled() && this.menuButtonOwnsFocus();
         this.closeMenu(restoreFocusableLoadingTrigger);
       }
     });
@@ -156,7 +144,15 @@ export abstract class KrnMenuButtonBase {
     });
   }
 
-  protected toggleMenu(): void {
+  connectView(
+    resolveMenuPanel: () => HTMLElement | undefined,
+    resolveFocusReturnTarget?: () => HTMLButtonElement | null,
+  ): void {
+    this.resolveMenuPanel = resolveMenuPanel;
+    this.resolveFocusReturnTarget = resolveFocusReturnTarget;
+  }
+
+  toggleMenu(): void {
     if (this.effectiveOpen()) {
       this.closeMenu(false);
       return;
@@ -164,7 +160,7 @@ export abstract class KrnMenuButtonBase {
     this.openMenu('first');
   }
 
-  protected registerOverlay(overlay: CdkConnectedOverlay, origin: HTMLElement): void {
+  registerOverlay(overlay: CdkConnectedOverlay, origin: HTMLElement): void {
     this.overlayCoordinator.registerOverlayOwnership(
       origin,
       overlay.overlayRef.overlayElement,
@@ -175,7 +171,7 @@ export abstract class KrnMenuButtonBase {
       if (!this.effectiveOpen()) {
         return;
       }
-      const panel = this.menuPanel()?.nativeElement;
+      const panel = this.resolveMenuPanel();
       if (panel) {
         this.installPanelActivationGuard(panel);
         this.observeMenu(panel);
@@ -188,19 +184,19 @@ export abstract class KrnMenuButtonBase {
     });
   }
 
-  protected onOverlayDetached(): void {
+  onOverlayDetached(): void {
     this.requestedFocus = null;
     this.menuHadFocus = false;
     this.clearTypeahead();
     this.stopObservingMenu();
     this.removePanelActivationGuard();
-    if (this.open()) {
-      this.open.set(false);
+    if (this.menuHost.open()) {
+      this.menuHost.open.set(false);
     }
   }
 
-  protected onOverlayOutsideClick(event: MouseEvent): void {
-    const panel = this.menuPanel()?.nativeElement;
+  onOverlayOutsideClick(event: MouseEvent): void {
+    const panel = this.resolveMenuPanel();
     if (
       !this.effectiveOpen() ||
       this.hasInertAncestor(panel) ||
@@ -212,8 +208,8 @@ export abstract class KrnMenuButtonBase {
     this.closeMenu(false);
   }
 
-  protected closeFromMenu(event: MouseEvent): void {
-    if (event.defaultPrevented || !this.closeOnSelection()) {
+  closeFromMenu(event: MouseEvent): void {
+    if (event.defaultPrevented || !this.menuHost.closeOnSelection()) {
       return;
     }
     this.synchronizeMenuItems();
@@ -229,7 +225,7 @@ export abstract class KrnMenuButtonBase {
     this.closeMenu(true);
   }
 
-  protected onTriggerKeydown(event: KeyboardEvent): void {
+  onTriggerKeydown(event: KeyboardEvent): void {
     if (event.defaultPrevented || this.isDisabled()) {
       return;
     }
@@ -252,7 +248,7 @@ export abstract class KrnMenuButtonBase {
     this.openMenu(position);
   }
 
-  protected onMenuKeydown(event: KeyboardEvent): void {
+  onMenuKeydown(event: KeyboardEvent): void {
     if (event.defaultPrevented) {
       return;
     }
@@ -312,10 +308,10 @@ export abstract class KrnMenuButtonBase {
     }
   }
 
-  protected closeOnFocusOut(event: FocusEvent): void {
+  closeOnFocusOut(event: FocusEvent): void {
     const next = event.relatedTarget;
     const current = event.currentTarget;
-    const panel = this.menuPanel()?.nativeElement;
+    const panel = this.resolveMenuPanel();
     if (panel === current && (!krnIsNode(this.platform, next) || !panel.contains(next))) {
       this.menuHadFocus = false;
     }
@@ -331,23 +327,13 @@ export abstract class KrnMenuButtonBase {
     this.closeMenu(false);
   }
 
-  /**
-   * Focus destination after a menu-owned loading transition.
-   *
-   * Compound variants can preserve a different focusable action while their menu trigger
-   * becomes disabled.
-   */
-  protected getFocusReturnTarget(): HTMLButtonElement | null {
-    return this.findMenuTrigger();
-  }
-
   private openMenu(focus: KrnRequestedMenuFocus): void {
     if (this.isDisabled()) {
       return;
     }
     this.requestedFocus = focus;
-    this.open.set(true);
-    if (this.menuPanel()) {
+    this.menuHost.open.set(true);
+    if (this.resolveMenuPanel()) {
       this.focusMenuItem(focus);
       this.requestedFocus = null;
     }
@@ -357,8 +343,8 @@ export abstract class KrnMenuButtonBase {
     this.requestedFocus = null;
     this.menuHadFocus = false;
     this.clearTypeahead();
-    if (this.open()) {
-      this.open.set(false);
+    if (this.menuHost.open()) {
+      this.menuHost.open.set(false);
     }
     if (restoreFocus) {
       this.focusTrigger();
@@ -366,7 +352,7 @@ export abstract class KrnMenuButtonBase {
   }
 
   private synchronizeMenuItems(): HTMLElement[] {
-    const panel = this.menuPanel()?.nativeElement;
+    const panel = this.resolveMenuPanel();
     if (!panel) {
       return [];
     }
@@ -458,7 +444,7 @@ export abstract class KrnMenuButtonBase {
     if (!krnIsElement(this.platform, target)) {
       return null;
     }
-    const panel = this.menuPanel()?.nativeElement;
+    const panel = this.resolveMenuPanel();
     const item = target.closest<HTMLElement>(MENU_ITEM_SELECTOR);
     return item && panel?.contains(item) ? item : null;
   }
@@ -478,7 +464,7 @@ export abstract class KrnMenuButtonBase {
       this.focusItem(item, synchronizedItems);
       return;
     }
-    const panel = this.menuPanel()?.nativeElement;
+    const panel = this.resolveMenuPanel();
     if (panel) {
       this.menuHadFocus = true;
       this.lastFocusedItemIndex = 0;
@@ -706,7 +692,7 @@ export abstract class KrnMenuButtonBase {
     }
 
     const trigger = this.findMenuTrigger();
-    const panel = this.menuPanel()?.nativeElement;
+    const panel = this.resolveMenuPanel();
     return (
       trigger === activeElement ||
       Boolean(trigger?.contains(activeElement)) ||
@@ -717,7 +703,7 @@ export abstract class KrnMenuButtonBase {
   }
 
   private focusTriggerImmediately(): void {
-    const target = this.getFocusReturnTarget();
+    const target = this.resolveFocusReturnTarget?.() ?? this.findMenuTrigger();
     if (target?.isConnected && !target.disabled) {
       target.focus({ preventScroll: true });
     }
@@ -739,7 +725,7 @@ export abstract class KrnMenuButtonBase {
   imports: [OverlayModule, KrnButton],
   host: {
     '[attr.data-menu-align]': 'menuAlign()',
-    '[attr.data-open]': 'effectiveOpen()',
+    '[attr.data-open]': 'menu.effectiveOpen()',
     '[attr.data-size]': 'size()',
     '[attr.data-tone]': 'tone()',
     '[attr.data-variant]': 'variant()',
@@ -749,23 +735,23 @@ export abstract class KrnMenuButtonBase {
       #origin="cdkOverlayOrigin"
       cdkOverlayOrigin
       class="krn-dropdown"
-      (focusout)="closeOnFocusOut($event)"
+      (focusout)="menu.closeOnFocusOut($event)"
     >
       <button
         #menuTrigger
         krnButton
         aria-haspopup="menu"
         type="button"
-        [attr.aria-controls]="menuId"
-        [attr.aria-expanded]="effectiveOpen()"
-        [attr.id]="triggerId"
+        [attr.aria-controls]="menu.menuId"
+        [attr.aria-expanded]="menu.effectiveOpen()"
+        [attr.id]="menu.triggerId"
         [disabled]="disabled()"
         [loading]="loading()"
         [size]="size()"
         [tone]="tone()"
         [variant]="variant()"
-        (click)="toggleMenu()"
-        (keydown)="onTriggerKeydown($event)"
+        (click)="menu.toggleMenu()"
+        (keydown)="menu.onTriggerKeydown($event)"
       >
         <ng-content select="[krnLabel]" />
         <span krnTrailingIcon class="krn-chevron"></span>
@@ -775,8 +761,8 @@ export abstract class KrnMenuButtonBase {
       #connectedOverlay="cdkConnectedOverlay"
       cdkConnectedOverlay
       [cdkConnectedOverlayOrigin]="origin"
-      [cdkConnectedOverlayOpen]="effectiveOpen()"
-      [cdkConnectedOverlayPositions]="menuPositions()"
+      [cdkConnectedOverlayOpen]="menu.effectiveOpen()"
+      [cdkConnectedOverlayPositions]="menu.menuPositions()"
       [cdkConnectedOverlayPush]="true"
       [cdkConnectedOverlayFlexibleDimensions]="true"
       [cdkConnectedOverlayViewportMargin]="8"
@@ -786,22 +772,22 @@ export abstract class KrnMenuButtonBase {
       cdkConnectedOverlayTransformOriginOn=".krn-action-menu"
       [cdkConnectedOverlayHasBackdrop]="false"
       cdkConnectedOverlayPanelClass="krn-overlay-pane"
-      (attach)="registerOverlay(connectedOverlay, origin.elementRef.nativeElement)"
-      (detach)="onOverlayDetached()"
-      (overlayOutsideClick)="onOverlayOutsideClick($event)"
+      (attach)="menu.registerOverlay(connectedOverlay, origin.elementRef.nativeElement)"
+      (detach)="menu.onOverlayDetached()"
+      (overlayOutsideClick)="menu.onOverlayOutsideClick($event)"
     >
-      @if (effectiveOpen()) {
+      @if (menu.effectiveOpen()) {
         <div
           #menuPanel
           class="krn-action-menu"
           role="menu"
           tabindex="-1"
-          [attr.aria-labelledby]="triggerId"
+          [attr.aria-labelledby]="menu.triggerId"
           [attr.data-match-trigger-width]="matchTriggerWidth()"
-          [attr.id]="menuId"
-          (click)="closeFromMenu($event)"
-          (focusout)="closeOnFocusOut($event)"
-          (keydown)="onMenuKeydown($event)"
+          [attr.id]="menu.menuId"
+          (click)="menu.closeFromMenu($event)"
+          (focusout)="menu.closeOnFocusOut($event)"
+          (keydown)="menu.onMenuKeydown($event)"
         >
           <ng-content select="[krnMenu]" />
         </div>
@@ -810,7 +796,31 @@ export abstract class KrnMenuButtonBase {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnDropdownButton extends KrnMenuButtonBase {}
+export class KrnDropdownButton {
+  private readonly options = inject(KRN_MENU_BUTTON_OPTIONS);
+  readonly size = input<KrnSize>(this.options.size);
+  readonly variant = input<KrnActionVariant>(this.options.variant);
+  readonly tone = input<KrnTone>(this.options.tone);
+  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly loading = input(false, { transform: booleanAttribute });
+  readonly open = model(false);
+  /** Logical horizontal alignment used before the CDK collision fallbacks. */
+  readonly menuAlign = input<KrnMenuAlignment>(this.options.menuAlign);
+  /** Non-negative logical gap in CSS pixels between the trigger and menu. */
+  readonly menuOffset = input(this.options.menuOffset, { transform: numberAttribute });
+  /** Makes the connected overlay exactly as wide as the complete trigger origin. */
+  readonly matchTriggerWidth = input(this.options.matchTriggerWidth, {
+    transform: booleanAttribute,
+  });
+  /** Closes after an enabled menu item activates; use the keep-open marker for one item. */
+  readonly closeOnSelection = input(true, { transform: booleanAttribute });
+  private readonly menuPanel = viewChild<ElementRef<HTMLElement>>('menuPanel');
+  protected readonly menu = new KrnMenuButtonController(this);
+
+  constructor() {
+    this.menu.connectView(() => this.menuPanel()?.nativeElement);
+  }
+}
 
 @Component({
   selector: 'krn-split-button',
@@ -818,7 +828,7 @@ export class KrnDropdownButton extends KrnMenuButtonBase {}
   host: {
     '[attr.data-menu-align]': 'menuAlign()',
     '[attr.data-loading]': 'loading()',
-    '[attr.data-open]': 'effectiveOpen()',
+    '[attr.data-open]': 'menu.effectiveOpen()',
     '[attr.data-size]': 'size()',
     '[attr.data-tone]': 'tone()',
     '[attr.data-variant]': 'variant()',
@@ -828,7 +838,7 @@ export class KrnDropdownButton extends KrnMenuButtonBase {}
       #origin="cdkOverlayOrigin"
       cdkOverlayOrigin
       class="krn-split-button"
-      (focusout)="closeOnFocusOut($event)"
+      (focusout)="menu.closeOnFocusOut($event)"
     >
       <button
         krnButton
@@ -849,16 +859,16 @@ export class KrnDropdownButton extends KrnMenuButtonBase {}
         class="krn-split-button__menu-trigger"
         type="button"
         aria-haspopup="menu"
-        [attr.aria-controls]="menuId"
-        [attr.aria-expanded]="effectiveOpen()"
+        [attr.aria-controls]="menu.menuId"
+        [attr.aria-expanded]="menu.effectiveOpen()"
         [attr.aria-label]="menuLabel()"
-        [attr.id]="triggerId"
-        [disabled]="isDisabled()"
+        [attr.id]="menu.triggerId"
+        [disabled]="menu.isDisabled()"
         [size]="size()"
         [tone]="tone()"
         [variant]="variant()"
-        (click)="toggleMenu()"
-        (keydown)="onTriggerKeydown($event)"
+        (click)="menu.toggleMenu()"
+        (keydown)="menu.onTriggerKeydown($event)"
       >
         <span krnTrailingIcon class="krn-chevron"></span>
       </button>
@@ -867,8 +877,8 @@ export class KrnDropdownButton extends KrnMenuButtonBase {}
       #connectedOverlay="cdkConnectedOverlay"
       cdkConnectedOverlay
       [cdkConnectedOverlayOrigin]="origin"
-      [cdkConnectedOverlayOpen]="effectiveOpen()"
-      [cdkConnectedOverlayPositions]="menuPositions()"
+      [cdkConnectedOverlayOpen]="menu.effectiveOpen()"
+      [cdkConnectedOverlayPositions]="menu.menuPositions()"
       [cdkConnectedOverlayPush]="true"
       [cdkConnectedOverlayFlexibleDimensions]="true"
       [cdkConnectedOverlayViewportMargin]="8"
@@ -878,22 +888,22 @@ export class KrnDropdownButton extends KrnMenuButtonBase {}
       cdkConnectedOverlayTransformOriginOn=".krn-action-menu"
       [cdkConnectedOverlayHasBackdrop]="false"
       cdkConnectedOverlayPanelClass="krn-overlay-pane"
-      (attach)="registerOverlay(connectedOverlay, origin.elementRef.nativeElement)"
-      (detach)="onOverlayDetached()"
-      (overlayOutsideClick)="onOverlayOutsideClick($event)"
+      (attach)="menu.registerOverlay(connectedOverlay, origin.elementRef.nativeElement)"
+      (detach)="menu.onOverlayDetached()"
+      (overlayOutsideClick)="menu.onOverlayOutsideClick($event)"
     >
-      @if (effectiveOpen()) {
+      @if (menu.effectiveOpen()) {
         <div
           #menuPanel
           class="krn-action-menu"
           role="menu"
           tabindex="-1"
-          [attr.aria-labelledby]="triggerId"
+          [attr.aria-labelledby]="menu.triggerId"
           [attr.data-match-trigger-width]="matchTriggerWidth()"
-          [attr.id]="menuId"
-          (click)="closeFromMenu($event)"
-          (focusout)="closeOnFocusOut($event)"
-          (keydown)="onMenuKeydown($event)"
+          [attr.id]="menu.menuId"
+          (click)="menu.closeFromMenu($event)"
+          (focusout)="menu.closeOnFocusOut($event)"
+          (keydown)="menu.onMenuKeydown($event)"
         >
           <ng-content select="[krnMenu]" />
         </div>
@@ -902,21 +912,44 @@ export class KrnDropdownButton extends KrnMenuButtonBase {}
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnSplitButton extends KrnMenuButtonBase {
+export class KrnSplitButton {
+  private readonly options = inject(KRN_MENU_BUTTON_OPTIONS);
   private readonly splitHost = inject<ElementRef<HTMLElement>>(ElementRef);
+  readonly size = input<KrnSize>(this.options.size);
+  readonly variant = input<KrnActionVariant>(this.options.variant);
+  readonly tone = input<KrnTone>(this.options.tone);
+  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly loading = input(false, { transform: booleanAttribute });
+  readonly open = model(false);
+  /** Logical horizontal alignment used before the CDK collision fallbacks. */
+  readonly menuAlign = input<KrnMenuAlignment>(this.options.menuAlign);
+  /** Non-negative logical gap in CSS pixels between the trigger and menu. */
+  readonly menuOffset = input(this.options.menuOffset, { transform: numberAttribute });
+  /** Makes the connected overlay exactly as wide as the complete trigger origin. */
+  readonly matchTriggerWidth = input(this.options.matchTriggerWidth, {
+    transform: booleanAttribute,
+  });
+  /** Closes after an enabled menu item activates; use the keep-open marker for one item. */
+  readonly closeOnSelection = input(true, { transform: booleanAttribute });
   readonly menuLabel = input(inject(KRN_MORE_ACTIONS_LABEL));
   readonly primaryAction = output<MouseEvent>();
+  private readonly menuPanel = viewChild<ElementRef<HTMLElement>>('menuPanel');
+  protected readonly menu = new KrnMenuButtonController(this);
 
-  protected override getFocusReturnTarget(): HTMLButtonElement | null {
-    return this.loading()
-      ? (this.splitHost.nativeElement.querySelector<HTMLButtonElement>(
-          '.krn-split-button__primary',
-        ) ?? super.getFocusReturnTarget())
-      : super.getFocusReturnTarget();
+  constructor() {
+    this.menu.connectView(
+      () => this.menuPanel()?.nativeElement,
+      () =>
+        this.loading()
+          ? this.splitHost.nativeElement.querySelector<HTMLButtonElement>(
+              '.krn-split-button__primary',
+            )
+          : null,
+    );
   }
 
   protected activatePrimary(event: MouseEvent): void {
-    if (!this.isDisabled()) {
+    if (!this.menu.isDisabled()) {
       this.open.set(false);
       this.primaryAction.emit(event);
     }

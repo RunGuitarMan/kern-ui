@@ -96,6 +96,7 @@ export class KrnAvatar {
   selector: 'krn-avatar-group',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
+    class: 'krn-avatar-group',
     '[style.--krn-avatar-overlap]': 'overlap()',
     '[attr.aria-label]': 'ariaLabel()',
     role: 'group',
@@ -105,12 +106,6 @@ export class KrnAvatar {
     :host {
       display: inline-flex;
       align-items: center;
-    }
-    :host ::ng-deep krn-avatar + krn-avatar {
-      margin-inline-start: calc(var(--krn-avatar-overlap, 0.625rem) * -1);
-    }
-    :host ::ng-deep krn-avatar {
-      box-shadow: 0 0 0 2px var(--krn-color-canvas, #faf9f7);
     }
   `,
 })

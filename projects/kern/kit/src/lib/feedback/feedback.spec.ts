@@ -29,6 +29,12 @@ function inertAncestor(element: Element | null): HTMLElement | null {
 }
 
 describe('Kern feedback', () => {
+  it('composes each stable modal without a public implementation base class', () => {
+    for (const component of [KrnDialog, KrnAlertDialog, KrnDrawer, KrnBottomSheet]) {
+      expect(Object.getPrototypeOf(component.prototype)).toBe(Object.prototype);
+    }
+  });
+
   it('exposes hint, overlay, progress, state and confirmation primitives', () => {
     expect([
       KrnTooltip,

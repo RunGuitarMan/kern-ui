@@ -14,8 +14,12 @@ const sharedStyles = [
     family: 'forms',
     path: join(sourceRoot, 'styles/components/forms.css'),
   },
+  {
+    family: 'projection',
+    path: join(sourceRoot, 'styles/components/projection.css'),
+  },
 ];
-const maxRuntimeBundleBytes = 1_440_000;
+const maxRuntimeBundleBytes = 1_485_000;
 const failures = [];
 
 function walk(directory, extension) {
@@ -53,6 +57,25 @@ const componentSources = [
   ...walk(join(workspaceRoot, 'projects/kern/kit/src/lib/actions'), '.ts'),
   ...walk(join(workspaceRoot, 'projects/kern/kit/src/lib/forms'), '.ts'),
 ];
+
+const kernProjectRoot = join(workspaceRoot, 'projects/kern');
+const runtimeSourceRoots = [
+  join(kernProjectRoot, 'src/lib'),
+  ...readdirSync(kernProjectRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => join(kernProjectRoot, entry.name, 'src/lib')),
+].filter(existsSync);
+const runtimeComponentSources = runtimeSourceRoots.flatMap((sourceRoot) =>
+  walk(sourceRoot, '.ts').filter(
+    (path) => !path.endsWith('.spec.ts') && !path.endsWith('.hydration.spec.ts'),
+  ),
+);
+
+for (const path of runtimeComponentSources) {
+  if (readFileSync(path, 'utf8').includes('::ng-deep')) {
+    failures.push(`${relative(workspaceRoot, path)} uses forbidden ::ng-deep styling.`);
+  }
+}
 
 for (const path of componentSources) {
   const source = readFileSync(path, 'utf8');
@@ -102,6 +125,10 @@ for (const { family, path } of sharedStyles) {
 }
 
 const actionStyles = readFileSync(sharedStyles[0].path, 'utf8');
+const projectionStyles = readFileSync(sharedStyles[2].path, 'utf8');
+if (!projectionStyles.includes('.krn-responsive-media :is(img, video, iframe, svg)')) {
+  failures.push('Responsive Media projection styles must support wrapped media descendants.');
+}
 const linkFocusRule = actionStyles.match(/\.krn-link:focus-visible\s*\{([^}]*)\}/)?.[1] ?? '';
 if (!linkFocusRule.includes('var(--krn-focus-ring')) {
   failures.push('Link focus-visible styles must use the public --krn-focus-ring token.');

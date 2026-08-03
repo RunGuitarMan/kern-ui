@@ -167,6 +167,86 @@ function publicDeclarations(sourceFile) {
   return declarations;
 }
 
+function kernEntrypointFromModule(moduleName) {
+  if (moduleName === '@kern-ui/angular') return '.';
+  const prefix = '@kern-ui/angular/';
+  return moduleName.startsWith(prefix) ? `./${moduleName.slice(prefix.length)}` : null;
+}
+
+function importBindings(sourceFile) {
+  const named = new Map();
+  const namespaces = new Map();
+  for (const statement of sourceFile.statements) {
+    if (
+      !ts.isImportDeclaration(statement) ||
+      !ts.isStringLiteralLike(statement.moduleSpecifier) ||
+      !statement.importClause
+    ) {
+      continue;
+    }
+    const entrypoint = kernEntrypointFromModule(statement.moduleSpecifier.text);
+    if (!entrypoint) continue;
+    const bindings = statement.importClause.namedBindings;
+    if (bindings && ts.isNamedImports(bindings)) {
+      for (const element of bindings.elements) {
+        named.set(
+          element.name.text,
+          `${entrypoint}:${element.propertyName?.text ?? element.name.text}`,
+        );
+      }
+    } else if (bindings && ts.isNamespaceImport(bindings)) {
+      namespaces.set(bindings.name.text, entrypoint);
+    }
+  }
+  return { named, namespaces };
+}
+
+function isDeclarationName(identifier) {
+  const parent = identifier.parent;
+  return Boolean(
+    parent &&
+    'name' in parent &&
+    parent.name === identifier &&
+    !ts.isShorthandPropertyAssignment(parent),
+  );
+}
+
+function declarationDependencies(rootName, declarations, exportedLocals, imports) {
+  const dependencies = new Set();
+  const visitedLocals = new Set();
+
+  function visitDeclaration(localName) {
+    if (visitedLocals.has(localName)) return;
+    visitedLocals.add(localName);
+    const declaration = declarations.get(localName);
+    if (declaration) ts.forEachChild(declaration, visit);
+  }
+
+  function visit(node) {
+    if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.expression)) {
+      const entrypoint = imports.namespaces.get(node.expression.text);
+      if (entrypoint) dependencies.add(`${entrypoint}:${node.name.text}`);
+    }
+    if (ts.isIdentifier(node) && !isDeclarationName(node)) {
+      const imported = imports.named.get(node.text);
+      if (imported) {
+        dependencies.add(imported);
+      } else if (node.text !== rootName && declarations.has(node.text)) {
+        const exportedName = exportedLocals.get(node.text);
+        if (exportedName) {
+          dependencies.add(exportedName);
+        } else {
+          visitDeclaration(node.text);
+        }
+      }
+    }
+    ts.forEachChild(node, visit);
+  }
+
+  visitDeclaration(rootName);
+  return dependencies;
+}
+
 async function discoverPublicApi(apiConfig) {
   const symbols = new Map();
   const deprecatedMembers = new Map();
@@ -184,6 +264,8 @@ async function discoverPublicApi(apiConfig) {
     );
     const declarations = publicDeclarations(sourceFile);
     const exportedLocals = new Map();
+    const exportedKeys = new Map();
+    const imports = importBindings(sourceFile);
 
     for (const statement of sourceFile.statements) {
       if (
@@ -200,6 +282,7 @@ async function discoverPublicApi(apiConfig) {
         if (symbols.has(key)) report(`Public API baseline exports "${key}" more than once.`);
         const declaration = declarations.get(localName);
         symbols.set(key, {
+          dependencies: new Set(),
           entrypoint: entrypoint.subpath,
           experimental: declaration ? hasJsDocTag(declaration, 'experimental') : false,
           kind: statement.isTypeOnly || element.isTypeOnly ? 'type' : 'value',
@@ -207,12 +290,29 @@ async function discoverPublicApi(apiConfig) {
           name: exportedName,
         });
         if (!exportedLocals.has(localName) || exportedName === localName) {
-          exportedLocals.set(localName, exportedName);
+          exportedLocals.set(localName, key);
         }
+        const keys = exportedKeys.get(localName) ?? [];
+        keys.push(key);
+        exportedKeys.set(localName, keys);
       }
     }
 
-    for (const [localName, exportedName] of exportedLocals) {
+    for (const [localName, keys] of exportedKeys) {
+      const dependencies = declarationDependencies(
+        localName,
+        declarations,
+        exportedLocals,
+        imports,
+      );
+      for (const key of keys) {
+        const symbol = symbols.get(key);
+        symbol.dependencies = new Set([...dependencies].filter((dependency) => dependency !== key));
+      }
+    }
+
+    for (const [localName, publicSymbolKey] of exportedLocals) {
+      const exportedName = publicSymbolKey.slice(publicSymbolKey.lastIndexOf(':') + 1);
       const declaration = declarations.get(localName);
       if (!declaration || !ts.isClassDeclaration(declaration)) continue;
       for (const member of declaration.members) {
@@ -416,6 +516,37 @@ function compareSymbols(expected, registered) {
   }
   for (const key of registered.keys()) {
     if (!expected.has(key)) report(`Lifecycle public symbol "${key}" is not in an API baseline.`);
+  }
+}
+
+const lifecycleMaturity = new Map([
+  ['experimental', 0],
+  ['beta', 1],
+  ['stable', 2],
+]);
+
+export function symbolDependencyStatusIssues(discoveredSymbols, registeredSymbols) {
+  const found = [];
+  for (const [key, symbol] of discoveredSymbols) {
+    const owner = registeredSymbols.get(key);
+    const ownerMaturity = lifecycleMaturity.get(owner?.status);
+    if (ownerMaturity === undefined || ownerMaturity === 0) continue;
+    for (const dependencyKey of symbol.dependencies ?? []) {
+      const dependency = registeredSymbols.get(dependencyKey);
+      const dependencyMaturity = lifecycleMaturity.get(dependency?.status);
+      if (dependencyMaturity === undefined || dependencyMaturity >= ownerMaturity) continue;
+      found.push(
+        `Public ${owner.status} symbol "${key}" depends on less mature ` +
+          `${dependency.status} symbol "${dependencyKey}".`,
+      );
+    }
+  }
+  return found;
+}
+
+function compareSymbolDependencyStatuses(discoveredSymbols, registeredSymbols) {
+  for (const issue of symbolDependencyStatusIssues(discoveredSymbols, registeredSymbols)) {
+    report(issue);
   }
 }
 
@@ -631,6 +762,7 @@ async function main() {
   const discoveredApi = await discoverPublicApi(apiConfig);
   compareCatalog(catalog, registeredCatalog);
   compareSymbols(discoveredApi.symbols, registeredSymbols);
+  compareSymbolDependencyStatuses(discoveredApi.symbols, registeredSymbols);
   compareComponentStatuses(catalog, classes, registeredSymbols);
 
   const version = parseSemver(packageManifest.version);

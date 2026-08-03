@@ -10,34 +10,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { provideKrnFormControl } from './index';
-import { KrnEditableComboboxBase } from './select-controls';
-import { KrnUploadBase } from './upload-controls';
-import { useKrnControlA11y, useKrnFormControl } from './value-accessor';
-
-@Component({
-  selector: 'krn-external-combobox-base-test',
-  providers: [...provideKrnFormControl()],
-  template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class ExternalComboboxBaseFixture extends KrnEditableComboboxBase {
-  constructor() {
-    super();
-  }
-}
-
-@Component({
-  selector: 'krn-external-upload-base-test',
-  providers: [...provideKrnFormControl()],
-  template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class ExternalUploadBaseFixture extends KrnUploadBase {
-  constructor() {
-    super();
-  }
-}
+import { provideKrnFormControl, useKrnControlA11y, useKrnFormControl } from './value-accessor';
 
 @Component({
   selector: 'krn-missing-form-adapter-test',
@@ -212,21 +185,6 @@ function testAccessor(fixture: {
 }
 
 describe('KRN form-control composition ownership contract', () => {
-  it('keeps external experimental base subclasses consumable through the public provider', () => {
-    const comboboxFixture = TestBed.createComponent(ExternalComboboxBaseFixture);
-    comboboxFixture.componentRef.setInput('options', []);
-    comboboxFixture.detectChanges();
-    const uploadFixture = TestBed.createComponent(ExternalUploadBaseFixture);
-    uploadFixture.detectChanges();
-
-    const comboboxAccessors = comboboxFixture.debugElement.injector.get(NG_VALUE_ACCESSOR);
-    const uploadAccessors = uploadFixture.debugElement.injector.get(NG_VALUE_ACCESSOR);
-    expect(comboboxAccessors).toHaveLength(1);
-    expect(uploadAccessors).toHaveLength(1);
-    expect(comboboxAccessors[0]).not.toBe(comboboxFixture.componentInstance);
-    expect(uploadAccessors[0]).not.toBe(uploadFixture.componentInstance);
-  });
-
   it('fails fast instead of borrowing an ancestor adapter when the component provider is missing', () => {
     expect(() => TestBed.createComponent(FormAdapterAncestorFixture)).toThrow(
       /KRN_FORM_CONTROL_ADAPTER|No provider/i,

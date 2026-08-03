@@ -199,7 +199,6 @@
 - Assuming the documentation SSR build replaces validation of the consuming application.
 - Combobox commits only a known option; do not treat unmatched text as a value.
 - Keep option identity stable across async refreshes.
-- Do not manually duplicate value and disabled state when Angular Forms owns the control.
 
 ## Autocomplete
 
@@ -208,7 +207,6 @@
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
 - Autocomplete preserves valid free text; use Combobox when a known identifier is required.
-- Do not manually duplicate value and disabled state when Angular Forms owns the control.
 
 ## Slider
 
@@ -259,20 +257,6 @@
 - Do not manually duplicate value and disabled state when Angular Forms owns the control.
 
 ## Color Picker
-
-- Importing from an undeclared family path or a source implementation file.
-- Loading only tokens.css instead of the complete styles/kern.css component bundle.
-- Assuming the documentation SSR build replaces validation of the consuming application.
-- Do not manually duplicate value and disabled state when Angular Forms owns the control.
-
-## File Upload
-
-- Importing from an undeclared family path or a source implementation file.
-- Loading only tokens.css instead of the complete styles/kern.css component bundle.
-- Assuming the documentation SSR build replaces validation of the consuming application.
-- Do not manually duplicate value and disabled state when Angular Forms owns the control.
-
-## Drag Drop Upload
 
 - Importing from an undeclared family path or a source implementation file.
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.

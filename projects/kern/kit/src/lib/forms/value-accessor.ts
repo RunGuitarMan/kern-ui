@@ -71,14 +71,12 @@ const KRN_FORM_CONTROL_ADAPTER = new InjectionToken<KrnFormControlAdapter<unknow
 );
 
 /**
- * Installs the Angular Forms adapter required by Kern's experimental form-control variant bases.
+ * Installs Kern's component-scoped Angular Forms adapter.
  *
- * Add the returned providers to a component that extends `KrnEditableComboboxBase` or
- * `KrnUploadBase`. The adapter remains component-scoped and is shared by `NG_VALUE_ACCESSOR` and
- * `NG_VALIDATORS` without making the component inherit form-state machinery.
+ * The adapter is shared by `NG_VALUE_ACCESSOR` and `NG_VALIDATORS` without making the component
+ * inherit Angular Forms state machinery.
  *
- * @publicApi
- * @experimental The custom-control extension contract may change before Kern 1.0.
+ * @internal Kern controls install this together with the private state hook below.
  */
 export function provideKrnFormControl(): Provider[] {
   return [

@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  Directive,
   ElementRef,
   effect,
   inject,
@@ -14,6 +13,7 @@ import {
   type TemplateRef,
   viewChild,
 } from '@angular/core';
+import type { ModelSignal, OutputEmitterRef, Signal } from '@angular/core';
 import { A11yModule } from '@angular/cdk/a11y';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -34,28 +34,28 @@ function nullableBooleanAttribute(value: unknown): boolean | null {
 const overlayExitDuration = 260;
 
 const OVERLAY_TEMPLATE = `
-  @if (rendered()) {
+  @if (surface.rendered()) {
     <div
       class="backdrop"
-      [attr.data-position]="surfacePosition()"
-      [attr.data-state]="closing() ? 'closing' : open() ? 'open' : 'closed'"
-      [attr.hidden]="!open() && !closing() ? '' : null"
+      [attr.data-position]="surface.surfacePosition()"
+      [attr.data-state]="surface.closing() ? 'closing' : open() ? 'open' : 'closed'"
+      [attr.hidden]="!open() && !surface.closing() ? '' : null"
       [attr.aria-hidden]="!open() ? 'true' : null"
       [attr.inert]="!open() ? '' : null"
-      (pointerdown)="onBackdropPointerdown($event)"
-      (animationend)="onBackdropAnimationEnd($event)"
-      (transitionend)="onBackdropTransitionEnd($event)"
+      (pointerdown)="surface.onBackdropPointerdown($event)"
+      (animationend)="surface.onBackdropAnimationEnd($event)"
+      (transitionend)="surface.onBackdropTransitionEnd($event)"
     >
       <section
         #panel
         class="surface"
-        [attr.role]="surfaceRole()"
+        [attr.role]="surface.surfaceRole()"
         [attr.aria-modal]="open() ? 'true' : null"
-        [attr.aria-labelledby]="title() ? titleId : null"
-        [attr.aria-describedby]="description() ? descriptionId : null"
+        [attr.aria-labelledby]="title() ? surface.titleId : null"
+        [attr.aria-describedby]="description() ? surface.descriptionId : null"
         [attr.aria-label]="title() ? null : ariaLabel()"
         tabindex="-1"
-        [cdkTrapFocus]="open() && !closing()"
+        [cdkTrapFocus]="open() && !surface.closing()"
         [cdkTrapFocusAutoCapture]="false"
         (pointerdown)="$event.stopPropagation()"
       >
@@ -66,14 +66,14 @@ const OVERLAY_TEMPLATE = `
                 <p class="eyebrow">{{ eyebrow() }}</p>
               }
               @if (title()) {
-                <h2 [id]="titleId">{{ title() }}</h2>
+                <h2 [id]="surface.titleId">{{ title() }}</h2>
               }
               @if (description()) {
-                <p class="description" [id]="descriptionId">{{ description() }}</p>
+                <p class="description" [id]="surface.descriptionId">{{ description() }}</p>
               }
             </div>
             @if (showClose()) {
-              <button type="button" class="close" [attr.aria-label]="closeLabel()" (click)="close('action')">
+              <button type="button" class="close" [attr.aria-label]="closeLabel()" (click)="surface.close('action')">
                 <span aria-hidden="true">×</span>
               </button>
             }
@@ -186,49 +186,69 @@ const OVERLAY_STYLES = `
   }
 `;
 
-@Directive()
-export abstract class KrnOverlaySurface {
+interface KrnOverlaySurfaceDefinition {
+  readonly position: KrnOverlayPosition;
+  readonly role: 'dialog' | 'alertdialog';
+  readonly closeOnOutside: boolean;
+}
+
+interface KrnOverlaySurfaceHost {
+  readonly open: ModelSignal<boolean>;
+  readonly closeOnEscape: Signal<boolean>;
+  readonly closeOnOutside: Signal<boolean | null>;
+  readonly initialFocus: Signal<KrnOverlayInitialFocus>;
+  readonly restoreFocus: Signal<HTMLElement | false | null>;
+  readonly closed: OutputEmitterRef<KrnOverlayCloseReason>;
+  readonly afterExited: OutputEmitterRef<void>;
+}
+
+const DIALOG_SURFACE: KrnOverlaySurfaceDefinition = {
+  position: 'center',
+  role: 'dialog',
+  closeOnOutside: true,
+};
+const ALERT_DIALOG_SURFACE: KrnOverlaySurfaceDefinition = {
+  position: 'center',
+  role: 'alertdialog',
+  closeOnOutside: false,
+};
+const DRAWER_SURFACE: KrnOverlaySurfaceDefinition = {
+  position: 'inline-end',
+  role: 'dialog',
+  closeOnOutside: true,
+};
+const BOTTOM_SHEET_SURFACE: KrnOverlaySurfaceDefinition = {
+  position: 'bottom',
+  role: 'dialog',
+  closeOnOutside: true,
+};
+
+/** Internal signal controller shared by the public declarative overlay components. */
+class KrnOverlaySurfaceController {
   private readonly ids = inject(KrnIdService);
   private readonly platform = inject(KRN_PLATFORM);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly coordinator = inject(KrnOverlayCoordinator);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly translations = inject(KRN_TRANSLATIONS);
-  private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
   private exitTimer: KrnScheduledHandle | null = null;
   private focusTimer: KrnScheduledHandle | null = null;
   private lifecycle: 'closed' | 'open' | 'exiting' = 'closed';
   private coordinatorActive = false;
-  readonly open = model(false);
-  readonly title = input('');
-  readonly description = input('');
-  readonly eyebrow = input('');
-  readonly ariaLabel = input(this.translations.feedback.dialog);
-  readonly showClose = input(true, { transform: booleanAttribute });
-  readonly closeLabel = input(this.translations.feedback.close);
-  readonly closeOnEscape = input(true, { transform: booleanAttribute });
-  readonly closeOnOutside = input<boolean | null, unknown>(null, {
-    transform: nullableBooleanAttribute,
-  });
-  readonly initialFocus = input<KrnOverlayInitialFocus>('first-tabbable');
-  /** Explicit focus return target, or `false` to disable focus restoration. */
-  readonly restoreFocus = input<HTMLElement | false | null>(null);
-  readonly contentTemplate = input<TemplateRef<unknown> | null>(null);
-  readonly actionsTemplate = input<TemplateRef<unknown> | null>(null);
-  readonly closed = output<KrnOverlayCloseReason>();
-  /** Emits after exit motion and global modal cleanup have completed. */
-  readonly afterExited = output<void>();
-  protected readonly rendered = signal(false);
-  protected readonly closing = signal(false);
+  readonly rendered = signal(false);
+  readonly closing = signal(false);
   private readonly overlayId = this.ids.next('overlay');
-  protected readonly titleId = `${this.overlayId}-title`;
-  protected readonly descriptionId = `${this.overlayId}-description`;
+  readonly titleId = `${this.overlayId}-title`;
+  readonly descriptionId = `${this.overlayId}-description`;
 
-  constructor() {
+  constructor(
+    private readonly surfaceHost: KrnOverlaySurfaceHost,
+    private readonly resolvePanel: () => HTMLElement | undefined,
+    private readonly definition: KrnOverlaySurfaceDefinition,
+  ) {
     effect(() => {
-      const open = this.open();
+      const open = this.surfaceHost.open();
       if (open) {
-        this.beginOpen(this.closeOnEscape());
+        this.beginOpen(this.surfaceHost.closeOnEscape());
         return;
       }
       if (this.lifecycle === 'open') this.beginExit();
@@ -238,33 +258,31 @@ export abstract class KrnOverlaySurface {
       this.cancelFocus();
       this.cancelExit();
       if (this.coordinatorActive) {
-        this.coordinator.deactivate(this.overlayId, 0, this.restoreFocus() !== false);
+        this.coordinator.deactivate(this.overlayId, 0, this.surfaceHost.restoreFocus() !== false);
         this.coordinatorActive = false;
       }
     });
   }
 
-  protected abstract surfacePosition(): KrnOverlayPosition;
-
-  protected surfaceRole(): 'dialog' | 'alertdialog' {
-    return 'dialog';
+  surfacePosition(): KrnOverlayPosition {
+    return this.definition.position;
   }
 
-  protected defaultOutsideClose(): boolean {
-    return true;
+  surfaceRole(): 'dialog' | 'alertdialog' {
+    return this.definition.role;
   }
 
-  protected supportsExitAnimation(): boolean {
-    return true;
+  defaultOutsideClose(): boolean {
+    return this.definition.closeOnOutside;
   }
 
-  protected close(reason: KrnOverlayCloseReason): void {
-    if (!this.open()) return;
-    this.open.set(false);
-    this.closed.emit(reason);
+  close(reason: KrnOverlayCloseReason): void {
+    if (!this.surfaceHost.open()) return;
+    this.surfaceHost.open.set(false);
+    this.surfaceHost.closed.emit(reason);
   }
 
-  protected onBackdropTransitionEnd(event: TransitionEvent): void {
+  onBackdropTransitionEnd(event: TransitionEvent): void {
     if (
       this.closing() &&
       event.target === event.currentTarget &&
@@ -274,16 +292,16 @@ export abstract class KrnOverlaySurface {
     }
   }
 
-  protected onBackdropAnimationEnd(event: AnimationEvent): void {
-    if (this.closing() && event.target === this.panel()?.nativeElement) {
+  onBackdropAnimationEnd(event: AnimationEvent): void {
+    if (this.closing() && event.target === this.resolvePanel()) {
       this.finishExit();
     }
   }
 
-  protected onBackdropPointerdown(event: PointerEvent): void {
+  onBackdropPointerdown(event: PointerEvent): void {
     if (
       event.target === event.currentTarget &&
-      (this.closeOnOutside() ?? this.defaultOutsideClose())
+      (this.surfaceHost.closeOnOutside() ?? this.defaultOutsideClose())
     ) {
       this.close('outside');
     }
@@ -311,7 +329,7 @@ export abstract class KrnOverlaySurface {
     this.coordinator.activate(
       this.overlayId,
       this.host.nativeElement,
-      this.restoreFocus(),
+      this.surfaceHost.restoreFocus(),
       requestClose,
     );
     this.coordinatorActive = true;
@@ -319,9 +337,9 @@ export abstract class KrnOverlaySurface {
     if (!wasClosed) return;
     const focus = (): void => {
       this.focusTimer = null;
-      const panel = this.panel()?.nativeElement;
-      if (panel && this.open() && this.coordinator.isTop(this.overlayId)) {
-        this.coordinator.focusInitial(panel, this.initialFocus());
+      const panel = this.resolvePanel();
+      if (panel && this.surfaceHost.open() && this.coordinator.isTop(this.overlayId)) {
+        this.coordinator.focusInitial(panel, this.surfaceHost.initialFocus());
       }
     };
     this.focusTimer = this.platform.schedule(focus);
@@ -335,12 +353,7 @@ export abstract class KrnOverlaySurface {
       this.coordinator.updateCloseRequest(this.overlayId, null);
     }
     this.closing.set(true);
-    if (
-      !this.platform.isBrowser ||
-      !this.supportsExitAnimation() ||
-      this.prefersReducedMotion() ||
-      !this.platform.window
-    ) {
+    if (!this.platform.isBrowser || this.prefersReducedMotion() || !this.platform.window) {
       this.finishExit();
       return;
     }
@@ -351,11 +364,11 @@ export abstract class KrnOverlaySurface {
   private finishExit(): void {
     if (this.lifecycle !== 'exiting') return;
     this.cancelExit();
-    if (this.open()) return;
+    if (this.surfaceHost.open()) return;
     this.lifecycle = 'closed';
     this.closing.set(false);
     if (this.coordinatorActive) {
-      this.coordinator.deactivate(this.overlayId, 0, this.restoreFocus() !== false);
+      this.coordinator.deactivate(this.overlayId, 0, this.surfaceHost.restoreFocus() !== false);
       this.coordinatorActive = false;
     }
     const retainClosedSurface =
@@ -363,7 +376,7 @@ export abstract class KrnOverlaySurface {
     if (!retainClosedSurface) {
       this.rendered.set(false);
     }
-    this.afterExited.emit();
+    this.surfaceHost.afterExited.emit();
   }
 
   private cancelExit(): void {
@@ -387,10 +400,33 @@ export abstract class KrnOverlaySurface {
   template: OVERLAY_TEMPLATE,
   styles: OVERLAY_STYLES,
 })
-export class KrnDialog extends KrnOverlaySurface {
-  protected override surfacePosition(): KrnOverlayPosition {
-    return 'center';
-  }
+export class KrnDialog {
+  private readonly translations = inject(KRN_TRANSLATIONS);
+  readonly open = model(false);
+  readonly title = input('');
+  readonly description = input('');
+  readonly eyebrow = input('');
+  readonly ariaLabel = input(this.translations.feedback.dialog);
+  readonly showClose = input(true, { transform: booleanAttribute });
+  readonly closeLabel = input(this.translations.feedback.close);
+  readonly closeOnEscape = input(true, { transform: booleanAttribute });
+  readonly closeOnOutside = input<boolean | null, unknown>(null, {
+    transform: nullableBooleanAttribute,
+  });
+  readonly initialFocus = input<KrnOverlayInitialFocus>('first-tabbable');
+  /** Explicit focus return target, or `false` to disable focus restoration. */
+  readonly restoreFocus = input<HTMLElement | false | null>(null);
+  readonly contentTemplate = input<TemplateRef<unknown> | null>(null);
+  readonly actionsTemplate = input<TemplateRef<unknown> | null>(null);
+  readonly closed = output<KrnOverlayCloseReason>();
+  /** Emits after exit motion and global modal cleanup have completed. */
+  readonly afterExited = output<void>();
+  private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
+  protected readonly surface = new KrnOverlaySurfaceController(
+    this,
+    () => this.panel()?.nativeElement,
+    DIALOG_SURFACE,
+  );
 }
 
 @Component({
@@ -401,18 +437,33 @@ export class KrnDialog extends KrnOverlaySurface {
   template: OVERLAY_TEMPLATE,
   styles: OVERLAY_STYLES,
 })
-export class KrnAlertDialog extends KrnOverlaySurface {
-  protected override surfacePosition(): KrnOverlayPosition {
-    return 'center';
-  }
-
-  protected override surfaceRole(): 'alertdialog' {
-    return 'alertdialog';
-  }
-
-  protected override defaultOutsideClose(): boolean {
-    return false;
-  }
+export class KrnAlertDialog {
+  private readonly translations = inject(KRN_TRANSLATIONS);
+  readonly open = model(false);
+  readonly title = input('');
+  readonly description = input('');
+  readonly eyebrow = input('');
+  readonly ariaLabel = input(this.translations.feedback.dialog);
+  readonly showClose = input(true, { transform: booleanAttribute });
+  readonly closeLabel = input(this.translations.feedback.close);
+  readonly closeOnEscape = input(true, { transform: booleanAttribute });
+  readonly closeOnOutside = input<boolean | null, unknown>(null, {
+    transform: nullableBooleanAttribute,
+  });
+  readonly initialFocus = input<KrnOverlayInitialFocus>('first-tabbable');
+  /** Explicit focus return target, or `false` to disable focus restoration. */
+  readonly restoreFocus = input<HTMLElement | false | null>(null);
+  readonly contentTemplate = input<TemplateRef<unknown> | null>(null);
+  readonly actionsTemplate = input<TemplateRef<unknown> | null>(null);
+  readonly closed = output<KrnOverlayCloseReason>();
+  /** Emits after exit motion and global modal cleanup have completed. */
+  readonly afterExited = output<void>();
+  private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
+  protected readonly surface = new KrnOverlaySurfaceController(
+    this,
+    () => this.panel()?.nativeElement,
+    ALERT_DIALOG_SURFACE,
+  );
 }
 
 @Component({
@@ -423,10 +474,33 @@ export class KrnAlertDialog extends KrnOverlaySurface {
   template: OVERLAY_TEMPLATE,
   styles: OVERLAY_STYLES,
 })
-export class KrnDrawer extends KrnOverlaySurface {
-  protected override surfacePosition(): KrnOverlayPosition {
-    return 'inline-end';
-  }
+export class KrnDrawer {
+  private readonly translations = inject(KRN_TRANSLATIONS);
+  readonly open = model(false);
+  readonly title = input('');
+  readonly description = input('');
+  readonly eyebrow = input('');
+  readonly ariaLabel = input(this.translations.feedback.dialog);
+  readonly showClose = input(true, { transform: booleanAttribute });
+  readonly closeLabel = input(this.translations.feedback.close);
+  readonly closeOnEscape = input(true, { transform: booleanAttribute });
+  readonly closeOnOutside = input<boolean | null, unknown>(null, {
+    transform: nullableBooleanAttribute,
+  });
+  readonly initialFocus = input<KrnOverlayInitialFocus>('first-tabbable');
+  /** Explicit focus return target, or `false` to disable focus restoration. */
+  readonly restoreFocus = input<HTMLElement | false | null>(null);
+  readonly contentTemplate = input<TemplateRef<unknown> | null>(null);
+  readonly actionsTemplate = input<TemplateRef<unknown> | null>(null);
+  readonly closed = output<KrnOverlayCloseReason>();
+  /** Emits after exit motion and global modal cleanup have completed. */
+  readonly afterExited = output<void>();
+  private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
+  protected readonly surface = new KrnOverlaySurfaceController(
+    this,
+    () => this.panel()?.nativeElement,
+    DRAWER_SURFACE,
+  );
 }
 
 @Component({
@@ -437,8 +511,31 @@ export class KrnDrawer extends KrnOverlaySurface {
   template: OVERLAY_TEMPLATE,
   styles: OVERLAY_STYLES,
 })
-export class KrnBottomSheet extends KrnOverlaySurface {
-  protected override surfacePosition(): KrnOverlayPosition {
-    return 'bottom';
-  }
+export class KrnBottomSheet {
+  private readonly translations = inject(KRN_TRANSLATIONS);
+  readonly open = model(false);
+  readonly title = input('');
+  readonly description = input('');
+  readonly eyebrow = input('');
+  readonly ariaLabel = input(this.translations.feedback.dialog);
+  readonly showClose = input(true, { transform: booleanAttribute });
+  readonly closeLabel = input(this.translations.feedback.close);
+  readonly closeOnEscape = input(true, { transform: booleanAttribute });
+  readonly closeOnOutside = input<boolean | null, unknown>(null, {
+    transform: nullableBooleanAttribute,
+  });
+  readonly initialFocus = input<KrnOverlayInitialFocus>('first-tabbable');
+  /** Explicit focus return target, or `false` to disable focus restoration. */
+  readonly restoreFocus = input<HTMLElement | false | null>(null);
+  readonly contentTemplate = input<TemplateRef<unknown> | null>(null);
+  readonly actionsTemplate = input<TemplateRef<unknown> | null>(null);
+  readonly closed = output<KrnOverlayCloseReason>();
+  /** Emits after exit motion and global modal cleanup have completed. */
+  readonly afterExited = output<void>();
+  private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
+  protected readonly surface = new KrnOverlaySurfaceController(
+    this,
+    () => this.panel()?.nativeElement,
+    BOTTOM_SHEET_SURFACE,
+  );
 }

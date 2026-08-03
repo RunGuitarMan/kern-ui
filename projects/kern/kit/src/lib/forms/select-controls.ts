@@ -15,6 +15,9 @@ import {
   Renderer2,
   signal,
   type ElementRef,
+  type ModelSignal,
+  type OutputEmitterRef,
+  type Signal,
   type TemplateRef,
   viewChild,
 } from '@angular/core';
@@ -948,171 +951,184 @@ const COMBOBOX_IMPORTS = [
   KrnEditableComboboxSemantics,
 ];
 
-/**
- * Shared contract for editable KERN combobox variants.
- *
- * @publicApi
- * @experimental The required editable-combobox template contract is not stable yet.
- */
-@Directive()
-export abstract class KrnEditableComboboxBase {
-  private readonly comboboxDirective = viewChild<Combobox>('combo');
-  private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('comboInput');
+interface KrnEditableComboboxHost {
+  readonly autocompleteModeInput: Signal<KrnAutocompleteMode | undefined>;
+  readonly allowCustomValueInput: Signal<boolean | undefined>;
+  readonly id: Signal<string>;
+  readonly placeholder: Signal<string>;
+  readonly emptyText: Signal<string>;
+  readonly loadingText: Signal<string>;
+  readonly errorText: Signal<string>;
+  readonly ariaLabel: Signal<string>;
+  readonly ariaLabelledBy: Signal<string>;
+  readonly ariaDescribedBy: Signal<string>;
+  readonly toggleLabel: Signal<string>;
+  readonly name: Signal<string>;
+  readonly options: Signal<readonly KrnSelectOption<string>[]>;
+  readonly optionsState: Signal<KrnOptionsState>;
+  readonly filterLocally: Signal<boolean>;
+  readonly optionFilter: Signal<KrnOptionFilter<string> | null>;
+  readonly disabled: Signal<boolean>;
+  readonly readOnly: Signal<boolean>;
+  readonly required: Signal<boolean>;
+  readonly invalid: Signal<boolean>;
+  readonly value: Signal<string | undefined>;
+  readonly open: ModelSignal<boolean>;
+  readonly valueChange: OutputEmitterRef<string>;
+  readonly queryChange: OutputEmitterRef<string>;
+  readonly optionSelected: OutputEmitterRef<KrnSelectOption<string>>;
+}
+
+interface KrnEditableComboboxView {
+  readonly combobox: Signal<Combobox | undefined>;
+  readonly input: Signal<ElementRef<HTMLInputElement> | undefined>;
+}
+
+/** Internal signal controller shared by the two public editable-combobox variants. */
+class KrnEditableComboboxController {
+  private readonly host: KrnEditableComboboxHost;
+  private readonly view: KrnEditableComboboxView;
+  private readonly defaultAutocompleteMode: KrnAutocompleteMode;
+  private readonly defaultAllowCustomValue: boolean;
   private readonly destroyRef = inject(DestroyRef);
   private readonly locale = inject(KRN_LOCALE);
   private readonly platform = inject(KRN_PLATFORM);
   private readonly renderer = inject(Renderer2);
-  private readonly translations = inject(KRN_TRANSLATIONS);
-  protected readonly inputFocused = signal(false);
+  readonly inputFocused = signal(false);
   private readonly queryEditing = signal(false);
   private inlineRenderRevision = 0;
   private pendingEnterClose: KrnScheduledHandle | null = null;
   private renderedAutocompleteMode: KrnAutocompleteMode | undefined;
-  protected readonly defaultAutocompleteMode: KrnAutocompleteMode = 'list';
-  protected readonly defaultAllowCustomValue: boolean = false;
-  readonly autocompleteModeInput = input<KrnAutocompleteMode | undefined>(undefined, {
-    alias: 'autocompleteMode',
-  });
-  readonly allowCustomValueInput = input<boolean | undefined, unknown>(undefined, {
-    alias: 'allowCustomValue',
-    transform: optionalBooleanAttribute,
-  });
+  readonly autocompleteMode: Signal<KrnAutocompleteMode>;
+  readonly hasAutocompletePopup: Signal<boolean>;
+  readonly allowCustomValue: Signal<boolean>;
+  readonly query = signal('');
+  private readonly formControl: ReturnType<typeof useKrnFormControl<string>>;
+  readonly controlValue: ReturnType<typeof signal<string>>;
+  readonly formDisabled: ReturnType<typeof signal<boolean>>;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: string) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: ReturnType<typeof useKrnFormControl<string>>['validate'];
+  readonly registerOnValidatorChange: (fn: () => void) => void;
+  readonly a11y: ReturnType<typeof useKrnControlA11y>;
+  readonly isDisabled: Signal<boolean>;
+  readonly isReadOnly: Signal<boolean>;
+  readonly effectiveLabelledBy: Signal<string | null>;
+  readonly effectiveDescribedBy: Signal<string | null>;
+  readonly filteredOptions: Signal<readonly KrnSelectOption<string>[]>;
+  private readonly inlineSuggestedOption: Signal<KrnSelectOption<string> | undefined>;
+  readonly inlineSuggestion: Signal<string | undefined>;
+  readonly selectedValues: Signal<string[]>;
 
-  readonly id = input('');
-  readonly placeholder = input(this.translations.forms.startTyping);
-  readonly emptyText = input(this.translations.forms.noMatches);
-  readonly loadingText = input(
-    this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? '',
-  );
-  readonly errorText = input(
-    this.translations.forms.optionsLoadFailed ??
-      KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??
-      '',
-  );
-  readonly ariaLabel = input('');
-  readonly ariaLabelledBy = input('');
-  readonly ariaDescribedBy = input('');
-  readonly toggleLabel = input(this.translations.forms.showOptions);
-  readonly name = input('');
-  readonly options = input.required<readonly KrnSelectOption<string>[]>();
-  /** Controls whether options are interactive or replaced by an announced loading/error state. */
-  readonly optionsState = input<KrnOptionsState>('ready');
-  /** Set to false when the consumer filters options remotely in response to queryChange. */
-  readonly filterLocally = input(true, { transform: booleanAttribute });
-  /** Overrides the default case-insensitive local option filter. */
-  readonly optionFilter = input<KrnOptionFilter<string> | null>(null);
-  protected readonly autocompleteMode = computed(
-    () => this.autocompleteModeInput() ?? this.defaultAutocompleteMode,
-  );
-  protected readonly hasAutocompletePopup = computed(() => {
-    const mode = this.autocompleteMode();
-    return mode === 'list' || mode === 'both';
-  });
-  protected readonly allowCustomValue = computed(
-    () => this.allowCustomValueInput() ?? this.defaultAllowCustomValue,
-  );
-  readonly disabled = input(false, { transform: booleanAttribute });
-  readonly readOnly = input(false, {
-    alias: 'readonly',
-    transform: booleanAttribute,
-  });
-  readonly required = input(false, { transform: booleanAttribute });
-  readonly invalid = input(false, { transform: booleanAttribute });
-  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
-  readonly value = input<string | undefined>(undefined);
-  readonly open = model(false);
-  readonly valueChange = output<string>();
-  /** Emits every user query so remote option sources can load and replace options. */
-  readonly queryChange = output<string>();
-  readonly optionSelected = output<KrnSelectOption<string>>();
-  protected readonly query = signal('');
-
-  private readonly formControl = useKrnFormControl(this, '', {
-    normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
-    validateValue: (value) => this.validateValue(value),
-  });
-  protected readonly controlValue = this.formControl.controlValue;
-  protected readonly formDisabled = this.formControl.formDisabled;
-  readonly writeValue = this.formControl.writeValue;
-  readonly registerOnChange = this.formControl.registerOnChange;
-  readonly registerOnTouched = this.formControl.registerOnTouched;
-  readonly setDisabledState = this.formControl.setDisabledState;
-  readonly validate = this.formControl.validate;
-  readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
-
-  protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'combobox', {
-    disabled: this.disabled,
-    readOnly: this.readOnly,
-    required: this.required,
-  });
-  protected readonly isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
-  protected readonly isReadOnly = computed(() => this.a11y.readOnly());
-  protected readonly effectiveLabelledBy = computed(() =>
-    mergeAriaIds(this.ariaLabelledBy(), this.a11y.labelledBy()),
-  );
-  protected readonly effectiveDescribedBy = computed(() =>
-    mergeAriaIds(this.ariaDescribedBy(), this.a11y.describedBy()),
-  );
-  protected readonly filteredOptions = computed(() => {
-    const rawQuery = this.query().trim();
-    if (!rawQuery || !this.filterLocally()) {
-      return this.options();
-    }
-    const optionFilter = this.optionFilter();
-    if (optionFilter) {
-      return this.options().filter((option) => optionFilter(option, rawQuery));
-    }
-    const query = this.normalizeForSearch(rawQuery);
-    return this.options().filter((option) =>
-      this.normalizeForSearch(`${option.label} ${option.description ?? ''}`).includes(query),
+  constructor(
+    host: KrnEditableComboboxHost,
+    view: KrnEditableComboboxView,
+    defaultAutocompleteMode: KrnAutocompleteMode,
+    defaultAllowCustomValue: boolean,
+  ) {
+    this.host = host;
+    this.view = view;
+    this.defaultAutocompleteMode = defaultAutocompleteMode;
+    this.defaultAllowCustomValue = defaultAllowCustomValue;
+    this.autocompleteMode = computed(
+      () => this.host.autocompleteModeInput() ?? this.defaultAutocompleteMode,
     );
-  });
-  private readonly inlineSuggestedOption = computed(() => {
-    if (this.optionsState() !== 'ready') {
-      return undefined;
-    }
-    const mode = this.autocompleteMode();
-    if (mode !== 'inline' && mode !== 'both') {
-      return undefined;
-    }
-
-    const rawQuery = this.query();
-    if (!rawQuery.trim()) {
-      return undefined;
-    }
-    const query = this.normalizeForSearch(rawQuery);
-    return this.filteredOptions().find(
-      (option) => !option.disabled && this.normalizeForSearch(option.label).startsWith(query),
+    this.hasAutocompletePopup = computed(() => {
+      const mode = this.autocompleteMode();
+      return mode === 'list' || mode === 'both';
+    });
+    this.allowCustomValue = computed(
+      () => this.host.allowCustomValueInput() ?? this.defaultAllowCustomValue,
     );
-  });
-  protected readonly inlineSuggestion = computed(() => this.inlineSuggestedOption()?.label);
-  protected readonly selectedValues = computed(() => {
-    const value = this.controlValue();
-    return this.options().some((option) => option.value === value) ? [value] : [];
-  });
-
-  protected constructor() {
-    this.formControl.bindStandaloneValue(this.value);
-    this.formControl.watchValidationInputs(this.required, this.a11y.required);
-    const openSubscription = this.open.subscribe(() => this.cancelPendingEnterClose());
+    this.formControl = useKrnFormControl(this, '', {
+      normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
+      validateValue: (value) => this.validateValue(value),
+    });
+    this.controlValue = this.formControl.controlValue;
+    this.formDisabled = this.formControl.formDisabled;
+    this.writeValue = this.formControl.writeValue;
+    this.registerOnChange = this.formControl.registerOnChange;
+    this.registerOnTouched = this.formControl.registerOnTouched;
+    this.setDisabledState = this.formControl.setDisabledState;
+    this.validate = this.formControl.validate;
+    this.registerOnValidatorChange = this.formControl.registerOnValidatorChange;
+    this.a11y = useKrnControlA11y(this, this.host.id, this.host.invalid, 'combobox', {
+      disabled: this.host.disabled,
+      readOnly: this.host.readOnly,
+      required: this.host.required,
+    });
+    this.isDisabled = computed(() => this.a11y.disabled() || this.formDisabled());
+    this.isReadOnly = computed(() => this.a11y.readOnly());
+    this.effectiveLabelledBy = computed(() =>
+      mergeAriaIds(this.host.ariaLabelledBy(), this.a11y.labelledBy()),
+    );
+    this.effectiveDescribedBy = computed(() =>
+      mergeAriaIds(this.host.ariaDescribedBy(), this.a11y.describedBy()),
+    );
+    this.filteredOptions = computed(() => {
+      const rawQuery = this.query().trim();
+      if (!rawQuery || !this.host.filterLocally()) {
+        return this.host.options();
+      }
+      const optionFilter = this.host.optionFilter();
+      if (optionFilter) {
+        return this.host.options().filter((option) => optionFilter(option, rawQuery));
+      }
+      const query = this.normalizeForSearch(rawQuery);
+      return this.host
+        .options()
+        .filter((option) =>
+          this.normalizeForSearch(`${option.label} ${option.description ?? ''}`).includes(query),
+        );
+    });
+    this.inlineSuggestedOption = computed(() => {
+      if (this.host.optionsState() !== 'ready') {
+        return undefined;
+      }
+      const mode = this.autocompleteMode();
+      if (mode !== 'inline' && mode !== 'both') {
+        return undefined;
+      }
+      const rawQuery = this.query();
+      if (!rawQuery.trim()) {
+        return undefined;
+      }
+      const query = this.normalizeForSearch(rawQuery);
+      return this.filteredOptions().find(
+        (option) => !option.disabled && this.normalizeForSearch(option.label).startsWith(query),
+      );
+    });
+    this.inlineSuggestion = computed(() => this.inlineSuggestedOption()?.label);
+    this.selectedValues = computed(() => {
+      const value = this.controlValue();
+      return this.host.options().some((option) => option.value === value) ? [value] : [];
+    });
+    this.formControl.bindStandaloneValue(this.host.value);
+    this.formControl.watchValidationInputs(this.host.required, this.a11y.required);
+    const openSubscription = this.host.open.subscribe(() => this.cancelPendingEnterClose());
     this.destroyRef.onDestroy(() => {
       openSubscription.unsubscribe();
       this.cancelPendingEnterClose();
     });
     effect(() => {
-      this.open();
+      this.host.open();
       this.cancelPendingEnterClose();
     });
     effect(() => {
-      if (this.open() && (this.isDisabled() || this.isReadOnly() || !this.hasAutocompletePopup())) {
+      if (
+        this.host.open() &&
+        (this.isDisabled() || this.isReadOnly() || !this.hasAutocompletePopup())
+      ) {
         this.setOpen(false);
       }
     });
     effect(() => {
       const value = this.controlValue();
-      const option = this.options().find((item) => item.value === value);
+      const option = this.host.options().find((item) => item.value === value);
       const restoreConstrainedPopup =
-        !this.open() && this.hasAutocompletePopup() && !this.allowCustomValue();
+        !this.host.open() && this.hasAutocompletePopup() && !this.allowCustomValue();
       if (
         (!this.queryEditing() || restoreConstrainedPopup) &&
         option &&
@@ -1124,11 +1140,11 @@ export abstract class KrnEditableComboboxBase {
     });
     afterRenderEffect({
       write: () => {
-        const input = this.inputElement()?.nativeElement;
+        const input = this.view.input()?.nativeElement;
         const mode = this.autocompleteMode();
         const hasPopup = this.hasAutocompletePopup();
         const suggestion = this.inlineSuggestion();
-        const expanded = this.open() && hasPopup;
+        const expanded = this.host.open() && hasPopup;
         if (!input) {
           return;
         }
@@ -1164,7 +1180,7 @@ export abstract class KrnEditableComboboxBase {
 
   private normalizeIncomingValue(value: unknown): string {
     const normalized = typeof value === 'string' ? value : '';
-    const option = this.options().find((item) => item.value === normalized);
+    const option = this.host.options().find((item) => item.value === normalized);
     this.queryEditing.set(false);
     this.setQuery(option?.label ?? normalized);
     return normalized;
@@ -1174,7 +1190,7 @@ export abstract class KrnEditableComboboxBase {
     return requiredError(value, this.a11y.required());
   }
 
-  protected updateQuery(query: string): void {
+  updateQuery(query: string): void {
     if (query === this.query()) {
       return;
     }
@@ -1183,19 +1199,19 @@ export abstract class KrnEditableComboboxBase {
     }
     this.queryEditing.set(true);
     this.setQuery(query);
-    this.queryChange.emit(query);
-    this.open.set(this.hasAutocompletePopup());
+    this.host.queryChange.emit(query);
+    this.host.open.set(this.hasAutocompletePopup());
     if (this.allowCustomValue() && this.formControl.commitUserValue(query)) {
-      this.valueChange.emit(query);
+      this.host.valueChange.emit(query);
     }
   }
 
-  protected selectValues(values: string[]): void {
-    if (this.isDisabled() || this.isReadOnly() || this.optionsState() !== 'ready') {
+  selectValues(values: string[]): void {
+    if (this.isDisabled() || this.isReadOnly() || this.host.optionsState() !== 'ready') {
       return;
     }
     const value = values.at(-1);
-    const option = this.options().find((item) => item.value === value);
+    const option = this.host.options().find((item) => item.value === value);
     if (values.length === 0) {
       return;
     }
@@ -1205,17 +1221,17 @@ export abstract class KrnEditableComboboxBase {
     this.queryEditing.set(false);
     this.setQuery(option.label);
     if (this.formControl.commitUserValue(option.value)) {
-      this.valueChange.emit(option.value);
-      this.optionSelected.emit(option);
+      this.host.valueChange.emit(option.value);
+      this.host.optionSelected.emit(option);
     }
     this.setOpen(false);
   }
 
-  protected commitQuery(event?: Event): void {
+  commitQuery(event?: Event): void {
     if (event && this.autocompleteMode() === 'inline' && this.acceptInlineSuggestion()) {
       return;
     }
-    if (event && this.open()) {
+    if (event && this.host.open()) {
       event.preventDefault();
       this.cancelPendingEnterClose();
       const pendingClose = this.platform.schedule(() => {
@@ -1234,7 +1250,7 @@ export abstract class KrnEditableComboboxBase {
     if (this.isDisabled() || this.isReadOnly()) {
       return;
     }
-    if (this.optionsState() !== 'ready') {
+    if (this.host.optionsState() !== 'ready') {
       this.setOpen(false);
       return;
     }
@@ -1247,7 +1263,7 @@ export abstract class KrnEditableComboboxBase {
       if (this.controlValue() === exact.value) {
         this.queryEditing.set(false);
         this.setQuery(exact.label);
-        this.open.set(false);
+        this.host.open.set(false);
       } else {
         this.selectValues([exact.value]);
       }
@@ -1255,17 +1271,17 @@ export abstract class KrnEditableComboboxBase {
       const query = this.query();
       if (this.controlValue() !== query) {
         this.formControl.commitValue(query);
-        this.valueChange.emit(query);
+        this.host.valueChange.emit(query);
       }
       this.queryEditing.set(false);
-      this.open.set(false);
+      this.host.open.set(false);
     } else {
       this.restoreCommittedQuery();
-      this.open.set(false);
+      this.host.open.set(false);
     }
   }
 
-  protected closeOnFocusOut(event: FocusEvent): void {
+  closeOnFocusOut(event: FocusEvent): void {
     if (focusStayedWithin(event)) {
       return;
     }
@@ -1277,39 +1293,39 @@ export abstract class KrnEditableComboboxBase {
     return value.toLocaleLowerCase(this.locale);
   }
 
-  protected setOpen(open: boolean): void {
+  setOpen(open: boolean): void {
     this.cancelPendingEnterClose();
     const next = open && this.hasAutocompletePopup() && !this.isDisabled() && !this.isReadOnly();
-    this.comboboxDirective()?.expanded.set(next);
+    this.view.combobox()?.expanded.set(next);
     if (!next && !this.allowCustomValue()) {
       this.restoreCommittedQuery();
     } else if (!next) {
       this.queryEditing.set(false);
     }
-    this.open.set(next);
+    this.host.open.set(next);
   }
 
-  protected openOptions(): void {
+  openOptions(): void {
     this.setOpen(true);
   }
 
-  protected cancelQuery(): void {
+  cancelQuery(): void {
     if (!this.allowCustomValue()) {
       this.restoreCommittedQuery();
     }
-    this.open.set(false);
+    this.host.open.set(false);
   }
 
-  protected onEscape(event: Event): void {
-    consumeOpenEscape(event, this.open(), () => this.cancelQuery());
+  onEscape(event: Event): void {
+    consumeOpenEscape(event, this.host.open(), () => this.cancelQuery());
   }
 
-  protected toggleOptions(input: HTMLInputElement): void {
-    this.setOpen(!this.open());
+  toggleOptions(input: HTMLInputElement): void {
+    this.setOpen(!this.host.open());
     input.focus();
   }
 
-  protected acceptInlineCompletion(input: HTMLInputElement): void {
+  acceptInlineCompletion(input: HTMLInputElement): void {
     const option = this.inlineSuggestedOption();
     const end = option?.label.length;
     if (
@@ -1323,9 +1339,9 @@ export abstract class KrnEditableComboboxBase {
     }
   }
 
-  protected closeSelectedOption(option: KrnSelectOption<string>): void {
+  closeSelectedOption(option: KrnSelectOption<string>): void {
     if (
-      this.optionsState() === 'ready' &&
+      this.host.optionsState() === 'ready' &&
       !this.isDisabled() &&
       !this.isReadOnly() &&
       !option.disabled &&
@@ -1336,7 +1352,7 @@ export abstract class KrnEditableComboboxBase {
   }
 
   private restoreCommittedQuery(): void {
-    const option = this.options().find((item) => item.value === this.controlValue());
+    const option = this.host.options().find((item) => item.value === this.controlValue());
     const query = option?.label ?? (this.allowCustomValue() ? this.controlValue() : '');
     this.queryEditing.set(false);
     this.setQuery(query);
@@ -1344,7 +1360,7 @@ export abstract class KrnEditableComboboxBase {
 
   private setQuery(query: string): void {
     this.query.set(query);
-    this.comboboxDirective()?.value.set(query);
+    this.view.combobox()?.value.set(query);
   }
 
   private cancelPendingEnterClose(): void {
@@ -1364,19 +1380,19 @@ export abstract class KrnEditableComboboxBase {
   }
 
   focus(options?: FocusOptions): void {
-    this.inputElement()?.nativeElement.focus(options);
+    this.view.input()?.nativeElement.focus(options);
   }
 
   blur(): void {
-    this.inputElement()?.nativeElement.blur();
+    this.view.input()?.nativeElement.blur();
   }
 
   select(): void {
-    this.inputElement()?.nativeElement.select();
+    this.view.input()?.nativeElement.select();
   }
 
   setSelectionRange(start: number, end: number, direction?: SelectionDirection): void {
-    this.inputElement()?.nativeElement.setSelectionRange(start, end, direction);
+    this.view.input()?.nativeElement.setSelectionRange(start, end, direction);
   }
 }
 
@@ -1392,9 +1408,138 @@ export abstract class KrnEditableComboboxBase {
   templateUrl: './editable-combobox.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnCombobox extends KrnEditableComboboxBase {
-  constructor() {
-    super();
+export class KrnCombobox {
+  private readonly translations = inject(KRN_TRANSLATIONS);
+  readonly autocompleteModeInput = input<KrnAutocompleteMode | undefined>(undefined, {
+    alias: 'autocompleteMode',
+  });
+  readonly allowCustomValueInput = input<boolean | undefined, unknown>(undefined, {
+    alias: 'allowCustomValue',
+    transform: optionalBooleanAttribute,
+  });
+  readonly id = input('');
+  readonly placeholder = input(this.translations.forms.startTyping);
+  readonly emptyText = input(this.translations.forms.noMatches);
+  readonly loadingText = input(
+    this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? '',
+  );
+  readonly errorText = input(
+    this.translations.forms.optionsLoadFailed ??
+      KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??
+      '',
+  );
+  readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
+  readonly toggleLabel = input(this.translations.forms.showOptions);
+  readonly name = input('');
+  readonly options = input.required<readonly KrnSelectOption<string>[]>();
+  /** Controls whether options are interactive or replaced by an announced loading/error state. */
+  readonly optionsState = input<KrnOptionsState>('ready');
+  /** Set to false when the consumer filters options remotely in response to queryChange. */
+  readonly filterLocally = input(true, { transform: booleanAttribute });
+  /** Overrides the default case-insensitive local option filter. */
+  readonly optionFilter = input<KrnOptionFilter<string> | null>(null);
+  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly readOnly = input(false, { alias: 'readonly', transform: booleanAttribute });
+  readonly required = input(false, { transform: booleanAttribute });
+  readonly invalid = input(false, { transform: booleanAttribute });
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
+  readonly value = input<string | undefined>(undefined);
+  readonly open = model(false);
+  readonly valueChange = output<string>();
+  /** Emits every user query so remote option sources can load and replace options. */
+  readonly queryChange = output<string>();
+  readonly optionSelected = output<KrnSelectOption<string>>();
+
+  private readonly comboboxDirective = viewChild<Combobox>('combo');
+  private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('comboInput');
+  readonly #controller = new KrnEditableComboboxController(
+    this,
+    { combobox: this.comboboxDirective, input: this.inputElement },
+    'list',
+    false,
+  );
+  protected readonly inputFocused = this.#controller.inputFocused;
+  protected readonly autocompleteMode = this.#controller.autocompleteMode;
+  protected readonly hasAutocompletePopup = this.#controller.hasAutocompletePopup;
+  protected readonly allowCustomValue = this.#controller.allowCustomValue;
+  protected readonly query = this.#controller.query;
+  protected readonly controlValue = this.#controller.controlValue;
+  protected readonly formDisabled = this.#controller.formDisabled;
+  readonly writeValue = this.#controller.writeValue;
+  readonly registerOnChange = this.#controller.registerOnChange;
+  readonly registerOnTouched = this.#controller.registerOnTouched;
+  readonly setDisabledState = this.#controller.setDisabledState;
+  readonly validate = this.#controller.validate;
+  readonly registerOnValidatorChange = this.#controller.registerOnValidatorChange;
+  protected readonly a11y = this.#controller.a11y;
+  protected readonly isDisabled = this.#controller.isDisabled;
+  protected readonly isReadOnly = this.#controller.isReadOnly;
+  protected readonly effectiveLabelledBy = this.#controller.effectiveLabelledBy;
+  protected readonly effectiveDescribedBy = this.#controller.effectiveDescribedBy;
+  protected readonly filteredOptions = this.#controller.filteredOptions;
+  protected readonly inlineSuggestion = this.#controller.inlineSuggestion;
+  protected readonly selectedValues = this.#controller.selectedValues;
+
+  protected updateQuery(query: string): void {
+    this.#controller.updateQuery(query);
+  }
+
+  protected selectValues(values: string[]): void {
+    this.#controller.selectValues(values);
+  }
+
+  protected commitQuery(event?: Event): void {
+    this.#controller.commitQuery(event);
+  }
+
+  protected closeOnFocusOut(event: FocusEvent): void {
+    this.#controller.closeOnFocusOut(event);
+  }
+
+  protected setOpen(open: boolean): void {
+    this.#controller.setOpen(open);
+  }
+
+  protected openOptions(): void {
+    this.#controller.openOptions();
+  }
+
+  protected cancelQuery(): void {
+    this.#controller.cancelQuery();
+  }
+
+  protected onEscape(event: Event): void {
+    this.#controller.onEscape(event);
+  }
+
+  protected toggleOptions(input: HTMLInputElement): void {
+    this.#controller.toggleOptions(input);
+  }
+
+  protected acceptInlineCompletion(input: HTMLInputElement): void {
+    this.#controller.acceptInlineCompletion(input);
+  }
+
+  protected closeSelectedOption(option: KrnSelectOption<string>): void {
+    this.#controller.closeSelectedOption(option);
+  }
+
+  focus(options?: FocusOptions): void {
+    this.#controller.focus(options);
+  }
+
+  blur(): void {
+    this.#controller.blur();
+  }
+
+  select(): void {
+    this.#controller.select();
+  }
+
+  setSelectionRange(start: number, end: number, direction?: SelectionDirection): void {
+    this.#controller.setSelectionRange(start, end, direction);
   }
 }
 
@@ -1410,11 +1555,137 @@ export class KrnCombobox extends KrnEditableComboboxBase {
   templateUrl: './editable-combobox.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KrnAutocomplete extends KrnEditableComboboxBase {
-  protected override readonly defaultAutocompleteMode: KrnAutocompleteMode = 'both';
-  protected override readonly defaultAllowCustomValue = true;
+export class KrnAutocomplete {
+  private readonly translations = inject(KRN_TRANSLATIONS);
+  readonly autocompleteModeInput = input<KrnAutocompleteMode | undefined>(undefined, {
+    alias: 'autocompleteMode',
+  });
+  readonly allowCustomValueInput = input<boolean | undefined, unknown>(undefined, {
+    alias: 'allowCustomValue',
+    transform: optionalBooleanAttribute,
+  });
+  readonly id = input('');
+  readonly placeholder = input(this.translations.forms.startTyping);
+  readonly emptyText = input(this.translations.forms.noMatches);
+  readonly loadingText = input(
+    this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? '',
+  );
+  readonly errorText = input(
+    this.translations.forms.optionsLoadFailed ??
+      KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??
+      '',
+  );
+  readonly ariaLabel = input('');
+  readonly ariaLabelledBy = input('');
+  readonly ariaDescribedBy = input('');
+  readonly toggleLabel = input(this.translations.forms.showOptions);
+  readonly name = input('');
+  readonly options = input.required<readonly KrnSelectOption<string>[]>();
+  /** Controls whether options are interactive or replaced by an announced loading/error state. */
+  readonly optionsState = input<KrnOptionsState>('ready');
+  /** Set to false when the consumer filters options remotely in response to queryChange. */
+  readonly filterLocally = input(true, { transform: booleanAttribute });
+  /** Overrides the default case-insensitive local option filter. */
+  readonly optionFilter = input<KrnOptionFilter<string> | null>(null);
+  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly readOnly = input(false, { alias: 'readonly', transform: booleanAttribute });
+  readonly required = input(false, { transform: booleanAttribute });
+  readonly invalid = input(false, { transform: booleanAttribute });
+  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
+  readonly value = input<string | undefined>(undefined);
+  readonly open = model(false);
+  readonly valueChange = output<string>();
+  /** Emits every user query so remote option sources can load and replace options. */
+  readonly queryChange = output<string>();
+  readonly optionSelected = output<KrnSelectOption<string>>();
 
-  constructor() {
-    super();
+  private readonly comboboxDirective = viewChild<Combobox>('combo');
+  private readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('comboInput');
+  readonly #controller = new KrnEditableComboboxController(
+    this,
+    { combobox: this.comboboxDirective, input: this.inputElement },
+    'both',
+    true,
+  );
+  protected readonly inputFocused = this.#controller.inputFocused;
+  protected readonly autocompleteMode = this.#controller.autocompleteMode;
+  protected readonly hasAutocompletePopup = this.#controller.hasAutocompletePopup;
+  protected readonly allowCustomValue = this.#controller.allowCustomValue;
+  protected readonly query = this.#controller.query;
+  protected readonly controlValue = this.#controller.controlValue;
+  protected readonly formDisabled = this.#controller.formDisabled;
+  readonly writeValue = this.#controller.writeValue;
+  readonly registerOnChange = this.#controller.registerOnChange;
+  readonly registerOnTouched = this.#controller.registerOnTouched;
+  readonly setDisabledState = this.#controller.setDisabledState;
+  readonly validate = this.#controller.validate;
+  readonly registerOnValidatorChange = this.#controller.registerOnValidatorChange;
+  protected readonly a11y = this.#controller.a11y;
+  protected readonly isDisabled = this.#controller.isDisabled;
+  protected readonly isReadOnly = this.#controller.isReadOnly;
+  protected readonly effectiveLabelledBy = this.#controller.effectiveLabelledBy;
+  protected readonly effectiveDescribedBy = this.#controller.effectiveDescribedBy;
+  protected readonly filteredOptions = this.#controller.filteredOptions;
+  protected readonly inlineSuggestion = this.#controller.inlineSuggestion;
+  protected readonly selectedValues = this.#controller.selectedValues;
+
+  protected updateQuery(query: string): void {
+    this.#controller.updateQuery(query);
+  }
+
+  protected selectValues(values: string[]): void {
+    this.#controller.selectValues(values);
+  }
+
+  protected commitQuery(event?: Event): void {
+    this.#controller.commitQuery(event);
+  }
+
+  protected closeOnFocusOut(event: FocusEvent): void {
+    this.#controller.closeOnFocusOut(event);
+  }
+
+  protected setOpen(open: boolean): void {
+    this.#controller.setOpen(open);
+  }
+
+  protected openOptions(): void {
+    this.#controller.openOptions();
+  }
+
+  protected cancelQuery(): void {
+    this.#controller.cancelQuery();
+  }
+
+  protected onEscape(event: Event): void {
+    this.#controller.onEscape(event);
+  }
+
+  protected toggleOptions(input: HTMLInputElement): void {
+    this.#controller.toggleOptions(input);
+  }
+
+  protected acceptInlineCompletion(input: HTMLInputElement): void {
+    this.#controller.acceptInlineCompletion(input);
+  }
+
+  protected closeSelectedOption(option: KrnSelectOption<string>): void {
+    this.#controller.closeSelectedOption(option);
+  }
+
+  focus(options?: FocusOptions): void {
+    this.#controller.focus(options);
+  }
+
+  blur(): void {
+    this.#controller.blur();
+  }
+
+  select(): void {
+    this.#controller.select();
+  }
+
+  setSelectionRange(start: number, end: number, direction?: SelectionDirection): void {
+    this.#controller.setSelectionRange(start, end, direction);
   }
 }

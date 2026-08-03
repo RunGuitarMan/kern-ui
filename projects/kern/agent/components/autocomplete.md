@@ -99,7 +99,7 @@ _No projected content slots._
 
 ## Angular Forms
 
-Angular Forms control with value type `string`.
+Not an Angular Forms value accessor.
 
 ## Accessibility
 
@@ -230,14 +230,12 @@ Presets:
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
 - Autocomplete preserves valid free text; use Combobox when a known identifier is required.
-- Do not manually duplicate value and disabled state when Angular Forms owns the control.
 
 ## Ship checklist
 
 - [ ] Import the symbol from its documented owner entrypoint; do not use a deep source import.
 - [ ] Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.
 - [ ] Provide every required input and keep collection identities stable across updates.
-- [ ] Verify reactive-form value, touched, disabled, required and invalid state.
 - [ ] Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.
 - [ ] Test the consuming SSR/hydration route when server rendering is enabled.
 - [ ] Use @kern-ui/angular/testing harnesses when a component-specific harness is available.

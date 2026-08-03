@@ -73,7 +73,7 @@
       "@kern-ui/angular/patterns",
       "@kern-ui/angular/testing"
     ],
-    "sourceDigest": "sha256-894d4b70cd857ee66909cae3def69ceb12a72a97b99da8abe6fa566d5c8fc7ba"
+    "sourceDigest": "sha256-d94f3a6b1043fc8b29546a2a8b9243a22836fad07cd0b85d50afa04d4f590f12"
   },
   "components": [
     {
@@ -22619,16 +22619,13 @@
       ],
       "slots": [],
       "forms": {
-        "controlValueAccessor": true,
-        "validator": true,
-        "valueType": "string",
-        "reactiveForms": true,
-        "templateDrivenForms": true,
+        "controlValueAccessor": false,
+        "validator": false,
+        "valueType": null,
+        "reactiveForms": false,
+        "templateDrivenForms": false,
         "stateInputs": ["disabled", "readonly", "required", "invalid"],
-        "notes": [
-          "Works with Angular Forms through ControlValueAccessor.",
-          "Angular validator state and explicit KERN state inputs are combined."
-        ]
+        "notes": []
       },
       "a11y": {
         "target": "WCAG 2.2 AA",
@@ -22719,14 +22716,12 @@
         "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
         "Assuming the documentation SSR build replaces validation of the consuming application.",
         "Combobox commits only a known option; do not treat unmatched text as a value.",
-        "Keep option identity stable across async refreshes.",
-        "Do not manually duplicate value and disabled state when Angular Forms owns the control."
+        "Keep option identity stable across async refreshes."
       ],
       "checklist": [
         "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
         "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
         "Provide every required input and keep collection identities stable across updates.",
-        "Verify reactive-form value, touched, disabled, required and invalid state.",
         "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
         "Test the consuming SSR/hydration route when server rendering is enabled.",
         "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
@@ -23604,16 +23599,13 @@
       ],
       "slots": [],
       "forms": {
-        "controlValueAccessor": true,
-        "validator": true,
-        "valueType": "string",
-        "reactiveForms": true,
-        "templateDrivenForms": true,
+        "controlValueAccessor": false,
+        "validator": false,
+        "valueType": null,
+        "reactiveForms": false,
+        "templateDrivenForms": false,
         "stateInputs": ["disabled", "readonly", "required", "invalid"],
-        "notes": [
-          "Works with Angular Forms through ControlValueAccessor.",
-          "Angular validator state and explicit KERN state inputs are combined."
-        ]
+        "notes": []
       },
       "a11y": {
         "target": "WCAG 2.2 AA",
@@ -23703,14 +23695,12 @@
         "Importing from an undeclared family path or a source implementation file.",
         "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
         "Assuming the documentation SSR build replaces validation of the consuming application.",
-        "Autocomplete preserves valid free text; use Combobox when a known identifier is required.",
-        "Do not manually duplicate value and disabled state when Angular Forms owns the control."
+        "Autocomplete preserves valid free text; use Combobox when a known identifier is required."
       ],
       "checklist": [
         "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
         "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
         "Provide every required input and keep collection identities stable across updates.",
-        "Verify reactive-form value, touched, disabled, required and invalid state.",
         "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
         "Test the consuming SSR/hydration route when server rendering is enabled.",
         "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
@@ -29675,16 +29665,13 @@
       ],
       "slots": [],
       "forms": {
-        "controlValueAccessor": true,
-        "validator": true,
-        "valueType": "ReadonlyArray<File>",
-        "reactiveForms": true,
-        "templateDrivenForms": true,
+        "controlValueAccessor": false,
+        "validator": false,
+        "valueType": null,
+        "reactiveForms": false,
+        "templateDrivenForms": false,
         "stateInputs": ["disabled", "readonly", "required", "invalid"],
-        "notes": [
-          "Works with Angular Forms through ControlValueAccessor.",
-          "Angular validator state and explicit KERN state inputs are combined."
-        ]
+        "notes": []
       },
       "a11y": {
         "target": "WCAG 2.2 AA",
@@ -29754,14 +29741,12 @@
       "commonMistakes": [
         "Importing from an undeclared family path or a source implementation file.",
         "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
-        "Assuming the documentation SSR build replaces validation of the consuming application.",
-        "Do not manually duplicate value and disabled state when Angular Forms owns the control."
+        "Assuming the documentation SSR build replaces validation of the consuming application."
       ],
       "checklist": [
         "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
         "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
         "Provide every required input and keep collection identities stable across updates.",
-        "Verify reactive-form value, touched, disabled, required and invalid state.",
         "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
         "Test the consuming SSR/hydration route when server rendering is enabled.",
         "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
@@ -30407,16 +30392,13 @@
       ],
       "slots": [],
       "forms": {
-        "controlValueAccessor": true,
-        "validator": true,
-        "valueType": "ReadonlyArray<File>",
-        "reactiveForms": true,
-        "templateDrivenForms": true,
+        "controlValueAccessor": false,
+        "validator": false,
+        "valueType": null,
+        "reactiveForms": false,
+        "templateDrivenForms": false,
         "stateInputs": ["disabled", "readonly", "required", "invalid"],
-        "notes": [
-          "Works with Angular Forms through ControlValueAccessor.",
-          "Angular validator state and explicit KERN state inputs are combined."
-        ]
+        "notes": []
       },
       "a11y": {
         "target": "WCAG 2.2 AA",
@@ -30488,14 +30470,12 @@
       "commonMistakes": [
         "Importing from an undeclared family path or a source implementation file.",
         "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
-        "Assuming the documentation SSR build replaces validation of the consuming application.",
-        "Do not manually duplicate value and disabled state when Angular Forms owns the control."
+        "Assuming the documentation SSR build replaces validation of the consuming application."
       ],
       "checklist": [
         "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
         "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
         "Provide every required input and keep collection identities stable across updates.",
-        "Verify reactive-form value, touched, disabled, required and invalid state.",
         "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
         "Test the consuming SSR/hydration route when server rendering is enabled.",
         "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
@@ -64597,7 +64577,7 @@
       "kind": "class",
       "type": "class KrnIdService",
       "deprecated": false,
-      "description": "Application-scoped, SSR-safe ID generation.\n\n`next` is appropriate when server and client instantiate the same view tree\nin the same order. `fromKey` is order-independent and should be preferred for\ndata-driven content with a stable application key.",
+      "description": "Document- and application-scoped, SSR-safe ID generation.\n\n`next` shares its counters across Angular roots and records server allocations\non the owning component host. Hydration consumes that local ledger, preserving\neven base IDs that only appear through derived `tab-*` or `title-*` IDs when\nroots hydrate out of order. `fromKey` remains order-independent.",
       "source": "projects/kern/cdk/src/lib/cdk/id.ts",
       "componentIds": []
     },
@@ -64669,7 +64649,7 @@
       "kind": "class",
       "type": "class KrnOverlayCoordinator",
       "deprecated": false,
-      "description": "Coordinates modal surfaces rendered in the application tree.\n\nThe coordinator deliberately owns global side effects so that nested dialogs\nshare one scroll lock, only the top surface receives Escape, and background\ncontent is restored to its exact previous state.",
+      "description": "Injector-scoped facade over the modal coordinator shared by one `Document`.\n\nMultiple Angular roots therefore share one stack, one close watcher, one\nscroll lock and one background state, while identical local overlay IDs stay\nisolated by the facade lease.",
       "source": "projects/kern/cdk/src/lib/cdk/overlay-coordinator.ts",
       "componentIds": []
     },
@@ -66678,18 +66658,6 @@
       "componentIds": ["drag-drop-upload"]
     },
     {
-      "name": "KrnEditableComboboxBase",
-      "aliases": [],
-      "owner": "kit",
-      "importPath": "@kern-ui/angular/kit",
-      "kind": "class",
-      "type": "class KrnEditableComboboxBase",
-      "deprecated": false,
-      "description": "Shared contract for editable KERN combobox variants.",
-      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
-      "componentIds": []
-    },
-    {
       "name": "KrnEmptyState",
       "aliases": [],
       "owner": "kit",
@@ -67050,18 +67018,6 @@
       "componentIds": ["menubar"]
     },
     {
-      "name": "KrnMenuButtonBase",
-      "aliases": [],
-      "owner": "kit",
-      "importPath": "@kern-ui/angular/kit",
-      "kind": "class",
-      "type": "class KrnMenuButtonBase",
-      "deprecated": false,
-      "description": "Shared behavior for menu-button variants.\n\nPrefer `KrnDropdownButton` or `KrnSplitButton` unless a custom menu-button primitive is needed.",
-      "source": "projects/kern/kit/src/lib/actions/dropdown-button.ts",
-      "componentIds": []
-    },
-    {
       "name": "KrnMenuButtonOptions",
       "aliases": [],
       "owner": "kit",
@@ -67335,18 +67291,6 @@
       "deprecated": false,
       "description": "Opens typed component or template content in one of Kern's modal surfaces.",
       "source": "projects/kern/kit/src/lib/feedback/programmatic-overlay.ts",
-      "componentIds": []
-    },
-    {
-      "name": "KrnOverlaySurface",
-      "aliases": [],
-      "owner": "kit",
-      "importPath": "@kern-ui/angular/kit",
-      "kind": "class",
-      "type": "class KrnOverlaySurface",
-      "deprecated": false,
-      "description": "Public class owned by @kern-ui/angular/kit.",
-      "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
       "componentIds": []
     },
     {
@@ -68202,18 +68146,6 @@
       "componentIds": []
     },
     {
-      "name": "KrnUploadBase",
-      "aliases": [],
-      "owner": "kit",
-      "importPath": "@kern-ui/angular/kit",
-      "kind": "class",
-      "type": "class KrnUploadBase",
-      "deprecated": false,
-      "description": "Shared contract for KERN upload variants.",
-      "source": "projects/kern/kit/src/lib/forms/upload-controls.ts",
-      "componentIds": []
-    },
-    {
       "name": "KrnUploadRejection",
       "aliases": [],
       "owner": "kit",
@@ -68283,18 +68215,6 @@
       "deprecated": false,
       "description": "Public constant owned by @kern-ui/angular/kit.",
       "source": "projects/kern/kit/src/lib/actions/floating-action-button-options.ts",
-      "componentIds": []
-    },
-    {
-      "name": "provideKrnFormControl",
-      "aliases": [],
-      "owner": "kit",
-      "importPath": "@kern-ui/angular/kit",
-      "kind": "function",
-      "type": "() => Provider[]",
-      "deprecated": false,
-      "description": "Installs the Angular Forms adapter required by Kern's experimental form-control variant bases.\n\nAdd the returned providers to a component that extends `KrnEditableComboboxBase` or\n`KrnUploadBase`. The adapter remains component-scoped and is shared by `NG_VALUE_ACCESSOR` and\n`NG_VALIDATORS` without making the component inherit form-state machinery.",
-      "source": "projects/kern/kit/src/lib/forms/value-accessor.ts",
       "componentIds": []
     },
     {
@@ -70042,6 +69962,37 @@
       "components": ["menu"],
       "before": "<krn-menu [hasProjectedTrigger]=\"true\">...</krn-menu>",
       "after": "<span krnMenuTrigger>Actions</span>",
+      "automatic": false
+    },
+    {
+      "id": "compose-concrete-variants",
+      "from": "KrnMenuButtonBase, KrnEditableComboboxBase, KrnUploadBase, or KrnOverlaySurface subclasses; provideKrnFormControl custom extensions",
+      "to": "Concrete Kern components composed with application services, directives, and projected templates",
+      "summary": "Stop inheriting template-coupled component implementations or installing Kern's private form adapter. Use the concrete Dropdown/Split Button, Combobox/Autocomplete, File/Drag Drop Upload, or Dialog/Alert Dialog/Drawer/Bottom Sheet components; use KrnOverlayService for custom programmatic overlay content and Angular ControlValueAccessor/Validator for application-owned controls.",
+      "components": [
+        "dropdown-button",
+        "split-button",
+        "combobox",
+        "autocomplete",
+        "file-upload",
+        "drag-drop-upload",
+        "dialog",
+        "alert-dialog",
+        "drawer",
+        "bottom-sheet"
+      ],
+      "before": "export class AccountDialog extends KrnOverlaySurface { /* inherited component internals */ }",
+      "after": "const ref = inject(KrnOverlayService).open(AccountDialogContent, { variant: 'dialog', data: account });",
+      "automatic": false
+    },
+    {
+      "id": "mcp-companion-package",
+      "from": "@kern-ui/angular/mcp, @kern-ui/angular/agent/* exports, and the kern-mcp executable bundled with @kern-ui/angular",
+      "to": "@kern-ui/mcp, @kern-ui/mcp/agent/* exports, and the kern-mcp executable from @kern-ui/mcp",
+      "summary": "Install @kern-ui/mcp as a development dependency, import the programmatic API from @kern-ui/mcp, and move AI-contract imports there. Runtime-only Angular applications no longer install parser dependencies or multi-megabyte agent assets.",
+      "components": [],
+      "before": "import manifest from '@kern-ui/angular/agent/component-manifest.json';",
+      "after": "import manifest from '@kern-ui/mcp/agent/component-manifest.json';",
       "automatic": false
     }
   ]

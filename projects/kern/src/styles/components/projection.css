@@ -1,0 +1,61 @@
+/*
+ * Projected descendants live outside Angular's component style scope. Keep the
+ * bridge explicit, class-scoped, and part of Kern's required global stylesheet.
+ */
+.krn-avatar-group > krn-avatar + krn-avatar {
+  margin-inline-start: calc(var(--krn-avatar-overlap, 0.625rem) * -1);
+}
+
+.krn-avatar-group > krn-avatar {
+  box-shadow: 0 0 0 2px var(--krn-color-canvas, #faf9f7);
+}
+
+.krn-responsive-media :is(img, video, iframe, svg) {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: var(--krn-media-fit, cover);
+}
+
+.krn-user-menu__menu :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']) {
+  display: flex;
+  inline-size: 100%;
+  min-block-size: 2.5rem;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border: 0;
+  border-radius: var(--krn-radius-sm, 0.375rem);
+  color: inherit;
+  background: transparent;
+  font: 500 var(--krn-font-size-md, 0.9375rem) / 1.25 var(--krn-font-family-sans, sans-serif);
+  text-align: start;
+  cursor: pointer;
+}
+
+.krn-user-menu__menu
+  :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']):is(
+    :hover,
+    :focus-visible
+  ) {
+  background: var(--krn-color-surface-hover, #f2f3f5);
+  outline: 0;
+}
+
+.krn-user-menu__menu
+  :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']):focus-visible {
+  box-shadow: inset 0 0 0 2px var(--krn-color-focus);
+}
+
+@media (pointer: coarse) {
+  .krn-user-menu__menu [role^='menuitem'] {
+    min-block-size: 2.75rem;
+  }
+}
+
+@media (forced-colors: active) {
+  .krn-user-menu__menu [role^='menuitem']:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
+}

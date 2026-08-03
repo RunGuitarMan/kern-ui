@@ -4,13 +4,7 @@ export * from './toast';
 export * from './progress';
 export * from './states';
 export { KrnHoverCard, KrnPopover, KrnTooltip } from './hint-overlays';
-export {
-  KrnAlertDialog,
-  KrnBottomSheet,
-  KrnDialog,
-  KrnDrawer,
-  KrnOverlaySurface,
-} from './modal-overlays';
+export { KrnAlertDialog, KrnBottomSheet, KrnDialog, KrnDrawer } from './modal-overlays';
 export {
   KRN_OVERLAY_DATA,
   KrnOverlayRef,

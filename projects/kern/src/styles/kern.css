@@ -7,6 +7,7 @@
 @import './utilities.css';
 @import './components/actions.css';
 @import './components/forms.css';
+@import './components/projection.css';
 
 /*
  * CDK calculates connected-overlay positions from documentElement.clientWidth.

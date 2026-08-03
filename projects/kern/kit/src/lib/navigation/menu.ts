@@ -1,9 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   Directive,
   ElementRef,
-  HostListener,
   computed,
   contentChild,
   effect,
@@ -817,6 +817,7 @@ export class KrnMenubar {
 export class KrnContextMenu {
   private readonly overlayCoordinator = inject(KrnOverlayCoordinator);
   private readonly platform = inject(KRN_PLATFORM);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly elements = viewChildren<ElementRef<HTMLButtonElement>>('contextItem');
@@ -861,6 +862,23 @@ export class KrnContextMenu {
   private focusToken = 0;
 
   constructor() {
+    if (this.platform.isBrowser) {
+      const document = this.platform.document;
+      const window = this.platform.window;
+      const onEscape = (event: KeyboardEvent): void => this.onDocumentEscape(event);
+      const onContextMenu = (event: MouseEvent): void => this.onDocumentContextMenu(event);
+      const onBlur = (): void => this.onWindowBlur();
+
+      document.addEventListener('keydown', onEscape);
+      document.addEventListener('contextmenu', onContextMenu);
+      window?.addEventListener('blur', onBlur);
+      this.destroyRef.onDestroy(() => {
+        document.removeEventListener('keydown', onEscape);
+        document.removeEventListener('contextmenu', onContextMenu);
+        window?.removeEventListener('blur', onBlur);
+      });
+    }
+
     effect(() => {
       if (!this.open()) return;
       const activePath = this.pathTo(this.activeId());
@@ -1130,21 +1148,18 @@ export class KrnContextMenu {
     }
   }
 
-  @HostListener('document:keydown.escape', ['$event'])
-  protected onDocumentEscape(event: Event): void {
-    if (!this.open() || event.defaultPrevented) return;
+  protected onDocumentEscape(event: KeyboardEvent): void {
+    if (event.key !== 'Escape' || !this.open() || event.defaultPrevented) return;
     event.preventDefault();
     this.dismiss(true);
   }
 
-  @HostListener('document:contextmenu', ['$event'])
   protected onDocumentContextMenu(event: MouseEvent): void {
     if (!this.open() || this.host.nativeElement.contains(event.target as Node)) return;
     event.preventDefault();
     this.dismiss(false);
   }
 
-  @HostListener('window:blur')
   protected onWindowBlur(): void {
     this.dismiss(false);
   }

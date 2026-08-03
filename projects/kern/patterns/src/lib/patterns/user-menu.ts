@@ -2,8 +2,8 @@ import {
   afterNextRender,
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
-  HostListener,
   computed,
   effect,
   inject,
@@ -19,6 +19,7 @@ import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
   selector: 'krn-user-menu',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
+    class: 'krn-user-menu',
     '[attr.data-open]': 'open() ? "" : null',
   },
   template: `
@@ -44,7 +45,7 @@ import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
       @if (open()) {
         <div
           #menu
-          class="menu"
+          class="menu krn-user-menu__menu"
           [id]="menuId"
           role="menu"
           [attr.aria-label]="resolvedMenuAriaLabel()"
@@ -155,34 +156,6 @@ import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
     :host-context([dir='rtl']) .menu {
       transform-origin: top right;
     }
-    .menu ::ng-deep :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']) {
-      display: flex;
-      inline-size: 100%;
-      min-block-size: 2.5rem;
-      align-items: center;
-      padding: 0.5rem 0.75rem;
-      border: 0;
-      border-radius: var(--krn-radius-sm, 0.375rem);
-      color: inherit;
-      background: transparent;
-      font: 500 var(--krn-font-size-md, 0.9375rem) / 1.25 var(--krn-font-family-sans, sans-serif);
-      text-align: start;
-      cursor: pointer;
-    }
-    .menu
-      ::ng-deep
-      :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']):is(
-        :hover,
-        :focus-visible
-      ) {
-      background: var(--krn-color-surface-hover, #f2f3f5);
-      outline: 0;
-    }
-    .menu
-      ::ng-deep
-      :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']):focus-visible {
-      box-shadow: inset 0 0 0 2px var(--krn-color-focus);
-    }
     @keyframes user-menu-in {
       from {
         opacity: 0;
@@ -200,18 +173,12 @@ import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
         animation: none;
       }
     }
-    @media (pointer: coarse) {
-      .menu ::ng-deep [role^='menuitem'] {
-        min-block-size: 2.75rem;
-      }
-    }
     @media (forced-colors: active) {
       .trigger,
       .menu {
         border-color: CanvasText;
       }
-      .trigger:focus-visible,
-      .menu ::ng-deep [role^='menuitem']:focus-visible {
+      .trigger:focus-visible {
         outline: 2px solid Highlight;
         outline-offset: 2px;
         box-shadow: none;
@@ -224,6 +191,7 @@ export class KrnUserMenu {
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly injector = inject(Injector);
+  private readonly destroyRef = inject(DestroyRef);
   protected readonly menuId = inject(KrnIdService).next('user-menu');
   readonly name = input.required<string>();
   readonly detail = input('');
@@ -263,6 +231,15 @@ export class KrnUserMenu {
     menu.addEventListener('click', captureDisabledClick, true);
     onCleanup(() => menu.removeEventListener('click', captureDisabledClick, true));
   });
+
+  constructor() {
+    if (!this.platform.isBrowser) return;
+    const listener = (event: PointerEvent): void => this.closeOnOutsidePointer(event);
+    this.platform.document.addEventListener('pointerdown', listener);
+    this.destroyRef.onDestroy(() =>
+      this.platform.document.removeEventListener('pointerdown', listener),
+    );
+  }
 
   protected toggleMenu(): void {
     const next = !this.open();
@@ -336,7 +313,6 @@ export class KrnUserMenu {
     this.open.set(false);
   }
 
-  @HostListener('document:pointerdown', ['$event'])
   protected closeOnOutsidePointer(event: PointerEvent): void {
     if (
       this.open() &&

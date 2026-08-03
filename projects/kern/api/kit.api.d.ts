@@ -8,13 +8,14 @@
 import * as _angular_core from '@angular/core';
 import {
   OnInit,
+  ModelSignal,
   Signal,
-  Provider,
+  OutputEmitterRef,
   TemplateRef,
-  ElementRef,
   InjectionToken,
   ViewContainerRef,
   Injector,
+  Provider,
   Type,
 } from '@angular/core';
 import * as _kern_ui_angular_core from '@kern-ui/angular/core';
@@ -26,7 +27,7 @@ import {
   KrnToastTranslations,
   KrnCalendarTranslations,
 } from '@kern-ui/angular/core';
-import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { ConnectedPosition, CdkConnectedOverlay } from '@angular/cdk/overlay';
 import * as _angular_forms from '@angular/forms';
 import * as _kern_ui_angular_kit from '@kern-ui/angular/kit';
 import * as _kern_ui_angular_cdk from '@kern-ui/angular/cdk';
@@ -1285,22 +1286,25 @@ declare const provideKrnMenuButtonOptions: (
   patch: Partial<KrnMenuButtonOptions> | (() => Partial<KrnMenuButtonOptions>),
 ) => _angular_core.FactoryProvider;
 
-/**
- * Shared behavior for menu-button variants.
- *
- * Prefer `KrnDropdownButton` or `KrnSplitButton` unless a custom menu-button primitive is needed.
- *
- * @experimental The required trigger and panel template contract is not stable yet.
- */
-declare abstract class KrnMenuButtonBase {
+interface KrnMenuButtonHost {
+  readonly disabled: Signal<boolean>;
+  readonly loading: Signal<boolean>;
+  readonly open: ModelSignal<boolean>;
+  readonly menuAlign: Signal<KrnMenuAlignment>;
+  readonly menuOffset: Signal<number>;
+  readonly closeOnSelection: Signal<boolean>;
+}
+/** Internal signal controller shared by the two public menu-button components. */
+declare class KrnMenuButtonController {
+  private readonly menuHost;
   private readonly platform;
   private readonly overlayCoordinator;
   private readonly host;
   private readonly ids;
   private readonly destroyRef;
   private readonly renderer;
-  private readonly options;
-  private readonly menuPanel;
+  private resolveMenuPanel;
+  private resolveFocusReturnTarget;
   private readonly capturedPanelClickItems;
   private requestedFocus;
   private typeaheadBuffer;
@@ -1309,58 +1313,24 @@ declare abstract class KrnMenuButtonBase {
   private menuHadFocus;
   private lastFocusedItemIndex;
   private stopPanelActivationGuard;
-  readonly size: _angular_core.InputSignal<KrnSize>;
-  readonly variant: _angular_core.InputSignal<KrnActionVariant>;
-  readonly tone: _angular_core.InputSignal<KrnTone>;
-  readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly open: _angular_core.ModelSignal<boolean>;
-  /** Logical horizontal alignment used before the CDK collision fallbacks. */
-  readonly menuAlign: _angular_core.InputSignal<KrnMenuAlignment>;
-  /** Non-negative logical gap in CSS pixels between the trigger and menu. */
-  readonly menuOffset: _angular_core.InputSignalWithTransform<number, unknown>;
-  /** Makes the connected overlay exactly as wide as the complete trigger origin. */
-  readonly matchTriggerWidth: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  /** Closes after an enabled menu item activates; use the keep-open marker for one item. */
-  readonly closeOnSelection: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  protected readonly triggerId: string;
-  protected readonly menuId: string;
-  protected readonly isDisabled: _angular_core.Signal<boolean>;
-  protected readonly effectiveOpen: _angular_core.Signal<boolean>;
-  protected readonly menuPositions: _angular_core.Signal<
-    (
-      | {
-          originX: KrnMenuAlignment;
-          originY: 'bottom';
-          overlayX: KrnMenuAlignment;
-          overlayY: 'top';
-          offsetY: number;
-        }
-      | {
-          originX: KrnMenuAlignment;
-          originY: 'top';
-          overlayX: KrnMenuAlignment;
-          overlayY: 'bottom';
-          offsetY: number;
-        }
-    )[]
-  >;
-  constructor();
-  protected toggleMenu(): void;
-  protected registerOverlay(overlay: CdkConnectedOverlay, origin: HTMLElement): void;
-  protected onOverlayDetached(): void;
-  protected onOverlayOutsideClick(event: MouseEvent): void;
-  protected closeFromMenu(event: MouseEvent): void;
-  protected onTriggerKeydown(event: KeyboardEvent): void;
-  protected onMenuKeydown(event: KeyboardEvent): void;
-  protected closeOnFocusOut(event: FocusEvent): void;
-  /**
-   * Focus destination after a menu-owned loading transition.
-   *
-   * Compound variants can preserve a different focusable action while their menu trigger
-   * becomes disabled.
-   */
-  protected getFocusReturnTarget(): HTMLButtonElement | null;
+  readonly triggerId: string;
+  readonly menuId: string;
+  readonly isDisabled: Signal<boolean>;
+  readonly effectiveOpen: Signal<boolean>;
+  readonly menuPositions: Signal<ConnectedPosition[]>;
+  constructor(menuHost: KrnMenuButtonHost);
+  connectView(
+    resolveMenuPanel: () => HTMLElement | undefined,
+    resolveFocusReturnTarget?: () => HTMLButtonElement | null,
+  ): void;
+  toggleMenu(): void;
+  registerOverlay(overlay: CdkConnectedOverlay, origin: HTMLElement): void;
+  onOverlayDetached(): void;
+  onOverlayOutsideClick(event: MouseEvent): void;
+  closeFromMenu(event: MouseEvent): void;
+  onTriggerKeydown(event: KeyboardEvent): void;
+  onMenuKeydown(event: KeyboardEvent): void;
+  closeOnFocusOut(event: FocusEvent): void;
   private openMenu;
   private closeMenu;
   private synchronizeMenuItems;
@@ -1388,10 +1358,30 @@ declare abstract class KrnMenuButtonBase {
   private focusTriggerImmediately;
   private findMenuTrigger;
   private focusTrigger;
-  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnMenuButtonBase, never>;
-  static ɵdir: _angular_core.ɵɵDirectiveDeclaration<
-    KrnMenuButtonBase,
-    never,
+}
+declare class KrnDropdownButton {
+  private readonly options;
+  readonly size: _angular_core.InputSignal<KrnSize>;
+  readonly variant: _angular_core.InputSignal<KrnActionVariant>;
+  readonly tone: _angular_core.InputSignal<KrnTone>;
+  readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly open: ModelSignal<boolean>;
+  /** Logical horizontal alignment used before the CDK collision fallbacks. */
+  readonly menuAlign: _angular_core.InputSignal<KrnMenuAlignment>;
+  /** Non-negative logical gap in CSS pixels between the trigger and menu. */
+  readonly menuOffset: _angular_core.InputSignalWithTransform<number, unknown>;
+  /** Makes the connected overlay exactly as wide as the complete trigger origin. */
+  readonly matchTriggerWidth: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Closes after an enabled menu item activates; use the keep-open marker for one item. */
+  readonly closeOnSelection: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  private readonly menuPanel;
+  protected readonly menu: KrnMenuButtonController;
+  constructor();
+  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDropdownButton, never>;
+  static ɵcmp: _angular_core.ɵɵComponentDeclaration<
+    KrnDropdownButton,
+    'krn-dropdown-button',
     never,
     {
       size: { alias: 'size'; required: false; isSignal: true };
@@ -1407,38 +1397,53 @@ declare abstract class KrnMenuButtonBase {
     },
     { open: 'openChange' },
     never,
-    never,
-    true,
-    never
-  >;
-}
-declare class KrnDropdownButton extends KrnMenuButtonBase {
-  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDropdownButton, never>;
-  static ɵcmp: _angular_core.ɵɵComponentDeclaration<
-    KrnDropdownButton,
-    'krn-dropdown-button',
-    never,
-    {},
-    {},
-    never,
     ['[krnLabel]', '[krnMenu]'],
     true,
     never
   >;
 }
-declare class KrnSplitButton extends KrnMenuButtonBase {
+declare class KrnSplitButton {
+  private readonly options;
   private readonly splitHost;
+  readonly size: _angular_core.InputSignal<KrnSize>;
+  readonly variant: _angular_core.InputSignal<KrnActionVariant>;
+  readonly tone: _angular_core.InputSignal<KrnTone>;
+  readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly open: ModelSignal<boolean>;
+  /** Logical horizontal alignment used before the CDK collision fallbacks. */
+  readonly menuAlign: _angular_core.InputSignal<KrnMenuAlignment>;
+  /** Non-negative logical gap in CSS pixels between the trigger and menu. */
+  readonly menuOffset: _angular_core.InputSignalWithTransform<number, unknown>;
+  /** Makes the connected overlay exactly as wide as the complete trigger origin. */
+  readonly matchTriggerWidth: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Closes after an enabled menu item activates; use the keep-open marker for one item. */
+  readonly closeOnSelection: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly menuLabel: _angular_core.InputSignal<string>;
   readonly primaryAction: _angular_core.OutputEmitterRef<MouseEvent>;
-  protected getFocusReturnTarget(): HTMLButtonElement | null;
+  private readonly menuPanel;
+  protected readonly menu: KrnMenuButtonController;
+  constructor();
   protected activatePrimary(event: MouseEvent): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnSplitButton, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnSplitButton,
     'krn-split-button',
     never,
-    { menuLabel: { alias: 'menuLabel'; required: false; isSignal: true } },
-    { primaryAction: 'primaryAction' },
+    {
+      size: { alias: 'size'; required: false; isSignal: true };
+      variant: { alias: 'variant'; required: false; isSignal: true };
+      tone: { alias: 'tone'; required: false; isSignal: true };
+      disabled: { alias: 'disabled'; required: false; isSignal: true };
+      loading: { alias: 'loading'; required: false; isSignal: true };
+      open: { alias: 'open'; required: false; isSignal: true };
+      menuAlign: { alias: 'menuAlign'; required: false; isSignal: true };
+      menuOffset: { alias: 'menuOffset'; required: false; isSignal: true };
+      matchTriggerWidth: { alias: 'matchTriggerWidth'; required: false; isSignal: true };
+      closeOnSelection: { alias: 'closeOnSelection'; required: false; isSignal: true };
+      menuLabel: { alias: 'menuLabel'; required: false; isSignal: true };
+    },
+    { open: 'openChange'; primaryAction: 'primaryAction' },
     never,
     ['[krnLabel]', '[krnMenu]'],
     true,
@@ -1606,17 +1611,6 @@ declare class KrnValidationMessage {
   >;
 }
 
-/**
- * Installs the Angular Forms adapter required by Kern's experimental form-control variant bases.
- *
- * Add the returned providers to a component that extends `KrnEditableComboboxBase` or
- * `KrnUploadBase`. The adapter remains component-scoped and is shared by `NG_VALUE_ACCESSOR` and
- * `NG_VALIDATORS` without making the component inherit form-state machinery.
- *
- * @publicApi
- * @experimental The custom-control extension contract may change before Kern 1.0.
- */
-declare function provideKrnFormControl(): Provider[];
 interface KrnControlA11y {
   readonly id: Signal<string>;
   readonly describedBy: Signal<string | null>;
@@ -2575,7 +2569,7 @@ declare class KrnNativeSelect<T = string> {
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly value: _angular_core.InputSignal<T | null | undefined>;
-  readonly valueChange: _angular_core.OutputEmitterRef<T | null>;
+  readonly valueChange: OutputEmitterRef<T | null>;
   private readonly formControl;
   protected readonly controlValue: _angular_core.WritableSignal<T | null>;
   protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
@@ -2589,11 +2583,11 @@ declare class KrnNativeSelect<T = string> {
   ) => _angular_forms.ValidationErrors | null;
   readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
-  protected readonly isDisabled: _angular_core.Signal<boolean>;
-  protected readonly isReadOnly: _angular_core.Signal<boolean>;
-  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
-  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
-  protected readonly selectedNativeKey: _angular_core.Signal<string>;
+  protected readonly isDisabled: Signal<boolean>;
+  protected readonly isReadOnly: Signal<boolean>;
+  protected readonly effectiveLabelledBy: Signal<string | null>;
+  protected readonly effectiveDescribedBy: Signal<string | null>;
+  protected readonly selectedNativeKey: Signal<string>;
   constructor();
   private normalizeIncomingValue;
   private validateValue;
@@ -2662,9 +2656,9 @@ declare class KrnSelect<T = string> {
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly value: _angular_core.InputSignal<T | null | undefined>;
-  readonly open: _angular_core.ModelSignal<boolean>;
-  readonly valueChange: _angular_core.OutputEmitterRef<T | null>;
-  readonly selectionChange: _angular_core.OutputEmitterRef<KrnSelectOption<T> | null>;
+  readonly open: ModelSignal<boolean>;
+  readonly valueChange: OutputEmitterRef<T | null>;
+  readonly selectionChange: OutputEmitterRef<KrnSelectOption<T> | null>;
   protected readonly controlValue: _angular_core.WritableSignal<T | null>;
   protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
   readonly writeValue: (value: unknown) => void;
@@ -2676,12 +2670,12 @@ declare class KrnSelect<T = string> {
   ) => _angular_forms.ValidationErrors | null;
   readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
-  protected readonly isDisabled: _angular_core.Signal<boolean>;
-  protected readonly isReadOnly: _angular_core.Signal<boolean>;
-  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
-  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
-  protected readonly selectedOption: _angular_core.Signal<KrnSelectOption<T> | null>;
-  protected readonly selectedValues: _angular_core.Signal<T[]>;
+  protected readonly isDisabled: Signal<boolean>;
+  protected readonly isReadOnly: Signal<boolean>;
+  protected readonly effectiveLabelledBy: Signal<string | null>;
+  protected readonly effectiveDescribedBy: Signal<string | null>;
+  protected readonly selectedOption: Signal<KrnSelectOption<T> | null>;
+  protected readonly selectedValues: Signal<T[]>;
   constructor();
   protected setOpen(open: boolean): void;
   protected close(): void;
@@ -2757,8 +2751,8 @@ declare class KrnMultiSelect<T = string> {
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly value: _angular_core.InputSignal<readonly T[] | undefined>;
-  readonly open: _angular_core.ModelSignal<boolean>;
-  readonly valueChange: _angular_core.OutputEmitterRef<readonly T[]>;
+  readonly open: ModelSignal<boolean>;
+  readonly valueChange: OutputEmitterRef<readonly T[]>;
   private readonly formControl;
   protected readonly controlValue: _angular_core.WritableSignal<readonly T[]>;
   protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
@@ -2771,15 +2765,15 @@ declare class KrnMultiSelect<T = string> {
   ) => _angular_forms.ValidationErrors | null;
   readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
-  protected readonly isDisabled: _angular_core.Signal<boolean>;
-  protected readonly isReadOnly: _angular_core.Signal<boolean>;
-  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
-  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
-  protected readonly visibleLimit: _angular_core.Signal<number>;
-  protected readonly selectedOptions: _angular_core.Signal<KrnSelectOption<T>[]>;
-  protected readonly visibleSelectedOptions: _angular_core.Signal<KrnSelectOption<T>[]>;
-  protected readonly remainingCount: _angular_core.Signal<number>;
-  protected readonly mutableValues: _angular_core.Signal<T[]>;
+  protected readonly isDisabled: Signal<boolean>;
+  protected readonly isReadOnly: Signal<boolean>;
+  protected readonly effectiveLabelledBy: Signal<string | null>;
+  protected readonly effectiveDescribedBy: Signal<string | null>;
+  protected readonly visibleLimit: Signal<number>;
+  protected readonly selectedOptions: Signal<KrnSelectOption<T>[]>;
+  protected readonly visibleSelectedOptions: Signal<KrnSelectOption<T>[]>;
+  protected readonly remainingCount: Signal<number>;
+  protected readonly mutableValues: Signal<T[]>;
   constructor();
   private normalizeIncomingValue;
   private validateValue;
@@ -2830,27 +2824,9 @@ declare class KrnMultiSelect<T = string> {
     never
   >;
 }
-/**
- * Shared contract for editable KERN combobox variants.
- *
- * @publicApi
- * @experimental The required editable-combobox template contract is not stable yet.
- */
-declare abstract class KrnEditableComboboxBase {
-  private readonly comboboxDirective;
-  private readonly inputElement;
-  private readonly destroyRef;
-  private readonly locale;
-  private readonly platform;
-  private readonly renderer;
+declare class KrnCombobox {
+  #private;
   private readonly translations;
-  protected readonly inputFocused: _angular_core.WritableSignal<boolean>;
-  private readonly queryEditing;
-  private inlineRenderRevision;
-  private pendingEnterClose;
-  private renderedAutocompleteMode;
-  protected readonly defaultAutocompleteMode: KrnAutocompleteMode;
-  protected readonly defaultAllowCustomValue: boolean;
   readonly autocompleteModeInput: _angular_core.InputSignal<KrnAutocompleteMode | undefined>;
   readonly allowCustomValueInput: _angular_core.InputSignalWithTransform<
     boolean | undefined,
@@ -2873,22 +2849,24 @@ declare abstract class KrnEditableComboboxBase {
   readonly filterLocally: _angular_core.InputSignalWithTransform<boolean, unknown>;
   /** Overrides the default case-insensitive local option filter. */
   readonly optionFilter: _angular_core.InputSignal<KrnOptionFilter<string> | null>;
-  protected readonly autocompleteMode: _angular_core.Signal<KrnAutocompleteMode>;
-  protected readonly hasAutocompletePopup: _angular_core.Signal<boolean>;
-  protected readonly allowCustomValue: _angular_core.Signal<boolean>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly value: _angular_core.InputSignal<string | undefined>;
-  readonly open: _angular_core.ModelSignal<boolean>;
-  readonly valueChange: _angular_core.OutputEmitterRef<string>;
+  readonly open: ModelSignal<boolean>;
+  readonly valueChange: OutputEmitterRef<string>;
   /** Emits every user query so remote option sources can load and replace options. */
-  readonly queryChange: _angular_core.OutputEmitterRef<string>;
-  readonly optionSelected: _angular_core.OutputEmitterRef<KrnSelectOption<string>>;
+  readonly queryChange: OutputEmitterRef<string>;
+  readonly optionSelected: OutputEmitterRef<KrnSelectOption<string>>;
+  private readonly comboboxDirective;
+  private readonly inputElement;
+  protected readonly inputFocused: _angular_core.WritableSignal<boolean>;
+  protected readonly autocompleteMode: Signal<KrnAutocompleteMode>;
+  protected readonly hasAutocompletePopup: Signal<boolean>;
+  protected readonly allowCustomValue: Signal<boolean>;
   protected readonly query: _angular_core.WritableSignal<string>;
-  private readonly formControl;
   protected readonly controlValue: _angular_core.WritableSignal<string>;
   protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
   readonly writeValue: (value: unknown) => void;
@@ -2900,22 +2878,17 @@ declare abstract class KrnEditableComboboxBase {
   ) => _angular_forms.ValidationErrors | null;
   readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
-  protected readonly isDisabled: _angular_core.Signal<boolean>;
-  protected readonly isReadOnly: _angular_core.Signal<boolean>;
-  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
-  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
-  protected readonly filteredOptions: _angular_core.Signal<readonly KrnSelectOption<string>[]>;
-  private readonly inlineSuggestedOption;
-  protected readonly inlineSuggestion: _angular_core.Signal<string | undefined>;
-  protected readonly selectedValues: _angular_core.Signal<string[]>;
-  protected constructor();
-  private normalizeIncomingValue;
-  private validateValue;
+  protected readonly isDisabled: Signal<boolean>;
+  protected readonly isReadOnly: Signal<boolean>;
+  protected readonly effectiveLabelledBy: Signal<string | null>;
+  protected readonly effectiveDescribedBy: Signal<string | null>;
+  protected readonly filteredOptions: Signal<readonly KrnSelectOption<string>[]>;
+  protected readonly inlineSuggestion: Signal<string | undefined>;
+  protected readonly selectedValues: Signal<string[]>;
   protected updateQuery(query: string): void;
   protected selectValues(values: string[]): void;
   protected commitQuery(event?: Event): void;
   protected closeOnFocusOut(event: FocusEvent): void;
-  private normalizeForSearch;
   protected setOpen(open: boolean): void;
   protected openOptions(): void;
   protected cancelQuery(): void;
@@ -2923,18 +2896,14 @@ declare abstract class KrnEditableComboboxBase {
   protected toggleOptions(input: HTMLInputElement): void;
   protected acceptInlineCompletion(input: HTMLInputElement): void;
   protected closeSelectedOption(option: KrnSelectOption<string>): void;
-  private restoreCommittedQuery;
-  private setQuery;
-  private cancelPendingEnterClose;
-  private acceptInlineSuggestion;
   focus(options?: FocusOptions): void;
   blur(): void;
   select(): void;
   setSelectionRange(start: number, end: number, direction?: SelectionDirection): void;
-  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnEditableComboboxBase, never>;
-  static ɵdir: _angular_core.ɵɵDirectiveDeclaration<
-    KrnEditableComboboxBase,
-    never,
+  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnCombobox, never>;
+  static ɵcmp: _angular_core.ɵɵComponentDeclaration<
+    KrnCombobox,
+    'krn-combobox',
     never,
     {
       autocompleteModeInput: { alias: 'autocompleteMode'; required: false; isSignal: true };
@@ -2973,32 +2942,118 @@ declare abstract class KrnEditableComboboxBase {
     never
   >;
 }
-declare class KrnCombobox extends KrnEditableComboboxBase {
-  constructor();
-  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnCombobox, never>;
-  static ɵcmp: _angular_core.ɵɵComponentDeclaration<
-    KrnCombobox,
-    'krn-combobox',
-    never,
-    {},
-    {},
-    never,
-    never,
-    true,
-    never
+declare class KrnAutocomplete {
+  #private;
+  private readonly translations;
+  readonly autocompleteModeInput: _angular_core.InputSignal<KrnAutocompleteMode | undefined>;
+  readonly allowCustomValueInput: _angular_core.InputSignalWithTransform<
+    boolean | undefined,
+    unknown
   >;
-}
-declare class KrnAutocomplete extends KrnEditableComboboxBase {
-  protected readonly defaultAutocompleteMode: KrnAutocompleteMode;
-  protected readonly defaultAllowCustomValue = true;
-  constructor();
+  readonly id: _angular_core.InputSignal<string>;
+  readonly placeholder: _angular_core.InputSignal<string>;
+  readonly emptyText: _angular_core.InputSignal<string>;
+  readonly loadingText: _angular_core.InputSignal<string>;
+  readonly errorText: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
+  readonly toggleLabel: _angular_core.InputSignal<string>;
+  readonly name: _angular_core.InputSignal<string>;
+  readonly options: _angular_core.InputSignal<readonly KrnSelectOption<string>[]>;
+  /** Controls whether options are interactive or replaced by an announced loading/error state. */
+  readonly optionsState: _angular_core.InputSignal<KrnOptionsState>;
+  /** Set to false when the consumer filters options remotely in response to queryChange. */
+  readonly filterLocally: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Overrides the default case-insensitive local option filter. */
+  readonly optionFilter: _angular_core.InputSignal<KrnOptionFilter<string> | null>;
+  readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly value: _angular_core.InputSignal<string | undefined>;
+  readonly open: ModelSignal<boolean>;
+  readonly valueChange: OutputEmitterRef<string>;
+  /** Emits every user query so remote option sources can load and replace options. */
+  readonly queryChange: OutputEmitterRef<string>;
+  readonly optionSelected: OutputEmitterRef<KrnSelectOption<string>>;
+  private readonly comboboxDirective;
+  private readonly inputElement;
+  protected readonly inputFocused: _angular_core.WritableSignal<boolean>;
+  protected readonly autocompleteMode: Signal<KrnAutocompleteMode>;
+  protected readonly hasAutocompletePopup: Signal<boolean>;
+  protected readonly allowCustomValue: Signal<boolean>;
+  protected readonly query: _angular_core.WritableSignal<string>;
+  protected readonly controlValue: _angular_core.WritableSignal<string>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: string) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
+  protected readonly a11y: KrnControlA11y;
+  protected readonly isDisabled: Signal<boolean>;
+  protected readonly isReadOnly: Signal<boolean>;
+  protected readonly effectiveLabelledBy: Signal<string | null>;
+  protected readonly effectiveDescribedBy: Signal<string | null>;
+  protected readonly filteredOptions: Signal<readonly KrnSelectOption<string>[]>;
+  protected readonly inlineSuggestion: Signal<string | undefined>;
+  protected readonly selectedValues: Signal<string[]>;
+  protected updateQuery(query: string): void;
+  protected selectValues(values: string[]): void;
+  protected commitQuery(event?: Event): void;
+  protected closeOnFocusOut(event: FocusEvent): void;
+  protected setOpen(open: boolean): void;
+  protected openOptions(): void;
+  protected cancelQuery(): void;
+  protected onEscape(event: Event): void;
+  protected toggleOptions(input: HTMLInputElement): void;
+  protected acceptInlineCompletion(input: HTMLInputElement): void;
+  protected closeSelectedOption(option: KrnSelectOption<string>): void;
+  focus(options?: FocusOptions): void;
+  blur(): void;
+  select(): void;
+  setSelectionRange(start: number, end: number, direction?: SelectionDirection): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnAutocomplete, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnAutocomplete,
     'krn-autocomplete',
     never,
-    {},
-    {},
+    {
+      autocompleteModeInput: { alias: 'autocompleteMode'; required: false; isSignal: true };
+      allowCustomValueInput: { alias: 'allowCustomValue'; required: false; isSignal: true };
+      id: { alias: 'id'; required: false; isSignal: true };
+      placeholder: { alias: 'placeholder'; required: false; isSignal: true };
+      emptyText: { alias: 'emptyText'; required: false; isSignal: true };
+      loadingText: { alias: 'loadingText'; required: false; isSignal: true };
+      errorText: { alias: 'errorText'; required: false; isSignal: true };
+      ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
+      toggleLabel: { alias: 'toggleLabel'; required: false; isSignal: true };
+      name: { alias: 'name'; required: false; isSignal: true };
+      options: { alias: 'options'; required: true; isSignal: true };
+      optionsState: { alias: 'optionsState'; required: false; isSignal: true };
+      filterLocally: { alias: 'filterLocally'; required: false; isSignal: true };
+      optionFilter: { alias: 'optionFilter'; required: false; isSignal: true };
+      disabled: { alias: 'disabled'; required: false; isSignal: true };
+      readOnly: { alias: 'readonly'; required: false; isSignal: true };
+      required: { alias: 'required'; required: false; isSignal: true };
+      invalid: { alias: 'invalid'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
+      open: { alias: 'open'; required: false; isSignal: true };
+    },
+    {
+      open: 'openChange';
+      valueChange: 'valueChange';
+      queryChange: 'queryChange';
+      optionSelected: 'optionSelected';
+    },
     never,
     never,
     true,
@@ -3857,16 +3912,9 @@ declare class KrnNumberInput {
   >;
 }
 
-/**
- * Shared contract for KERN upload variants.
- *
- * @publicApi
- * @experimental The required file-input template contract is not stable yet.
- */
-declare abstract class KrnUploadBase {
-  protected readonly platform: _kern_ui_angular_cdk.KrnPlatformAdapter;
+declare class KrnFileUpload {
+  #private;
   protected readonly translations: Readonly<_kern_ui_angular_core.KrnTranslations>;
-  protected readonly fileInput: Signal<ElementRef<HTMLInputElement> | undefined>;
   readonly id: _angular_core.InputSignal<string>;
   readonly label: _angular_core.InputSignal<string>;
   readonly locale: _angular_core.InputSignal<string>;
@@ -3879,10 +3927,14 @@ declare abstract class KrnUploadBase {
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly filesChange: _angular_core.OutputEmitterRef<readonly File[]>;
-  readonly rejected: _angular_core.OutputEmitterRef<readonly KrnUploadRejection[]>;
+  readonly filesChange: OutputEmitterRef<readonly File[]>;
+  readonly rejected: OutputEmitterRef<readonly KrnUploadRejection[]>;
+  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
+  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
+  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly value: _angular_core.InputSignal<readonly File[] | undefined>;
+  private readonly fileInput;
   protected readonly rejections: _angular_core.WritableSignal<readonly KrnUploadRejection[]>;
-  private readonly formControl;
   protected readonly controlValue: _angular_core.WritableSignal<readonly File[]>;
   protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
   protected readonly touch: () => void;
@@ -3896,23 +3948,23 @@ declare abstract class KrnUploadBase {
   readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: Signal<boolean>;
-  protected constructor();
-  protected bindStandaloneFiles(value: Signal<readonly File[] | undefined>): void;
-  private normalizeIncomingValue;
-  private validateValue;
-  private valuesEqual;
+  protected readonly nativeInputId: Signal<string>;
+  protected readonly descriptionId: Signal<string>;
+  protected readonly requiredDescriptionId: Signal<string>;
+  protected readonly effectiveLabelledBy: Signal<string | null>;
+  protected readonly effectiveDescribedBy: Signal<string | null>;
+  private readonly action;
   protected openPicker(): void;
   protected selectFromInput(event: Event): void;
-  protected acceptFiles(incoming: readonly File[]): void;
   protected removeFile(index: number): void;
   protected formatBytes(bytes: number): string;
   protected fileKey(file: File): string;
-  private matchesAccept;
-  private isFile;
-  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnUploadBase, never>;
-  static ɵdir: _angular_core.ɵɵDirectiveDeclaration<
-    KrnUploadBase,
-    never,
+  focus(options?: FocusOptions): void;
+  blur(): void;
+  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnFileUpload, never>;
+  static ɵcmp: _angular_core.ɵɵComponentDeclaration<
+    KrnFileUpload,
+    'krn-file-upload',
     never,
     {
       id: { alias: 'id'; required: false; isSignal: true };
@@ -3927,6 +3979,10 @@ declare abstract class KrnUploadBase {
       readOnly: { alias: 'readonly'; required: false; isSignal: true };
       required: { alias: 'required'; required: false; isSignal: true };
       invalid: { alias: 'invalid'; required: false; isSignal: true };
+      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
+      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
+      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
+      value: { alias: 'value'; required: false; isSignal: true };
     },
     { filesChange: 'filesChange'; rejected: 'rejected' },
     never,
@@ -3935,44 +3991,44 @@ declare abstract class KrnUploadBase {
     never
   >;
 }
-declare class KrnFileUpload extends KrnUploadBase {
-  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
-  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
-  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
-  readonly value: _angular_core.InputSignal<readonly File[] | undefined>;
-  protected readonly nativeInputId: Signal<string>;
-  protected readonly descriptionId: Signal<string>;
-  protected readonly requiredDescriptionId: Signal<string>;
-  protected readonly effectiveLabelledBy: Signal<string | null>;
-  protected readonly effectiveDescribedBy: Signal<string | null>;
-  private readonly action;
-  constructor();
-  focus(options?: FocusOptions): void;
-  blur(): void;
-  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnFileUpload, never>;
-  static ɵcmp: _angular_core.ɵɵComponentDeclaration<
-    KrnFileUpload,
-    'krn-file-upload',
-    never,
-    {
-      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
-      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
-      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
-      value: { alias: 'value'; required: false; isSignal: true };
-    },
-    {},
-    never,
-    never,
-    true,
-    never
-  >;
-}
-declare class KrnDropUpload extends KrnUploadBase {
+declare class KrnDropUpload {
+  #private;
+  protected readonly platform: _kern_ui_angular_cdk.KrnPlatformAdapter;
+  protected readonly translations: Readonly<_kern_ui_angular_core.KrnTranslations>;
+  readonly id: _angular_core.InputSignal<string>;
+  readonly label: _angular_core.InputSignal<string>;
+  readonly locale: _angular_core.InputSignal<string>;
+  readonly description: _angular_core.InputSignal<string>;
+  readonly accept: _angular_core.InputSignal<string>;
+  readonly multiple: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly maxSize: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly maxFiles: _angular_core.InputSignalWithTransform<number, unknown>;
+  readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly filesChange: OutputEmitterRef<readonly File[]>;
+  readonly rejected: OutputEmitterRef<readonly KrnUploadRejection[]>;
   readonly dropLabel: _angular_core.InputSignal<string>;
   readonly ariaLabelledBy: _angular_core.InputSignal<string>;
   readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly value: _angular_core.InputSignal<readonly File[] | undefined>;
+  private readonly fileInput;
+  protected readonly rejections: _angular_core.WritableSignal<readonly KrnUploadRejection[]>;
+  protected readonly controlValue: _angular_core.WritableSignal<readonly File[]>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  protected readonly touch: () => void;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: readonly File[]) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
+  protected readonly a11y: KrnControlA11y;
+  protected readonly isDisabled: Signal<boolean>;
   protected readonly dragging: _angular_core.WritableSignal<boolean>;
   protected readonly nativeInputId: Signal<string>;
   protected readonly dropLabelId: Signal<string>;
@@ -3982,7 +4038,12 @@ declare class KrnDropUpload extends KrnUploadBase {
   protected readonly effectiveDescribedBy: Signal<string | null>;
   private readonly action;
   private readonly resetDraggingWhenBlocked;
-  constructor();
+  protected openPicker(): void;
+  protected selectFromInput(event: Event): void;
+  protected acceptFiles(incoming: readonly File[]): void;
+  protected removeFile(index: number): void;
+  protected formatBytes(bytes: number): string;
+  protected fileKey(file: File): string;
   protected enterDrag(event: DragEvent): void;
   protected leaveDrag(event: DragEvent): void;
   protected dropFiles(event: DragEvent): void;
@@ -3994,13 +4055,25 @@ declare class KrnDropUpload extends KrnUploadBase {
     'krn-drop-upload, krn-drag-drop-upload',
     never,
     {
+      id: { alias: 'id'; required: false; isSignal: true };
+      label: { alias: 'label'; required: false; isSignal: true };
+      locale: { alias: 'locale'; required: false; isSignal: true };
+      description: { alias: 'description'; required: false; isSignal: true };
+      accept: { alias: 'accept'; required: false; isSignal: true };
+      multiple: { alias: 'multiple'; required: false; isSignal: true };
+      maxSize: { alias: 'maxSize'; required: false; isSignal: true };
+      maxFiles: { alias: 'maxFiles'; required: false; isSignal: true };
+      disabled: { alias: 'disabled'; required: false; isSignal: true };
+      readOnly: { alias: 'readonly'; required: false; isSignal: true };
+      required: { alias: 'required'; required: false; isSignal: true };
+      invalid: { alias: 'invalid'; required: false; isSignal: true };
       dropLabel: { alias: 'dropLabel'; required: false; isSignal: true };
       ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
       ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
       tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
       value: { alias: 'value'; required: false; isSignal: true };
     },
-    {},
+    { filesChange: 'filesChange'; rejected: 'rejected' },
     never,
     never,
     true,
@@ -4386,6 +4459,7 @@ declare class KrnMenubar {
 declare class KrnContextMenu {
   private readonly overlayCoordinator;
   private readonly platform;
+  private readonly destroyRef;
   private readonly translations;
   private readonly host;
   private readonly elements;
@@ -4448,7 +4522,7 @@ declare class KrnContextMenu {
   private pathTo;
   private focusById;
   protected dismiss(restoreFocus: boolean): void;
-  protected onDocumentEscape(event: Event): void;
+  protected onDocumentEscape(event: KeyboardEvent): void;
   protected onDocumentContextMenu(event: MouseEvent): void;
   protected onWindowBlur(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnContextMenu, never>;
@@ -5262,19 +5336,61 @@ declare class KrnHoverCard {
   >;
 }
 
-declare abstract class KrnOverlaySurface {
+interface KrnOverlaySurfaceDefinition {
+  readonly position: KrnOverlayPosition;
+  readonly role: 'dialog' | 'alertdialog';
+  readonly closeOnOutside: boolean;
+}
+interface KrnOverlaySurfaceHost {
+  readonly open: ModelSignal<boolean>;
+  readonly closeOnEscape: Signal<boolean>;
+  readonly closeOnOutside: Signal<boolean | null>;
+  readonly initialFocus: Signal<KrnOverlayInitialFocus>;
+  readonly restoreFocus: Signal<HTMLElement | false | null>;
+  readonly closed: OutputEmitterRef<KrnOverlayCloseReason>;
+  readonly afterExited: OutputEmitterRef<void>;
+}
+/** Internal signal controller shared by the public declarative overlay components. */
+declare class KrnOverlaySurfaceController {
+  private readonly surfaceHost;
+  private readonly resolvePanel;
+  private readonly definition;
   private readonly ids;
   private readonly platform;
   private readonly host;
   private readonly coordinator;
   private readonly destroyRef;
-  private readonly translations;
-  private readonly panel;
   private exitTimer;
   private focusTimer;
   private lifecycle;
   private coordinatorActive;
-  readonly open: _angular_core.ModelSignal<boolean>;
+  readonly rendered: _angular_core.WritableSignal<boolean>;
+  readonly closing: _angular_core.WritableSignal<boolean>;
+  private readonly overlayId;
+  readonly titleId: string;
+  readonly descriptionId: string;
+  constructor(
+    surfaceHost: KrnOverlaySurfaceHost,
+    resolvePanel: () => HTMLElement | undefined,
+    definition: KrnOverlaySurfaceDefinition,
+  );
+  surfacePosition(): KrnOverlayPosition;
+  surfaceRole(): 'dialog' | 'alertdialog';
+  defaultOutsideClose(): boolean;
+  close(reason: KrnOverlayCloseReason): void;
+  onBackdropTransitionEnd(event: TransitionEvent): void;
+  onBackdropAnimationEnd(event: AnimationEvent): void;
+  onBackdropPointerdown(event: PointerEvent): void;
+  private prefersReducedMotion;
+  private beginOpen;
+  private beginExit;
+  private finishExit;
+  private cancelExit;
+  private cancelFocus;
+}
+declare class KrnDialog {
+  private readonly translations;
+  readonly open: ModelSignal<boolean>;
   readonly title: _angular_core.InputSignal<string>;
   readonly description: _angular_core.InputSignal<string>;
   readonly eyebrow: _angular_core.InputSignal<string>;
@@ -5288,33 +5404,15 @@ declare abstract class KrnOverlaySurface {
   readonly restoreFocus: _angular_core.InputSignal<false | HTMLElement | null>;
   readonly contentTemplate: _angular_core.InputSignal<TemplateRef<unknown> | null>;
   readonly actionsTemplate: _angular_core.InputSignal<TemplateRef<unknown> | null>;
-  readonly closed: _angular_core.OutputEmitterRef<KrnOverlayCloseReason>;
+  readonly closed: OutputEmitterRef<KrnOverlayCloseReason>;
   /** Emits after exit motion and global modal cleanup have completed. */
-  readonly afterExited: _angular_core.OutputEmitterRef<void>;
-  protected readonly rendered: _angular_core.WritableSignal<boolean>;
-  protected readonly closing: _angular_core.WritableSignal<boolean>;
-  private readonly overlayId;
-  protected readonly titleId: string;
-  protected readonly descriptionId: string;
-  constructor();
-  protected abstract surfacePosition(): KrnOverlayPosition;
-  protected surfaceRole(): 'dialog' | 'alertdialog';
-  protected defaultOutsideClose(): boolean;
-  protected supportsExitAnimation(): boolean;
-  protected close(reason: KrnOverlayCloseReason): void;
-  protected onBackdropTransitionEnd(event: TransitionEvent): void;
-  protected onBackdropAnimationEnd(event: AnimationEvent): void;
-  protected onBackdropPointerdown(event: PointerEvent): void;
-  private prefersReducedMotion;
-  private beginOpen;
-  private beginExit;
-  private finishExit;
-  private cancelExit;
-  private cancelFocus;
-  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnOverlaySurface, never>;
-  static ɵdir: _angular_core.ɵɵDirectiveDeclaration<
-    KrnOverlaySurface,
-    never,
+  readonly afterExited: OutputEmitterRef<void>;
+  private readonly panel;
+  protected readonly surface: KrnOverlaySurfaceController;
+  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDialog, never>;
+  static ɵcmp: _angular_core.ɵɵComponentDeclaration<
+    KrnDialog,
+    'krn-dialog',
     never,
     {
       open: { alias: 'open'; required: false; isSignal: true };
@@ -5333,67 +5431,149 @@ declare abstract class KrnOverlaySurface {
     },
     { open: 'openChange'; closed: 'closed'; afterExited: 'afterExited' },
     never,
-    never,
-    true,
-    never
-  >;
-}
-declare class KrnDialog extends KrnOverlaySurface {
-  protected surfacePosition(): KrnOverlayPosition;
-  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDialog, never>;
-  static ɵcmp: _angular_core.ɵɵComponentDeclaration<
-    KrnDialog,
-    'krn-dialog',
-    never,
-    {},
-    {},
-    never,
     ['*', '[krnDialogAction]'],
     true,
     never
   >;
 }
-declare class KrnAlertDialog extends KrnOverlaySurface {
-  protected surfacePosition(): KrnOverlayPosition;
-  protected surfaceRole(): 'alertdialog';
-  protected defaultOutsideClose(): boolean;
+declare class KrnAlertDialog {
+  private readonly translations;
+  readonly open: ModelSignal<boolean>;
+  readonly title: _angular_core.InputSignal<string>;
+  readonly description: _angular_core.InputSignal<string>;
+  readonly eyebrow: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly showClose: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly closeLabel: _angular_core.InputSignal<string>;
+  readonly closeOnEscape: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly closeOnOutside: _angular_core.InputSignalWithTransform<boolean | null, unknown>;
+  readonly initialFocus: _angular_core.InputSignal<string>;
+  /** Explicit focus return target, or `false` to disable focus restoration. */
+  readonly restoreFocus: _angular_core.InputSignal<false | HTMLElement | null>;
+  readonly contentTemplate: _angular_core.InputSignal<TemplateRef<unknown> | null>;
+  readonly actionsTemplate: _angular_core.InputSignal<TemplateRef<unknown> | null>;
+  readonly closed: OutputEmitterRef<KrnOverlayCloseReason>;
+  /** Emits after exit motion and global modal cleanup have completed. */
+  readonly afterExited: OutputEmitterRef<void>;
+  private readonly panel;
+  protected readonly surface: KrnOverlaySurfaceController;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnAlertDialog, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnAlertDialog,
     'krn-alert-dialog',
     never,
-    {},
-    {},
+    {
+      open: { alias: 'open'; required: false; isSignal: true };
+      title: { alias: 'title'; required: false; isSignal: true };
+      description: { alias: 'description'; required: false; isSignal: true };
+      eyebrow: { alias: 'eyebrow'; required: false; isSignal: true };
+      ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      showClose: { alias: 'showClose'; required: false; isSignal: true };
+      closeLabel: { alias: 'closeLabel'; required: false; isSignal: true };
+      closeOnEscape: { alias: 'closeOnEscape'; required: false; isSignal: true };
+      closeOnOutside: { alias: 'closeOnOutside'; required: false; isSignal: true };
+      initialFocus: { alias: 'initialFocus'; required: false; isSignal: true };
+      restoreFocus: { alias: 'restoreFocus'; required: false; isSignal: true };
+      contentTemplate: { alias: 'contentTemplate'; required: false; isSignal: true };
+      actionsTemplate: { alias: 'actionsTemplate'; required: false; isSignal: true };
+    },
+    { open: 'openChange'; closed: 'closed'; afterExited: 'afterExited' },
     never,
     ['*', '[krnDialogAction]'],
     true,
     never
   >;
 }
-declare class KrnDrawer extends KrnOverlaySurface {
-  protected surfacePosition(): KrnOverlayPosition;
+declare class KrnDrawer {
+  private readonly translations;
+  readonly open: ModelSignal<boolean>;
+  readonly title: _angular_core.InputSignal<string>;
+  readonly description: _angular_core.InputSignal<string>;
+  readonly eyebrow: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly showClose: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly closeLabel: _angular_core.InputSignal<string>;
+  readonly closeOnEscape: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly closeOnOutside: _angular_core.InputSignalWithTransform<boolean | null, unknown>;
+  readonly initialFocus: _angular_core.InputSignal<string>;
+  /** Explicit focus return target, or `false` to disable focus restoration. */
+  readonly restoreFocus: _angular_core.InputSignal<false | HTMLElement | null>;
+  readonly contentTemplate: _angular_core.InputSignal<TemplateRef<unknown> | null>;
+  readonly actionsTemplate: _angular_core.InputSignal<TemplateRef<unknown> | null>;
+  readonly closed: OutputEmitterRef<KrnOverlayCloseReason>;
+  /** Emits after exit motion and global modal cleanup have completed. */
+  readonly afterExited: OutputEmitterRef<void>;
+  private readonly panel;
+  protected readonly surface: KrnOverlaySurfaceController;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDrawer, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnDrawer,
     'krn-drawer',
     never,
-    {},
-    {},
+    {
+      open: { alias: 'open'; required: false; isSignal: true };
+      title: { alias: 'title'; required: false; isSignal: true };
+      description: { alias: 'description'; required: false; isSignal: true };
+      eyebrow: { alias: 'eyebrow'; required: false; isSignal: true };
+      ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      showClose: { alias: 'showClose'; required: false; isSignal: true };
+      closeLabel: { alias: 'closeLabel'; required: false; isSignal: true };
+      closeOnEscape: { alias: 'closeOnEscape'; required: false; isSignal: true };
+      closeOnOutside: { alias: 'closeOnOutside'; required: false; isSignal: true };
+      initialFocus: { alias: 'initialFocus'; required: false; isSignal: true };
+      restoreFocus: { alias: 'restoreFocus'; required: false; isSignal: true };
+      contentTemplate: { alias: 'contentTemplate'; required: false; isSignal: true };
+      actionsTemplate: { alias: 'actionsTemplate'; required: false; isSignal: true };
+    },
+    { open: 'openChange'; closed: 'closed'; afterExited: 'afterExited' },
     never,
     ['*', '[krnDialogAction]'],
     true,
     never
   >;
 }
-declare class KrnBottomSheet extends KrnOverlaySurface {
-  protected surfacePosition(): KrnOverlayPosition;
+declare class KrnBottomSheet {
+  private readonly translations;
+  readonly open: ModelSignal<boolean>;
+  readonly title: _angular_core.InputSignal<string>;
+  readonly description: _angular_core.InputSignal<string>;
+  readonly eyebrow: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly showClose: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly closeLabel: _angular_core.InputSignal<string>;
+  readonly closeOnEscape: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  readonly closeOnOutside: _angular_core.InputSignalWithTransform<boolean | null, unknown>;
+  readonly initialFocus: _angular_core.InputSignal<string>;
+  /** Explicit focus return target, or `false` to disable focus restoration. */
+  readonly restoreFocus: _angular_core.InputSignal<false | HTMLElement | null>;
+  readonly contentTemplate: _angular_core.InputSignal<TemplateRef<unknown> | null>;
+  readonly actionsTemplate: _angular_core.InputSignal<TemplateRef<unknown> | null>;
+  readonly closed: OutputEmitterRef<KrnOverlayCloseReason>;
+  /** Emits after exit motion and global modal cleanup have completed. */
+  readonly afterExited: OutputEmitterRef<void>;
+  private readonly panel;
+  protected readonly surface: KrnOverlaySurfaceController;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnBottomSheet, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnBottomSheet,
     'krn-bottom-sheet',
     never,
-    {},
-    {},
+    {
+      open: { alias: 'open'; required: false; isSignal: true };
+      title: { alias: 'title'; required: false; isSignal: true };
+      description: { alias: 'description'; required: false; isSignal: true };
+      eyebrow: { alias: 'eyebrow'; required: false; isSignal: true };
+      ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      showClose: { alias: 'showClose'; required: false; isSignal: true };
+      closeLabel: { alias: 'closeLabel'; required: false; isSignal: true };
+      closeOnEscape: { alias: 'closeOnEscape'; required: false; isSignal: true };
+      closeOnOutside: { alias: 'closeOnOutside'; required: false; isSignal: true };
+      initialFocus: { alias: 'initialFocus'; required: false; isSignal: true };
+      restoreFocus: { alias: 'restoreFocus'; required: false; isSignal: true };
+      contentTemplate: { alias: 'contentTemplate'; required: false; isSignal: true };
+      actionsTemplate: { alias: 'actionsTemplate'; required: false; isSignal: true };
+    },
+    { open: 'openChange'; closed: 'closed'; afterExited: 'afterExited' },
     never,
     ['*', '[krnDialogAction]'],
     true,
@@ -6143,7 +6323,6 @@ export {
   KrnDrawer,
   KrnDropUpload,
   KrnDropdownButton,
-  KrnEditableComboboxBase,
   KrnEmptyState,
   KrnErrorState,
   KrnFileUpload,
@@ -6163,7 +6342,6 @@ export {
   KrnListItem,
   KrnLoadingOverlay,
   KrnMenu,
-  KrnMenuButtonBase,
   KrnMenuTrigger,
   KrnMenubar,
   KrnMeter,
@@ -6174,7 +6352,6 @@ export {
   KrnOtpInput,
   KrnOverlayRef,
   KrnOverlayService,
-  KrnOverlaySurface,
   KrnPagination,
   KrnPasswordInput,
   KrnPopover,
@@ -6225,7 +6402,6 @@ export {
   KrnTooltip,
   KrnTree,
   KrnTreeNavigation,
-  KrnUploadBase,
   KrnValidationMessage,
   KrnOtpInput as KrnVerificationCode,
   KrnTabs as KrnVerticalTabs,
@@ -6235,7 +6411,6 @@ export {
   provideKrnButtonOptions,
   provideKrnCopyButtonOptions,
   provideKrnFloatingActionButtonOptions,
-  provideKrnFormControl,
   provideKrnIconButtonOptions,
   provideKrnMenuButtonOptions,
   provideKrnToggleButtonOptions,

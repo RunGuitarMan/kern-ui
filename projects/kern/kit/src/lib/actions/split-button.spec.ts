@@ -77,6 +77,11 @@ class NestedSplitButtonHost {
 describe('KrnSplitButton', () => {
   afterEach(() => TestBed.resetTestingModule());
 
+  it('keeps stable menu-button components independent from an implementation base class', () => {
+    expect(Object.getPrototypeOf(KrnDropdownButton.prototype)).toBe(Object.prototype);
+    expect(Object.getPrototypeOf(KrnSplitButton.prototype)).toBe(Object.prototype);
+  });
+
   it('composes two form-safe native KrnButton segments with stable menu ownership', async () => {
     const fixture = TestBed.createComponent(SplitButtonHost);
     const overlay = TestBed.inject(OverlayContainer).getContainerElement();

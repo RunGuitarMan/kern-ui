@@ -7,6 +7,7 @@ import {
   Injectable,
   InjectionToken,
   input,
+  signal,
 } from '@angular/core';
 
 export interface KrnIconDefinition {
@@ -69,32 +70,45 @@ export type KrnIconSize = 'sm' | 'md' | 'lg' | number;
 export const KRN_ICONS = new InjectionToken<readonly (readonly KrnIconDefinition[])[]>('KRN_ICONS');
 
 export function provideKrnIcons(...icons: readonly KrnIconDefinition[]): readonly Provider[] {
-  return [{ provide: KRN_ICONS, useValue: icons, multi: true }];
+  return [
+    { provide: KRN_ICONS, useValue: icons, multi: true },
+    // A registry belongs to the same injector as its icon definitions. This
+    // keeps lazy features and embedded applications from mutating the root
+    // registry just to install a local icon set.
+    KrnIconRegistry,
+  ];
 }
 
 @Injectable({ providedIn: 'root' })
 export class KrnIconRegistry {
-  private readonly definitions = new Map<string, KrnIconDefinition>();
+  readonly #definitions = signal<ReadonlyMap<string, KrnIconDefinition>>(new Map());
+  readonly #parent = inject(KrnIconRegistry, { optional: true, skipSelf: true });
 
   constructor() {
-    for (const icon of KRN_BUILT_IN_ICONS) {
-      this.definitions.set(icon.name, icon);
+    const definitions = new Map<string, KrnIconDefinition>();
+    if (!this.#parent) {
+      for (const icon of KRN_BUILT_IN_ICONS) {
+        definitions.set(icon.name, icon);
+      }
     }
     for (const group of inject(KRN_ICONS, { optional: true }) ?? []) {
       for (const icon of group) {
-        this.definitions.set(icon.name, icon);
+        definitions.set(icon.name, icon);
       }
     }
+    this.#definitions.set(definitions);
   }
 
   register(...icons: readonly KrnIconDefinition[]): void {
+    const definitions = new Map(this.#definitions());
     for (const icon of icons) {
-      this.definitions.set(icon.name, icon);
+      definitions.set(icon.name, icon);
     }
+    this.#definitions.set(definitions);
   }
 
   resolve(name: string): KrnIconDefinition | undefined {
-    return this.definitions.get(name);
+    return this.#definitions().get(name) ?? this.#parent?.resolve(name);
   }
 }
 

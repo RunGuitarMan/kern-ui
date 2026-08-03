@@ -2187,12 +2187,6 @@
       "owner": "testing",
       "kind": "interface"
     },
-    "KrnEditableComboboxBase": {
-      "canonicalSymbol": "KrnEditableComboboxBase",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
-      "kind": "class"
-    },
     "KrnEditableComboboxHarness": {
       "canonicalSymbol": "KrnEditableComboboxHarness",
       "importPath": "@kern-ui/angular/testing",
@@ -2643,12 +2637,6 @@
       "owner": "kit",
       "kind": "class"
     },
-    "KrnMenuButtonBase": {
-      "canonicalSymbol": "KrnMenuButtonBase",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
-      "kind": "class"
-    },
     "KrnMenuButtonOptions": {
       "canonicalSymbol": "KrnMenuButtonOptions",
       "importPath": "@kern-ui/angular/kit",
@@ -2873,12 +2861,6 @@
     },
     "KrnOverlayService": {
       "canonicalSymbol": "KrnOverlayService",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
-      "kind": "class"
-    },
-    "KrnOverlaySurface": {
-      "canonicalSymbol": "KrnOverlaySurface",
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "class"
@@ -3657,12 +3639,6 @@
       "owner": "kit",
       "kind": "interface"
     },
-    "KrnUploadBase": {
-      "canonicalSymbol": "KrnUploadBase",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
-      "kind": "class"
-    },
     "KrnUploadHarness": {
       "canonicalSymbol": "KrnUploadHarness",
       "importPath": "@kern-ui/angular/testing",
@@ -3734,12 +3710,6 @@
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "constant"
-    },
-    "provideKrnFormControl": {
-      "canonicalSymbol": "provideKrnFormControl",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
-      "kind": "function"
     },
     "provideKrnIconButtonOptions": {
       "canonicalSymbol": "provideKrnIconButtonOptions",

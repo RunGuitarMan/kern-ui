@@ -281,6 +281,7 @@ declare class KrnUserMenu {
   private readonly translations;
   private readonly host;
   private readonly injector;
+  private readonly destroyRef;
   protected readonly menuId: string;
   readonly name: _angular_core.InputSignal<string>;
   readonly detail: _angular_core.InputSignal<string>;
@@ -291,6 +292,7 @@ declare class KrnUserMenu {
   protected readonly resolvedDetail: _angular_core.Signal<string>;
   protected readonly resolvedMenuAriaLabel: _angular_core.Signal<string>;
   private readonly blockDisabledActivation;
+  constructor();
   protected toggleMenu(): void;
   protected onTriggerKeydown(event: KeyboardEvent): void;
   protected onMenuKeydown(event: KeyboardEvent): void;
