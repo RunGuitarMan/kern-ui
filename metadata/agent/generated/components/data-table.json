@@ -108,9 +108,9 @@
       "name": "mode",
       "property": "mode",
       "kind": "input",
-      "type": "KrnDataGridMode | null",
+      "type": "KrnDataGridMode",
       "required": false,
-      "defaultValue": "null",
+      "defaultValue": "{ kind: 'client', pagination: true }",
       "description": "Discriminated operating mode that selects the component data and interaction contract.",
       "descriptionSource": "inferred"
     },
@@ -265,16 +265,6 @@
       "descriptionSource": "inferred"
     },
     {
-      "name": "pagination",
-      "property": "pagination",
-      "kind": "input",
-      "type": "boolean",
-      "required": false,
-      "defaultValue": "true",
-      "description": "Enables client pagination or supplies the controlled paging configuration.",
-      "descriptionSource": "inferred"
-    },
-    {
       "name": "compact",
       "property": "compact",
       "kind": "input",
@@ -282,16 +272,6 @@
       "required": false,
       "defaultValue": "false",
       "description": "Uses the reduced-density presentation intended for constrained data views.",
-      "descriptionSource": "inferred"
-    },
-    {
-      "name": "virtualize",
-      "property": "virtualize",
-      "kind": "input",
-      "type": "boolean",
-      "required": false,
-      "defaultValue": "false",
-      "description": "Enables fixed-height row virtualization for large data collections.",
       "descriptionSource": "inferred"
     },
     {
@@ -479,9 +459,7 @@
     "defaultCellTemplate",
     "defaultHeaderTemplate",
     "resizable",
-    "pagination",
     "compact",
-    "virtualize",
     "viewportHeight",
     "pageSize",
     "columnChooser",
@@ -570,9 +548,9 @@
         "testValue": true,
         "description": "Paginates the table rows.",
         "binding": {
-          "kind": "input",
-          "publicName": "pagination",
-          "syntax": "property"
+          "kind": "fixture",
+          "target": "interaction",
+          "description": "Composes the discriminated client mode for the specimen."
         }
       },
       {
@@ -771,19 +749,6 @@
         "min": -1000,
         "max": 1000,
         "step": 1
-      },
-      {
-        "key": "virtualize",
-        "label": "Virtualize",
-        "kind": "boolean",
-        "defaultValue": false,
-        "testValue": true,
-        "description": "Configures the component virtualize contract.",
-        "binding": {
-          "kind": "input",
-          "publicName": "virtualize",
-          "syntax": "property"
-        }
       }
     ],
     "presets": [
@@ -1043,8 +1008,8 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 32,
-      "controlled": 17,
+      "publicInputsAndModels": 30,
+      "controlled": 15,
       "excluded": 15,
       "unclassified": 0
     },
@@ -1197,7 +1162,7 @@
         "componentId": "data-table",
         "publicName": "mode",
         "kind": "input",
-        "type": "KrnDataGridMode | null",
+        "type": "KrnDataGridMode",
         "code": "complex-data",
         "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
         "evidence": {

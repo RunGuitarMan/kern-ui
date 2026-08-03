@@ -3687,12 +3687,6 @@
       "owner": "kit",
       "kind": "class"
     },
-    "KrnValueAccessor": {
-      "canonicalSymbol": "KrnValueAccessor",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
-      "kind": "class"
-    },
     "KrnVerificationCode": {
       "canonicalSymbol": "KrnOtpInput",
       "importPath": "@kern-ui/angular/kit",
@@ -3740,6 +3734,12 @@
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "constant"
+    },
+    "provideKrnFormControl": {
+      "canonicalSymbol": "provideKrnFormControl",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "function"
     },
     "provideKrnIconButtonOptions": {
       "canonicalSymbol": "provideKrnIconButtonOptions",

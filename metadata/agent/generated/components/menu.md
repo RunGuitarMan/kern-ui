@@ -50,17 +50,16 @@ void bootstrapApplication(KernMenuAgentExample);
 
 ## API
 
-| Name                  | Kind   | Type                                                                 | Required | Default                                  | Description                                                                 |
-| --------------------- | ------ | -------------------------------------------------------------------- | -------- | ---------------------------------------- | --------------------------------------------------------------------------- |
-| `items`               | input  | `ReadonlyArray<KrnNavigationItem & { readonly shortcut?: string; }>` | no       | `[]`                                     | Ordered item collection rendered by the composite widget.                   |
-| `open`                | model  | `boolean`                                                            | no       | `false`                                  | Controls whether the disclosure or overlay surface is visible.              |
-| `triggerLabel`        | input  | `string`                                                             | no       | `this.translations.navigation.actions`   | Human-readable copy for the trigger state or control.                       |
-| `triggerAriaLabel`    | input  | `string`                                                             | no       | `this.translations.navigation.openMenu`  | Human-readable copy for the trigger aria state or control.                  |
-| `menuAriaLabel`       | input  | `string`                                                             | no       | `this.translations.navigation.actions`   | Human-readable copy for the menu aria state or control.                     |
-| `emptyLabel`          | input  | `string`                                                             | no       | `this.translations.navigation.menuEmpty` | Accessible copy that explains the empty state.                              |
-| `hasProjectedTrigger` | input  | `boolean`                                                            | no       | `false`                                  | Legacy signal indicating that trigger content is projected by the consumer. |
-| `itemSelected`        | output | `KrnNavigationItem`                                                  | no       | `undefined`                              | Notifies the consumer after the item selected interaction completes.        |
-| `closed`              | output | `"detach" \| "escape" \| "outside" \| "selection"`                   | no       | `undefined`                              | Notifies the consumer after the closed interaction completes.               |
+| Name               | Kind   | Type                                                                 | Required | Default                                  | Description                                                          |
+| ------------------ | ------ | -------------------------------------------------------------------- | -------- | ---------------------------------------- | -------------------------------------------------------------------- |
+| `items`            | input  | `ReadonlyArray<KrnNavigationItem & { readonly shortcut?: string; }>` | no       | `[]`                                     | Ordered item collection rendered by the composite widget.            |
+| `open`             | model  | `boolean`                                                            | no       | `false`                                  | Controls whether the disclosure or overlay surface is visible.       |
+| `triggerLabel`     | input  | `string`                                                             | no       | `this.translations.navigation.actions`   | Human-readable copy for the trigger state or control.                |
+| `triggerAriaLabel` | input  | `string`                                                             | no       | `this.translations.navigation.openMenu`  | Human-readable copy for the trigger aria state or control.           |
+| `menuAriaLabel`    | input  | `string`                                                             | no       | `this.translations.navigation.actions`   | Human-readable copy for the menu aria state or control.              |
+| `emptyLabel`       | input  | `string`                                                             | no       | `this.translations.navigation.menuEmpty` | Accessible copy that explains the empty state.                       |
+| `itemSelected`     | output | `KrnNavigationItem`                                                  | no       | `undefined`                              | Notifies the consumer after the item selected interaction completes. |
+| `closed`           | output | `"detach" \| "escape" \| "outside" \| "selection"`                   | no       | `undefined`                              | Notifies the consumer after the closed interaction completes.        |
 
 ## Deprecated selectors
 
@@ -118,17 +117,16 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/menu`
 
 Scenarios: `default`.
-Public API coverage: 2/7
+Public API coverage: 1/6
 directly controlled; 5 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument              | Control | Default | Test value | Binding                                | Description                                            |
-| --------------------- | ------- | ------- | ---------- | -------------------------------------- | ------------------------------------------------------ |
-| `open`                | boolean | `false` | `true`     | model `open`                           | Opens the navigation menu.                             |
-| `hasProjectedTrigger` | boolean | `false` | `true`     | input `hasProjectedTrigger` (property) | Configures the component hasProjectedTrigger contract. |
+| Argument | Control | Default | Test value | Binding      | Description                |
+| -------- | ------- | ------- | ---------- | ------------ | -------------------------- |
+| `open`   | boolean | `false` | `true`     | model `open` | Opens the navigation menu. |
 
 Exact API exclusions:
 

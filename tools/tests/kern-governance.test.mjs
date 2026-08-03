@@ -65,6 +65,20 @@ function isAngularProject(project) {
   });
 }
 
+function inventorySelectorDeprecation(entry, patch = {}) {
+  return {
+    id: entry.id,
+    selector: entry.selector,
+    status: 'active',
+    introducedIn: entry.introducedIn,
+    removeIn: entry.removeIn,
+    replacement: entry.replacement,
+    migration: entry.migration,
+    documentation: entry.documentation,
+    ...patch,
+  };
+}
+
 async function temporaryJson(name, value) {
   const directory = await mkdtemp(join(tmpdir(), 'kern-governance-'));
   const path = join(directory, name);
@@ -397,7 +411,7 @@ test('committed lifecycle and manual evidence registries verify', () => {
   assert.equal(componentInventory.status, 0, componentInventory.stderr);
   assert.match(
     componentInventory.stdout,
-    /135 public review units \(126 catalog \+ 9 supporting\), 3 internal, 151 selectors/,
+    /135 public review units \(126 catalog \+ 9 supporting\), 3 internal, 149 selectors/,
   );
 
   const accessibility = run(accessibilityScript);
@@ -573,18 +587,18 @@ test('Angular projects disable the Angular CLI persistent cache under Nx', async
   assert.ok(angularProjects.length > 0, 'Nx must discover at least one Angular project');
 });
 
-test('lifecycle verification rejects an undocumented API deprecation', async () => {
+test('lifecycle verification rejects an active member not tagged deprecated in the API', async () => {
   const registry = JSON.parse(
     await readFile(resolve(workspaceRoot, 'projects/kern/api/deprecations.json'), 'utf8'),
   );
-  const deprecatedMember = registry.entries.findIndex((entry) => entry.kind !== 'selector');
-  assert.notEqual(deprecatedMember, -1, 'fixture requires a deprecated API member');
-  registry.entries.splice(deprecatedMember, 1);
+  const deprecatedMember = registry.entries.find((entry) => entry.kind !== 'selector');
+  assert.ok(deprecatedMember, 'fixture requires a removed API member');
+  deprecatedMember.status = 'active';
   const temporary = await temporaryJson('deprecations.json', registry);
   try {
     const result = run(lifecycleScript, `--deprecations=${temporary.path}`);
     assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /is missing from deprecations\.json/);
+    assert.match(result.stderr, /is not tagged @deprecated in the API baseline/);
   } finally {
     await rm(temporary.directory, { recursive: true, force: true });
   }
@@ -595,7 +609,8 @@ test('lifecycle verification rejects an active selector deprecation missing from
     await readFile(resolve(workspaceRoot, 'projects/kern/api/deprecations.json'), 'utf8'),
   );
   const selector = registry.entries.find((entry) => entry.kind === 'selector');
-  assert.ok(selector, 'fixture requires an active selector deprecation');
+  assert.ok(selector, 'fixture requires a removed selector deprecation');
+  selector.status = 'active';
   selector.selector = 'krn-missing-selector';
   const temporary = await temporaryJson('deprecations.json', registry);
   try {
@@ -612,7 +627,9 @@ test('lifecycle verification rejects a deprecated selector assigned to the wrong
     await readFile(resolve(workspaceRoot, 'projects/kern/api/deprecations.json'), 'utf8'),
   );
   const selector = registry.entries.find((entry) => entry.kind === 'selector');
-  assert.ok(selector, 'fixture requires an active selector deprecation');
+  assert.ok(selector, 'fixture requires a removed selector deprecation');
+  selector.status = 'active';
+  selector.selector = 'div[krnButtonGroup]';
   selector.symbol = 'KrnButton';
   const temporary = await temporaryJson('deprecations.json', registry);
   try {
@@ -626,9 +643,15 @@ test('lifecycle verification rejects a deprecated selector assigned to the wrong
 
 test('component inventory schema rejects incomplete selector deprecation metadata', async () => {
   const inventory = JSON.parse(await readFile(componentInventoryPath, 'utf8'));
-  const unit = inventory.units.find((candidate) => candidate.selectorDeprecations?.length);
-  assert.ok(unit, 'fixture requires generated selector deprecation metadata');
-  delete unit.selectorDeprecations[0].replacement;
+  const registry = JSON.parse(
+    await readFile(resolve(workspaceRoot, 'projects/kern/api/deprecations.json'), 'utf8'),
+  );
+  const selector = registry.entries.find((entry) => entry.kind === 'selector');
+  const unit = inventory.units.find((candidate) => candidate.symbol === selector?.symbol);
+  assert.ok(unit && selector, 'fixture requires matching removed selector metadata');
+  const incomplete = inventorySelectorDeprecation(selector);
+  delete incomplete.replacement;
+  unit.selectorDeprecations.push(incomplete);
   const temporary = await temporaryJson('component-inventory.json', inventory);
   try {
     const result = run(componentInventoryScript, `--inventory=${temporary.path}`);
@@ -641,9 +664,17 @@ test('component inventory schema rejects incomplete selector deprecation metadat
 
 test('component inventory rejects selector deprecation drift from the lifecycle registry', async () => {
   const inventory = JSON.parse(await readFile(componentInventoryPath, 'utf8'));
-  const unit = inventory.units.find((candidate) => candidate.selectorDeprecations?.length);
-  assert.ok(unit, 'fixture requires generated selector deprecation metadata');
-  unit.selectorDeprecations[0].migration = 'Use an unregistered migration instead.';
+  const registry = JSON.parse(
+    await readFile(resolve(workspaceRoot, 'projects/kern/api/deprecations.json'), 'utf8'),
+  );
+  const selector = registry.entries.find((entry) => entry.kind === 'selector');
+  const unit = inventory.units.find((candidate) => candidate.symbol === selector?.symbol);
+  assert.ok(unit && selector, 'fixture requires matching removed selector metadata');
+  unit.selectorDeprecations.push(
+    inventorySelectorDeprecation(selector, {
+      migration: 'Use an unregistered migration instead.',
+    }),
+  );
   const temporary = await temporaryJson('component-inventory.json', inventory);
   try {
     const result = run(componentInventoryScript, `--inventory=${temporary.path}`);

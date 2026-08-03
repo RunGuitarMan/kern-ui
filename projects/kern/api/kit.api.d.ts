@@ -9,13 +9,12 @@ import * as _angular_core from '@angular/core';
 import {
   OnInit,
   Signal,
-  WritableSignal,
+  Provider,
   TemplateRef,
   ElementRef,
   InjectionToken,
   ViewContainerRef,
   Injector,
-  Provider,
   Type,
 } from '@angular/core';
 import * as _kern_ui_angular_core from '@kern-ui/angular/core';
@@ -29,7 +28,6 @@ import {
 } from '@kern-ui/angular/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import * as _angular_forms from '@angular/forms';
-import { ControlValueAccessor, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
 import * as _kern_ui_angular_kit from '@kern-ui/angular/kit';
 import * as _kern_ui_angular_cdk from '@kern-ui/angular/cdk';
 import { KrnOverlayInitialFocus } from '@kern-ui/angular/cdk';
@@ -957,31 +955,19 @@ declare const provideKrnIconButtonOptions: (
 ) => _angular_core.FactoryProvider;
 
 declare class KrnButtonGroup {
-  private readonly elementRef;
   private readonly options;
-  private readonly renderer;
-  private legacyAriaLabelOwned;
   /** Changes the visual layout axis without altering native document-order keyboard behavior. */
   readonly orientation: _angular_core.InputSignal<KrnOrientation>;
   /** Joins adjacent action borders and radii without coordinating child state or activation. */
   readonly connected: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  /**
-   * Deprecated compatibility bridge for a native accessible-name attribute.
-   *
-   * @deprecated Set native `aria-label` or `aria-labelledby` on the group host.
-   * This bridge exists only for the legacy `<krn-button-group>` API.
-   */
-  readonly ariaLabel: _angular_core.InputSignal<string | null | undefined>;
-  private readonly syncLegacyAriaLabel;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnButtonGroup, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnButtonGroup,
-    'div[krnButtonGroup], krn-button-group',
+    'div[krnButtonGroup]',
     never,
     {
       orientation: { alias: 'orientation'; required: false; isSignal: true };
       connected: { alias: 'connected'; required: false; isSignal: true };
-      ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
     },
     {},
     never,
@@ -1103,11 +1089,9 @@ declare class KrnToggleGroup {
   private readonly elementRef;
   private readonly options;
   private readonly platform;
-  private readonly renderer;
   private readonly activeItem;
   private readonly itemVersion;
   private items;
-  private legacyAriaLabelOwned;
   /** Defines both the visual layout axis and the toolbar Arrow-key axis. */
   readonly orientation: _angular_core.InputSignal<KrnOrientation>;
   /** Allows multiple pressed values; false exposes at most one effective pressed value. */
@@ -1116,15 +1100,7 @@ declare class KrnToggleGroup {
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   /** Controlled stable string values; user transitions always emit a fresh frozen array. */
   readonly values: _angular_core.ModelSignal<readonly string[]>;
-  /**
-   * Deprecated compatibility bridge for native accessible-name attributes.
-   *
-   * @deprecated Set native `aria-label` or `aria-labelledby` on the group host.
-   * Server rendering expects a stable migration input; change it only after hydration.
-   */
-  readonly ariaLabel: _angular_core.InputSignal<string | null | undefined>;
   private readonly effectiveValues;
-  private readonly syncLegacyAriaLabel;
   private isSelected;
   private toggle;
   private register;
@@ -1136,14 +1112,13 @@ declare class KrnToggleGroup {
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnToggleGroup, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnToggleGroup,
-    'div[krnToggleGroup], krn-toggle-group',
+    'div[krnToggleGroup]',
     never,
     {
       orientation: { alias: 'orientation'; required: false; isSignal: true };
       multiple: { alias: 'multiple'; required: false; isSignal: true };
       disabled: { alias: 'disabled'; required: false; isSignal: true };
       values: { alias: 'values'; required: false; isSignal: true };
-      ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
     },
     { values: 'valuesChange' },
     never,
@@ -1310,6 +1285,13 @@ declare const provideKrnMenuButtonOptions: (
   patch: Partial<KrnMenuButtonOptions> | (() => Partial<KrnMenuButtonOptions>),
 ) => _angular_core.FactoryProvider;
 
+/**
+ * Shared behavior for menu-button variants.
+ *
+ * Prefer `KrnDropdownButton` or `KrnSplitButton` unless a custom menu-button primitive is needed.
+ *
+ * @experimental The required trigger and panel template contract is not stable yet.
+ */
 declare abstract class KrnMenuButtonBase {
   private readonly platform;
   private readonly overlayCoordinator;
@@ -1625,78 +1607,16 @@ declare class KrnValidationMessage {
 }
 
 /**
- * Base ControlValueAccessor and Validator contract for custom KERN form controls.
+ * Installs the Angular Forms adapter required by Kern's experimental form-control variant bases.
+ *
+ * Add the returned providers to a component that extends `KrnEditableComboboxBase` or
+ * `KrnUploadBase`. The adapter remains component-scoped and is shared by `NG_VALUE_ACCESSOR` and
+ * `NG_VALIDATORS` without making the component inherit form-state machinery.
  *
  * @publicApi
- * @experimental
+ * @experimental The custom-control extension contract may change before Kern 1.0.
  */
-declare abstract class KrnValueAccessor<T, TControl = T>
-  implements ControlValueAccessor, Validator
-{
-  protected readonly controlValue: WritableSignal<T>;
-  protected readonly formDisabled: WritableSignal<boolean>;
-  private readonly valueOwnerState;
-  protected readonly valueOwner: Signal<'angular' | 'internal' | 'standalone'>;
-  private readonly accessorDestroyRef;
-  private readonly initialValue;
-  private onChange;
-  private onTouched;
-  private onValidatorChange;
-  private mixedOwnershipReported;
-  protected constructor(initialValue: T);
-  writeValue(value: unknown): void;
-  registerOnChange(fn: (value: TControl) => void): void;
-  registerOnTouched(fn: () => void): void;
-  setDisabledState(disabled: boolean): void;
-  validate(control: AbstractControl): ValidationErrors | null;
-  registerOnValidatorChange(fn: () => void): void;
-  /**
-   * Converts an Angular Forms value into the component's view-value domain.
-   *
-   * Override together with `toControlValue` when the form model and the rendered component use
-   * different value types. Existing controls can continue overriding `normalizeIncomingValue`.
-   */
-  protected fromControlValue(value: TControl | null | undefined): T;
-  /**
-   * Converts a committed view value into the Angular Forms value domain.
-   */
-  protected toControlValue(value: T): TControl;
-  protected normalizeIncomingValue(value: unknown): T;
-  /**
-   * Normalizes a declarative standalone value without claiming Angular Forms ownership.
-   */
-  protected normalizeStandaloneValue(value: T): T;
-  /**
-   * Binds an optional declarative value source to this accessor.
-   *
-   * `undefined` means that no standalone owner is present. Once Angular Forms registers the
-   * accessor it remains the deterministic owner and later standalone writes are ignored.
-   * Incoming writes are always silent: they never call `onChange`, touch the control, or emit a
-   * component output.
-   */
-  protected bindStandaloneValue(value: Signal<T | undefined>): void;
-  protected validateValue(_value: unknown): ValidationErrors | null;
-  protected watchValidationInputs(...dependencies: readonly Signal<unknown>[]): void;
-  protected commitValue(value: T): void;
-  /**
-   * Commits one user-originated value when it differs from the rendered value.
-   *
-   * The boolean result lets a concrete component emit its existing public output only for an
-   * accepted change. The legacy `commitValue` method deliberately keeps its historical
-   * always-notify behavior until concrete controls migrate one by one.
-   */
-  protected commitUserValue(value: T): boolean;
-  /**
-   * Equality policy for user commits. Reference-valued controls can override this with their
-   * domain identity contract.
-   */
-  protected valuesEqual(current: T, next: T): boolean;
-  protected touch(): void;
-  private bindAngularControl;
-  private syncAngularControlState;
-  private claimAngularOwnership;
-  private reportMixedOwnership;
-}
+declare function provideKrnFormControl(): Provider[];
 interface KrnControlA11y {
   readonly id: Signal<string>;
   readonly describedBy: Signal<string | null>;
@@ -1787,7 +1707,7 @@ interface KrnUploadRejection {
 }
 type KrnAutocompleteMode = 'list' | 'both' | 'inline' | 'none';
 
-declare class KrnDatePicker extends KrnValueAccessor<string> {
+declare class KrnDatePicker {
   private readonly platform;
   private readonly translations;
   readonly id: _angular_core.InputSignal<string>;
@@ -1810,6 +1730,17 @@ declare class KrnDatePicker extends KrnValueAccessor<string> {
   readonly valueChange: _angular_core.OutputEmitterRef<string>;
   protected readonly visibleMonth: _angular_core.WritableSignal<Date>;
   protected readonly focusedDate: _angular_core.WritableSignal<string>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<string>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: string) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly copy: _angular_core.Signal<{
     chooseDate: string;
     chooseDateRange: string;
@@ -1848,9 +1779,9 @@ declare class KrnDatePicker extends KrnValueAccessor<string> {
   private readonly syncFocusedDay;
   private readonly closeWhenBlocked;
   constructor();
-  writeValue(value: unknown): void;
-  protected normalizeIncomingValue(value: unknown): string;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  private syncVisibleMonth;
+  private normalizeIncomingValue;
+  private validateValue;
   protected toggleOpen(): void;
   protected close(restoreFocus?: boolean): void;
   protected onEscape(event: Event): void;
@@ -1900,7 +1831,7 @@ declare class KrnDatePicker extends KrnValueAccessor<string> {
     never
   >;
 }
-declare class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
+declare class KrnDateRangePicker {
   private readonly platform;
   private readonly translations;
   readonly id: _angular_core.InputSignal<string>;
@@ -1925,6 +1856,17 @@ declare class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
   readonly valueChange: _angular_core.OutputEmitterRef<KrnDateRangeValue>;
   protected readonly visibleMonth: _angular_core.WritableSignal<Date>;
   protected readonly focusedDate: _angular_core.WritableSignal<string>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<KrnDateRangeValue>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: KrnDateRangeValue) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly copy: _angular_core.Signal<{
     chooseDate: string;
     chooseDateRange: string;
@@ -1967,10 +1909,10 @@ declare class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
   private readonly syncFocusedDay;
   private readonly closeWhenBlocked;
   constructor();
-  writeValue(value: unknown): void;
-  protected normalizeIncomingValue(value: unknown): KrnDateRangeValue;
-  protected valuesEqual(current: KrnDateRangeValue, next: KrnDateRangeValue): boolean;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  private syncVisibleMonth;
+  private normalizeIncomingValue;
+  private valuesEqual;
+  private validateValue;
   protected toggleOpen(): void;
   protected close(restoreFocus?: boolean): void;
   protected onEscape(event: Event): void;
@@ -2025,7 +1967,7 @@ declare class KrnDateRangePicker extends KrnValueAccessor<KrnDateRangeValue> {
     never
   >;
 }
-declare class KrnTimePicker extends KrnValueAccessor<string> {
+declare class KrnTimePicker {
   private readonly platform;
   private readonly translations;
   readonly id: _angular_core.InputSignal<string>;
@@ -2046,6 +1988,17 @@ declare class KrnTimePicker extends KrnValueAccessor<string> {
   readonly valueChange: _angular_core.OutputEmitterRef<string>;
   protected readonly hourDraft: _angular_core.WritableSignal<string>;
   protected readonly minuteDraft: _angular_core.WritableSignal<string>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<string>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: string) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly copy: _angular_core.Signal<{
     chooseTime: string;
     selectTime: string;
@@ -2083,8 +2036,8 @@ declare class KrnTimePicker extends KrnValueAccessor<string> {
   private readonly focusDraftOnOpen;
   private readonly closeWhenBlocked;
   constructor();
-  protected normalizeIncomingValue(value: unknown): string;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  private normalizeIncomingValue;
+  private validateValue;
   protected toggleOpen(): void;
   protected close(restoreFocus?: boolean): void;
   protected onEscape(event: Event): void;
@@ -2137,7 +2090,7 @@ declare class KrnTimePicker extends KrnValueAccessor<string> {
     never
   >;
 }
-declare class KrnColorPicker extends KrnValueAccessor<string> {
+declare class KrnColorPicker {
   private readonly platform;
   private readonly translations;
   readonly id: _angular_core.InputSignal<string>;
@@ -2156,6 +2109,17 @@ declare class KrnColorPicker extends KrnValueAccessor<string> {
   protected readonly hue: _angular_core.WritableSignal<number>;
   protected readonly saturation: _angular_core.WritableSignal<number>;
   protected readonly lightness: _angular_core.WritableSignal<number>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<string>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: string) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly copy: _angular_core.Signal<{
     chooseColor: string;
     preview: string;
@@ -2200,10 +2164,8 @@ declare class KrnColorPicker extends KrnValueAccessor<string> {
   private readonly focusColorTextOnOpen;
   private readonly closeWhenBlocked;
   constructor();
-  protected normalizeIncomingValue(value: unknown): string;
-  protected validateValue(value: unknown): {
-    color: boolean;
-  } | null;
+  private normalizeIncomingValue;
+  private validateValue;
   protected toggleOpen(): void;
   protected close(restoreFocus?: boolean): void;
   protected onEscape(event: Event): void;
@@ -2252,7 +2214,7 @@ interface KrnTagFeedback {
   readonly kind: 'added' | 'duplicate' | 'removed';
   readonly text: string;
 }
-declare class KrnOtpInput extends KrnValueAccessor<string> {
+declare class KrnOtpInput {
   private readonly translations;
   private readonly inputElement;
   private readonly slotElements;
@@ -2273,6 +2235,17 @@ declare class KrnOtpInput extends KrnValueAccessor<string> {
   readonly completed: _angular_core.OutputEmitterRef<string>;
   protected readonly focused: _angular_core.WritableSignal<boolean>;
   protected readonly activeIndex: _angular_core.WritableSignal<number>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<string>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: string) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly safeLength: _angular_core.Signal<number>;
   protected readonly slots: _angular_core.Signal<number[]>;
   protected readonly a11y: KrnControlA11y;
@@ -2281,8 +2254,8 @@ declare class KrnOtpInput extends KrnValueAccessor<string> {
   protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
   protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
   constructor();
-  protected normalizeIncomingValue(value: unknown): string;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  private normalizeIncomingValue;
+  private validateValue;
   protected characterAt(index: number): string;
   protected inputCode(event: Event): void;
   private sanitize;
@@ -2319,7 +2292,7 @@ declare class KrnOtpInput extends KrnValueAccessor<string> {
     never
   >;
 }
-declare class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
+declare class KrnTagsInput {
   private readonly destroyRef;
   private readonly platform;
   protected readonly translations: Readonly<_kern_ui_angular_core.KrnTranslations>;
@@ -2352,14 +2325,25 @@ declare class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
   protected readonly draft: _angular_core.WritableSignal<string>;
   protected readonly announcement: _angular_core.WritableSignal<string>;
   protected readonly visualFeedback: _angular_core.WritableSignal<KrnTagFeedback | null>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<readonly string[]>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: readonly string[]) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   protected readonly safeMaxTags: _angular_core.Signal<number>;
   protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
   protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
   constructor();
-  protected normalizeIncomingValue(value: unknown): readonly string[];
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  private normalizeIncomingValue;
+  private validateValue;
   protected updateDraft(event: Event): void;
   protected handleKey(event: KeyboardEvent): void;
   protected handleFocusOut(event: FocusEvent): void;
@@ -2404,7 +2388,7 @@ declare class KrnTagsInput extends KrnValueAccessor<readonly string[]> {
   >;
 }
 
-declare class KrnSlider extends KrnValueAccessor<number> {
+declare class KrnSlider {
   private readonly translations;
   private readonly inputElement;
   readonly id: _angular_core.InputSignal<string>;
@@ -2422,6 +2406,18 @@ declare class KrnSlider extends KrnValueAccessor<number> {
   readonly value: _angular_core.InputSignal<number | undefined>;
   readonly valueFormatter: _angular_core.InputSignal<((value: number) => string) | undefined>;
   readonly valueChange: _angular_core.OutputEmitterRef<number>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<number>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  protected readonly touch: () => void;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: number) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   protected readonly effectiveMin: _angular_core.Signal<number>;
@@ -2432,8 +2428,8 @@ declare class KrnSlider extends KrnValueAccessor<number> {
   protected readonly formattedValue: _angular_core.Signal<string>;
   protected readonly valuePercent: _angular_core.Signal<number>;
   constructor();
-  protected normalizeIncomingValue(value: unknown): number;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  private normalizeIncomingValue;
+  private validateValue;
   protected updateValue(event: Event): void;
   protected protectReadOnlyKeyboard(event: KeyboardEvent): void;
   protected protectReadOnlyPointer(event: PointerEvent): void;
@@ -2468,7 +2464,7 @@ declare class KrnSlider extends KrnValueAccessor<number> {
     never
   >;
 }
-declare class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
+declare class KrnRangeSlider {
   private readonly platform;
   private readonly startInput;
   private readonly endInput;
@@ -2490,6 +2486,17 @@ declare class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
   protected readonly activeThumb: _angular_core.WritableSignal<'start' | 'end'>;
   protected readonly draggingThumb: _angular_core.WritableSignal<'start' | 'end' | null>;
   private activePointerId;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<KrnRangeValue>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: KrnRangeValue) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   protected readonly effectiveMin: _angular_core.Signal<number>;
@@ -2500,9 +2507,9 @@ declare class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
   protected readonly startPercent: _angular_core.Signal<number>;
   protected readonly endPercent: _angular_core.Signal<number>;
   constructor();
-  protected normalizeIncomingValue(value: unknown): KrnRangeValue;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
-  protected valuesEqual(current: KrnRangeValue, next: KrnRangeValue): boolean;
+  private normalizeIncomingValue;
+  private validateValue;
+  private valuesEqual;
   protected updateStart(event: Event): void;
   protected updateEnd(event: Event): void;
   protected beginPointerInteraction(event: PointerEvent): void;
@@ -2549,7 +2556,7 @@ declare class KrnRangeSlider extends KrnValueAccessor<KrnRangeValue> {
   >;
 }
 
-declare class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
+declare class KrnNativeSelect<T = string> {
   private readonly select;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
@@ -2569,6 +2576,18 @@ declare class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
   readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly value: _angular_core.InputSignal<T | null | undefined>;
   readonly valueChange: _angular_core.OutputEmitterRef<T | null>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<T | null>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  protected readonly touch: () => void;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: T | null) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   protected readonly isReadOnly: _angular_core.Signal<boolean>;
@@ -2576,9 +2595,9 @@ declare class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
   protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
   protected readonly selectedNativeKey: _angular_core.Signal<string>;
   constructor();
-  protected normalizeIncomingValue(value: unknown): T | null;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
-  protected valuesEqual(current: T | null, next: T | null): boolean;
+  private normalizeIncomingValue;
+  private validateValue;
+  private valuesEqual;
   protected optionKey(_option: KrnSelectOption<T>, index: number): string;
   protected selectNative(event: Event): void;
   protected protectReadOnlyInteraction(event: Event): void;
@@ -2615,8 +2634,8 @@ declare class KrnNativeSelect<T = string> extends KrnValueAccessor<T | null> {
     never
   >;
 }
-declare class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
-  private readonly translations;
+declare class KrnSelect<T = string> {
+  #private;
   private readonly trigger;
   readonly id: _angular_core.InputSignal<string>;
   readonly placeholder: _angular_core.InputSignal<string>;
@@ -2646,6 +2665,16 @@ declare class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
   readonly open: _angular_core.ModelSignal<boolean>;
   readonly valueChange: _angular_core.OutputEmitterRef<T | null>;
   readonly selectionChange: _angular_core.OutputEmitterRef<KrnSelectOption<T> | null>;
+  protected readonly controlValue: _angular_core.WritableSignal<T | null>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: T | null) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   protected readonly isReadOnly: _angular_core.Signal<boolean>;
@@ -2654,9 +2683,6 @@ declare class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
   protected readonly selectedOption: _angular_core.Signal<KrnSelectOption<T> | null>;
   protected readonly selectedValues: _angular_core.Signal<T[]>;
   constructor();
-  protected normalizeIncomingValue(value: unknown): T | null;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
-  protected valuesEqual(current: T | null, next: T | null): boolean;
   protected setOpen(open: boolean): void;
   protected close(): void;
   protected onEscape(event: Event): void;
@@ -2702,7 +2728,7 @@ declare class KrnSelect<T = string> extends KrnValueAccessor<T | null> {
     never
   >;
 }
-declare class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> {
+declare class KrnMultiSelect<T = string> {
   private readonly translations;
   private readonly trigger;
   readonly id: _angular_core.InputSignal<string>;
@@ -2733,6 +2759,17 @@ declare class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> 
   readonly value: _angular_core.InputSignal<readonly T[] | undefined>;
   readonly open: _angular_core.ModelSignal<boolean>;
   readonly valueChange: _angular_core.OutputEmitterRef<readonly T[]>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<readonly T[]>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: readonly T[]) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   protected readonly isReadOnly: _angular_core.Signal<boolean>;
@@ -2744,9 +2781,9 @@ declare class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> 
   protected readonly remainingCount: _angular_core.Signal<number>;
   protected readonly mutableValues: _angular_core.Signal<T[]>;
   constructor();
-  protected normalizeIncomingValue(value: unknown): readonly T[];
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
-  protected valuesEqual(current: readonly T[], next: readonly T[]): boolean;
+  private normalizeIncomingValue;
+  private validateValue;
+  private valuesEqual;
   protected setOpen(open: boolean): void;
   protected close(): void;
   protected onEscape(event: Event): void;
@@ -2794,16 +2831,17 @@ declare class KrnMultiSelect<T = string> extends KrnValueAccessor<readonly T[]> 
   >;
 }
 /**
- * Base contract for editable KERN combobox implementations.
+ * Shared contract for editable KERN combobox variants.
  *
  * @publicApi
- * @experimental
+ * @experimental The required editable-combobox template contract is not stable yet.
  */
-declare abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> {
+declare abstract class KrnEditableComboboxBase {
   private readonly comboboxDirective;
   private readonly inputElement;
   private readonly destroyRef;
   private readonly locale;
+  private readonly platform;
   private readonly renderer;
   private readonly translations;
   protected readonly inputFocused: _angular_core.WritableSignal<boolean>;
@@ -2850,6 +2888,17 @@ declare abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> 
   readonly queryChange: _angular_core.OutputEmitterRef<string>;
   readonly optionSelected: _angular_core.OutputEmitterRef<KrnSelectOption<string>>;
   protected readonly query: _angular_core.WritableSignal<string>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<string>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: string) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   protected readonly isReadOnly: _angular_core.Signal<boolean>;
@@ -2860,8 +2909,8 @@ declare abstract class KrnEditableComboboxBase extends KrnValueAccessor<string> 
   protected readonly inlineSuggestion: _angular_core.Signal<string | undefined>;
   protected readonly selectedValues: _angular_core.Signal<string[]>;
   protected constructor();
-  protected normalizeIncomingValue(value: unknown): string;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  private normalizeIncomingValue;
+  private validateValue;
   protected updateQuery(query: string): void;
   protected selectValues(values: string[]): void;
   protected commitQuery(event?: Event): void;
@@ -2964,12 +3013,8 @@ interface KrnCheckboxGroupController {
   markTouched(): void;
   toggle(value: string, checked: boolean): void;
 }
-declare class KrnCheckboxGroup
-  extends KrnValueAccessor<readonly string[]>
-  implements KrnCheckboxGroupController
-{
+declare class KrnCheckboxGroup implements KrnCheckboxGroupController {
   private readonly fieldset;
-  private angularOwnsValue;
   readonly id: _angular_core.InputSignal<string>;
   readonly label: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
@@ -2983,6 +3028,17 @@ declare class KrnCheckboxGroup
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly describedBy: _angular_core.InputSignal<string>;
   readonly valueChange: _angular_core.OutputEmitterRef<readonly string[]>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<readonly string[]>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: readonly string[]) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   readonly isDisabled: _angular_core.Signal<boolean>;
   readonly isReadOnly: _angular_core.Signal<boolean>;
@@ -2991,10 +3047,8 @@ declare class KrnCheckboxGroup
   protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
   protected readonly isFormFieldControl: _angular_core.Signal<boolean>;
   constructor();
-  writeValue(value: unknown): void;
-  registerOnChange(fn: (value: readonly string[]) => void): void;
-  protected normalizeIncomingValue(value: unknown): readonly string[];
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  private normalizeIncomingValue;
+  private validateValue;
   has(value: string): boolean;
   markTouched(): void;
   toggle(value: string, checked: boolean): void;
@@ -3025,11 +3079,10 @@ declare class KrnCheckboxGroup
     never
   >;
 }
-declare class KrnCheckbox extends KrnValueAccessor<boolean | null> {
+declare class KrnCheckbox {
   private readonly group;
   private readonly inputElement;
   private readonly indeterminateOverride;
-  private angularOwnsChecked;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
   readonly value: _angular_core.InputSignal<string>;
@@ -3046,6 +3099,17 @@ declare class KrnCheckbox extends KrnValueAccessor<boolean | null> {
   readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly checkedChange: _angular_core.OutputEmitterRef<boolean>;
   readonly indeterminateChange: _angular_core.OutputEmitterRef<boolean>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<boolean | null>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: boolean | null) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   protected readonly isReadOnly: _angular_core.Signal<boolean>;
@@ -3057,10 +3121,8 @@ declare class KrnCheckbox extends KrnValueAccessor<boolean | null> {
   protected readonly isFormFieldControl: _angular_core.Signal<boolean>;
   protected readonly isIndeterminate: _angular_core.Signal<boolean>;
   constructor();
-  writeValue(value: unknown): void;
-  registerOnChange(fn: (value: boolean | null) => void): void;
-  protected normalizeIncomingValue(value: unknown): boolean | null;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  private normalizeIncomingValue;
+  private validateValue;
   protected changeChecked(event: Event): void;
   protected blurred(): void;
   focus(options?: FocusOptions): void;
@@ -3101,13 +3163,9 @@ interface KrnRadioGroupController {
   markTouched(): void;
   select(value: string): void;
 }
-declare class KrnRadioGroup
-  extends KrnValueAccessor<string | null>
-  implements KrnRadioGroupController
-{
+declare class KrnRadioGroup implements KrnRadioGroupController {
   private readonly generatedName;
   private readonly fieldset;
-  private angularOwnsValue;
   readonly id: _angular_core.InputSignal<string>;
   readonly label: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
@@ -3122,6 +3180,17 @@ declare class KrnRadioGroup
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly describedBy: _angular_core.InputSignal<string>;
   readonly valueChange: _angular_core.OutputEmitterRef<string | null>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<string | null>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: string | null) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   readonly name: _angular_core.Signal<string>;
   protected readonly a11y: KrnControlA11y;
   readonly isDisabled: _angular_core.Signal<boolean>;
@@ -3132,10 +3201,8 @@ declare class KrnRadioGroup
   protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
   protected readonly isFormFieldControl: _angular_core.Signal<boolean>;
   constructor();
-  writeValue(value: unknown): void;
-  registerOnChange(fn: (value: string | null) => void): void;
-  protected normalizeIncomingValue(value: unknown): string | null;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  private normalizeIncomingValue;
+  private validateValue;
   isSelected(value: string): boolean;
   select(value: string): void;
   markTouched(): void;
@@ -3223,9 +3290,8 @@ declare class KrnRadio {
     never
   >;
 }
-declare class KrnSwitch extends KrnValueAccessor<boolean> {
+declare class KrnSwitch {
   private readonly inputElement;
-  private angularOwnsChecked;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
   readonly checked: _angular_core.InputSignalWithTransform<boolean | undefined, unknown>;
@@ -3239,6 +3305,18 @@ declare class KrnSwitch extends KrnValueAccessor<boolean> {
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly checkedChange: _angular_core.OutputEmitterRef<boolean>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<boolean>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  protected readonly touch: () => void;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: boolean) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   protected readonly isReadOnly: _angular_core.Signal<boolean>;
@@ -3249,10 +3327,8 @@ declare class KrnSwitch extends KrnValueAccessor<boolean> {
   protected readonly renderedChecked: _angular_core.Signal<boolean>;
   protected readonly isFormFieldControl: _angular_core.Signal<boolean>;
   constructor();
-  writeValue(value: unknown): void;
-  registerOnChange(fn: (value: boolean) => void): void;
-  protected normalizeIncomingValue(value: unknown): boolean;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  private normalizeIncomingValue;
+  private validateValue;
   protected changeValue(event: Event): void;
   protected preventReadonly(event: Event): void;
   focus(options?: FocusOptions): void;
@@ -3283,7 +3359,7 @@ declare class KrnSwitch extends KrnValueAccessor<boolean> {
     never
   >;
 }
-declare class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null> {
+declare class KrnSegmentedControl<T = string> {
   private readonly segmentButtons;
   private readonly translations;
   readonly id: _angular_core.InputSignal<string>;
@@ -3305,14 +3381,25 @@ declare class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null>
   readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly value: _angular_core.InputSignal<T | null | undefined>;
   readonly valueChange: _angular_core.OutputEmitterRef<T | null>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<T | null>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: T | null) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
   protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
   constructor();
-  protected normalizeIncomingValue(value: unknown): T | null;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
-  protected valuesEqual(current: T | null, next: T | null): boolean;
+  private normalizeIncomingValue;
+  private validateValue;
+  private valuesEqual;
   protected tabIndexFor(value: T, index: number): number;
   protected select(value: T): void;
   protected navigate(event: KeyboardEvent): void;
@@ -3353,9 +3440,8 @@ declare class KrnSegmentedControl<T = string> extends KrnValueAccessor<T | null>
   >;
 }
 
-declare class KrnTextInput extends KrnValueAccessor<string> {
+declare class KrnTextInput {
   private readonly inputElement;
-  private angularOwnsValue;
   private composing;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
@@ -3375,17 +3461,27 @@ declare class KrnTextInput extends KrnValueAccessor<string> {
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly valueChange: _angular_core.OutputEmitterRef<string>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<string>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  protected readonly touch: () => void;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: string) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   protected readonly labelledBy: _angular_core.Signal<string | null>;
   protected readonly describedBy: _angular_core.Signal<string | null>;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   constructor();
-  writeValue(value: unknown): void;
-  registerOnChange(fn: (value: string) => void): void;
   focus(options?: FocusOptions): void;
   blur(): void;
   select(): void;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  private validateValue;
   protected updateText(event: Event): void;
   protected startComposition(): void;
   protected endComposition(event: Event): void;
@@ -3421,9 +3517,8 @@ declare class KrnTextInput extends KrnValueAccessor<string> {
     never
   >;
 }
-declare class KrnTextarea extends KrnValueAccessor<string> {
+declare class KrnTextarea {
   private readonly textareaElement;
-  private angularOwnsValue;
   private composing;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
@@ -3445,18 +3540,28 @@ declare class KrnTextarea extends KrnValueAccessor<string> {
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly valueChange: _angular_core.OutputEmitterRef<string>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<string>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  protected readonly touch: () => void;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: string) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   protected readonly labelledBy: _angular_core.Signal<string | null>;
   protected readonly describedBy: _angular_core.Signal<string | null>;
   protected readonly isFormFieldControl: _angular_core.Signal<boolean>;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   constructor();
-  writeValue(value: unknown): void;
-  registerOnChange(fn: (value: string) => void): void;
   focus(options?: FocusOptions): void;
   blur(): void;
   select(): void;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  private validateValue;
   protected updateText(event: Event): void;
   protected startComposition(): void;
   protected endComposition(event: Event): void;
@@ -3495,10 +3600,9 @@ declare class KrnTextarea extends KrnValueAccessor<string> {
     never
   >;
 }
-declare class KrnPasswordInput extends KrnValueAccessor<string> {
+declare class KrnPasswordInput {
   private readonly translations;
   private readonly inputElement;
-  private angularOwnsValue;
   private composing;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
@@ -3520,6 +3624,18 @@ declare class KrnPasswordInput extends KrnValueAccessor<string> {
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly valueChange: _angular_core.OutputEmitterRef<string>;
   protected readonly revealed: _angular_core.WritableSignal<boolean>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<string>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  protected readonly touch: () => void;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: string) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly toggle: (value: boolean) => boolean;
   protected readonly a11y: KrnControlA11y;
   protected readonly labelledBy: _angular_core.Signal<string | null>;
@@ -3527,12 +3643,10 @@ declare class KrnPasswordInput extends KrnValueAccessor<string> {
   protected readonly isFormFieldControl: _angular_core.Signal<boolean>;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   constructor();
-  writeValue(value: unknown): void;
-  registerOnChange(fn: (value: string) => void): void;
   focus(options?: FocusOptions): void;
   blur(): void;
   select(): void;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  private validateValue;
   protected updatePassword(event: Event): void;
   protected startComposition(): void;
   protected endComposition(event: Event): void;
@@ -3570,10 +3684,9 @@ declare class KrnPasswordInput extends KrnValueAccessor<string> {
     never
   >;
 }
-declare class KrnSearchInput extends KrnValueAccessor<string> {
+declare class KrnSearchInput {
   private readonly translations;
   private readonly inputElement;
-  private angularOwnsValue;
   private composing;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
@@ -3594,18 +3707,28 @@ declare class KrnSearchInput extends KrnValueAccessor<string> {
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly valueChange: _angular_core.OutputEmitterRef<string>;
   readonly searchSubmitted: _angular_core.OutputEmitterRef<string>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<string>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  protected readonly touch: () => void;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: string) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   protected readonly labelledBy: _angular_core.Signal<string | null>;
   protected readonly describedBy: _angular_core.Signal<string | null>;
   protected readonly isFormFieldControl: _angular_core.Signal<boolean>;
   protected readonly isDisabled: _angular_core.Signal<boolean>;
   constructor();
-  writeValue(value: unknown): void;
-  registerOnChange(fn: (value: string) => void): void;
   focus(options?: FocusOptions): void;
   blur(): void;
   select(): void;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  private validateValue;
   protected updateSearch(event: Event): void;
   protected clear(): void;
   protected submitSearch(event: Event): void;
@@ -3644,10 +3767,9 @@ declare class KrnSearchInput extends KrnValueAccessor<string> {
     never
   >;
 }
-declare class KrnNumberInput extends KrnValueAccessor<number | null> {
+declare class KrnNumberInput {
   private readonly translations;
   private readonly inputElement;
-  private angularOwnsValue;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
   readonly placeholder: _angular_core.InputSignal<string>;
@@ -3668,6 +3790,18 @@ declare class KrnNumberInput extends KrnValueAccessor<number | null> {
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly valueChange: _angular_core.OutputEmitterRef<number | null>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<number | null>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  protected readonly touch: () => void;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: number | null) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   protected readonly labelledBy: _angular_core.Signal<string | null>;
   protected readonly describedBy: _angular_core.Signal<string | null>;
@@ -3676,12 +3810,10 @@ declare class KrnNumberInput extends KrnValueAccessor<number | null> {
   protected readonly canIncrease: _angular_core.Signal<boolean>;
   protected readonly canDecrease: _angular_core.Signal<boolean>;
   constructor();
-  writeValue(value: unknown): void;
-  registerOnChange(fn: (value: number | null) => void): void;
   focus(options?: FocusOptions): void;
   blur(): void;
-  protected normalizeIncomingValue(value: unknown): number | null;
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
+  private normalizeIncomingValue;
+  private validateValue;
   protected updateNumber(event: Event): void;
   protected stepBy(direction: 1 | -1): void;
   protected focusFromShell(event: PointerEvent): void;
@@ -3726,15 +3858,15 @@ declare class KrnNumberInput extends KrnValueAccessor<number | null> {
 }
 
 /**
- * Base contract for custom KERN upload controls.
+ * Shared contract for KERN upload variants.
  *
  * @publicApi
- * @experimental
+ * @experimental The required file-input template contract is not stable yet.
  */
-declare abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
+declare abstract class KrnUploadBase {
   protected readonly platform: _kern_ui_angular_cdk.KrnPlatformAdapter;
   protected readonly translations: Readonly<_kern_ui_angular_core.KrnTranslations>;
-  protected readonly fileInput: _angular_core.Signal<ElementRef<HTMLInputElement> | undefined>;
+  protected readonly fileInput: Signal<ElementRef<HTMLInputElement> | undefined>;
   readonly id: _angular_core.InputSignal<string>;
   readonly label: _angular_core.InputSignal<string>;
   readonly locale: _angular_core.InputSignal<string>;
@@ -3750,12 +3882,25 @@ declare abstract class KrnUploadBase extends KrnValueAccessor<readonly File[]> {
   readonly filesChange: _angular_core.OutputEmitterRef<readonly File[]>;
   readonly rejected: _angular_core.OutputEmitterRef<readonly KrnUploadRejection[]>;
   protected readonly rejections: _angular_core.WritableSignal<readonly KrnUploadRejection[]>;
+  private readonly formControl;
+  protected readonly controlValue: _angular_core.WritableSignal<readonly File[]>;
+  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
+  protected readonly touch: () => void;
+  readonly writeValue: (value: unknown) => void;
+  readonly registerOnChange: (fn: (value: readonly File[]) => void) => void;
+  readonly registerOnTouched: (fn: () => void) => void;
+  readonly setDisabledState: (disabled: boolean) => void;
+  readonly validate: (
+    control: _angular_forms.AbstractControl,
+  ) => _angular_forms.ValidationErrors | null;
+  readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
-  protected readonly isDisabled: _angular_core.Signal<boolean>;
+  protected readonly isDisabled: Signal<boolean>;
   protected constructor();
-  protected normalizeIncomingValue(value: unknown): readonly File[];
-  protected validateValue(value: unknown): _angular_forms.ValidationErrors | null;
-  protected valuesEqual(current: readonly File[], next: readonly File[]): boolean;
+  protected bindStandaloneFiles(value: Signal<readonly File[] | undefined>): void;
+  private normalizeIncomingValue;
+  private validateValue;
+  private valuesEqual;
   protected openPicker(): void;
   protected selectFromInput(event: Event): void;
   protected acceptFiles(incoming: readonly File[]): void;
@@ -3795,11 +3940,11 @@ declare class KrnFileUpload extends KrnUploadBase {
   readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly value: _angular_core.InputSignal<readonly File[] | undefined>;
-  protected readonly nativeInputId: _angular_core.Signal<string>;
-  protected readonly descriptionId: _angular_core.Signal<string>;
-  protected readonly requiredDescriptionId: _angular_core.Signal<string>;
-  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
-  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
+  protected readonly nativeInputId: Signal<string>;
+  protected readonly descriptionId: Signal<string>;
+  protected readonly requiredDescriptionId: Signal<string>;
+  protected readonly effectiveLabelledBy: Signal<string | null>;
+  protected readonly effectiveDescribedBy: Signal<string | null>;
   private readonly action;
   constructor();
   focus(options?: FocusOptions): void;
@@ -3829,12 +3974,12 @@ declare class KrnDropUpload extends KrnUploadBase {
   readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly value: _angular_core.InputSignal<readonly File[] | undefined>;
   protected readonly dragging: _angular_core.WritableSignal<boolean>;
-  protected readonly nativeInputId: _angular_core.Signal<string>;
-  protected readonly dropLabelId: _angular_core.Signal<string>;
-  protected readonly descriptionId: _angular_core.Signal<string>;
-  protected readonly requiredDescriptionId: _angular_core.Signal<string>;
-  protected readonly effectiveLabelledBy: _angular_core.Signal<string | null>;
-  protected readonly effectiveDescribedBy: _angular_core.Signal<string | null>;
+  protected readonly nativeInputId: Signal<string>;
+  protected readonly dropLabelId: Signal<string>;
+  protected readonly descriptionId: Signal<string>;
+  protected readonly requiredDescriptionId: Signal<string>;
+  protected readonly effectiveLabelledBy: Signal<string | null>;
+  protected readonly effectiveDescribedBy: Signal<string | null>;
   private readonly action;
   private readonly resetDraggingWhenBlocked;
   constructor();
@@ -4149,10 +4294,6 @@ declare class KrnMenu {
   readonly triggerAriaLabel: _angular_core.InputSignal<string>;
   readonly menuAriaLabel: _angular_core.InputSignal<string>;
   readonly emptyLabel: _angular_core.InputSignal<string>;
-  /**
-   * @deprecated Import and apply `KrnMenuTrigger` to projected trigger content instead.
-   */
-  readonly hasProjectedTrigger: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly itemSelected: _angular_core.OutputEmitterRef<KrnNavigationItem>;
   readonly closed: _angular_core.OutputEmitterRef<'escape' | 'outside' | 'detach' | 'selection'>;
   protected readonly activeIndex: _angular_core.WritableSignal<number>;
@@ -4204,7 +4345,6 @@ declare class KrnMenu {
       triggerAriaLabel: { alias: 'triggerAriaLabel'; required: false; isSignal: true };
       menuAriaLabel: { alias: 'menuAriaLabel'; required: false; isSignal: true };
       emptyLabel: { alias: 'emptyLabel'; required: false; isSignal: true };
-      hasProjectedTrigger: { alias: 'hasProjectedTrigger'; required: false; isSignal: true };
     },
     { open: 'openChange'; itemSelected: 'itemSelected'; closed: 'closed' },
     ['projectedTrigger'],
@@ -5334,6 +5474,7 @@ type KrnOverlayConfig<Data = undefined> = {
 declare class KrnOverlayService {
   private readonly injector;
   private readonly platform;
+  private readonly coordinator;
   private readonly ids;
   private readonly translations;
   private readonly destroyRef;
@@ -6086,7 +6227,6 @@ export {
   KrnTreeNavigation,
   KrnUploadBase,
   KrnValidationMessage,
-  KrnValueAccessor,
   KrnOtpInput as KrnVerificationCode,
   KrnTabs as KrnVerticalTabs,
   injectKrnOverlayData,
@@ -6095,6 +6235,7 @@ export {
   provideKrnButtonOptions,
   provideKrnCopyButtonOptions,
   provideKrnFloatingActionButtonOptions,
+  provideKrnFormControl,
   provideKrnIconButtonOptions,
   provideKrnMenuButtonOptions,
   provideKrnToggleButtonOptions,

@@ -55,17 +55,16 @@ void bootstrapApplication(KernToggleGroupAgentExample);
 
 ## API
 
-| Name          | Kind  | Type                          | Required | Default                    | Description                                                                         |
-| ------------- | ----- | ----------------------------- | -------- | -------------------------- | ----------------------------------------------------------------------------------- |
-| `orientation` | input | `KrnOrientation`              | no       | `this.options.orientation` | Defines both the visual layout axis and the toolbar Arrow-key axis.                 |
-| `multiple`    | input | `boolean`                     | no       | `this.options.multiple`    | Allows multiple pressed values; false exposes at most one effective pressed value.  |
-| `disabled`    | input | `boolean`                     | no       | `false`                    | Disables every registered native toggle and all group-owned value transitions.      |
-| `values`      | model | `ReadonlyArray<string>`       | no       | `[]`                       | Controlled stable string values; user transitions always emit a fresh frozen array. |
-| `ariaLabel`   | input | `string \| null \| undefined` | no       | `undefined`                | Deprecated compatibility bridge for native accessible-name attributes.              |
+| Name          | Kind  | Type                    | Required | Default                    | Description                                                                         |
+| ------------- | ----- | ----------------------- | -------- | -------------------------- | ----------------------------------------------------------------------------------- |
+| `orientation` | input | `KrnOrientation`        | no       | `this.options.orientation` | Defines both the visual layout axis and the toolbar Arrow-key axis.                 |
+| `multiple`    | input | `boolean`               | no       | `this.options.multiple`    | Allows multiple pressed values; false exposes at most one effective pressed value.  |
+| `disabled`    | input | `boolean`               | no       | `false`                    | Disables every registered native toggle and all group-owned value transitions.      |
+| `values`      | model | `ReadonlyArray<string>` | no       | `[]`                       | Controlled stable string values; user transitions always emit a fresh frozen array. |
 
 ## Deprecated selectors
 
-- `krn-toggle-group` — remove in `0.2.0`; replace with `div[krnToggleGroup]`. Replace <krn-toggle-group> with <div krnToggleGroup> and replace its closing tag with </div>; keep direct native Toggle Button children and stable values unchanged. Documentation: `docs/DEPRECATIONS.md#krn-toggle-group-element-selector`.
+_No deprecated selectors._
 
 ## Content slots
 
@@ -118,8 +117,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/toggle-group`
 
 Scenarios: `default`.
-Public API coverage: 3/5
-directly controlled; 2 exact exclusions; 0 unclassified.
+Public API coverage: 3/4
+directly controlled; 1 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -133,10 +132,9 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API  | Category           | Evidence                                                  | Reason                                                                                                                  |
-| ----------- | ------------------ | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#toggle-group` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
-| `values`    | complex-data       | `specimen-fixture:preview/toggle-group?state=default`     | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
+| Public API | Category     | Evidence                                              | Reason                                                                                                                  |
+| ---------- | ------------ | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `values`   | complex-data | `specimen-fixture:preview/toggle-group?state=default` | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
 
 Presets:
 

@@ -73,7 +73,7 @@
       "@kern-ui/angular/patterns",
       "@kern-ui/angular/testing"
     ],
-    "sourceDigest": "sha256-e21ca0d589c1c07c085ea9770d020d235005c79bc5838684afc68d3736661382"
+    "sourceDigest": "sha256-894d4b70cd857ee66909cae3def69ceb12a72a97b99da8abe6fa566d5c8fc7ba"
   },
   "components": [
     {
@@ -7233,19 +7233,8 @@
       "category": "Actions",
       "kind": "component",
       "selector": "div[krnButtonGroup]",
-      "selectors": ["div[krnButtonGroup]", "krn-button-group"],
-      "selectorDeprecations": [
-        {
-          "id": "krn-button-group-element-selector",
-          "selector": "krn-button-group",
-          "status": "active",
-          "introducedIn": "0.1.0",
-          "removeIn": "0.2.0",
-          "replacement": "div[krnButtonGroup]",
-          "migration": "Replace <krn-button-group> with <div krnButtonGroup> and replace its closing tag with </div>; keep each child action and its native semantics unchanged.",
-          "documentation": "docs/DEPRECATIONS.md#krn-button-group-element-selector"
-        }
-      ],
+      "selectors": ["div[krnButtonGroup]"],
+      "selectorDeprecations": [],
       "symbol": "KrnButtonGroup",
       "canonicalSymbol": "KrnButtonGroup",
       "canonicalId": "button-group",
@@ -7253,7 +7242,7 @@
       "importPath": "@kern-ui/angular/kit",
       "aliases": {
         "symbols": [],
-        "selectors": ["krn-button-group"],
+        "selectors": [],
         "componentIds": []
       },
       "summary": "Button Group. Labels and arranges independent native actions without owning their focus, activation, disabled, loading, or selection state.",
@@ -7305,16 +7294,6 @@
           "required": false,
           "defaultValue": "this.options.connected",
           "description": "Joins adjacent action borders and radii without coordinating child state or activation.",
-          "descriptionSource": "source"
-        },
-        {
-          "name": "ariaLabel",
-          "property": "ariaLabel",
-          "kind": "input",
-          "type": "string | null | undefined",
-          "required": false,
-          "defaultValue": "undefined",
-          "description": "Deprecated compatibility bridge for a native accessible-name attribute.",
           "descriptionSource": "source"
         }
       ],
@@ -7389,8 +7368,7 @@
         "connected layout",
         "scoped layout defaults",
         "orientation",
-        "connected",
-        "ariaLabel"
+        "connected"
       ],
       "guidance": {
         "useWhen": "Use <div krnButtonGroup aria-label=\"Review actions\"> for a small set of related, independent native actions.",
@@ -7544,25 +7522,12 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 3,
+          "publicInputsAndModels": 2,
           "controlled": 2,
-          "excluded": 1,
+          "excluded": 0,
           "unclassified": 0
         },
-        "exclusions": [
-          {
-            "componentId": "button-group",
-            "publicName": "ariaLabel",
-            "kind": "input",
-            "type": "string | null | undefined",
-            "code": "accessibility-copy",
-            "reason": "Deprecated compatibility input; the canonical div[krnButtonGroup] host uses native aria-label or aria-labelledby.",
-            "evidence": {
-              "category": "a11y-test",
-              "pointer": "tests/a11y/accessibility.spec.ts#button-group"
-            }
-          }
-        ]
+        "exclusions": []
       }
     },
     {
@@ -9296,19 +9261,8 @@
       "category": "Actions",
       "kind": "component",
       "selector": "div[krnToggleGroup]",
-      "selectors": ["div[krnToggleGroup]", "krn-toggle-group"],
-      "selectorDeprecations": [
-        {
-          "id": "krn-toggle-group-element-selector",
-          "selector": "krn-toggle-group",
-          "status": "active",
-          "introducedIn": "0.1.0",
-          "removeIn": "0.2.0",
-          "replacement": "div[krnToggleGroup]",
-          "migration": "Replace <krn-toggle-group> with <div krnToggleGroup> and replace its closing tag with </div>; keep direct native Toggle Button children and stable values unchanged.",
-          "documentation": "docs/DEPRECATIONS.md#krn-toggle-group-element-selector"
-        }
-      ],
+      "selectors": ["div[krnToggleGroup]"],
+      "selectorDeprecations": [],
       "symbol": "KrnToggleGroup",
       "canonicalSymbol": "KrnToggleGroup",
       "canonicalId": "toggle-group",
@@ -9316,7 +9270,7 @@
       "importPath": "@kern-ui/angular/kit",
       "aliases": {
         "symbols": [],
-        "selectors": ["krn-toggle-group"],
+        "selectors": [],
         "componentIds": []
       },
       "summary": "Toggle Group. Coordinates stable pressed values across native toggle buttons in a labelled, orientation-aware action toolbar.",
@@ -9393,16 +9347,6 @@
           "required": false,
           "defaultValue": "[]",
           "description": "Controlled stable string values; user transitions always emit a fresh frozen array.",
-          "descriptionSource": "source"
-        },
-        {
-          "name": "ariaLabel",
-          "property": "ariaLabel",
-          "kind": "input",
-          "type": "string | null | undefined",
-          "required": false,
-          "defaultValue": "undefined",
-          "description": "Deprecated compatibility bridge for native accessible-name attributes.",
           "descriptionSource": "source"
         }
       ],
@@ -9482,8 +9426,7 @@
         "orientation",
         "multiple",
         "disabled",
-        "values",
-        "ariaLabel"
+        "values"
       ],
       "guidance": {
         "useWhen": "Use <div krnToggleGroup aria-label=\"Formatting\"> with direct native Toggle Button children and stable unique values.",
@@ -9696,24 +9639,12 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 5,
+          "publicInputsAndModels": 4,
           "controlled": 3,
-          "excluded": 2,
+          "excluded": 1,
           "unclassified": 0
         },
         "exclusions": [
-          {
-            "componentId": "toggle-group",
-            "publicName": "ariaLabel",
-            "kind": "input",
-            "type": "string | null | undefined",
-            "code": "accessibility-copy",
-            "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
-            "evidence": {
-              "category": "a11y-test",
-              "pointer": "tests/a11y/accessibility.spec.ts#toggle-group"
-            }
-          },
           {
             "componentId": "toggle-group",
             "publicName": "values",
@@ -19751,7 +19682,7 @@
           "kind": "input",
           "type": "string",
           "required": false,
-          "defaultValue": "this.translations.forms.selectOption",
+          "defaultValue": "this.#translations.forms.selectOption",
           "description": "Short input hint shown only while no value is present.",
           "descriptionSource": "inferred"
         },
@@ -19761,7 +19692,7 @@
           "kind": "input",
           "type": "string",
           "required": false,
-          "defaultValue": "this.translations.forms.noOptions",
+          "defaultValue": "this.#translations.forms.noOptions",
           "description": "Visible and announced copy when the data collection has no items.",
           "descriptionSource": "inferred"
         },
@@ -19771,7 +19702,7 @@
           "kind": "input",
           "type": "string",
           "required": false,
-          "defaultValue": "this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? ''",
+          "defaultValue": "this.#translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? ''",
           "description": "Visible and announced copy while asynchronous data is loading.",
           "descriptionSource": "inferred"
         },
@@ -19781,7 +19712,7 @@
           "kind": "input",
           "type": "string",
           "required": false,
-          "defaultValue": "this.translations.forms.optionsLoadFailed ??\n      KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??\n      ''",
+          "defaultValue": "this.#translations.forms.optionsLoadFailed ??\n      KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??\n      ''",
           "description": "Visible and announced copy when loading the data collection fails.",
           "descriptionSource": "inferred"
         },
@@ -34708,16 +34639,6 @@
           "descriptionSource": "inferred"
         },
         {
-          "name": "hasProjectedTrigger",
-          "property": "hasProjectedTrigger",
-          "kind": "input",
-          "type": "boolean",
-          "required": false,
-          "defaultValue": "false",
-          "description": "Legacy signal indicating that trigger content is projected by the consumer.",
-          "descriptionSource": "inferred"
-        },
-        {
           "name": "itemSelected",
           "property": "itemSelected",
           "kind": "output",
@@ -34801,7 +34722,6 @@
         "triggerAriaLabel",
         "menuAriaLabel",
         "emptyLabel",
-        "hasProjectedTrigger",
         "itemSelected",
         "closed"
       ],
@@ -34842,19 +34762,6 @@
             "binding": {
               "kind": "model",
               "publicName": "open"
-            }
-          },
-          {
-            "key": "hasProjectedTrigger",
-            "label": "Has Projected Trigger",
-            "kind": "boolean",
-            "defaultValue": false,
-            "testValue": true,
-            "description": "Configures the component hasProjectedTrigger contract.",
-            "binding": {
-              "kind": "input",
-              "publicName": "hasProjectedTrigger",
-              "syntax": "property"
             }
           }
         ],
@@ -35029,8 +34936,8 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 7,
-          "controlled": 2,
+          "publicInputsAndModels": 6,
+          "controlled": 1,
           "excluded": 5,
           "unclassified": 0
         },
@@ -51246,9 +51153,9 @@
           "name": "mode",
           "property": "mode",
           "kind": "input",
-          "type": "KrnDataGridMode | null",
+          "type": "KrnDataGridMode",
           "required": false,
-          "defaultValue": "null",
+          "defaultValue": "{ kind: 'client', pagination: true }",
           "description": "Discriminated operating mode that selects the component data and interaction contract.",
           "descriptionSource": "inferred"
         },
@@ -51403,16 +51310,6 @@
           "descriptionSource": "inferred"
         },
         {
-          "name": "pagination",
-          "property": "pagination",
-          "kind": "input",
-          "type": "boolean",
-          "required": false,
-          "defaultValue": "true",
-          "description": "Enables client pagination or supplies the controlled paging configuration.",
-          "descriptionSource": "inferred"
-        },
-        {
           "name": "compact",
           "property": "compact",
           "kind": "input",
@@ -51420,16 +51317,6 @@
           "required": false,
           "defaultValue": "false",
           "description": "Uses the reduced-density presentation intended for constrained data views.",
-          "descriptionSource": "inferred"
-        },
-        {
-          "name": "virtualize",
-          "property": "virtualize",
-          "kind": "input",
-          "type": "boolean",
-          "required": false,
-          "defaultValue": "false",
-          "description": "Enables fixed-height row virtualization for large data collections.",
           "descriptionSource": "inferred"
         },
         {
@@ -51617,9 +51504,7 @@
         "defaultCellTemplate",
         "defaultHeaderTemplate",
         "resizable",
-        "pagination",
         "compact",
-        "virtualize",
         "viewportHeight",
         "pageSize",
         "columnChooser",
@@ -51708,9 +51593,9 @@
             "testValue": true,
             "description": "Paginates the table rows.",
             "binding": {
-              "kind": "input",
-              "publicName": "pagination",
-              "syntax": "property"
+              "kind": "fixture",
+              "target": "interaction",
+              "description": "Composes the discriminated client mode for the specimen."
             }
           },
           {
@@ -51909,19 +51794,6 @@
             "min": -1000,
             "max": 1000,
             "step": 1
-          },
-          {
-            "key": "virtualize",
-            "label": "Virtualize",
-            "kind": "boolean",
-            "defaultValue": false,
-            "testValue": true,
-            "description": "Configures the component virtualize contract.",
-            "binding": {
-              "kind": "input",
-              "publicName": "virtualize",
-              "syntax": "property"
-            }
           }
         ],
         "presets": [
@@ -52181,8 +52053,8 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 32,
-          "controlled": 17,
+          "publicInputsAndModels": 30,
+          "controlled": 15,
           "excluded": 15,
           "unclassified": 0
         },
@@ -52335,7 +52207,7 @@
             "componentId": "data-table",
             "publicName": "mode",
             "kind": "input",
-            "type": "KrnDataGridMode | null",
+            "type": "KrnDataGridMode",
             "code": "complex-data",
             "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
             "evidence": {
@@ -52480,9 +52352,9 @@
           "name": "mode",
           "property": "mode",
           "kind": "input",
-          "type": "KrnDataGridMode | null",
+          "type": "KrnDataGridMode",
           "required": false,
-          "defaultValue": "null",
+          "defaultValue": "{ kind: 'client', pagination: true }",
           "description": "Discriminated operating mode that selects the component data and interaction contract.",
           "descriptionSource": "inferred"
         },
@@ -52637,16 +52509,6 @@
           "descriptionSource": "inferred"
         },
         {
-          "name": "pagination",
-          "property": "pagination",
-          "kind": "input",
-          "type": "boolean",
-          "required": false,
-          "defaultValue": "true",
-          "description": "Enables client pagination or supplies the controlled paging configuration.",
-          "descriptionSource": "inferred"
-        },
-        {
           "name": "compact",
           "property": "compact",
           "kind": "input",
@@ -52654,16 +52516,6 @@
           "required": false,
           "defaultValue": "false",
           "description": "Uses the reduced-density presentation intended for constrained data views.",
-          "descriptionSource": "inferred"
-        },
-        {
-          "name": "virtualize",
-          "property": "virtualize",
-          "kind": "input",
-          "type": "boolean",
-          "required": false,
-          "defaultValue": "false",
-          "description": "Enables fixed-height row virtualization for large data collections.",
           "descriptionSource": "inferred"
         },
         {
@@ -52854,9 +52706,7 @@
         "defaultCellTemplate",
         "defaultHeaderTemplate",
         "resizable",
-        "pagination",
         "compact",
-        "virtualize",
         "viewportHeight",
         "pageSize",
         "columnChooser",
@@ -52968,9 +52818,9 @@
             "testValue": true,
             "description": "Virtualizes rows and turns row expansion off because both modes are incompatible.",
             "binding": {
-              "kind": "input",
-              "publicName": "virtualize",
-              "syntax": "property"
+              "kind": "fixture",
+              "target": "interaction",
+              "description": "Composes virtual or client mode for the specimen."
             }
           },
           {
@@ -53007,9 +52857,9 @@
             "testValue": false,
             "description": "Paginates non-virtual data.",
             "binding": {
-              "kind": "input",
-              "publicName": "pagination",
-              "syntax": "property"
+              "kind": "fixture",
+              "target": "interaction",
+              "description": "Composes the discriminated client mode for the specimen."
             }
           },
           {
@@ -53418,8 +53268,8 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 32,
-          "controlled": 17,
+          "publicInputsAndModels": 30,
+          "controlled": 15,
           "excluded": 15,
           "unclassified": 0
         },
@@ -53572,7 +53422,7 @@
             "componentId": "data-grid",
             "publicName": "mode",
             "kind": "input",
-            "type": "KrnDataGridMode | null",
+            "type": "KrnDataGridMode",
             "code": "complex-data",
             "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
             "evidence": {
@@ -64627,7 +64477,7 @@
       "kind": "function",
       "type": "<T extends object>(description: string, defaults: T) => readonly [InjectionToken<Readonly<T>>, (patch: (() => Partial<T>) | Partial<T>) => FactoryProvider]",
       "deprecated": false,
-      "description": "Creates a hierarchical immutable options contract.\n\nDefaults, inherited provider values, and provider patches must be plain\nrecords at runtime: objects with the ordinary `Object.prototype` (including\ncross-realm objects) or a null prototype. Arrays, functions, class instances,\nand built-in collection or asynchronous objects are rejected rather than\nsilently losing their type. Only enumerable own data properties are accepted;\nnon-enumerable properties and accessors, including symbol properties, are\nrejected without invoking getters.\n\nProviders merge their defined properties over the nearest parent scope.\nComponent instance inputs can then apply their own final overrides without\nmutating the shared provider value.\n\nImmutability is deliberately shallow and top-level: each resolved record is\ncloned and frozen, while nested values retain their original identities and\nmust be treated as immutable by their owners.",
+      "description": "Creates a hierarchical immutable options contract.\n\nDefaults, inherited provider values, and provider patches must be plain\nrecords at runtime: objects with the ordinary `Object.prototype` (including\ncross-realm objects) or a null prototype. Arrays, functions, class instances,\nand built-in collection or asynchronous objects are rejected rather than\nsilently losing their type. Only enumerable own data properties are accepted;\nnon-enumerable properties and accessors, including symbol properties, are\nrejected without invoking getters.\n\nProviders merge their defined properties over the nearest parent scope.\nComponent instance inputs can then apply their own final overrides without\nmutating the shared provider value.\n\nImmutability is deliberately shallow and top-level: each resolved record is\ncloned and frozen, while nested values retain their original identities and\nmust be treated as immutable by their owners.\n\nThis stable foundation is shared by component families that need immutable,\nhierarchically scoped defaults without coupling their public option types.",
       "source": "projects/kern/cdk/src/lib/cdk/options.ts",
       "componentIds": []
     },
@@ -66835,7 +66685,7 @@
       "kind": "class",
       "type": "class KrnEditableComboboxBase",
       "deprecated": false,
-      "description": "Base contract for editable KERN combobox implementations.",
+      "description": "Shared contract for editable KERN combobox variants.",
       "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
       "componentIds": []
     },
@@ -67207,7 +67057,7 @@
       "kind": "class",
       "type": "class KrnMenuButtonBase",
       "deprecated": false,
-      "description": "Public class owned by @kern-ui/angular/kit.",
+      "description": "Shared behavior for menu-button variants.\n\nPrefer `KrnDropdownButton` or `KrnSplitButton` unless a custom menu-button primitive is needed.",
       "source": "projects/kern/kit/src/lib/actions/dropdown-button.ts",
       "componentIds": []
     },
@@ -68359,7 +68209,7 @@
       "kind": "class",
       "type": "class KrnUploadBase",
       "deprecated": false,
-      "description": "Base contract for custom KERN upload controls.",
+      "description": "Shared contract for KERN upload variants.",
       "source": "projects/kern/kit/src/lib/forms/upload-controls.ts",
       "componentIds": []
     },
@@ -68386,18 +68236,6 @@
       "description": "Public class owned by @kern-ui/angular/kit.",
       "source": "projects/kern/kit/src/lib/forms/form-field.ts",
       "componentIds": ["validation-message"]
-    },
-    {
-      "name": "KrnValueAccessor",
-      "aliases": [],
-      "owner": "kit",
-      "importPath": "@kern-ui/angular/kit",
-      "kind": "class",
-      "type": "class KrnValueAccessor",
-      "deprecated": false,
-      "description": "Base ControlValueAccessor and Validator contract for custom KERN form controls.",
-      "source": "projects/kern/kit/src/lib/forms/value-accessor.ts",
-      "componentIds": []
     },
     {
       "name": "provideKrnButtonGroupOptions",
@@ -68445,6 +68283,18 @@
       "deprecated": false,
       "description": "Public constant owned by @kern-ui/angular/kit.",
       "source": "projects/kern/kit/src/lib/actions/floating-action-button-options.ts",
+      "componentIds": []
+    },
+    {
+      "name": "provideKrnFormControl",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "function",
+      "type": "() => Provider[]",
+      "deprecated": false,
+      "description": "Installs the Angular Forms adapter required by Kern's experimental form-control variant bases.\n\nAdd the returned providers to a component that extends `KrnEditableComboboxBase` or\n`KrnUploadBase`. The adapter remains component-scoped and is shared by `NG_VALUE_ACCESSOR` and\n`NG_VALIDATORS` without making the component inherit form-state machinery.",
+      "source": "projects/kern/kit/src/lib/forms/value-accessor.ts",
       "componentIds": []
     },
     {
@@ -68803,7 +68653,7 @@
       "kind": "class",
       "type": "class KrnButtonGroupHarness",
       "deprecated": false,
-      "description": "Harness for the canonical `div[krnButtonGroup]` host and its legacy element alias.\n\nButton Group is a stateless semantic and layout container. Selection belongs\nto Toggle Group or Segmented Control, so this harness intentionally exposes\nno value, pressed, or selection API.",
+      "description": "Harness for the canonical `div[krnButtonGroup]` host.\n\nButton Group is a stateless semantic and layout container. Selection belongs\nto Toggle Group or Segmented Control, so this harness intentionally exposes\nno value, pressed, or selection API.",
       "source": "projects/kern/testing/src/button-group-harness.ts",
       "componentIds": []
     },
@@ -69739,7 +69589,7 @@
       "kind": "class",
       "type": "class KrnToggleGroupHarness",
       "deprecated": false,
-      "description": "Harness for the canonical `div[krnToggleGroup]` toolbar and its legacy element alias.\n\nIt exposes effective pressed values and direct native toggle children without\ncoupling tests to the private item-registration or roving-focus implementation.",
+      "description": "Harness for the canonical `div[krnToggleGroup]` toolbar.\n\nIt exposes effective pressed values and direct native toggle children without\ncoupling tests to the private item-registration or roving-focus implementation.",
       "source": "projects/kern/testing/src/toggle-group-harness.ts",
       "componentIds": []
     },
@@ -70118,21 +69968,21 @@
       "id": "toggle-group-native-host",
       "from": "<krn-toggle-group> and the ariaLabel input",
       "to": "<div krnToggleGroup> and native aria-label or aria-labelledby attributes",
-      "summary": "Move Toggle Group coordination onto the canonical labelled toolbar host. The legacy element and ariaLabel input remain deprecated compatibility bridges; direct native Toggle Button children participate in roving focus and controlled values.",
+      "summary": "Move Toggle Group coordination onto the canonical labelled toolbar host. The legacy element and ariaLabel input were removed before publication; direct native Toggle Button children participate in roving focus and controlled values.",
       "components": ["toggle-group", "toggle-button"],
       "before": "<krn-toggle-group [ariaLabel]=\"formattingLabel\" [(values)]=\"formats\">\n  <button krnToggleButton value=\"bold\">Bold</button>\n  <button krnToggleButton value=\"italic\">Italic</button>\n</krn-toggle-group>",
       "after": "<div krnToggleGroup [attr.aria-label]=\"formattingLabel\" [(values)]=\"formats\">\n  <button krnToggleButton value=\"bold\">Bold</button>\n  <button krnToggleButton value=\"italic\">Italic</button>\n</div>",
-      "automatic": false
+      "automatic": true
     },
     {
       "id": "button-group-native-host",
       "from": "<krn-button-group> and the ariaLabel input",
       "to": "<div krnButtonGroup> and native aria-label or aria-labelledby attributes",
-      "summary": "Move Button Group layout onto the canonical directive host and keep accessible naming on the native element. The legacy element and ariaLabel input remain deprecated compatibility bridges; orientation and connected affect layout only.",
+      "summary": "Move Button Group layout onto the canonical directive host and keep accessible naming on the native element. The legacy element and ariaLabel input were removed before publication; orientation and connected affect layout only.",
       "components": ["button-group"],
       "before": "<krn-button-group [ariaLabel]=\"reviewActionsLabel\">\n  <button krnButton>Request changes</button>\n  <button krnButton>Approve</button>\n</krn-button-group>",
       "after": "<div krnButtonGroup [attr.aria-label]=\"reviewActionsLabel\">\n  <button krnButton type=\"button\">Request changes</button>\n  <button krnButton type=\"button\">Approve</button>\n</div>",
-      "automatic": false
+      "automatic": true
     },
     {
       "id": "copy-button-lightweight-i18n-bridge",
@@ -70158,7 +70008,7 @@
       "id": "data-grid-pagination-mode",
       "from": "KrnDataGrid.pagination",
       "to": "KrnDataGrid.mode",
-      "summary": "Replace the compatibility pagination input with an explicit client-mode object.",
+      "summary": "Replace the removed pagination input with an explicit client-mode object while preserving its static boolean value.",
       "components": ["data-grid", "data-table"],
       "before": "<krn-data-grid [pagination]=\"true\" />",
       "after": "<krn-data-grid [mode]=\"{ kind: 'client', pagination: true }\" />",
@@ -70168,17 +70018,27 @@
       "id": "data-grid-virtual-mode",
       "from": "KrnDataGrid.virtualize",
       "to": "KrnDataGrid.mode",
-      "summary": "Replace the compatibility virtualize input with the discriminated virtual-mode object.",
+      "summary": "Replace the removed virtualize input with virtual mode when enabled or the equivalent client mode when disabled.",
       "components": ["data-grid", "data-table"],
       "before": "<krn-data-grid [virtualize]=\"true\" />",
       "after": "<krn-data-grid [mode]=\"{ kind: 'virtual' }\" />",
       "automatic": true
     },
     {
+      "id": "data-grid-non-null-mode",
+      "from": "KrnDataGrid.mode: KrnDataGridMode | null",
+      "to": "KrnDataGrid.mode: KrnDataGridMode",
+      "summary": "Coalesce nullable mode state to an explicit discriminated mode. The update schematic removes static null/undefined bindings so the default client mode applies and warns for dynamic bindings that need manual review.",
+      "components": ["data-grid", "data-table"],
+      "before": "<krn-data-grid [mode]=\"maybeMode\" />",
+      "after": "<krn-data-grid [mode]=\"maybeMode ?? { kind: 'client', pagination: true }\" />",
+      "automatic": false
+    },
+    {
       "id": "menu-trigger-directive",
       "from": "KrnMenu.hasProjectedTrigger",
       "to": "KrnMenuTrigger",
-      "summary": "Apply the explicit trigger directive to projected menu trigger content.",
+      "summary": "Replace the removed boolean input by applying the explicit trigger directive to projected menu trigger content.",
       "components": ["menu"],
       "before": "<krn-menu [hasProjectedTrigger]=\"true\">...</krn-menu>",
       "after": "<span krnMenuTrigger>Actions</span>",

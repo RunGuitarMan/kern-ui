@@ -47,8 +47,16 @@ describe('KERN agent component contract', () => {
     const buttonGroup = incompleteSelectorDeprecation.components.find(
       (component) => component.id === 'button-group',
     );
-    assert.ok(buttonGroup?.selectorDeprecations.length);
-    delete buttonGroup.selectorDeprecations[0].migration;
+    assert.deepEqual(buttonGroup?.selectorDeprecations, []);
+    buttonGroup.selectorDeprecations.push({
+      id: 'legacy-button-group-selector',
+      selector: 'krn-button-group',
+      status: 'active',
+      introducedIn: '0.1.0',
+      removeIn: '0.2.0',
+      replacement: 'div[krnButtonGroup]',
+      documentation: 'docs/DEPRECATIONS.md#krn-button-group-element-selector',
+    });
     assert.equal(
       validate(incompleteSelectorDeprecation),
       false,

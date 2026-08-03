@@ -87,7 +87,7 @@
       "kind": "input",
       "type": "string",
       "required": false,
-      "defaultValue": "this.translations.forms.selectOption",
+      "defaultValue": "this.#translations.forms.selectOption",
       "description": "Short input hint shown only while no value is present.",
       "descriptionSource": "inferred"
     },
@@ -97,7 +97,7 @@
       "kind": "input",
       "type": "string",
       "required": false,
-      "defaultValue": "this.translations.forms.noOptions",
+      "defaultValue": "this.#translations.forms.noOptions",
       "description": "Visible and announced copy when the data collection has no items.",
       "descriptionSource": "inferred"
     },
@@ -107,7 +107,7 @@
       "kind": "input",
       "type": "string",
       "required": false,
-      "defaultValue": "this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? ''",
+      "defaultValue": "this.#translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? ''",
       "description": "Visible and announced copy while asynchronous data is loading.",
       "descriptionSource": "inferred"
     },
@@ -117,7 +117,7 @@
       "kind": "input",
       "type": "string",
       "required": false,
-      "defaultValue": "this.translations.forms.optionsLoadFailed ??\n      KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??\n      ''",
+      "defaultValue": "this.#translations.forms.optionsLoadFailed ??\n      KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??\n      ''",
       "description": "Visible and announced copy when loading the data collection fails.",
       "descriptionSource": "inferred"
     },

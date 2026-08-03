@@ -53,13 +53,14 @@ const TYPEAHEAD_RESET_DELAY = 500;
 
 type KrnRequestedMenuFocus = 'first' | 'last';
 
-@Directive()
 /**
  * Shared behavior for menu-button variants.
  *
- * @experimental Extension API; prefer `KrnDropdownButton` or `KrnSplitButton`
- * unless a custom menu-button primitive is required.
+ * Prefer `KrnDropdownButton` or `KrnSplitButton` unless a custom menu-button primitive is needed.
+ *
+ * @experimental The required trigger and panel template contract is not stable yet.
  */
+@Directive()
 export abstract class KrnMenuButtonBase {
   private readonly platform = inject(KRN_PLATFORM);
   private readonly overlayCoordinator = inject(KrnOverlayCoordinator);

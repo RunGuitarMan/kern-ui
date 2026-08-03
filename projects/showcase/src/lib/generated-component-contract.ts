@@ -330,14 +330,6 @@ export const KERN_RUNTIME_COMPONENTS = {
     source: 'projects/kern/kit/src/lib/actions/button-group.ts',
     api: [
       {
-        name: 'ariaLabel',
-        property: 'ariaLabel',
-        kind: 'input',
-        type: 'string | null | undefined',
-        required: false,
-        defaultValue: 'undefined',
-      },
-      {
         name: 'connected',
         property: 'connected',
         kind: 'input',
@@ -360,14 +352,6 @@ export const KERN_RUNTIME_COMPONENTS = {
     kind: 'component',
     source: 'projects/kern/kit/src/lib/actions/toggle-group.ts',
     api: [
-      {
-        name: 'ariaLabel',
-        property: 'ariaLabel',
-        kind: 'input',
-        type: 'string | null | undefined',
-        required: false,
-        defaultValue: 'undefined',
-      },
       {
         name: 'disabled',
         property: 'disabled',
@@ -1552,37 +1536,6 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '(count: number) => string',
         required: false,
         defaultValue: 'this.translations.patterns.selectedCount',
-      },
-    ],
-  },
-  'krn-button-group': {
-    className: 'KrnButtonGroup',
-    kind: 'component',
-    source: 'projects/kern/kit/src/lib/actions/button-group.ts',
-    api: [
-      {
-        name: 'ariaLabel',
-        property: 'ariaLabel',
-        kind: 'input',
-        type: 'string | null | undefined',
-        required: false,
-        defaultValue: 'undefined',
-      },
-      {
-        name: 'connected',
-        property: 'connected',
-        kind: 'input',
-        type: 'boolean',
-        required: false,
-        defaultValue: 'this.options.connected',
-      },
-      {
-        name: 'orientation',
-        property: 'orientation',
-        kind: 'input',
-        type: 'KrnOrientation',
-        required: false,
-        defaultValue: 'this.options.orientation',
       },
     ],
   },
@@ -3258,9 +3211,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         name: 'mode',
         property: 'mode',
         kind: 'input',
-        type: 'KrnDataGridMode | null',
+        type: 'KrnDataGridMode',
         required: false,
-        defaultValue: 'null',
+        defaultValue: "{ kind: 'client', pagination: true }",
       },
       {
         name: 'pageSize',
@@ -3269,14 +3222,6 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '10',
-      },
-      {
-        name: 'pagination',
-        property: 'pagination',
-        kind: 'input',
-        type: 'boolean',
-        required: false,
-        defaultValue: 'true',
       },
       {
         name: 'resizable',
@@ -3309,14 +3254,6 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '360',
-      },
-      {
-        name: 'virtualize',
-        property: 'virtualize',
-        kind: 'input',
-        type: 'boolean',
-        required: false,
-        defaultValue: 'false',
       },
       {
         name: 'expanded',
@@ -3529,9 +3466,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         name: 'mode',
         property: 'mode',
         kind: 'input',
-        type: 'KrnDataGridMode | null',
+        type: 'KrnDataGridMode',
         required: false,
-        defaultValue: 'null',
+        defaultValue: "{ kind: 'client', pagination: true }",
       },
       {
         name: 'pageSize',
@@ -3540,14 +3477,6 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '10',
-      },
-      {
-        name: 'pagination',
-        property: 'pagination',
-        kind: 'input',
-        type: 'boolean',
-        required: false,
-        defaultValue: 'true',
       },
       {
         name: 'resizable',
@@ -3580,14 +3509,6 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '360',
-      },
-      {
-        name: 'virtualize',
-        property: 'virtualize',
-        kind: 'input',
-        type: 'boolean',
-        required: false,
-        defaultValue: 'false',
       },
       {
         name: 'expanded',
@@ -5874,14 +5795,6 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'this.translations.navigation.menuEmpty',
-      },
-      {
-        name: 'hasProjectedTrigger',
-        property: 'hasProjectedTrigger',
-        kind: 'input',
-        type: 'boolean',
-        required: false,
-        defaultValue: 'false',
       },
       {
         name: 'items',
@@ -8500,7 +8413,7 @@ export const KERN_RUNTIME_COMPONENTS = {
         kind: 'input',
         type: 'string',
         required: false,
-        defaultValue: 'this.translations.forms.noOptions',
+        defaultValue: 'this.#translations.forms.noOptions',
       },
       {
         name: 'errorText',
@@ -8509,7 +8422,7 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue:
-          "this.translations.forms.optionsLoadFailed ??\n      KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??\n      ''",
+          "this.#translations.forms.optionsLoadFailed ??\n      KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??\n      ''",
       },
       {
         name: 'id',
@@ -8542,7 +8455,7 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue:
-          "this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? ''",
+          "this.#translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? ''",
       },
       {
         name: 'options',
@@ -8574,7 +8487,7 @@ export const KERN_RUNTIME_COMPONENTS = {
         kind: 'input',
         type: 'string',
         required: false,
-        defaultValue: 'this.translations.forms.selectOption',
+        defaultValue: 'this.#translations.forms.selectOption',
       },
       {
         name: 'readonly',
@@ -10468,53 +10381,6 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
-      },
-    ],
-  },
-  'krn-toggle-group': {
-    className: 'KrnToggleGroup',
-    kind: 'component',
-    source: 'projects/kern/kit/src/lib/actions/toggle-group.ts',
-    api: [
-      {
-        name: 'ariaLabel',
-        property: 'ariaLabel',
-        kind: 'input',
-        type: 'string | null | undefined',
-        required: false,
-        defaultValue: 'undefined',
-      },
-      {
-        name: 'disabled',
-        property: 'disabled',
-        kind: 'input',
-        type: 'boolean',
-        required: false,
-        defaultValue: 'false',
-      },
-      {
-        name: 'multiple',
-        property: 'multiple',
-        kind: 'input',
-        type: 'boolean',
-        required: false,
-        defaultValue: 'this.options.multiple',
-      },
-      {
-        name: 'orientation',
-        property: 'orientation',
-        kind: 'input',
-        type: 'KrnOrientation',
-        required: false,
-        defaultValue: 'this.options.orientation',
-      },
-      {
-        name: 'values',
-        property: 'values',
-        kind: 'model',
-        type: 'ReadonlyArray<string>',
-        required: false,
-        defaultValue: '[]',
       },
     ],
   },

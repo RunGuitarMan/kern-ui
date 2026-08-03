@@ -93,8 +93,10 @@ component setup.
 ## State and rendering
 
 Components use `OnPush`, signal inputs/outputs/models, computed state, and effects for controlled
-state or DOM synchronization. Form controls use ControlValueAccessor or typed reactive forms. The
-Angular 22 workspace runs without a `zone.js` dependency, and the library does not require one.
+state or DOM synchronization. Form controls register one internal composable adapter for
+`ControlValueAccessor`, validation, ownership, and Angular state; public components no longer
+inherit that machinery from an exported base class. The Angular 22 workspace runs without a
+`zone.js` dependency, and the library does not require one.
 
 Reusable low-level services reach platform APIs through `KRN_PLATFORM`. The replaceable adapter
 exposes the owning document, time scheduling, storage, animation frames, and safely nullable
@@ -123,14 +125,17 @@ overlay coordinator. The coordinator follows that ownership chain, so only overl
 inside the top modal remain interactive; both pre-existing and late programmatic background panes
 are isolated. It consumes handled Escape events at the top layer and restores pre-existing
 `inert`, `aria-hidden`, scroll, and focus state exactly. One platform `CloseWatcher` follows the
-top closable modal, with an unhandled-Escape fallback where the API is unavailable; global modal
-ownership is released only after exit motion completes.
+top modal; locked modals cancel close requests, while dismissible modals handle them through the
+same coordinator and an Escape fallback where the API is unavailable. Global modal ownership is
+released only after exit motion completes.
 
 `KrnOverlayService` is the Kit-level imperative policy over that CDK infrastructure. Component and
 `TemplateRef` content receive typed data and a `KrnOverlayRef`; the first close source wins, owned
 children settle before their parent, and views/providers are disposed before the replayed outcome
-emits. Server calls render no overlay DOM and settle as `ssr`; declarative surfaces remain the
-contract for server-visible initially open content.
+emits. Overlay chrome inherits caller-scoped translations while its platform and coordinator stay
+bound to the root CDK overlay document; arbitrary content providers remain scoped to content.
+Server calls render no overlay DOM and settle as `ssr`; declarative surfaces remain the contract
+for server-visible initially open content.
 
 ## Styling and theming
 
@@ -160,7 +165,9 @@ though the stylesheet is required.
 
 Theme modes are `light`, `dark`, `system`, and `high-contrast`; density modes are `compact`,
 `comfortable`, and `spacious`. Motion uses semantic duration tokens and the `system`, `reduce`,
-or `full` preference. Locale defaults to Angular's `LOCALE_ID`, while direction defaults to the
+or `full` preference. Document-level runtime and theme state has one injector owner at a time;
+nested owners remain dormant, promote deterministically, and restore prior attributes and inline
+styles on teardown. Locale defaults to Angular's `LOCALE_ID`, while direction defaults to the
 document `dir`. `KRN_TRANSLATIONS` supplies typed English component UI-copy defaults; complete
 schema-checked English and Russian packs can be adapted through `krnLocaleConfig`.
 `provideKrn({ translations })` accepts a typed partial override, and component label inputs remain

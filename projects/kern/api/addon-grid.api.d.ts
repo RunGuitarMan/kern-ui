@@ -126,7 +126,7 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
   readonly data: _angular_core.InputSignal<readonly T[]>;
   readonly columns: _angular_core.InputSignal<readonly KrnDataColumn<T>[]>;
   readonly rowIdentity: _angular_core.InputSignal<(row: T, index: number) => KrnDataRowKey>;
-  readonly mode: _angular_core.InputSignal<KrnDataGridMode | null>;
+  readonly mode: _angular_core.InputSignal<KrnDataGridMode>;
   readonly labels: _angular_core.InputSignal<Partial<KrnDataGridTranslations>>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -146,11 +146,7 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
     KrnDataHeaderContext<T>
   > | null>;
   readonly resizable: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  /** @deprecated Prefer the discriminated `mode` input. */
-  readonly pagination: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly compact: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  /** @deprecated Prefer `{ kind: 'virtual' }` through the `mode` input. */
-  readonly virtualize: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly viewportHeight: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly pageSize: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly columnChooser: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -321,9 +317,7 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
       defaultCellTemplate: { alias: 'defaultCellTemplate'; required: false; isSignal: true };
       defaultHeaderTemplate: { alias: 'defaultHeaderTemplate'; required: false; isSignal: true };
       resizable: { alias: 'resizable'; required: false; isSignal: true };
-      pagination: { alias: 'pagination'; required: false; isSignal: true };
       compact: { alias: 'compact'; required: false; isSignal: true };
-      virtualize: { alias: 'virtualize'; required: false; isSignal: true };
       viewportHeight: { alias: 'viewportHeight'; required: false; isSignal: true };
       pageSize: { alias: 'pageSize'; required: false; isSignal: true };
       columnChooser: { alias: 'columnChooser'; required: false; isSignal: true };

@@ -125,8 +125,8 @@ function mergeAndFreeze<T extends object>(base: object, patch?: object): Readonl
  * cloned and frozen, while nested values retain their original identities and
  * must be treated as immutable by their owners.
  *
- * @experimental This foundation remains experimental until it has been proven
- * across multiple component families and their SSR and override contracts.
+ * This stable foundation is shared by component families that need immutable,
+ * hierarchically scoped defaults without coupling their public option types.
  */
 export function createKrnOptions<T extends object>(
   description: string,

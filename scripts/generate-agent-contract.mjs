@@ -593,8 +593,6 @@ function inferDescription(name, kind) {
     gap: 'Logical spacing inserted between adjacent layout children.',
     gutter: 'Outer or inter-column spacing applied by the layout.',
     gutters: 'Enables the container-owned logical inline page gutters.',
-    hasProjectedTrigger:
-      'Legacy signal indicating that trigger content is projected by the consumer.',
     height: 'Explicit block size of the rendered surface or virtual viewport.',
     high: 'Threshold above which a meter value is considered high.',
     hint: 'Supporting guidance displayed with a form control or product action.',
@@ -810,18 +808,41 @@ function formValueType(checker, declaration, stack = new Set()) {
   const key = `${declaration.getSourceFile().fileName}:${declaration.pos}`;
   if (stack.has(key)) return null;
   const nextStack = new Set(stack).add(key);
+
+  for (const member of declaration.members) {
+    const initializer = ts.isPropertyDeclaration(member) ? member.initializer : undefined;
+    if (
+      !initializer ||
+      !ts.isCallExpression(initializer) ||
+      !ts.isIdentifier(initializer.expression) ||
+      initializer.expression.text !== 'useKrnFormControl'
+    ) {
+      continue;
+    }
+
+    const explicitValueType = initializer.typeArguments?.[0];
+    if (explicitValueType) {
+      return stableTypeText(checker, checker.getTypeFromTypeNode(explicitValueType), declaration);
+    }
+
+    const returnType = checker.getTypeAtLocation(initializer);
+    const typeArguments = returnType.aliasTypeArguments?.length
+      ? returnType.aliasTypeArguments
+      : returnType.objectFlags & ts.ObjectFlags.Reference
+        ? checker.getTypeArguments(returnType)
+        : [];
+    if (typeArguments[0]) {
+      return stableTypeText(checker, typeArguments[0], declaration);
+    }
+
+    return 'unknown';
+  }
+
   const clause = declaration.heritageClauses?.find(
     (candidate) => candidate.token === ts.SyntaxKind.ExtendsKeyword,
   );
   const typeNode = clause?.types[0];
   if (!typeNode) return null;
-  const baseName = typeNode.expression.getText(declaration.getSourceFile()).split('.').at(-1);
-  if (baseName === 'KrnValueAccessor') {
-    const valueType = typeNode.typeArguments?.[0];
-    return valueType
-      ? stableTypeText(checker, checker.getTypeFromTypeNode(valueType), declaration)
-      : 'unknown';
-  }
   const base = baseClassDeclaration(checker, declaration);
   return base ? formValueType(checker, base, nextStack) : null;
 }

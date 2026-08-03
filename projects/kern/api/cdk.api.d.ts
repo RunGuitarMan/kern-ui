@@ -65,8 +65,8 @@ declare function isKrnComponentContent<TComponent extends object>(
  * cloned and frozen, while nested values retain their original identities and
  * must be treated as immutable by their owners.
  *
- * @experimental This foundation remains experimental until it has been proven
- * across multiple component families and their SSR and override contracts.
+ * This stable foundation is shared by component families that need immutable,
+ * hierarchically scoped defaults without coupling their public option types.
  */
 declare function createKrnOptions<T extends object>(
   description: string,
@@ -92,8 +92,8 @@ declare const KRN_CLIPBOARD_WRITER: InjectionToken<KrnClipboardWriter>;
 type KrnScheduledHandle = ReturnType<typeof globalThis.setTimeout>;
 /** Minimal browser CloseWatcher surface used without depending on lib.dom support. */
 interface KrnCloseWatcher {
-  addEventListener(type: 'close', listener: EventListener): void;
-  removeEventListener(type: 'close', listener: EventListener): void;
+  addEventListener(type: 'cancel' | 'close', listener: EventListener): void;
+  removeEventListener(type: 'cancel' | 'close', listener: EventListener): void;
   destroy(): void;
 }
 type KrnCloseWatcherFactory = () => KrnCloseWatcher | null;
@@ -161,7 +161,8 @@ declare class KrnOverlayCoordinator {
   private closeBindingId;
   private closeBindingRequest;
   private closeWatcher;
-  private closeWatcherListener;
+  private closeWatcherCancelListener;
+  private closeWatcherCloseListener;
   private fallbackEscapeListener;
   private previousOverflow;
   private recentPointerOrigin;

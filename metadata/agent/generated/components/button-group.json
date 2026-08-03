@@ -4,19 +4,8 @@
   "category": "Actions",
   "kind": "component",
   "selector": "div[krnButtonGroup]",
-  "selectors": ["div[krnButtonGroup]", "krn-button-group"],
-  "selectorDeprecations": [
-    {
-      "id": "krn-button-group-element-selector",
-      "selector": "krn-button-group",
-      "status": "active",
-      "introducedIn": "0.1.0",
-      "removeIn": "0.2.0",
-      "replacement": "div[krnButtonGroup]",
-      "migration": "Replace <krn-button-group> with <div krnButtonGroup> and replace its closing tag with </div>; keep each child action and its native semantics unchanged.",
-      "documentation": "docs/DEPRECATIONS.md#krn-button-group-element-selector"
-    }
-  ],
+  "selectors": ["div[krnButtonGroup]"],
+  "selectorDeprecations": [],
   "symbol": "KrnButtonGroup",
   "canonicalSymbol": "KrnButtonGroup",
   "canonicalId": "button-group",
@@ -24,7 +13,7 @@
   "importPath": "@kern-ui/angular/kit",
   "aliases": {
     "symbols": [],
-    "selectors": ["krn-button-group"],
+    "selectors": [],
     "componentIds": []
   },
   "summary": "Button Group. Labels and arranges independent native actions without owning their focus, activation, disabled, loading, or selection state.",
@@ -76,16 +65,6 @@
       "required": false,
       "defaultValue": "this.options.connected",
       "description": "Joins adjacent action borders and radii without coordinating child state or activation.",
-      "descriptionSource": "source"
-    },
-    {
-      "name": "ariaLabel",
-      "property": "ariaLabel",
-      "kind": "input",
-      "type": "string | null | undefined",
-      "required": false,
-      "defaultValue": "undefined",
-      "description": "Deprecated compatibility bridge for a native accessible-name attribute.",
       "descriptionSource": "source"
     }
   ],
@@ -160,8 +139,7 @@
     "connected layout",
     "scoped layout defaults",
     "orientation",
-    "connected",
-    "ariaLabel"
+    "connected"
   ],
   "guidance": {
     "useWhen": "Use <div krnButtonGroup aria-label=\"Review actions\"> for a small set of related, independent native actions.",
@@ -315,24 +293,11 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 3,
+      "publicInputsAndModels": 2,
       "controlled": 2,
-      "excluded": 1,
+      "excluded": 0,
       "unclassified": 0
     },
-    "exclusions": [
-      {
-        "componentId": "button-group",
-        "publicName": "ariaLabel",
-        "kind": "input",
-        "type": "string | null | undefined",
-        "code": "accessibility-copy",
-        "reason": "Deprecated compatibility input; the canonical div[krnButtonGroup] host uses native aria-label or aria-labelledby.",
-        "evidence": {
-          "category": "a11y-test",
-          "pointer": "tests/a11y/accessibility.spec.ts#button-group"
-        }
-      }
-    ]
+    "exclusions": []
   }
 }

@@ -311,13 +311,6 @@
     },
     {
       "entrypoint": "./cdk",
-      "status": "experimental",
-      "owner": "kern/cdk",
-      "rationale": "Hierarchical component options are newly introduced and remain experimental until multiple component families prove their scoped override, SSR, and compatibility contracts.",
-      "symbols": ["createKrnOptions"]
-    },
-    {
-      "entrypoint": "./cdk",
       "status": "beta",
       "owner": "kern/cdk",
       "rationale": "Status follows the beta modal lifecycle and programmatic overlay contract.",
@@ -328,6 +321,7 @@
       "status": "stable",
       "owner": "kern/cdk",
       "symbols": [
+        "createKrnOptions",
         "isKrnComponentContent",
         "isKrnTemplateContent",
         "KRN_CLIPBOARD_WRITER",
@@ -514,7 +508,7 @@
         "KrnResizablePanels",
         "KrnResizeHandle",
         "KrnUploadBase",
-        "KrnValueAccessor"
+        "provideKrnFormControl"
       ]
     },
     {

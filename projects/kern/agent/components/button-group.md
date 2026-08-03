@@ -48,15 +48,14 @@ void bootstrapApplication(KernButtonGroupAgentExample);
 
 ## API
 
-| Name          | Kind  | Type                          | Required | Default                    | Description                                                                              |
-| ------------- | ----- | ----------------------------- | -------- | -------------------------- | ---------------------------------------------------------------------------------------- |
-| `orientation` | input | `KrnOrientation`              | no       | `this.options.orientation` | Changes the visual layout axis without altering native document-order keyboard behavior. |
-| `connected`   | input | `boolean`                     | no       | `this.options.connected`   | Joins adjacent action borders and radii without coordinating child state or activation.  |
-| `ariaLabel`   | input | `string \| null \| undefined` | no       | `undefined`                | Deprecated compatibility bridge for a native accessible-name attribute.                  |
+| Name          | Kind  | Type             | Required | Default                    | Description                                                                              |
+| ------------- | ----- | ---------------- | -------- | -------------------------- | ---------------------------------------------------------------------------------------- |
+| `orientation` | input | `KrnOrientation` | no       | `this.options.orientation` | Changes the visual layout axis without altering native document-order keyboard behavior. |
+| `connected`   | input | `boolean`        | no       | `this.options.connected`   | Joins adjacent action borders and radii without coordinating child state or activation.  |
 
 ## Deprecated selectors
 
-- `krn-button-group` — remove in `0.2.0`; replace with `div[krnButtonGroup]`. Replace <krn-button-group> with <div krnButtonGroup> and replace its closing tag with </div>; keep each child action and its native semantics unchanged. Documentation: `docs/DEPRECATIONS.md#krn-button-group-element-selector`.
+_No deprecated selectors._
 
 ## Content slots
 
@@ -102,8 +101,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/button-group`
 
 Scenarios: `default`.
-Public API coverage: 2/3
-directly controlled; 1 exact exclusions; 0 unclassified.
+Public API coverage: 2/2
+directly controlled; 0 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -116,9 +115,7 @@ component inputs or models.
 
 Exact API exclusions:
 
-| Public API  | Category           | Evidence                                                  | Reason                                                                                                            |
-| ----------- | ------------------ | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#button-group` | Deprecated compatibility input; the canonical div[krnButtonGroup] host uses native aria-label or aria-labelledby. |
+_No excluded public API members._
 
 Presets:
 

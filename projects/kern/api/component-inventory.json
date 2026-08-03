@@ -14,7 +14,7 @@
     "projects/showcase/src/lib/catalog.ts"
   ],
   "summary": {
-    "selectorCount": 151,
+    "selectorCount": 149,
     "implementationCount": 138,
     "componentCount": 133,
     "directiveCount": 5,
@@ -24,7 +24,7 @@
     "publicReviewUnitCount": 135,
     "supportingReviewUnitCount": 9,
     "internalImplementationCount": 3,
-    "selectorAliasCount": 13
+    "selectorAliasCount": 11
   },
   "units": [
     {
@@ -175,19 +175,8 @@
       "canonicalPublicSymbol": "KrnButtonGroup",
       "canonicalSelector": "div[krnButtonGroup]",
       "publicSymbols": ["KrnButtonGroup"],
-      "selectors": ["div[krnButtonGroup]", "krn-button-group"],
-      "selectorDeprecations": [
-        {
-          "id": "krn-button-group-element-selector",
-          "selector": "krn-button-group",
-          "status": "active",
-          "introducedIn": "0.1.0",
-          "removeIn": "0.2.0",
-          "replacement": "div[krnButtonGroup]",
-          "migration": "Replace <krn-button-group> with <div krnButtonGroup> and replace its closing tag with </div>; keep each child action and its native semantics unchanged.",
-          "documentation": "docs/DEPRECATIONS.md#krn-button-group-element-selector"
-        }
-      ],
+      "selectors": ["div[krnButtonGroup]"],
+      "selectorDeprecations": [],
       "catalog": [
         {
           "id": "button-group",
@@ -202,7 +191,7 @@
       ],
       "aliases": {
         "symbols": [],
-        "selectors": ["krn-button-group"],
+        "selectors": [],
         "catalogIds": []
       }
     },
@@ -338,19 +327,8 @@
       "canonicalPublicSymbol": "KrnToggleGroup",
       "canonicalSelector": "div[krnToggleGroup]",
       "publicSymbols": ["KrnToggleGroup"],
-      "selectors": ["div[krnToggleGroup]", "krn-toggle-group"],
-      "selectorDeprecations": [
-        {
-          "id": "krn-toggle-group-element-selector",
-          "selector": "krn-toggle-group",
-          "status": "active",
-          "introducedIn": "0.1.0",
-          "removeIn": "0.2.0",
-          "replacement": "div[krnToggleGroup]",
-          "migration": "Replace <krn-toggle-group> with <div krnToggleGroup> and replace its closing tag with </div>; keep direct native Toggle Button children and stable values unchanged.",
-          "documentation": "docs/DEPRECATIONS.md#krn-toggle-group-element-selector"
-        }
-      ],
+      "selectors": ["div[krnToggleGroup]"],
+      "selectorDeprecations": [],
       "catalog": [
         {
           "id": "toggle-group",
@@ -365,7 +343,7 @@
       ],
       "aliases": {
         "symbols": [],
-        "selectors": ["krn-toggle-group"],
+        "selectors": [],
         "catalogIds": []
       }
     },

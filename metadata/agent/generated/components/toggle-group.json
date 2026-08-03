@@ -4,19 +4,8 @@
   "category": "Actions",
   "kind": "component",
   "selector": "div[krnToggleGroup]",
-  "selectors": ["div[krnToggleGroup]", "krn-toggle-group"],
-  "selectorDeprecations": [
-    {
-      "id": "krn-toggle-group-element-selector",
-      "selector": "krn-toggle-group",
-      "status": "active",
-      "introducedIn": "0.1.0",
-      "removeIn": "0.2.0",
-      "replacement": "div[krnToggleGroup]",
-      "migration": "Replace <krn-toggle-group> with <div krnToggleGroup> and replace its closing tag with </div>; keep direct native Toggle Button children and stable values unchanged.",
-      "documentation": "docs/DEPRECATIONS.md#krn-toggle-group-element-selector"
-    }
-  ],
+  "selectors": ["div[krnToggleGroup]"],
+  "selectorDeprecations": [],
   "symbol": "KrnToggleGroup",
   "canonicalSymbol": "KrnToggleGroup",
   "canonicalId": "toggle-group",
@@ -24,7 +13,7 @@
   "importPath": "@kern-ui/angular/kit",
   "aliases": {
     "symbols": [],
-    "selectors": ["krn-toggle-group"],
+    "selectors": [],
     "componentIds": []
   },
   "summary": "Toggle Group. Coordinates stable pressed values across native toggle buttons in a labelled, orientation-aware action toolbar.",
@@ -101,16 +90,6 @@
       "required": false,
       "defaultValue": "[]",
       "description": "Controlled stable string values; user transitions always emit a fresh frozen array.",
-      "descriptionSource": "source"
-    },
-    {
-      "name": "ariaLabel",
-      "property": "ariaLabel",
-      "kind": "input",
-      "type": "string | null | undefined",
-      "required": false,
-      "defaultValue": "undefined",
-      "description": "Deprecated compatibility bridge for native accessible-name attributes.",
       "descriptionSource": "source"
     }
   ],
@@ -190,8 +169,7 @@
     "orientation",
     "multiple",
     "disabled",
-    "values",
-    "ariaLabel"
+    "values"
   ],
   "guidance": {
     "useWhen": "Use <div krnToggleGroup aria-label=\"Formatting\"> with direct native Toggle Button children and stable unique values.",
@@ -404,24 +382,12 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 5,
+      "publicInputsAndModels": 4,
       "controlled": 3,
-      "excluded": 2,
+      "excluded": 1,
       "unclassified": 0
     },
     "exclusions": [
-      {
-        "componentId": "toggle-group",
-        "publicName": "ariaLabel",
-        "kind": "input",
-        "type": "string | null | undefined",
-        "code": "accessibility-copy",
-        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
-        "evidence": {
-          "category": "a11y-test",
-          "pointer": "tests/a11y/accessibility.spec.ts#toggle-group"
-        }
-      },
       {
         "componentId": "toggle-group",
         "publicName": "values",

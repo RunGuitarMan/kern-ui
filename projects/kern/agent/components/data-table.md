@@ -90,7 +90,7 @@ void bootstrapApplication(KernDataTableAgentExample);
 | `data`                  | input  | `ReadonlyArray<T>`                             | yes      | `required`                                     | Immutable data supplied by the consumer.                                               |
 | `columns`               | input  | `ReadonlyArray<KrnDataColumn<T>>`              | yes      | `required`                                     | Typed column definitions with stable keys.                                             |
 | `rowIdentity`           | input  | `(row: T, index: number) => KrnDataRowKey`     | yes      | `required`                                     | Returns a stable unique key for every source row occurrence.                           |
-| `mode`                  | input  | `KrnDataGridMode \| null`                      | no       | `null`                                         | Discriminated operating mode that selects the component data and interaction contract. |
+| `mode`                  | input  | `KrnDataGridMode`                              | no       | `{ kind: 'client', pagination: true }`         | Discriminated operating mode that selects the component data and interaction contract. |
 | `labels`                | input  | `Partial<KrnDataGridTranslations>`             | no       | `{}`                                           | Localized copy overrides for the component-owned interface text.                       |
 | `ariaLabel`             | input  | `string`                                       | no       | `this.translations.dataGrid.ariaLabel`         | Accessible name used when visible content is not sufficient.                           |
 | `loading`               | input  | `boolean`                                      | no       | `false`                                        | Prevents duplicate actions and exposes accessible busy state.                          |
@@ -106,9 +106,7 @@ void bootstrapApplication(KernDataTableAgentExample);
 | `defaultCellTemplate`   | input  | `TemplateRef<KrnDataCellContext<T>> \| null`   | no       | `null`                                         | Template or projected content used to render default cell.                             |
 | `defaultHeaderTemplate` | input  | `TemplateRef<KrnDataHeaderContext<T>> \| null` | no       | `null`                                         | Template or projected content used to render default header.                           |
 | `resizable`             | input  | `boolean`                                      | no       | `true`                                         | Enables pointer and keyboard resizing for supported columns or panels.                 |
-| `pagination`            | input  | `boolean`                                      | no       | `true`                                         | Enables client pagination or supplies the controlled paging configuration.             |
 | `compact`               | input  | `boolean`                                      | no       | `false`                                        | Uses the reduced-density presentation intended for constrained data views.             |
-| `virtualize`            | input  | `boolean`                                      | no       | `false`                                        | Enables fixed-height row virtualization for large data collections.                    |
 | `viewportHeight`        | input  | `number`                                       | no       | `360`                                          | Measured virtual viewport height used to determine visible rows.                       |
 | `pageSize`              | input  | `number`                                       | no       | `10`                                           | Maximum number of records requested or displayed on one page.                          |
 | `columnChooser`         | input  | `boolean`                                      | no       | `false`                                        | Enables the grid-owned control for changing visible columns.                           |
@@ -184,7 +182,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/data-table`
 
 Scenarios: `default`, `states`, `stress`.
-Public API coverage: 17/32
+Public API coverage: 15/30
 directly controlled; 15 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -195,7 +193,7 @@ component inputs or models.
 | ------------------- | ------- | ---------------- | ---------------------------- | ------------------------------------ | ---------------------------------------------------------------- |
 | `dataState`         | select  | `"ready"`        | `"empty"`                    | fixture data                         | Shows ready, empty, or large datasets.                           |
 | `resizable`         | boolean | `false`          | `true`                       | input `resizable` (property)         | Allows pointer and keyboard column resizing.                     |
-| `pagination`        | boolean | `false`          | `true`                       | input `pagination` (property)        | Paginates the table rows.                                        |
+| `pagination`        | boolean | `false`          | `true`                       | fixture interaction                  | Paginates the table rows.                                        |
 | `compact`           | boolean | `false`          | `true`                       | input `compact` (property)           | Uses the compact row treatment.                                  |
 | `pageSize`          | number  | `4`              | `5`                          | input `pageSize` (property)          | Sets rows per page.                                              |
 | `filter`            | text    | `""`             | `"Alternate value"`          | model `filter`                       | Changes the active row filter.                                   |
@@ -210,7 +208,6 @@ component inputs or models.
 | `loading`           | boolean | `false`          | `true`                       | input `loading` (property)           | Prevents duplicate actions and exposes an accessible busy state. |
 | `selectable`        | boolean | `false`          | `true`                       | input `selectable` (property)        | Configures the component selectable contract.                    |
 | `viewportHeight`    | number  | `360`            | `361`                        | input `viewportHeight` (property)    | Configures the component viewportHeight contract.                |
-| `virtualize`        | boolean | `false`          | `true`                       | input `virtualize` (property)        | Configures the component virtualize contract.                    |
 
 Exact API exclusions:
 

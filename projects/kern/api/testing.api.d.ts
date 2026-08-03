@@ -157,7 +157,7 @@ interface KrnButtonGroupHarnessFilters extends BaseHarnessFilters {
   readonly connected?: boolean;
 }
 /**
- * Harness for the canonical `div[krnButtonGroup]` host and its legacy element alias.
+ * Harness for the canonical `div[krnButtonGroup]` host.
  *
  * Button Group is a stateless semantic and layout container. Selection belongs
  * to Toggle Group or Segmented Control, so this harness intentionally exposes
@@ -166,7 +166,7 @@ interface KrnButtonGroupHarnessFilters extends BaseHarnessFilters {
  * @publicApi
  */
 declare class KrnButtonGroupHarness extends ComponentHarness {
-  static readonly hostSelector = 'div[krnButtonGroup], krn-button-group';
+  static readonly hostSelector = 'div[krnButtonGroup]';
   static with(options?: KrnButtonGroupHarnessFilters): HarnessPredicate<KrnButtonGroupHarness>;
   getAriaLabel(): Promise<string | null>;
   getAriaLabelledBy(): Promise<string | null>;
@@ -1139,7 +1139,7 @@ interface KrnToggleGroupHarnessFilters extends BaseHarnessFilters {
   readonly disabled?: boolean;
 }
 /**
- * Harness for the canonical `div[krnToggleGroup]` toolbar and its legacy element alias.
+ * Harness for the canonical `div[krnToggleGroup]` toolbar.
  *
  * It exposes effective pressed values and direct native toggle children without
  * coupling tests to the private item-registration or roving-focus implementation.
@@ -1147,7 +1147,7 @@ interface KrnToggleGroupHarnessFilters extends BaseHarnessFilters {
  * @publicApi
  */
 declare class KrnToggleGroupHarness extends ComponentHarness {
-  static readonly hostSelector = 'div[krnToggleGroup], krn-toggle-group';
+  static readonly hostSelector = 'div[krnToggleGroup]';
   static with(options?: KrnToggleGroupHarnessFilters): HarnessPredicate<KrnToggleGroupHarness>;
   getAriaLabel(): Promise<string | null>;
   getAriaLabelledBy(): Promise<string | null>;

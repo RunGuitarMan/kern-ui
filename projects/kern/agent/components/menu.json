@@ -116,16 +116,6 @@
       "descriptionSource": "inferred"
     },
     {
-      "name": "hasProjectedTrigger",
-      "property": "hasProjectedTrigger",
-      "kind": "input",
-      "type": "boolean",
-      "required": false,
-      "defaultValue": "false",
-      "description": "Legacy signal indicating that trigger content is projected by the consumer.",
-      "descriptionSource": "inferred"
-    },
-    {
       "name": "itemSelected",
       "property": "itemSelected",
       "kind": "output",
@@ -209,7 +199,6 @@
     "triggerAriaLabel",
     "menuAriaLabel",
     "emptyLabel",
-    "hasProjectedTrigger",
     "itemSelected",
     "closed"
   ],
@@ -250,19 +239,6 @@
         "binding": {
           "kind": "model",
           "publicName": "open"
-        }
-      },
-      {
-        "key": "hasProjectedTrigger",
-        "label": "Has Projected Trigger",
-        "kind": "boolean",
-        "defaultValue": false,
-        "testValue": true,
-        "description": "Configures the component hasProjectedTrigger contract.",
-        "binding": {
-          "kind": "input",
-          "publicName": "hasProjectedTrigger",
-          "syntax": "property"
         }
       }
     ],
@@ -437,8 +413,8 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 7,
-      "controlled": 2,
+      "publicInputsAndModels": 6,
+      "controlled": 1,
       "excluded": 5,
       "unclassified": 0
     },

@@ -1153,10 +1153,10 @@ declare class KrnThemeService {
   private readonly systemDark;
   private readonly forcedContrast;
   private readonly initialized;
-  private readonly managedBrandProperties;
   private readonly themeState;
   private readonly densityState;
   private readonly brandColorState;
+  private documentOwnership;
   readonly theme: _angular_core.Signal<KrnTheme>;
   readonly density: _angular_core.Signal<KrnDensity>;
   readonly brandColor: _angular_core.Signal<string | null>;
