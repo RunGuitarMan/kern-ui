@@ -1,5 +1,6 @@
 import type { EnvironmentProviders, Provider } from '@angular/core';
 import {
+  DestroyRef,
   inject,
   Injectable,
   InjectionToken,
@@ -14,6 +15,11 @@ import type { KrnOverlayHostResolver, KrnPlatformAdapter } from '@kern-ui/angula
 import type { KrnDensity, KrnTheme } from '../foundations/tokens';
 import { createKrnTranslations, KRN_TRANSLATIONS } from './i18n';
 import type { KrnTranslationsPatch } from './i18n';
+import {
+  captureKrnElementState,
+  ownKrnDocumentState,
+  restoreKrnElementState,
+} from './document-state-ownership';
 import { provideKrnTheme } from './theme';
 import { provideKrnTranslationBridge } from './translation-bridge';
 
@@ -36,6 +42,7 @@ export interface KrnConfig {
 }
 
 const EMPTY_CONFIG: Readonly<KrnConfig> = Object.freeze({});
+const KRN_RUNTIME_DOCUMENT_STATE = Symbol('KRN_RUNTIME_DOCUMENT_STATE');
 
 export const KRN_CONFIG = new InjectionToken<Readonly<KrnConfig>>('KRN_CONFIG', {
   providedIn: 'root',
@@ -122,6 +129,7 @@ class KrnOverlayContainer extends OverlayContainer {
 class KrnRuntimeConfigService {
   private readonly config = inject(KRN_CONFIG);
   private readonly platform = inject(KRN_PLATFORM);
+  private readonly destroyRef = inject(DestroyRef);
   private initialized = false;
 
   initialize(): void {
@@ -135,15 +143,29 @@ class KrnRuntimeConfigService {
       return;
     }
 
-    if (this.config.locale !== undefined) {
-      root.setAttribute('lang', this.config.locale);
-    }
-    if (this.config.direction !== undefined) {
-      root.setAttribute('dir', this.config.direction);
-    }
-    if (this.config.motion !== undefined) {
-      root.setAttribute('data-krn-motion', this.config.motion);
-    }
+    const attributes = [
+      ...(this.config.locale === undefined ? [] : [['lang', this.config.locale] as const]),
+      ...(this.config.direction === undefined ? [] : [['dir', this.config.direction] as const]),
+      ...(this.config.motion === undefined
+        ? []
+        : [['data-krn-motion', this.config.motion] as const]),
+    ];
+    if (!attributes.length) return;
+
+    ownKrnDocumentState(
+      root,
+      KRN_RUNTIME_DOCUMENT_STATE,
+      this.destroyRef,
+      () =>
+        captureKrnElementState(
+          root,
+          attributes.map(([name]) => name),
+        ),
+      () => {
+        for (const [name, value] of attributes) root.setAttribute(name, value);
+      },
+      (snapshot) => restoreKrnElementState(root, snapshot),
+    );
   }
 }
 

@@ -23,6 +23,11 @@ import {
   krnBrandPaletteVariables,
 } from '../foundations/brand-color';
 import type { KrnDensity, KrnResolvedTheme, KrnTheme } from '../foundations/tokens';
+import {
+  captureKrnElementState,
+  ownKrnDocumentState,
+  restoreKrnElementState,
+} from './document-state-ownership';
 
 export interface KrnThemeConfig {
   readonly theme?: KrnTheme;
@@ -46,6 +51,16 @@ interface PersistedThemeState {
 const THEMES = new Set<KrnTheme>(['light', 'dark', 'system', 'high-contrast']);
 const DENSITIES = new Set<KrnDensity>(['compact', 'comfortable', 'spacious']);
 const DEFAULT_PREFERENCE_STORAGE_KEY = 'krn.preferences';
+const KRN_THEME_DOCUMENT_STATE = Symbol('KRN_THEME_DOCUMENT_STATE');
+const THEME_DOCUMENT_ATTRIBUTES = [
+  'data-krn-theme-mode',
+  'data-krn-theme',
+  'data-krn-density',
+] as const;
+const THEME_DOCUMENT_STYLES = [
+  'color-scheme',
+  ...KRN_BRAND_STEPS.map((step) => `--krn-color-brand-${step}`),
+] as const;
 
 function validBrandColor(value: unknown): value is string | null {
   return value === null || (typeof value === 'string' && generateKrnBrandPalette(value) !== null);
@@ -176,12 +191,12 @@ export class KrnThemeService {
   private readonly systemDark = signal(false);
   private readonly forcedContrast = signal(false);
   private readonly initialized = signal(false);
-  private readonly managedBrandProperties = new Set<string>();
   private readonly themeState = signal<KrnTheme>(this.config.theme ?? 'system');
   private readonly densityState = signal<KrnDensity>(this.config.density ?? 'comfortable');
   private readonly brandColorState = signal<string | null>(
     validBrandColor(this.config.brandColor) ? this.config.brandColor : null,
   );
+  private documentOwnership: ReturnType<typeof ownKrnDocumentState> | null = null;
 
   readonly theme = this.themeState.asReadonly();
   readonly density = this.densityState.asReadonly();
@@ -202,19 +217,11 @@ export class KrnThemeService {
 
   constructor() {
     effect(() => {
-      const theme = this.themeState();
-      const resolvedTheme = this.resolvedTheme();
-      const density = this.densityState();
-      const brandColor = this.brandColorState();
-      const root = this.document.documentElement;
-
-      if (root) {
-        this.applyToElement(root, theme, resolvedTheme, density, brandColor);
-      }
-
-      if (this.browser && this.initialized() && this.config.persist !== false) {
-        this.persist({ theme, density, brandColor });
-      }
+      this.themeState();
+      this.resolvedTheme();
+      this.densityState();
+      this.brandColorState();
+      this.documentOwnership?.refresh();
     });
   }
 
@@ -248,6 +255,26 @@ export class KrnThemeService {
     }
 
     this.initialized.set(true);
+    const root = this.document.documentElement;
+    if (root) {
+      this.documentOwnership = ownKrnDocumentState(
+        root,
+        KRN_THEME_DOCUMENT_STATE,
+        this.destroyRef,
+        () => captureKrnElementState(root, THEME_DOCUMENT_ATTRIBUTES, THEME_DOCUMENT_STYLES),
+        () => {
+          const theme = this.themeState();
+          const resolvedTheme = this.resolvedTheme();
+          const density = this.densityState();
+          const brandColor = this.brandColorState();
+          this.applyToElement(root, theme, resolvedTheme, density, brandColor);
+          if (this.browser && this.config.persist !== false) {
+            this.persist({ theme, density, brandColor });
+          }
+        },
+        (snapshot) => restoreKrnElementState(root, snapshot),
+      );
+    }
   }
 
   setTheme(theme: KrnTheme): void {
@@ -276,7 +303,7 @@ export class KrnThemeService {
     this.brandColorState.set(
       validBrandColor(this.config.brandColor) ? this.config.brandColor : null,
     );
-    if (this.browser) {
+    if (this.browser && this.documentOwnership?.isActive()) {
       this.safeStorage()?.removeItem(this.storageKey);
     }
   }
@@ -313,16 +340,14 @@ export class KrnThemeService {
     element.setAttribute('data-krn-density', density);
     element.style.colorScheme = resolved === 'high-contrast' ? 'light dark' : resolved;
 
-    for (const property of this.managedBrandProperties) {
-      element.style.removeProperty(property);
+    for (const step of KRN_BRAND_STEPS) {
+      element.style.removeProperty(`--krn-color-brand-${step}`);
     }
-    this.managedBrandProperties.clear();
 
     const palette = brandColor ? generateKrnBrandPalette(brandColor) : null;
     if (palette) {
       for (const [property, value] of Object.entries(krnBrandPaletteVariables(palette))) {
         element.style.setProperty(property, value);
-        this.managedBrandProperties.add(property);
       }
     }
   }

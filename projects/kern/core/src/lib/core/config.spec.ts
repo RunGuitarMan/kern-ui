@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { createEnvironmentInjector, EnvironmentInjector } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { KRN_OVERLAY_HOST, KRN_PLATFORM } from '@kern-ui/angular/cdk';
@@ -13,12 +14,12 @@ describe('provideKrn', () => {
 
   afterEach(() => {
     const document = TestBed.inject(DOCUMENT);
+    TestBed.resetTestingModule();
     for (const attribute of rootAttributes) {
       document.documentElement.removeAttribute(attribute);
     }
     document.documentElement.removeAttribute('style');
     document.querySelector('[data-config-spec-overlay]')?.remove();
-    TestBed.resetTestingModule();
   });
 
   it('registers one immutable runtime contract and applies explicit preferences', () => {
@@ -231,5 +232,55 @@ describe('provideKrn', () => {
   it('rejects an empty locale during provider creation', () => {
     expect(() => provideKrn({ locale: '   ' })).toThrowError(/non-empty BCP 47/);
     expect(() => provideKrn({ locale: 'not_a_locale' })).toThrowError(/Invalid Kern locale/);
+  });
+
+  it('promotes a live nested runtime owner and finally restores prior attributes', () => {
+    const document = TestBed.inject(DOCUMENT);
+    const root = document.documentElement;
+    root.setAttribute('lang', 'fr');
+    root.setAttribute('dir', 'ltr');
+    root.setAttribute('data-krn-motion', 'full');
+    const owner = createEnvironmentInjector(
+      [
+        provideKrn({
+          locale: 'de-DE',
+          direction: 'rtl',
+          motion: 'reduce',
+          persistPreferences: false,
+        }),
+      ],
+      TestBed.inject(EnvironmentInjector),
+    );
+    const nested = createEnvironmentInjector(
+      [
+        provideKrn({
+          locale: 'en-US',
+          direction: 'ltr',
+          motion: 'system',
+          persistPreferences: false,
+        }),
+      ],
+      owner,
+    );
+
+    try {
+      expect(root.getAttribute('lang')).toBe('de-DE');
+      expect(root.getAttribute('dir')).toBe('rtl');
+      expect(root.getAttribute('data-krn-motion')).toBe('reduce');
+
+      owner.destroy();
+      expect(root.getAttribute('lang')).toBe('en-US');
+      expect(root.getAttribute('dir')).toBe('ltr');
+      expect(root.getAttribute('data-krn-motion')).toBe('system');
+
+      nested.destroy();
+    } finally {
+      if (!nested.destroyed) nested.destroy();
+      if (!owner.destroyed) owner.destroy();
+    }
+
+    expect(root.getAttribute('lang')).toBe('fr');
+    expect(root.getAttribute('dir')).toBe('ltr');
+    expect(root.getAttribute('data-krn-motion')).toBe('full');
   });
 });

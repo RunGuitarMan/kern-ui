@@ -1,13 +1,21 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, PLATFORM_ID, signal } from '@angular/core';
+import {
+  Component,
+  createEnvironmentInjector,
+  EnvironmentInjector,
+  PLATFORM_ID,
+  signal,
+} from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { generateKrnBrandPalette } from '../foundations/brand-color';
+import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
+import { generateKrnBrandPalette, KRN_BRAND_STEPS } from '../foundations/brand-color';
 import {
   applyKrnPrepaintTheme,
-  provideKrnTheme,
   KrnThemeDirective,
   KrnThemeService,
+  KRN_THEME_CONFIG,
+  provideKrnTheme,
 } from './theme';
 
 @Component({
@@ -21,11 +29,46 @@ class ScopedThemeFixture {
 describe('KrnThemeService', () => {
   afterEach(() => {
     const root = TestBed.inject(DOCUMENT).documentElement;
+    TestBed.resetTestingModule();
     delete root.dataset['krnTheme'];
     delete root.dataset['krnThemeMode'];
     delete root.dataset['krnDensity'];
     root.removeAttribute('style');
-    TestBed.resetTestingModule();
+  });
+
+  it('preserves prepaint DOM until explicit initialization has loaded state', () => {
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: KRN_THEME_CONFIG,
+          useValue: {
+            theme: 'light',
+            density: 'compact',
+            brandColor: '#4666da',
+            persist: false,
+          },
+        },
+        KrnThemeService,
+      ],
+    });
+    const root = TestBed.inject(DOCUMENT).documentElement;
+    root.setAttribute('data-krn-theme-mode', 'dark');
+    root.setAttribute('data-krn-theme', 'dark');
+    root.setAttribute('data-krn-density', 'spacious');
+    root.style.setProperty('--krn-color-brand-500', 'rebeccapurple', 'important');
+
+    const service = TestBed.inject(KrnThemeService);
+    expect(root.getAttribute('data-krn-theme-mode')).toBe('dark');
+    expect(root.getAttribute('data-krn-theme')).toBe('dark');
+    expect(root.getAttribute('data-krn-density')).toBe('spacious');
+    expect(root.style.getPropertyValue('--krn-color-brand-500')).toBe('rebeccapurple');
+    expect(root.style.getPropertyPriority('--krn-color-brand-500')).toBe('important');
+
+    service.initialize();
+    expect(root.getAttribute('data-krn-theme-mode')).toBe('light');
+    expect(root.getAttribute('data-krn-theme')).toBe('light');
+    expect(root.getAttribute('data-krn-density')).toBe('compact');
+    expect(root.style.getPropertyValue('--krn-color-brand-500')).toContain('oklch');
   });
 
   it('applies theme and density at runtime', () => {
@@ -169,5 +212,142 @@ describe('KrnThemeService', () => {
     });
     expect(document.documentElement.dataset['krnTheme']).toBe('dark');
     expect(document.documentElement.style.getPropertyValue('--krn-color-brand-500')).toBe('');
+  });
+
+  it('promotes a live nested theme owner and finally restores prior attributes and styles', () => {
+    const root = TestBed.inject(DOCUMENT).documentElement;
+    root.setAttribute('data-krn-theme-mode', 'high-contrast');
+    root.setAttribute('data-krn-theme', 'high-contrast');
+    root.setAttribute('data-krn-density', 'spacious');
+    root.style.setProperty('color-scheme', 'light dark');
+    root.style.setProperty('--krn-color-brand-500', 'rebeccapurple', 'important');
+    const owner = createEnvironmentInjector(
+      [
+        provideKrnTheme({
+          theme: 'light',
+          density: 'compact',
+          brandColor: '#4666da',
+          persist: false,
+        }),
+      ],
+      TestBed.inject(EnvironmentInjector),
+    );
+    const ownedBrand = root.style.getPropertyValue('--krn-color-brand-500');
+    const nested = createEnvironmentInjector(
+      [
+        provideKrnTheme({
+          theme: 'dark',
+          density: 'comfortable',
+          brandColor: '#d95831',
+          persist: false,
+        }),
+      ],
+      owner,
+    );
+
+    try {
+      expect(root.getAttribute('data-krn-theme-mode')).toBe('light');
+      expect(root.getAttribute('data-krn-theme')).toBe('light');
+      expect(root.getAttribute('data-krn-density')).toBe('compact');
+      expect(ownedBrand).toContain('oklch');
+      expect(root.style.getPropertyValue('--krn-color-brand-500')).toBe(ownedBrand);
+
+      owner.get(KrnThemeService).setBrandColor(null);
+      TestBed.tick();
+      for (const step of KRN_BRAND_STEPS) {
+        expect(root.style.getPropertyValue(`--krn-color-brand-${step}`)).toBe('');
+      }
+
+      owner.destroy();
+      expect(root.getAttribute('data-krn-theme-mode')).toBe('dark');
+      expect(root.getAttribute('data-krn-theme')).toBe('dark');
+      expect(root.getAttribute('data-krn-density')).toBe('comfortable');
+      expect(root.style.getPropertyValue('--krn-color-brand-500')).toContain('oklch');
+
+      nested.destroy();
+    } finally {
+      if (!nested.destroyed) nested.destroy();
+      if (!owner.destroyed) owner.destroy();
+    }
+
+    expect(root.getAttribute('data-krn-theme-mode')).toBe('high-contrast');
+    expect(root.getAttribute('data-krn-theme')).toBe('high-contrast');
+    expect(root.getAttribute('data-krn-density')).toBe('spacious');
+    expect(root.style.getPropertyValue('color-scheme')).toBe('light dark');
+    expect(root.style.getPropertyValue('--krn-color-brand-500')).toBe('rebeccapurple');
+    expect(root.style.getPropertyPriority('--krn-color-brand-500')).toBe('important');
+  });
+
+  it('persists only the active owner and writes dormant state when it is promoted', () => {
+    const root = TestBed.inject(DOCUMENT).documentElement;
+    root.setAttribute('data-krn-theme-mode', 'system');
+    root.setAttribute('data-krn-theme', 'light');
+    root.setAttribute('data-krn-density', 'spacious');
+    const setItem = vi.fn();
+    const removeItem = vi.fn();
+    const storage: Storage = {
+      length: 0,
+      clear: vi.fn(),
+      getItem: vi.fn(() => null),
+      key: vi.fn(() => null),
+      removeItem,
+      setItem,
+    };
+    const platform = {
+      ...TestBed.inject(KRN_PLATFORM),
+      localStorage: storage,
+    };
+    const owner = createEnvironmentInjector(
+      [
+        { provide: KRN_PLATFORM, useValue: platform },
+        provideKrnTheme({ theme: 'light', density: 'compact', persist: true }),
+      ],
+      TestBed.inject(EnvironmentInjector),
+    );
+    TestBed.tick();
+    setItem.mockClear();
+    const nested = createEnvironmentInjector(
+      [
+        provideKrnTheme({
+          theme: 'dark',
+          density: 'comfortable',
+          brandColor: '#d95831',
+          persist: true,
+        }),
+      ],
+      owner,
+    );
+
+    try {
+      expect(setItem).not.toHaveBeenCalled();
+      const nestedTheme = nested.get(KrnThemeService);
+      nestedTheme.reset();
+      expect(removeItem).not.toHaveBeenCalled();
+      nestedTheme.setTheme('high-contrast');
+      TestBed.tick();
+      expect(root.getAttribute('data-krn-theme-mode')).toBe('light');
+      expect(root.getAttribute('data-krn-density')).toBe('compact');
+      expect(setItem).not.toHaveBeenCalled();
+
+      owner.destroy();
+      expect(root.getAttribute('data-krn-theme-mode')).toBe('high-contrast');
+      expect(root.getAttribute('data-krn-theme')).toBe('high-contrast');
+      expect(root.getAttribute('data-krn-density')).toBe('comfortable');
+      expect(setItem).toHaveBeenCalledOnce();
+      expect(JSON.parse(setItem.mock.calls[0]?.[1] ?? '{}')).toEqual({
+        theme: 'high-contrast',
+        density: 'comfortable',
+        brandColor: '#d95831',
+      });
+
+      nested.destroy();
+    } finally {
+      if (!nested.destroyed) nested.destroy();
+      if (!owner.destroyed) owner.destroy();
+    }
+
+    expect(root.getAttribute('data-krn-theme-mode')).toBe('system');
+    expect(root.getAttribute('data-krn-theme')).toBe('light');
+    expect(root.getAttribute('data-krn-density')).toBe('spacious');
   });
 });
