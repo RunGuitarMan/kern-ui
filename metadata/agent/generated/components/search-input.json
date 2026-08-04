@@ -79,9 +79,9 @@
       "name": "placeholder",
       "property": "placeholder",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.forms.search",
+      "defaultValue": "undefined",
       "description": "Short input hint shown only while no value is present.",
       "descriptionSource": "inferred"
     },
@@ -89,9 +89,9 @@
       "name": "ariaLabel",
       "property": "ariaLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.forms.search",
+      "defaultValue": "undefined",
       "description": "Accessible name used when visible content is not sufficient.",
       "descriptionSource": "inferred"
     },
@@ -119,9 +119,9 @@
       "name": "clearLabel",
       "property": "clearLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.forms.clearSearch",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the clear state or control.",
       "descriptionSource": "inferred"
     },
@@ -688,7 +688,7 @@
         "componentId": "search-input",
         "publicName": "ariaLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
         "evidence": {
@@ -712,7 +712,7 @@
         "componentId": "search-input",
         "publicName": "clearLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {

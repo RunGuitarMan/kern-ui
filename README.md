@@ -70,9 +70,10 @@ affected command when CI does not expose the expected Git refs.
 The committed `.env` sets `NG_BUILD_MAX_WORKERS=1`. Nx loads this workspace environment before
 running targets, making Angular and Sass worker shutdown deterministic on the supported Node 24
 toolchain. This limits compiler workers inside a target; it does not disable Nx task parallelism.
-Nx is the only persistent task-cache owner; the nested Angular cache is disabled per project to
-avoid duplicate and stale compiler state. Keep these settings in local and CI builds unless a
-toolchain upgrade is validated with the complete gate.
+Nx is the only persistent task-cache owner; production projects disable the nested Angular cache
+to avoid duplicate and stale compiler state. The isolated Vite smoke target uses an ephemeral
+prebundle cache that is removed before and after its run. Keep these settings in local and CI
+builds unless a toolchain upgrade is validated with the complete gate.
 
 ## Consume the library
 
@@ -202,7 +203,9 @@ import {
 
 Use these harnesses instead of depending on internal component markup. Runtime components remain
 available from the root compatibility API and from the supported direct subpaths documented in
-the [package README](projects/kern/README.md).
+the [package README](projects/kern/README.md). New tests can use the narrower
+`/testing/actions`, `/testing/data-display`, `/testing/feedback`, `/testing/forms`,
+`/testing/layout`, and `/testing/navigation` entrypoints while `/testing` remains compatible.
 
 ## Developer and agent discovery
 

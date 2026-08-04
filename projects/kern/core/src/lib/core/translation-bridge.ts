@@ -1,4 +1,5 @@
-import type { Provider } from '@angular/core';
+import { computed } from '@angular/core';
+import type { Provider, Signal } from '@angular/core';
 import {
   KRN_COPY_LABELS,
   KRN_DEFAULT_COPY_LABELS,
@@ -22,25 +23,27 @@ export function provideKrnTranslationBridge(): Provider[] {
     {
       provide: KRN_COPY_LABELS,
       deps: [KRN_TRANSLATIONS],
-      useFactory: (translations: Readonly<KrnTranslations>): Readonly<KrnCopyLabels> =>
-        Object.freeze({
-          copy: translations.actions.copyToClipboard,
-          copying: translations.actions.copying ?? KRN_DEFAULT_COPY_LABELS.copying,
-          copied: translations.actions.copied,
-          failed: translations.actions.copyFailed,
-        }),
+      useFactory: (translations: Readonly<KrnTranslations>): Signal<Readonly<KrnCopyLabels>> =>
+        computed(() =>
+          Object.freeze({
+            copy: translations.actions.copyToClipboard,
+            copying: translations.actions.copying ?? KRN_DEFAULT_COPY_LABELS.copying,
+            copied: translations.actions.copied,
+            failed: translations.actions.copyFailed,
+          }),
+        ),
     },
     {
       provide: KRN_LOADING_LABEL,
       deps: [KRN_TRANSLATIONS],
-      useFactory: (translations: Readonly<KrnTranslations>): string =>
-        translations.feedback.loadingInProgress,
+      useFactory: (translations: Readonly<KrnTranslations>): Signal<string> =>
+        computed(() => translations.feedback.loadingInProgress),
     },
     {
       provide: KRN_MORE_ACTIONS_LABEL,
       deps: [KRN_TRANSLATIONS],
-      useFactory: (translations: Readonly<KrnTranslations>): string =>
-        translations.actions.moreActions,
+      useFactory: (translations: Readonly<KrnTranslations>): Signal<string> =>
+        computed(() => translations.actions.moreActions),
     },
   ];
 }

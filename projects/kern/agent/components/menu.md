@@ -50,16 +50,16 @@ void bootstrapApplication(KernMenuAgentExample);
 
 ## API
 
-| Name               | Kind   | Type                                                                 | Required | Default                                  | Description                                                          |
-| ------------------ | ------ | -------------------------------------------------------------------- | -------- | ---------------------------------------- | -------------------------------------------------------------------- |
-| `items`            | input  | `ReadonlyArray<KrnNavigationItem & { readonly shortcut?: string; }>` | no       | `[]`                                     | Ordered item collection rendered by the composite widget.            |
-| `open`             | model  | `boolean`                                                            | no       | `false`                                  | Controls whether the disclosure or overlay surface is visible.       |
-| `triggerLabel`     | input  | `string`                                                             | no       | `this.translations.navigation.actions`   | Human-readable copy for the trigger state or control.                |
-| `triggerAriaLabel` | input  | `string`                                                             | no       | `this.translations.navigation.openMenu`  | Human-readable copy for the trigger aria state or control.           |
-| `menuAriaLabel`    | input  | `string`                                                             | no       | `this.translations.navigation.actions`   | Human-readable copy for the menu aria state or control.              |
-| `emptyLabel`       | input  | `string`                                                             | no       | `this.translations.navigation.menuEmpty` | Accessible copy that explains the empty state.                       |
-| `itemSelected`     | output | `KrnNavigationItem`                                                  | no       | `undefined`                              | Notifies the consumer after the item selected interaction completes. |
-| `closed`           | output | `"detach" \| "escape" \| "outside" \| "selection"`                   | no       | `undefined`                              | Notifies the consumer after the closed interaction completes.        |
+| Name               | Kind   | Type                                                                 | Required | Default     | Description                                                          |
+| ------------------ | ------ | -------------------------------------------------------------------- | -------- | ----------- | -------------------------------------------------------------------- |
+| `items`            | input  | `ReadonlyArray<KrnNavigationItem & { readonly shortcut?: string; }>` | no       | `[]`        | Ordered item collection rendered by the composite widget.            |
+| `open`             | model  | `boolean`                                                            | no       | `false`     | Controls whether the disclosure or overlay surface is visible.       |
+| `triggerLabel`     | input  | `string \| undefined`                                                | no       | `undefined` | Human-readable copy for the trigger state or control.                |
+| `triggerAriaLabel` | input  | `string \| undefined`                                                | no       | `undefined` | Human-readable copy for the trigger aria state or control.           |
+| `menuAriaLabel`    | input  | `string \| undefined`                                                | no       | `undefined` | Human-readable copy for the menu aria state or control.              |
+| `emptyLabel`       | input  | `string \| undefined`                                                | no       | `undefined` | Accessible copy that explains the empty state.                       |
+| `itemSelected`     | output | `KrnNavigationItem`                                                  | no       | `undefined` | Notifies the consumer after the item selected interaction completes. |
+| `closed`           | output | `"detach" \| "escape" \| "outside" \| "selection"`                   | no       | `undefined` | Notifies the consumer after the closed interaction completes.        |
 
 ## Deprecated selectors
 

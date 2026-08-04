@@ -195,7 +195,7 @@ export class KrnUserMenu {
   protected readonly menuId = inject(KrnIdService).next('user-menu');
   readonly name = input.required<string>();
   readonly detail = input('');
-  readonly menuAriaLabel = input(this.translations.patterns.userActions);
+  readonly menuAriaLabel = input<typeof this.translations.patterns.userActions | undefined>();
   readonly open = model(false);
   private readonly menu = viewChild<ElementRef<HTMLElement>>('menu');
   protected readonly resolvedName = computed(() => {

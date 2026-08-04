@@ -1,4 +1,5 @@
 import { InjectionToken } from '@angular/core';
+import type { KrnI18nValue } from './reactive-value';
 
 /** English fallback used when an application does not configure loading copy. */
 export const KRN_DEFAULT_LOADING_LABEL = 'Loading…';
@@ -10,9 +11,10 @@ export const KRN_DEFAULT_LOADING_LABEL = 'Loading…';
  * `translations.feedback.loadingInProgress`. Consumers that create a nested
  * locale boundary with low-level tokens must also install
  * `provideKrnTranslationBridge()` from Core, or override this leaf token
- * directly.
+ * directly. Read the injected fixed-or-signal value with
+ * `krnReadI18nValue`.
  */
-export const KRN_LOADING_LABEL = new InjectionToken<string>('KRN_LOADING_LABEL', {
+export const KRN_LOADING_LABEL = new InjectionToken<KrnI18nValue<string>>('KRN_LOADING_LABEL', {
   providedIn: 'root',
   factory: () => KRN_DEFAULT_LOADING_LABEL,
 });

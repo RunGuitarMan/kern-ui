@@ -82,9 +82,9 @@
       "name": "ariaLabel",
       "property": "ariaLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.layout.primaryNavigation",
+      "defaultValue": "undefined",
       "description": "Accessible name used when visible content is not sufficient.",
       "descriptionSource": "inferred"
     },
@@ -409,7 +409,7 @@
         "componentId": "navigation-rail",
         "publicName": "ariaLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
         "evidence": {

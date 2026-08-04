@@ -5,7 +5,12 @@
  * `npm run api:baseline:write` and review the declaration diff.
  */
 
-import { InjectionToken } from '@angular/core';
+import { Signal, InjectionToken } from '@angular/core';
+
+/** A fixed scoped value or a signal-backed application value. */
+type KrnI18nValue<T> = T | Signal<T>;
+/** Reads an i18n value while preserving Angular signal dependency tracking. */
+declare function krnReadI18nValue<T>(value: KrnI18nValue<T>): T;
 
 /**
  * Small, immutable copy contract for leaf components that must not retain the
@@ -29,9 +34,10 @@ declare const KRN_DEFAULT_COPY_LABELS: Readonly<KrnCopyLabels>;
  * `provideKrn({translations})` derives this value from the complete Core
  * translation registry. Consumers that create a nested low-level translation
  * boundary must install `provideKrnTranslationBridge()` or override this token
- * directly.
+ * directly. Read the injected fixed-or-signal value with
+ * `krnReadI18nValue`.
  */
-declare const KRN_COPY_LABELS: InjectionToken<Readonly<KrnCopyLabels>>;
+declare const KRN_COPY_LABELS: InjectionToken<KrnI18nValue<Readonly<KrnCopyLabels>>>;
 
 /** English fallback used when an application does not configure loading copy. */
 declare const KRN_DEFAULT_LOADING_LABEL = 'Loading\u2026';
@@ -42,9 +48,10 @@ declare const KRN_DEFAULT_LOADING_LABEL = 'Loading\u2026';
  * `translations.feedback.loadingInProgress`. Consumers that create a nested
  * locale boundary with low-level tokens must also install
  * `provideKrnTranslationBridge()` from Core, or override this leaf token
- * directly.
+ * directly. Read the injected fixed-or-signal value with
+ * `krnReadI18nValue`.
  */
-declare const KRN_LOADING_LABEL: InjectionToken<string>;
+declare const KRN_LOADING_LABEL: InjectionToken<KrnI18nValue<string>>;
 
 /** Default accessible name for a menu segment that reveals related actions. */
 declare const KRN_DEFAULT_MORE_ACTIONS_LABEL = 'More actions';
@@ -53,9 +60,10 @@ declare const KRN_DEFAULT_MORE_ACTIONS_LABEL = 'More actions';
  *
  * `provideKrn` bridges this token to `translations.actions.moreActions`.
  * Leaf consumers can override it directly without retaining the complete
- * translation registry.
+ * translation registry. Read the injected fixed-or-signal value with
+ * `krnReadI18nValue`.
  */
-declare const KRN_MORE_ACTIONS_LABEL: InjectionToken<string>;
+declare const KRN_MORE_ACTIONS_LABEL: InjectionToken<KrnI18nValue<string>>;
 
 export {
   KRN_COPY_LABELS,
@@ -64,5 +72,6 @@ export {
   KRN_DEFAULT_MORE_ACTIONS_LABEL,
   KRN_LOADING_LABEL,
   KRN_MORE_ACTIONS_LABEL,
+  krnReadI18nValue,
 };
-export type { KrnCopyLabels };
+export type { KrnCopyLabels, KrnI18nValue };

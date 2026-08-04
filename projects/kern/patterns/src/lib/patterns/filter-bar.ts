@@ -125,10 +125,10 @@ import type { KrnFilterDefinition } from './product-types';
 export class KrnFilterBar {
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly filterSelects = viewChildren<ElementRef<HTMLSelectElement>>('filterSelect');
-  readonly ariaLabel = input(this.translations.patterns.filters);
-  readonly allLabel = input(this.translations.patterns.all);
-  readonly activeLabel = input(this.translations.patterns.activeFilters);
-  readonly clearAllLabel = input(this.translations.patterns.clearAll);
+  readonly ariaLabel = input<typeof this.translations.patterns.filters | undefined>();
+  readonly allLabel = input<typeof this.translations.patterns.all | undefined>();
+  readonly activeLabel = input<typeof this.translations.patterns.activeFilters | undefined>();
+  readonly clearAllLabel = input<typeof this.translations.patterns.clearAll | undefined>();
   readonly filters = input<readonly KrnFilterDefinition[]>([]);
   readonly values = model<Readonly<Partial<Record<string, string>>>>({});
   protected readonly resolvedAriaLabel = computed(() =>
@@ -234,7 +234,7 @@ export class KrnFilterBar {
     this.filterSelects()[0]?.nativeElement.focus({ preventScroll: true });
   }
 
-  private requiredLabel(value: string, fallback: string, hardFallback: string): string {
+  private requiredLabel(value: string | undefined, fallback: string, hardFallback: string): string {
     const normalized = typeof value === 'string' ? value.trim() : '';
     const normalizedFallback = typeof fallback === 'string' ? fallback.trim() : '';
     return normalized || normalizedFallback || hardFallback;

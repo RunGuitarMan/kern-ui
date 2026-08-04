@@ -651,7 +651,7 @@ export class KrnResizeHandle {
   protected readonly managedValue = signal(50);
   protected readonly managedDisabled = signal(!this.parent);
 
-  readonly ariaLabel = input(this.translations.layout.resizeAdjacentPanels);
+  readonly ariaLabel = input<string | undefined>();
   readonly ariaValueText = input<string | null>(null);
   protected readonly resolvedAriaLabel = computed(
     () => this.ariaLabel()?.trim() || this.translations.layout.resizeAdjacentPanels.trim() || null,

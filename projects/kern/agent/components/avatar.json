@@ -50,9 +50,9 @@
       "name": "locale",
       "property": "locale",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "inject(KRN_LOCALE)",
+      "defaultValue": "undefined",
       "description": "Locale identifier used for collation, formatting, and component-owned copy.",
       "descriptionSource": "inferred"
     },
@@ -392,7 +392,7 @@
         "componentId": "avatar",
         "publicName": "locale",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "locale-environment",
         "reason": "Locale is owned by the playground environment selector so every locale-sensitive component changes consistently.",
         "evidence": {

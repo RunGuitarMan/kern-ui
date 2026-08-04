@@ -939,6 +939,12 @@
       "owner": "core",
       "kind": "function"
     },
+    "defineKrnOverlayContent": {
+      "canonicalSymbol": "defineKrnOverlayContent",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "function"
+    },
     "generateKrnBrandPalette": {
       "canonicalSymbol": "generateKrnBrandPalette",
       "importPath": "@kern-ui/angular/core",
@@ -947,6 +953,12 @@
     },
     "injectKrnOverlayData": {
       "canonicalSymbol": "injectKrnOverlayData",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "function"
+    },
+    "injectKrnOverlayRef": {
+      "canonicalSymbol": "injectKrnOverlayRef",
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "function"
@@ -1027,6 +1039,12 @@
       "canonicalSymbol": "KRN_COPY_LABELS",
       "importPath": "@kern-ui/angular/i18n",
       "owner": "i18n",
+      "kind": "constant"
+    },
+    "KRN_DATE_TIME_SNAPSHOT": {
+      "canonicalSymbol": "KRN_DATE_TIME_SNAPSHOT",
+      "importPath": "@kern-ui/angular/core",
+      "owner": "core",
       "kind": "constant"
     },
     "KRN_DEFAULT_COPY_LABELS": {
@@ -2067,6 +2085,12 @@
       "owner": "kit",
       "kind": "interface"
     },
+    "KrnDateTimeSnapshot": {
+      "canonicalSymbol": "KrnDateTimeSnapshot",
+      "importPath": "@kern-ui/angular/core",
+      "owner": "core",
+      "kind": "interface"
+    },
     "KrnDensity": {
       "canonicalSymbol": "KrnDensity",
       "importPath": "@kern-ui/angular/core",
@@ -2384,6 +2408,18 @@
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "class"
+    },
+    "KrnI18n": {
+      "canonicalSymbol": "KrnI18n",
+      "importPath": "@kern-ui/angular/core",
+      "owner": "core",
+      "kind": "class"
+    },
+    "KrnI18nValue": {
+      "canonicalSymbol": "KrnI18nValue",
+      "importPath": "@kern-ui/angular/i18n",
+      "owner": "i18n",
+      "kind": "type"
     },
     "KrnIcon": {
       "canonicalSymbol": "KrnIcon",
@@ -2799,6 +2835,12 @@
       "owner": "kit",
       "kind": "type"
     },
+    "KrnOverlayContent": {
+      "canonicalSymbol": "KrnOverlayContent",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "interface"
+    },
     "KrnOverlayCoordinator": {
       "canonicalSymbol": "KrnOverlayCoordinator",
       "importPath": "@kern-ui/angular/cdk",
@@ -2996,6 +3038,12 @@
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "class"
+    },
+    "krnReadI18nValue": {
+      "canonicalSymbol": "krnReadI18nValue",
+      "importPath": "@kern-ui/angular/i18n",
+      "owner": "i18n",
+      "kind": "function"
     },
     "KrnResizablePanel": {
       "canonicalSymbol": "KrnResizablePanel",
@@ -3674,6 +3722,12 @@
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "class"
+    },
+    "ɵgetKrnDocumentRuntimeChannel": {
+      "canonicalSymbol": "ɵgetKrnDocumentRuntimeChannel",
+      "importPath": "@kern-ui/angular/cdk",
+      "owner": "cdk",
+      "kind": "function"
     },
     "parseHexColor": {
       "canonicalSymbol": "parseHexColor",

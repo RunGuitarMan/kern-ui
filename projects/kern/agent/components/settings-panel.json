@@ -55,9 +55,9 @@
       "name": "heading",
       "property": "heading",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.patterns.settings",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the heading state or control.",
       "descriptionSource": "inferred"
     },
@@ -65,9 +65,9 @@
       "name": "closeLabel",
       "property": "closeLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.patterns.closeSettings",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the close state or control.",
       "descriptionSource": "inferred"
     },
@@ -426,7 +426,7 @@
         "componentId": "settings-panel",
         "publicName": "closeLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {

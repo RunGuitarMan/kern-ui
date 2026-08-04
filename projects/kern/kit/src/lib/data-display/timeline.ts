@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
 
 @Component({
   selector: 'krn-timeline',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'list',
-    '[attr.aria-label]': 'ariaLabel()',
+    '[attr.aria-label]': 'resolvedAriaLabel()',
   },
   template: `<ng-content />`,
   styles: `
@@ -17,7 +18,11 @@ import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 })
 export class KrnTimeline {
   private readonly translations = inject(KRN_TRANSLATIONS);
-  readonly ariaLabel = input(this.translations.dataDisplay.timeline);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.dataDisplay.timeline,
+  );
 }
 
 @Component({

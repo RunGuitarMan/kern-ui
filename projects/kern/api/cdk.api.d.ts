@@ -98,6 +98,13 @@ interface KrnClipboardWriter {
 /** Application-replaceable clipboard writer used by KERN copy affordances. */
 declare const KRN_CLIPBOARD_WRITER: InjectionToken<KrnClipboardWriter>;
 
+/** Resolves a versioned runtime channel shared by every Kern bundle on one document. */
+declare function getKrnDocumentRuntimeChannel<T>(
+  document: Document,
+  channelKey: symbol,
+  create: () => T,
+): T;
+
 type KrnScheduledHandle = ReturnType<typeof globalThis.setTimeout>;
 /** Minimal browser CloseWatcher surface used without depending on lib.dom support. */
 interface KrnCloseWatcher {
@@ -212,6 +219,7 @@ export {
   krnIsInputElement,
   krnIsNode,
   krnPrefersReducedMotion,
+  getKrnDocumentRuntimeChannel as ɵgetKrnDocumentRuntimeChannel,
 };
 export type {
   KrnClipboardWriter,

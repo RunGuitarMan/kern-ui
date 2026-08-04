@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { provideKrn } from '@kern-ui/angular/core';
+import { KrnI18n, provideKrn } from '@kern-ui/angular/core';
 import { KrnPasswordInput } from './text-inputs';
 
 @Component({
@@ -75,14 +75,18 @@ describe('KrnPasswordInput', () => {
     expect(input.type).toBe('text');
     expect(input.ownerDocument.activeElement).toBe(input);
     expect(toggle.getAttribute('aria-controls')).toBe('account-password');
-    expect(toggle.getAttribute('aria-label')).toBe(fixture.componentInstance.hideLabel());
+    expect(toggle.getAttribute('aria-label')).toBe(
+      TestBed.inject(KrnI18n).translations().forms.hidePassword,
+    );
     expect(toggle.hasAttribute('aria-pressed')).toBe(false);
     expect(touched).not.toHaveBeenCalled();
 
     toggle.click();
     await fixture.whenStable();
     expect(input.type).toBe('password');
-    expect(toggle.getAttribute('aria-label')).toBe(fixture.componentInstance.showLabel());
+    expect(toggle.getAttribute('aria-label')).toBe(
+      TestBed.inject(KrnI18n).translations().forms.showPassword,
+    );
     expect(toggle.hasAttribute('aria-pressed')).toBe(false);
   });
 

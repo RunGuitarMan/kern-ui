@@ -4,9 +4,10 @@ Kern's automated axe, semantics, keyboard, reflow, forced-color, and reduced-mot
 release evidence. They do not emulate a person using a branded browser and assistive technology.
 
 `manual-evidence.json` is the machine-readable execution matrix. All initial records are
-intentionally `pending`, `releaseBlocking` is `false`, and the top-level certification state is
+intentionally `pending`, the six required desktop records are release-blocking, and the top-level certification state is
 `not-certified`. Therefore this directory does **not** claim AT certification, WCAG conformance,
-or a VPAT/ACR.
+or a VPAT/ACR. Structural verification remains usable during local development, while release and
+stable-promotion modes reject pending, failed, blocked, or stale required evidence.
 
 ## Recording a run
 
@@ -27,6 +28,18 @@ Run:
 node tools/verify-kern-accessibility-evidence.mjs
 ```
 
-Making manual evidence release-blocking is a separate governance decision. Set
-`releaseBlocking: true` only after the required environments, owners, cadence, exception process,
-and CI-accessible evidence store exist; any non-passing blocking record then fails verification.
+Release candidates use the strict mode:
+
+```bash
+node tools/verify-kern-accessibility-evidence.mjs --mode=release
+```
+
+Before promoting beta components, run the scoped gate (comma-separated IDs are supported):
+
+```bash
+node tools/verify-kern-accessibility-evidence.mjs --mode=promotion --components=select,dialog
+```
+
+Strict modes use the declared maximum ages and never infer manual results from Playwright. They
+also require a separately recorded certification attestation. Local mode validates the honest
+ledger structure without treating expected pre-execution `pending` states as a development error.

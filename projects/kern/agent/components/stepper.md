@@ -61,15 +61,15 @@ void bootstrapApplication(KernStepperAgentExample);
 
 ## API
 
-| Name             | Kind  | Type                         | Required | Default                                 | Description                                                               |
-| ---------------- | ----- | ---------------------------- | -------- | --------------------------------------- | ------------------------------------------------------------------------- |
-| `steps`          | input | `ReadonlyArray<KrnStepItem>` | no       | `[]`                                    | Ordered domain values supplied to the step collection.                    |
-| `activeStep`     | model | `number`                     | no       | `0`                                     | Controlled active step state with a matching Angular model-change output. |
-| `completedSteps` | input | `ReadonlyArray<number>`      | no       | `[]`                                    | Ordered domain values supplied to the completed step collection.          |
-| `linear`         | input | `boolean`                    | no       | `false`                                 | Requires step completion in order and prevents skipping incomplete steps. |
-| `orientation`    | input | `KrnNavigationOrientation`   | no       | `'horizontal'`                          | Defines the logical axis used by layout and keyboard navigation.          |
-| `ariaLabel`      | input | `string`                     | no       | `this.translations.navigation.progress` | Accessible name used when visible content is not sufficient.              |
-| `optionalLabel`  | input | `string`                     | no       | `this.translations.navigation.optional` | Human-readable copy for the optional state or control.                    |
+| Name             | Kind  | Type                         | Required | Default        | Description                                                               |
+| ---------------- | ----- | ---------------------------- | -------- | -------------- | ------------------------------------------------------------------------- |
+| `steps`          | input | `ReadonlyArray<KrnStepItem>` | no       | `[]`           | Ordered domain values supplied to the step collection.                    |
+| `activeStep`     | model | `number`                     | no       | `0`            | Controlled active step state with a matching Angular model-change output. |
+| `completedSteps` | input | `ReadonlyArray<number>`      | no       | `[]`           | Ordered domain values supplied to the completed step collection.          |
+| `linear`         | input | `boolean`                    | no       | `false`        | Requires step completion in order and prevents skipping incomplete steps. |
+| `orientation`    | input | `KrnNavigationOrientation`   | no       | `'horizontal'` | Defines the logical axis used by layout and keyboard navigation.          |
+| `ariaLabel`      | input | `string \| undefined`        | no       | `undefined`    | Accessible name used when visible content is not sufficient.              |
+| `optionalLabel`  | input | `string \| undefined`        | no       | `undefined`    | Human-readable copy for the optional state or control.                    |
 
 ## Deprecated selectors
 

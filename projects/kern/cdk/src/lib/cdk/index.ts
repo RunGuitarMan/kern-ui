@@ -2,6 +2,7 @@ export { KrnIdService } from './id';
 export { isKrnComponentContent, isKrnTemplateContent } from './content';
 export { createKrnOptions } from './options';
 export { KRN_CLIPBOARD_WRITER } from './clipboard';
+export { getKrnDocumentRuntimeChannel as ɵgetKrnDocumentRuntimeChannel } from './document-runtime';
 export {
   KRN_OVERLAY_HOST,
   KRN_PLATFORM,

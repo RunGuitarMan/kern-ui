@@ -51,11 +51,11 @@ void bootstrapApplication(KernBulkActionsAgentExample);
 
 ## API
 
-| Name            | Kind  | Type                        | Required | Default                                    | Description                                                       |
-| --------------- | ----- | --------------------------- | -------- | ------------------------------------------ | ----------------------------------------------------------------- |
-| `ariaLabel`     | input | `string`                    | no       | `this.translations.patterns.actions`       | Accessible name used when visible content is not sufficient.      |
-| `selectedCount` | input | `number`                    | no       | `0`                                        | Number of selected records summarized by the surrounding pattern. |
-| `selectedLabel` | input | `(count: number) => string` | no       | `this.translations.patterns.selectedCount` | Human-readable copy for the selected state or control.            |
+| Name            | Kind  | Type                                       | Required | Default     | Description                                                       |
+| --------------- | ----- | ------------------------------------------ | -------- | ----------- | ----------------------------------------------------------------- |
+| `ariaLabel`     | input | `string \| undefined`                      | no       | `undefined` | Accessible name used when visible content is not sufficient.      |
+| `selectedCount` | input | `number`                                   | no       | `0`         | Number of selected records summarized by the surrounding pattern. |
+| `selectedLabel` | input | `((count: number) => string) \| undefined` | no       | `undefined` | Human-readable copy for the selected state or control.            |
 
 ## Deprecated selectors
 

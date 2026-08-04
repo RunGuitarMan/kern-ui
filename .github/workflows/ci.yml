@@ -28,6 +28,7 @@ jobs:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Node
@@ -40,8 +41,15 @@ jobs:
         run: npm ci
 
       - name: Verify lifecycle, deprecations, and accessibility evidence
+        env:
+          KERN_LIFECYCLE_BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
-          node tools/verify-kern-lifecycle.mjs
+          if [[ "${KERN_LIFECYCLE_BASE_REF}" =~ ^[0-9a-f]{40}$ ]] && \
+            [[ ! "${KERN_LIFECYCLE_BASE_REF}" =~ ^0+$ ]]; then
+            node tools/verify-kern-lifecycle.mjs "--base-ref=${KERN_LIFECYCLE_BASE_REF}"
+          else
+            node tools/verify-kern-lifecycle.mjs
+          fi
           node tools/verify-kern-accessibility-evidence.mjs
           node tools/verify-kern-package-policy.mjs
           node --test tools/tests/kern-governance.test.mjs

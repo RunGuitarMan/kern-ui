@@ -53,9 +53,9 @@
       "name": "ariaLabel",
       "property": "ariaLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.patterns.actions",
+      "defaultValue": "undefined",
       "description": "Accessible name used when visible content is not sufficient.",
       "descriptionSource": "inferred"
     },
@@ -73,9 +73,9 @@
       "name": "selectedLabel",
       "property": "selectedLabel",
       "kind": "input",
-      "type": "(count: number) => string",
+      "type": "((count: number) => string) | undefined",
       "required": false,
-      "defaultValue": "this.translations.patterns.selectedCount",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the selected state or control.",
       "descriptionSource": "inferred"
     }
@@ -325,7 +325,7 @@
         "componentId": "crud-toolbar",
         "publicName": "ariaLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
         "evidence": {
@@ -337,7 +337,7 @@
         "componentId": "crud-toolbar",
         "publicName": "selectedLabel",
         "kind": "input",
-        "type": "(count: number) => string",
+        "type": "((count: number) => string) | undefined",
         "code": "callback",
         "reason": "Callback inputs require executable application code and are covered by the typed specimen fixture.",
         "evidence": {

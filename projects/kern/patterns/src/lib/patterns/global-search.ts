@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { KRN_PLATFORM, KrnIdService, krnIsNode } from '@kern-ui/angular/cdk';
 import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnReadI18nValue } from '@kern-ui/angular/i18n';
 import type { KrnSearchResult } from './product-types';
 
 @Component({
@@ -202,15 +203,18 @@ import type { KrnSearchResult } from './product-types';
 export class KrnGlobalSearch {
   private readonly ids = inject(KrnIdService);
   private readonly generatedResultsId = this.ids.next('global-search-results');
-  private readonly locale = inject(KRN_LOCALE);
+  private readonly inheritedLocale = inject(KRN_LOCALE);
+  private readonly locale = computed(() => krnReadI18nValue(this.inheritedLocale));
   private readonly platform = inject(KRN_PLATFORM);
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly searchInput = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
-  readonly ariaLabel = input(this.translations.patterns.globalSearch);
-  readonly placeholder = input(this.translations.patterns.searchPlaceholder);
-  readonly clearLabel = input(this.translations.patterns.clearSearch);
-  readonly resultsLabel = input(this.translations.patterns.resultLabel);
-  readonly emptyResultsLabel = input(this.translations.patterns.noSearchResults);
+  readonly ariaLabel = input<typeof this.translations.patterns.globalSearch | undefined>();
+  readonly placeholder = input<typeof this.translations.patterns.searchPlaceholder | undefined>();
+  readonly clearLabel = input<typeof this.translations.patterns.clearSearch | undefined>();
+  readonly resultsLabel = input<typeof this.translations.patterns.resultLabel | undefined>();
+  readonly emptyResultsLabel = input<
+    typeof this.translations.patterns.noSearchResults | undefined
+  >();
   readonly results = input<readonly KrnSearchResult[]>([]);
   readonly maxResults = input(8, { transform: numberAttribute });
   readonly resultsId = input(this.generatedResultsId);
@@ -265,13 +269,13 @@ export class KrnGlobalSearch {
   protected readonly filteredResults = computed(() => {
     const results = this.validatedResults();
     const maximum = this.validatedMaxResults();
-    const query = this.query().trim().toLocaleLowerCase(this.locale);
+    const query = this.query().trim().toLocaleLowerCase(this.locale());
     if (!query) return [];
     return results
       .filter((result) =>
         [result.label, result.description ?? '', ...(result.keywords ?? [])]
           .join(' ')
-          .toLocaleLowerCase(this.locale)
+          .toLocaleLowerCase(this.locale())
           .includes(query),
       )
       .slice(0, maximum);
@@ -372,7 +376,7 @@ export class KrnGlobalSearch {
     this.searchInput().nativeElement.focus({ preventScroll: true });
   }
 
-  private requiredLabel(value: string, fallback: string, hardFallback: string): string {
+  private requiredLabel(value: string | undefined, fallback: string, hardFallback: string): string {
     const normalized = typeof value === 'string' ? value.trim() : '';
     const normalizedFallback = typeof fallback === 'string' ? fallback.trim() : '';
     return normalized || normalizedFallback || hardFallback;

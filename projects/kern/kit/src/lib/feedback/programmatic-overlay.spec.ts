@@ -21,10 +21,13 @@ import { KRN_TRANSLATIONS, provideKrn } from '@kern-ui/angular/core';
 import { KrnDropdownButton } from '../actions/dropdown-button';
 import { KrnDialog } from './modal-overlays';
 import {
-  KrnOverlayRef,
   KrnOverlayService,
+  defineKrnOverlayContent,
   injectKrnOverlayData,
+  injectKrnOverlayRef,
+  type KrnOverlayRef,
   type KrnOverlayDismissReason,
+  type KrnOverlayContent,
   type KrnOverlayOutcome,
   type KrnOverlayTemplateContext,
 } from './programmatic-overlay';
@@ -49,8 +52,8 @@ class ScopedOverlayResource {
   template: `<button type="button" class="save" (click)="save()">Save {{ data.name }}</button>`,
 })
 class EditOverlayContent {
-  protected readonly data = injectKrnOverlayData<EditData>();
-  private readonly overlayRef = inject<KrnOverlayRef<string>>(KrnOverlayRef);
+  protected readonly data = injectKrnOverlayData(EDIT_OVERLAY);
+  private readonly overlayRef = injectKrnOverlayRef(EDIT_OVERLAY);
   private readonly scopedResource = inject(ScopedOverlayResource);
 
   protected save(): void {
@@ -58,6 +61,8 @@ class EditOverlayContent {
     this.overlayRef.close(`saved:${this.data.name}`);
   }
 }
+
+const EDIT_OVERLAY = defineKrnOverlayContent<EditData, string>(EditOverlayContent);
 
 interface TemplateData {
   readonly label: string;
@@ -92,6 +97,8 @@ class TemplateOwner {
 })
 class PassiveOverlayContent {}
 
+const PASSIVE_OVERLAY = defineKrnOverlayContent(PassiveOverlayContent);
+
 const SCOPED_OVERLAY_VALUE = new InjectionToken<string>('SCOPED_OVERLAY_VALUE');
 
 @Component({
@@ -102,6 +109,8 @@ const SCOPED_OVERLAY_VALUE = new InjectionToken<string>('SCOPED_OVERLAY_VALUE');
 class ScopedOverlayContent {
   protected readonly value = inject(SCOPED_OVERLAY_VALUE);
 }
+
+const SCOPED_OVERLAY = defineKrnOverlayContent(ScopedOverlayContent);
 
 @Component({
   selector: 'krn-programmatic-nested-menu-content-spec',
@@ -118,6 +127,8 @@ class ScopedOverlayContent {
 })
 class NestedMenuOverlayContent {}
 
+const NESTED_MENU_OVERLAY = defineKrnOverlayContent(NestedMenuOverlayContent);
+
 @Component({
   selector: 'krn-programmatic-constructor-close-spec',
   standalone: true,
@@ -125,9 +136,13 @@ class NestedMenuOverlayContent {}
 })
 class ConstructorCloseContent {
   constructor() {
-    inject<KrnOverlayRef<string>>(KrnOverlayRef).close('constructor-result');
+    injectKrnOverlayRef(CONSTRUCTOR_CLOSE_OVERLAY).close('constructor-result');
   }
 }
+
+const CONSTRUCTOR_CLOSE_OVERLAY = defineKrnOverlayContent<undefined, string>(
+  ConstructorCloseContent,
+);
 
 interface ParentData {
   readonly childOpened: (ref: KrnOverlayRef<void, KrnOverlayDismissReason>) => void;
@@ -139,12 +154,12 @@ interface ParentData {
   template: `<button type="button" class="open-child" (click)="openChild()">Open child</button>`,
 })
 class ParentOverlayContent {
-  private readonly data = injectKrnOverlayData<ParentData>();
+  private readonly data = injectKrnOverlayData(PARENT_OVERLAY);
   private readonly injector = inject(Injector);
   private readonly overlays = inject(KrnOverlayService);
 
   protected openChild(): void {
-    const child = this.overlays.open(PassiveOverlayContent, {
+    const child = this.overlays.open(PASSIVE_OVERLAY, {
       injector: this.injector,
       title: 'Child overlay',
       variant: 'drawer',
@@ -152,6 +167,66 @@ class ParentOverlayContent {
     this.data.childOpened(child);
   }
 }
+
+const PARENT_OVERLAY = defineKrnOverlayContent<ParentData>(ParentOverlayContent);
+
+function assertTypedOverlayContract(service: KrnOverlayService): void {
+  const ref = service.open(EDIT_OVERLAY, { data: { name: 'Ada' } });
+  ref.close('saved:Ada');
+  // @ts-expect-error The shared content contract fixes the result type to string.
+  ref.close(42);
+  // @ts-expect-error The shared content contract fixes the data shape to EditData.
+  service.open(EDIT_OVERLAY, { data: { name: 42 } });
+  // @ts-expect-error Raw component types cannot assert unrelated Data/Result generics.
+  service.open(EditOverlayContent, { data: { name: 'Ada' } });
+
+  interface BaseData {
+    readonly name: string;
+  }
+  interface DerivedData extends BaseData {
+    readonly accountId: string;
+  }
+  type BaseResult = { readonly saved: boolean };
+  type DerivedResult = BaseResult & { readonly revision: number };
+  const derivedData = defineKrnOverlayContent<DerivedData, BaseResult, 'cancel'>(
+    EditOverlayContent,
+  );
+  const baseData = defineKrnOverlayContent<BaseData, BaseResult, 'cancel'>(EditOverlayContent);
+  const derivedResult = defineKrnOverlayContent<BaseData, DerivedResult, 'cancel'>(
+    EditOverlayContent,
+  );
+  const widerDismiss = defineKrnOverlayContent<BaseData, BaseResult, 'cancel' | 'timeout'>(
+    EditOverlayContent,
+  );
+  // @ts-expect-error Required hidden brand prevents structural contract forgery.
+  const forged: KrnOverlayContent<BaseData, BaseResult, 'cancel'> = {
+    component: EditOverlayContent,
+  };
+  // @ts-expect-error Data is invariant; derived content cannot accept arbitrary base data.
+  const unsafeDataWidening: typeof baseData = derivedData;
+  // @ts-expect-error Data is invariant in the opposite direction too.
+  const unsafeDataNarrowing: typeof derivedData = baseData;
+  // @ts-expect-error Result is invariant; callers cannot widen close values.
+  const unsafeResultWidening: typeof derivedResult = baseData;
+  // @ts-expect-error Result is invariant in the opposite direction too.
+  const unsafeResultNarrowing: typeof baseData = derivedResult;
+  // @ts-expect-error Custom dismiss reasons cannot be widened after definition.
+  const unsafeDismissWidening: typeof widerDismiss = baseData;
+  // @ts-expect-error Custom dismiss reasons are invariant in the opposite direction too.
+  const unsafeDismissNarrowing: typeof baseData = widerDismiss;
+
+  void [
+    forged,
+    unsafeDataWidening,
+    unsafeDataNarrowing,
+    unsafeResultWidening,
+    unsafeResultNarrowing,
+    unsafeDismissWidening,
+    unsafeDismissNarrowing,
+  ];
+}
+
+void assertTypedOverlayContract;
 
 @Component({
   selector: 'krn-programmatic-view-owner-spec',
@@ -197,7 +272,7 @@ describe('KrnOverlayService', () => {
 
   it('injects typed component data and settles exactly once after disposal', async () => {
     const service = TestBed.inject(KrnOverlayService);
-    const ref = service.open<EditData, string>(EditOverlayContent, {
+    const ref = service.open(EDIT_OVERLAY, {
       data: { name: 'Ada' },
       providers: [ScopedOverlayResource],
       title: 'Edit profile',
@@ -260,7 +335,7 @@ describe('KrnOverlayService', () => {
         },
       ],
     });
-    const ref = TestBed.inject(KrnOverlayService).open(ScopedOverlayContent, {
+    const ref = TestBed.inject(KrnOverlayService).open(SCOPED_OVERLAY, {
       injector: scopedInjector,
     });
 
@@ -309,7 +384,7 @@ describe('KrnOverlayService', () => {
   it('dismisses on Angular Location changes and removes the rendered host', async () => {
     const service = TestBed.inject(KrnOverlayService);
     const location = TestBed.inject(Location);
-    const ref = service.open(PassiveOverlayContent, {
+    const ref = service.open(PASSIVE_OVERLAY, {
       closeOnNavigation: true,
       title: 'Navigation-sensitive overlay',
     });
@@ -327,7 +402,7 @@ describe('KrnOverlayService', () => {
   it('dismisses descendants as parent-owned before completing the parent', async () => {
     const service = TestBed.inject(KrnOverlayService);
     const childRefs: Array<KrnOverlayRef<void, KrnOverlayDismissReason>> = [];
-    const parentRef = service.open<ParentData, void>(ParentOverlayContent, {
+    const parentRef = service.open(PARENT_OVERLAY, {
       data: {
         childOpened: (ref) => {
           childRefs.push(ref);
@@ -362,7 +437,7 @@ describe('KrnOverlayService', () => {
     let ownerDestroyed = false;
     owner.detectChanges();
     const service = TestBed.inject(KrnOverlayService);
-    const ref = service.open(PassiveOverlayContent, {
+    const ref = service.open(PASSIVE_OVERLAY, {
       restoreFocus: opener,
       title: 'Owned overlay',
       viewContainerRef: owner.componentInstance.viewContainerRef,
@@ -404,7 +479,7 @@ describe('KrnOverlayService', () => {
     const owner = TestBed.createComponent(ViewOwner);
     owner.detectChanges();
     const service = TestBed.inject(KrnOverlayService);
-    const ref = service.open(PassiveOverlayContent, {
+    const ref = service.open(PASSIVE_OVERLAY, {
       title: 'Owned animated overlay',
       variant: 'drawer',
       viewContainerRef: owner.componentInstance.viewContainerRef,
@@ -443,7 +518,7 @@ describe('KrnOverlayService', () => {
 
   it('maps the declarative close action into a typed dismissal', async () => {
     const service = TestBed.inject(KrnOverlayService);
-    const ref = service.open(PassiveOverlayContent, { title: 'Close action overlay' });
+    const ref = service.open(PASSIVE_OVERLAY, { title: 'Close action overlay' });
     const outcomes: Array<KrnOverlayOutcome<void>> = [];
     ref.closed.subscribe((outcome) => outcomes.push(outcome));
 
@@ -456,7 +531,7 @@ describe('KrnOverlayService', () => {
 
   it('binds the ref before constructing component content', async () => {
     const service = TestBed.inject(KrnOverlayService);
-    const ref = service.open<string>(ConstructorCloseContent, {
+    const ref = service.open(CONSTRUCTOR_CLOSE_OVERLAY, {
       title: 'Constructor close overlay',
     });
     const outcomes: Array<KrnOverlayOutcome<string>> = [];
@@ -470,7 +545,7 @@ describe('KrnOverlayService', () => {
 
   it('keeps a CDK popup opened from programmatic content inside the active modal zone', async () => {
     const service = TestBed.inject(KrnOverlayService);
-    const ref = service.open(NestedMenuOverlayContent, { title: 'Programmatic actions' });
+    const ref = service.open(NESTED_MENU_OVERLAY, { title: 'Programmatic actions' });
     await stabilize();
 
     (document.querySelector('.krn-action') as HTMLButtonElement).click();
@@ -507,7 +582,7 @@ describe('KrnOverlayService', () => {
     try {
       const application = TestBed.inject(ApplicationRef);
       const service = TestBed.inject(KrnOverlayService);
-      const ref = service.open(PassiveOverlayContent, {
+      const ref = service.open(PASSIVE_OVERLAY, {
         title: 'Animated drawer',
         variant: 'drawer',
       });
@@ -536,7 +611,7 @@ describe('KrnOverlayService', () => {
 
   it('visually suppresses an inert programmatic branch below a declarative modal', async () => {
     const service = TestBed.inject(KrnOverlayService);
-    const programmatic = service.open(PassiveOverlayContent, { title: 'Programmatic layer' });
+    const programmatic = service.open(PASSIVE_OVERLAY, { title: 'Programmatic layer' });
     const declarative = TestBed.createComponent(MixedStackOwner);
     declarative.detectChanges();
     await stabilize();
@@ -588,7 +663,7 @@ describe('KrnOverlayService', () => {
     try {
       const service = TestBed.inject(KrnOverlayService);
       const childRefs: Array<KrnOverlayRef<void, KrnOverlayDismissReason>> = [];
-      const parentRef = service.open<ParentData, void>(ParentOverlayContent, {
+      const parentRef = service.open(PARENT_OVERLAY, {
         data: { childOpened: (ref) => childRefs.push(ref) },
         title: 'Animated parent',
         variant: 'drawer',

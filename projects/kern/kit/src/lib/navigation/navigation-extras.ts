@@ -253,7 +253,7 @@ export class KrnBottomNavigation {
     transform: validateBottomNavigationItems,
   });
   readonly value = model<string | null>(null);
-  readonly ariaLabel = input(this.translations.navigation.primary);
+  readonly ariaLabel = input<string | undefined>();
   readonly itemSelected = output<KrnNavigationItem>();
   protected readonly columnCount = computed(() => Math.max(1, this.items().length));
   protected readonly resolvedAriaLabel = computed(
@@ -393,8 +393,8 @@ export class KrnTableOfContents {
   });
   readonly activeId = model<string | null>(null);
   readonly observe = input(true, { transform: booleanAttribute });
-  readonly title = input(this.translations.navigation.tableOfContentsTitle);
-  readonly ariaLabel = input(this.translations.navigation.tableOfContents);
+  readonly title = input<string | undefined>();
+  readonly ariaLabel = input<string | undefined>();
   readonly itemActivated = output<KrnTocItem>();
   protected readonly resolvedTitle = computed(
     () => this.title()?.trim() || this.translations.navigation.tableOfContentsTitle.trim() || null,
@@ -530,7 +530,7 @@ export class KrnBackButton {
   private readonly location = inject(Location);
   private readonly translations = inject(KRN_TRANSLATIONS);
   readonly href = input<string | null>(null);
-  readonly label = input(this.translations.navigation.back);
+  readonly label = input<string | undefined>();
   readonly activated = output<void>();
   protected readonly resolvedHref = computed(() => this.href()?.trim() || null);
   protected readonly resolvedLabel = computed(
@@ -604,11 +604,11 @@ export class KrnSkipLink {
   private readonly platform = inject(KRN_PLATFORM);
   private readonly translations = inject(KRN_TRANSLATIONS);
   readonly targetId = input('main-content');
-  readonly label = input(this.translations.navigation.skipToMainContent);
+  readonly label = input<string | undefined>();
   readonly activated = output<void>();
   protected readonly resolvedTargetId = computed(() => this.targetId().trim() || 'main-content');
   protected readonly resolvedLabel = computed(
-    () => this.label().trim() || this.translations.navigation.skipToMainContent.trim(),
+    () => this.label()?.trim() || this.translations.navigation.skipToMainContent.trim(),
   );
 
   protected href(): string {

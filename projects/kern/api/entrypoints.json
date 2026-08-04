@@ -35,6 +35,34 @@
     {
       "subpath": "./testing",
       "baseline": "testing.api.d.ts"
+    },
+    {
+      "subpath": "./testing/actions",
+      "baseline": "testing-actions.api.d.ts"
+    },
+    {
+      "subpath": "./testing/data-display",
+      "baseline": "testing-data-display.api.d.ts"
+    },
+    {
+      "subpath": "./testing/feedback",
+      "baseline": "testing-feedback.api.d.ts"
+    },
+    {
+      "subpath": "./testing/forms",
+      "baseline": "testing-forms.api.d.ts"
+    },
+    {
+      "subpath": "./testing/layout",
+      "baseline": "testing-layout.api.d.ts"
+    },
+    {
+      "subpath": "./testing/navigation",
+      "baseline": "testing-navigation.api.d.ts"
+    },
+    {
+      "subpath": "./testing/shared",
+      "baseline": "testing-shared.api.d.ts"
     }
   ]
 }

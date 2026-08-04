@@ -9,10 +9,13 @@ export {
   KRN_OVERLAY_DATA,
   KrnOverlayRef,
   KrnOverlayService,
+  defineKrnOverlayContent,
   injectKrnOverlayData,
+  injectKrnOverlayRef,
 } from './programmatic-overlay';
 export type {
   KrnOverlayConfig,
+  KrnOverlayContent,
   KrnOverlayDismissReason,
   KrnOverlayOutcome,
   KrnOverlayTemplateContext,

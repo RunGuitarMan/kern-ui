@@ -19,6 +19,7 @@ import {
 } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnToastTranslations } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
 import type {
   KrnToastOptions,
   KrnToastPauseReason,
@@ -585,11 +586,15 @@ export class KrnToastViewport {
   readonly maxVisible = input(4, { transform: numberAttribute });
   readonly maxExpanded = input(12, { transform: numberAttribute });
   readonly labels = input<Partial<KrnToastTranslations>>({});
-  readonly ariaLabel = input(this.translations.toast.ariaLabel);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.toast.ariaLabel,
+  );
   readonly expanded = model(false);
   protected readonly copy = computed(() => ({
     ...this.translations.toast,
-    ariaLabel: this.ariaLabel(),
+    ariaLabel: this.resolvedAriaLabel(),
     ...this.labels(),
   }));
   protected readonly Math = Math;

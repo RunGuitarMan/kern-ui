@@ -72,9 +72,56 @@ export abstract class KrnOverlayRef<
 /** Data injected into component content opened by `KrnOverlayService`. */
 export const KRN_OVERLAY_DATA = new InjectionToken<unknown>('KRN_OVERLAY_DATA');
 
-/** Typed access to `KRN_OVERLAY_DATA` from programmatic component content. */
-export function injectKrnOverlayData<Data>(): Data {
+const KRN_OVERLAY_CONTENT_BRAND: unique symbol = Symbol('KrnOverlayContent');
+const KRN_OVERLAY_CONTENT_IDENTITY = (value: readonly unknown[]): readonly unknown[] => value;
+
+/**
+ * Reusable type contract for component content opened by `KrnOverlayService`.
+ *
+ * Keep the contract next to the component and use the same value both when
+ * injecting overlay context and when opening it. This makes `Data`, `Result`,
+ * and custom dismiss reasons one compile-time contract instead of unrelated
+ * call-site assertions.
+ */
+export interface KrnOverlayContent<
+  Data = undefined,
+  Result = void,
+  CustomDismissReason extends string = never,
+> {
+  readonly component: Type<unknown>;
+  /** @internal Required nominal and invariant compile-time contract. */
+  readonly [KRN_OVERLAY_CONTENT_BRAND]: (
+    value: readonly [Data, Result, CustomDismissReason],
+  ) => readonly [Data, Result, CustomDismissReason];
+}
+
+/** Defines the shared type contract for one programmatic overlay component. */
+export function defineKrnOverlayContent<
+  Data = undefined,
+  Result = void,
+  CustomDismissReason extends string = never,
+>(component: Type<unknown>): KrnOverlayContent<Data, Result, CustomDismissReason> {
+  return Object.freeze({
+    component,
+    [KRN_OVERLAY_CONTENT_BRAND]: KRN_OVERLAY_CONTENT_IDENTITY,
+  }) as unknown as KrnOverlayContent<Data, Result, CustomDismissReason>;
+}
+
+/** Typed access to overlay data, bound to the component's shared contract. */
+export function injectKrnOverlayData<Data, Result, CustomDismissReason extends string>(
+  _content: KrnOverlayContent<Data, Result, CustomDismissReason>,
+): Data {
   return inject(KRN_OVERLAY_DATA) as Data;
+}
+
+/** Typed access to the overlay ref, bound to the component's shared contract. */
+export function injectKrnOverlayRef<Data, Result, CustomDismissReason extends string>(
+  _content: KrnOverlayContent<Data, Result, CustomDismissReason>,
+): KrnOverlayRef<Result, KrnOverlayDismissReason | CustomDismissReason> {
+  return inject(KrnOverlayRef) as KrnOverlayRef<
+    Result,
+    KrnOverlayDismissReason | CustomDismissReason
+  >;
 }
 
 /** Context stamped into programmatic `TemplateRef` content. */
@@ -335,11 +382,11 @@ export class KrnOverlayService {
   }
 
   open<Result = void, CustomDismissReason extends string = never>(
-    content: Type<unknown>,
+    content: KrnOverlayContent<undefined, Result, CustomDismissReason>,
     config?: KrnOverlayConfig<undefined>,
   ): KrnOverlayRef<Result, KrnOverlayDismissReason | CustomDismissReason>;
-  open<Data, Result = void, CustomDismissReason extends string = never>(
-    content: Type<unknown>,
+  open<Data, Result, CustomDismissReason extends string = never>(
+    content: KrnOverlayContent<Data, Result, CustomDismissReason>,
     config: KrnOverlayConfig<Data>,
   ): KrnOverlayRef<Result, KrnOverlayDismissReason | CustomDismissReason>;
   open<Data, Result = void, CustomDismissReason extends string = never>(
@@ -350,7 +397,7 @@ export class KrnOverlayService {
   ): KrnOverlayRef<Result, KrnOverlayDismissReason | CustomDismissReason>;
   open<Data, Result = void, CustomDismissReason extends string = never>(
     content:
-      | Type<unknown>
+      | KrnOverlayContent<Data, Result, CustomDismissReason>
       | TemplateRef<
           KrnOverlayTemplateContext<Data, Result, KrnOverlayDismissReason | CustomDismissReason>
         >,
@@ -478,7 +525,11 @@ export class KrnOverlayService {
               ),
             )
           : outlet.attach(
-              new ComponentPortal(content, config.viewContainerRef ?? null, contentInjector),
+              new ComponentPortal(
+                content.component,
+                config.viewContainerRef ?? null,
+                contentInjector,
+              ),
             );
       attached.onDestroy(() => {
         if (activeRecord.finalizing) return;

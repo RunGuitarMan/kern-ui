@@ -16,7 +16,7 @@ For version `X`, the release contains:
 - `kern-docs-X.manifest.json`: identical to
   `kern-docs/versioned-docs-manifest.json` inside the archive;
 - `release-manifest.json`: binds both documentation files and both package artifacts to version
-  `X`, tag `vX`, the full Git commit, and `/versions/X/`;
+  `X`, tag `vX`, the full Git commit, the dependency-lock digest, and `/versions/X/`;
 - `SHA256SUMS`: exact hashes of both npm tarballs and SBOMs, the documentation archive,
   documentation manifest, and release manifest.
 

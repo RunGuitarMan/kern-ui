@@ -1,0 +1,4061 @@
+{
+  "$schema": "./lifecycle-evidence.schema.json",
+  "schemaVersion": 1,
+  "libraryVersion": "0.1.0",
+  "generatedBy": "scripts/generate-lifecycle-evidence.mjs",
+  "artifacts": {
+    "agent-aot-verifier": {
+      "path": "tools/verify-kern-agent-dx.mjs",
+      "anchor": "Packed-package AOT emitted",
+      "sha256": "sha256-3bdac20326190f75bfde46ba58194948e6c813ec6a9648585b293d2d1efd2ff3"
+    },
+    "agent-example-autocomplete": {
+      "path": "projects/kern/agent/examples/autocomplete.ts",
+      "anchor": "",
+      "sha256": "sha256-a5673cbf534a15d84ae312d4778698bd29ed8517853ef4770a6ffaa5d51e9775"
+    },
+    "agent-example-bar-chart": {
+      "path": "projects/kern/agent/examples/bar-chart.ts",
+      "anchor": "",
+      "sha256": "sha256-112ff5801f416abe130c05e8efcb3bbb352d4b15a6430feee87994064dd4c090"
+    },
+    "agent-example-bottom-sheet": {
+      "path": "projects/kern/agent/examples/bottom-sheet.ts",
+      "anchor": "",
+      "sha256": "sha256-7a9f3b20c3586c1cab139d8602ab0a81d3745d54873cc466f45fb71dadcc69a2"
+    },
+    "agent-example-color-picker": {
+      "path": "projects/kern/agent/examples/color-picker.ts",
+      "anchor": "",
+      "sha256": "sha256-87d8db1cc4a102b57d1b8f0e465747e5190b351e4ff5a95ca3cfbc50542b6592"
+    },
+    "agent-example-combobox": {
+      "path": "projects/kern/agent/examples/combobox.ts",
+      "anchor": "",
+      "sha256": "sha256-a62fc5be960a909bf8e06a89911716560a6b145897bcdc93b5db02d4fcee82db"
+    },
+    "agent-example-command-palette": {
+      "path": "projects/kern/agent/examples/command-palette.ts",
+      "anchor": "",
+      "sha256": "sha256-e787d5413fa7c6679cb440b1a3c3fe5e7afe7078e1df6373555e1af2c7d2b3c1"
+    },
+    "agent-example-data-grid": {
+      "path": "projects/kern/agent/examples/data-grid.ts",
+      "anchor": "",
+      "sha256": "sha256-aa2117d295ffab4fc72bffa68cc7b42040e13ee5b68be70c1dc59d340f2de28a"
+    },
+    "agent-example-data-table": {
+      "path": "projects/kern/agent/examples/data-table.ts",
+      "anchor": "",
+      "sha256": "sha256-d31b42257c6042598433afb23e3fa25799fa7cb1ae490e80b7c04c6825d3b457"
+    },
+    "agent-example-date-picker": {
+      "path": "projects/kern/agent/examples/date-picker.ts",
+      "anchor": "",
+      "sha256": "sha256-b4ba7b7c123c2a2b2f3ce3ef027b9beb6940ae734227d410e3c977fb81abe097"
+    },
+    "agent-example-date-range-picker": {
+      "path": "projects/kern/agent/examples/date-range-picker.ts",
+      "anchor": "",
+      "sha256": "sha256-91ee6a07eaf3dace138ea03e60cab52fc191f7477d5e732a160ff8652d43e623"
+    },
+    "agent-example-dialog": {
+      "path": "projects/kern/agent/examples/dialog.ts",
+      "anchor": "",
+      "sha256": "sha256-978995bc68fcd1f880efacbadd9041ce1b837794719f62308b4ce4ea713b2914"
+    },
+    "agent-example-donut-chart": {
+      "path": "projects/kern/agent/examples/donut-chart.ts",
+      "anchor": "",
+      "sha256": "sha256-12c10f032450390c6c98493656e75d735f1331315167dc685bd11b5c3a365eb7"
+    },
+    "agent-example-drawer": {
+      "path": "projects/kern/agent/examples/drawer.ts",
+      "anchor": "",
+      "sha256": "sha256-26bf7642875f88c48a34e05625bfb79c877f6de3c1663c71301b66e9678c961b"
+    },
+    "agent-example-line-chart": {
+      "path": "projects/kern/agent/examples/line-chart.ts",
+      "anchor": "",
+      "sha256": "sha256-aa8f2186f32b647659b007b7fb96034f1bad36d15c79dffe9be18e297f91f8ea"
+    },
+    "agent-example-multi-select": {
+      "path": "projects/kern/agent/examples/multi-select.ts",
+      "anchor": "",
+      "sha256": "sha256-69d2aee857ff4b87d9233a1ca9a7e8b1a1f06930d9a8e29b7fd0281346b3cec2"
+    },
+    "agent-example-select": {
+      "path": "projects/kern/agent/examples/select.ts",
+      "anchor": "",
+      "sha256": "sha256-a20167a1d3e2a0ec16bf68ddbfd01286ebacf84c7b70273aa9b159c5c2866cb5"
+    },
+    "agent-example-time-picker": {
+      "path": "projects/kern/agent/examples/time-picker.ts",
+      "anchor": "",
+      "sha256": "sha256-764c605f11219ec6e28560c912fcff24cc794ef212364d36b8d87394446e5c7b"
+    },
+    "agent-example-tree": {
+      "path": "projects/kern/agent/examples/tree.ts",
+      "anchor": "",
+      "sha256": "sha256-5ad45f750c255ced1fbe5e3dab7150458eadeeba365d5ff63d14f95bafdedcc6"
+    },
+    "agent-example-tree-navigation": {
+      "path": "projects/kern/agent/examples/tree-navigation.ts",
+      "anchor": "",
+      "sha256": "sha256-78645f9db38a55fa66b2e1602e2c071e8f2a2c406cfd2c057271841ee5185a55"
+    },
+    "api-addon-charts": {
+      "path": "projects/kern/api/addon-charts.api.d.ts",
+      "anchor": "",
+      "sha256": "sha256-0a87151fd59a67606d3268cec050f49981ca21343b9a8c5002897a356c90056f"
+    },
+    "api-addon-grid": {
+      "path": "projects/kern/api/addon-grid.api.d.ts",
+      "anchor": "",
+      "sha256": "sha256-73c1ad8164712635a1bd75e6543e834881b3f38e00531e06fa6f3bb24576bf87"
+    },
+    "api-kit": {
+      "path": "projects/kern/api/kit.api.d.ts",
+      "anchor": "",
+      "sha256": "sha256-abc9734482df2df1adbd3d682acce3939bbe441ccdd52e19b97f99d47a40fdf2"
+    },
+    "api-patterns": {
+      "path": "projects/kern/api/patterns.api.d.ts",
+      "anchor": "",
+      "sha256": "sha256-a9f37f5de7430c68ee19f1096baf45bd38c1fc88fda60fc6e052327d5383d5c0"
+    },
+    "catalog-a11y": {
+      "path": "tests/a11y/accessibility.spec.ts",
+      "anchor": "specimen has no automated WCAG violations",
+      "sha256": "sha256-ece74cffc3a974fb1ba69ed477975ec6a0771dff3ff5300428d6caabc402f825"
+    },
+    "catalog-hydration": {
+      "path": "tests/e2e/component-specimens.spec.ts",
+      "anchor": "hydration preserves every server-rendered specimen node",
+      "sha256": "sha256-de5db89e2bb2b3babf62b1404ad1197a7e01e697f68202e45d1cedfe81d8aa6a"
+    },
+    "catalog-keyboard": {
+      "path": "tests/e2e/quality-regressions.spec.ts",
+      "anchor": "visible enabled controls are keyboard reachable without focus geometry shifts",
+      "sha256": "sha256-be614d726b4832612f41faddb874626b9dddd6eea8f905acf3842eefda6dbc82"
+    },
+    "catalog-ssr": {
+      "path": "tests/e2e/component-specimens.spec.ts",
+      "anchor": "raw SSR response contains every exact catalog route specimen",
+      "sha256": "sha256-de5db89e2bb2b3babf62b1404ad1197a7e01e697f68202e45d1cedfe81d8aa6a"
+    },
+    "catalog-visual": {
+      "path": "tests/visual/visual.spec.ts",
+      "anchor": "default specimen matches its visual baseline",
+      "sha256": "sha256-bc72067092945fde5493940dca1e19d0ece06cc2a48574ae2d65803c20aa6b8e"
+    },
+    "guidance-bulk-actions": {
+      "path": "projects/kern/agent/components/bulk-actions.md",
+      "anchor": "## Use",
+      "sha256": "sha256-e2a99189b75fe5dd3970e700f40437b5776f984f3a8c26d6b6cc889c710d2c6f"
+    },
+    "guidance-crud-toolbar": {
+      "path": "projects/kern/agent/components/crud-toolbar.md",
+      "anchor": "## Use",
+      "sha256": "sha256-7e2b2d70b4413bf4b3fa2e3ea8be9c5a9d8abaa8c67e01b0f7f5659eec643310"
+    },
+    "guidance-dashboard-widget": {
+      "path": "projects/kern/agent/components/dashboard-widget.md",
+      "anchor": "## Use",
+      "sha256": "sha256-26a6761b0ae9f551c7537d4a1f375fcb6512d3e137753a259668ff1e46fcf274"
+    },
+    "guidance-filter-bar": {
+      "path": "projects/kern/agent/components/filter-bar.md",
+      "anchor": "## Use",
+      "sha256": "sha256-6cba7b83b7665f1afc7f86696cb4c4ea47f3f02793534ba99e8cde9c6bb85cd7"
+    },
+    "guidance-global-search": {
+      "path": "projects/kern/agent/components/global-search.md",
+      "anchor": "## Use",
+      "sha256": "sha256-07f78296822062582b131cd86e811224a99420742b6019da8e01c8f713590457"
+    },
+    "guidance-login-form": {
+      "path": "projects/kern/agent/components/login-form.md",
+      "anchor": "## Use",
+      "sha256": "sha256-6f831b2b93bdea087e5e8a014cc55ac19966728b3a102596a37559fb357a454e"
+    },
+    "guidance-master-detail-layout": {
+      "path": "projects/kern/agent/components/master-detail-layout.md",
+      "anchor": "## Use",
+      "sha256": "sha256-01651d87efe8ee8fdddaa2aa0e7fa493293a6ce594d261fb9469128a9e98e728"
+    },
+    "guidance-mobile-navigation": {
+      "path": "projects/kern/agent/components/mobile-navigation.md",
+      "anchor": "## Use",
+      "sha256": "sha256-58fb85929eb58894f5841fd6acb5523cc1a18ea14d42a256ae0d04ed1f0dcece"
+    },
+    "guidance-multi-step-form": {
+      "path": "projects/kern/agent/components/multi-step-form.md",
+      "anchor": "## Use",
+      "sha256": "sha256-942e5fa75550cea70a47084b2f850425106b07dcb4dd5ddc74bdc1fc637b0123"
+    },
+    "guidance-notification-center": {
+      "path": "projects/kern/agent/components/notification-center.md",
+      "anchor": "## Use",
+      "sha256": "sha256-9c07e08bb07f704be0dbbdb2ce6085bf0633eee2cc95b3e7592678618a95f9c6"
+    },
+    "guidance-page-header": {
+      "path": "projects/kern/agent/components/page-header.md",
+      "anchor": "## Use",
+      "sha256": "sha256-5a330c04b4d95bbf5270ef8c0ee1e5a54065edc9829c8acc589df3d0a7f2c3f2"
+    },
+    "guidance-profile-form": {
+      "path": "projects/kern/agent/components/profile-form.md",
+      "anchor": "## Use",
+      "sha256": "sha256-e47690fd68ad9056bdca9ab52427c87b52de3aae53b0d7b0b366568a009cb027"
+    },
+    "guidance-responsive-application-shell": {
+      "path": "projects/kern/agent/components/responsive-application-shell.md",
+      "anchor": "## Use",
+      "sha256": "sha256-91a2eeb7b0f5870ea2e30101652de853e81219db879c1a0fab64624507d887a1"
+    },
+    "guidance-settings-panel": {
+      "path": "projects/kern/agent/components/settings-panel.md",
+      "anchor": "## Use",
+      "sha256": "sha256-c3523acd6fa32e77c3617d842400514ca090ddb09acefa6652d102aba52dd796"
+    },
+    "guidance-user-menu": {
+      "path": "projects/kern/agent/components/user-menu.md",
+      "anchor": "## Use",
+      "sha256": "sha256-ba35f50a908ebf8ef7004ec22d8a31b60f8a4e9471a76ba3b05f6331f0196a94"
+    },
+    "lifecycle-policy": {
+      "path": "docs/LIFECYCLE.md",
+      "anchor": "Current pre-1.0 promotion queue",
+      "sha256": "sha256-e5eb4c45d1792fdd63aff15abf615be632fe42af136d768687c1b4e025b06cff"
+    },
+    "mobile-form": {
+      "path": "tests/mobile-touch/risk-based.spec.ts",
+      "anchor": "[form]",
+      "sha256": "sha256-326bd2e7d187cdf329cb02c0d97c1b216f980fc3e9c0ce130b70a6316ee650c5"
+    },
+    "mobile-overlay": {
+      "path": "tests/mobile-touch/risk-based.spec.ts",
+      "anchor": "[overlay]",
+      "sha256": "sha256-326bd2e7d187cdf329cb02c0d97c1b216f980fc3e9c0ce130b70a6316ee650c5"
+    },
+    "mobile-pointer": {
+      "path": "tests/mobile-touch/risk-based.spec.ts",
+      "anchor": "[pointer]",
+      "sha256": "sha256-326bd2e7d187cdf329cb02c0d97c1b216f980fc3e9c0ce130b70a6316ee650c5"
+    },
+    "mobile-scroll": {
+      "path": "tests/mobile-touch/risk-based.spec.ts",
+      "anchor": "[scroll]",
+      "sha256": "sha256-326bd2e7d187cdf329cb02c0d97c1b216f980fc3e9c0ce130b70a6316ee650c5"
+    },
+    "perf-charts": {
+      "path": "tests/performance/runtime.spec.ts",
+      "anchor": "Chart keyboard marks stay bounded",
+      "sha256": "sha256-c5be305bd2e1dc6fdea59e33898a27e21c334f652e2bf8ca8f405cc24a56cf0a"
+    },
+    "perf-dialog": {
+      "path": "tests/performance/runtime.spec.ts",
+      "anchor": "Dialog repeated open/close cycles",
+      "sha256": "sha256-c5be305bd2e1dc6fdea59e33898a27e21c334f652e2bf8ca8f405cc24a56cf0a"
+    },
+    "perf-forms": {
+      "path": "tests/performance/runtime.spec.ts",
+      "anchor": "large typed-form primitives update",
+      "sha256": "sha256-c5be305bd2e1dc6fdea59e33898a27e21c334f652e2bf8ca8f405cc24a56cf0a"
+    },
+    "perf-grid": {
+      "path": "tests/performance/runtime.spec.ts",
+      "anchor": "virtual Data Grid keeps a 10k-row source",
+      "sha256": "sha256-c5be305bd2e1dc6fdea59e33898a27e21c334f652e2bf8ca8f405cc24a56cf0a"
+    },
+    "perf-select": {
+      "path": "tests/performance/runtime.spec.ts",
+      "anchor": "Select exposes the documented 1k-option stress envelope",
+      "sha256": "sha256-c5be305bd2e1dc6fdea59e33898a27e21c334f652e2bf8ca8f405cc24a56cf0a"
+    },
+    "perf-tree": {
+      "path": "tests/performance/runtime.spec.ts",
+      "anchor": "Tree mounts 500 stable nodes",
+      "sha256": "sha256-c5be305bd2e1dc6fdea59e33898a27e21c334f652e2bf8ca8f405cc24a56cf0a"
+    },
+    "responsive-suite": {
+      "path": "tests/responsive/responsive.spec.ts",
+      "anchor": "Responsive, RTL, and text zoom contracts",
+      "sha256": "sha256-bf1fa02ace335f35d12b271e4aba662aaacc46307410f1de8fec2bba471a3734"
+    },
+    "ssr-server": {
+      "path": "tests/support/serve-workspace.mjs",
+      "anchor": "browser tests exercise server rendering",
+      "sha256": "sha256-043361fcb387cf398b59156583611bc5f1ba712a9816c0d8025012ab05499319"
+    },
+    "unit-accordion": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnAccordion",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-alert": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnAlert",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-alert-dialog": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnAlertDialog",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-app-shell": {
+      "path": "projects/kern/kit/src/lib/layout/app-shell.spec.ts",
+      "anchor": "KrnAppShell",
+      "sha256": "sha256-779f290a84a4baeb0fda3544517e36505bde68fa02fec3310570e4f2aaac8cc0"
+    },
+    "unit-aspect-ratio": {
+      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "anchor": "KrnAspectRatio",
+      "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
+    },
+    "unit-autocomplete": {
+      "path": "projects/kern/kit/src/lib/forms/autocomplete.spec.ts",
+      "anchor": "KrnAutocomplete",
+      "sha256": "sha256-44a66baa63b2d61af8a20cb3a8bcbb59a5c4369a66bc5d0aa4b041fc9f6b09f8"
+    },
+    "unit-avatar": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnAvatar",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-avatar-group": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnAvatarGroup",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-back-button": {
+      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "anchor": "KrnBackButton",
+      "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
+    },
+    "unit-badge": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnBadge",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-banner": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnBanner",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-bar-chart": {
+      "path": "projects/kern/addon-charts/src/lib/charts/charts.spec.ts",
+      "anchor": "KrnBarChart",
+      "sha256": "sha256-9b5fb79dd777c367cf2d6bafc495cd9fc556cc0f2c6984d039bd668646d04527"
+    },
+    "unit-bottom-navigation": {
+      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "anchor": "KrnBottomNavigation",
+      "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
+    },
+    "unit-bottom-sheet": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnBottomSheet",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-breadcrumbs": {
+      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "anchor": "KrnBreadcrumbs",
+      "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
+    },
+    "unit-bulk-actions": {
+      "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
+      "anchor": "KrnCrudToolbar",
+      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+    },
+    "unit-button": {
+      "path": "projects/kern/kit/src/lib/actions/button.spec.ts",
+      "anchor": "KrnButton",
+      "sha256": "sha256-acc1f8c3be5d6c90d6ab078c6167b9d65ce8e1d204f91ee3509812ca611d124b"
+    },
+    "unit-button-group": {
+      "path": "projects/kern/kit/src/lib/actions/button-group.spec.ts",
+      "anchor": "KrnButtonGroup",
+      "sha256": "sha256-abcc09cd71850e46da2de0998f94c0503a83098d261ccd5584292d204e1ac184"
+    },
+    "unit-calendar": {
+      "path": "projects/kern/kit/src/lib/data-display/calendar.spec.ts",
+      "anchor": "KrnCalendar",
+      "sha256": "sha256-b432dfefd8f58ee7f9fcc548ed5175b5aa72252e780dfc157cec26121c186ccd"
+    },
+    "unit-card": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnCard",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-center": {
+      "path": "projects/kern/kit/src/lib/layout/container.spec.ts",
+      "anchor": "KrnCenter",
+      "sha256": "sha256-1b0e1b7cee05c273180f5bd307c99b98e2e6209b6b153bc3dce9343039475bdc"
+    },
+    "unit-checkbox": {
+      "path": "projects/kern/kit/src/lib/forms/checkbox.spec.ts",
+      "anchor": "KrnCheckbox",
+      "sha256": "sha256-8db6e3dc3dd58f0c5e2674327ae9cb20df2c2a6fdb08d8bb43adf9244fdaa2a3"
+    },
+    "unit-checkbox-group": {
+      "path": "projects/kern/kit/src/lib/forms/checkbox-group.spec.ts",
+      "anchor": "KrnCheckboxGroup",
+      "sha256": "sha256-1875b29146c884d304b4ae8e31425c487b10fbedb5b76bd437d6491e1763e33c"
+    },
+    "unit-chip": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnChip",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-circular-progress": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnCircularProgress",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-cluster": {
+      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "anchor": "KrnCluster",
+      "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
+    },
+    "unit-code-block": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnCodeBlock",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-color-picker": {
+      "path": "projects/kern/kit/src/lib/forms/color-picker.spec.ts",
+      "anchor": "KrnColorPicker",
+      "sha256": "sha256-e6d2cd8d983a2048938eb2acd7ea35ad1501f5a346e450f70193eb7b13f0ff99"
+    },
+    "unit-combobox": {
+      "path": "projects/kern/kit/src/lib/forms/combobox.spec.ts",
+      "anchor": "KrnCombobox",
+      "sha256": "sha256-56cfae32be9437949809330b46f58b445aa02cead0dc18c0533911b1ee70c0b0"
+    },
+    "unit-command-palette": {
+      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "anchor": "KrnCommandPalette",
+      "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
+    },
+    "unit-confirmation-pattern": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnConfirmation",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-container": {
+      "path": "projects/kern/kit/src/lib/layout/container.spec.ts",
+      "anchor": "KrnContainer",
+      "sha256": "sha256-1b0e1b7cee05c273180f5bd307c99b98e2e6209b6b153bc3dce9343039475bdc"
+    },
+    "unit-context-menu": {
+      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "anchor": "KrnContextMenu",
+      "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
+    },
+    "unit-copy-button": {
+      "path": "projects/kern/kit/src/lib/actions/copy-button.spec.ts",
+      "anchor": "KrnCopyButton",
+      "sha256": "sha256-7ddecbef04a4e4dd3fa76fb6699937dd22045f591261d0268bf81cc7b42194c3"
+    },
+    "unit-crud-toolbar": {
+      "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
+      "anchor": "KrnCrudToolbar",
+      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+    },
+    "unit-dashboard-widget": {
+      "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
+      "anchor": "KrnDashboardWidget",
+      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+    },
+    "unit-data-grid": {
+      "path": "projects/kern/addon-grid/src/lib/data-grid.spec.ts",
+      "anchor": "KrnDataGrid",
+      "sha256": "sha256-02fbecaa4d06cf8a5066631f9f0062908b4b141f2316828e7c0c36e8c339a3eb"
+    },
+    "unit-data-table": {
+      "path": "projects/kern/addon-grid/src/lib/data-grid.spec.ts",
+      "anchor": "KrnDataGrid",
+      "sha256": "sha256-02fbecaa4d06cf8a5066631f9f0062908b4b141f2316828e7c0c36e8c339a3eb"
+    },
+    "unit-date-picker": {
+      "path": "projects/kern/kit/src/lib/forms/date-picker.spec.ts",
+      "anchor": "KrnDatePicker",
+      "sha256": "sha256-bb7680a2aef5221d049a5e4f8008d9c5fad147fb649a9259e790dee83943bdf0"
+    },
+    "unit-date-range-picker": {
+      "path": "projects/kern/kit/src/lib/forms/date-range-picker.spec.ts",
+      "anchor": "KrnDateRangePicker",
+      "sha256": "sha256-c57214530e6e2b5d10fbdb2c440805df832810ea0ef023250eca063a2449731a"
+    },
+    "unit-description-list": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnDescriptionList",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-dialog": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnDialog",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-disclosure": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnDisclosure",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-divider": {
+      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "anchor": "KrnDivider",
+      "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
+    },
+    "unit-donut-chart": {
+      "path": "projects/kern/addon-charts/src/lib/charts/charts.spec.ts",
+      "anchor": "KrnDonutChart",
+      "sha256": "sha256-9b5fb79dd777c367cf2d6bafc495cd9fc556cc0f2c6984d039bd668646d04527"
+    },
+    "unit-drag-drop-upload": {
+      "path": "projects/kern/kit/src/lib/forms/drop-upload.spec.ts",
+      "anchor": "KrnDropUpload",
+      "sha256": "sha256-8b4fee07ff9cd0f079e1f1182413e65f0e9dbac3766898bf4ff592b9f32b72b5"
+    },
+    "unit-drawer": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnDrawer",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-dropdown-button": {
+      "path": "projects/kern/kit/src/lib/actions/dropdown-button.spec.ts",
+      "anchor": "KrnDropdownButton",
+      "sha256": "sha256-3d44720ca3bae1ffe279c5979d661f733320ac157f6a72af0a991c86e4351fcf"
+    },
+    "unit-empty-state": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnEmptyState",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-error-state": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnErrorState",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-file-upload": {
+      "path": "projects/kern/kit/src/lib/forms/file-upload.spec.ts",
+      "anchor": "KrnFileUpload",
+      "sha256": "sha256-abe2b8d12f6d8a356806a08478c8170a911d63b19b89a1ed832539f8222bfcde"
+    },
+    "unit-filter-bar": {
+      "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
+      "anchor": "KrnFilterBar",
+      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+    },
+    "unit-floating-action-button": {
+      "path": "projects/kern/kit/src/lib/actions/floating-action-button.spec.ts",
+      "anchor": "KrnFloatingActionButton",
+      "sha256": "sha256-e6c436d211772635ba0b4775e6d1878966117435a8b2c1401759e52d08affe98"
+    },
+    "unit-form-field": {
+      "path": "projects/kern/kit/src/lib/forms/form-field.spec.ts",
+      "anchor": "KrnFormField",
+      "sha256": "sha256-53ccde07587c9750e998d4a0058b4b5a7c8823869f15e439740c7d3a9ed98894"
+    },
+    "unit-global-search": {
+      "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
+      "anchor": "KrnGlobalSearch",
+      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+    },
+    "unit-grid": {
+      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "anchor": "KrnGrid",
+      "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
+    },
+    "unit-header": {
+      "path": "projects/kern/kit/src/lib/layout/header.spec.ts",
+      "anchor": "KrnHeader",
+      "sha256": "sha256-5ef10598e79b74dc09910cfdb8fe908f03cd04adceeb7e66fa57f9fa6ed4455b"
+    },
+    "unit-hint": {
+      "path": "projects/kern/kit/src/lib/forms/form-field.spec.ts",
+      "anchor": "KrnHint",
+      "sha256": "sha256-53ccde07587c9750e998d4a0058b4b5a7c8823869f15e439740c7d3a9ed98894"
+    },
+    "unit-hover-card": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnHoverCard",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-icon-button": {
+      "path": "projects/kern/kit/src/lib/actions/icon-button.spec.ts",
+      "anchor": "KrnIconButton",
+      "sha256": "sha256-e7a08fd01c454bf3146667d7546ca9307f0ef20169092950a1a365cb5b41507a"
+    },
+    "unit-inline": {
+      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "anchor": "KrnInline",
+      "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
+    },
+    "unit-keyboard-shortcut": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnKeyboardShortcut",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-label": {
+      "path": "projects/kern/kit/src/lib/forms/form-field.spec.ts",
+      "anchor": "KrnLabel",
+      "sha256": "sha256-53ccde07587c9750e998d4a0058b4b5a7c8823869f15e439740c7d3a9ed98894"
+    },
+    "unit-line-chart": {
+      "path": "projects/kern/addon-charts/src/lib/charts/charts.spec.ts",
+      "anchor": "KrnLineChart",
+      "sha256": "sha256-9b5fb79dd777c367cf2d6bafc495cd9fc556cc0f2c6984d039bd668646d04527"
+    },
+    "unit-link": {
+      "path": "projects/kern/kit/src/lib/actions/link.spec.ts",
+      "anchor": "KrnLink",
+      "sha256": "sha256-192d0ba1af5424f4e1a81f9359b4dfd94c3f88bf1a4bfeb202938acd321b1f53"
+    },
+    "unit-list": {
+      "path": "projects/kern/kit/src/lib/reactive-input.spec.ts",
+      "anchor": "KrnList",
+      "sha256": "sha256-95e6dcd45d042dadee9e2d600dc9d9b4fa7d4e2ac7c7ad100118a933ee11934a"
+    },
+    "unit-list-item": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnListItem",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-loading-overlay": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnLoadingOverlay",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-login-form": {
+      "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
+      "anchor": "KrnLoginForm",
+      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+    },
+    "unit-master-detail-layout": {
+      "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
+      "anchor": "KrnMasterDetailLayout",
+      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+    },
+    "unit-menu": {
+      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "anchor": "KrnMenu",
+      "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
+    },
+    "unit-menubar": {
+      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "anchor": "KrnMenubar",
+      "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
+    },
+    "unit-meter": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnMeter",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-mobile-navigation": {
+      "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
+      "anchor": "KrnMobileNavigation",
+      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+    },
+    "unit-multi-select": {
+      "path": "projects/kern/kit/src/lib/forms/multi-select.spec.ts",
+      "anchor": "KrnMultiSelect",
+      "sha256": "sha256-39e61dbb94ed07c768cb406e0747ed1cc1c9d565b5fe3b1ff5f894e8783c808c"
+    },
+    "unit-multi-step-form": {
+      "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
+      "anchor": "KrnMultiStepForm",
+      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+    },
+    "unit-native-select": {
+      "path": "projects/kern/kit/src/lib/forms/native-select.spec.ts",
+      "anchor": "KrnNativeSelect",
+      "sha256": "sha256-a61aed62dea9fa414999ab323f5786bee5ba2db77937a58288bd089c9757e9f6"
+    },
+    "unit-navigation-rail": {
+      "path": "projects/kern/kit/src/lib/layout/navigation-rail.spec.ts",
+      "anchor": "KrnNavigationRail",
+      "sha256": "sha256-0944e9eef572e598c4146c9e0cfc7c4f96de59a6bd2e8d3fd1ee59b01988f062"
+    },
+    "unit-notification-center": {
+      "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
+      "anchor": "KrnNotificationCenter",
+      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+    },
+    "unit-number-input": {
+      "path": "projects/kern/kit/src/lib/forms/number-input.spec.ts",
+      "anchor": "KrnNumberInput",
+      "sha256": "sha256-e7191dfbe0c4efe2ffdc94dba16a3f4fb695796438cb219301a91e9ed0d3240b"
+    },
+    "unit-page-header": {
+      "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
+      "anchor": "KrnPageHeader",
+      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+    },
+    "unit-pagination": {
+      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "anchor": "KrnPagination",
+      "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
+    },
+    "unit-password-input": {
+      "path": "projects/kern/kit/src/lib/forms/password-input.spec.ts",
+      "anchor": "KrnPasswordInput",
+      "sha256": "sha256-db0947180fc1278d8a333bf228c2fb7bee412e25a2abaabd6f8f32dadb44ebef"
+    },
+    "unit-popover": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnPopover",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-profile-form": {
+      "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
+      "anchor": "KrnProfileForm",
+      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+    },
+    "unit-progress-bar": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnProgressBar",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-radio": {
+      "path": "projects/kern/kit/src/lib/forms/radio.spec.ts",
+      "anchor": "KrnRadio",
+      "sha256": "sha256-f1a7bc4d541f6ce2365b6bc3d3e47210c6e837f2e6b7369043db447f68a90405"
+    },
+    "unit-radio-group": {
+      "path": "projects/kern/kit/src/lib/forms/radio-group.spec.ts",
+      "anchor": "KrnRadioGroup",
+      "sha256": "sha256-1f9c7ac1a4d2d3aab7355924bbbd92799e2549aeb57fa5096134308242e1a17c"
+    },
+    "unit-range-slider": {
+      "path": "projects/kern/kit/src/lib/forms/range-slider.spec.ts",
+      "anchor": "KrnRangeSlider",
+      "sha256": "sha256-71a5cdbd3b251d5c16c3d99c05dc8091931faea48ebdf23ecb55efe5ec3e98e1"
+    },
+    "unit-rating": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnRating",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-resizable-panels": {
+      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "anchor": "KrnResizablePanels",
+      "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
+    },
+    "unit-responsive-application-shell": {
+      "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
+      "anchor": "KrnResponsiveApplicationShell",
+      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+    },
+    "unit-responsive-media": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnResponsiveMedia",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-responsive-show-hide": {
+      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "anchor": "KrnShow",
+      "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
+    },
+    "unit-scroll-area": {
+      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "anchor": "KrnScrollArea",
+      "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
+    },
+    "unit-search-input": {
+      "path": "projects/kern/kit/src/lib/forms/search-input.spec.ts",
+      "anchor": "KrnSearchInput",
+      "sha256": "sha256-89fb793f8c083b211b1ee76f1940cfd43a1c6a0b17087b91efd7c393e17c7d9d"
+    },
+    "unit-segmented-control": {
+      "path": "projects/kern/kit/src/lib/forms/segmented-control.spec.ts",
+      "anchor": "KrnSegmentedControl",
+      "sha256": "sha256-8b76e5313cf02c03b4e6d7e8c60717f8dfcfb7ed26d017add572c569cb7995c1"
+    },
+    "unit-select": {
+      "path": "projects/kern/kit/src/lib/forms/select.spec.ts",
+      "anchor": "KrnSelect",
+      "sha256": "sha256-c5cc2bb687d6584636a3e2548932011d17a62cef1db61b80b517df38cdcb00b8"
+    },
+    "unit-settings-panel": {
+      "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
+      "anchor": "KrnSettingsPanel",
+      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+    },
+    "unit-sidebar": {
+      "path": "projects/kern/kit/src/lib/layout/sidebar.spec.ts",
+      "anchor": "KrnSidebar",
+      "sha256": "sha256-900379c88f50e786ac596c4f47d7f05cd7045f8783ee81667f808a2ce0c138ad"
+    },
+    "unit-skeleton": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnSkeleton",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-skip-link": {
+      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "anchor": "KrnSkipLink",
+      "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
+    },
+    "unit-slider": {
+      "path": "projects/kern/kit/src/lib/forms/slider.spec.ts",
+      "anchor": "KrnSlider",
+      "sha256": "sha256-4f2ce1307d6fdc454742e468d5c4795a20e98840e8009baf542437331496306c"
+    },
+    "unit-spacer": {
+      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "anchor": "KrnSpacer",
+      "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
+    },
+    "unit-spinner": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnSpinner",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-split-button": {
+      "path": "projects/kern/kit/src/lib/actions/split-button.spec.ts",
+      "anchor": "KrnSplitButton",
+      "sha256": "sha256-212ac2803b1693931537aa2c5f890fb1bdf708b67ce68e841d631c95720be05e"
+    },
+    "unit-split-layout": {
+      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "anchor": "KrnSplitLayout",
+      "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
+    },
+    "unit-stack": {
+      "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
+      "anchor": "KrnStack",
+      "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
+    },
+    "unit-stat": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnStat",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-status-badge": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnBadge",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-stepper": {
+      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "anchor": "KrnStepper",
+      "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
+    },
+    "unit-success-state": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnSuccessState",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-switch": {
+      "path": "projects/kern/kit/src/lib/forms/switch.spec.ts",
+      "anchor": "KrnSwitch",
+      "sha256": "sha256-1a8d71f3dfdb22d7fb314721c5951193591f6f8df2d798549ea44e92a1b9392c"
+    },
+    "unit-table-of-contents": {
+      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "anchor": "KrnTableOfContents",
+      "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
+    },
+    "unit-tabs": {
+      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "anchor": "KrnTabs",
+      "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
+    },
+    "unit-tag": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnChip",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-tags-input": {
+      "path": "projects/kern/kit/src/lib/forms/tags-input.spec.ts",
+      "anchor": "KrnTagsInput",
+      "sha256": "sha256-6bbdb71921a46d709641011e631f0185a05c8069b987f9dfc76f8ed2e0018ef7"
+    },
+    "unit-text-input": {
+      "path": "projects/kern/kit/src/lib/forms/text-input.spec.ts",
+      "anchor": "KrnTextInput",
+      "sha256": "sha256-47f29f9799559fc30c0eb26da55f4f1657895b3786ac36232927d59a421341e4"
+    },
+    "unit-textarea": {
+      "path": "projects/kern/kit/src/lib/forms/textarea.spec.ts",
+      "anchor": "KrnTextarea",
+      "sha256": "sha256-41fa87e971eb3bb685c90796beb6af5e63f54b65a46442b8a1ed5b77b83df22f"
+    },
+    "unit-time-picker": {
+      "path": "projects/kern/kit/src/lib/forms/time-picker.spec.ts",
+      "anchor": "KrnTimePicker",
+      "sha256": "sha256-bf5c81ceceabbefb699bd0b0f34cb1824ceae92916319a19bb4ff6d0c8dbdacc"
+    },
+    "unit-timeline": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnTimeline",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-toast": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnToastViewport",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-toggle-button": {
+      "path": "projects/kern/kit/src/lib/actions/toggle-button.spec.ts",
+      "anchor": "KrnToggleButton",
+      "sha256": "sha256-7e42106ef1fc2527d015946a351b300d87ba6a5d2d870aa72ef6d1ed7dbd5cdf"
+    },
+    "unit-toggle-group": {
+      "path": "projects/kern/kit/src/lib/actions/toggle-group.spec.ts",
+      "anchor": "KrnToggleGroup",
+      "sha256": "sha256-798b1e5d9c49269a46c64670c5900224ca689c57ec20fcee75a480aece0ea4bf"
+    },
+    "unit-tooltip": {
+      "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
+      "anchor": "KrnTooltip",
+      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+    },
+    "unit-tree": {
+      "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
+      "anchor": "KrnTree",
+      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+    },
+    "unit-tree-navigation": {
+      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "anchor": "KrnTreeNavigation",
+      "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
+    },
+    "unit-user-menu": {
+      "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
+      "anchor": "KrnUserMenu",
+      "sha256": "sha256-d81b93779811e7949eaf7393f43b0a9479d6f7435ba2126c4a85d74a5e167313"
+    },
+    "unit-validation-message": {
+      "path": "projects/kern/kit/src/lib/forms/forms.spec.ts",
+      "anchor": "KrnValidationMessage",
+      "sha256": "sha256-d5994f726b5732c13b0e857d3cf355d29da3c2c5cb73e7a9050f83b045fd11f2"
+    },
+    "unit-verification-code": {
+      "path": "projects/kern/kit/src/lib/forms/form-field.spec.ts",
+      "anchor": "KrnOtpInput",
+      "sha256": "sha256-53ccde07587c9750e998d4a0058b4b5a7c8823869f15e439740c7d3a9ed98894"
+    },
+    "unit-vertical-tabs": {
+      "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
+      "anchor": "KrnTabs",
+      "sha256": "sha256-4139a598a1d4f1006052fbf4a5d5592a208373435a54e2b2f78270466c24da36"
+    }
+  },
+  "components": [
+    {
+      "id": "accordion",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/disclosure.ts",
+      "sourceSha256": "sha256-1cc0599993fa7031675cae964145197db57b2a83424b6f03ee012f079fbed194",
+      "symbol": "KrnAccordion",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-accordion"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-accordion"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "alert",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/alert.ts",
+      "sourceSha256": "sha256-c5d165db7da422cc8214fcb912e9021c4f9ecc9172e96be461d94141cd36b351",
+      "symbol": "KrnAlert",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-alert"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-alert"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "alert-dialog",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
+      "sourceSha256": "sha256-6ee794e3e9b2b560f26ce681f73fd0b233f102405f42629cb99126958432f162",
+      "symbol": "KrnAlertDialog",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-alert-dialog"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-alert-dialog"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "app-shell",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/app-shell.ts",
+      "sourceSha256": "sha256-2b58454bbc6c2efb71951eeafca5e34307c463afd13d63c2d35735fb88fe91b1",
+      "symbol": "KrnAppShell",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-app-shell"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-app-shell"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "aspect-ratio",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/media-layout.ts",
+      "sourceSha256": "sha256-a1a3571cf034f404afd482a1c2f232cc3b1a9c9057c801fa7967b5cbc1d3e372",
+      "symbol": "KrnAspectRatio",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-aspect-ratio"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-aspect-ratio"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "autocomplete",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
+      "sourceSha256": "sha256-61afaea1de7825dfc293307bd9321f36d21fc01282f236f03efbbdfa04ffca0b",
+      "symbol": "KrnAutocomplete",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-autocomplete"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-autocomplete"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "pending",
+          "recordIds": [],
+          "reason": "The component is not yet materialized in the required manual AT matrix."
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-select"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-autocomplete", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
+      "id": "avatar",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/avatar.ts",
+      "sourceSha256": "sha256-5e9cebdd67aa8e0fdf7c6494fe3eebf84957af1b8291e231c3e025bfb442d574",
+      "symbol": "KrnAvatar",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-avatar"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-avatar"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "avatar-group",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/avatar.ts",
+      "sourceSha256": "sha256-5e9cebdd67aa8e0fdf7c6494fe3eebf84957af1b8291e231c3e025bfb442d574",
+      "symbol": "KrnAvatarGroup",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-avatar-group"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-avatar-group"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "back-button",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/navigation",
+      "source": "projects/kern/kit/src/lib/navigation/navigation-extras.ts",
+      "sourceSha256": "sha256-4e412e46259678dbd3f2a975c1b4166e623cf9891fdf63052345a750fa0143f5",
+      "symbol": "KrnBackButton",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-back-button"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-back-button"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "badge",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/badge.ts",
+      "sourceSha256": "sha256-be2f2094aa1d52452188249f0aef919a684573eb3936ea9d5bb0f6d3e451cffa",
+      "symbol": "KrnBadge",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-badge"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-badge"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "banner",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/alert.ts",
+      "sourceSha256": "sha256-c5d165db7da422cc8214fcb912e9021c4f9ecc9172e96be461d94141cd36b351",
+      "symbol": "KrnBanner",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-banner"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-banner"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "bar-chart",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/data-display",
+      "source": "projects/kern/addon-charts/src/lib/charts/charts.ts",
+      "sourceSha256": "sha256-034c73f7df3d4123ad260491bc0f8bd40463b3b934c9f25ac56b8a7e29a200cc",
+      "symbol": "KrnBarChart",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-addon-charts"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-bar-chart"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-bar-chart"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "pending",
+          "recordIds": [],
+          "reason": "The component is not yet materialized in the required manual AT matrix."
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-charts"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-bar-chart", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
+      "id": "bottom-navigation",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/navigation",
+      "source": "projects/kern/kit/src/lib/navigation/navigation-extras.ts",
+      "sourceSha256": "sha256-4e412e46259678dbd3f2a975c1b4166e623cf9891fdf63052345a750fa0143f5",
+      "symbol": "KrnBottomNavigation",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-bottom-navigation"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-bottom-navigation"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "bottom-sheet",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
+      "sourceSha256": "sha256-6ee794e3e9b2b560f26ce681f73fd0b233f102405f42629cb99126958432f162",
+      "symbol": "KrnBottomSheet",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-bottom-sheet"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-bottom-sheet"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "pending",
+          "recordIds": [],
+          "reason": "The component is not yet materialized in the required manual AT matrix."
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-dialog"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-bottom-sheet", "agent-aot-verifier"]
+        },
+        { "kind": "mobile-touch", "status": "linked", "artifactIds": ["mobile-overlay"] }
+      ]
+    },
+    {
+      "id": "breadcrumbs",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/navigation",
+      "source": "projects/kern/kit/src/lib/navigation/breadcrumbs.ts",
+      "sourceSha256": "sha256-9a85e6253e84656f72e434495b94e4e3c7ee1d4189785d310a6803df221bffe0",
+      "symbol": "KrnBreadcrumbs",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-breadcrumbs"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-breadcrumbs"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "bulk-actions",
+      "status": "recipe",
+      "evidenceProfile": "recipe-validation",
+      "owner": "kern/patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/crud-toolbar.ts",
+      "sourceSha256": "sha256-e7e66227ad2f624db0ea0589888167710874fa03a2714150c5b9f22716bfa96c",
+      "symbol": "KrnCrudToolbar",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-bulk-actions"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "adaptation-guidance",
+          "status": "linked",
+          "artifactIds": ["guidance-bulk-actions"]
+        }
+      ]
+    },
+    {
+      "id": "button",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/actions",
+      "source": "projects/kern/kit/src/lib/actions/button.ts",
+      "sourceSha256": "sha256-f5a4e0d7963d470773df5f89360132cdcfe7fb6a2e992add32b7df7f431fffeb",
+      "symbol": "KrnButton",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-button"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-button"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "button-group",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/actions",
+      "source": "projects/kern/kit/src/lib/actions/button-group.ts",
+      "sourceSha256": "sha256-913eaaa9c453da5650c636f79773d2a22fe9a92d19f66a210cc5ae0480066f5a",
+      "symbol": "KrnButtonGroup",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-button-group"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-button-group"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "calendar",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/calendar.ts",
+      "sourceSha256": "sha256-8fdbacce5748b1e2c2322d8352a01b03d70c7916e908f9c2a7dcf9387a5305fd",
+      "symbol": "KrnCalendar",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-calendar"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-calendar"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "card",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/card.ts",
+      "sourceSha256": "sha256-5c6cd5c873dd781c00940d6baaf9dba5366a700065ae3f25cf3b22bf345c9b07",
+      "symbol": "KrnCard",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-card"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-card"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "center",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/container.ts",
+      "sourceSha256": "sha256-0f8cf9e75b2ece3c7416c11a55895e275fcefb2d896156a6593e1382659b906a",
+      "symbol": "KrnCenter",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-center"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-center"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "checkbox",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
+      "sourceSha256": "sha256-7f4f342368441e3b1c6fd729f75a79e2542d8bd6bfe807a0799d159c2a9cd642",
+      "symbol": "KrnCheckbox",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-checkbox"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-checkbox"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "checkbox-group",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
+      "sourceSha256": "sha256-7f4f342368441e3b1c6fd729f75a79e2542d8bd6bfe807a0799d159c2a9cd642",
+      "symbol": "KrnCheckboxGroup",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-checkbox-group"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-checkbox-group"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "chip",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/badge.ts",
+      "sourceSha256": "sha256-be2f2094aa1d52452188249f0aef919a684573eb3936ea9d5bb0f6d3e451cffa",
+      "symbol": "KrnChip",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-chip"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-chip"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "circular-progress",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/progress.ts",
+      "sourceSha256": "sha256-6d3445a504344f73555ce4487530a0cdc75721ec52f04dc0b3553b1290c7c290",
+      "symbol": "KrnCircularProgress",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-circular-progress"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-circular-progress"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "cluster",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/flex-layout.ts",
+      "sourceSha256": "sha256-4a4c4fdc7f0a699065505e6f08e05544741dfcdcf35b8b7cc7eba58f0e7ee571",
+      "symbol": "KrnCluster",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-cluster"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-cluster"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "code-block",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/code-block.ts",
+      "sourceSha256": "sha256-575873d80968425f4816e1305d7861f070bd7f7d68b9fcfe1554df345ac29ecc",
+      "symbol": "KrnCodeBlock",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-code-block"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-code-block"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "color-picker",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/date-time-controls.ts",
+      "sourceSha256": "sha256-eebb46e6a7c98c7e05918f63342e754f3017f41e61e76641bd44e4bcd3d2c3df",
+      "symbol": "KrnColorPicker",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-color-picker"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-color-picker"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "pending",
+          "recordIds": [],
+          "reason": "The component is not yet materialized in the required manual AT matrix."
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-forms"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-color-picker", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
+      "id": "combobox",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
+      "sourceSha256": "sha256-61afaea1de7825dfc293307bd9321f36d21fc01282f236f03efbbdfa04ffca0b",
+      "symbol": "KrnCombobox",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-combobox"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-combobox"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "linked",
+          "recordIds": [
+            "jaws-edge-windows",
+            "keyboard-only-windows",
+            "nvda-firefox-windows",
+            "voiceover-safari-macos",
+            "windows-high-contrast",
+            "zoom-reflow-desktop"
+          ]
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-select"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-combobox", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
+      "id": "command-palette",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/navigation",
+      "source": "projects/kern/kit/src/lib/navigation/command-palette.ts",
+      "sourceSha256": "sha256-0e9816d0d573488e9af3b601a0cbc03f9d07af17fe8b44a2fcb1b5078debd3fd",
+      "symbol": "KrnCommandPalette",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-command-palette"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-command-palette"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "linked",
+          "recordIds": [
+            "jaws-edge-windows",
+            "keyboard-only-windows",
+            "nvda-firefox-windows",
+            "voiceover-safari-macos",
+            "windows-high-contrast",
+            "zoom-reflow-desktop"
+          ]
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        {
+          "kind": "runtime-performance",
+          "status": "pending",
+          "reason": "No component-family runtime budget is linked yet."
+        },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-command-palette", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
+      "id": "confirmation-pattern",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/states.ts",
+      "sourceSha256": "sha256-ff997b3ec5de90775918f40d25482200de97dc5fd7471049e691e843ba1cdd44",
+      "symbol": "KrnConfirmation",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-confirmation-pattern"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-confirmation-pattern"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "container",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/container.ts",
+      "sourceSha256": "sha256-0f8cf9e75b2ece3c7416c11a55895e275fcefb2d896156a6593e1382659b906a",
+      "symbol": "KrnContainer",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-container"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-container"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "context-menu",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/navigation",
+      "source": "projects/kern/kit/src/lib/navigation/menu.ts",
+      "sourceSha256": "sha256-21f721930a509ff51a22f75e3b39c455b29270b16099cbda7fe3c2d942cded36",
+      "symbol": "KrnContextMenu",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-context-menu"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-context-menu"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "copy-button",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/actions",
+      "source": "projects/kern/kit/src/lib/actions/copy-button.ts",
+      "sourceSha256": "sha256-2473daf300050754a9bec5eadb3fa0d29146d5f08c5eed2edbf98a59cbe17f33",
+      "symbol": "KrnCopyButton",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-copy-button"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-copy-button"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "crud-toolbar",
+      "status": "recipe",
+      "evidenceProfile": "recipe-validation",
+      "owner": "kern/patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/crud-toolbar.ts",
+      "sourceSha256": "sha256-e7e66227ad2f624db0ea0589888167710874fa03a2714150c5b9f22716bfa96c",
+      "symbol": "KrnCrudToolbar",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-crud-toolbar"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "adaptation-guidance",
+          "status": "linked",
+          "artifactIds": ["guidance-crud-toolbar"]
+        }
+      ]
+    },
+    {
+      "id": "dashboard-widget",
+      "status": "recipe",
+      "evidenceProfile": "recipe-validation",
+      "owner": "kern/patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/dashboard-widget.ts",
+      "sourceSha256": "sha256-158b891d4395bb0027b63561f3795778c7b28e15cbb360224a4cbf8eefa8d240",
+      "symbol": "KrnDashboardWidget",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-dashboard-widget"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "adaptation-guidance",
+          "status": "linked",
+          "artifactIds": ["guidance-dashboard-widget"]
+        }
+      ]
+    },
+    {
+      "id": "data-grid",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/data-display",
+      "source": "projects/kern/addon-grid/src/lib/data-grid.ts",
+      "sourceSha256": "sha256-01f09fc0404b6bf6bc5ec3d79eea4c436ae4bc3bdd0d5eeebc49afef1ec10b8d",
+      "symbol": "KrnDataGrid",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-addon-grid"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-data-grid"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-data-grid"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "linked",
+          "recordIds": [
+            "jaws-edge-windows",
+            "keyboard-only-windows",
+            "nvda-firefox-windows",
+            "voiceover-safari-macos",
+            "windows-high-contrast",
+            "zoom-reflow-desktop"
+          ]
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-grid"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-data-grid", "agent-aot-verifier"]
+        },
+        { "kind": "mobile-touch", "status": "linked", "artifactIds": ["mobile-scroll"] }
+      ]
+    },
+    {
+      "id": "data-table",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/data-display",
+      "source": "projects/kern/addon-grid/src/lib/data-grid.ts",
+      "sourceSha256": "sha256-01f09fc0404b6bf6bc5ec3d79eea4c436ae4bc3bdd0d5eeebc49afef1ec10b8d",
+      "symbol": "KrnDataGrid",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-addon-grid"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-data-table"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-data-table"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "pending",
+          "recordIds": [],
+          "reason": "The component is not yet materialized in the required manual AT matrix."
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-grid"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-data-table", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
+      "id": "date-picker",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/date-time-controls.ts",
+      "sourceSha256": "sha256-eebb46e6a7c98c7e05918f63342e754f3017f41e61e76641bd44e4bcd3d2c3df",
+      "symbol": "KrnDatePicker",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-date-picker"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-date-picker"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "linked",
+          "recordIds": [
+            "jaws-edge-windows",
+            "keyboard-only-windows",
+            "nvda-firefox-windows",
+            "voiceover-safari-macos",
+            "windows-high-contrast",
+            "zoom-reflow-desktop"
+          ]
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-forms"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-date-picker", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
+      "id": "date-range-picker",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/date-time-controls.ts",
+      "sourceSha256": "sha256-eebb46e6a7c98c7e05918f63342e754f3017f41e61e76641bd44e4bcd3d2c3df",
+      "symbol": "KrnDateRangePicker",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-date-range-picker"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-date-range-picker"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "pending",
+          "recordIds": [],
+          "reason": "The component is not yet materialized in the required manual AT matrix."
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-forms"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-date-range-picker", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
+      "id": "description-list",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/description-list.ts",
+      "sourceSha256": "sha256-10ccc1087fa75f0eaa04e32bec931f92988b7855c39cffea36b3be68f76466b8",
+      "symbol": "KrnDescriptionList",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-description-list"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-description-list"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "dialog",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
+      "sourceSha256": "sha256-6ee794e3e9b2b560f26ce681f73fd0b233f102405f42629cb99126958432f162",
+      "symbol": "KrnDialog",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-dialog"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-dialog"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "linked",
+          "recordIds": [
+            "jaws-edge-windows",
+            "keyboard-only-windows",
+            "nvda-firefox-windows",
+            "voiceover-safari-macos",
+            "windows-high-contrast",
+            "zoom-reflow-desktop"
+          ]
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-dialog"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-dialog", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
+      "id": "disclosure",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/disclosure.ts",
+      "sourceSha256": "sha256-1cc0599993fa7031675cae964145197db57b2a83424b6f03ee012f079fbed194",
+      "symbol": "KrnDisclosure",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-disclosure"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-disclosure"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "divider",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/media-layout.ts",
+      "sourceSha256": "sha256-a1a3571cf034f404afd482a1c2f232cc3b1a9c9057c801fa7967b5cbc1d3e372",
+      "symbol": "KrnDivider",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-divider"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-divider"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "donut-chart",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/data-display",
+      "source": "projects/kern/addon-charts/src/lib/charts/charts.ts",
+      "sourceSha256": "sha256-034c73f7df3d4123ad260491bc0f8bd40463b3b934c9f25ac56b8a7e29a200cc",
+      "symbol": "KrnDonutChart",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-addon-charts"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-donut-chart"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-donut-chart"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "linked",
+          "recordIds": [
+            "jaws-edge-windows",
+            "nvda-firefox-windows",
+            "voiceover-safari-macos",
+            "windows-high-contrast"
+          ]
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-charts"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-donut-chart", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
+      "id": "drag-drop-upload",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/upload-controls.ts",
+      "sourceSha256": "sha256-99f41f4a5918dafa93557f3da305547d71a9be809c800a1982779c50e2d95062",
+      "symbol": "KrnDropUpload",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-drag-drop-upload"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-drag-drop-upload"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "drawer",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
+      "sourceSha256": "sha256-6ee794e3e9b2b560f26ce681f73fd0b233f102405f42629cb99126958432f162",
+      "symbol": "KrnDrawer",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-drawer"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-drawer"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "pending",
+          "recordIds": [],
+          "reason": "The component is not yet materialized in the required manual AT matrix."
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-dialog"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-drawer", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
+      "id": "dropdown-button",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/actions",
+      "source": "projects/kern/kit/src/lib/actions/dropdown-button.ts",
+      "sourceSha256": "sha256-5c542751503797b6f612ce9adae9699e39673c364b993bea272183f8ceb1af02",
+      "symbol": "KrnDropdownButton",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-dropdown-button"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-dropdown-button"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "empty-state",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/states.ts",
+      "sourceSha256": "sha256-ff997b3ec5de90775918f40d25482200de97dc5fd7471049e691e843ba1cdd44",
+      "symbol": "KrnEmptyState",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-empty-state"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-empty-state"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "error-state",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/states.ts",
+      "sourceSha256": "sha256-ff997b3ec5de90775918f40d25482200de97dc5fd7471049e691e843ba1cdd44",
+      "symbol": "KrnErrorState",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-error-state"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-error-state"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "file-upload",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/upload-controls.ts",
+      "sourceSha256": "sha256-99f41f4a5918dafa93557f3da305547d71a9be809c800a1982779c50e2d95062",
+      "symbol": "KrnFileUpload",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-file-upload"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-file-upload"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "filter-bar",
+      "status": "recipe",
+      "evidenceProfile": "recipe-validation",
+      "owner": "kern/patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/filter-bar.ts",
+      "sourceSha256": "sha256-f54bb8a6951902c434fff3c3b9fbb273dec259ecb55d3618af5ea0f01567b823",
+      "symbol": "KrnFilterBar",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-filter-bar"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "adaptation-guidance",
+          "status": "linked",
+          "artifactIds": ["guidance-filter-bar"]
+        }
+      ]
+    },
+    {
+      "id": "floating-action-button",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/actions",
+      "source": "projects/kern/kit/src/lib/actions/button.ts",
+      "sourceSha256": "sha256-f5a4e0d7963d470773df5f89360132cdcfe7fb6a2e992add32b7df7f431fffeb",
+      "symbol": "KrnFloatingActionButton",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-floating-action-button"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-floating-action-button"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "form-field",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/form-field.ts",
+      "sourceSha256": "sha256-ba0bd3cf6beb412f87a0f6175b2f91f5bd51c1375e127219f487c4cca2992113",
+      "symbol": "KrnFormField",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-form-field"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-form-field"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "global-search",
+      "status": "recipe",
+      "evidenceProfile": "recipe-validation",
+      "owner": "kern/patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/global-search.ts",
+      "sourceSha256": "sha256-1989a6c93f30c936cf4cdeb50de7b258d32176b1176527fdc11662321b52fb3c",
+      "symbol": "KrnGlobalSearch",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-global-search"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "adaptation-guidance",
+          "status": "linked",
+          "artifactIds": ["guidance-global-search"]
+        }
+      ]
+    },
+    {
+      "id": "grid",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/grid.ts",
+      "sourceSha256": "sha256-3e707acd4176e9f6b23a4d1107adb9e8926c998295b3c8277362d547b734c2c6",
+      "symbol": "KrnGrid",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-grid"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-grid"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "header",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/app-shell.ts",
+      "sourceSha256": "sha256-2b58454bbc6c2efb71951eeafca5e34307c463afd13d63c2d35735fb88fe91b1",
+      "symbol": "KrnHeader",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-header"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-header"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "hint",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/form-field.ts",
+      "sourceSha256": "sha256-ba0bd3cf6beb412f87a0f6175b2f91f5bd51c1375e127219f487c4cca2992113",
+      "symbol": "KrnHint",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-hint"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-hint"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "hover-card",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/hint-overlays.ts",
+      "sourceSha256": "sha256-178a2adfde566eab54d5f0796274220ef0255f786a4279121a3368ac2cc536d5",
+      "symbol": "KrnHoverCard",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-hover-card"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-hover-card"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "icon-button",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/actions",
+      "source": "projects/kern/kit/src/lib/actions/icon-button.ts",
+      "sourceSha256": "sha256-d172988fc7c5e690a9f444c0e03f46f1906af90b14a2ed55512824932ecbbcc8",
+      "symbol": "KrnIconButton",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-icon-button"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-icon-button"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "inline",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/flex-layout.ts",
+      "sourceSha256": "sha256-4a4c4fdc7f0a699065505e6f08e05544741dfcdcf35b8b7cc7eba58f0e7ee571",
+      "symbol": "KrnInline",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-inline"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-inline"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "keyboard-shortcut",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/code-block.ts",
+      "sourceSha256": "sha256-575873d80968425f4816e1305d7861f070bd7f7d68b9fcfe1554df345ac29ecc",
+      "symbol": "KrnKeyboardShortcut",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-keyboard-shortcut"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-keyboard-shortcut"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "label",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/form-field.ts",
+      "sourceSha256": "sha256-ba0bd3cf6beb412f87a0f6175b2f91f5bd51c1375e127219f487c4cca2992113",
+      "symbol": "KrnLabel",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-label"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-label"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "line-chart",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/data-display",
+      "source": "projects/kern/addon-charts/src/lib/charts/charts.ts",
+      "sourceSha256": "sha256-034c73f7df3d4123ad260491bc0f8bd40463b3b934c9f25ac56b8a7e29a200cc",
+      "symbol": "KrnLineChart",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-addon-charts"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-line-chart"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-line-chart"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "linked",
+          "recordIds": [
+            "jaws-edge-windows",
+            "nvda-firefox-windows",
+            "voiceover-safari-macos",
+            "windows-high-contrast"
+          ]
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-charts"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-line-chart", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/actions",
+      "source": "projects/kern/kit/src/lib/actions/link.ts",
+      "sourceSha256": "sha256-08a07226d77a09a5206ece95581a0a3505de12eb91ba1b61a4ed26ebbd22f363",
+      "symbol": "KrnLink",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-link"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-link"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "list",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/list.ts",
+      "sourceSha256": "sha256-e399c0ad16f60441d0be699236655cd6bba6db142dae68f88142f60e9092e3a0",
+      "symbol": "KrnList",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-list"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-list"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "list-item",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/list.ts",
+      "sourceSha256": "sha256-e399c0ad16f60441d0be699236655cd6bba6db142dae68f88142f60e9092e3a0",
+      "symbol": "KrnListItem",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-list-item"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-list-item"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "loading-overlay",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/progress.ts",
+      "sourceSha256": "sha256-6d3445a504344f73555ce4487530a0cdc75721ec52f04dc0b3553b1290c7c290",
+      "symbol": "KrnLoadingOverlay",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-loading-overlay"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-loading-overlay"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "login-form",
+      "status": "recipe",
+      "evidenceProfile": "recipe-validation",
+      "owner": "kern/patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/form-patterns.ts",
+      "sourceSha256": "sha256-d250585bb4755e2a58a20152329d720d3326db883a4c82d8b4d9dee878927161",
+      "symbol": "KrnLoginForm",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-login-form"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "adaptation-guidance",
+          "status": "linked",
+          "artifactIds": ["guidance-login-form"]
+        }
+      ]
+    },
+    {
+      "id": "master-detail-layout",
+      "status": "recipe",
+      "evidenceProfile": "recipe-validation",
+      "owner": "kern/patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/master-detail-layout.ts",
+      "sourceSha256": "sha256-bfa0ef2489aad12b272b2cb961aae028864c011d334dffe99ab0d8a7c4b15b09",
+      "symbol": "KrnMasterDetailLayout",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-master-detail-layout"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "adaptation-guidance",
+          "status": "linked",
+          "artifactIds": ["guidance-master-detail-layout"]
+        }
+      ]
+    },
+    {
+      "id": "menu",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/navigation",
+      "source": "projects/kern/kit/src/lib/navigation/menu.ts",
+      "sourceSha256": "sha256-21f721930a509ff51a22f75e3b39c455b29270b16099cbda7fe3c2d942cded36",
+      "symbol": "KrnMenu",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-menu"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-menu"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "menubar",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/navigation",
+      "source": "projects/kern/kit/src/lib/navigation/menu.ts",
+      "sourceSha256": "sha256-21f721930a509ff51a22f75e3b39c455b29270b16099cbda7fe3c2d942cded36",
+      "symbol": "KrnMenubar",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-menubar"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-menubar"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "meter",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/meter.ts",
+      "sourceSha256": "sha256-67b832d909697f474a5bf909d0020200149381ea3c00785d0c9facb9e5a5fc97",
+      "symbol": "KrnMeter",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-meter"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-meter"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "mobile-navigation",
+      "status": "recipe",
+      "evidenceProfile": "recipe-validation",
+      "owner": "kern/patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/mobile-navigation.ts",
+      "sourceSha256": "sha256-37310a540a16b5094a0243d9c49d6c994ce75e4c97670b725df3fe05f131278f",
+      "symbol": "KrnMobileNavigation",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-mobile-navigation"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "adaptation-guidance",
+          "status": "linked",
+          "artifactIds": ["guidance-mobile-navigation"]
+        }
+      ]
+    },
+    {
+      "id": "multi-select",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
+      "sourceSha256": "sha256-61afaea1de7825dfc293307bd9321f36d21fc01282f236f03efbbdfa04ffca0b",
+      "symbol": "KrnMultiSelect",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-multi-select"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-multi-select"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "pending",
+          "recordIds": [],
+          "reason": "The component is not yet materialized in the required manual AT matrix."
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-select"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-multi-select", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
+      "id": "multi-step-form",
+      "status": "recipe",
+      "evidenceProfile": "recipe-validation",
+      "owner": "kern/patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/form-patterns.ts",
+      "sourceSha256": "sha256-d250585bb4755e2a58a20152329d720d3326db883a4c82d8b4d9dee878927161",
+      "symbol": "KrnMultiStepForm",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-multi-step-form"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "adaptation-guidance",
+          "status": "linked",
+          "artifactIds": ["guidance-multi-step-form"]
+        }
+      ]
+    },
+    {
+      "id": "native-select",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
+      "sourceSha256": "sha256-61afaea1de7825dfc293307bd9321f36d21fc01282f236f03efbbdfa04ffca0b",
+      "symbol": "KrnNativeSelect",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-native-select"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-native-select"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "navigation-rail",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/app-shell.ts",
+      "sourceSha256": "sha256-2b58454bbc6c2efb71951eeafca5e34307c463afd13d63c2d35735fb88fe91b1",
+      "symbol": "KrnNavigationRail",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-navigation-rail"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-navigation-rail"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "notification-center",
+      "status": "recipe",
+      "evidenceProfile": "recipe-validation",
+      "owner": "kern/patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/notification-center.ts",
+      "sourceSha256": "sha256-b8abda23b24bd1787c39a912d384444c8601fcf9a549a8547fdb51a1e6e1b0d6",
+      "symbol": "KrnNotificationCenter",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-notification-center"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "adaptation-guidance",
+          "status": "linked",
+          "artifactIds": ["guidance-notification-center"]
+        }
+      ]
+    },
+    {
+      "id": "number-input",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/text-inputs.ts",
+      "sourceSha256": "sha256-ec010412448a64ca27eefc239cbff094ec6ed6b1dfb66304a21af448a13bd1ca",
+      "symbol": "KrnNumberInput",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-number-input"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-number-input"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "mobile-touch", "status": "linked", "artifactIds": ["mobile-pointer"] }
+      ]
+    },
+    {
+      "id": "page-header",
+      "status": "recipe",
+      "evidenceProfile": "recipe-validation",
+      "owner": "kern/patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/page-header.ts",
+      "sourceSha256": "sha256-ea21eead70977995e19078ca42add6bb8f12d50631f76a6ae033255931f2c4c1",
+      "symbol": "KrnPageHeader",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-page-header"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "adaptation-guidance",
+          "status": "linked",
+          "artifactIds": ["guidance-page-header"]
+        }
+      ]
+    },
+    {
+      "id": "pagination",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/navigation",
+      "source": "projects/kern/kit/src/lib/navigation/pagination.ts",
+      "sourceSha256": "sha256-746b8152a108c837c2a992adc0c3891e9b70a5797c85f60d9a19bf11b207e2e9",
+      "symbol": "KrnPagination",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-pagination"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-pagination"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "password-input",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/text-inputs.ts",
+      "sourceSha256": "sha256-ec010412448a64ca27eefc239cbff094ec6ed6b1dfb66304a21af448a13bd1ca",
+      "symbol": "KrnPasswordInput",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-password-input"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-password-input"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "popover",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/hint-overlays.ts",
+      "sourceSha256": "sha256-178a2adfde566eab54d5f0796274220ef0255f786a4279121a3368ac2cc536d5",
+      "symbol": "KrnPopover",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-popover"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-popover"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "profile-form",
+      "status": "recipe",
+      "evidenceProfile": "recipe-validation",
+      "owner": "kern/patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/form-patterns.ts",
+      "sourceSha256": "sha256-d250585bb4755e2a58a20152329d720d3326db883a4c82d8b4d9dee878927161",
+      "symbol": "KrnProfileForm",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-profile-form"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "adaptation-guidance",
+          "status": "linked",
+          "artifactIds": ["guidance-profile-form"]
+        }
+      ]
+    },
+    {
+      "id": "progress-bar",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/progress.ts",
+      "sourceSha256": "sha256-6d3445a504344f73555ce4487530a0cdc75721ec52f04dc0b3553b1290c7c290",
+      "symbol": "KrnProgressBar",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-progress-bar"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-progress-bar"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "radio",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
+      "sourceSha256": "sha256-7f4f342368441e3b1c6fd729f75a79e2542d8bd6bfe807a0799d159c2a9cd642",
+      "symbol": "KrnRadio",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-radio"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-radio"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "radio-group",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
+      "sourceSha256": "sha256-7f4f342368441e3b1c6fd729f75a79e2542d8bd6bfe807a0799d159c2a9cd642",
+      "symbol": "KrnRadioGroup",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-radio-group"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-radio-group"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "range-slider",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/range-controls.ts",
+      "sourceSha256": "sha256-39f13df8b80fb0d98f19f754739c8b18e5df187ecf5d448bd2aced87dcdce880",
+      "symbol": "KrnRangeSlider",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-range-slider"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-range-slider"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "rating",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/meter.ts",
+      "sourceSha256": "sha256-67b832d909697f474a5bf909d0020200149381ea3c00785d0c9facb9e5a5fc97",
+      "symbol": "KrnRating",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-rating"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-rating"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "resizable-panels",
+      "status": "experimental",
+      "evidenceProfile": "experimental-incubation",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/resizable-panels.ts",
+      "sourceSha256": "sha256-86063cf2c4b939ae85ffece554210b59654777c26524202cab2fe5d9ea90312b",
+      "symbol": "KrnResizablePanels",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "owner", "status": "linked", "artifactIds": ["lifecycle-policy"] },
+        { "kind": "limitations", "status": "linked", "artifactIds": ["lifecycle-policy"] },
+        { "kind": "exit-criteria", "status": "linked", "artifactIds": ["lifecycle-policy"] }
+      ]
+    },
+    {
+      "id": "responsive-application-shell",
+      "status": "recipe",
+      "evidenceProfile": "recipe-validation",
+      "owner": "kern/patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/responsive-application-shell.ts",
+      "sourceSha256": "sha256-9f5dfb34b9da9c0cfecfe6dddfb8516f4eec10ad445c67891c620ca3d676efee",
+      "symbol": "KrnResponsiveApplicationShell",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
+        {
+          "kind": "unit",
+          "status": "linked",
+          "artifactIds": ["unit-responsive-application-shell"]
+        },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "adaptation-guidance",
+          "status": "linked",
+          "artifactIds": ["guidance-responsive-application-shell"]
+        }
+      ]
+    },
+    {
+      "id": "responsive-media",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/responsive-media.ts",
+      "sourceSha256": "sha256-982bc99af97418d141e3578fa0a0f062145ab1479d88df78e1f5798def68b0e4",
+      "symbol": "KrnResponsiveMedia",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-responsive-media"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-responsive-media"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "responsive-show-hide",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/media-layout.ts",
+      "sourceSha256": "sha256-a1a3571cf034f404afd482a1c2f232cc3b1a9c9057c801fa7967b5cbc1d3e372",
+      "symbol": "KrnShow",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-responsive-show-hide"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-responsive-show-hide"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "scroll-area",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/media-layout.ts",
+      "sourceSha256": "sha256-a1a3571cf034f404afd482a1c2f232cc3b1a9c9057c801fa7967b5cbc1d3e372",
+      "symbol": "KrnScrollArea",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-scroll-area"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-scroll-area"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "search-input",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/text-inputs.ts",
+      "sourceSha256": "sha256-ec010412448a64ca27eefc239cbff094ec6ed6b1dfb66304a21af448a13bd1ca",
+      "symbol": "KrnSearchInput",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-search-input"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-search-input"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "segmented-control",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
+      "sourceSha256": "sha256-7f4f342368441e3b1c6fd729f75a79e2542d8bd6bfe807a0799d159c2a9cd642",
+      "symbol": "KrnSegmentedControl",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-segmented-control"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-segmented-control"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "select",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
+      "sourceSha256": "sha256-61afaea1de7825dfc293307bd9321f36d21fc01282f236f03efbbdfa04ffca0b",
+      "symbol": "KrnSelect",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-select"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-select"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "linked",
+          "recordIds": [
+            "jaws-edge-windows",
+            "keyboard-only-windows",
+            "nvda-firefox-windows",
+            "voiceover-safari-macos",
+            "windows-high-contrast",
+            "zoom-reflow-desktop"
+          ]
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-select"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-select", "agent-aot-verifier"]
+        },
+        { "kind": "mobile-touch", "status": "linked", "artifactIds": ["mobile-form"] }
+      ]
+    },
+    {
+      "id": "settings-panel",
+      "status": "recipe",
+      "evidenceProfile": "recipe-validation",
+      "owner": "kern/patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/settings-panel.ts",
+      "sourceSha256": "sha256-cb9cd3e6dd75ec3926b44f9deb6f7257fd48c712482eb68fa81d467a0072eb90",
+      "symbol": "KrnSettingsPanel",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-settings-panel"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "adaptation-guidance",
+          "status": "linked",
+          "artifactIds": ["guidance-settings-panel"]
+        }
+      ]
+    },
+    {
+      "id": "sidebar",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/app-shell.ts",
+      "sourceSha256": "sha256-2b58454bbc6c2efb71951eeafca5e34307c463afd13d63c2d35735fb88fe91b1",
+      "symbol": "KrnSidebar",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-sidebar"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-sidebar"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "skeleton",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/progress.ts",
+      "sourceSha256": "sha256-6d3445a504344f73555ce4487530a0cdc75721ec52f04dc0b3553b1290c7c290",
+      "symbol": "KrnSkeleton",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-skeleton"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-skeleton"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "skip-link",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/navigation",
+      "source": "projects/kern/kit/src/lib/navigation/navigation-extras.ts",
+      "sourceSha256": "sha256-4e412e46259678dbd3f2a975c1b4166e623cf9891fdf63052345a750fa0143f5",
+      "symbol": "KrnSkipLink",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-skip-link"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-skip-link"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "slider",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/range-controls.ts",
+      "sourceSha256": "sha256-39f13df8b80fb0d98f19f754739c8b18e5df187ecf5d448bd2aced87dcdce880",
+      "symbol": "KrnSlider",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-slider"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-slider"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "spacer",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/flex-layout.ts",
+      "sourceSha256": "sha256-4a4c4fdc7f0a699065505e6f08e05544741dfcdcf35b8b7cc7eba58f0e7ee571",
+      "symbol": "KrnSpacer",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-spacer"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-spacer"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "spinner",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/progress.ts",
+      "sourceSha256": "sha256-6d3445a504344f73555ce4487530a0cdc75721ec52f04dc0b3553b1290c7c290",
+      "symbol": "KrnSpinner",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-spinner"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-spinner"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "split-button",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/actions",
+      "source": "projects/kern/kit/src/lib/actions/dropdown-button.ts",
+      "sourceSha256": "sha256-5c542751503797b6f612ce9adae9699e39673c364b993bea272183f8ceb1af02",
+      "symbol": "KrnSplitButton",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-split-button"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-split-button"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "split-layout",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/split-layout.ts",
+      "sourceSha256": "sha256-a261ea1a6bf1443c88f882599166209a2fed7afdc086df39f53cdc7423c41917",
+      "symbol": "KrnSplitLayout",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-split-layout"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-split-layout"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "stack",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/layout",
+      "source": "projects/kern/kit/src/lib/layout/flex-layout.ts",
+      "sourceSha256": "sha256-4a4c4fdc7f0a699065505e6f08e05544741dfcdcf35b8b7cc7eba58f0e7ee571",
+      "symbol": "KrnStack",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-stack"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-stack"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "stat",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/card.ts",
+      "sourceSha256": "sha256-5c6cd5c873dd781c00940d6baaf9dba5366a700065ae3f25cf3b22bf345c9b07",
+      "symbol": "KrnStat",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-stat"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-stat"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "status-badge",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/badge.ts",
+      "sourceSha256": "sha256-be2f2094aa1d52452188249f0aef919a684573eb3936ea9d5bb0f6d3e451cffa",
+      "symbol": "KrnBadge",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-status-badge"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-status-badge"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "stepper",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/navigation",
+      "source": "projects/kern/kit/src/lib/navigation/stepper.ts",
+      "sourceSha256": "sha256-6ab4d7acd9a570217fb7f417c5e7c133a4692adcf80a7118ccab70dc480b080e",
+      "symbol": "KrnStepper",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-stepper"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-stepper"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "success-state",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/states.ts",
+      "sourceSha256": "sha256-ff997b3ec5de90775918f40d25482200de97dc5fd7471049e691e843ba1cdd44",
+      "symbol": "KrnSuccessState",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-success-state"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-success-state"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "switch",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/selection-controls.ts",
+      "sourceSha256": "sha256-7f4f342368441e3b1c6fd729f75a79e2542d8bd6bfe807a0799d159c2a9cd642",
+      "symbol": "KrnSwitch",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-switch"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-switch"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "table-of-contents",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/navigation",
+      "source": "projects/kern/kit/src/lib/navigation/navigation-extras.ts",
+      "sourceSha256": "sha256-4e412e46259678dbd3f2a975c1b4166e623cf9891fdf63052345a750fa0143f5",
+      "symbol": "KrnTableOfContents",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-table-of-contents"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-table-of-contents"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "tabs",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/navigation",
+      "source": "projects/kern/kit/src/lib/navigation/tabs.ts",
+      "sourceSha256": "sha256-6b2b00c8649570c9e23f13381cc505b5479804622fca76e964596c42025e806f",
+      "symbol": "KrnTabs",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-tabs"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-tabs"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "tag",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/badge.ts",
+      "sourceSha256": "sha256-be2f2094aa1d52452188249f0aef919a684573eb3936ea9d5bb0f6d3e451cffa",
+      "symbol": "KrnChip",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-tag"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        { "kind": "keyboard", "status": "linked", "artifactIds": ["catalog-keyboard", "unit-tag"] },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "tags-input",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/otp-tags.ts",
+      "sourceSha256": "sha256-492fa62b2dd96232ada331957389f55cc52b3d2ed59d2096b31189c15da12e18",
+      "symbol": "KrnTagsInput",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-tags-input"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-tags-input"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "text-input",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/text-inputs.ts",
+      "sourceSha256": "sha256-ec010412448a64ca27eefc239cbff094ec6ed6b1dfb66304a21af448a13bd1ca",
+      "symbol": "KrnTextInput",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-text-input"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-text-input"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "textarea",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/text-inputs.ts",
+      "sourceSha256": "sha256-ec010412448a64ca27eefc239cbff094ec6ed6b1dfb66304a21af448a13bd1ca",
+      "symbol": "KrnTextarea",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-textarea"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-textarea"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "time-picker",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/date-time-controls.ts",
+      "sourceSha256": "sha256-eebb46e6a7c98c7e05918f63342e754f3017f41e61e76641bd44e4bcd3d2c3df",
+      "symbol": "KrnTimePicker",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-time-picker"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-time-picker"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "pending",
+          "recordIds": [],
+          "reason": "The component is not yet materialized in the required manual AT matrix."
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-forms"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-time-picker", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
+      "id": "timeline",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/timeline.ts",
+      "sourceSha256": "sha256-34fa17953722bdece65d52197f075a2fbf9c7dfa76a2cc5d5826ce714d5a5ab2",
+      "symbol": "KrnTimeline",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-timeline"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-timeline"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "toast",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/toast.ts",
+      "sourceSha256": "sha256-a13706ab3895c80eba7e2352379feb682ee051f0cba625be34bdd3411e2bc7d9",
+      "symbol": "KrnToastViewport",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-toast"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-toast"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "toggle-button",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/actions",
+      "source": "projects/kern/kit/src/lib/actions/toggle-button.ts",
+      "sourceSha256": "sha256-4d5aec4770fd2afcfe74b5b004cd93adda079ce4402387a11f971229f4d73003",
+      "symbol": "KrnToggleButton",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-toggle-button"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-toggle-button"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "toggle-group",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/actions",
+      "source": "projects/kern/kit/src/lib/actions/toggle-group.ts",
+      "sourceSha256": "sha256-24d5a4448f9a42f202a18d81317f659a1a7cf4c30920d4a8319021bfd667ad02",
+      "symbol": "KrnToggleGroup",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-toggle-group"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-toggle-group"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "tooltip",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/feedback",
+      "source": "projects/kern/kit/src/lib/feedback/hint-overlays.ts",
+      "sourceSha256": "sha256-178a2adfde566eab54d5f0796274220ef0255f786a4279121a3368ac2cc536d5",
+      "symbol": "KrnTooltip",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-tooltip"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-tooltip"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "tree",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/tree.ts",
+      "sourceSha256": "sha256-3c75062b813b9534dd437c02b6569a30b7a564ccd22080f00491db68a9494c18",
+      "symbol": "KrnTree",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-tree"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-tree"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "linked",
+          "recordIds": [
+            "jaws-edge-windows",
+            "keyboard-only-windows",
+            "nvda-firefox-windows",
+            "voiceover-safari-macos",
+            "windows-high-contrast",
+            "zoom-reflow-desktop"
+          ]
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-tree"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-tree", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
+      "id": "tree-navigation",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/navigation",
+      "source": "projects/kern/kit/src/lib/navigation/tree-navigation.ts",
+      "sourceSha256": "sha256-045ec132e3ba35c0df757ba0db031534a1fbfed0750edb7523d7c4d19caee702",
+      "symbol": "KrnTreeNavigation",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-tree-navigation"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-tree-navigation"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "linked",
+          "recordIds": [
+            "jaws-edge-windows",
+            "keyboard-only-windows",
+            "nvda-firefox-windows",
+            "voiceover-safari-macos"
+          ]
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        { "kind": "runtime-performance", "status": "linked", "artifactIds": ["perf-tree"] },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-tree-navigation", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
+      "id": "user-menu",
+      "status": "recipe",
+      "evidenceProfile": "recipe-validation",
+      "owner": "kern/patterns",
+      "source": "projects/kern/patterns/src/lib/patterns/user-menu.ts",
+      "sourceSha256": "sha256-2193217a521dcd7bd9836055bf51562c1e8dafd4320bd2ff6e6959e1b0087745",
+      "symbol": "KrnUserMenu",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-user-menu"] },
+        { "kind": "responsive", "status": "linked", "artifactIds": ["responsive-suite"] },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "adaptation-guidance", "status": "linked", "artifactIds": ["guidance-user-menu"] }
+      ]
+    },
+    {
+      "id": "validation-message",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/form-field.ts",
+      "sourceSha256": "sha256-ba0bd3cf6beb412f87a0f6175b2f91f5bd51c1375e127219f487c4cca2992113",
+      "symbol": "KrnValidationMessage",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-validation-message"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-validation-message"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "verification-code",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/forms",
+      "source": "projects/kern/kit/src/lib/forms/otp-tags.ts",
+      "sourceSha256": "sha256-492fa62b2dd96232ada331957389f55cc52b3d2ed59d2096b31189c15da12e18",
+      "symbol": "KrnOtpInput",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-verification-code"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-verification-code"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    },
+    {
+      "id": "vertical-tabs",
+      "status": "stable",
+      "evidenceProfile": "stable-release",
+      "owner": "kern/navigation",
+      "source": "projects/kern/kit/src/lib/navigation/tabs.ts",
+      "sourceSha256": "sha256-6b2b00c8649570c9e23f13381cc505b5479804622fca76e964596c42025e806f",
+      "symbol": "KrnTabs",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-vertical-tabs"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-vertical-tabs"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        { "kind": "visual-smoke", "status": "linked", "artifactIds": ["catalog-visual"] }
+      ]
+    }
+  ]
+}

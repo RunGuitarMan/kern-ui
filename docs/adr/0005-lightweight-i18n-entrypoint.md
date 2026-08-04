@@ -23,12 +23,20 @@ contracts include:
 - `KRN_LOADING_LABEL`;
 - `KRN_DEFAULT_COPY_LABELS`;
 - `KRN_COPY_LABELS`;
-- `KrnCopyLabels`.
+- `KRN_DEFAULT_MORE_ACTIONS_LABEL`;
+- `KRN_MORE_ACTIONS_LABEL`;
+- `KrnCopyLabels`;
+- `KrnI18nValue` and `krnReadI18nValue`.
 
 The entrypoint depends only on Angular Core. Core owns the complete `KRN_TRANSLATIONS` registry and
 exports `provideKrnTranslationBridge()`, an aggregate provider set whose lazy factories derive
 leaf tokens from the final registry in the same injector. New mappings can join that set without
 changing its public shape. `provideKrn()` installs this bridge automatically.
+
+Each leaf token carries either a fixed value or a signal. This single-source contract avoids
+guessing whether an equal string came from a local provider or from the application dictionary:
+Core provides signals, direct `useValue` overrides stay fixed, and components read both through
+`krnReadI18nValue`.
 
 A low-level injector boundary that provides `KRN_TRANSLATIONS` directly must also install
 `provideKrnTranslationBridge()`. A direct leaf-token provider is valid for a narrow override.

@@ -28,6 +28,7 @@ env:
   RELEASE_TAG: ${{ github.ref_name }}
   RELEASE_COMMIT: ${{ github.sha }}
   NPM_DIST_TAG: ${{ inputs.npm_dist_tag }}
+  NPM_STAGING_TAG: kern-staging
 
 jobs:
   package:
@@ -95,8 +96,16 @@ jobs:
 
       - name: Verify lifecycle and evidence governance
         run: |
-          node tools/verify-kern-lifecycle.mjs
-          node tools/verify-kern-accessibility-evidence.mjs
+          mkdir -p release
+          node tools/attest-kern-lifecycle-release.mjs \
+            "--version=${RELEASE_VERSION}" \
+            "--tag=${RELEASE_TAG}" \
+            "--commit=${RELEASE_COMMIT}" \
+            --output=release/lifecycle-attestation.json
+          node tools/verify-kern-lifecycle.mjs \
+            --mode=release \
+            --release-attestation=release/lifecycle-attestation.json
+          node tools/verify-kern-accessibility-evidence.mjs --mode=release
           node tools/verify-kern-package-policy.mjs
           node --test tools/tests/kern-governance.test.mjs
 
@@ -108,6 +117,9 @@ jobs:
 
       - name: Run the complete Playwright suite
         run: npm run test:e2e
+
+      - name: Run the mobile and touch browser tier
+        run: npm run test:mobile-touch
 
       - name: Validate built package version
         run: |
@@ -141,7 +153,7 @@ jobs:
 
       - name: Pack the exact npm tarballs
         run: |
-          mkdir release
+          mkdir -p release
           npm pack ./dist/kern --pack-destination release
           npm pack ./dist/kern-mcp --pack-destination release
 
@@ -155,11 +167,12 @@ jobs:
             "--input-dir=dist/versioned-docs" \
             "--artifact-dir=release"
 
-      - name: Resolve Angular package dependency graph and enforce vulnerability policy
-        working-directory: dist/kern
+      - name: Materialize the pinned Angular dependency graph and enforce vulnerability policy
         run: |
-          npm install --package-lock-only --ignore-scripts --audit=false --include=peer
-          npm audit --package-lock-only --omit=dev --audit-level=high
+          node tools/prepare-kern-release-lock.mjs \
+            --manifest=dist/kern/package.json \
+            --output=dist/kern/package-lock.json
+          npm audit --prefix dist/kern --package-lock-only --omit=dev --audit-level=high
 
       - name: Generate Angular package CycloneDX SBOM
         working-directory: dist/kern
@@ -167,11 +180,12 @@ jobs:
           npm sbom --package-lock-only --sbom-format cyclonedx --sbom-type library > \
             "../../release/kern-ui-angular-${RELEASE_VERSION}.cdx.json"
 
-      - name: Resolve MCP package dependency graph and enforce vulnerability policy
-        working-directory: dist/kern-mcp
+      - name: Materialize the pinned MCP dependency graph and enforce vulnerability policy
         run: |
-          npm install --package-lock-only --ignore-scripts --audit=false
-          npm audit --package-lock-only --omit=dev --audit-level=high
+          node tools/prepare-kern-release-lock.mjs \
+            --manifest=dist/kern-mcp/package.json \
+            --output=dist/kern-mcp/package-lock.json
+          npm audit --prefix dist/kern-mcp --package-lock-only --omit=dev --audit-level=high
 
       - name: Generate MCP package CycloneDX SBOM
         working-directory: dist/kern-mcp
@@ -217,13 +231,18 @@ jobs:
       - name: Check out the exact release tag
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Node for npm trusted publishing
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .nvmrc
+          cache: npm
           registry-url: https://registry.npmjs.org
+
+      - name: Install release tooling dependencies
+        run: npm ci --ignore-scripts
 
       - name: Download the approved candidate
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
@@ -243,18 +262,29 @@ jobs:
             "--npm-tag=${NPM_DIST_TAG}" \
             "--artifact-dir=release"
 
-      - name: Publish exact tarballs with npm OIDC provenance
+      - name: Stage exact tarballs with npm OIDC provenance
         run: |
           node tools/publish-kern-release-package.mjs \
             --package=@kern-ui/angular \
             "--version=${RELEASE_VERSION}" \
             "--tarball=release/kern-ui-angular-${RELEASE_VERSION}.tgz" \
-            "--tag=${NPM_DIST_TAG}"
+            "--staging-tag=${NPM_STAGING_TAG}"
           node tools/publish-kern-release-package.mjs \
             --package=@kern-ui/mcp \
             "--version=${RELEASE_VERSION}" \
             "--tarball=release/kern-ui-mcp-${RELEASE_VERSION}.tgz" \
-            "--tag=${NPM_DIST_TAG}"
+            "--staging-tag=${NPM_STAGING_TAG}"
+
+      - name: Verify both staged integrities and promote public tags with rollback
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_DIST_TAG_TOKEN }}
+        run: |
+          node tools/promote-kern-release.mjs \
+            "--version=${RELEASE_VERSION}" \
+            "--tag=${NPM_DIST_TAG}" \
+            "--staging-tag=${NPM_STAGING_TAG}" \
+            "--angular-tarball=release/kern-ui-angular-${RELEASE_VERSION}.tgz" \
+            "--mcp-tarball=release/kern-ui-mcp-${RELEASE_VERSION}.tgz"
 
       - name: Verify synchronized npm distribution tags
         run: |
@@ -269,6 +299,7 @@ jobs:
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
             gh release upload "$RELEASE_TAG" \
               "release/SHA256SUMS" \
+              "release/lifecycle-attestation.json" \
               "release/release-manifest.json" \
               "release/kern-docs-${RELEASE_VERSION}.manifest.json" \
               "release/kern-docs-${RELEASE_VERSION}.tgz" \
@@ -281,6 +312,7 @@ jobs:
           else
             gh release create "$RELEASE_TAG" \
               "release/SHA256SUMS" \
+              "release/lifecycle-attestation.json" \
               "release/release-manifest.json" \
               "release/kern-docs-${RELEASE_VERSION}.manifest.json" \
               "release/kern-docs-${RELEASE_VERSION}.tgz" \

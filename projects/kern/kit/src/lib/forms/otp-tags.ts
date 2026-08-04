@@ -15,6 +15,7 @@ import {
 } from '@angular/core';
 import { KRN_PLATFORM, type KrnScheduledHandle } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
 import {
   maxLengthError,
   mergeValidationErrors,
@@ -45,7 +46,7 @@ const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string
   template: `
     <div class="krn-otp-control">
       @if (!effectiveLabelledBy()) {
-        <span class="krn-label" [id]="internalLabelId()">{{ label() }}</span>
+        <span class="krn-label" [id]="internalLabelId()">{{ resolvedLabel() }}</span>
       }
       <div
         class="krn-otp"
@@ -102,7 +103,11 @@ export class KrnOtpInput {
   private readonly slotElements = viewChildren<ElementRef<HTMLElement>>('otpSlot');
 
   readonly id = input('');
-  readonly label = input(this.translations.forms.verificationCode);
+  readonly label = input<string | undefined>();
+  protected readonly resolvedLabel = krnInputFallback(
+    this.label,
+    () => this.translations.forms.verificationCode,
+  );
   readonly length = input(6, { transform: numberAttribute });
   readonly numericOnly = input(true, { transform: booleanAttribute });
   readonly autocomplete = input('one-time-code');
@@ -282,7 +287,7 @@ export class KrnOtpInput {
       <div
         class="krn-tag-input"
         role="group"
-        [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel()"
+        [attr.aria-label]="effectiveLabelledBy() ? null : resolvedAriaLabel()"
         [attr.aria-labelledby]="effectiveLabelledBy()"
       >
         @for (tag of controlValue(); track $index; let index = $index) {
@@ -308,14 +313,14 @@ export class KrnOtpInput {
           type="text"
           [attr.aria-describedby]="effectiveDescribedBy()"
           [attr.aria-invalid]="a11y.invalid()"
-          [attr.aria-label]="effectiveLabelledBy() ? null : inputLabel()"
+          [attr.aria-label]="effectiveLabelledBy() ? null : resolvedInputLabel()"
           [attr.aria-labelledby]="effectiveLabelledBy()"
           [attr.aria-required]="a11y.required()"
           [attr.autocomplete]="autocomplete()"
           [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
           [disabled]="isDisabled()"
           [id]="a11y.id()"
-          [placeholder]="controlValue().length ? '' : placeholder()"
+          [placeholder]="controlValue().length ? '' : resolvedPlaceholder()"
           [readOnly]="a11y.readOnly()"
           [required]="a11y.required() && controlValue().length === 0"
           [tabIndex]="isDisabled() ? -1 : tabIndex()"
@@ -351,9 +356,21 @@ export class KrnTagsInput {
   private feedbackId = 0;
 
   readonly id = input('');
-  readonly ariaLabel = input(this.translations.forms.tags);
-  readonly inputLabel = input(this.translations.forms.addTag);
-  readonly placeholder = input(this.translations.forms.addTagPlaceholder);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.forms.tags,
+  );
+  readonly inputLabel = input<string | undefined>();
+  protected readonly resolvedInputLabel = krnInputFallback(
+    this.inputLabel,
+    () => this.translations.forms.addTag,
+  );
+  readonly placeholder = input<string | undefined>();
+  protected readonly resolvedPlaceholder = krnInputFallback(
+    this.placeholder,
+    () => this.translations.forms.addTagPlaceholder,
+  );
   readonly ariaLabelledBy = input('');
   readonly ariaDescribedBy = input('');
   readonly autocomplete = input('off');

@@ -116,9 +116,9 @@
       "name": "locale",
       "property": "locale",
       "kind": "input",
-      "type": "Array<string> | string",
+      "type": "Array<string> | string | undefined",
       "required": false,
-      "defaultValue": "inject(KRN_LOCALE)",
+      "defaultValue": "undefined",
       "description": "Locale identifier used for collation, formatting, and component-owned copy.",
       "descriptionSource": "inferred"
     },
@@ -587,7 +587,7 @@
         "componentId": "donut-chart",
         "publicName": "locale",
         "kind": "input",
-        "type": "Array<string> | string",
+        "type": "Array<string> | string | undefined",
         "code": "complex-data",
         "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
         "evidence": {

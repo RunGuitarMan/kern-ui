@@ -156,9 +156,9 @@ export class KrnBreadcrumbs {
   readonly items = input<readonly KrnBreadcrumbItem[]>([]);
   readonly maxItems = input(5, { transform: numberAttribute });
   readonly separator = input('›');
-  readonly ariaLabel = input(this.translations.navigation.breadcrumb);
-  readonly moreLabel = input(this.translations.navigation.breadcrumbMore);
-  readonly showAllLabel = input(this.translations.navigation.breadcrumbShowAll);
+  readonly ariaLabel = input<string | undefined>();
+  readonly moreLabel = input<string | undefined>();
+  readonly showAllLabel = input<string | undefined>();
   readonly itemActivated = output<KrnBreadcrumbItem>();
   protected readonly expanded = signal(false);
   protected readonly resolvedMaxItems = computed(() => {
@@ -174,10 +174,13 @@ export class KrnBreadcrumbs {
       this.translations.navigation.breadcrumbShowAll.trim() ||
       this.translations.navigation.breadcrumbMore.trim(),
   );
+  protected readonly resolvedMoreLabel = computed(
+    () => this.moreLabel()?.trim() || this.translations.navigation.breadcrumbMore.trim(),
+  );
   protected readonly currentIndex = computed(() => this.items().length - 1);
   protected readonly ellipsis = computed<VisibleBreadcrumb>(() => ({
-    label: this.moreLabel(),
-    source: { label: this.moreLabel() },
+    label: this.resolvedMoreLabel(),
+    source: { label: this.resolvedMoreLabel() },
     index: -1,
     ellipsis: true,
   }));

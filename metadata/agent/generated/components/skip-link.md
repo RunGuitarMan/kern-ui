@@ -46,11 +46,11 @@ void bootstrapApplication(KernSkipLinkAgentExample);
 
 ## API
 
-| Name        | Kind   | Type     | Required | Default                                          | Description                                                      |
-| ----------- | ------ | -------- | -------- | ------------------------------------------------ | ---------------------------------------------------------------- |
-| `targetId`  | input  | `string` | no       | `'main-content'`                                 | Stable identifier value used by the target contract.             |
-| `label`     | input  | `string` | no       | `this.translations.navigation.skipToMainContent` | Visible text that names the control or data value.               |
-| `activated` | output | `void`   | no       | `undefined`                                      | Notifies the consumer after the activated interaction completes. |
+| Name        | Kind   | Type                  | Required | Default          | Description                                                      |
+| ----------- | ------ | --------------------- | -------- | ---------------- | ---------------------------------------------------------------- |
+| `targetId`  | input  | `string`              | no       | `'main-content'` | Stable identifier value used by the target contract.             |
+| `label`     | input  | `string \| undefined` | no       | `undefined`      | Visible text that names the control or data value.               |
+| `activated` | output | `void`                | no       | `undefined`      | Notifies the consumer after the activated interaction completes. |
 
 ## Deprecated selectors
 

@@ -5,7 +5,7 @@ import { TestBed } from '@angular/core/testing';
 import type { Type } from '@angular/core';
 import { provideKrn } from '@kern-ui/angular/core';
 import { KrnDropdownButton } from '../actions/dropdown-button';
-import { KrnAlert } from './alert';
+import { KrnAlert, KrnBanner } from './alert';
 import { KrnHoverCard, KrnPopover, KrnTooltip } from './hint-overlays';
 import { KrnDialog } from './modal-overlays';
 import { KrnAlertDialog, KrnBottomSheet, KrnDrawer } from './modal-overlays';
@@ -65,6 +65,16 @@ describe('Kern feedback', () => {
     (fixture.nativeElement.querySelector('.dismiss') as HTMLButtonElement | null)?.click();
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.alert')).toBeNull();
+  });
+
+  it('keeps banner identity while using the shared live-region feedback contract', async () => {
+    const fixture = await create(KrnBanner, {
+      tone: 'info',
+      title: 'Scheduled maintenance',
+    });
+    const host = fixture.nativeElement as HTMLElement;
+    expect(host.hasAttribute('data-banner')).toBe(true);
+    expect(host.querySelector('[role="status"]')?.textContent).toContain('Scheduled maintenance');
   });
 
   it('publishes and removes toast records through the service', async () => {

@@ -45,15 +45,15 @@ void bootstrapApplication(KernAvatarAgentExample);
 
 ## API
 
-| Name          | Kind  | Type                                        | Required | Default              | Description                                                                    |
-| ------------- | ----- | ------------------------------------------- | -------- | -------------------- | ------------------------------------------------------------------------------ |
-| `locale`      | input | `string`                                    | no       | `inject(KRN_LOCALE)` | Locale identifier used for collation, formatting, and component-owned copy.    |
-| `src`         | input | `string \| undefined`                       | no       | `undefined`          | Required media source URL loaded by the component.                             |
-| `alt`         | input | `string`                                    | no       | `''`                 | Text alternative that communicates the meaning of visual media.                |
-| `name`        | input | `string`                                    | no       | `''`                 | Required human-readable name for the represented person, item, or action.      |
-| `size`        | input | `"lg" \| "md" \| "sm"`                      | no       | `'md'`               | Named semantic size resolved through KERN density and sizing tokens.           |
-| `status`      | input | `"away" \| "busy" \| "online" \| undefined` | no       | `undefined`          | Current domain status rendered as visible text and a non-color-only treatment. |
-| `imageFailed` | model | `boolean`                                   | no       | `false`              | Controlled image failed state with a matching Angular model-change output.     |
+| Name          | Kind  | Type                                        | Required | Default     | Description                                                                    |
+| ------------- | ----- | ------------------------------------------- | -------- | ----------- | ------------------------------------------------------------------------------ |
+| `locale`      | input | `string \| undefined`                       | no       | `undefined` | Locale identifier used for collation, formatting, and component-owned copy.    |
+| `src`         | input | `string \| undefined`                       | no       | `undefined` | Required media source URL loaded by the component.                             |
+| `alt`         | input | `string`                                    | no       | `''`        | Text alternative that communicates the meaning of visual media.                |
+| `name`        | input | `string`                                    | no       | `''`        | Required human-readable name for the represented person, item, or action.      |
+| `size`        | input | `"lg" \| "md" \| "sm"`                      | no       | `'md'`      | Named semantic size resolved through KERN density and sizing tokens.           |
+| `status`      | input | `"away" \| "busy" \| "online" \| undefined` | no       | `undefined` | Current domain status rendered as visible text and a non-color-only treatment. |
+| `imageFailed` | model | `boolean`                                   | no       | `false`     | Controlled image failed state with a matching Angular model-change output.     |
 
 ## Deprecated selectors
 

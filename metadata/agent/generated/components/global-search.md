@@ -72,20 +72,20 @@ void bootstrapApplication(KernGlobalSearchAgentExample);
 
 ## API
 
-| Name                | Kind   | Type                             | Required | Default                                        | Description                                                            |
-| ------------------- | ------ | -------------------------------- | -------- | ---------------------------------------------- | ---------------------------------------------------------------------- |
-| `ariaLabel`         | input  | `string`                         | no       | `this.translations.patterns.globalSearch`      | Accessible name used when visible content is not sufficient.           |
-| `placeholder`       | input  | `string`                         | no       | `this.translations.patterns.searchPlaceholder` | Short input hint shown only while no value is present.                 |
-| `clearLabel`        | input  | `string`                         | no       | `this.translations.patterns.clearSearch`       | Human-readable copy for the clear state or control.                    |
-| `resultsLabel`      | input  | `(label: string) => string`      | no       | `this.translations.patterns.resultLabel`       | Human-readable copy for the results state or control.                  |
-| `emptyResultsLabel` | input  | `(query: string) => string`      | no       | `this.translations.patterns.noSearchResults`   | Accessible copy announced when a search has no matching results.       |
-| `results`           | input  | `ReadonlyArray<KrnSearchResult>` | no       | `[]`                                           | Search result collection rendered in response to the current query.    |
-| `maxResults`        | input  | `number`                         | no       | `8`                                            | Upper or lower bound applied to the results value.                     |
-| `resultsId`         | input  | `string`                         | no       | `this.generatedResultsId`                      | Stable identifier value used by the results contract.                  |
-| `query`             | model  | `string`                         | no       | `''`                                           | Current controlled search text used to derive visible results.         |
-| `open`              | model  | `boolean`                        | no       | `false`                                        | Controls whether the disclosure or overlay surface is visible.         |
-| `activeIndex`       | model  | `number`                         | no       | `0`                                            | Zero-based index currently participating in managed keyboard focus.    |
-| `resultSelected`    | output | `KrnSearchResult`                | no       | `undefined`                                    | Notifies the consumer after the result selected interaction completes. |
+| Name                | Kind   | Type                                       | Required | Default                   | Description                                                            |
+| ------------------- | ------ | ------------------------------------------ | -------- | ------------------------- | ---------------------------------------------------------------------- |
+| `ariaLabel`         | input  | `string \| undefined`                      | no       | `undefined`               | Accessible name used when visible content is not sufficient.           |
+| `placeholder`       | input  | `string \| undefined`                      | no       | `undefined`               | Short input hint shown only while no value is present.                 |
+| `clearLabel`        | input  | `string \| undefined`                      | no       | `undefined`               | Human-readable copy for the clear state or control.                    |
+| `resultsLabel`      | input  | `((label: string) => string) \| undefined` | no       | `undefined`               | Human-readable copy for the results state or control.                  |
+| `emptyResultsLabel` | input  | `((query: string) => string) \| undefined` | no       | `undefined`               | Accessible copy announced when a search has no matching results.       |
+| `results`           | input  | `ReadonlyArray<KrnSearchResult>`           | no       | `[]`                      | Search result collection rendered in response to the current query.    |
+| `maxResults`        | input  | `number`                                   | no       | `8`                       | Upper or lower bound applied to the results value.                     |
+| `resultsId`         | input  | `string`                                   | no       | `this.generatedResultsId` | Stable identifier value used by the results contract.                  |
+| `query`             | model  | `string`                                   | no       | `''`                      | Current controlled search text used to derive visible results.         |
+| `open`              | model  | `boolean`                                  | no       | `false`                   | Controls whether the disclosure or overlay surface is visible.         |
+| `activeIndex`       | model  | `number`                                   | no       | `0`                       | Zero-based index currently participating in managed keyboard focus.    |
+| `resultSelected`    | output | `KrnSearchResult`                          | no       | `undefined`               | Notifies the consumer after the result selected interaction completes. |
 
 ## Deprecated selectors
 

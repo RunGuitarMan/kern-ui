@@ -928,14 +928,29 @@ describe('KrnDataGrid', () => {
 
   it('measures the CSS row size for virtual density and text zoom without losing focus', async () => {
     const originalResizeObserver = Object.getOwnPropertyDescriptor(window, 'ResizeObserver');
-    let resizeCallback: ResizeObserverCallback | undefined;
+    const resizeObservers: Array<{
+      readonly callback: ResizeObserverCallback;
+      readonly targets: Set<Element>;
+    }> = [];
     class GridResizeObserver implements ResizeObserver {
+      private readonly record: {
+        readonly callback: ResizeObserverCallback;
+        readonly targets: Set<Element>;
+      };
+
       constructor(callback: ResizeObserverCallback) {
-        resizeCallback = callback;
+        this.record = { callback, targets: new Set<Element>() };
+        resizeObservers.push(this.record);
       }
-      observe(): void {}
-      unobserve(): void {}
-      disconnect(): void {}
+      observe(target: Element): void {
+        this.record.targets.add(target);
+      }
+      unobserve(target: Element): void {
+        this.record.targets.delete(target);
+      }
+      disconnect(): void {
+        this.record.targets.clear();
+      }
     }
     Object.defineProperty(window, 'ResizeObserver', {
       configurable: true,
@@ -981,9 +996,11 @@ describe('KrnDataGrid', () => {
       const firstCell = row.querySelector<HTMLElement>('[data-cell="0-0"]')!;
       const checkViewport = vi.spyOn(viewport, 'checkViewportSize');
       const rowRect = vi.spyOn(rowMeasure, 'getBoundingClientRect');
+      const rowResizeObserver = resizeObservers.find(({ targets }) => targets.has(rowMeasure));
+      expect(rowResizeObserver).toBeDefined();
 
       rowRect.mockReturnValue({ height: 52 } as DOMRect);
-      resizeCallback?.([], {} as ResizeObserver);
+      rowResizeObserver?.callback([], {} as ResizeObserver);
       fixture.detectChanges();
       await Promise.resolve();
 
@@ -992,7 +1009,7 @@ describe('KrnDataGrid', () => {
 
       firstCell.focus();
       rowRect.mockReturnValue({ height: 104 } as DOMRect);
-      resizeCallback?.([], {} as ResizeObserver);
+      rowResizeObserver?.callback([], {} as ResizeObserver);
       fixture.detectChanges();
       await Promise.resolve();
 

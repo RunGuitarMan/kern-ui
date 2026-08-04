@@ -20,10 +20,44 @@ async function openSpecimen(page: Page, id: string): Promise<void> {
 }
 
 test.describe('Complete component specimen routing', () => {
-  test('renders all 131 catalog routes with their exact specimen contract', async ({ page }) => {
+  test('raw SSR response contains every exact catalog route specimen and hydration preserves every server-rendered specimen node', async ({
+    page,
+  }) => {
     test.setTimeout(240_000);
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.addInitScript(() => {
+      const state = globalThis as typeof globalThis & {
+        __krnServerSpecimen?: Element;
+        __krnServerSpecimenNodes?: Node[];
+        __krnServerCaptureComplete?: boolean;
+      };
+      let observer: MutationObserver | undefined;
+      const captureServerNodes = (force = false): void => {
+        if (!force && document.readyState !== 'loading') return;
+        const specimen = document.querySelector('[data-testid^="component-specimen-"]');
+        if (!specimen) return;
+        state.__krnServerSpecimen ??= specimen;
+        const nodes: Node[] = [specimen];
+        const walker = document.createTreeWalker(specimen, NodeFilter.SHOW_ALL);
+        for (let node = walker.nextNode(); node; node = walker.nextNode()) nodes.push(node);
+        state.__krnServerSpecimenNodes = nodes;
+      };
+      const finishServerCapture = (): void => {
+        if (document.readyState === 'loading') return;
+        captureServerNodes(true);
+        observer?.disconnect();
+        state.__krnServerCaptureComplete = true;
+      };
+      observer = new MutationObserver(() => captureServerNodes());
+      observer.observe(document, {
+        childList: true,
+        subtree: true,
+      });
+      document.addEventListener('readystatechange', finishServerCapture);
+      captureServerNodes();
+      finishServerCapture();
+    });
 
     let activeRoute = 'bootstrap';
     const runtimeErrors: string[] = [];
@@ -46,11 +80,47 @@ test.describe('Complete component specimen routing', () => {
       });
 
       expect.soft(response?.ok(), `${item.id}: route returned a successful response`).toBe(true);
+      const serverHtml = (await response?.text()) ?? '';
+      const rawServerSnapshot = {
+        hasExactSpecimen: serverHtml.includes(`data-testid="component-specimen-${item.id}"`),
+        hasSpecimenIdentity: serverHtml.includes(`data-specimen="${item.id}"`),
+        hasDeferPlaceholder: serverHtml.includes('class="specimen-loading"'),
+      };
+      expect
+        .soft(rawServerSnapshot.hasExactSpecimen, `${item.id}: raw response has exact specimen`)
+        .toBe(true);
+      expect
+        .soft(
+          rawServerSnapshot.hasSpecimenIdentity,
+          `${item.id}: raw response has specimen identity`,
+        )
+        .toBe(true);
+      expect
+        .soft(
+          rawServerSnapshot.hasDeferPlaceholder,
+          `${item.id}: raw response contains no defer placeholder`,
+        )
+        .toBe(false);
 
       await page
         .getByTestId(`component-specimen-${item.id}`)
         .waitFor({ state: 'attached', timeout: 10_000 })
         .catch(() => undefined);
+      await page.waitForFunction(
+        () =>
+          Boolean(
+            (
+              globalThis as typeof globalThis & {
+                __krnServerCaptureComplete?: boolean;
+              }
+            ).__krnServerCaptureComplete,
+          ),
+        undefined,
+        { timeout: 10_000 },
+      );
+      // A retained server node is not proof of hydration by itself. Waiting for network idle makes
+      // the route and defer chunks part of the gate, including deliberately delayed chunk responses.
+      await page.waitForLoadState('networkidle', { timeout: 10_000 });
       await page.evaluate(async () => {
         await document.fonts.ready;
         await new Promise<void>((resolve) => {
@@ -60,6 +130,11 @@ test.describe('Complete component specimen routing', () => {
 
       const snapshot = await page.evaluate(
         ({ id, overlaySelector }) => {
+          const state = globalThis as typeof globalThis & {
+            __krnServerSpecimen?: Element;
+            __krnServerSpecimenNodes?: Node[];
+            __krnServerCaptureComplete?: boolean;
+          };
           const specimens = [
             ...document.querySelectorAll<HTMLElement>('[data-testid^="component-specimen-"]'),
           ];
@@ -68,6 +143,12 @@ test.describe('Complete component specimen routing', () => {
           );
           const specimenRect = exactSpecimen?.getBoundingClientRect();
           const root = document.documentElement;
+          const serverNodes = state.__krnServerSpecimenNodes ?? [];
+          const preservedServerNodes = serverNodes.filter(
+            (node) =>
+              node.isConnected &&
+              (node === exactSpecimen || Boolean(exactSpecimen?.contains(node))),
+          );
 
           return {
             title: document.title,
@@ -91,6 +172,10 @@ test.describe('Complete component specimen routing', () => {
               specimenRect === undefined ||
               specimenRect.left < -2 ||
               specimenRect.right > window.innerWidth + 2,
+            serverNodeCount: serverNodes.length,
+            preservedServerNodeCount: preservedServerNodes.length,
+            serverSpecimenPreserved: state.__krnServerSpecimen === exactSpecimen,
+            serverCaptureComplete: state.__krnServerCaptureComplete === true,
           };
         },
         { id: item.id, overlaySelector: ERROR_OVERLAY_SELECTOR },
@@ -121,6 +206,21 @@ test.describe('Complete component specimen routing', () => {
       expect
         .soft(snapshot.specimenOutsideViewport, `${item.id}: specimen stays in the viewport`)
         .toBe(false);
+      expect
+        .soft(snapshot.serverNodeCount, `${item.id}: server rendered a non-empty specimen subtree`)
+        .toBeGreaterThan(1);
+      expect
+        .soft(snapshot.serverCaptureComplete, `${item.id}: server DOM capture completed`)
+        .toBe(true);
+      expect
+        .soft(snapshot.serverSpecimenPreserved, `${item.id}: hydration retained the specimen root`)
+        .toBe(true);
+      expect
+        .soft(
+          snapshot.preservedServerNodeCount,
+          `${item.id}: hydration retained every server-rendered specimen node`,
+        )
+        .toBe(snapshot.serverNodeCount);
 
       const routeErrors = runtimeErrors.slice(errorsBeforeRoute);
       expect.soft(routeErrors, `${item.id}: browser runtime errors`).toEqual([]);
@@ -131,6 +231,20 @@ test.describe('Complete component specimen routing', () => {
 });
 
 test.describe('Representative live specimen interactions', () => {
+  test('client-side component navigation immediately materializes the next specimen', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    await openSpecimen(page, 'dropdown-button');
+
+    await page.locator('.component-pager a.next').click();
+    await expect(page).toHaveURL(/\/components\/form-field$/);
+    const specimen = page.getByTestId('component-specimen-form-field');
+    await expect(specimen).toBeVisible();
+    await expect(specimen.locator('.specimen-loading')).toHaveCount(0);
+    assertNoRuntimeErrors();
+  });
+
   test('buttons activate and form values can be edited', async ({ page }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
 

@@ -54,22 +54,22 @@ void bootstrapApplication(KernAppShellAgentExample);
 
 ## API
 
-| Name                           | Kind  | Type                                        | Required | Default                                     | Description                                                                          |
-| ------------------------------ | ----- | ------------------------------------------- | -------- | ------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `sidebarWidth`                 | input | `KrnLayoutSpace`                            | no       | `'17rem'`                                   | Inline size reserved for the expanded application sidebar.                           |
-| `railWidth`                    | input | `KrnLayoutSpace`                            | no       | `'3.5rem'`                                  | Inline size reserved for the application navigation rail.                            |
-| `mainMaxWidth`                 | input | `KrnLayoutSpace`                            | no       | `'100%'`                                    | Maximum inline size allocated to the primary application content.                    |
-| `sidebarPosition`              | input | `"end" \| "start"`                          | no       | `'start'`                                   | Logical start or end placement of the application sidebar.                           |
-| `mobileNavigation`             | input | `"auto" \| "hidden" \| "rail" \| "sidebar"` | no       | `'auto'`                                    | Template rendered as the application’s narrow-viewport navigation.                   |
-| `mobileNavigationOpen`         | model | `boolean`                                   | no       | `false`                                     | Controlled mobile navigation open state with a matching Angular model-change output. |
-| `mobileNavigationId`           | input | `string`                                    | no       | `this.ids.next('mobile-navigation')`        | Stable identifier value used by the mobile navigation contract.                      |
-| `mobileNavigationLabel`        | input | `string`                                    | no       | `this.translations.layout.mobileNavigation` | Human-readable copy for the mobile navigation state or control.                      |
-| `mobileNavigationLabelledBy`   | input | `string`                                    | no       | `''`                                        | Space-separated element ids that name the mobile navigation dialog.                  |
-| `mobileNavigationDescribedBy`  | input | `string`                                    | no       | `''`                                        | Space-separated element ids that describe the mobile navigation dialog.              |
-| `mobileNavigationInitialFocus` | input | `string`                                    | no       | `'first-tabbable'`                          | Focus target applied after the mobile navigation dialog opens.                       |
-| `openNavigationLabel`          | input | `string`                                    | no       | `this.translations.layout.openNavigation`   | Human-readable copy for the open navigation state or control.                        |
-| `closeNavigationLabel`         | input | `string`                                    | no       | `this.translations.layout.closeNavigation`  | Human-readable copy for the close navigation state or control.                       |
-| `mainId`                       | input | `string`                                    | no       | `'main-content'`                            | Stable identifier value used by the main contract.                                   |
+| Name                           | Kind  | Type                                        | Required | Default                              | Description                                                                          |
+| ------------------------------ | ----- | ------------------------------------------- | -------- | ------------------------------------ | ------------------------------------------------------------------------------------ |
+| `sidebarWidth`                 | input | `KrnLayoutSpace`                            | no       | `'17rem'`                            | Inline size reserved for the expanded application sidebar.                           |
+| `railWidth`                    | input | `KrnLayoutSpace`                            | no       | `'3.5rem'`                           | Inline size reserved for the application navigation rail.                            |
+| `mainMaxWidth`                 | input | `KrnLayoutSpace`                            | no       | `'100%'`                             | Maximum inline size allocated to the primary application content.                    |
+| `sidebarPosition`              | input | `"end" \| "start"`                          | no       | `'start'`                            | Logical start or end placement of the application sidebar.                           |
+| `mobileNavigation`             | input | `"auto" \| "hidden" \| "rail" \| "sidebar"` | no       | `'auto'`                             | Template rendered as the application’s narrow-viewport navigation.                   |
+| `mobileNavigationOpen`         | model | `boolean`                                   | no       | `false`                              | Controlled mobile navigation open state with a matching Angular model-change output. |
+| `mobileNavigationId`           | input | `string`                                    | no       | `this.ids.next('mobile-navigation')` | Stable identifier value used by the mobile navigation contract.                      |
+| `mobileNavigationLabel`        | input | `string \| undefined`                       | no       | `undefined`                          | Human-readable copy for the mobile navigation state or control.                      |
+| `mobileNavigationLabelledBy`   | input | `string`                                    | no       | `''`                                 | Space-separated element ids that name the mobile navigation dialog.                  |
+| `mobileNavigationDescribedBy`  | input | `string`                                    | no       | `''`                                 | Space-separated element ids that describe the mobile navigation dialog.              |
+| `mobileNavigationInitialFocus` | input | `string`                                    | no       | `'first-tabbable'`                   | Focus target applied after the mobile navigation dialog opens.                       |
+| `openNavigationLabel`          | input | `string \| undefined`                       | no       | `undefined`                          | Human-readable copy for the open navigation state or control.                        |
+| `closeNavigationLabel`         | input | `string \| undefined`                       | no       | `undefined`                          | Human-readable copy for the close navigation state or control.                       |
+| `mainId`                       | input | `string`                                    | no       | `'main-content'`                     | Stable identifier value used by the main contract.                                   |
 
 ## Deprecated selectors
 

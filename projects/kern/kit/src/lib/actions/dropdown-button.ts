@@ -25,7 +25,7 @@ import {
   krnIsNode,
   type KrnScheduledHandle,
 } from '@kern-ui/angular/cdk';
-import { KRN_MORE_ACTIONS_LABEL } from '@kern-ui/angular/i18n';
+import { KRN_MORE_ACTIONS_LABEL, krnReadI18nValue } from '@kern-ui/angular/i18n';
 import type { KrnActionVariant, KrnSize, KrnTone } from './action-types';
 import { KrnButton } from './button';
 import {
@@ -861,7 +861,7 @@ export class KrnDropdownButton {
         aria-haspopup="menu"
         [attr.aria-controls]="menu.menuId"
         [attr.aria-expanded]="menu.effectiveOpen()"
-        [attr.aria-label]="menuLabel()"
+        [attr.aria-label]="resolvedMenuLabel()"
         [attr.id]="menu.triggerId"
         [disabled]="menu.isDisabled()"
         [size]="size()"
@@ -915,6 +915,7 @@ export class KrnDropdownButton {
 export class KrnSplitButton {
   private readonly options = inject(KRN_MENU_BUTTON_OPTIONS);
   private readonly splitHost = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly inheritedMenuLabel = inject(KRN_MORE_ACTIONS_LABEL);
   readonly size = input<KrnSize>(this.options.size);
   readonly variant = input<KrnActionVariant>(this.options.variant);
   readonly tone = input<KrnTone>(this.options.tone);
@@ -931,7 +932,10 @@ export class KrnSplitButton {
   });
   /** Closes after an enabled menu item activates; use the keep-open marker for one item. */
   readonly closeOnSelection = input(true, { transform: booleanAttribute });
-  readonly menuLabel = input(inject(KRN_MORE_ACTIONS_LABEL));
+  readonly menuLabel = input<string | undefined>();
+  protected readonly resolvedMenuLabel = computed(
+    () => this.menuLabel() ?? krnReadI18nValue(this.inheritedMenuLabel),
+  );
   readonly primaryAction = output<MouseEvent>();
   private readonly menuPanel = viewChild<ElementRef<HTMLElement>>('menuPanel');
   protected readonly menu = new KrnMenuButtonController(this);

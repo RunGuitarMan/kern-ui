@@ -84,8 +84,8 @@ export class KrnMasterDetailLayout {
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly masterPane = viewChild<ElementRef<HTMLElement>>('masterPane');
   private readonly detailPane = viewChild<ElementRef<HTMLElement>>('detailPane');
-  readonly masterLabel = input(this.translations.patterns.masterList);
-  readonly detailLabel = input(this.translations.patterns.detail);
+  readonly masterLabel = input<typeof this.translations.patterns.masterList | undefined>();
+  readonly detailLabel = input<typeof this.translations.patterns.detail | undefined>();
   readonly detailOpen = model(false);
   protected readonly resolvedMasterLabel = computed(() =>
     this.requiredLabel(this.masterLabel(), this.translations.patterns.masterList, 'Master list'),
@@ -127,7 +127,7 @@ export class KrnMasterDetailLayout {
     );
   });
 
-  private requiredLabel(value: string, fallback: string, hardFallback: string): string {
+  private requiredLabel(value: string | undefined, fallback: string, hardFallback: string): string {
     const normalized = typeof value === 'string' ? value.trim() : '';
     const normalizedFallback = typeof fallback === 'string' ? fallback.trim() : '';
     return normalized || normalizedFallback || hardFallback;

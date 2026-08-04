@@ -53,12 +53,8 @@ interface HydrationRow {
       [options]="options()"
       [value]="selectedValues()"
     />
-    <krn-date-picker data-hydration="date-picker" today="2026-08-03" value="2026-08-03" />
-    <krn-date-range-picker
-      data-hydration="date-range-picker"
-      today="2026-08-03"
-      [value]="dateRange"
-    />
+    <krn-date-picker data-hydration="date-picker" />
+    <krn-date-range-picker data-hydration="date-range-picker" />
     <krn-time-picker data-hydration="time-picker" value="09:30" />
     <krn-color-picker data-hydration="color-picker" value="#4666da" />
 
@@ -115,7 +111,6 @@ class BetaHydrationHost {
   ]);
   readonly selected = signal('alpha');
   readonly selectedValues = computed(() => [this.selected()]);
-  readonly dateRange = { start: '2026-08-03', end: '2026-08-04' } as const;
   readonly rows = signal<readonly HydrationRow[]>([{ id: 1, name: 'Alpha row' }]);
   readonly columns: readonly KrnDataColumn<HydrationRow>[] = [{ key: 'name', label: 'Name' }];
   readonly gridMode: KrnDataGridMode = { kind: 'client', pagination: false };
@@ -168,6 +163,11 @@ const hydrationProbes = [
 
 describe('beta component hydration gate', () => {
   it('reuses lifecycle-listed non-modal beta DOM and keeps it reactive', async () => {
+    const dateNow = vi.spyOn(Date, 'now').mockReturnValue(Date.UTC(2026, 2, 15, 12));
+    const resolvedOptions = new Intl.DateTimeFormat().resolvedOptions();
+    const resolvedOptionsSpy = vi
+      .spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions')
+      .mockReturnValue({ ...resolvedOptions, timeZone: 'Pacific/Kiritimati' });
     const html = await renderApplication(
       (context) =>
         bootstrapApplication(
@@ -182,6 +182,8 @@ describe('beta component hydration gate', () => {
         allowedHosts: ['kern.example'],
       },
     );
+    dateNow.mockReturnValue(Date.UTC(2026, 3, 20, 12));
+    resolvedOptionsSpy.mockReturnValue({ ...resolvedOptions, timeZone: 'America/Adak' });
     const serverDocument = new DOMParser().parseFromString(html, 'text/html');
     const originalHead = document.head.innerHTML;
     const originalBody = document.body.innerHTML;
@@ -206,6 +208,28 @@ describe('beta component hydration gate', () => {
       expect([...consoleWarn.mock.calls, ...consoleError.mock.calls].flat().join(' ')).not.toMatch(
         /NG05\d{2}/u,
       );
+
+      (
+        document.querySelector(
+          '[data-hydration="date-picker"] .krn-picker__trigger',
+        ) as HTMLButtonElement
+      ).click();
+      await application.whenStable();
+      const pickerToday = document.querySelector<HTMLElement>(
+        '[data-hydration="date-picker"] [data-today="true"]',
+      );
+      expect(pickerToday?.dataset['date']).toBe('2026-04-20');
+
+      (
+        document.querySelector(
+          '[data-hydration="date-range-picker"] .krn-picker__trigger',
+        ) as HTMLButtonElement
+      ).click();
+      await application.whenStable();
+      const rangeToday = document.querySelector<HTMLElement>(
+        '[data-hydration="date-range-picker"] [data-today="true"]',
+      );
+      expect(rangeToday?.dataset['date']).toBe(pickerToday?.dataset['date']);
 
       const instance = application.components[0]?.instance as BetaHydrationHost;
       instance.selected.set('beta');
@@ -233,6 +257,8 @@ describe('beta component hydration gate', () => {
       application?.destroy();
       consoleWarn.mockRestore();
       consoleError.mockRestore();
+      resolvedOptionsSpy.mockRestore();
+      dateNow.mockRestore();
       document.head.innerHTML = originalHead;
       document.body.innerHTML = originalBody;
     }

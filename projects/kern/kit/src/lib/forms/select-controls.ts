@@ -42,7 +42,9 @@ import {
   useKrnFormControl,
 } from './value-accessor';
 import { KRN_PLATFORM, type KrnScheduledHandle } from '@kern-ui/angular/cdk';
-import { KRN_ENGLISH_TRANSLATIONS, KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { KRN_ENGLISH_TRANSLATIONS, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
+import { krnInheritedLocale } from '../reactive-locale';
 
 const optionalBooleanAttribute = (value: unknown): boolean | undefined =>
   value === undefined || value === null ? undefined : booleanAttribute(value);
@@ -349,7 +351,7 @@ export class KrnNativeSelect<T = string> {
               }
             </span>
           } @else {
-            <span class="krn-select-placeholder">{{ placeholder() }}</span>
+            <span class="krn-select-placeholder">{{ resolvedPlaceholder() }}</span>
           }
           <span class="krn-select-chevron" aria-hidden="true"></span>
         </button>
@@ -361,7 +363,7 @@ export class KrnNativeSelect<T = string> {
           [attr.role]="optionsState() === 'error' ? 'alert' : 'status'"
           [attr.data-options-state-announcement]="optionsState()"
         >
-          {{ optionsState() === 'loading' ? loadingText() : errorText() }}
+          {{ optionsState() === 'loading' ? resolvedLoadingText() : resolvedErrorText() }}
         </span>
       }
 
@@ -416,7 +418,7 @@ export class KrnNativeSelect<T = string> {
                 aria-selected="false"
                 data-options-state="empty"
               >
-                {{ emptyText() }}
+                {{ resolvedEmptyText() }}
               </li>
             }
           } @else {
@@ -427,7 +429,7 @@ export class KrnNativeSelect<T = string> {
               aria-selected="false"
               [attr.data-options-state]="optionsState()"
             >
-              {{ optionsState() === 'loading' ? loadingText() : errorText() }}
+              {{ optionsState() === 'loading' ? resolvedLoadingText() : resolvedErrorText() }}
             </li>
           }
         </ul>
@@ -440,13 +442,29 @@ export class KrnSelect<T = string> {
   readonly #translations = inject(KRN_TRANSLATIONS);
   private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
   readonly id = input('');
-  readonly placeholder = input(this.#translations.forms.selectOption);
-  readonly emptyText = input(this.#translations.forms.noOptions);
-  readonly loadingText = input(
-    this.#translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? '',
+  readonly placeholder = input<string | undefined>();
+  protected readonly resolvedPlaceholder = krnInputFallback(
+    this.placeholder,
+    () => this.#translations.forms.selectOption,
   );
-  readonly errorText = input(
-    this.#translations.forms.optionsLoadFailed ??
+  readonly emptyText = input<string | undefined>();
+  protected readonly resolvedEmptyText = krnInputFallback(
+    this.emptyText,
+    () => this.#translations.forms.noOptions,
+  );
+  readonly loadingText = input<string | undefined>();
+  protected readonly resolvedLoadingText = krnInputFallback(
+    this.loadingText,
+    () =>
+      this.#translations.forms.loadingOptions ??
+      KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ??
+      '',
+  );
+  readonly errorText = input<string | undefined>();
+  protected readonly resolvedErrorText = krnInputFallback(
+    this.errorText,
+    () =>
+      this.#translations.forms.optionsLoadFailed ??
       KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??
       '',
   );
@@ -662,7 +680,7 @@ export class KrnSelect<T = string> {
               }
             </span>
           } @else {
-            <span class="krn-select-placeholder">{{ placeholder() }}</span>
+            <span class="krn-select-placeholder">{{ resolvedPlaceholder() }}</span>
           }
           <span class="krn-select-chevron" aria-hidden="true"></span>
         </button>
@@ -674,7 +692,7 @@ export class KrnSelect<T = string> {
           [attr.role]="optionsState() === 'error' ? 'alert' : 'status'"
           [attr.data-options-state-announcement]="optionsState()"
         >
-          {{ optionsState() === 'loading' ? loadingText() : errorText() }}
+          {{ optionsState() === 'loading' ? resolvedLoadingText() : resolvedErrorText() }}
         </span>
       }
 
@@ -730,7 +748,7 @@ export class KrnSelect<T = string> {
                 aria-selected="false"
                 data-options-state="empty"
               >
-                {{ emptyText() }}
+                {{ resolvedEmptyText() }}
               </li>
             }
           } @else {
@@ -741,7 +759,7 @@ export class KrnSelect<T = string> {
               aria-selected="false"
               [attr.data-options-state]="optionsState()"
             >
-              {{ optionsState() === 'loading' ? loadingText() : errorText() }}
+              {{ optionsState() === 'loading' ? resolvedLoadingText() : resolvedErrorText() }}
             </li>
           }
         </ul>
@@ -754,13 +772,27 @@ export class KrnMultiSelect<T = string> {
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
   readonly id = input('');
-  readonly placeholder = input(this.translations.forms.selectOptions);
-  readonly emptyText = input(this.translations.forms.noOptions);
-  readonly loadingText = input(
-    this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? '',
+  readonly placeholder = input<string | undefined>();
+  protected readonly resolvedPlaceholder = krnInputFallback(
+    this.placeholder,
+    () => this.translations.forms.selectOptions,
   );
-  readonly errorText = input(
-    this.translations.forms.optionsLoadFailed ??
+  readonly emptyText = input<string | undefined>();
+  protected readonly resolvedEmptyText = krnInputFallback(
+    this.emptyText,
+    () => this.translations.forms.noOptions,
+  );
+  readonly loadingText = input<string | undefined>();
+  protected readonly resolvedLoadingText = krnInputFallback(
+    this.loadingText,
+    () =>
+      this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? '',
+  );
+  readonly errorText = input<string | undefined>();
+  protected readonly resolvedErrorText = krnInputFallback(
+    this.errorText,
+    () =>
+      this.translations.forms.optionsLoadFailed ??
       KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??
       '',
   );
@@ -955,14 +987,14 @@ interface KrnEditableComboboxHost {
   readonly autocompleteModeInput: Signal<KrnAutocompleteMode | undefined>;
   readonly allowCustomValueInput: Signal<boolean | undefined>;
   readonly id: Signal<string>;
-  readonly placeholder: Signal<string>;
-  readonly emptyText: Signal<string>;
-  readonly loadingText: Signal<string>;
-  readonly errorText: Signal<string>;
+  readonly placeholder: Signal<string | undefined>;
+  readonly emptyText: Signal<string | undefined>;
+  readonly loadingText: Signal<string | undefined>;
+  readonly errorText: Signal<string | undefined>;
   readonly ariaLabel: Signal<string>;
   readonly ariaLabelledBy: Signal<string>;
   readonly ariaDescribedBy: Signal<string>;
-  readonly toggleLabel: Signal<string>;
+  readonly toggleLabel: Signal<string | undefined>;
   readonly name: Signal<string>;
   readonly options: Signal<readonly KrnSelectOption<string>[]>;
   readonly optionsState: Signal<KrnOptionsState>;
@@ -991,7 +1023,7 @@ class KrnEditableComboboxController {
   private readonly defaultAutocompleteMode: KrnAutocompleteMode;
   private readonly defaultAllowCustomValue: boolean;
   private readonly destroyRef = inject(DestroyRef);
-  private readonly locale = inject(KRN_LOCALE);
+  private readonly locale = krnInheritedLocale();
   private readonly platform = inject(KRN_PLATFORM);
   private readonly renderer = inject(Renderer2);
   readonly inputFocused = signal(false);
@@ -1290,7 +1322,7 @@ class KrnEditableComboboxController {
   }
 
   private normalizeForSearch(value: string): string {
-    return value.toLocaleLowerCase(this.locale);
+    return value.toLocaleLowerCase(this.locale());
   }
 
   setOpen(open: boolean): void {
@@ -1418,20 +1450,38 @@ export class KrnCombobox {
     transform: optionalBooleanAttribute,
   });
   readonly id = input('');
-  readonly placeholder = input(this.translations.forms.startTyping);
-  readonly emptyText = input(this.translations.forms.noMatches);
-  readonly loadingText = input(
-    this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? '',
+  readonly placeholder = input<string | undefined>();
+  protected readonly resolvedPlaceholder = krnInputFallback(
+    this.placeholder,
+    () => this.translations.forms.startTyping,
   );
-  readonly errorText = input(
-    this.translations.forms.optionsLoadFailed ??
+  readonly emptyText = input<string | undefined>();
+  protected readonly resolvedEmptyText = krnInputFallback(
+    this.emptyText,
+    () => this.translations.forms.noMatches,
+  );
+  readonly loadingText = input<string | undefined>();
+  protected readonly resolvedLoadingText = krnInputFallback(
+    this.loadingText,
+    () =>
+      this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? '',
+  );
+  readonly errorText = input<string | undefined>();
+  protected readonly resolvedErrorText = krnInputFallback(
+    this.errorText,
+    () =>
+      this.translations.forms.optionsLoadFailed ??
       KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??
       '',
   );
   readonly ariaLabel = input('');
   readonly ariaLabelledBy = input('');
   readonly ariaDescribedBy = input('');
-  readonly toggleLabel = input(this.translations.forms.showOptions);
+  readonly toggleLabel = input<string | undefined>();
+  protected readonly resolvedToggleLabel = krnInputFallback(
+    this.toggleLabel,
+    () => this.translations.forms.showOptions,
+  );
   readonly name = input('');
   readonly options = input.required<readonly KrnSelectOption<string>[]>();
   /** Controls whether options are interactive or replaced by an announced loading/error state. */
@@ -1565,20 +1615,38 @@ export class KrnAutocomplete {
     transform: optionalBooleanAttribute,
   });
   readonly id = input('');
-  readonly placeholder = input(this.translations.forms.startTyping);
-  readonly emptyText = input(this.translations.forms.noMatches);
-  readonly loadingText = input(
-    this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? '',
+  readonly placeholder = input<string | undefined>();
+  protected readonly resolvedPlaceholder = krnInputFallback(
+    this.placeholder,
+    () => this.translations.forms.startTyping,
   );
-  readonly errorText = input(
-    this.translations.forms.optionsLoadFailed ??
+  readonly emptyText = input<string | undefined>();
+  protected readonly resolvedEmptyText = krnInputFallback(
+    this.emptyText,
+    () => this.translations.forms.noMatches,
+  );
+  readonly loadingText = input<string | undefined>();
+  protected readonly resolvedLoadingText = krnInputFallback(
+    this.loadingText,
+    () =>
+      this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? '',
+  );
+  readonly errorText = input<string | undefined>();
+  protected readonly resolvedErrorText = krnInputFallback(
+    this.errorText,
+    () =>
+      this.translations.forms.optionsLoadFailed ??
       KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ??
       '',
   );
   readonly ariaLabel = input('');
   readonly ariaLabelledBy = input('');
   readonly ariaDescribedBy = input('');
-  readonly toggleLabel = input(this.translations.forms.showOptions);
+  readonly toggleLabel = input<string | undefined>();
+  protected readonly resolvedToggleLabel = krnInputFallback(
+    this.toggleLabel,
+    () => this.translations.forms.showOptions,
+  );
   readonly name = input('');
   readonly options = input.required<readonly KrnSelectOption<string>[]>();
   /** Controls whether options are interactive or replaced by an announced loading/error state. */

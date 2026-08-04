@@ -214,7 +214,10 @@ describe('KERN agent component contract', () => {
     const select = api.resolveComponent('krn-select');
     assert.equal(select.forms.controlValueAccessor, true);
     assert.equal(select.forms.valueType, 'T | null');
-    assert.equal(select.api.find((member) => member.name === 'placeholder')?.type, 'string');
+    assert.equal(
+      select.api.find((member) => member.name === 'placeholder')?.type,
+      'string | undefined',
+    );
 
     const popoverTrigger = api
       .resolveComponent('popover')

@@ -66,20 +66,20 @@ void bootstrapApplication(KernCommandPaletteAgentExample);
 
 ## API
 
-| Name            | Kind   | Type                                   | Required | Default                                                  | Description                                                                 |
-| --------------- | ------ | -------------------------------------- | -------- | -------------------------------------------------------- | --------------------------------------------------------------------------- |
-| `items`         | input  | `ReadonlyArray<KrnCommandItem>`        | no       | `[]`                                                     | Ordered item collection rendered by the composite widget.                   |
-| `open`          | model  | `boolean`                              | no       | `false`                                                  | Controls whether the disclosure or overlay surface is visible.              |
-| `query`         | model  | `string`                               | no       | `''`                                                     | Current controlled search text used to derive visible results.              |
-| `title`         | input  | `string`                               | no       | `this.translations.navigation.commandPalette`            | Visible title that also names the component surface or data view.           |
-| `description`   | input  | `string`                               | no       | `''`                                                     | Visible supporting description for the component content.                   |
-| `placeholder`   | input  | `string`                               | no       | `this.translations.navigation.searchCommandsPlaceholder` | Short input hint shown only while no value is present.                      |
-| `resultsLabel`  | input  | `string`                               | no       | `this.translations.navigation.commands`                  | Human-readable copy for the results state or control.                       |
-| `closeShortcut` | input  | `string`                               | no       | `this.translations.navigation.escapeShortcut`            | Controls whether the component applies the close shortcut behavior.         |
-| `locale`        | input  | `Array<string> \| string`              | no       | `inject(KRN_LOCALE)`                                     | Locale identifier used for collation, formatting, and component-owned copy. |
-| `labels`        | input  | `Partial<KrnCommandPaletteLabels>`     | no       | `{}`                                                     | Localized copy overrides for the component-owned interface text.            |
-| `selected`      | output | `KrnCommandItem`                       | no       | `undefined`                                              | Controlled selected state, distinct from keyboard focus.                    |
-| `closed`        | output | `"escape" \| "outside" \| "selection"` | no       | `undefined`                                              | Notifies the consumer after the closed interaction completes.               |
+| Name            | Kind   | Type                                   | Required | Default     | Description                                                                 |
+| --------------- | ------ | -------------------------------------- | -------- | ----------- | --------------------------------------------------------------------------- |
+| `items`         | input  | `ReadonlyArray<KrnCommandItem>`        | no       | `[]`        | Ordered item collection rendered by the composite widget.                   |
+| `open`          | model  | `boolean`                              | no       | `false`     | Controls whether the disclosure or overlay surface is visible.              |
+| `query`         | model  | `string`                               | no       | `''`        | Current controlled search text used to derive visible results.              |
+| `title`         | input  | `string \| undefined`                  | no       | `undefined` | Visible title that also names the component surface or data view.           |
+| `description`   | input  | `string`                               | no       | `''`        | Visible supporting description for the component content.                   |
+| `placeholder`   | input  | `string \| undefined`                  | no       | `undefined` | Short input hint shown only while no value is present.                      |
+| `resultsLabel`  | input  | `string \| undefined`                  | no       | `undefined` | Human-readable copy for the results state or control.                       |
+| `closeShortcut` | input  | `string \| undefined`                  | no       | `undefined` | Controls whether the component applies the close shortcut behavior.         |
+| `locale`        | input  | `Array<string> \| string \| undefined` | no       | `undefined` | Locale identifier used for collation, formatting, and component-owned copy. |
+| `labels`        | input  | `Partial<KrnCommandPaletteLabels>`     | no       | `{}`        | Localized copy overrides for the component-owned interface text.            |
+| `selected`      | output | `KrnCommandItem`                       | no       | `undefined` | Controlled selected state, distinct from keyboard focus.                    |
+| `closed`        | output | `"escape" \| "outside" \| "selection"` | no       | `undefined` | Notifies the consumer after the closed interaction completes.               |
 
 ## Deprecated selectors
 

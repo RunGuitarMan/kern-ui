@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "packageName": "@kern-ui/angular",
+  "aggregator": {
+    "subpath": "./testing",
+    "budgetBytes": 2000
+  },
+  "entrypoints": [
+    {
+      "name": "actions",
+      "subpath": "./testing/actions",
+      "aggregated": true,
+      "inventoryFamilies": ["actions"],
+      "budgetBytes": 36000
+    },
+    {
+      "name": "data-display",
+      "subpath": "./testing/data-display",
+      "aggregated": true,
+      "inventoryFamilies": ["charts", "data-display", "data-grid"],
+      "budgetBytes": 24000
+    },
+    {
+      "name": "feedback",
+      "subpath": "./testing/feedback",
+      "aggregated": true,
+      "inventoryFamilies": ["feedback"],
+      "budgetBytes": 8000
+    },
+    {
+      "name": "forms",
+      "subpath": "./testing/forms",
+      "aggregated": true,
+      "inventoryFamilies": ["forms"],
+      "budgetBytes": 36000
+    },
+    {
+      "name": "layout",
+      "subpath": "./testing/layout",
+      "aggregated": true,
+      "inventoryFamilies": ["layout"],
+      "budgetBytes": 8000
+    },
+    {
+      "name": "navigation",
+      "subpath": "./testing/navigation",
+      "aggregated": true,
+      "inventoryFamilies": ["navigation"],
+      "budgetBytes": 10000
+    },
+    {
+      "name": "shared",
+      "subpath": "./testing/shared",
+      "aggregated": false,
+      "budgetBytes": 2000
+    }
+  ]
+}

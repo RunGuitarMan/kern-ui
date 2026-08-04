@@ -85,9 +85,9 @@
       "name": "title",
       "property": "title",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.navigation.tableOfContentsTitle",
+      "defaultValue": "undefined",
       "description": "Visible title that also names the component surface or data view.",
       "descriptionSource": "inferred"
     },
@@ -95,9 +95,9 @@
       "name": "ariaLabel",
       "property": "ariaLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.navigation.tableOfContents",
+      "defaultValue": "undefined",
       "description": "Accessible name used when visible content is not sufficient.",
       "descriptionSource": "inferred"
     },
@@ -378,7 +378,7 @@
         "componentId": "table-of-contents",
         "publicName": "ariaLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
         "evidence": {

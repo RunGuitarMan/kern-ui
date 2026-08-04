@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, inject, input } from '@angular/core';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
 
 @Component({
   selector: 'krn-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[attr.role]': 'role()',
-    '[attr.aria-label]': 'ariaLabel()',
+    '[attr.aria-label]': 'resolvedAriaLabel()',
   },
   template: `<ng-content />`,
   styles: `
@@ -22,7 +23,11 @@ import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 export class KrnList {
   private readonly translations = inject(KRN_TRANSLATIONS);
   readonly role = input<'list' | 'listbox'>('list');
-  readonly ariaLabel = input(this.translations.dataDisplay.list);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.dataDisplay.list,
+  );
 }
 
 @Component({

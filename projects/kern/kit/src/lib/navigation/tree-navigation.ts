@@ -14,8 +14,9 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { KRN_PLATFORM, KrnIdService, type KrnScheduledHandle } from '@kern-ui/angular/cdk';
-import { KRN_ENGLISH_TRANSLATIONS, KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { KRN_ENGLISH_TRANSLATIONS, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnTreeNavigationItem } from './navigation.types';
+import { krnInheritedLocale } from '../reactive-locale';
 
 @Component({
   selector: 'krn-tree-navigation',
@@ -293,7 +294,7 @@ import type { KrnTreeNavigationItem } from './navigation.types';
 export class KrnTreeNavigation {
   private readonly destroyRef = inject(DestroyRef);
   private readonly ids = inject(KrnIdService);
-  private readonly locale = inject(KRN_LOCALE);
+  private readonly locale = krnInheritedLocale();
   private readonly platform = inject(KRN_PLATFORM);
   protected readonly translations = inject(KRN_TRANSLATIONS);
   private readonly elements = viewChildren<ElementRef<HTMLElement>>('treeItem');
@@ -304,7 +305,7 @@ export class KrnTreeNavigation {
   readonly items = input<readonly KrnTreeNavigationItem[]>([]);
   readonly selectedId = model<string | null>(null);
   readonly expandedIds = model<readonly string[]>([]);
-  readonly ariaLabel = input(this.translations.navigation.navigationTree);
+  readonly ariaLabel = input<string | undefined>();
   readonly indent = input('1rem');
   readonly showGuides = input(true, { transform: booleanAttribute });
   readonly itemSelected = output<KrnTreeNavigationItem>();
@@ -531,7 +532,7 @@ export class KrnTreeNavigation {
 
     event.preventDefault();
     if (this.typeaheadTimer !== null) this.platform.cancelScheduled(this.typeaheadTimer);
-    this.typeaheadBuffer += event.key.toLocaleLowerCase(this.locale);
+    this.typeaheadBuffer += event.key.toLocaleLowerCase(this.locale());
     const clearTypeahead = (): void => {
       this.typeaheadBuffer = '';
       this.typeaheadTimer = null;
@@ -548,7 +549,7 @@ export class KrnTreeNavigation {
     const match = ordered.find((candidate) =>
       candidate.label
         .trim()
-        .toLocaleLowerCase(this.locale)
+        .toLocaleLowerCase(this.locale())
         .startsWith(query ?? ''),
     );
     if (match) this.focusItem(match.id);

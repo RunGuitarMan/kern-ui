@@ -53,27 +53,27 @@ void bootstrapApplication(KernDragDropUploadAgentExample);
 
 ## API
 
-| Name              | Kind   | Type                                | Required | Default                                 | Description                                                                                      |
-| ----------------- | ------ | ----------------------------------- | -------- | --------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`                            | no       | `''`                                    | Stable identifier value used by the id contract.                                                 |
-| `label`           | input  | `string`                            | no       | `this.translations.forms.chooseFiles`   | Visible text that names the control or data value.                                               |
-| `locale`          | input  | `string`                            | no       | `inject(KRN_LOCALE)`                    | Locale identifier used for collation, formatting, and component-owned copy.                      |
-| `description`     | input  | `string`                            | no       | `''`                                    | Visible supporting description for the component content.                                        |
-| `accept`          | input  | `string`                            | no       | `''`                                    | Comma-separated file types accepted by the upload control.                                       |
-| `multiple`        | input  | `boolean`                           | no       | `false`                                 | Allows more than one value or file to be selected in one interaction.                            |
-| `maxSize`         | input  | `number`                            | no       | `Number.POSITIVE_INFINITY`              | Upper or lower bound applied to the size value.                                                  |
-| `maxFiles`        | input  | `number`                            | no       | `Number.POSITIVE_INFINITY`              | Upper or lower bound applied to the files value.                                                 |
-| `disabled`        | input  | `boolean`                           | no       | `false`                                 | Prevents user interaction and participates in the disabled-state contract.                       |
-| `readonly`        | input  | `boolean`                           | no       | `false`                                 | Keeps the value perceivable while preventing user edits.                                         |
-| `required`        | input  | `boolean`                           | no       | `false`                                 | Marks the value as required and participates in Angular Forms validation.                        |
-| `invalid`         | input  | `boolean`                           | no       | `false`                                 | Exposes an externally controlled invalid presentation state.                                     |
-| `filesChange`     | output | `ReadonlyArray<File>`               | no       | `undefined`                             | Notifies the consumer after the files change interaction completes.                              |
-| `rejected`        | output | `ReadonlyArray<KrnUploadRejection>` | no       | `undefined`                             | Notifies the consumer after the rejected interaction completes.                                  |
-| `dropLabel`       | input  | `string`                            | no       | `this.translations.forms.dropFilesHere` | Human-readable copy for the drop state or control.                                               |
-| `ariaLabelledBy`  | input  | `string`                            | no       | `''`                                    | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
-| `ariaDescribedBy` | input  | `string`                            | no       | `''`                                    | Space-separated element ids composed with Form Field hints and validation descriptions.          |
-| `tabindex`        | input  | `number`                            | no       | `0`                                     | Native sequential-focus order forwarded to the owned interactive element.                        |
-| `value`           | input  | `ReadonlyArray<File> \| undefined`  | no       | `undefined`                             | Controlled component value.                                                                      |
+| Name              | Kind   | Type                                | Required | Default                    | Description                                                                                      |
+| ----------------- | ------ | ----------------------------------- | -------- | -------------------------- | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`                            | no       | `''`                       | Stable identifier value used by the id contract.                                                 |
+| `label`           | input  | `string \| undefined`               | no       | `undefined`                | Visible text that names the control or data value.                                               |
+| `locale`          | input  | `string \| undefined`               | no       | `undefined`                | Locale identifier used for collation, formatting, and component-owned copy.                      |
+| `description`     | input  | `string`                            | no       | `''`                       | Visible supporting description for the component content.                                        |
+| `accept`          | input  | `string`                            | no       | `''`                       | Comma-separated file types accepted by the upload control.                                       |
+| `multiple`        | input  | `boolean`                           | no       | `false`                    | Allows more than one value or file to be selected in one interaction.                            |
+| `maxSize`         | input  | `number`                            | no       | `Number.POSITIVE_INFINITY` | Upper or lower bound applied to the size value.                                                  |
+| `maxFiles`        | input  | `number`                            | no       | `Number.POSITIVE_INFINITY` | Upper or lower bound applied to the files value.                                                 |
+| `disabled`        | input  | `boolean`                           | no       | `false`                    | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean`                           | no       | `false`                    | Keeps the value perceivable while preventing user edits.                                         |
+| `required`        | input  | `boolean`                           | no       | `false`                    | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`         | input  | `boolean`                           | no       | `false`                    | Exposes an externally controlled invalid presentation state.                                     |
+| `filesChange`     | output | `ReadonlyArray<File>`               | no       | `undefined`                | Notifies the consumer after the files change interaction completes.                              |
+| `rejected`        | output | `ReadonlyArray<KrnUploadRejection>` | no       | `undefined`                | Notifies the consumer after the rejected interaction completes.                                  |
+| `dropLabel`       | input  | `string \| undefined`               | no       | `undefined`                | Human-readable copy for the drop state or control.                                               |
+| `ariaLabelledBy`  | input  | `string`                            | no       | `''`                       | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`                            | no       | `''`                       | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `tabindex`        | input  | `number`                            | no       | `0`                        | Native sequential-focus order forwarded to the owned interactive element.                        |
+| `value`           | input  | `ReadonlyArray<File> \| undefined`  | no       | `undefined`                | Controlled component value.                                                                      |
 
 ## Deprecated selectors
 

@@ -51,15 +51,15 @@ void bootstrapApplication(KernNavigationRailAgentExample);
 
 ## API
 
-| Name              | Kind  | Type                         | Required | Default                                      | Description                                                               |
-| ----------------- | ----- | ---------------------------- | -------- | -------------------------------------------- | ------------------------------------------------------------------------- |
-| `expanded`        | model | `boolean`                    | no       | `false`                                      | Controlled expanded state for a disclosure or hierarchical item.          |
-| `width`           | input | `KrnLayoutSpace`             | no       | `'var(--krn-shell-rail-width, 3.5rem)'`      | Explicit inline size of the rendered surface.                             |
-| `expandedWidth`   | input | `KrnLayoutSpace`             | no       | `'14rem'`                                    | Controls whether the component applies the expanded width behavior.       |
-| `ariaLabel`       | input | `string`                     | no       | `this.translations.layout.primaryNavigation` | Accessible name used when visible content is not sufficient.              |
-| `ariaLabelledBy`  | input | `string`                     | no       | `''`                                         | Space-separated element ids that name the native navigation landmark.     |
-| `ariaDescribedBy` | input | `string`                     | no       | `''`                                         | Space-separated element ids that describe the native navigation landmark. |
-| `side`            | input | `"auto" \| "end" \| "start"` | no       | `'auto'`                                     | Logical side on which the anchored or modal surface is placed.            |
+| Name              | Kind  | Type                         | Required | Default                                 | Description                                                               |
+| ----------------- | ----- | ---------------------------- | -------- | --------------------------------------- | ------------------------------------------------------------------------- |
+| `expanded`        | model | `boolean`                    | no       | `false`                                 | Controlled expanded state for a disclosure or hierarchical item.          |
+| `width`           | input | `KrnLayoutSpace`             | no       | `'var(--krn-shell-rail-width, 3.5rem)'` | Explicit inline size of the rendered surface.                             |
+| `expandedWidth`   | input | `KrnLayoutSpace`             | no       | `'14rem'`                               | Controls whether the component applies the expanded width behavior.       |
+| `ariaLabel`       | input | `string \| undefined`        | no       | `undefined`                             | Accessible name used when visible content is not sufficient.              |
+| `ariaLabelledBy`  | input | `string`                     | no       | `''`                                    | Space-separated element ids that name the native navigation landmark.     |
+| `ariaDescribedBy` | input | `string`                     | no       | `''`                                    | Space-separated element ids that describe the native navigation landmark. |
+| `side`            | input | `"auto" \| "end" \| "start"` | no       | `'auto'`                                | Logical side on which the anchored or modal surface is placed.            |
 
 ## Deprecated selectors
 

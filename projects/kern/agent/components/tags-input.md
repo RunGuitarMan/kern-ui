@@ -50,29 +50,29 @@ void bootstrapApplication(KernTagsInputAgentExample);
 
 ## API
 
-| Name              | Kind   | Type                                 | Required | Default                                     | Description                                                                                      |
-| ----------------- | ------ | ------------------------------------ | -------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`                             | no       | `''`                                        | Stable identifier value used by the id contract.                                                 |
-| `ariaLabel`       | input  | `string`                             | no       | `this.translations.forms.tags`              | Accessible name used when visible content is not sufficient.                                     |
-| `inputLabel`      | input  | `string`                             | no       | `this.translations.forms.addTag`            | Human-readable copy for the input state or control.                                              |
-| `placeholder`     | input  | `string`                             | no       | `this.translations.forms.addTagPlaceholder` | Short input hint shown only while no value is present.                                           |
-| `ariaLabelledBy`  | input  | `string`                             | no       | `''`                                        | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
-| `ariaDescribedBy` | input  | `string`                             | no       | `''`                                        | Space-separated element ids composed with Form Field hints and validation descriptions.          |
-| `autocomplete`    | input  | `string`                             | no       | `'off'`                                     | Native autocomplete purpose forwarded to the editable control.                                   |
-| `tabindex`        | input  | `number`                             | no       | `0`                                         | Native sequential-focus order forwarded to the owned interactive element.                        |
-| `separatorKeys`   | input  | `ReadonlyArray<string>`              | no       | `['Enter', ',']`                            | Stable identifier value used by the separator contract.                                          |
-| `separator`       | input  | `RegExp \| string`                   | no       | `/[,\n]+/`                                  | Delimiter or pattern used to split committed draft text into tags.                               |
-| `maxTags`         | input  | `number`                             | no       | `Number.POSITIVE_INFINITY`                  | Upper or lower bound applied to the tags value.                                                  |
-| `allowDuplicates` | input  | `boolean`                            | no       | `false`                                     | Controls whether the component applies the allow duplicates behavior.                            |
-| `addOnBlur`       | input  | `boolean`                            | no       | `true`                                      | Commits a valid draft tag when the text input loses focus.                                       |
-| `disabled`        | input  | `boolean`                            | no       | `false`                                     | Prevents user interaction and participates in the disabled-state contract.                       |
-| `readonly`        | input  | `boolean`                            | no       | `false`                                     | Keeps the value perceivable while preventing user edits.                                         |
-| `required`        | input  | `boolean`                            | no       | `false`                                     | Marks the value as required and participates in Angular Forms validation.                        |
-| `invalid`         | input  | `boolean`                            | no       | `false`                                     | Exposes an externally controlled invalid presentation state.                                     |
-| `value`           | input  | `ReadonlyArray<string> \| undefined` | no       | `undefined`                                 | Controlled component value.                                                                      |
-| `valueChange`     | output | `ReadonlyArray<string>`              | no       | `undefined`                                 | Notifies the consumer after the value change interaction completes.                              |
-| `tagAdded`        | output | `string`                             | no       | `undefined`                                 | Notifies the consumer after the tag added interaction completes.                                 |
-| `tagRemoved`      | output | `string`                             | no       | `undefined`                                 | Notifies the consumer after the tag removed interaction completes.                               |
+| Name              | Kind   | Type                                 | Required | Default                    | Description                                                                                      |
+| ----------------- | ------ | ------------------------------------ | -------- | -------------------------- | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`                             | no       | `''`                       | Stable identifier value used by the id contract.                                                 |
+| `ariaLabel`       | input  | `string \| undefined`                | no       | `undefined`                | Accessible name used when visible content is not sufficient.                                     |
+| `inputLabel`      | input  | `string \| undefined`                | no       | `undefined`                | Human-readable copy for the input state or control.                                              |
+| `placeholder`     | input  | `string \| undefined`                | no       | `undefined`                | Short input hint shown only while no value is present.                                           |
+| `ariaLabelledBy`  | input  | `string`                             | no       | `''`                       | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`                             | no       | `''`                       | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `autocomplete`    | input  | `string`                             | no       | `'off'`                    | Native autocomplete purpose forwarded to the editable control.                                   |
+| `tabindex`        | input  | `number`                             | no       | `0`                        | Native sequential-focus order forwarded to the owned interactive element.                        |
+| `separatorKeys`   | input  | `ReadonlyArray<string>`              | no       | `['Enter', ',']`           | Stable identifier value used by the separator contract.                                          |
+| `separator`       | input  | `RegExp \| string`                   | no       | `/[,\n]+/`                 | Delimiter or pattern used to split committed draft text into tags.                               |
+| `maxTags`         | input  | `number`                             | no       | `Number.POSITIVE_INFINITY` | Upper or lower bound applied to the tags value.                                                  |
+| `allowDuplicates` | input  | `boolean`                            | no       | `false`                    | Controls whether the component applies the allow duplicates behavior.                            |
+| `addOnBlur`       | input  | `boolean`                            | no       | `true`                     | Commits a valid draft tag when the text input loses focus.                                       |
+| `disabled`        | input  | `boolean`                            | no       | `false`                    | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean`                            | no       | `false`                    | Keeps the value perceivable while preventing user edits.                                         |
+| `required`        | input  | `boolean`                            | no       | `false`                    | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`         | input  | `boolean`                            | no       | `false`                    | Exposes an externally controlled invalid presentation state.                                     |
+| `value`           | input  | `ReadonlyArray<string> \| undefined` | no       | `undefined`                | Controlled component value.                                                                      |
+| `valueChange`     | output | `ReadonlyArray<string>`              | no       | `undefined`                | Notifies the consumer after the value change interaction completes.                              |
+| `tagAdded`        | output | `string`                             | no       | `undefined`                | Notifies the consumer after the tag added interaction completes.                                 |
+| `tagRemoved`      | output | `string`                             | no       | `undefined`                | Notifies the consumer after the tag removed interaction completes.                               |
 
 ## Deprecated selectors
 

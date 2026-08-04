@@ -2,6 +2,7 @@ import {
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
   inject,
   input,
@@ -10,7 +11,7 @@ import {
   signal,
 } from '@angular/core';
 import { KRN_CLIPBOARD_WRITER, KRN_PLATFORM, type KrnScheduledHandle } from '@kern-ui/angular/cdk';
-import { KRN_COPY_LABELS } from '@kern-ui/angular/i18n';
+import { KRN_COPY_LABELS, KRN_DEFAULT_COPY_LABELS, krnReadI18nValue } from '@kern-ui/angular/i18n';
 import type { KrnActionVariant, KrnSize, KrnTone } from './action-types';
 import { KrnButton } from './button';
 import { KRN_COPY_BUTTON_DEFAULT_OPTIONS, KRN_COPY_BUTTON_OPTIONS } from './copy-button-options';
@@ -48,7 +49,7 @@ export type KrnCopyState = 'idle' | 'copied' | 'error';
     >
       <span class="krn-copy-labels">
         <span class="krn-copy-label">
-          <ng-content>{{ copyLabel() }}</ng-content>
+          <ng-content>{{ resolvedCopyLabel() }}</ng-content>
         </span>
         <span class="krn-copy-indicator" [attr.data-state]="state()" aria-hidden="true">
           @if (state() === 'copied') {
@@ -61,11 +62,11 @@ export type KrnCopyState = 'idle' | 'copied' | 'error';
     </button>
     <span class="krn-copy-status" role="status" aria-atomic="true" aria-live="polite">
       @if (pending()) {
-        {{ copyingLabel() }}
+        {{ resolvedCopyingLabel() }}
       } @else if (state() === 'copied') {
-        {{ copiedLabel() }}
+        {{ resolvedCopiedLabel() }}
       } @else if (state() === 'error') {
-        {{ errorLabel() }}
+        {{ resolvedErrorLabel() }}
       }
     </span>
   `,
@@ -76,7 +77,7 @@ export class KrnCopyButton {
   private readonly platform = inject(KRN_PLATFORM);
   private readonly destroyRef = inject(DestroyRef);
   private readonly options = inject(KRN_COPY_BUTTON_OPTIONS);
-  private readonly labels = inject(KRN_COPY_LABELS);
+  private readonly inheritedLabels = inject(KRN_COPY_LABELS);
   private resetTimer: KrnScheduledHandle | undefined;
   private activeAttempt = 0;
 
@@ -90,13 +91,28 @@ export class KrnCopyButton {
    */
   readonly ariaLabel = input('');
   /** Localized visible fallback used only when no action label is projected. */
-  readonly copyLabel = input(this.labels.copy);
+  readonly copyLabel = input<string | undefined>();
   /** Loading announcement while the asynchronous write is in flight. */
-  readonly copyingLabel = input(this.labels.copying);
+  readonly copyingLabel = input<string | undefined>();
   /** Success announcement paired with the visible success indicator. */
-  readonly copiedLabel = input(this.labels.copied);
+  readonly copiedLabel = input<string | undefined>();
   /** Failure announcement paired with the visible error indicator. */
-  readonly errorLabel = input(this.labels.failed);
+  readonly errorLabel = input<string | undefined>();
+  protected readonly resolvedCopyLabel = computed(
+    () => this.copyLabel() ?? krnReadI18nValue(this.inheritedLabels).copy,
+  );
+  protected readonly resolvedCopyingLabel = computed(
+    () =>
+      this.copyingLabel() ??
+      krnReadI18nValue(this.inheritedLabels).copying ??
+      KRN_DEFAULT_COPY_LABELS.copying,
+  );
+  protected readonly resolvedCopiedLabel = computed(
+    () => this.copiedLabel() ?? krnReadI18nValue(this.inheritedLabels).copied,
+  );
+  protected readonly resolvedErrorLabel = computed(
+    () => this.errorLabel() ?? krnReadI18nValue(this.inheritedLabels).failed,
+  );
   readonly size = input<KrnSize>(this.options.size);
   readonly variant = input<KrnActionVariant>(this.options.variant);
   readonly tone = input<KrnTone>(this.options.tone);

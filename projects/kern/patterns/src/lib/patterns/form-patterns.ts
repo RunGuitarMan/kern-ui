@@ -249,14 +249,16 @@ export class KrnLoginForm {
   readonly loading = input(false, { transform: booleanAttribute });
   readonly errorMessage = input('');
   readonly recoveryHref = input('');
-  readonly submitLabel = input(this.translations.patterns.signIn);
-  readonly emailLabel = input(this.translations.patterns.email);
-  readonly emailErrorLabel = input(this.translations.patterns.invalidEmail);
-  readonly passwordLabel = input(this.translations.patterns.password);
-  readonly passwordErrorLabel = input(this.translations.patterns.minimumPasswordLength);
-  readonly rememberLabel = input(this.translations.patterns.rememberMe);
-  readonly recoveryLabel = input(this.translations.patterns.forgotPassword);
-  readonly loadingLabel = input(this.translations.patterns.signingIn);
+  readonly submitLabel = input<typeof this.translations.patterns.signIn | undefined>();
+  readonly emailLabel = input<typeof this.translations.patterns.email | undefined>();
+  readonly emailErrorLabel = input<typeof this.translations.patterns.invalidEmail | undefined>();
+  readonly passwordLabel = input<typeof this.translations.patterns.password | undefined>();
+  readonly passwordErrorLabel = input<
+    typeof this.translations.patterns.minimumPasswordLength | undefined
+  >();
+  readonly rememberLabel = input<typeof this.translations.patterns.rememberMe | undefined>();
+  readonly recoveryLabel = input<typeof this.translations.patterns.forgotPassword | undefined>();
+  readonly loadingLabel = input<typeof this.translations.patterns.signingIn | undefined>();
   readonly minimumPasswordLength = input(8, { transform: numberAttribute });
   readonly submitted = output<KrnLoginCredentials>();
   protected readonly resolvedMinimumPasswordLength = computed(() => {
@@ -286,7 +288,7 @@ export class KrnLoginForm {
   protected readonly resolvedPasswordErrorLabel = computed(() => {
     const minimum = this.resolvedMinimumPasswordLength();
     return this.requiredLabel(
-      this.passwordErrorLabel()(minimum),
+      this.passwordErrorLabel()?.(minimum),
       this.translations.patterns.minimumPasswordLength(minimum),
       `Use at least ${minimum} characters`,
     );
@@ -340,11 +342,11 @@ export class KrnLoginForm {
     this.submitted.emit(this.form.getRawValue());
   }
 
-  private normalizeText(value: string): string {
+  private normalizeText(value: string | undefined): string {
     return typeof value === 'string' ? value.trim() : '';
   }
 
-  private requiredLabel(value: string, fallback: string, hardFallback: string): string {
+  private requiredLabel(value: string | undefined, fallback: string, hardFallback: string): string {
     return this.normalizeText(value) || this.normalizeText(fallback) || hardFallback;
   }
 }
@@ -459,21 +461,25 @@ export class KrnProfileForm {
   protected readonly timezoneId = `${this.instanceId}-timezone`;
   protected readonly timezoneErrorId = `${this.timezoneId}-error`;
   readonly value = input<KrnProfileValue>({ name: '', role: '', bio: '', timezone: 'UTC' });
-  readonly timezones = input<readonly { readonly value: string; readonly label: string }[]>(
-    this.translations.patterns.profileTimezones,
-  );
+  readonly timezones = input<
+    readonly { readonly value: string; readonly label: string }[] | undefined
+  >();
   readonly saving = input(false, { transform: booleanAttribute });
-  readonly dirtyMessage = input(this.translations.patterns.unsavedChanges);
-  readonly nameLabel = input(this.translations.patterns.displayName);
-  readonly nameErrorLabel = input(this.translations.patterns.displayNameRequired);
-  readonly roleLabel = input(this.translations.patterns.role);
-  readonly bioLabel = input(this.translations.patterns.bio);
-  readonly bioErrorLabel = input(this.translations.patterns.bioMaximumLength);
+  readonly dirtyMessage = input<typeof this.translations.patterns.unsavedChanges | undefined>();
+  readonly nameLabel = input<typeof this.translations.patterns.displayName | undefined>();
+  readonly nameErrorLabel = input<
+    typeof this.translations.patterns.displayNameRequired | undefined
+  >();
+  readonly roleLabel = input<typeof this.translations.patterns.role | undefined>();
+  readonly bioLabel = input<typeof this.translations.patterns.bio | undefined>();
+  readonly bioErrorLabel = input<typeof this.translations.patterns.bioMaximumLength | undefined>();
   readonly bioMaxLength = input(280, { transform: numberAttribute });
-  readonly timezoneLabel = input(this.translations.patterns.timezone);
-  readonly timezoneErrorLabel = input(this.translations.patterns.timezoneUnavailable);
-  readonly savingLabel = input(this.translations.patterns.saving);
-  readonly saveLabel = input(this.translations.patterns.saveProfile);
+  readonly timezoneLabel = input<typeof this.translations.patterns.timezone | undefined>();
+  readonly timezoneErrorLabel = input<
+    typeof this.translations.patterns.timezoneUnavailable | undefined
+  >();
+  readonly savingLabel = input<typeof this.translations.patterns.saving | undefined>();
+  readonly saveLabel = input<typeof this.translations.patterns.saveProfile | undefined>();
   readonly saved = output<KrnProfileValue>();
   protected readonly resolvedBioMaxLength = computed(() => {
     const maximum = this.bioMaxLength();
@@ -484,7 +490,7 @@ export class KrnProfileForm {
     return maximum;
   });
   protected readonly resolvedTimezones = computed(() => {
-    const timezones = this.timezones();
+    const timezones = this.timezones() ?? this.translations.patterns.profileTimezones;
     if (!Array.isArray(timezones) || timezones.length === 0) {
       throw new Error('KrnProfileForm: timezones must contain at least one option.');
     }
@@ -529,7 +535,7 @@ export class KrnProfileForm {
   protected readonly resolvedBioErrorLabel = computed(() => {
     const maximum = this.resolvedBioMaxLength();
     return this.requiredLabel(
-      this.bioErrorLabel()(maximum),
+      this.bioErrorLabel()?.(maximum),
       this.translations.patterns.bioMaximumLength(maximum),
       `Biography must contain at most ${maximum} characters`,
     );
@@ -605,11 +611,11 @@ export class KrnProfileForm {
     this.saved.emit(this.form.getRawValue());
   }
 
-  private normalizeText(value: string): string {
+  private normalizeText(value: string | undefined): string {
     return typeof value === 'string' ? value.trim() : '';
   }
 
-  private requiredLabel(value: string, fallback: string, hardFallback: string): string {
+  private requiredLabel(value: string | undefined, fallback: string, hardFallback: string): string {
     return this.normalizeText(value) || this.normalizeText(fallback) || hardFallback;
   }
 }
@@ -841,12 +847,12 @@ export class KrnMultiStepForm {
   readonly furthestStep = model(0);
   readonly allowStepNavigation = input(true, { transform: booleanAttribute });
   readonly orientation = input<'horizontal' | 'vertical'>('horizontal');
-  readonly completeLabel = input(this.translations.patterns.complete);
-  readonly ariaLabel = input(this.translations.patterns.formProgress);
-  readonly optionalLabel = input(this.translations.patterns.optional);
-  readonly backLabel = input(this.translations.patterns.back);
-  readonly continueLabel = input(this.translations.patterns.continue);
-  readonly stepCounterLabel = input(this.translations.patterns.stepCounter);
+  readonly completeLabel = input<typeof this.translations.patterns.complete | undefined>();
+  readonly ariaLabel = input<typeof this.translations.patterns.formProgress | undefined>();
+  readonly optionalLabel = input<typeof this.translations.patterns.optional | undefined>();
+  readonly backLabel = input<typeof this.translations.patterns.back | undefined>();
+  readonly continueLabel = input<typeof this.translations.patterns.continue | undefined>();
+  readonly stepCounterLabel = input<typeof this.translations.patterns.stepCounter | undefined>();
   readonly completed = output<void>();
   protected readonly validatedSteps = computed<readonly KrnFormStep[]>(() => {
     const steps = this.steps();
@@ -913,7 +919,7 @@ export class KrnMultiStepForm {
     const total = this.validatedSteps().length;
     const current = this.clampIndex(this.current(), total) + 1;
     return this.requiredLabel(
-      this.stepCounterLabel()(current, total),
+      this.stepCounterLabel()?.(current, total),
       this.translations.patterns.stepCounter(current, total),
       `Step ${current} of ${total}`,
     );
@@ -983,11 +989,11 @@ export class KrnMultiStepForm {
     return Number.isSafeInteger(value) ? Math.max(0, Math.min(length - 1, value)) : 0;
   }
 
-  private normalizeText(value: string): string {
+  private normalizeText(value: string | undefined): string {
     return typeof value === 'string' ? value.trim() : '';
   }
 
-  private requiredLabel(value: string, fallback: string, hardFallback: string): string {
+  private requiredLabel(value: string | undefined, fallback: string, hardFallback: string): string {
     return this.normalizeText(value) || this.normalizeText(fallback) || hardFallback;
   }
 }

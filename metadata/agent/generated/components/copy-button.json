@@ -78,9 +78,9 @@
       "name": "copyLabel",
       "property": "copyLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.labels.copy",
+      "defaultValue": "undefined",
       "description": "Localized visible fallback used only when no action label is projected.",
       "descriptionSource": "source"
     },
@@ -88,9 +88,9 @@
       "name": "copyingLabel",
       "property": "copyingLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.labels.copying",
+      "defaultValue": "undefined",
       "description": "Loading announcement while the asynchronous write is in flight.",
       "descriptionSource": "source"
     },
@@ -98,9 +98,9 @@
       "name": "copiedLabel",
       "property": "copiedLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.labels.copied",
+      "defaultValue": "undefined",
       "description": "Success announcement paired with the visible success indicator.",
       "descriptionSource": "source"
     },
@@ -108,9 +108,9 @@
       "name": "errorLabel",
       "property": "errorLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.labels.failed",
+      "defaultValue": "undefined",
       "description": "Failure announcement paired with the visible error indicator.",
       "descriptionSource": "source"
     },
@@ -633,7 +633,7 @@
         "componentId": "copy-button",
         "publicName": "copiedLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
@@ -645,7 +645,7 @@
         "componentId": "copy-button",
         "publicName": "copyingLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
@@ -657,7 +657,7 @@
         "componentId": "copy-button",
         "publicName": "copyLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
@@ -669,7 +669,7 @@
         "componentId": "copy-button",
         "publicName": "errorLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {

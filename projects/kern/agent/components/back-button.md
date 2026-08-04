@@ -43,11 +43,11 @@ void bootstrapApplication(KernBackButtonAgentExample);
 
 ## API
 
-| Name        | Kind   | Type             | Required | Default                             | Description                                                      |
-| ----------- | ------ | ---------------- | -------- | ----------------------------------- | ---------------------------------------------------------------- |
-| `href`      | input  | `string \| null` | no       | `null`                              | Required destination URL used by the semantic link element.      |
-| `label`     | input  | `string`         | no       | `this.translations.navigation.back` | Visible text that names the control or data value.               |
-| `activated` | output | `void`           | no       | `undefined`                         | Notifies the consumer after the activated interaction completes. |
+| Name        | Kind   | Type                  | Required | Default     | Description                                                      |
+| ----------- | ------ | --------------------- | -------- | ----------- | ---------------------------------------------------------------- |
+| `href`      | input  | `string \| null`      | no       | `null`      | Required destination URL used by the semantic link element.      |
+| `label`     | input  | `string \| undefined` | no       | `undefined` | Visible text that names the control or data value.               |
+| `activated` | output | `void`                | no       | `undefined` | Notifies the consumer after the activated interaction completes. |
 
 ## Deprecated selectors
 

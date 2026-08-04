@@ -27,6 +27,7 @@ import {
   type KrnScheduledHandle,
 } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
 
 /**
  * @internalReviewWith kit:KrnTooltip
@@ -324,7 +325,7 @@ export class KrnTooltip {
         [id]="panelId"
         class="popover"
         role="region"
-        [attr.aria-label]="ariaLabel()"
+        [attr.aria-label]="resolvedAriaLabel()"
         tabindex="-1"
         (keydown.escape)="
           $event.defaultPrevented || !open()
@@ -398,7 +399,11 @@ export class KrnPopover {
   private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
   protected readonly panelId = this.ids.next('popover');
   readonly open = model(false);
-  readonly ariaLabel = input(this.translations.feedback.moreInformation);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.feedback.moreInformation,
+  );
   readonly autoFocus = input(true, { transform: booleanAttribute });
   readonly closed = output<'api' | 'escape' | 'outside'>();
   protected readonly positions = [
@@ -490,7 +495,7 @@ export class KrnPopover {
         (pointerenter)="cancelClose()"
         (pointerleave)="scheduleClose()"
       >
-        <span class="visually-hidden">{{ ariaLabel() }}</span>
+        <span class="visually-hidden">{{ resolvedAriaLabel() }}</span>
         <ng-content />
       </section>
     </ng-template>
@@ -559,7 +564,11 @@ export class KrnHoverCard {
   private readonly translations = inject(KRN_TRANSLATIONS);
   protected readonly open = signal(false);
   protected readonly panelId = this.ids.next('hover-card');
-  readonly ariaLabel = input(this.translations.feedback.preview);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.feedback.preview,
+  );
   readonly openDelay = input(350, { transform: numberAttribute });
   readonly closeDelay = input(120, { transform: numberAttribute });
   private openTimer: KrnScheduledHandle | null = null;

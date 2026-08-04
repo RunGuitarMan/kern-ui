@@ -1,15 +1,29 @@
+import { createHash } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { dirname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { schema as angularSchema } from '@angular-devkit/core';
+import { lt, rcompare, valid as validSemver } from 'semver';
 import ts from 'typescript';
 
 import { extractCatalogFromSource } from '../scripts/generate-component-contract.mjs';
+import { validateLifecycleAttestation } from './attest-kern-lifecycle-release.mjs';
 
 const modulePath = fileURLToPath(import.meta.url);
 const workspaceRoot = resolve(dirname(modulePath), '..');
 const defaultLifecyclePath = resolve(workspaceRoot, 'projects/kern/api/lifecycle.json');
+const defaultLifecycleEvidencePath = resolve(
+  workspaceRoot,
+  'projects/kern/api/lifecycle-evidence.json',
+);
+const lifecycleEvidenceSchemaPath = resolve(
+  workspaceRoot,
+  'projects/kern/api/lifecycle-evidence.schema.json',
+);
+const manualEvidencePath = resolve(workspaceRoot, 'docs/accessibility/manual-evidence.json');
 const defaultDeprecationsPath = resolve(workspaceRoot, 'projects/kern/api/deprecations.json');
 const catalogPath = resolve(workspaceRoot, 'projects/showcase/src/lib/catalog.ts');
 const catalogIndexPath = resolve(
@@ -23,6 +37,7 @@ const componentContractPath = resolve(
 const apiConfigPath = resolve(workspaceRoot, 'projects/kern/api/entrypoints.json');
 const packageManifestPath = resolve(workspaceRoot, 'projects/kern/package.json');
 const allowedStatuses = new Set(['stable', 'beta', 'experimental', 'recipe', 'deprecated']);
+const allowedEvidenceModes = new Set(['local', 'release', 'promotion']);
 const issues = [];
 
 function option(name, fallback) {
@@ -31,8 +46,18 @@ function option(name, fallback) {
   return argument ? resolve(workspaceRoot, argument.slice(prefix.length)) : fallback;
 }
 
+function valueOption(name, fallback) {
+  const prefix = `--${name}=`;
+  const argument = process.argv.find((value) => value.startsWith(prefix));
+  return argument ? argument.slice(prefix.length) : fallback;
+}
+
 function report(message) {
   issues.push(message);
+}
+
+function sha256(content) {
+  return `sha256-${createHash('sha256').update(content).digest('hex')}`;
 }
 
 async function readJson(path, label) {
@@ -41,6 +66,116 @@ async function readJson(path, label) {
   } catch (error) {
     throw new Error(
       `${label} could not be read at ${path}: ${error instanceof Error ? error.message : error}`,
+    );
+  }
+}
+
+const releasePackages = ['@kern-ui/angular', '@kern-ui/mcp'];
+const publicReleaseTags = ['latest', 'next'];
+
+export function selectPublishedReleaseBase(distTagsByPackage, currentVersion) {
+  if (validSemver(currentVersion) !== currentVersion) {
+    throw new Error(`Release base version must be exact Semantic Versioning: ${currentVersion}.`);
+  }
+  const candidates = [];
+  for (const tag of publicReleaseTags) {
+    const versions = releasePackages.map(
+      (packageName) => distTagsByPackage[packageName]?.[tag] ?? null,
+    );
+    const configured = versions.filter((version) => version !== null);
+    if (configured.length === 0) continue;
+    if (configured.length !== releasePackages.length || new Set(configured).size !== 1) {
+      throw new Error(
+        `Published npm dist-tag ${tag} is not synchronized: ${releasePackages
+          .map((packageName, index) => `${packageName}=${versions[index] ?? 'unset'}`)
+          .join(', ')}.`,
+      );
+    }
+    const [version] = configured;
+    if (validSemver(version) !== version) {
+      throw new Error(`Published npm dist-tag ${tag} contains invalid version ${version}.`);
+    }
+    if (lt(version, currentVersion)) candidates.push(version);
+  }
+  return [...new Set(candidates)].sort(rcompare)[0] ?? null;
+}
+
+function publishedDistTags(packageName) {
+  const result = spawnSync(
+    process.platform === 'win32' ? 'npm.cmd' : 'npm',
+    ['view', packageName, 'dist-tags', '--json'],
+    {
+      cwd: workspaceRoot,
+      encoding: 'utf8',
+      maxBuffer: 2 * 1024 * 1024,
+    },
+  );
+  if (result.status !== 0) {
+    const output = `${result.stdout}\n${result.stderr}`;
+    if (/E404|404 Not Found|is not in this registry/i.test(output)) return {};
+    throw new Error(`Could not query npm dist-tags for ${packageName}: ${output.trim()}`);
+  }
+  const value = JSON.parse(result.stdout || '{}');
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error(`npm returned invalid dist-tags for ${packageName}.`);
+  }
+  return value;
+}
+
+function publishedReleaseBaseCommit(currentVersion) {
+  const distTagsByPackage = Object.fromEntries(
+    releasePackages.map((packageName) => [packageName, publishedDistTags(packageName)]),
+  );
+  const baseVersion = selectPublishedReleaseBase(distTagsByPackage, currentVersion);
+  if (baseVersion === null) return null;
+  const tag = `v${baseVersion}`;
+  const revision = spawnSync('git', ['rev-parse', '--verify', `${tag}^{commit}`], {
+    cwd: workspaceRoot,
+    encoding: 'utf8',
+  });
+  if (revision.status !== 0 || !/^[0-9a-f]{40}\n?$/.test(revision.stdout)) {
+    throw new Error(`Published release base ${baseVersion} has no exact Git tag ${tag}.`);
+  }
+  const commit = revision.stdout.trim();
+  const ancestor = spawnSync('git', ['merge-base', '--is-ancestor', commit, 'HEAD'], {
+    cwd: workspaceRoot,
+    encoding: 'utf8',
+  });
+  if (ancestor.status !== 0) {
+    throw new Error(`Published release base ${tag} is not an ancestor of the current release tag.`);
+  }
+  return commit;
+}
+
+async function readBaseLifecycle(path, ref, releaseVersion) {
+  if ([path, ref, releaseVersion].filter(Boolean).length > 1) {
+    throw new Error(
+      'Use only one of --base-lifecycle=PATH, --base-ref=COMMIT, or --release-base-version=VERSION.',
+    );
+  }
+  if (path) return readJson(path, 'Base lifecycle registry');
+  if (releaseVersion) ref = publishedReleaseBaseCommit(releaseVersion);
+  if (!ref) return null;
+  if (!/^[0-9a-f]{40}$/.test(ref)) {
+    throw new Error('--base-ref must be an exact 40-character Git commit SHA.');
+  }
+  const result = spawnSync('git', ['show', `${ref}:projects/kern/api/lifecycle.json`], {
+    cwd: workspaceRoot,
+    encoding: 'utf8',
+    maxBuffer: 2 * 1024 * 1024,
+  });
+  if (result.status !== 0) {
+    throw new Error(
+      `Base lifecycle registry could not be read from ${ref}: ${result.stderr.trim()}`,
+    );
+  }
+  try {
+    return JSON.parse(result.stdout);
+  } catch (error) {
+    throw new Error(
+      `Base lifecycle registry at ${ref} is invalid JSON: ${
+        error instanceof Error ? error.message : error
+      }`,
     );
   }
 }
@@ -432,6 +567,44 @@ function flattenCatalogRegistry(registry) {
   return entries;
 }
 
+function catalogRecordIndex(registry) {
+  return new Map(
+    (registry.catalogGroups ?? []).flatMap((group) =>
+      (group.ids ?? []).map((id) => [
+        id,
+        {
+          evidenceProfile: group.evidenceProfile,
+          status: group.status,
+        },
+      ]),
+    ),
+  );
+}
+
+/** Detects status promotions that must be proven against the pull request or push base. */
+export function lifecyclePromotionTransitions(baseLifecycle, currentLifecycle) {
+  const base = catalogRecordIndex(baseLifecycle);
+  const current = catalogRecordIndex(currentLifecycle);
+  return [...current]
+    .flatMap(([id, currentRecord]) => {
+      const baseRecord = base.get(id);
+      return baseRecord &&
+        ['beta', 'experimental'].includes(baseRecord.status) &&
+        currentRecord.status === 'stable'
+        ? [
+            {
+              fromEvidenceProfile: baseRecord.evidenceProfile,
+              fromStatus: baseRecord.status,
+              id,
+              toEvidenceProfile: currentRecord.evidenceProfile,
+              toStatus: currentRecord.status,
+            },
+          ]
+        : [];
+    })
+    .sort((left, right) => left.id.localeCompare(right.id));
+}
+
 function flattenSymbolRegistry(registry) {
   const symbols = new Map();
   if (!Array.isArray(registry.symbolGroups)) {
@@ -559,7 +732,7 @@ export function componentStatusIssues(catalog, classes, registeredSymbols) {
       continue;
     }
     const matches = [...registeredSymbols.values()].filter(
-      (symbol) => symbol.name === className && symbol.entrypoint !== './testing',
+      (symbol) => symbol.name === className && !symbol.entrypoint.startsWith('./testing'),
     );
     if (matches.length !== 1) {
       found.push(
@@ -731,23 +904,421 @@ async function verifyDeprecations(
   return activeMembers.size + activeSelectors.size;
 }
 
+function evidenceKindsForComponent(lifecycle, componentId, profileName) {
+  const kinds = new Set(lifecycle.evidenceProfiles?.[profileName]?.requiredEvidence ?? []);
+  for (const riskProfile of Object.values(lifecycle.riskEvidenceProfiles ?? {})) {
+    if (
+      !Array.isArray(riskProfile.appliesToEvidenceProfiles) ||
+      !riskProfile.appliesToEvidenceProfiles.includes(profileName)
+    ) {
+      continue;
+    }
+    const components = Object.values(riskProfile.families ?? {});
+    if (components.includes(componentId)) kinds.add(riskProfile.requiredEvidence);
+  }
+  return [...kinds];
+}
+
+function validateRiskEvidenceProfiles(lifecycle, registeredCatalog) {
+  const evidenceProfiles = new Set(Object.keys(lifecycle.evidenceProfiles ?? {}));
+  const componentKinds = new Set();
+  for (const [name, profile] of Object.entries(lifecycle.riskEvidenceProfiles ?? {})) {
+    const label = `Risk evidence profile "${name}"`;
+    if (!profile || typeof profile !== 'object') {
+      report(`${label} must be an object.`);
+      continue;
+    }
+    if (typeof profile.requiredEvidence !== 'string' || !profile.requiredEvidence.trim()) {
+      report(`${label} requires requiredEvidence.`);
+    }
+    if (
+      !Array.isArray(profile.appliesToEvidenceProfiles) ||
+      profile.appliesToEvidenceProfiles.length === 0
+    ) {
+      report(`${label} requires appliesToEvidenceProfiles.`);
+      continue;
+    }
+    if (
+      new Set(profile.appliesToEvidenceProfiles).size !== profile.appliesToEvidenceProfiles.length
+    ) {
+      report(`${label} repeats an evidence profile.`);
+    }
+    for (const evidenceProfile of profile.appliesToEvidenceProfiles) {
+      if (!evidenceProfiles.has(evidenceProfile)) {
+        report(`${label} references unknown evidence profile "${evidenceProfile}".`);
+      }
+    }
+    if (!profile.families || typeof profile.families !== 'object') {
+      report(`${label} requires component families.`);
+      continue;
+    }
+    const families = Object.entries(profile.families);
+    if (families.length === 0) report(`${label} requires at least one component family.`);
+    for (const [family, componentId] of families) {
+      if (!family || typeof componentId !== 'string' || !componentId) {
+        report(`${label} contains an invalid family mapping.`);
+        continue;
+      }
+      const component = registeredCatalog.get(componentId);
+      if (!component) {
+        report(`${label} references unknown component "${componentId}".`);
+        continue;
+      }
+      if (!profile.appliesToEvidenceProfiles.includes(component.evidenceProfile)) {
+        report(
+          `${label} does not apply to ${componentId}'s "${component.evidenceProfile}" profile.`,
+        );
+      }
+      const key = `${componentId}:${profile.requiredEvidence}`;
+      if (componentKinds.has(key)) report(`Risk evidence "${key}" is registered more than once.`);
+      componentKinds.add(key);
+    }
+  }
+}
+
+function manualRecordFresh(record, maxAgeDays, now = Date.now()) {
+  if (typeof record?.testedAt !== 'string' || Number.isNaN(Date.parse(record.testedAt))) {
+    return false;
+  }
+  const testedAt = Date.parse(record.testedAt);
+  const age = now - testedAt;
+  return testedAt <= now && age <= maxAgeDays * 24 * 60 * 60 * 1000;
+}
+
+export function promotionManualEvidenceIssues(componentId, item, manualEvidence, now = Date.now()) {
+  const found = [];
+  if (manualEvidence.certification?.status !== 'certified') {
+    found.push(`Promotion gate for "${componentId}" requires certified manual AT evidence.`);
+  }
+  const maxAgeDays = manualEvidence.policy?.promotionMaxAgeDays;
+  const manualById = new Map((manualEvidence.records ?? []).map((record) => [record.id, record]));
+  for (const recordId of item?.recordIds ?? []) {
+    const record = manualById.get(recordId);
+    if (record?.status !== 'pass') {
+      found.push(
+        `Promotion gate for "${componentId}" requires passing manual record "${recordId}".`,
+      );
+    } else if (!Number.isInteger(maxAgeDays) || !manualRecordFresh(record, maxAgeDays, now)) {
+      found.push(`Promotion gate for "${componentId}" requires fresh manual record "${recordId}".`);
+    }
+  }
+  return found;
+}
+
+async function verifyMaterializedEvidence(
+  lifecycle,
+  evidence,
+  manualEvidence,
+  registeredCatalog,
+  packageManifest,
+  mode,
+  promotionIds,
+  promotionTransitions,
+) {
+  if (evidence.$schema !== './lifecycle-evidence.schema.json') {
+    report('Lifecycle evidence must reference ./lifecycle-evidence.schema.json.');
+  }
+  if (evidence.schemaVersion !== 1) {
+    report('lifecycle-evidence.json schemaVersion must be 1.');
+  }
+  if (evidence.libraryVersion !== packageManifest.version) {
+    report(
+      `Lifecycle evidence version ${evidence.libraryVersion} does not match package ${packageManifest.version}.`,
+    );
+  }
+  if (evidence.generatedBy !== 'scripts/generate-lifecycle-evidence.mjs') {
+    report('Lifecycle evidence must name its deterministic generator.');
+  }
+
+  const artifactContents = new Map();
+  for (const [id, artifact] of Object.entries(evidence.artifacts ?? {})) {
+    const label = `Lifecycle evidence artifact "${id}"`;
+    if (
+      !artifact ||
+      typeof artifact.path !== 'string' ||
+      artifact.path.startsWith('/') ||
+      artifact.path.includes('..')
+    ) {
+      report(`${label} requires a safe repository-relative path.`);
+      continue;
+    }
+    const absolutePath = resolve(workspaceRoot, artifact.path);
+    if (!absolutePath.startsWith(`${workspaceRoot}${sep}`) || !existsSync(absolutePath)) {
+      report(`${label} points to a missing repository file.`);
+      continue;
+    }
+    const content = await readFile(absolutePath, 'utf8');
+    artifactContents.set(id, content);
+    if (artifact.sha256 !== sha256(content)) {
+      report(`${label} is stale because ${artifact.path} changed.`);
+    }
+    if (typeof artifact.anchor !== 'string' || !content.includes(artifact.anchor)) {
+      report(`${label} anchor no longer resolves in ${artifact.path}.`);
+    }
+  }
+
+  const records = new Map();
+  if (!Array.isArray(evidence.components)) {
+    report('lifecycle-evidence.json requires a components array.');
+    return;
+  }
+  for (const [index, component] of evidence.components.entries()) {
+    const label = `lifecycle evidence components[${index}]`;
+    if (typeof component?.id !== 'string' || !component.id) {
+      report(`${label} requires an id.`);
+      continue;
+    }
+    if (records.has(component.id)) {
+      report(`Lifecycle evidence component "${component.id}" is duplicated.`);
+    }
+    records.set(component.id, component);
+  }
+
+  const transitionById = new Map(
+    promotionTransitions.map((transition) => [transition.id, transition]),
+  );
+  for (const id of promotionIds) {
+    const lifecycleRecord = registeredCatalog.get(id);
+    if (!lifecycleRecord) {
+      report(`Lifecycle promotion gate references unknown component "${id}".`);
+    } else if (
+      !transitionById.has(id) &&
+      !['beta', 'experimental'].includes(lifecycleRecord.status)
+    ) {
+      report(
+        `Lifecycle promotion gate expects beta or experimental "${id}", found ${lifecycleRecord.status}.`,
+      );
+    }
+    if (lifecycleRecord && lifecycleRecord.evidenceProfile !== 'beta-promotion') {
+      report(
+        `Lifecycle promotion gate requires "${id}" to retain the "beta-promotion" evidence profile until promotion is verified.`,
+      );
+    }
+  }
+
+  const promotionIdSet = new Set(promotionIds);
+  for (const [id, lifecycleRecord] of registeredCatalog) {
+    const component = records.get(id);
+    if (!component) {
+      report(`Lifecycle component "${id}" has no materialized evidence record.`);
+      continue;
+    }
+    if (component.status !== lifecycleRecord.status) {
+      report(`Lifecycle evidence "${id}" status differs from lifecycle.json.`);
+    }
+    if (component.owner !== lifecycleRecord.owner) {
+      report(`Lifecycle evidence "${id}" owner differs from lifecycle.json.`);
+    }
+    if (component.evidenceProfile !== lifecycleRecord.evidenceProfile) {
+      report(`Lifecycle evidence "${id}" profile differs from lifecycle.json.`);
+    }
+    if (
+      typeof component.source !== 'string' ||
+      component.source.startsWith('/') ||
+      component.source.includes('..')
+    ) {
+      report(`Lifecycle evidence "${id}" requires a safe source path.`);
+    } else {
+      const sourcePath = resolve(workspaceRoot, component.source);
+      if (!sourcePath.startsWith(`${workspaceRoot}${sep}`) || !existsSync(sourcePath)) {
+        report(`Lifecycle evidence "${id}" source is missing.`);
+      } else {
+        const source = await readFile(sourcePath, 'utf8');
+        if (component.sourceSha256 !== sha256(source)) {
+          report(`Lifecycle evidence "${id}" is stale because its production source changed.`);
+        }
+      }
+    }
+    if (typeof component.symbol !== 'string' || !component.symbol) {
+      report(`Lifecycle evidence "${id}" requires its canonical symbol.`);
+    }
+
+    const expectedProfile = promotionIdSet.has(id)
+      ? 'beta-promotion'
+      : lifecycleRecord.evidenceProfile;
+    const expectedKinds = evidenceKindsForComponent(lifecycle, id, expectedProfile);
+    const items = new Map();
+    for (const item of component.evidence ?? []) {
+      if (items.has(item.kind)) report(`Lifecycle evidence "${id}" duplicates "${item.kind}".`);
+      items.set(item.kind, item);
+    }
+    for (const kind of expectedKinds) {
+      const item = items.get(kind);
+      if (!item) {
+        report(`Lifecycle evidence "${id}" does not materialize required "${kind}".`);
+        continue;
+      }
+      if (!['linked', 'pending'].includes(item.status)) {
+        report(`Lifecycle evidence "${id}:${kind}" has invalid status "${item.status}".`);
+      }
+      if (
+        item.status === 'pending' &&
+        (typeof item.reason !== 'string' || item.reason.length < 10)
+      ) {
+        report(`Pending lifecycle evidence "${id}:${kind}" requires a reason.`);
+      }
+      if (kind === 'manual-at') {
+        const expectedRecordIds = (manualEvidence.records ?? [])
+          .filter((record) => record.required && record.componentIds?.includes(id))
+          .map((record) => record.id)
+          .sort();
+        if (JSON.stringify(item.recordIds ?? []) !== JSON.stringify(expectedRecordIds)) {
+          report(`Lifecycle evidence "${id}:manual-at" differs from the manual evidence matrix.`);
+        }
+      } else {
+        if (
+          item.status === 'linked' &&
+          (!Array.isArray(item.artifactIds) || !item.artifactIds.length)
+        ) {
+          report(`Linked lifecycle evidence "${id}:${kind}" requires concrete artifacts.`);
+        }
+        for (const artifactId of item.artifactIds ?? []) {
+          if (!artifactContents.has(artifactId)) {
+            report(
+              `Lifecycle evidence "${id}:${kind}" references unknown artifact "${artifactId}".`,
+            );
+          }
+        }
+      }
+    }
+    for (const kind of items.keys()) {
+      if (!expectedKinds.includes(kind)) {
+        report(`Lifecycle evidence "${id}" contains unexpected "${kind}".`);
+      }
+    }
+
+    const apiItem = items.get('api-baseline');
+    if (apiItem?.status === 'linked') {
+      const apiSources = (apiItem.artifactIds ?? []).map(
+        (artifactId) => artifactContents.get(artifactId) ?? '',
+      );
+      if (!apiSources.some((content) => content.includes(component.symbol))) {
+        report(`Lifecycle evidence "${id}:api-baseline" does not contain ${component.symbol}.`);
+      }
+    }
+
+    const promotionRequired = promotionIdSet.has(id);
+    const strict = (mode === 'release' && lifecycleRecord.status === 'stable') || promotionRequired;
+    if (strict) {
+      const gate = promotionRequired ? 'promotion' : mode;
+      for (const kind of expectedKinds) {
+        const item = items.get(kind);
+        if (item?.status !== 'linked') {
+          report(`${gate} gate requires linked lifecycle evidence "${id}:${kind}".`);
+        }
+      }
+    }
+
+    if (promotionRequired && items.has('manual-at')) {
+      for (const issue of promotionManualEvidenceIssues(
+        id,
+        items.get('manual-at'),
+        manualEvidence,
+      )) {
+        report(issue);
+      }
+    }
+  }
+
+  for (const id of records.keys()) {
+    if (!registeredCatalog.has(id)) {
+      report(`Lifecycle evidence contains unknown component "${id}".`);
+    }
+  }
+}
+
 async function main() {
   const lifecyclePath = option('lifecycle', defaultLifecyclePath);
+  const lifecycleEvidencePath = option('evidence', defaultLifecycleEvidencePath);
+  const selectedManualEvidencePath = option('manual-evidence', manualEvidencePath);
+  const baseLifecyclePath = option('base-lifecycle', null);
+  const baseRef = valueOption('base-ref', '');
+  const releaseBaseVersion = valueOption('release-base-version', '');
+  const releaseAttestationPath = option('release-attestation', null);
   const deprecationsPath = option('deprecations', defaultDeprecationsPath);
-  const [lifecycle, deprecations, apiConfig, packageManifest, catalog, componentContracts] =
-    await Promise.all([
-      readJson(lifecyclePath, 'Lifecycle registry'),
-      readJson(deprecationsPath, 'Deprecation registry'),
-      readJson(apiConfigPath, 'API entrypoint configuration'),
-      readJson(packageManifestPath, 'Kern package manifest'),
-      discoverCatalog(),
-      discoverComponentContracts(),
-    ]);
+  const evidenceMode = valueOption('mode', 'local');
+  const requestedPromotionIds = valueOption('components', '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+  if (
+    releaseAttestationPath &&
+    [baseLifecyclePath, baseRef, releaseBaseVersion].filter(Boolean).length > 0
+  ) {
+    throw new Error(
+      'Use --release-attestation alone, not with --base-lifecycle, --base-ref, or --release-base-version.',
+    );
+  }
+  const releaseAttestation = releaseAttestationPath
+    ? await readJson(releaseAttestationPath, 'Lifecycle release attestation')
+    : null;
+  const attestedBaseRef = releaseAttestation?.base?.commit ?? '';
+  if (releaseAttestationPath && attestedBaseRef && !/^[0-9a-f]{40}$/.test(attestedBaseRef)) {
+    throw new Error('Lifecycle release attestation base commit must be an exact 40-character SHA.');
+  }
+  const [
+    lifecycle,
+    lifecycleEvidence,
+    lifecycleEvidenceSchema,
+    manualEvidence,
+    deprecations,
+    apiConfig,
+    packageManifest,
+    catalog,
+    componentContracts,
+    baseLifecycle,
+  ] = await Promise.all([
+    readJson(lifecyclePath, 'Lifecycle registry'),
+    readJson(lifecycleEvidencePath, 'Per-component lifecycle evidence'),
+    readJson(lifecycleEvidenceSchemaPath, 'Per-component lifecycle evidence schema'),
+    readJson(selectedManualEvidencePath, 'Manual accessibility evidence'),
+    readJson(deprecationsPath, 'Deprecation registry'),
+    readJson(apiConfigPath, 'API entrypoint configuration'),
+    readJson(packageManifestPath, 'Kern package manifest'),
+    discoverCatalog(),
+    discoverComponentContracts(),
+    readBaseLifecycle(baseLifecyclePath, baseRef || attestedBaseRef, releaseBaseVersion),
+  ]);
   const classes = new Map(
     [...componentContracts].map(([selector, contract]) => [selector, contract.className]),
   );
 
   if (lifecycle.schemaVersion !== 1) report('lifecycle.json schemaVersion must be 1.');
+  const schemaRegistry = new angularSchema.CoreSchemaRegistry();
+  const validateEvidenceSchema = await schemaRegistry.compile(lifecycleEvidenceSchema);
+  const evidenceSchemaResult = await validateEvidenceSchema(lifecycleEvidence);
+  if (!evidenceSchemaResult.success) {
+    const details = (evidenceSchemaResult.errors ?? [])
+      .map((error) => `${error.instancePath || '/'} ${error.message ?? 'is invalid'}`)
+      .join('; ');
+    report(`Lifecycle evidence does not satisfy its JSON Schema: ${details}`);
+  }
+  if (!allowedEvidenceModes.has(evidenceMode)) {
+    report(`Unsupported lifecycle evidence mode "${evidenceMode}".`);
+  }
+  if (evidenceMode === 'release' && !releaseAttestationPath) {
+    report('Release lifecycle mode requires --release-attestation=PATH.');
+  }
+  if (releaseAttestationPath && evidenceMode !== 'release') {
+    report('--release-attestation is supported only with --mode=release.');
+  }
+  if (releaseAttestation) {
+    for (const issue of await validateLifecycleAttestation(releaseAttestation, {
+      version: packageManifest.version,
+      tag: `v${packageManifest.version}`,
+      commit:
+        typeof releaseAttestation.candidate?.commit === 'string'
+          ? releaseAttestation.candidate.commit
+          : '',
+    })) {
+      report(issue);
+    }
+  }
+  if (releaseAttestation && releaseAttestation.candidate?.version !== packageManifest.version) {
+    report(
+      'Lifecycle release attestation candidate version does not match projects/kern/package.json.',
+    );
+  }
   if (!lifecycle.policy || typeof lifecycle.policy !== 'object') {
     report('lifecycle.json requires a policy object.');
   }
@@ -758,12 +1329,41 @@ async function main() {
   }
 
   const registeredCatalog = flattenCatalogRegistry(lifecycle);
+  const promotionTransitions = baseLifecycle
+    ? lifecyclePromotionTransitions(baseLifecycle, lifecycle)
+    : [];
+  const promotionIds = [
+    ...new Set([
+      ...(evidenceMode === 'promotion' ? requestedPromotionIds : []),
+      ...promotionTransitions.map(({ id }) => id),
+    ]),
+  ].sort();
+  if (evidenceMode === 'promotion' && promotionIds.length === 0) {
+    report('Lifecycle promotion mode requires --components=<catalog-id>[,<catalog-id>...].');
+  }
+  if (evidenceMode !== 'promotion' && requestedPromotionIds.length > 0) {
+    report('--components is supported only with --mode=promotion.');
+  }
+  if (promotionIds.length > 0 && !lifecycle.evidenceProfiles?.['beta-promotion']) {
+    report('Lifecycle promotion gate requires the beta-promotion evidence profile.');
+  }
   const registeredSymbols = flattenSymbolRegistry(lifecycle);
+  validateRiskEvidenceProfiles(lifecycle, registeredCatalog);
   const discoveredApi = await discoverPublicApi(apiConfig);
   compareCatalog(catalog, registeredCatalog);
   compareSymbols(discoveredApi.symbols, registeredSymbols);
   compareSymbolDependencyStatuses(discoveredApi.symbols, registeredSymbols);
   compareComponentStatuses(catalog, classes, registeredSymbols);
+  await verifyMaterializedEvidence(
+    lifecycle,
+    lifecycleEvidence,
+    manualEvidence,
+    registeredCatalog,
+    packageManifest,
+    evidenceMode,
+    promotionIds,
+    promotionTransitions,
+  );
 
   const version = parseSemver(packageManifest.version);
   let activeDeprecationCount = 0;
@@ -788,7 +1388,9 @@ async function main() {
   console.log(
     `Kern lifecycle verified: ${registeredCatalog.size} catalog entries, ` +
       `${registeredSymbols.size} public symbols, ` +
-      `${activeDeprecationCount} active deprecations.`,
+      `${activeDeprecationCount} active deprecations, ` +
+      `${lifecycleEvidence.components?.length ?? 0} component evidence records; mode=${evidenceMode}` +
+      `${promotionIds.length > 0 ? `; promotion=${promotionIds.join(',')}` : ''}.`,
   );
 }
 

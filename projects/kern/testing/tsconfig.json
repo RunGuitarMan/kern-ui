@@ -2,8 +2,18 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../../out-tsc/kern-testing",
-    "rootDir": "./src",
+    "rootDir": ".",
+    "paths": {
+      "@kern-ui/angular/testing": ["./src/public-api.ts"],
+      "@kern-ui/angular/testing/actions": ["./actions/src/public-api.ts"],
+      "@kern-ui/angular/testing/data-display": ["./data-display/src/public-api.ts"],
+      "@kern-ui/angular/testing/feedback": ["./feedback/src/public-api.ts"],
+      "@kern-ui/angular/testing/forms": ["./forms/src/public-api.ts"],
+      "@kern-ui/angular/testing/layout": ["./layout/src/public-api.ts"],
+      "@kern-ui/angular/testing/navigation": ["./navigation/src/public-api.ts"],
+      "@kern-ui/angular/testing/shared": ["./shared/src/public-api.ts"]
+    },
     "types": []
   },
-  "include": ["src/**/*.ts"]
+  "include": ["**/*.ts"]
 }

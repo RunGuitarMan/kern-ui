@@ -66,14 +66,14 @@ void bootstrapApplication(KernFilterBarAgentExample);
 
 ## API
 
-| Name            | Kind  | Type                                        | Required | Default                                    | Description                                                          |
-| --------------- | ----- | ------------------------------------------- | -------- | ------------------------------------------ | -------------------------------------------------------------------- |
-| `ariaLabel`     | input | `string`                                    | no       | `this.translations.patterns.filters`       | Accessible name used when visible content is not sufficient.         |
-| `allLabel`      | input | `string`                                    | no       | `this.translations.patterns.all`           | Human-readable copy for the all state or control.                    |
-| `activeLabel`   | input | `(count: number) => string`                 | no       | `this.translations.patterns.activeFilters` | Human-readable copy for the active state or control.                 |
-| `clearAllLabel` | input | `string`                                    | no       | `this.translations.patterns.clearAll`      | Human-readable copy for the clear all state or control.              |
-| `filters`       | input | `ReadonlyArray<KrnFilterDefinition>`        | no       | `[]`                                       | Ordered domain values supplied to the filter collection.             |
-| `values`        | model | `Readonly<Partial<Record<string, string>>>` | no       | `{}`                                       | Controlled values state with a matching Angular model-change output. |
+| Name            | Kind  | Type                                        | Required | Default     | Description                                                          |
+| --------------- | ----- | ------------------------------------------- | -------- | ----------- | -------------------------------------------------------------------- |
+| `ariaLabel`     | input | `string \| undefined`                       | no       | `undefined` | Accessible name used when visible content is not sufficient.         |
+| `allLabel`      | input | `string \| undefined`                       | no       | `undefined` | Human-readable copy for the all state or control.                    |
+| `activeLabel`   | input | `((count: number) => string) \| undefined`  | no       | `undefined` | Human-readable copy for the active state or control.                 |
+| `clearAllLabel` | input | `string \| undefined`                       | no       | `undefined` | Human-readable copy for the clear all state or control.              |
+| `filters`       | input | `ReadonlyArray<KrnFilterDefinition>`        | no       | `[]`        | Ordered domain values supplied to the filter collection.             |
+| `values`        | model | `Readonly<Partial<Record<string, string>>>` | no       | `{}`        | Controlled values state with a matching Angular model-change output. |
 
 ## Deprecated selectors
 

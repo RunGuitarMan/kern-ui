@@ -1,9 +1,13 @@
+import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { schema as angularSchema } from '@angular-devkit/core';
+
 const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const defaultEvidencePath = resolve(workspaceRoot, 'docs/accessibility/manual-evidence.json');
+const defaultSchemaPath = resolve(workspaceRoot, 'docs/accessibility/manual-evidence.schema.json');
 const defaultLifecyclePath = resolve(workspaceRoot, 'projects/kern/api/lifecycle.json');
 const packageManifestPath = resolve(workspaceRoot, 'projects/kern/package.json');
 const requiredRecordIds = new Set([
@@ -20,12 +24,19 @@ const screenReaderRecords = new Set([
   'voiceover-safari-macos',
 ]);
 const validStatuses = new Set(['pending', 'pass', 'fail', 'blocked']);
+const validModes = new Set(['local', 'release', 'promotion']);
 const issues = [];
 
 function option(name, fallback) {
   const prefix = `--${name}=`;
   const argument = process.argv.find((value) => value.startsWith(prefix));
   return argument ? resolve(workspaceRoot, argument.slice(prefix.length)) : fallback;
+}
+
+function valueOption(name, fallback) {
+  const prefix = `--${name}=`;
+  const argument = process.argv.find((value) => value.startsWith(prefix));
+  return argument ? argument.slice(prefix.length) : fallback;
 }
 
 async function readJson(path, label) {
@@ -50,6 +61,22 @@ function lifecycleIds(lifecycle) {
   return ids;
 }
 
+function lifecycleComponents(lifecycle) {
+  const components = new Map();
+  for (const group of lifecycle.catalogGroups ?? []) {
+    const requiredEvidence =
+      lifecycle.evidenceProfiles?.[group.evidenceProfile]?.requiredEvidence ?? [];
+    for (const id of group.ids ?? []) {
+      components.set(id, {
+        evidenceProfile: group.evidenceProfile,
+        requiredEvidence,
+        status: group.status,
+      });
+    }
+  }
+  return components;
+}
+
 function isIsoTimestamp(value) {
   return (
     typeof value === 'string' &&
@@ -71,6 +98,23 @@ function validateNamedVersion(value, label, completed) {
   }
   if (!completed && value.version !== null) {
     report(`${label}.version must remain null while evidence is pending or blocked.`);
+  }
+}
+
+function validateEvidencePointer(pointer, label) {
+  if (typeof pointer !== 'string' || !pointer.trim()) {
+    report(`${label} must be a non-empty URL or repository-relative path.`);
+    return;
+  }
+  if (/^https?:\/\//.test(pointer)) return;
+  const [path] = pointer.split('#', 1);
+  if (
+    !path ||
+    path.startsWith('/') ||
+    path.includes('..') ||
+    !existsSync(resolve(workspaceRoot, path))
+  ) {
+    report(`${label} must resolve to an existing repository file or an HTTP(S) URL.`);
   }
 }
 
@@ -104,10 +148,6 @@ function validateRecord(record, index, knownIds) {
   if (typeof record.releaseBlocking !== 'boolean') {
     report(`${label}.releaseBlocking must be boolean.`);
   }
-  if (record.releaseBlocking && record.status !== 'pass') {
-    report(`${label} is release-blocking but does not have passing evidence.`);
-  }
-
   const completed = record.status === 'pass' || record.status === 'fail';
   const environment = record.environment;
   if (!environment || typeof environment !== 'object') {
@@ -141,6 +181,10 @@ function validateRecord(record, index, knownIds) {
     }
     if (!Array.isArray(record.evidence) || record.evidence.length === 0) {
       report(`${label}.evidence is required for completed evidence.`);
+    } else {
+      for (const [evidenceIndex, pointer] of record.evidence.entries()) {
+        validateEvidencePointer(pointer, `${label}.evidence[${evidenceIndex}]`);
+      }
     }
   } else {
     if (record.testedAt !== null || record.tester !== null || record.verifiedBy !== null) {
@@ -155,31 +199,147 @@ function validateRecord(record, index, knownIds) {
   }
 }
 
+function isFresh(record, maxAgeDays, now) {
+  if (!isIsoTimestamp(record.testedAt)) return false;
+  const testedAt = Date.parse(record.testedAt);
+  const maxAgeMs = maxAgeDays * 24 * 60 * 60 * 1000;
+  return testedAt <= now && now - testedAt <= maxAgeMs;
+}
+
+function enforcePassingRecords(records, label, maxAgeDays, now) {
+  const ageUnit = maxAgeDays === 1 ? 'day' : 'days';
+  for (const record of records) {
+    if (record.status !== 'pass') {
+      report(`${label} requires "${record.id}" to pass; current status is ${record.status}.`);
+      continue;
+    }
+    if (!isFresh(record, maxAgeDays, now)) {
+      report(
+        `${label} requires fresh "${record.id}" evidence no older than ${maxAgeDays} ${ageUnit}.`,
+      );
+    }
+  }
+}
+
+function enforceCertificationTiming(certification, records, label, maxAgeDays, now) {
+  if (certification?.status !== 'certified' || !isIsoTimestamp(certification.attestedAt)) return;
+
+  const attestedAt = Date.parse(certification.attestedAt);
+  const maxAgeMs = maxAgeDays * 24 * 60 * 60 * 1000;
+  if (now - attestedAt > maxAgeMs) {
+    report(
+      `${label} requires certification no older than ${maxAgeDays} ${
+        maxAgeDays === 1 ? 'day' : 'days'
+      }.`,
+    );
+  }
+
+  const newerRecords = records.filter(
+    (record) =>
+      record.status === 'pass' &&
+      isIsoTimestamp(record.testedAt) &&
+      Date.parse(record.testedAt) > attestedAt,
+  );
+  if (newerRecords.length > 0) {
+    report(
+      `${label} certification must be at or after required passing record${
+        newerRecords.length === 1 ? '' : 's'
+      } ${newerRecords.map((record) => `"${record.id}"`).join(', ')}.`,
+    );
+  }
+}
+
 async function main() {
   const evidencePath = option('evidence', defaultEvidencePath);
+  const schemaPath = option('schema', defaultSchemaPath);
   const lifecyclePath = option('lifecycle', defaultLifecyclePath);
-  const [evidence, lifecycle, packageManifest] = await Promise.all([
+  const [evidence, evidenceSchema, lifecycle, packageManifest] = await Promise.all([
     readJson(evidencePath, 'Manual accessibility evidence'),
+    readJson(schemaPath, 'Manual accessibility evidence schema'),
     readJson(lifecyclePath, 'Lifecycle registry'),
     readJson(packageManifestPath, 'Kern package manifest'),
   ]);
   const knownIds = lifecycleIds(lifecycle);
+  const lifecycleById = lifecycleComponents(lifecycle);
+  const mode = valueOption('mode', 'local');
+  const componentIds = valueOption('components', '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+  const now = Date.now();
+
+  const schemaRegistry = new angularSchema.CoreSchemaRegistry();
+  const validateSchema = await schemaRegistry.compile(evidenceSchema);
+  const schemaResult = await validateSchema(evidence);
+  if (!schemaResult.success) {
+    const details = (schemaResult.errors ?? [])
+      .map((error) => `${error.instancePath || '/'} ${error.message ?? 'is invalid'}`)
+      .join('; ');
+    report(`Manual evidence does not satisfy its JSON Schema: ${details}`);
+  }
+
+  if (!validModes.has(mode)) report(`Unsupported verification mode "${mode}".`);
+  if (mode === 'promotion' && componentIds.length === 0) {
+    report('Promotion mode requires --components=<catalog-id>[,<catalog-id>...].');
+  }
 
   if (evidence.$schema !== './manual-evidence.schema.json') {
     report('Manual evidence must reference ./manual-evidence.schema.json.');
   }
-  if (evidence.schemaVersion !== 1) report('Manual evidence schemaVersion must be 1.');
+  if (evidence.schemaVersion !== 2) report('Manual evidence schemaVersion must be 2.');
   if (evidence.libraryVersion !== packageManifest.version) {
     report(
       `Manual evidence version ${evidence.libraryVersion} does not match package ${packageManifest.version}.`,
     );
   }
   if (
-    evidence.certification?.status !== 'not-certified' ||
+    !['not-certified', 'certified'].includes(evidence.certification?.status) ||
     typeof evidence.certification?.statement !== 'string' ||
     evidence.certification.statement.length < 20
   ) {
-    report('Manual evidence must retain an explicit not-certified statement.');
+    report('Manual evidence requires an explicit certification status and statement.');
+  }
+  if (evidence.certification?.status === 'certified') {
+    if (!isIsoTimestamp(evidence.certification.attestedAt)) {
+      report('Certified evidence requires certification.attestedAt as an ISO UTC timestamp.');
+    } else if (Date.parse(evidence.certification.attestedAt) > now) {
+      report('Certified evidence requires certification.attestedAt not to be in the future.');
+    }
+    if (
+      typeof evidence.certification.attestedBy !== 'string' ||
+      evidence.certification.attestedBy.trim().length < 2
+    ) {
+      report('Certified evidence requires certification.attestedBy.');
+    }
+    if (
+      !Array.isArray(evidence.certification.evidence) ||
+      evidence.certification.evidence.length === 0
+    ) {
+      report('Certified evidence requires certification.evidence.');
+    } else {
+      for (const [index, pointer] of evidence.certification.evidence.entries()) {
+        validateEvidencePointer(pointer, `certification.evidence[${index}]`);
+      }
+    }
+  } else if (
+    evidence.certification?.attestedAt !== null ||
+    evidence.certification?.attestedBy !== null ||
+    !Array.isArray(evidence.certification?.evidence) ||
+    evidence.certification.evidence.length !== 0
+  ) {
+    report('Not-certified evidence must not contain attestation metadata.');
+  }
+  if (
+    !Number.isInteger(evidence.policy?.releaseMaxAgeDays) ||
+    evidence.policy.releaseMaxAgeDays < 1
+  ) {
+    report('Manual evidence policy.releaseMaxAgeDays must be a positive integer.');
+  }
+  if (
+    !Number.isInteger(evidence.policy?.promotionMaxAgeDays) ||
+    evidence.policy.promotionMaxAgeDays < 1
+  ) {
+    report('Manual evidence policy.promotionMaxAgeDays must be a positive integer.');
   }
 
   if (!Array.isArray(evidence.targetComponentIds) || evidence.targetComponentIds.length === 0) {
@@ -203,7 +363,17 @@ async function main() {
       validateRecord(record, index, knownIds);
     }
     for (const id of requiredRecordIds) {
-      if (!recordIds.has(id)) report(`Required manual evidence record "${id}" is missing.`);
+      const record = evidence.records.find((candidate) => candidate.id === id);
+      if (!record) {
+        report(`Required manual evidence record "${id}" is missing.`);
+        continue;
+      }
+      if (record.required !== true) {
+        report(`Required manual evidence record "${id}" must set required=true.`);
+      }
+      if (record.releaseBlocking !== true) {
+        report(`Required manual evidence record "${id}" must set releaseBlocking=true.`);
+      }
     }
 
     const keyboardRecord = evidence.records.find((record) => record.id === 'keyboard-only-windows');
@@ -223,6 +393,60 @@ async function main() {
         report(`Target component "${id}" has no keyboard-only record.`);
       }
     }
+
+    if (
+      (mode === 'release' || mode === 'promotion') &&
+      evidence.certification?.status !== 'certified'
+    ) {
+      report(`${mode === 'release' ? 'Release' : 'Promotion'} gate requires certified evidence.`);
+    }
+
+    if (mode === 'release' && Number.isInteger(evidence.policy?.releaseMaxAgeDays)) {
+      const releaseRecords = evidence.records.filter((record) => record.releaseBlocking);
+      enforcePassingRecords(releaseRecords, 'Release gate', evidence.policy.releaseMaxAgeDays, now);
+      enforceCertificationTiming(
+        evidence.certification,
+        releaseRecords,
+        'Release gate',
+        evidence.policy.releaseMaxAgeDays,
+        now,
+      );
+    }
+
+    if (mode === 'promotion' && Number.isInteger(evidence.policy?.promotionMaxAgeDays)) {
+      for (const id of componentIds) {
+        const component = lifecycleById.get(id);
+        if (!component) {
+          report(`Promotion gate references unknown component "${id}".`);
+          continue;
+        }
+        if (!component.requiredEvidence.includes('manual-at')) continue;
+        if (!evidence.targetComponentIds?.includes(id)) {
+          report(`Promotion gate requires "${id}" in targetComponentIds.`);
+          continue;
+        }
+        const records = evidence.records.filter(
+          (record) => record.required && record.componentIds?.includes(id),
+        );
+        if (records.length === 0) {
+          report(`Promotion gate found no required manual evidence for "${id}".`);
+          continue;
+        }
+        enforcePassingRecords(
+          records,
+          `Promotion gate for "${id}"`,
+          evidence.policy.promotionMaxAgeDays,
+          now,
+        );
+        enforceCertificationTiming(
+          evidence.certification,
+          records,
+          `Promotion gate for "${id}"`,
+          evidence.policy.promotionMaxAgeDays,
+          now,
+        );
+      }
+    }
   }
 
   if (issues.length) {
@@ -240,7 +464,7 @@ async function main() {
   console.log(
     `Kern manual accessibility evidence verified: ${evidence.records.length} records ` +
       `(${counts.pass} pass, ${counts.fail} fail, ${counts.pending} pending, ${counts.blocked} blocked); ` +
-      'certification status remains not-certified.',
+      `certification status is ${evidence.certification.status}; mode=${mode}.`,
   );
 }
 

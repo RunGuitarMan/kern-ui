@@ -8,6 +8,7 @@ import {
   type KrnScheduledHandle,
 } from '@kern-ui/angular/cdk';
 import { KRN_COPY_LABELS, type KrnCopyLabels } from '@kern-ui/angular/i18n';
+import { KrnI18n, provideKrn } from '@kern-ui/angular/core';
 import { KrnCopyButton } from './copy-button';
 import {
   KRN_COPY_BUTTON_DEFAULT_OPTIONS,
@@ -660,5 +661,30 @@ describe('KrnCopyButton', () => {
     expect(
       (fixture.nativeElement.querySelector('.krn-copy-status') as HTMLElement).textContent?.trim(),
     ).toBe('Instance copied');
+  });
+
+  it('reacts to application copy labels when no leaf or instance override exists', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideKrn(), { provide: KRN_CLIPBOARD_WRITER, useValue: writerFrom() }],
+    });
+    const fixture = TestBed.createComponent(KrnCopyButton);
+    fixture.componentRef.setInput('value', 'localized');
+    await fixture.whenStable();
+
+    TestBed.inject(KrnI18n).setTranslations({
+      actions: {
+        copyToClipboard: 'Copier maintenant',
+        copying: 'Copie réactive…',
+      },
+    });
+    fixture.detectChanges();
+
+    const button = fixture.nativeElement.querySelector('button') as HTMLButtonElement;
+    expect(button.querySelector('.krn-copy-label')?.textContent?.trim()).toBe('Copier maintenant');
+    button.click();
+    fixture.detectChanges();
+    expect(
+      (fixture.nativeElement.querySelector('.krn-copy-status') as HTMLElement).textContent?.trim(),
+    ).toBe('Copie réactive…');
   });
 });

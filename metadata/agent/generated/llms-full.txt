@@ -1446,12 +1446,12 @@ void bootstrapApplication(KernAppShellAgentExample);
 | `mobileNavigation` | input | `"auto" \| "hidden" \| "rail" \| "sidebar"` | no | `'auto'` | Template rendered as the application’s narrow-viewport navigation. |
 | `mobileNavigationOpen` | model | `boolean` | no | `false` | Controlled mobile navigation open state with a matching Angular model-change output. |
 | `mobileNavigationId` | input | `string` | no | `this.ids.next('mobile-navigation')` | Stable identifier value used by the mobile navigation contract. |
-| `mobileNavigationLabel` | input | `string` | no | `this.translations.layout.mobileNavigation` | Human-readable copy for the mobile navigation state or control. |
+| `mobileNavigationLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the mobile navigation state or control. |
 | `mobileNavigationLabelledBy` | input | `string` | no | `''` | Space-separated element ids that name the mobile navigation dialog. |
 | `mobileNavigationDescribedBy` | input | `string` | no | `''` | Space-separated element ids that describe the mobile navigation dialog. |
 | `mobileNavigationInitialFocus` | input | `string` | no | `'first-tabbable'` | Focus target applied after the mobile navigation dialog opens. |
-| `openNavigationLabel` | input | `string` | no | `this.translations.layout.openNavigation` | Human-readable copy for the open navigation state or control. |
-| `closeNavigationLabel` | input | `string` | no | `this.translations.layout.closeNavigation` | Human-readable copy for the close navigation state or control. |
+| `openNavigationLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the open navigation state or control. |
+| `closeNavigationLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the close navigation state or control. |
 | `mainId` | input | `string` | no | `'main-content'` | Stable identifier value used by the main contract. |
 
 ## Deprecated selectors
@@ -1791,7 +1791,7 @@ void bootstrapApplication(KernSidebarAgentExample);
 | `collapsedMode` | input | `"hidden" \| "icons"` | no | `'icons'` | Controls whether the component applies the collapsed mode behavior. |
 | `width` | input | `KrnLayoutSpace` | no | `'var(--krn-shell-sidebar-width, 17rem)'` | Explicit inline size of the rendered surface. |
 | `collapsedWidth` | input | `KrnLayoutSpace` | no | `'4rem'` | Controls whether the component applies the collapsed width behavior. |
-| `ariaLabel` | input | `string` | no | `this.translations.layout.secondaryNavigation` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that name the native complementary landmark. |
 | `ariaDescribedBy` | input | `string` | no | `''` | Space-separated element ids that describe the native complementary landmark. |
 | `side` | input | `"auto" \| "end" \| "start"` | no | `'auto'` | Logical side on which the anchored or modal surface is placed. |
@@ -1960,7 +1960,7 @@ void bootstrapApplication(KernNavigationRailAgentExample);
 | `expanded` | model | `boolean` | no | `false` | Controlled expanded state for a disclosure or hierarchical item. |
 | `width` | input | `KrnLayoutSpace` | no | `'var(--krn-shell-rail-width, 3.5rem)'` | Explicit inline size of the rendered surface. |
 | `expandedWidth` | input | `KrnLayoutSpace` | no | `'14rem'` | Controls whether the component applies the expanded width behavior. |
-| `ariaLabel` | input | `string` | no | `this.translations.layout.primaryNavigation` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that name the native navigation landmark. |
 | `ariaDescribedBy` | input | `string` | no | `''` | Space-separated element ids that describe the native navigation landmark. |
 | `side` | input | `"auto" \| "end" \| "start"` | no | `'auto'` | Logical side on which the anchored or modal surface is placed. |
@@ -3677,7 +3677,7 @@ void bootstrapApplication(KernScrollAreaAgentExample);
 | `maxBlockSize` | input | `KrnLayoutSpace` | no | `'100%'` | Upper or lower bound applied to the block size value. |
 | `maxInlineSize` | input | `KrnLayoutSpace` | no | `'100%'` | Upper or lower bound applied to the inline size value. |
 | `keyboardAccessible` | input | `boolean` | no | `true` | Keeps the native viewport keyboard-scrollable when enabled. |
-| `ariaLabel` | input | `string \| null` | no | `this.translations.layout.scrollableContent` | Names the scrollable region. Blank values omit the region role and accessible name. |
+| `ariaLabel` | input | `string \| null \| undefined` | no | `undefined` | Names the scrollable region. Blank values omit the region role and accessible name. |
 | `scrollbar` | input | `"auto" \| "hidden" \| "stable"` | no | `'auto'` | Controls native scrollbar visibility and gutter allocation. |
 
 ## Deprecated selectors
@@ -4175,7 +4175,7 @@ void bootstrapApplication(KernButtonAgentExample);
 | `variant` | input | `KrnActionVariant` | no | `this.options.variant` | Named visual hierarchy treatment that preserves the component semantics. |
 | `tone` | input | `KrnTone` | no | `this.options.tone` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
 | `loading` | input | `boolean` | no | `false` | Suppresses duplicate activation, owns `aria-disabled`, and updates the persistent polite status. Use native `disabled` for ordinary unavailability. |
-| `loadingLabel` | input | `string` | no | `this.defaultLoadingLabel` | Accessible loading copy; defaults to the application or closest scoped option. |
+| `loadingLabel` | input | `string \| undefined` | no | `undefined` | Accessible loading copy; defaults to the application or closest scoped option. |
 
 ## Deprecated selectors
 
@@ -4346,7 +4346,7 @@ void bootstrapApplication(KernIconButtonAgentExample);
 | `variant` | input | `KrnActionVariant` | no | `this.options.variant` | Named visual hierarchy treatment that preserves the component semantics. |
 | `tone` | input | `KrnTone` | no | `this.options.tone` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
 | `loading` | input | `boolean` | no | `false` | Suppresses duplicate activation and owns `aria-disabled` while retaining focus. Use native `disabled` for ordinary unavailability. |
-| `loadingLabel` | input | `string` | no | `this.defaultLoadingLabel` | Accessible loading copy; defaults to the application or closest scoped option. |
+| `loadingLabel` | input | `string \| undefined` | no | `undefined` | Accessible loading copy; defaults to the application or closest scoped option. |
 
 ## Deprecated selectors
 
@@ -4694,7 +4694,7 @@ void bootstrapApplication(KernSplitButtonAgentExample);
 | `menuOffset` | input | `number` | no | `this.options.menuOffset` | Non-negative logical gap in CSS pixels between the trigger and menu. |
 | `matchTriggerWidth` | input | `boolean` | no | `this.options.matchTriggerWidth` | Makes the connected overlay exactly as wide as the complete trigger origin. |
 | `closeOnSelection` | input | `boolean` | no | `true` | Closes after an enabled menu item activates; use the keep-open marker for one item. |
-| `menuLabel` | input | `string` | no | `inject(KRN_MORE_ACTIONS_LABEL)` | Human-readable copy for the menu state or control. |
+| `menuLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the menu state or control. |
 | `primaryAction` | output | `MouseEvent` | no | `undefined` | Notifies the consumer after the primary action interaction completes. |
 
 ## Deprecated selectors
@@ -4877,7 +4877,7 @@ void bootstrapApplication(KernFloatingActionButtonAgentExample);
 | `tone` | input | `KrnTone` | no | `this.options.tone` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
 | `extended` | input | `boolean` | no | `this.options.extended` | Displays the floating action label in addition to its icon. |
 | `loading` | input | `boolean` | no | `false` | Suppresses duplicate activation and owns `aria-disabled` while retaining focus. Use native `disabled` for ordinary unavailability. |
-| `loadingLabel` | input | `string` | no | `this.defaultLoadingLabel` | Accessible loading copy; defaults to the application or closest scoped option. |
+| `loadingLabel` | input | `string \| undefined` | no | `undefined` | Accessible loading copy; defaults to the application or closest scoped option. |
 
 ## Deprecated selectors
 
@@ -5439,10 +5439,10 @@ void bootstrapApplication(KernCopyButtonAgentExample);
 | --- | --- | --- | --- | --- | --- |
 | `value` | input | `string` | yes | `required` | Exact text captured once at activation and written to the clipboard. |
 | `ariaLabel` | input | `string` | no | `''` | Optional accessible-name override for the inner native button. Leave empty to derive the name from the visible action label. When set, include that visible label in the override. |
-| `copyLabel` | input | `string` | no | `this.labels.copy` | Localized visible fallback used only when no action label is projected. |
-| `copyingLabel` | input | `string` | no | `this.labels.copying` | Loading announcement while the asynchronous write is in flight. |
-| `copiedLabel` | input | `string` | no | `this.labels.copied` | Success announcement paired with the visible success indicator. |
-| `errorLabel` | input | `string` | no | `this.labels.failed` | Failure announcement paired with the visible error indicator. |
+| `copyLabel` | input | `string \| undefined` | no | `undefined` | Localized visible fallback used only when no action label is projected. |
+| `copyingLabel` | input | `string \| undefined` | no | `undefined` | Loading announcement while the asynchronous write is in flight. |
+| `copiedLabel` | input | `string \| undefined` | no | `undefined` | Success announcement paired with the visible success indicator. |
+| `errorLabel` | input | `string \| undefined` | no | `undefined` | Failure announcement paired with the visible error indicator. |
 | `size` | input | `KrnSize` | no | `this.options.size` | Named semantic size resolved through KERN density and sizing tokens. |
 | `variant` | input | `KrnActionVariant` | no | `this.options.variant` | Named visual hierarchy treatment that preserves the component semantics. |
 | `tone` | input | `KrnTone` | no | `this.options.tone` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
@@ -7068,10 +7068,10 @@ void bootstrapApplication(KernPasswordInputAgentExample);
 | `value` | input | `string \| undefined` | no | `undefined` | Controlled component value. |
 | `minLength` | input | `number \| undefined` | no | `undefined` | Upper or lower bound applied to the length value. |
 | `maxLength` | input | `number \| undefined` | no | `undefined` | Upper or lower bound applied to the length value. |
-| `showLabel` | input | `string` | no | `this.translations.forms.showPassword` | Human-readable copy for the show state or control. |
-| `hideLabel` | input | `string` | no | `this.translations.forms.hidePassword` | Human-readable copy for the hide state or control. |
-| `showText` | input | `string` | no | `this.translations.forms.show` | Human-readable copy for the show state or control. |
-| `hideText` | input | `string` | no | `this.translations.forms.hide` | Human-readable copy for the hide state or control. |
+| `showLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the show state or control. |
+| `hideLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the hide state or control. |
+| `showText` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the show state or control. |
+| `hideText` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the hide state or control. |
 | `disabled` | input | `boolean` | no | `false` | Prevents user interaction and participates in the disabled-state contract. |
 | `readonly` | input | `boolean` | no | `false` | Keeps the value perceivable while preventing user edits. |
 | `required` | input | `boolean` | no | `false` | Marks the value as required and participates in Angular Forms validation. |
@@ -7273,11 +7273,11 @@ void bootstrapApplication(KernSearchInputAgentExample);
 | --- | --- | --- | --- | --- | --- |
 | `id` | input | `string` | no | `''` | Stable identifier value used by the id contract. |
 | `name` | input | `string` | no | `''` | Required human-readable name for the represented person, item, or action. |
-| `placeholder` | input | `string` | no | `this.translations.forms.search` | Short input hint shown only while no value is present. |
-| `ariaLabel` | input | `string` | no | `this.translations.forms.search` | Accessible name used when visible content is not sufficient. |
+| `placeholder` | input | `string \| undefined` | no | `undefined` | Short input hint shown only while no value is present. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input | `string` | no | `''` | Space-separated element ids composed with Form Field hints and validation descriptions. |
-| `clearLabel` | input | `string` | no | `this.translations.forms.clearSearch` | Human-readable copy for the clear state or control. |
+| `clearLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the clear state or control. |
 | `autocomplete` | input | `string` | no | `'off'` | Native autocomplete purpose forwarded to the editable control. |
 | `enterKeyHint` | input | `string` | no | `'search'` | Native virtual-keyboard action hint forwarded to the editable control. |
 | `value` | input | `string \| undefined` | no | `undefined` | Controlled component value. |
@@ -7493,8 +7493,8 @@ void bootstrapApplication(KernNumberInputAgentExample);
 | `autocomplete` | input | `string` | no | `'off'` | Native autocomplete purpose forwarded to the editable control. |
 | `inputMode` | input | `KrnInputMode` | no | `'decimal'` | Virtual-keyboard hint forwarded to the editable control. |
 | `value` | input | `number \| null \| undefined` | no | `undefined` | Controlled component value. |
-| `increaseLabel` | input | `string` | no | `this.translations.forms.increaseValue` | Human-readable copy for the increase state or control. |
-| `decreaseLabel` | input | `string` | no | `this.translations.forms.decreaseValue` | Human-readable copy for the decrease state or control. |
+| `increaseLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the increase state or control. |
+| `decreaseLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the decrease state or control. |
 | `min` | input | `number \| undefined` | no | `undefined` | Smallest accepted numeric or temporal value. |
 | `max` | input | `number \| undefined` | no | `undefined` | Largest accepted numeric or temporal value. |
 | `step` | input | `number` | no | `1` | Increment applied by keyboard and pointer value adjustments. |
@@ -8710,10 +8710,10 @@ void bootstrapApplication(KernSelectAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `id` | input | `string` | no | `''` | Stable identifier value used by the id contract. |
-| `placeholder` | input | `string` | no | `this.#translations.forms.selectOption` | Short input hint shown only while no value is present. |
-| `emptyText` | input | `string` | no | `this.#translations.forms.noOptions` | Visible and announced copy when the data collection has no items. |
-| `loadingText` | input | `string` | no | `this.#translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? ''` | Visible and announced copy while asynchronous data is loading. |
-| `errorText` | input | `string` | no | `this.#translations.forms.optionsLoadFailed ?? KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ?? ''` | Visible and announced copy when loading the data collection fails. |
+| `placeholder` | input | `string \| undefined` | no | `undefined` | Short input hint shown only while no value is present. |
+| `emptyText` | input | `string \| undefined` | no | `undefined` | Visible and announced copy when the data collection has no items. |
+| `loadingText` | input | `string \| undefined` | no | `undefined` | Visible and announced copy while asynchronous data is loading. |
+| `errorText` | input | `string \| undefined` | no | `undefined` | Visible and announced copy when loading the data collection fails. |
 | `ariaLabel` | input | `string` | no | `''` | Accessible name used when visible content is not sufficient. |
 | `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input | `string` | no | `''` | Space-separated element ids composed with Form Field hints and validation descriptions. |
@@ -9177,10 +9177,10 @@ void bootstrapApplication(KernMultiSelectAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `id` | input | `string` | no | `''` | Stable identifier value used by the id contract. |
-| `placeholder` | input | `string` | no | `this.translations.forms.selectOptions` | Short input hint shown only while no value is present. |
-| `emptyText` | input | `string` | no | `this.translations.forms.noOptions` | Visible and announced copy when the data collection has no items. |
-| `loadingText` | input | `string` | no | `this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? ''` | Visible and announced copy while asynchronous data is loading. |
-| `errorText` | input | `string` | no | `this.translations.forms.optionsLoadFailed ?? KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ?? ''` | Visible and announced copy when loading the data collection fails. |
+| `placeholder` | input | `string \| undefined` | no | `undefined` | Short input hint shown only while no value is present. |
+| `emptyText` | input | `string \| undefined` | no | `undefined` | Visible and announced copy when the data collection has no items. |
+| `loadingText` | input | `string \| undefined` | no | `undefined` | Visible and announced copy while asynchronous data is loading. |
+| `errorText` | input | `string \| undefined` | no | `undefined` | Visible and announced copy when loading the data collection fails. |
 | `ariaLabel` | input | `string` | no | `''` | Accessible name used when visible content is not sufficient. |
 | `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input | `string` | no | `''` | Space-separated element ids composed with Form Field hints and validation descriptions. |
@@ -9427,14 +9427,14 @@ void bootstrapApplication(KernComboboxAgentExample);
 | `autocompleteMode` | input | `KrnAutocompleteMode \| undefined` | no | `undefined` | Controls whether the component applies the autocomplete mode input behavior. |
 | `allowCustomValue` | input | `boolean \| undefined` | no | `undefined` | Controls whether the component applies the allow custom value input behavior. |
 | `id` | input | `string` | no | `''` | Stable identifier value used by the id contract. |
-| `placeholder` | input | `string` | no | `this.translations.forms.startTyping` | Short input hint shown only while no value is present. |
-| `emptyText` | input | `string` | no | `this.translations.forms.noMatches` | Visible and announced copy when the data collection has no items. |
-| `loadingText` | input | `string` | no | `this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? ''` | Visible and announced copy while asynchronous data is loading. |
-| `errorText` | input | `string` | no | `this.translations.forms.optionsLoadFailed ?? KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ?? ''` | Visible and announced copy when loading the data collection fails. |
+| `placeholder` | input | `string \| undefined` | no | `undefined` | Short input hint shown only while no value is present. |
+| `emptyText` | input | `string \| undefined` | no | `undefined` | Visible and announced copy when the data collection has no items. |
+| `loadingText` | input | `string \| undefined` | no | `undefined` | Visible and announced copy while asynchronous data is loading. |
+| `errorText` | input | `string \| undefined` | no | `undefined` | Visible and announced copy when loading the data collection fails. |
 | `ariaLabel` | input | `string` | no | `''` | Accessible name used when visible content is not sufficient. |
 | `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input | `string` | no | `''` | Space-separated element ids composed with Form Field hints and validation descriptions. |
-| `toggleLabel` | input | `string` | no | `this.translations.forms.showOptions` | Human-readable copy for the toggle state or control. |
+| `toggleLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the toggle state or control. |
 | `name` | input | `string` | no | `''` | Required human-readable name for the represented person, item, or action. |
 | `options` | input | `ReadonlyArray<KrnSelectOption<string>>` | yes | `required` | Authoritative option collection presented by the selection control. |
 | `optionsState` | input | `KrnOptionsState` | no | `'ready'` | Controls whether options are interactive or replaced by an announced loading/error state. |
@@ -9673,14 +9673,14 @@ void bootstrapApplication(KernAutocompleteAgentExample);
 | `autocompleteMode` | input | `KrnAutocompleteMode \| undefined` | no | `undefined` | Controls whether the component applies the autocomplete mode input behavior. |
 | `allowCustomValue` | input | `boolean \| undefined` | no | `undefined` | Controls whether the component applies the allow custom value input behavior. |
 | `id` | input | `string` | no | `''` | Stable identifier value used by the id contract. |
-| `placeholder` | input | `string` | no | `this.translations.forms.startTyping` | Short input hint shown only while no value is present. |
-| `emptyText` | input | `string` | no | `this.translations.forms.noMatches` | Visible and announced copy when the data collection has no items. |
-| `loadingText` | input | `string` | no | `this.translations.forms.loadingOptions ?? KRN_ENGLISH_TRANSLATIONS.forms.loadingOptions ?? ''` | Visible and announced copy while asynchronous data is loading. |
-| `errorText` | input | `string` | no | `this.translations.forms.optionsLoadFailed ?? KRN_ENGLISH_TRANSLATIONS.forms.optionsLoadFailed ?? ''` | Visible and announced copy when loading the data collection fails. |
+| `placeholder` | input | `string \| undefined` | no | `undefined` | Short input hint shown only while no value is present. |
+| `emptyText` | input | `string \| undefined` | no | `undefined` | Visible and announced copy when the data collection has no items. |
+| `loadingText` | input | `string \| undefined` | no | `undefined` | Visible and announced copy while asynchronous data is loading. |
+| `errorText` | input | `string \| undefined` | no | `undefined` | Visible and announced copy when loading the data collection fails. |
 | `ariaLabel` | input | `string` | no | `''` | Accessible name used when visible content is not sufficient. |
 | `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input | `string` | no | `''` | Space-separated element ids composed with Form Field hints and validation descriptions. |
-| `toggleLabel` | input | `string` | no | `this.translations.forms.showOptions` | Human-readable copy for the toggle state or control. |
+| `toggleLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the toggle state or control. |
 | `name` | input | `string` | no | `''` | Required human-readable name for the represented person, item, or action. |
 | `options` | input | `ReadonlyArray<KrnSelectOption<string>>` | yes | `required` | Authoritative option collection presented by the selection control. |
 | `optionsState` | input | `KrnOptionsState` | no | `'ready'` | Controls whether options are interactive or replaced by an announced loading/error state. |
@@ -9906,7 +9906,7 @@ void bootstrapApplication(KernSliderAgentExample);
 | `id` | input | `string` | no | `''` | Stable identifier value used by the id contract. |
 | `name` | input | `string` | no | `''` | Required human-readable name for the represented person, item, or action. |
 | `label` | input | `string` | no | `''` | Visible text that names the control or data value. |
-| `ariaLabel` | input | `string` | no | `this.translations.forms.value` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `min` | input | `number` | no | `0` | Smallest accepted numeric or temporal value. |
 | `max` | input | `number` | no | `100` | Largest accepted numeric or temporal value. |
 | `step` | input | `number` | no | `1` | Increment applied by keyboard and pointer value adjustments. |
@@ -10114,9 +10114,9 @@ void bootstrapApplication(KernRangeSliderAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `id` | input | `string` | no | `''` | Stable identifier value used by the id contract. |
-| `label` | input | `string` | no | `this.translations.forms.range` | Visible text that names the control or data value. |
-| `startLabel` | input | `string` | no | `this.translations.forms.minimumValue` | Human-readable copy for the start state or control. |
-| `endLabel` | input | `string` | no | `this.translations.forms.maximumValue` | Human-readable copy for the end state or control. |
+| `label` | input | `string \| undefined` | no | `undefined` | Visible text that names the control or data value. |
+| `startLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the start state or control. |
+| `endLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the end state or control. |
 | `min` | input | `number` | no | `0` | Smallest accepted numeric or temporal value. |
 | `max` | input | `number` | no | `100` | Largest accepted numeric or temporal value. |
 | `step` | input | `number` | no | `1` | Increment applied by keyboard and pointer value adjustments. |
@@ -10329,7 +10329,7 @@ void bootstrapApplication(KernSegmentedControlAgentExample);
 | `trackBy` | input | `KrnSegmentTrackBy<T>` | no | `(option) => option.value` | Returns the stable identity used to retain rendered items across updates. |
 | `disabledHandler` | input | `KrnSegmentDisabledHandler<T>` | no | `(option) => option.disabled ?? false` | Determines whether an individual option or item is unavailable. |
 | `optionTemplate` | input | `TemplateRef<KrnSegmentOptionContext<T>> \| null` | no | `null` | Template used to render one option with its typed context. |
-| `ariaLabel` | input | `string` | no | `this.translations.forms.chooseOption` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input | `string` | no | `''` | Space-separated element ids composed with Form Field hints and validation descriptions. |
 | `orientation` | input | `KrnOrientation` | no | `'horizontal'` | Defines the logical axis used by layout and keyboard navigation. |
@@ -10537,8 +10537,8 @@ void bootstrapApplication(KernDatePickerAgentExample);
 | `ariaLabel` | input | `string` | no | `''` | Accessible name used when visible content is not sufficient. |
 | `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input | `string` | no | `''` | Space-separated element ids composed with Form Field hints and validation descriptions. |
-| `locale` | input | `string` | no | `inject(KRN_LOCALE)` | Locale identifier used for collation, formatting, and component-owned copy. |
-| `today` | input | `string` | no | `toIsoDate(new Date(this.platform.now()))` | Deterministic plain date treated as today on both server and client. |
+| `locale` | input | `string \| undefined` | no | `undefined` | Locale identifier used for collation, formatting, and component-owned copy. |
+| `today` | input | `string \| undefined` | no | `undefined` | Deterministic plain date treated as today on both server and client. |
 | `weekStartsOn` | input | `number` | no | `0` | Zero-based weekday used as the first calendar column. |
 | `labels` | input | `Partial<KrnDatePickerLabels>` | no | `{}` | Localized copy overrides for the component-owned interface text. |
 | `min` | input | `string` | no | `''` | Smallest accepted numeric or temporal value. |
@@ -10633,7 +10633,7 @@ component inputs or models.
 | `id` | text | `""` | `"Alternate value"` | input `id` (property) | Configures the component id contract. |
 | `open` | boolean | `false` | `true` | model `open` | Controlled disclosure or overlay state. |
 | `tabindex` | number | `0` | `1` | input `tabindex` (property) | Configures the component tabindex contract. |
-| `today` | text | `"2026-07-30"` | `"2026-08-15"` | input `today` (property) | Configures the component today contract. |
+| `today` | text | `""` | `"2026-08-15"` | input `today` (property) | Configures the component today contract. |
 | `value` | text | `""` | `"Alternate value"` | input `value` (property) | Controlled component value. |
 
 Exact API exclusions:
@@ -10768,12 +10768,12 @@ void bootstrapApplication(KernDateRangePickerAgentExample);
 | `ariaLabel` | input | `string` | no | `''` | Accessible name used when visible content is not sufficient. |
 | `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input | `string` | no | `''` | Space-separated element ids composed with Form Field hints and validation descriptions. |
-| `locale` | input | `string` | no | `inject(KRN_LOCALE)` | Locale identifier used for collation, formatting, and component-owned copy. |
-| `today` | input | `string` | no | `toIsoDate(new Date(this.platform.now()))` | Deterministic plain date treated as today on both server and client. |
+| `locale` | input | `string \| undefined` | no | `undefined` | Locale identifier used for collation, formatting, and component-owned copy. |
+| `today` | input | `string \| undefined` | no | `undefined` | Deterministic plain date treated as today on both server and client. |
 | `weekStartsOn` | input | `number` | no | `0` | Zero-based weekday used as the first calendar column. |
 | `labels` | input | `Partial<KrnDatePickerLabels>` | no | `{}` | Localized copy overrides for the component-owned interface text. |
-| `startLabel` | input | `string` | no | `this.translations.datePicker.startDate` | Human-readable copy for the start state or control. |
-| `endLabel` | input | `string` | no | `this.translations.datePicker.endDate` | Human-readable copy for the end state or control. |
+| `startLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the start state or control. |
+| `endLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the end state or control. |
 | `min` | input | `string` | no | `''` | Smallest accepted numeric or temporal value. |
 | `max` | input | `string` | no | `''` | Largest accepted numeric or temporal value. |
 | `disabled` | input | `boolean` | no | `false` | Prevents user interaction and participates in the disabled-state contract. |
@@ -10865,7 +10865,7 @@ component inputs or models.
 | `min` | text | `""` | `"2026-02-01"` | input `min` (property) | Configures the component min contract. |
 | `open` | boolean | `false` | `true` | model `open` | Controlled disclosure or overlay state. |
 | `tabindex` | number | `0` | `1` | input `tabindex` (property) | Configures the component tabindex contract. |
-| `today` | text | `"2026-07-30"` | `"2026-08-15"` | input `today` (property) | Configures the component today contract. |
+| `today` | text | `""` | `"2026-08-15"` | input `today` (property) | Configures the component today contract. |
 | `weekStartsOn` | number | `0` | `1` | input `weekStartsOn` (property) | Configures the component weekStartsOn contract. |
 
 Exact API exclusions:
@@ -11215,8 +11215,8 @@ void bootstrapApplication(KernColorPickerAgentExample);
 | --- | --- | --- | --- | --- | --- |
 | `id` | input | `string` | no | `''` | Stable identifier value used by the id contract. |
 | `labels` | input | `Partial<KrnColorPickerTranslations>` | no | `{}` | Localized copy overrides for the component-owned interface text. |
-| `pickerLabel` | input | `string` | no | `this.translations.colorPicker.chooseColor` | Human-readable copy for the picker state or control. |
-| `textLabel` | input | `string` | no | `this.translations.colorPicker.colorValue` | Human-readable copy for the text state or control. |
+| `pickerLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the picker state or control. |
+| `textLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the text state or control. |
 | `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input | `string` | no | `''` | Space-separated element ids composed with Form Field hints and validation descriptions. |
 | `disabled` | input | `boolean` | no | `false` | Prevents user interaction and participates in the disabled-state contract. |
@@ -11422,8 +11422,8 @@ void bootstrapApplication(KernFileUploadAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `id` | input | `string` | no | `''` | Stable identifier value used by the id contract. |
-| `label` | input | `string` | no | `this.translations.forms.chooseFiles` | Visible text that names the control or data value. |
-| `locale` | input | `string` | no | `inject(KRN_LOCALE)` | Locale identifier used for collation, formatting, and component-owned copy. |
+| `label` | input | `string \| undefined` | no | `undefined` | Visible text that names the control or data value. |
+| `locale` | input | `string \| undefined` | no | `undefined` | Locale identifier used for collation, formatting, and component-owned copy. |
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
 | `accept` | input | `string` | no | `''` | Comma-separated file types accepted by the upload control. |
 | `multiple` | input | `boolean` | no | `false` | Allows more than one value or file to be selected in one interaction. |
@@ -11631,8 +11631,8 @@ void bootstrapApplication(KernDragDropUploadAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `id` | input | `string` | no | `''` | Stable identifier value used by the id contract. |
-| `label` | input | `string` | no | `this.translations.forms.chooseFiles` | Visible text that names the control or data value. |
-| `locale` | input | `string` | no | `inject(KRN_LOCALE)` | Locale identifier used for collation, formatting, and component-owned copy. |
+| `label` | input | `string \| undefined` | no | `undefined` | Visible text that names the control or data value. |
+| `locale` | input | `string \| undefined` | no | `undefined` | Locale identifier used for collation, formatting, and component-owned copy. |
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
 | `accept` | input | `string` | no | `''` | Comma-separated file types accepted by the upload control. |
 | `multiple` | input | `boolean` | no | `false` | Allows more than one value or file to be selected in one interaction. |
@@ -11644,7 +11644,7 @@ void bootstrapApplication(KernDragDropUploadAgentExample);
 | `invalid` | input | `boolean` | no | `false` | Exposes an externally controlled invalid presentation state. |
 | `filesChange` | output | `ReadonlyArray<File>` | no | `undefined` | Notifies the consumer after the files change interaction completes. |
 | `rejected` | output | `ReadonlyArray<KrnUploadRejection>` | no | `undefined` | Notifies the consumer after the rejected interaction completes. |
-| `dropLabel` | input | `string` | no | `this.translations.forms.dropFilesHere` | Human-readable copy for the drop state or control. |
+| `dropLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the drop state or control. |
 | `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input | `string` | no | `''` | Space-separated element ids composed with Form Field hints and validation descriptions. |
 | `tabindex` | input | `number` | no | `0` | Native sequential-focus order forwarded to the owned interactive element. |
@@ -11837,7 +11837,7 @@ void bootstrapApplication(KernVerificationCodeAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `id` | input | `string` | no | `''` | Stable identifier value used by the id contract. |
-| `label` | input | `string` | no | `this.translations.forms.verificationCode` | Visible text that names the control or data value. |
+| `label` | input | `string \| undefined` | no | `undefined` | Visible text that names the control or data value. |
 | `length` | input | `number` | no | `6` | Required number of editable positions in the verification-code control. |
 | `numericOnly` | input | `boolean` | no | `true` | Restricts verification-code entry to decimal digits. |
 | `autocomplete` | input | `string` | no | `'one-time-code'` | Native autocomplete purpose forwarded to the editable control. |
@@ -12038,9 +12038,9 @@ void bootstrapApplication(KernTagsInputAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `id` | input | `string` | no | `''` | Stable identifier value used by the id contract. |
-| `ariaLabel` | input | `string` | no | `this.translations.forms.tags` | Accessible name used when visible content is not sufficient. |
-| `inputLabel` | input | `string` | no | `this.translations.forms.addTag` | Human-readable copy for the input state or control. |
-| `placeholder` | input | `string` | no | `this.translations.forms.addTagPlaceholder` | Short input hint shown only while no value is present. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
+| `inputLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the input state or control. |
+| `placeholder` | input | `string \| undefined` | no | `undefined` | Short input hint shown only while no value is present. |
 | `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input | `string` | no | `''` | Space-separated element ids composed with Form Field hints and validation descriptions. |
 | `autocomplete` | input | `string` | no | `'off'` | Native autocomplete purpose forwarded to the editable control. |
@@ -12250,9 +12250,9 @@ void bootstrapApplication(KernBreadcrumbsAgentExample);
 | `items` | input | `ReadonlyArray<KrnBreadcrumbItem>` | no | `[]` | Ordered item collection rendered by the composite widget. |
 | `maxItems` | input | `number` | no | `5` | Upper or lower bound applied to the items value. |
 | `separator` | input | `string` | no | `'›'` | Visible text inserted between adjacent values or navigation segments. |
-| `ariaLabel` | input | `string` | no | `this.translations.navigation.breadcrumb` | Accessible name used when visible content is not sufficient. |
-| `moreLabel` | input | `string` | no | `this.translations.navigation.breadcrumbMore` | Human-readable copy for the more state or control. |
-| `showAllLabel` | input | `string` | no | `this.translations.navigation.breadcrumbShowAll` | Human-readable copy for the show all state or control. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
+| `moreLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the more state or control. |
+| `showAllLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the show all state or control. |
 | `itemActivated` | output | `KrnBreadcrumbItem` | no | `undefined` | Notifies the consumer after the item activated interaction completes. |
 
 ## Deprecated selectors
@@ -12431,7 +12431,7 @@ void bootstrapApplication(KernTabsAgentExample);
 | `items` | input | `ReadonlyArray<KrnTabItem>` | no | `[]` | Ordered item collection rendered by the composite widget. |
 | `value` | model | `string \| null` | no | `null` | Controlled component value. |
 | `orientation` | input | `KrnNavigationOrientation` | no | `this.host.nativeElement.localName === 'krn-vertical-tabs' ? 'vertical' : 'horizontal'` | Defines the logical axis used by layout and keyboard navigation. |
-| `ariaLabel` | input | `string` | no | `this.translations.navigation.sections` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 
 ## Deprecated selectors
 
@@ -12607,7 +12607,7 @@ void bootstrapApplication(KernVerticalTabsAgentExample);
 | `items` | input | `ReadonlyArray<KrnTabItem>` | no | `[]` | Ordered item collection rendered by the composite widget. |
 | `value` | model | `string \| null` | no | `null` | Controlled component value. |
 | `orientation` | input | `KrnNavigationOrientation` | no | `this.host.nativeElement.localName === 'krn-vertical-tabs' ? 'vertical' : 'horizontal'` | Defines the logical axis used by layout and keyboard navigation. |
-| `ariaLabel` | input | `string` | no | `this.translations.navigation.sections` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 
 ## Deprecated selectors
 
@@ -12777,13 +12777,13 @@ void bootstrapApplication(KernPaginationAgentExample);
 | `pageSize` | input | `number` | no | `20` | Maximum number of records requested or displayed on one page. |
 | `siblingCount` | input | `number` | no | `1` | Total number of peer items used to expose hierarchical position. |
 | `page` | model | `number` | no | `1` | One-based controlled page index. |
-| `ariaLabel` | input | `string` | no | `this.translations.navigation.pagination` | Accessible name used when visible content is not sufficient. |
-| `previousLabel` | input | `string` | no | `this.translations.navigation.previous` | Human-readable copy for the previous state or control. |
-| `nextLabel` | input | `string` | no | `this.translations.navigation.next` | Human-readable copy for the next state or control. |
-| `pageLabel` | input | `string` | no | `this.translations.navigation.pageLabel` | Backward-compatible `{page}` template. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
+| `previousLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the previous state or control. |
+| `nextLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the next state or control. |
+| `pageLabel` | input | `string \| undefined` | no | `undefined` | Backward-compatible `{page}` template. |
 | `pageLabelFormatter` | input | `((page: number) => string) \| undefined` | no | `undefined` | Typed alternative to `pageLabel` for locale-specific grammar. |
-| `emptyLabel` | input | `string` | no | `this.translations.navigation.noResults` | Accessible copy that explains the empty state. |
-| `rangeLabel` | input | `string` | no | `this.translations.navigation.resultRangeLabel` | Backward-compatible `{start}`, `{end}`, and `{total}` template. |
+| `emptyLabel` | input | `string \| undefined` | no | `undefined` | Accessible copy that explains the empty state. |
+| `rangeLabel` | input | `string \| undefined` | no | `undefined` | Backward-compatible `{start}`, `{end}`, and `{total}` template. |
 | `rangeLabelFormatter` | input | `((start: number, end: number, total: number) => string) \| undefined` | no | `undefined` | Typed alternative to `rangeLabel` for locale-specific grammar. |
 
 ## Deprecated selectors
@@ -12976,8 +12976,8 @@ void bootstrapApplication(KernStepperAgentExample);
 | `completedSteps` | input | `ReadonlyArray<number>` | no | `[]` | Ordered domain values supplied to the completed step collection. |
 | `linear` | input | `boolean` | no | `false` | Requires step completion in order and prevents skipping incomplete steps. |
 | `orientation` | input | `KrnNavigationOrientation` | no | `'horizontal'` | Defines the logical axis used by layout and keyboard navigation. |
-| `ariaLabel` | input | `string` | no | `this.translations.navigation.progress` | Accessible name used when visible content is not sufficient. |
-| `optionalLabel` | input | `string` | no | `this.translations.navigation.optional` | Human-readable copy for the optional state or control. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
+| `optionalLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the optional state or control. |
 
 ## Deprecated selectors
 
@@ -13150,10 +13150,10 @@ void bootstrapApplication(KernMenuAgentExample);
 | --- | --- | --- | --- | --- | --- |
 | `items` | input | `ReadonlyArray<KrnNavigationItem & { readonly shortcut?: string; }>` | no | `[]` | Ordered item collection rendered by the composite widget. |
 | `open` | model | `boolean` | no | `false` | Controls whether the disclosure or overlay surface is visible. |
-| `triggerLabel` | input | `string` | no | `this.translations.navigation.actions` | Human-readable copy for the trigger state or control. |
-| `triggerAriaLabel` | input | `string` | no | `this.translations.navigation.openMenu` | Human-readable copy for the trigger aria state or control. |
-| `menuAriaLabel` | input | `string` | no | `this.translations.navigation.actions` | Human-readable copy for the menu aria state or control. |
-| `emptyLabel` | input | `string` | no | `this.translations.navigation.menuEmpty` | Accessible copy that explains the empty state. |
+| `triggerLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the trigger state or control. |
+| `triggerAriaLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the trigger aria state or control. |
+| `menuAriaLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the menu aria state or control. |
+| `emptyLabel` | input | `string \| undefined` | no | `undefined` | Accessible copy that explains the empty state. |
 | `itemSelected` | output | `KrnNavigationItem` | no | `undefined` | Notifies the consumer after the item selected interaction completes. |
 | `closed` | output | `"detach" \| "escape" \| "outside" \| "selection"` | no | `undefined` | Notifies the consumer after the closed interaction completes. |
 
@@ -13335,7 +13335,7 @@ void bootstrapApplication(KernMenubarAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `items` | input | `ReadonlyArray<KrnNavigationItem>` | no | `[]` | Ordered item collection rendered by the composite widget. |
-| `ariaLabel` | input | `string` | no | `this.translations.navigation.applicationMenu` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `itemSelected` | output | `KrnNavigationItem` | no | `undefined` | Notifies the consumer after the item selected interaction completes. |
 
 ## Deprecated selectors
@@ -13513,7 +13513,7 @@ void bootstrapApplication(KernContextMenuAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `items` | input | `ReadonlyArray<KrnContextMenuItem>` | no | `[]` | Ordered item collection rendered by the composite widget. |
-| `ariaLabel` | input | `string` | no | `this.translations.navigation.contextActions` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `itemSelected` | output | `KrnContextMenuItem` | no | `undefined` | Notifies the consumer after the item selected interaction completes. |
 
 ## Deprecated selectors
@@ -13707,7 +13707,7 @@ void bootstrapApplication(KernTreeNavigationAgentExample);
 | `items` | input | `ReadonlyArray<KrnTreeNavigationItem>` | no | `[]` | Ordered item collection rendered by the composite widget. |
 | `selectedId` | model | `string \| null` | no | `null` | Stable id of the currently selected item. |
 | `expandedIds` | model | `ReadonlyArray<string>` | no | `[]` | Stable ids of the currently expanded hierarchical items. |
-| `ariaLabel` | input | `string` | no | `this.translations.navigation.navigationTree` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `indent` | input | `string` | no | `'1rem'` | Logical inline indentation applied for each hierarchical depth level. |
 | `showGuides` | input | `boolean` | no | `true` | Controls whether the component applies the show guides behavior. |
 | `itemSelected` | output | `KrnTreeNavigationItem` | no | `undefined` | Notifies the consumer after the item selected interaction completes. |
@@ -13906,7 +13906,7 @@ void bootstrapApplication(KernBottomNavigationAgentExample);
 | --- | --- | --- | --- | --- | --- |
 | `items` | input | `ReadonlyArray<KrnNavigationItem>` | no | `[]` | Ordered item collection rendered by the composite widget. |
 | `value` | model | `string \| null` | no | `null` | Controlled component value. |
-| `ariaLabel` | input | `string` | no | `this.translations.navigation.primary` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `itemSelected` | output | `KrnNavigationItem` | no | `undefined` | Notifies the consumer after the item selected interaction completes. |
 
 ## Deprecated selectors
@@ -14093,12 +14093,12 @@ void bootstrapApplication(KernCommandPaletteAgentExample);
 | `items` | input | `ReadonlyArray<KrnCommandItem>` | no | `[]` | Ordered item collection rendered by the composite widget. |
 | `open` | model | `boolean` | no | `false` | Controls whether the disclosure or overlay surface is visible. |
 | `query` | model | `string` | no | `''` | Current controlled search text used to derive visible results. |
-| `title` | input | `string` | no | `this.translations.navigation.commandPalette` | Visible title that also names the component surface or data view. |
+| `title` | input | `string \| undefined` | no | `undefined` | Visible title that also names the component surface or data view. |
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
-| `placeholder` | input | `string` | no | `this.translations.navigation.searchCommandsPlaceholder` | Short input hint shown only while no value is present. |
-| `resultsLabel` | input | `string` | no | `this.translations.navigation.commands` | Human-readable copy for the results state or control. |
-| `closeShortcut` | input | `string` | no | `this.translations.navigation.escapeShortcut` | Controls whether the component applies the close shortcut behavior. |
-| `locale` | input | `Array<string> \| string` | no | `inject(KRN_LOCALE)` | Locale identifier used for collation, formatting, and component-owned copy. |
+| `placeholder` | input | `string \| undefined` | no | `undefined` | Short input hint shown only while no value is present. |
+| `resultsLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the results state or control. |
+| `closeShortcut` | input | `string \| undefined` | no | `undefined` | Controls whether the component applies the close shortcut behavior. |
+| `locale` | input | `Array<string> \| string \| undefined` | no | `undefined` | Locale identifier used for collation, formatting, and component-owned copy. |
 | `labels` | input | `Partial<KrnCommandPaletteLabels>` | no | `{}` | Localized copy overrides for the component-owned interface text. |
 | `selected` | output | `KrnCommandItem` | no | `undefined` | Controlled selected state, distinct from keyboard focus. |
 | `closed` | output | `"escape" \| "outside" \| "selection"` | no | `undefined` | Notifies the consumer after the closed interaction completes. |
@@ -14299,8 +14299,8 @@ void bootstrapApplication(KernTableOfContentsAgentExample);
 | `items` | input | `ReadonlyArray<KrnTocItem>` | no | `[]` | Ordered item collection rendered by the composite widget. |
 | `activeId` | model | `string \| null` | no | `null` | Stable id of the item currently participating in roving focus. |
 | `observe` | input | `boolean` | no | `true` | Enables automatic observation of headings used by the table of contents. |
-| `title` | input | `string` | no | `this.translations.navigation.tableOfContentsTitle` | Visible title that also names the component surface or data view. |
-| `ariaLabel` | input | `string` | no | `this.translations.navigation.tableOfContents` | Accessible name used when visible content is not sufficient. |
+| `title` | input | `string \| undefined` | no | `undefined` | Visible title that also names the component surface or data view. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `itemActivated` | output | `KrnTocItem` | no | `undefined` | Notifies the consumer after the item activated interaction completes. |
 
 ## Deprecated selectors
@@ -14464,7 +14464,7 @@ void bootstrapApplication(KernBackButtonAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `href` | input | `string \| null` | no | `null` | Required destination URL used by the semantic link element. |
-| `label` | input | `string` | no | `this.translations.navigation.back` | Visible text that names the control or data value. |
+| `label` | input | `string \| undefined` | no | `undefined` | Visible text that names the control or data value. |
 | `activated` | output | `void` | no | `undefined` | Notifies the consumer after the activated interaction completes. |
 
 ## Deprecated selectors
@@ -14627,7 +14627,7 @@ void bootstrapApplication(KernSkipLinkAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `targetId` | input | `string` | no | `'main-content'` | Stable identifier value used by the target contract. |
-| `label` | input | `string` | no | `this.translations.navigation.skipToMainContent` | Visible text that names the control or data value. |
+| `label` | input | `string \| undefined` | no | `undefined` | Visible text that names the control or data value. |
 | `activated` | output | `void` | no | `undefined` | Notifies the consumer after the activated interaction completes. |
 
 ## Deprecated selectors
@@ -14796,7 +14796,7 @@ void bootstrapApplication(KernAlertAgentExample);
 | `title` | input | `string` | no | `''` | Visible title that also names the component surface or data view. |
 | `icon` | input | `string` | no | `''` | Semantic icon name rendered alongside the visible component content. |
 | `dismissible` | input | `boolean` | no | `false` | Controls whether the user can dismiss the surface before completing an action. |
-| `dismissLabel` | input | `string` | no | `this.translations.feedback.dismissMessage` | Human-readable copy for the dismiss state or control. |
+| `dismissLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the dismiss state or control. |
 | `closed` | output | `void` | no | `undefined` | Notifies the consumer after the closed interaction completes. |
 
 ## Deprecated selectors
@@ -14957,7 +14957,7 @@ void bootstrapApplication(KernBannerAgentExample);
 | `title` | input | `string` | no | `''` | Visible title that also names the component surface or data view. |
 | `icon` | input | `string` | no | `''` | Semantic icon name rendered alongside the visible component content. |
 | `dismissible` | input | `boolean` | no | `false` | Controls whether the user can dismiss the surface before completing an action. |
-| `dismissLabel` | input | `string` | no | `this.translations.feedback.dismissMessage` | Human-readable copy for the dismiss state or control. |
+| `dismissLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the dismiss state or control. |
 | `closed` | output | `void` | no | `undefined` | Notifies the consumer after the closed interaction completes. |
 
 ## Deprecated selectors
@@ -15125,7 +15125,7 @@ void bootstrapApplication(KernToastAgentExample);
 | `maxVisible` | input | `number` | no | `4` | Upper or lower bound applied to the visible value. |
 | `maxExpanded` | input | `number` | no | `12` | Upper or lower bound applied to the expanded value. |
 | `labels` | input | `Partial<KrnToastTranslations>` | no | `{}` | Localized copy overrides for the component-owned interface text. |
-| `ariaLabel` | input | `string` | no | `this.translations.toast.ariaLabel` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `expanded` | model | `boolean` | no | `false` | Controlled expanded state for a disclosure or hierarchical item. |
 
 ## Deprecated selectors
@@ -15462,7 +15462,7 @@ void bootstrapApplication(KernPopoverAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `open` | model | `boolean` | no | `false` | Controls whether the disclosure or overlay surface is visible. |
-| `ariaLabel` | input | `string` | no | `this.translations.feedback.moreInformation` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `autoFocus` | input | `boolean` | no | `true` | Controls whether the component applies the auto focus behavior. |
 | `closed` | output | `"api" \| "escape" \| "outside"` | no | `undefined` | Notifies the consumer after the closed interaction completes. |
 
@@ -15633,7 +15633,7 @@ void bootstrapApplication(KernHoverCardAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `ariaLabel` | input | `string` | no | `this.translations.feedback.preview` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `openDelay` | input | `number` | no | `350` | Delay in milliseconds before the transient surface becomes visible. |
 | `closeDelay` | input | `number` | no | `120` | Controls whether the component applies the close delay behavior. |
 
@@ -15812,9 +15812,9 @@ void bootstrapApplication(KernDialogAgentExample);
 | `title` | input | `string` | no | `''` | Visible title that also names the component surface or data view. |
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
 | `eyebrow` | input | `string` | no | `''` | Human-readable copy for the eyebrow state or control. |
-| `ariaLabel` | input | `string` | no | `this.translations.feedback.dialog` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `showClose` | input | `boolean` | no | `true` | Controls whether the component applies the show close behavior. |
-| `closeLabel` | input | `string` | no | `this.translations.feedback.close` | Human-readable copy for the close state or control. |
+| `closeLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the close state or control. |
 | `closeOnEscape` | input | `boolean` | no | `true` | Allows Escape to dismiss the topmost owned overlay. |
 | `closeOnOutside` | input | `boolean \| null` | no | `null` | Allows an interaction outside the owned overlay to dismiss it. |
 | `initialFocus` | input | `string` | no | `'first-tabbable'` | Identifies the element that receives focus when the modal surface opens. |
@@ -16013,9 +16013,9 @@ void bootstrapApplication(KernAlertDialogAgentExample);
 | `title` | input | `string` | no | `''` | Visible title that also names the component surface or data view. |
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
 | `eyebrow` | input | `string` | no | `''` | Human-readable copy for the eyebrow state or control. |
-| `ariaLabel` | input | `string` | no | `this.translations.feedback.dialog` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `showClose` | input | `boolean` | no | `true` | Controls whether the component applies the show close behavior. |
-| `closeLabel` | input | `string` | no | `this.translations.feedback.close` | Human-readable copy for the close state or control. |
+| `closeLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the close state or control. |
 | `closeOnEscape` | input | `boolean` | no | `true` | Allows Escape to dismiss the topmost owned overlay. |
 | `closeOnOutside` | input | `boolean \| null` | no | `null` | Allows an interaction outside the owned overlay to dismiss it. |
 | `initialFocus` | input | `string` | no | `'first-tabbable'` | Identifies the element that receives focus when the modal surface opens. |
@@ -16209,9 +16209,9 @@ void bootstrapApplication(KernDrawerAgentExample);
 | `title` | input | `string` | no | `''` | Visible title that also names the component surface or data view. |
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
 | `eyebrow` | input | `string` | no | `''` | Human-readable copy for the eyebrow state or control. |
-| `ariaLabel` | input | `string` | no | `this.translations.feedback.dialog` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `showClose` | input | `boolean` | no | `true` | Controls whether the component applies the show close behavior. |
-| `closeLabel` | input | `string` | no | `this.translations.feedback.close` | Human-readable copy for the close state or control. |
+| `closeLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the close state or control. |
 | `closeOnEscape` | input | `boolean` | no | `true` | Allows Escape to dismiss the topmost owned overlay. |
 | `closeOnOutside` | input | `boolean \| null` | no | `null` | Allows an interaction outside the owned overlay to dismiss it. |
 | `initialFocus` | input | `string` | no | `'first-tabbable'` | Identifies the element that receives focus when the modal surface opens. |
@@ -16407,9 +16407,9 @@ void bootstrapApplication(KernBottomSheetAgentExample);
 | `title` | input | `string` | no | `''` | Visible title that also names the component surface or data view. |
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
 | `eyebrow` | input | `string` | no | `''` | Human-readable copy for the eyebrow state or control. |
-| `ariaLabel` | input | `string` | no | `this.translations.feedback.dialog` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `showClose` | input | `boolean` | no | `true` | Controls whether the component applies the show close behavior. |
-| `closeLabel` | input | `string` | no | `this.translations.feedback.close` | Human-readable copy for the close state or control. |
+| `closeLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the close state or control. |
 | `closeOnEscape` | input | `boolean` | no | `true` | Allows Escape to dismiss the topmost owned overlay. |
 | `closeOnOutside` | input | `boolean \| null` | no | `null` | Allows an interaction outside the owned overlay to dismiss it. |
 | `initialFocus` | input | `string` | no | `'first-tabbable'` | Identifies the element that receives focus when the modal surface opens. |
@@ -16596,7 +16596,7 @@ void bootstrapApplication(KernLoadingOverlayAgentExample);
 | --- | --- | --- | --- | --- | --- |
 | `active` | input | `boolean` | no | `false` | Marks the item as the current interaction target without implying selection. |
 | `blocking` | input | `boolean` | no | `true` | Marks feedback as requiring attention before the workflow can continue. |
-| `label` | input | `string` | no | `this.translations.feedback.loadingInProgress` | Visible text that names the control or data value. |
+| `label` | input | `string \| undefined` | no | `undefined` | Visible text that names the control or data value. |
 
 ## Deprecated selectors
 
@@ -16761,7 +16761,7 @@ void bootstrapApplication(KernProgressBarAgentExample);
 | `value` | input | `number` | no | `0` | Controlled component value. |
 | `max` | input | `number` | no | `100` | Largest accepted numeric or temporal value. |
 | `indeterminate` | input | `boolean` | no | `false` | Represents an unknown progress value or a mixed selection state. |
-| `ariaLabel` | input | `string` | no | `this.translations.feedback.progress` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `valueText` | input | `string` | no | `''` | Human-readable copy for the value state or control. |
 
 ## Deprecated selectors
@@ -16931,8 +16931,8 @@ void bootstrapApplication(KernCircularProgressAgentExample);
 | `max` | input | `number` | no | `100` | Largest accepted numeric or temporal value. |
 | `indeterminate` | input | `boolean` | no | `false` | Represents an unknown progress value or a mixed selection state. |
 | `showValue` | input | `boolean` | no | `false` | Controls whether the component applies the show value behavior. |
-| `ariaLabel` | input | `string` | no | `this.translations.feedback.progress` | Accessible name used when visible content is not sufficient. |
-| `locale` | input | `Array<string> \| string` | no | `inject(KRN_LOCALE)` | Locale identifier used for collation, formatting, and component-owned copy. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
+| `locale` | input | `Array<string> \| string \| undefined` | no | `undefined` | Locale identifier used for collation, formatting, and component-owned copy. |
 
 ## Deprecated selectors
 
@@ -17092,7 +17092,7 @@ void bootstrapApplication(KernSpinnerAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `label` | input | `string` | no | `this.translations.feedback.loading` | Visible text that names the control or data value. |
+| `label` | input | `string \| undefined` | no | `undefined` | Visible text that names the control or data value. |
 
 ## Deprecated selectors
 
@@ -17404,7 +17404,7 @@ void bootstrapApplication(KernEmptyStateAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `title` | input | `string` | no | `this.translations.feedback.emptyStateTitle` | Visible title that also names the component surface or data view. |
+| `title` | input | `string \| undefined` | no | `undefined` | Visible title that also names the component surface or data view. |
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
 | `tone` | input | `KrnFeedbackTone` | no | `'neutral'` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
 
@@ -17565,7 +17565,7 @@ void bootstrapApplication(KernErrorStateAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `title` | input | `string` | no | `this.translations.feedback.errorStateTitle` | Visible title that also names the component surface or data view. |
+| `title` | input | `string \| undefined` | no | `undefined` | Visible title that also names the component surface or data view. |
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
 | `tone` | input | `KrnFeedbackTone` | no | `'danger'` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
 
@@ -17728,7 +17728,7 @@ void bootstrapApplication(KernSuccessStateAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `title` | input | `string` | no | `this.translations.feedback.successStateTitle` | Visible title that also names the component surface or data view. |
+| `title` | input | `string \| undefined` | no | `undefined` | Visible title that also names the component surface or data view. |
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
 | `tone` | input | `KrnFeedbackTone` | no | `'success'` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
 
@@ -17892,10 +17892,10 @@ void bootstrapApplication(KernConfirmationPatternAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `confirming` | model | `boolean` | no | `false` | Controlled confirming state with a matching Angular model-change output. |
-| `requestLabel` | input | `string` | no | `this.translations.feedback.delete` | Human-readable copy for the request state or control. |
-| `prompt` | input | `string` | no | `this.translations.feedback.confirmPrompt` | Human-readable copy for the prompt state or control. |
-| `confirmLabel` | input | `string` | no | `this.translations.feedback.confirm` | Human-readable copy for the confirm state or control. |
-| `cancelLabel` | input | `string` | no | `this.translations.feedback.cancel` | Human-readable copy for the cancel state or control. |
+| `requestLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the request state or control. |
+| `prompt` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the prompt state or control. |
+| `confirmLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the confirm state or control. |
+| `cancelLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the cancel state or control. |
 | `confirmed` | output | `void` | no | `undefined` | Notifies the consumer after the confirmed interaction completes. |
 | `cancelled` | output | `void` | no | `undefined` | Notifies the consumer after the cancelled interaction completes. |
 
@@ -18361,7 +18361,7 @@ void bootstrapApplication(KernChipAgentExample);
 | `interactive` | input | `boolean` | no | `false` | Enables the documented user interaction for an otherwise presentational item. |
 | `removable` | input | `boolean` | no | `false` | Displays a named action for removing the represented value. |
 | `disabled` | input | `boolean` | no | `false` | Prevents user interaction and participates in the disabled-state contract. |
-| `accessibleLabel` | input | `string` | no | `this.translations.dataDisplay.tag` | Accessible name for the complete composite widget. |
+| `accessibleLabel` | input | `string \| undefined` | no | `undefined` | Accessible name for the complete composite widget. |
 | `remove` | output | `void` | no | `undefined` | Notifies the consumer after the remove interaction completes. |
 
 ## Deprecated selectors
@@ -18539,7 +18539,7 @@ void bootstrapApplication(KernTagAgentExample);
 | `interactive` | input | `boolean` | no | `false` | Enables the documented user interaction for an otherwise presentational item. |
 | `removable` | input | `boolean` | no | `false` | Displays a named action for removing the represented value. |
 | `disabled` | input | `boolean` | no | `false` | Prevents user interaction and participates in the disabled-state contract. |
-| `accessibleLabel` | input | `string` | no | `this.translations.dataDisplay.tag` | Accessible name for the complete composite widget. |
+| `accessibleLabel` | input | `string \| undefined` | no | `undefined` | Accessible name for the complete composite widget. |
 | `remove` | output | `void` | no | `undefined` | Notifies the consumer after the remove interaction completes. |
 
 ## Deprecated selectors
@@ -18704,7 +18704,7 @@ void bootstrapApplication(KernAvatarAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `locale` | input | `string` | no | `inject(KRN_LOCALE)` | Locale identifier used for collation, formatting, and component-owned copy. |
+| `locale` | input | `string \| undefined` | no | `undefined` | Locale identifier used for collation, formatting, and component-owned copy. |
 | `src` | input | `string \| undefined` | no | `undefined` | Required media source URL loaded by the component. |
 | `alt` | input | `string` | no | `''` | Text alternative that communicates the meaning of visual media. |
 | `name` | input | `string` | no | `''` | Required human-readable name for the represented person, item, or action. |
@@ -18869,7 +18869,7 @@ void bootstrapApplication(KernAvatarGroupAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `ariaLabel` | input | `string` | no | `this.translations.dataDisplay.people` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `overlap` | input | `string` | no | `'0.625rem'` | Allows the floating action surface to overlap its adjacent container edge. |
 
 ## Deprecated selectors
@@ -19496,7 +19496,7 @@ void bootstrapApplication(KernListAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `role` | input | `"list" \| "listbox"` | no | `'list'` | ARIA role used when the consumer must refine the component’s semantic purpose. |
-| `ariaLabel` | input | `string` | no | `this.translations.dataDisplay.list` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 
 ## Deprecated selectors
 
@@ -19818,7 +19818,7 @@ void bootstrapApplication(KernAccordionAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `ariaLabel` | input | `string` | no | `this.translations.dataDisplay.accordion` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 
 ## Deprecated selectors
 
@@ -20150,7 +20150,7 @@ void bootstrapApplication(KernTimelineAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `ariaLabel` | input | `string` | no | `this.translations.dataDisplay.timeline` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 
 ## Deprecated selectors
 
@@ -20322,7 +20322,7 @@ void bootstrapApplication(KernTreeAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `nodes` | input | `ReadonlyArray<KrnTreeNode>` | no | `[]` | Hierarchical nodes whose ids must be stable and unique across the complete tree. |
-| `ariaLabel` | input | `string` | no | `this.translations.navigation.tree` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `selected` | model | `string` | no | `''` | Controlled selected state, distinct from keyboard focus. |
 | `expanded` | model | `ReadonlySet<string>` | no | `new Set<string>()` | Controlled expanded state for a disclosure or hierarchical item. |
 | `loadChildren` | output | `KrnTreeNode` | no | `undefined` | Requests children when an unloaded node is expanded or its failed request is retried. |
@@ -20556,12 +20556,12 @@ void bootstrapApplication(KernDataTableAgentExample);
 | `rowIdentity` | input | `(row: T, index: number) => KrnDataRowKey` | yes | `required` | Returns a stable unique key for every source row occurrence. |
 | `mode` | input | `KrnDataGridMode` | no | `{ kind: 'client', pagination: true }` | Discriminated operating mode that selects the component data and interaction contract. |
 | `labels` | input | `Partial<KrnDataGridTranslations>` | no | `{}` | Localized copy overrides for the component-owned interface text. |
-| `ariaLabel` | input | `string` | no | `this.translations.dataGrid.ariaLabel` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `loading` | input | `boolean` | no | `false` | Prevents duplicate actions and exposes accessible busy state. |
 | `error` | input | `string` | no | `''` | Current failure message or error state exposed by asynchronous content. |
-| `emptyLabel` | input | `string` | no | `this.translations.dataGrid.empty` | Accessible copy that explains the empty state. |
+| `emptyLabel` | input | `string \| undefined` | no | `undefined` | Accessible copy that explains the empty state. |
 | `filterable` | input | `boolean` | no | `true` | Enables the grid-owned text filtering interface. |
-| `filterPlaceholder` | input | `string` | no | `this.translations.dataGrid.filterPlaceholder` | Short hint displayed in the grid filter input before a query is entered. |
+| `filterPlaceholder` | input | `string \| undefined` | no | `undefined` | Short hint displayed in the grid filter input before a query is entered. |
 | `filterPredicate` | input | `KrnDataFilterPredicate<T> \| null` | no | `null` | Determines whether a row matches the current filter query. |
 | `selectable` | input | `boolean` | no | `false` | Enables row selection and the corresponding selected-key contract. |
 | `expandable` | input | `boolean` | no | `false` | Controls whether the component applies the expandable behavior. |
@@ -20848,12 +20848,12 @@ void bootstrapApplication(KernDataGridAgentExample);
 | `rowIdentity` | input | `(row: T, index: number) => KrnDataRowKey` | yes | `required` | Returns a stable unique key for every source row occurrence. |
 | `mode` | input | `KrnDataGridMode` | no | `{ kind: 'client', pagination: true }` | Discriminated operating mode that selects the component data and interaction contract. |
 | `labels` | input | `Partial<KrnDataGridTranslations>` | no | `{}` | Localized copy overrides for the component-owned interface text. |
-| `ariaLabel` | input | `string` | no | `this.translations.dataGrid.ariaLabel` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `loading` | input | `boolean` | no | `false` | Prevents duplicate actions and exposes accessible busy state. |
 | `error` | input | `string` | no | `''` | Current failure message or error state exposed by asynchronous content. |
-| `emptyLabel` | input | `string` | no | `this.translations.dataGrid.empty` | Accessible copy that explains the empty state. |
+| `emptyLabel` | input | `string \| undefined` | no | `undefined` | Accessible copy that explains the empty state. |
 | `filterable` | input | `boolean` | no | `true` | Enables the grid-owned text filtering interface. |
-| `filterPlaceholder` | input | `string` | no | `this.translations.dataGrid.filterPlaceholder` | Short hint displayed in the grid filter input before a query is entered. |
+| `filterPlaceholder` | input | `string \| undefined` | no | `undefined` | Short hint displayed in the grid filter input before a query is entered. |
 | `filterPredicate` | input | `KrnDataFilterPredicate<T> \| null` | no | `null` | Determines whether a row matches the current filter query. |
 | `selectable` | input | `boolean` | no | `false` | Enables row selection and the corresponding selected-key contract. |
 | `expandable` | input | `boolean` | no | `false` | Controls whether the component applies the expandable behavior. |
@@ -21117,7 +21117,7 @@ void bootstrapApplication(KernCalendarAgentExample);
 | `min` | input | `string` | no | `''` | Smallest accepted numeric or temporal value. |
 | `max` | input | `string` | no | `''` | Largest accepted numeric or temporal value. |
 | `disabledDates` | input | `ReadonlySet<string>` | no | `new Set<string>()` | Returns whether a plain date is unavailable for selection. |
-| `locale` | input | `string` | no | `inject(KRN_LOCALE)` | Locale identifier used for collation, formatting, and component-owned copy. |
+| `locale` | input | `string \| undefined` | no | `undefined` | Locale identifier used for collation, formatting, and component-owned copy. |
 | `labels` | input | `Partial<KrnCalendarTranslations>` | no | `{}` | Localized copy overrides for the component-owned interface text. |
 | `weekStartsOn` | input | `0 \| 1` | no | `1` | Zero-based weekday used as the first calendar column. |
 | `today` | input | `string` | no | `''` | Deterministic plain date treated as today on both server and client. |
@@ -21615,7 +21615,7 @@ void bootstrapApplication(KernMeterAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `locale` | input | `Array<string> \| string` | no | `inject(KRN_LOCALE)` | Locale identifier used for collation, formatting, and component-owned copy. |
+| `locale` | input | `Array<string> \| string \| undefined` | no | `undefined` | Locale identifier used for collation, formatting, and component-owned copy. |
 | `label` | input | `string` | yes | `required` | Visible text that names the control or data value. |
 | `value` | input | `number` | yes | `required` | Controlled component value. |
 | `min` | input | `number` | no | `0` | Smallest accepted numeric or temporal value. |
@@ -21789,7 +21789,7 @@ void bootstrapApplication(KernRatingAgentExample);
 | `max` | input | `number` | no | `5` | Largest accepted numeric or temporal value. |
 | `disabled` | input | `boolean` | no | `false` | Prevents user interaction and participates in the disabled-state contract. |
 | `readonly` | input | `boolean` | no | `false` | Keeps the value perceivable while preventing user edits. |
-| `ariaLabel` | input | `string` | no | `this.translations.dataDisplay.rating` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 
 ## Deprecated selectors
 
@@ -21971,7 +21971,7 @@ void bootstrapApplication(KernLineChartAgentExample);
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
 | `data` | input | `ReadonlyArray<KrnChartDatum>` | yes | `required` | Immutable data supplied by the consumer. |
 | `palette` | input | `ReadonlyArray<string>` | no | `['var(--krn-chart-1, #4f6feb)']` | Ordered semantic color values available to the color control. |
-| `locale` | input | `Array<string> \| string` | no | `inject(KRN_LOCALE)` | Locale identifier used for collation, formatting, and component-owned copy. |
+| `locale` | input | `Array<string> \| string \| undefined` | no | `undefined` | Locale identifier used for collation, formatting, and component-owned copy. |
 | `labels` | input | `Partial<KrnChartLabels>` | no | `{}` | Localized copy overrides for the component-owned interface text. |
 | `valueFormatter` | input | `KrnChartValueFormatter \| null` | no | `null` | Formats a domain value for visible and accessible presentation. |
 | `percentFormatter` | input | `KrnChartValueFormatter \| null` | no | `null` | Formats a normalized value for visible and accessible percentage copy. |
@@ -22171,7 +22171,7 @@ void bootstrapApplication(KernBarChartAgentExample);
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
 | `data` | input | `ReadonlyArray<KrnChartDatum>` | yes | `required` | Immutable data supplied by the consumer. |
 | `palette` | input | `ReadonlyArray<string>` | no | `['var(--krn-chart-1, #4f6feb)']` | Ordered semantic color values available to the color control. |
-| `locale` | input | `Array<string> \| string` | no | `inject(KRN_LOCALE)` | Locale identifier used for collation, formatting, and component-owned copy. |
+| `locale` | input | `Array<string> \| string \| undefined` | no | `undefined` | Locale identifier used for collation, formatting, and component-owned copy. |
 | `labels` | input | `Partial<KrnChartLabels>` | no | `{}` | Localized copy overrides for the component-owned interface text. |
 | `valueFormatter` | input | `KrnChartValueFormatter \| null` | no | `null` | Formats a domain value for visible and accessible presentation. |
 | `percentFormatter` | input | `KrnChartValueFormatter \| null` | no | `null` | Formats a normalized value for visible and accessible percentage copy. |
@@ -22371,7 +22371,7 @@ void bootstrapApplication(KernDonutChartAgentExample);
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
 | `data` | input | `ReadonlyArray<KrnChartDatum>` | yes | `required` | Immutable data supplied by the consumer. |
 | `palette` | input | `ReadonlyArray<string>` | no | `[ 'var(--krn-chart-1, #4f6feb)', 'var(--krn-chart-3, #5087c8)', 'var(--krn-chart-2, #3d8a77)', 'var(--krn-chart-5, #8a63a8)', 'var(--krn-chart-4, #b58633)', ]` | Ordered semantic color values available to the color control. |
-| `locale` | input | `Array<string> \| string` | no | `inject(KRN_LOCALE)` | Locale identifier used for collation, formatting, and component-owned copy. |
+| `locale` | input | `Array<string> \| string \| undefined` | no | `undefined` | Locale identifier used for collation, formatting, and component-owned copy. |
 | `labels` | input | `Partial<KrnChartLabels>` | no | `{}` | Localized copy overrides for the component-owned interface text. |
 | `valueFormatter` | input | `KrnChartValueFormatter \| null` | no | `null` | Formats a domain value for visible and accessible presentation. |
 | `percentFormatter` | input | `KrnChartValueFormatter \| null` | no | `null` | Formats a normalized value for visible and accessible percentage copy. |
@@ -22714,7 +22714,7 @@ void bootstrapApplication(KernUserMenuAgentExample);
 | --- | --- | --- | --- | --- | --- |
 | `name` | input | `string` | yes | `required` | Required human-readable name for the represented person, item, or action. |
 | `detail` | input | `string` | no | `''` | Supporting detail text displayed with the primary content. |
-| `menuAriaLabel` | input | `string` | no | `this.translations.patterns.userActions` | Human-readable copy for the menu aria state or control. |
+| `menuAriaLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the menu aria state or control. |
 | `open` | model | `boolean` | no | `false` | Controls whether the disclosure or overlay surface is visible. |
 
 ## Deprecated selectors
@@ -22903,12 +22903,12 @@ void bootstrapApplication(KernNotificationCenterAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `heading` | input | `string` | no | `this.translations.patterns.notifications` | Human-readable copy for the heading state or control. |
-| `ariaLabel` | input | `string` | no | `this.translations.patterns.notificationCenter` | Accessible name used when visible content is not sufficient. |
-| `unreadLabel` | input | `(count: number) => string` | no | `this.translations.patterns.unreadCount` | Human-readable copy for the unread state or control. |
-| `unreadStateLabel` | input | `string` | no | `this.translations.patterns.unread` | Human-readable copy for the unread state state or control. |
-| `markAllReadLabel` | input | `string` | no | `this.translations.patterns.markAllRead` | Human-readable copy for the mark all read state or control. |
-| `emptyLabel` | input | `string` | no | `this.translations.patterns.notificationsEmpty` | Accessible copy that explains the empty state. |
+| `heading` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the heading state or control. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
+| `unreadLabel` | input | `((count: number) => string) \| undefined` | no | `undefined` | Human-readable copy for the unread state or control. |
+| `unreadStateLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the unread state state or control. |
+| `markAllReadLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the mark all read state or control. |
+| `emptyLabel` | input | `string \| undefined` | no | `undefined` | Accessible copy that explains the empty state. |
 | `notifications` | input | `ReadonlyArray<KrnNotification>` | no | `[]` | Ordered domain values supplied to the notification collection. |
 | `markAllRead` | output | `void` | no | `undefined` | Notifies the consumer after the mark all read interaction completes. |
 | `notificationSelected` | output | `KrnNotification` | no | `undefined` | Notifies the consumer after the notification selected interaction completes. |
@@ -23103,11 +23103,11 @@ void bootstrapApplication(KernGlobalSearchAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `ariaLabel` | input | `string` | no | `this.translations.patterns.globalSearch` | Accessible name used when visible content is not sufficient. |
-| `placeholder` | input | `string` | no | `this.translations.patterns.searchPlaceholder` | Short input hint shown only while no value is present. |
-| `clearLabel` | input | `string` | no | `this.translations.patterns.clearSearch` | Human-readable copy for the clear state or control. |
-| `resultsLabel` | input | `(label: string) => string` | no | `this.translations.patterns.resultLabel` | Human-readable copy for the results state or control. |
-| `emptyResultsLabel` | input | `(query: string) => string` | no | `this.translations.patterns.noSearchResults` | Accessible copy announced when a search has no matching results. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
+| `placeholder` | input | `string \| undefined` | no | `undefined` | Short input hint shown only while no value is present. |
+| `clearLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the clear state or control. |
+| `resultsLabel` | input | `((label: string) => string) \| undefined` | no | `undefined` | Human-readable copy for the results state or control. |
+| `emptyResultsLabel` | input | `((query: string) => string) \| undefined` | no | `undefined` | Accessible copy announced when a search has no matching results. |
 | `results` | input | `ReadonlyArray<KrnSearchResult>` | no | `[]` | Search result collection rendered in response to the current query. |
 | `maxResults` | input | `number` | no | `8` | Upper or lower bound applied to the results value. |
 | `resultsId` | input | `string` | no | `this.generatedResultsId` | Stable identifier value used by the results contract. |
@@ -23306,10 +23306,10 @@ void bootstrapApplication(KernFilterBarAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `ariaLabel` | input | `string` | no | `this.translations.patterns.filters` | Accessible name used when visible content is not sufficient. |
-| `allLabel` | input | `string` | no | `this.translations.patterns.all` | Human-readable copy for the all state or control. |
-| `activeLabel` | input | `(count: number) => string` | no | `this.translations.patterns.activeFilters` | Human-readable copy for the active state or control. |
-| `clearAllLabel` | input | `string` | no | `this.translations.patterns.clearAll` | Human-readable copy for the clear all state or control. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
+| `allLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the all state or control. |
+| `activeLabel` | input | `((count: number) => string) \| undefined` | no | `undefined` | Human-readable copy for the active state or control. |
+| `clearAllLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the clear all state or control. |
 | `filters` | input | `ReadonlyArray<KrnFilterDefinition>` | no | `[]` | Ordered domain values supplied to the filter collection. |
 | `values` | model | `Readonly<Partial<Record<string, string>>>` | no | `{}` | Controlled values state with a matching Angular model-change output. |
 
@@ -23650,8 +23650,8 @@ void bootstrapApplication(KernSettingsPanelAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `heading` | input | `string` | no | `this.translations.patterns.settings` | Human-readable copy for the heading state or control. |
-| `closeLabel` | input | `string` | no | `this.translations.patterns.closeSettings` | Human-readable copy for the close state or control. |
+| `heading` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the heading state or control. |
+| `closeLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the close state or control. |
 | `initialFocus` | input | `string` | no | `'first-tabbable'` | Identifies the element that receives focus when the modal surface opens. |
 | `closeOnEscape` | input | `boolean` | no | `true` | Allows Escape to dismiss the topmost owned overlay. |
 | `closeOnOutside` | input | `boolean` | no | `true` | Allows an interaction outside the owned overlay to dismiss it. |
@@ -23828,9 +23828,9 @@ void bootstrapApplication(KernCrudToolbarAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `ariaLabel` | input | `string` | no | `this.translations.patterns.actions` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `selectedCount` | input | `number` | no | `0` | Number of selected records summarized by the surrounding pattern. |
-| `selectedLabel` | input | `(count: number) => string` | no | `this.translations.patterns.selectedCount` | Human-readable copy for the selected state or control. |
+| `selectedLabel` | input | `((count: number) => string) \| undefined` | no | `undefined` | Human-readable copy for the selected state or control. |
 
 ## Deprecated selectors
 
@@ -23995,9 +23995,9 @@ void bootstrapApplication(KernBulkActionsAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `ariaLabel` | input | `string` | no | `this.translations.patterns.actions` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `selectedCount` | input | `number` | no | `0` | Number of selected records summarized by the surrounding pattern. |
-| `selectedLabel` | input | `(count: number) => string` | no | `this.translations.patterns.selectedCount` | Human-readable copy for the selected state or control. |
+| `selectedLabel` | input | `((count: number) => string) \| undefined` | no | `undefined` | Human-readable copy for the selected state or control. |
 
 ## Deprecated selectors
 
@@ -24171,8 +24171,8 @@ void bootstrapApplication(KernMasterDetailLayoutAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `masterLabel` | input | `string` | no | `this.translations.patterns.masterList` | Human-readable copy for the master state or control. |
-| `detailLabel` | input | `string` | no | `this.translations.patterns.detail` | Human-readable copy for the detail state or control. |
+| `masterLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the master state or control. |
+| `detailLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the detail state or control. |
 | `detailOpen` | model | `boolean` | no | `false` | Controlled detail open state with a matching Angular model-change output. |
 
 ## Deprecated selectors
@@ -24510,14 +24510,14 @@ void bootstrapApplication(KernLoginFormAgentExample);
 | `loading` | input | `boolean` | no | `false` | Prevents duplicate actions and exposes accessible busy state. |
 | `errorMessage` | input | `string` | no | `''` | Human-readable copy for the error state or control. |
 | `recoveryHref` | input | `string` | no | `''` | Destination URL for the error-state recovery action. |
-| `submitLabel` | input | `string` | no | `this.translations.patterns.signIn` | Human-readable copy for the submit state or control. |
-| `emailLabel` | input | `string` | no | `this.translations.patterns.email` | Human-readable copy for the email state or control. |
-| `emailErrorLabel` | input | `string` | no | `this.translations.patterns.invalidEmail` | Human-readable copy for the email error state or control. |
-| `passwordLabel` | input | `string` | no | `this.translations.patterns.password` | Human-readable copy for the password state or control. |
-| `passwordErrorLabel` | input | `(minimumLength: number) => string` | no | `this.translations.patterns.minimumPasswordLength` | Human-readable copy for the password error state or control. |
-| `rememberLabel` | input | `string` | no | `this.translations.patterns.rememberMe` | Human-readable copy for the remember state or control. |
-| `recoveryLabel` | input | `string` | no | `this.translations.patterns.forgotPassword` | Human-readable copy for the recovery state or control. |
-| `loadingLabel` | input | `string` | no | `this.translations.patterns.signingIn` | Human-readable copy for the loading state or control. |
+| `submitLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the submit state or control. |
+| `emailLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the email state or control. |
+| `emailErrorLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the email error state or control. |
+| `passwordLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the password state or control. |
+| `passwordErrorLabel` | input | `((minimumLength: number) => string) \| undefined` | no | `undefined` | Human-readable copy for the password error state or control. |
+| `rememberLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the remember state or control. |
+| `recoveryLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the recovery state or control. |
+| `loadingLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the loading state or control. |
 | `minimumPasswordLength` | input | `number` | no | `8` | Upper or lower bound applied to the password length value. |
 | `submitted` | output | `KrnLoginCredentials` | no | `undefined` | Notifies the consumer after the submitted interaction completes. |
 
@@ -24712,19 +24712,19 @@ void bootstrapApplication(KernProfileFormAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `value` | input | `KrnProfileValue` | no | `{ name: '', role: '', bio: '', timezone: 'UTC' }` | Controlled component value. |
-| `timezones` | input | `ReadonlyArray<{ readonly value: string; readonly label: string; }>` | no | `this.translations.patterns.profileTimezones` | Ordered domain values supplied to the timezone collection. |
+| `timezones` | input | `ReadonlyArray<{ readonly value: string; readonly label: string; }> \| undefined` | no | `undefined` | Ordered domain values supplied to the timezone collection. |
 | `saving` | input | `boolean` | no | `false` | Exposes an in-progress save state and prevents duplicate submission. |
-| `dirtyMessage` | input | `string` | no | `this.translations.patterns.unsavedChanges` | Human-readable copy for the dirty state or control. |
-| `nameLabel` | input | `string` | no | `this.translations.patterns.displayName` | Human-readable copy for the name state or control. |
-| `nameErrorLabel` | input | `string` | no | `this.translations.patterns.displayNameRequired` | Human-readable copy for the name error state or control. |
-| `roleLabel` | input | `string` | no | `this.translations.patterns.role` | Human-readable copy for the role state or control. |
-| `bioLabel` | input | `string` | no | `this.translations.patterns.bio` | Human-readable copy for the bio state or control. |
-| `bioErrorLabel` | input | `(maximumLength: number) => string` | no | `this.translations.patterns.bioMaximumLength` | Human-readable copy for the bio error state or control. |
+| `dirtyMessage` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the dirty state or control. |
+| `nameLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the name state or control. |
+| `nameErrorLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the name error state or control. |
+| `roleLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the role state or control. |
+| `bioLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the bio state or control. |
+| `bioErrorLabel` | input | `((maximumLength: number) => string) \| undefined` | no | `undefined` | Human-readable copy for the bio error state or control. |
 | `bioMaxLength` | input | `number` | no | `280` | Maximum biography length enforced by the profile form pattern. |
-| `timezoneLabel` | input | `string` | no | `this.translations.patterns.timezone` | Human-readable copy for the timezone state or control. |
-| `timezoneErrorLabel` | input | `string` | no | `this.translations.patterns.timezoneUnavailable` | Human-readable copy for the timezone error state or control. |
-| `savingLabel` | input | `string` | no | `this.translations.patterns.saving` | Human-readable copy for the saving state or control. |
-| `saveLabel` | input | `string` | no | `this.translations.patterns.saveProfile` | Human-readable copy for the save state or control. |
+| `timezoneLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the timezone state or control. |
+| `timezoneErrorLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the timezone error state or control. |
+| `savingLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the saving state or control. |
+| `saveLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the save state or control. |
 | `saved` | output | `KrnProfileValue` | no | `undefined` | Notifies the consumer after the saved interaction completes. |
 
 ## Deprecated selectors
@@ -24917,12 +24917,12 @@ void bootstrapApplication(KernMultiStepFormAgentExample);
 | `furthestStep` | model | `number` | no | `0` | Controlled furthest step state with a matching Angular model-change output. |
 | `allowStepNavigation` | input | `boolean` | no | `true` | Controls whether the component applies the allow step navigation behavior. |
 | `orientation` | input | `"horizontal" \| "vertical"` | no | `'horizontal'` | Defines the logical axis used by layout and keyboard navigation. |
-| `completeLabel` | input | `string` | no | `this.translations.patterns.complete` | Human-readable copy for the complete state or control. |
-| `ariaLabel` | input | `string` | no | `this.translations.patterns.formProgress` | Accessible name used when visible content is not sufficient. |
-| `optionalLabel` | input | `string` | no | `this.translations.patterns.optional` | Human-readable copy for the optional state or control. |
-| `backLabel` | input | `string` | no | `this.translations.patterns.back` | Human-readable copy for the back state or control. |
-| `continueLabel` | input | `string` | no | `this.translations.patterns.continue` | Human-readable copy for the continue state or control. |
-| `stepCounterLabel` | input | `(current: number, total: number) => string` | no | `this.translations.patterns.stepCounter` | Human-readable copy for the step counter state or control. |
+| `completeLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the complete state or control. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
+| `optionalLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the optional state or control. |
+| `backLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the back state or control. |
+| `continueLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the continue state or control. |
+| `stepCounterLabel` | input | `((current: number, total: number) => string) \| undefined` | no | `undefined` | Human-readable copy for the step counter state or control. |
 | `completed` | output | `void` | no | `undefined` | Notifies the consumer after the completed interaction completes. |
 
 ## Deprecated selectors
@@ -25095,7 +25095,7 @@ void bootstrapApplication(KernMobileNavigationAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `ariaLabel` | input | `string` | no | `this.translations.patterns.mobileNavigation` | Accessible name used when visible content is not sufficient. |
+| `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 
 ## Deprecated selectors
 
@@ -25268,8 +25268,8 @@ void bootstrapApplication(KernResponsiveApplicationShellAgentExample);
 | --- | --- | --- | --- | --- | --- |
 | `navigationOpen` | model | `boolean` | no | `false` | Controlled navigation open state with a matching Angular model-change output. |
 | `mainId` | input | `string` | no | `this.ids.next('main-content')` | Stable identifier value used by the main contract. |
-| `navigationLabel` | input | `string` | no | `this.translations.layout.primaryNavigation` | Human-readable copy for the navigation state or control. |
-| `closeNavigationLabel` | input | `string` | no | `this.translations.layout.closeNavigation` | Human-readable copy for the close navigation state or control. |
+| `navigationLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the navigation state or control. |
+| `closeNavigationLabel` | input | `string \| undefined` | no | `undefined` | Human-readable copy for the close navigation state or control. |
 
 ## Deprecated selectors
 

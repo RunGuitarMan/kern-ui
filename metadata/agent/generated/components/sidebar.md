@@ -51,16 +51,16 @@ void bootstrapApplication(KernSidebarAgentExample);
 
 ## API
 
-| Name              | Kind  | Type                         | Required | Default                                        | Description                                                                  |
-| ----------------- | ----- | ---------------------------- | -------- | ---------------------------------------------- | ---------------------------------------------------------------------------- |
-| `collapsed`       | model | `boolean`                    | no       | `false`                                        | Controlled collapsed state with a matching Angular model-change output.      |
-| `collapsedMode`   | input | `"hidden" \| "icons"`        | no       | `'icons'`                                      | Controls whether the component applies the collapsed mode behavior.          |
-| `width`           | input | `KrnLayoutSpace`             | no       | `'var(--krn-shell-sidebar-width, 17rem)'`      | Explicit inline size of the rendered surface.                                |
-| `collapsedWidth`  | input | `KrnLayoutSpace`             | no       | `'4rem'`                                       | Controls whether the component applies the collapsed width behavior.         |
-| `ariaLabel`       | input | `string`                     | no       | `this.translations.layout.secondaryNavigation` | Accessible name used when visible content is not sufficient.                 |
-| `ariaLabelledBy`  | input | `string`                     | no       | `''`                                           | Space-separated element ids that name the native complementary landmark.     |
-| `ariaDescribedBy` | input | `string`                     | no       | `''`                                           | Space-separated element ids that describe the native complementary landmark. |
-| `side`            | input | `"auto" \| "end" \| "start"` | no       | `'auto'`                                       | Logical side on which the anchored or modal surface is placed.               |
+| Name              | Kind  | Type                         | Required | Default                                   | Description                                                                  |
+| ----------------- | ----- | ---------------------------- | -------- | ----------------------------------------- | ---------------------------------------------------------------------------- |
+| `collapsed`       | model | `boolean`                    | no       | `false`                                   | Controlled collapsed state with a matching Angular model-change output.      |
+| `collapsedMode`   | input | `"hidden" \| "icons"`        | no       | `'icons'`                                 | Controls whether the component applies the collapsed mode behavior.          |
+| `width`           | input | `KrnLayoutSpace`             | no       | `'var(--krn-shell-sidebar-width, 17rem)'` | Explicit inline size of the rendered surface.                                |
+| `collapsedWidth`  | input | `KrnLayoutSpace`             | no       | `'4rem'`                                  | Controls whether the component applies the collapsed width behavior.         |
+| `ariaLabel`       | input | `string \| undefined`        | no       | `undefined`                               | Accessible name used when visible content is not sufficient.                 |
+| `ariaLabelledBy`  | input | `string`                     | no       | `''`                                      | Space-separated element ids that name the native complementary landmark.     |
+| `ariaDescribedBy` | input | `string`                     | no       | `''`                                      | Space-separated element ids that describe the native complementary landmark. |
+| `side`            | input | `"auto" \| "end" \| "start"` | no       | `'auto'`                                  | Logical side on which the anchored or modal surface is placed.               |
 
 ## Deprecated selectors
 

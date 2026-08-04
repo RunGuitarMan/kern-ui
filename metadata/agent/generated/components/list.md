@@ -48,10 +48,10 @@ void bootstrapApplication(KernListAgentExample);
 
 ## API
 
-| Name        | Kind  | Type                  | Required | Default                              | Description                                                                    |
-| ----------- | ----- | --------------------- | -------- | ------------------------------------ | ------------------------------------------------------------------------------ |
-| `role`      | input | `"list" \| "listbox"` | no       | `'list'`                             | ARIA role used when the consumer must refine the component’s semantic purpose. |
-| `ariaLabel` | input | `string`              | no       | `this.translations.dataDisplay.list` | Accessible name used when visible content is not sufficient.                   |
+| Name        | Kind  | Type                  | Required | Default     | Description                                                                    |
+| ----------- | ----- | --------------------- | -------- | ----------- | ------------------------------------------------------------------------------ |
+| `role`      | input | `"list" \| "listbox"` | no       | `'list'`    | ARIA role used when the consumer must refine the component’s semantic purpose. |
+| `ariaLabel` | input | `string \| undefined` | no       | `undefined` | Accessible name used when visible content is not sufficient.                   |
 
 ## Deprecated selectors
 

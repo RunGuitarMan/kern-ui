@@ -5,7 +5,12 @@ import { By } from '@angular/platform-browser';
 import { vi } from 'vitest';
 
 import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
-import { KRN_ENGLISH_TRANSLATIONS, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import {
+  KRN_ENGLISH_TRANSLATIONS,
+  KRN_TRANSLATIONS,
+  KrnI18n,
+  provideKrn,
+} from '@kern-ui/angular/core';
 import { KrnDrawer } from '@kern-ui/angular/kit';
 
 import { KrnLoginForm, KrnMultiStepForm, KrnProfileForm } from './form-patterns';
@@ -25,6 +30,31 @@ import {
 } from './product-patterns';
 
 describe('Kern product patterns', () => {
+  it('reacts to scoped application copy while retaining explicit pattern inputs', async () => {
+    TestBed.configureTestingModule({
+      imports: [KrnLoginForm],
+      providers: [provideKrn({ locale: 'en-US', persistPreferences: false })],
+    });
+    const fixture = TestBed.createComponent(KrnLoginForm);
+    fixture.detectChanges();
+
+    TestBed.inject(KrnI18n).setTranslations({
+      patterns: { email: 'Courriel', signIn: 'Se connecter' },
+    });
+    fixture.detectChanges();
+
+    const labels = fixture.nativeElement.querySelectorAll('label') as NodeListOf<HTMLLabelElement>;
+    expect(labels[0]?.textContent).toContain('Courriel');
+    expect(
+      (fixture.nativeElement.querySelector('.submit') as HTMLButtonElement).textContent,
+    ).toContain('Se connecter');
+
+    fixture.componentRef.setInput('emailLabel', 'Account email');
+    TestBed.inject(KrnI18n).setTranslations({ patterns: { email: 'E-mail' } });
+    fixture.detectChanges();
+    expect(labels[0]?.textContent).toContain('Account email');
+  });
+
   it('filters and chooses a global-search result', async () => {
     await TestBed.configureTestingModule({ imports: [KrnGlobalSearch] }).compileComponents();
     const fixture = TestBed.createComponent(KrnGlobalSearch);

@@ -75,9 +75,9 @@
       "name": "menuAriaLabel",
       "property": "menuAriaLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.patterns.userActions",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the menu aria state or control.",
       "descriptionSource": "inferred"
     },
@@ -382,7 +382,7 @@
         "componentId": "user-menu",
         "publicName": "menuAriaLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
         "evidence": {

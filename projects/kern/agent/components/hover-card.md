@@ -49,11 +49,11 @@ void bootstrapApplication(KernHoverCardAgentExample);
 
 ## API
 
-| Name         | Kind  | Type     | Required | Default                              | Description                                                         |
-| ------------ | ----- | -------- | -------- | ------------------------------------ | ------------------------------------------------------------------- |
-| `ariaLabel`  | input | `string` | no       | `this.translations.feedback.preview` | Accessible name used when visible content is not sufficient.        |
-| `openDelay`  | input | `number` | no       | `350`                                | Delay in milliseconds before the transient surface becomes visible. |
-| `closeDelay` | input | `number` | no       | `120`                                | Controls whether the component applies the close delay behavior.    |
+| Name         | Kind  | Type                  | Required | Default     | Description                                                         |
+| ------------ | ----- | --------------------- | -------- | ----------- | ------------------------------------------------------------------- |
+| `ariaLabel`  | input | `string \| undefined` | no       | `undefined` | Accessible name used when visible content is not sufficient.        |
+| `openDelay`  | input | `number`              | no       | `350`       | Delay in milliseconds before the transient surface becomes visible. |
+| `closeDelay` | input | `number`              | no       | `120`       | Controls whether the component applies the close delay behavior.    |
 
 ## Deprecated selectors
 

@@ -60,7 +60,7 @@ void bootstrapApplication(KernTabsAgentExample);
 | `items`       | input | `ReadonlyArray<KrnTabItem>` | no       | `[]`                                                                                    | Ordered item collection rendered by the composite widget.        |
 | `value`       | model | `string \| null`            | no       | `null`                                                                                  | Controlled component value.                                      |
 | `orientation` | input | `KrnNavigationOrientation`  | no       | `this.host.nativeElement.localName === 'krn-vertical-tabs' ? 'vertical' : 'horizontal'` | Defines the logical axis used by layout and keyboard navigation. |
-| `ariaLabel`   | input | `string`                    | no       | `this.translations.navigation.sections`                                                 | Accessible name used when visible content is not sufficient.     |
+| `ariaLabel`   | input | `string \| undefined`       | no       | `undefined`                                                                             | Accessible name used when visible content is not sufficient.     |
 
 ## Deprecated selectors
 

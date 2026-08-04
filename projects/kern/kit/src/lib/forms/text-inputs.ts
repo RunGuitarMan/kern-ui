@@ -13,6 +13,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
 import type { KrnControlSize, KrnInputMode } from './form-types';
 import {
   maxError,
@@ -523,12 +524,12 @@ export class KrnTextarea {
         class="krn-inline-action"
         type="button"
         [attr.aria-controls]="a11y.id()"
-        [attr.aria-label]="revealed() ? hideLabel() : showLabel()"
+        [attr.aria-label]="revealed() ? resolvedHideLabel() : resolvedShowLabel()"
         [disabled]="isDisabled()"
         (click)="revealed.update(toggle)"
         (pointerdown)="retainInputFocus($event)"
       >
-        {{ revealed() ? hideText() : showText() }}
+        {{ revealed() ? resolvedHideText() : resolvedShowText() }}
       </button>
     </span>
   `,
@@ -553,10 +554,26 @@ export class KrnPasswordInput {
   readonly maxLength = input<number | undefined>(undefined, {
     transform: optionalTextLength,
   });
-  readonly showLabel = input(this.translations.forms.showPassword);
-  readonly hideLabel = input(this.translations.forms.hidePassword);
-  readonly showText = input(this.translations.forms.show);
-  readonly hideText = input(this.translations.forms.hide);
+  readonly showLabel = input<string | undefined>();
+  protected readonly resolvedShowLabel = krnInputFallback(
+    this.showLabel,
+    () => this.translations.forms.showPassword,
+  );
+  readonly hideLabel = input<string | undefined>();
+  protected readonly resolvedHideLabel = krnInputFallback(
+    this.hideLabel,
+    () => this.translations.forms.hidePassword,
+  );
+  readonly showText = input<string | undefined>();
+  protected readonly resolvedShowText = krnInputFallback(
+    this.showText,
+    () => this.translations.forms.show,
+  );
+  readonly hideText = input<string | undefined>();
+  protected readonly resolvedHideText = krnInputFallback(
+    this.hideText,
+    () => this.translations.forms.hide,
+  );
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false, {
     alias: 'readonly',
@@ -707,7 +724,7 @@ export class KrnPasswordInput {
         type="search"
         [attr.aria-describedby]="describedBy()"
         [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="labelledBy() ? null : ariaLabel() || null"
+        [attr.aria-label]="labelledBy() ? null : resolvedAriaLabel() || null"
         [attr.aria-labelledby]="labelledBy()"
         [attr.autocomplete]="autocomplete() || null"
         [attr.enterkeyhint]="enterKeyHint() || null"
@@ -718,7 +735,7 @@ export class KrnPasswordInput {
         [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
         [disabled]="isDisabled()"
         [id]="a11y.id()"
-        [placeholder]="placeholder()"
+        [placeholder]="resolvedPlaceholder()"
         [readOnly]="a11y.readOnly()"
         [required]="a11y.required()"
         [value]="controlValue()"
@@ -734,7 +751,7 @@ export class KrnPasswordInput {
           type="button"
           tabindex="-1"
           [attr.aria-controls]="a11y.id()"
-          [attr.aria-label]="clearLabel()"
+          [attr.aria-label]="resolvedClearLabel()"
           [disabled]="isDisabled()"
           (click)="clear()"
           (pointerdown)="retainInputFocus($event)"
@@ -753,11 +770,23 @@ export class KrnSearchInput {
 
   readonly id = input('');
   readonly name = input('');
-  readonly placeholder = input(this.translations.forms.search);
-  readonly ariaLabel = input(this.translations.forms.search);
+  readonly placeholder = input<string | undefined>();
+  protected readonly resolvedPlaceholder = krnInputFallback(
+    this.placeholder,
+    () => this.translations.forms.search,
+  );
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.forms.search,
+  );
   readonly ariaLabelledBy = input('');
   readonly ariaDescribedBy = input('');
-  readonly clearLabel = input(this.translations.forms.clearSearch);
+  readonly clearLabel = input<string | undefined>();
+  protected readonly resolvedClearLabel = krnInputFallback(
+    this.clearLabel,
+    () => this.translations.forms.clearSearch,
+  );
   readonly autocomplete = input('off');
   readonly enterKeyHint = input('search');
   readonly value = input<string | undefined>(undefined);
@@ -954,7 +983,7 @@ export class KrnSearchInput {
             type="button"
             tabindex="-1"
             [attr.aria-controls]="a11y.id()"
-            [attr.aria-label]="increaseLabel()"
+            [attr.aria-label]="resolvedIncreaseLabel()"
             [disabled]="!canIncrease()"
             (click)="stepBy(1)"
             (pointerdown)="retainInputFocus($event)"
@@ -965,7 +994,7 @@ export class KrnSearchInput {
             type="button"
             tabindex="-1"
             [attr.aria-controls]="a11y.id()"
-            [attr.aria-label]="decreaseLabel()"
+            [attr.aria-label]="resolvedDecreaseLabel()"
             [disabled]="!canDecrease()"
             (click)="stepBy(-1)"
             (pointerdown)="retainInputFocus($event)"
@@ -991,8 +1020,16 @@ export class KrnNumberInput {
   readonly autocomplete = input('off');
   readonly inputMode = input<KrnInputMode>('decimal');
   readonly value = input<number | null | undefined>(undefined);
-  readonly increaseLabel = input(this.translations.forms.increaseValue);
-  readonly decreaseLabel = input(this.translations.forms.decreaseValue);
+  readonly increaseLabel = input<string | undefined>();
+  protected readonly resolvedIncreaseLabel = krnInputFallback(
+    this.increaseLabel,
+    () => this.translations.forms.increaseValue,
+  );
+  readonly decreaseLabel = input<string | undefined>();
+  protected readonly resolvedDecreaseLabel = krnInputFallback(
+    this.decreaseLabel,
+    () => this.translations.forms.decreaseValue,
+  );
   readonly min = input<number | undefined>(undefined, {
     transform: optionalNumber,
   });
@@ -1150,8 +1187,13 @@ export class KrnNumberInput {
       return;
     }
 
-    event.preventDefault();
-    this.focus();
+    // Preventing a touch pointerdown suppresses the compatibility click in
+    // mobile WebKit. Mouse pointers can keep the input focused before click;
+    // touch activation is focused by stepBy after the click commits.
+    if (event.pointerType === 'mouse') {
+      event.preventDefault();
+      this.focus();
+    }
   }
 
   private nextStepValue(direction: 1 | -1): number {

@@ -8,9 +8,9 @@ imports, cycles, duplicate owners, and root imports from secondary entrypoints.
 ```text
 core        ← cdk + i18n
 kit         ← cdk + i18n + core
-addon-grid  ← cdk + core
-addon-charts ← cdk + core
-patterns    ← cdk + core + kit
+addon-grid  ← cdk + i18n + core
+addon-charts ← cdk + i18n + core
+patterns    ← cdk + i18n + core + kit
 
 root ─→ compatibility re-export of every runtime entrypoint
 styles ─→ every rendered component
@@ -25,7 +25,7 @@ styles ─→ every rendered component
 | `addon-grid`   | Virtualized enterprise data grid                                    |
 | `addon-charts` | Accessible data visualizations                                      |
 | `patterns`     | Opinionated product compositions; depends on Kit, never the reverse |
-| `testing`      | Runtime-free Angular CDK harnesses                                  |
+| `testing/*`    | Runtime-free, family-scoped Angular CDK harnesses                   |
 
 Components have safe root-provided defaults; `provideKrn` is not mandatory. Applications use it
 when they own locale, direction, density, motion preference, theme, shared UI-copy translations,
@@ -37,23 +37,26 @@ brand, and preference persistence are needed.
 
 Nx owns the workspace project graph and target orchestration. The allowed dependency direction is
 `docs → showcase → kern` (with Docs also consuming Kern directly); project tags and ESLint module
-boundaries reject reverse dependencies. Nx is the sole persistent CI task-cache owner. Library
-projects disable Angular CLI caching; the Docs dev server enables it only in the `local`
-environment so Angular's Vite dependency prebundling remains active without introducing a second
-CI cache. Governance verifies both sides of that boundary, and a startup smoke test exercises the
-configured Vite development server.
+boundaries reject reverse dependencies. Nx is the sole persistent task-cache owner; production
+projects disable the nested Angular disk cache, and the Docs dev server disables dependency
+prebundling that would implicitly require it. The isolated `docs-vite-smoke` target enables
+prebundling in every environment with Nx target caching disabled. Its dedicated Vite cache is
+deleted before and after each run, while only Angular's nested compiler and i18n LMDB stores are
+replaced with process-local maps. This keeps Vite and esbuild on their real runtime paths without
+introducing a second persistent cache owner.
 
 - `kern` publishes the browser/runtime package `@kern-ui/angular`. `/cdk`, `/i18n`, `/core`,
-  `/kit`, `/addon-grid`, `/addon-charts`, `/patterns`, and `/testing` are its supported physical
-  entrypoints.
+  `/kit`, `/addon-grid`, `/addon-charts`, `/patterns`, and the `/testing/*` harness families are
+  its supported physical entrypoints. `/testing` is their test-only compatibility aggregator.
 - `kern-mcp` publishes the optional `@kern-ui/mcp` tooling package. It owns the MCP executable,
   generated AI contracts, recipes, and examples so parser/tooling dependencies and multi-megabyte
   agent assets never enter application bundles. Both npm packages share one version and immutable
   release candidate, but retain independent manifests, dependency graphs, SBOMs, and provenance.
 - The package root is a compatibility-only aggregator. It declares no runtime implementation and
   preserves strict object identity with every direct entrypoint.
-- `@kern-ui/angular/testing` contains CDK harnesses but no Kern runtime imports, services, or
-  injection tokens.
+- `@kern-ui/angular/testing/{actions,data-display,feedback,forms,layout,navigation}` contain CDK
+  harnesses but no Kern runtime imports, services, or injection tokens. `/testing` only re-exports
+  those family owners.
 - `showcase` is private metadata. Documentation pages and preview scenarios can evolve without
   expanding the public package.
 - `docs` consumes the built public package, uses SSR plus hydration, and lazy-loads its page
@@ -136,8 +139,10 @@ top modal; locked modals cancel close requests, while dismissible modals handle 
 same coordinator and an Escape fallback where the API is unavailable. Global modal ownership is
 released only after exit motion completes.
 
-`KrnOverlayService` is the Kit-level imperative policy over that CDK infrastructure. Component and
-`TemplateRef` content receive typed data and a `KrnOverlayRef`; the first close source wins, owned
+`KrnOverlayService` is the Kit-level imperative policy over that CDK infrastructure. Component
+content is registered once with `defineKrnOverlayContent`, and that same contract types data and
+the `KrnOverlayRef` in both the content and caller; `TemplateRef` context remains structurally
+typed. The first close source wins, owned
 children settle before their parent, and views/providers are disposed before the replayed outcome
 emits. Overlay chrome inherits caller-scoped translations while its platform and coordinator stay
 bound to the root CDK overlay document; arbitrary content providers remain scoped to content.
@@ -174,8 +179,10 @@ Theme modes are `light`, `dark`, `system`, and `high-contrast`; density modes ar
 `comfortable`, and `spacious`. Motion uses semantic duration tokens and the `system`, `reduce`,
 or `full` preference. Document-level runtime and theme state has one injector owner at a time;
 nested owners remain dormant, promote deterministically, and restore prior attributes and inline
-styles on teardown. Locale defaults to Angular's `LOCALE_ID`, while direction defaults to the
-document `dir`. `KRN_TRANSLATIONS` supplies typed English component UI-copy defaults; complete
+styles on teardown, including when independent physical Kern bundles share a document. Locale
+defaults to Angular's `LOCALE_ID`, while direction defaults to the document `dir`. Injector-scoped
+`KrnI18n.locale` and `KrnI18n.translations` signals support runtime language changes; the stable,
+frozen `KRN_TRANSLATIONS` view reads that state reactively for compatibility. Complete
 schema-checked English and Russian packs can be adapted through `krnLocaleConfig`.
 `provideKrn({ translations })` accepts a typed partial override, and component label inputs remain
 available for one-off copy. Leaf components consume narrow tokens from the dependency-light
@@ -186,6 +193,17 @@ boundary. Existing token templates such as `Page {page}` remain source-compatibl
 packs can add the corresponding optional typed formatter for grammar that cannot be expressed by
 a template. Runtime interpolation is single-pass and resolves only named tokens. Kern does not
 bundle application content.
+
+`KRN_LOCALE` and the narrow leaf-copy tokens carry `KrnI18nValue<T>`: `provideKrn` supplies a
+signal while a direct `useValue` remains a fixed scoped boundary. Components and direct consumers
+read that single source with `krnReadI18nValue`, avoiding value-equality guesses about DI
+provenance. `provideKrn` also owns `html[lang]` for its lifetime and keeps it synchronized with the
+active locale signal.
+
+`KRN_DATE_TIME_SNAPSHOT` is an SSR hydration seed, not a lifetime clock. Every root and physical
+bundle reads the same retained TransferState value for the initial render; date controls then
+derive the current day in the client time zone, refresh on open/resume, and schedule rollover only
+while their calendar is active.
 
 ## Accessibility contract
 

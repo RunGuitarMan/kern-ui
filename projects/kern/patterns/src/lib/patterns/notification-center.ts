@@ -206,12 +206,12 @@ import type { KrnNotification } from './product-types';
 export class KrnNotificationCenter {
   private readonly translations = inject(KRN_TRANSLATIONS);
   protected readonly notificationsId = inject(KrnIdService).next('notifications');
-  readonly heading = input(this.translations.patterns.notifications);
-  readonly ariaLabel = input(this.translations.patterns.notificationCenter);
-  readonly unreadLabel = input(this.translations.patterns.unreadCount);
-  readonly unreadStateLabel = input(this.translations.patterns.unread);
-  readonly markAllReadLabel = input(this.translations.patterns.markAllRead);
-  readonly emptyLabel = input(this.translations.patterns.notificationsEmpty);
+  readonly heading = input<typeof this.translations.patterns.notifications | undefined>();
+  readonly ariaLabel = input<typeof this.translations.patterns.notificationCenter | undefined>();
+  readonly unreadLabel = input<typeof this.translations.patterns.unreadCount | undefined>();
+  readonly unreadStateLabel = input<typeof this.translations.patterns.unread | undefined>();
+  readonly markAllReadLabel = input<typeof this.translations.patterns.markAllRead | undefined>();
+  readonly emptyLabel = input<typeof this.translations.patterns.notificationsEmpty | undefined>();
   readonly notifications = input<readonly KrnNotification[]>([]);
   readonly markAllRead = output<void>();
   readonly notificationSelected = output<KrnNotification>();
@@ -298,7 +298,7 @@ export class KrnNotificationCenter {
     ),
   );
 
-  private requiredLabel(value: string, fallback: string): string {
+  private requiredLabel(value: string | undefined, fallback: string): string {
     const normalized = typeof value === 'string' ? value.trim() : '';
     return normalized || fallback.trim();
   }

@@ -54,9 +54,9 @@ void bootstrapApplication(KernAccordionAgentExample);
 
 ## API
 
-| Name        | Kind  | Type     | Required | Default                                   | Description                                                  |
-| ----------- | ----- | -------- | -------- | ----------------------------------------- | ------------------------------------------------------------ |
-| `ariaLabel` | input | `string` | no       | `this.translations.dataDisplay.accordion` | Accessible name used when visible content is not sufficient. |
+| Name        | Kind  | Type                  | Required | Default     | Description                                                  |
+| ----------- | ----- | --------------------- | -------- | ----------- | ------------------------------------------------------------ |
+| `ariaLabel` | input | `string \| undefined` | no       | `undefined` | Accessible name used when visible content is not sufficient. |
 
 ## Deprecated selectors
 

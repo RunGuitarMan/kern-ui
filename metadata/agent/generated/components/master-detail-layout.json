@@ -53,9 +53,9 @@
       "name": "masterLabel",
       "property": "masterLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.patterns.masterList",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the master state or control.",
       "descriptionSource": "inferred"
     },
@@ -63,9 +63,9 @@
       "name": "detailLabel",
       "property": "detailLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.patterns.detail",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the detail state or control.",
       "descriptionSource": "inferred"
     },
@@ -319,7 +319,7 @@
         "componentId": "master-detail-layout",
         "publicName": "detailLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
@@ -331,7 +331,7 @@
         "componentId": "master-detail-layout",
         "publicName": "masterLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {

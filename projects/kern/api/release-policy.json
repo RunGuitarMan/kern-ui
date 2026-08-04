@@ -42,6 +42,7 @@
   "sbom": {
     "format": "CycloneDX",
     "specVersions": ["1.5", "1.6"],
-    "generator": "npm"
+    "generator": "npm",
+    "dependencyLock": "package-lock.json"
   }
 }

@@ -30,7 +30,7 @@
       [id]="a11y.id()"
       [inlineSuggestion]="inlineSuggestion()"
       [name]="name()"
-      [placeholder]="placeholder()"
+      [placeholder]="resolvedPlaceholder()"
       [readOnly]="isReadOnly()"
       [required]="a11y.required()"
       [tabindex]="isDisabled() ? -1 : tabIndex()"
@@ -49,7 +49,7 @@
         class="krn-combobox-toggle"
         type="button"
         [attr.aria-expanded]="open()"
-        [attr.aria-label]="toggleLabel()"
+        [attr.aria-label]="resolvedToggleLabel()"
         [disabled]="isDisabled() || isReadOnly()"
         [tabindex]="-1"
         (click)="toggleOptions(comboInput)"
@@ -66,7 +66,7 @@
       [attr.role]="optionsState() === 'error' ? 'alert' : 'status'"
       [attr.data-options-state-announcement]="optionsState()"
     >
-      {{ optionsState() === 'loading' ? loadingText() : errorText() }}
+      {{ optionsState() === 'loading' ? resolvedLoadingText() : resolvedErrorText() }}
     </span>
   }
 
@@ -116,7 +116,7 @@
               aria-selected="false"
               data-options-state="empty"
             >
-              {{ emptyText() }}
+              {{ resolvedEmptyText() }}
             </li>
           }
         } @else {
@@ -127,7 +127,7 @@
             aria-selected="false"
             [attr.data-options-state]="optionsState()"
           >
-            {{ optionsState() === 'loading' ? loadingText() : errorText() }}
+            {{ optionsState() === 'loading' ? resolvedLoadingText() : resolvedErrorText() }}
           </li>
         }
       </ul>

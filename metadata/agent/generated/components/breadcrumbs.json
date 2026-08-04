@@ -85,9 +85,9 @@
       "name": "ariaLabel",
       "property": "ariaLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.navigation.breadcrumb",
+      "defaultValue": "undefined",
       "description": "Accessible name used when visible content is not sufficient.",
       "descriptionSource": "inferred"
     },
@@ -95,9 +95,9 @@
       "name": "moreLabel",
       "property": "moreLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.navigation.breadcrumbMore",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the more state or control.",
       "descriptionSource": "inferred"
     },
@@ -105,9 +105,9 @@
       "name": "showAllLabel",
       "property": "showAllLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.navigation.breadcrumbShowAll",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the show all state or control.",
       "descriptionSource": "inferred"
     },
@@ -366,7 +366,7 @@
         "componentId": "breadcrumbs",
         "publicName": "ariaLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
         "evidence": {
@@ -390,7 +390,7 @@
         "componentId": "breadcrumbs",
         "publicName": "moreLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
@@ -402,7 +402,7 @@
         "componentId": "breadcrumbs",
         "publicName": "showAllLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {

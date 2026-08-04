@@ -6,8 +6,9 @@
  */
 
 import * as _angular_core from '@angular/core';
-import { InjectionToken, Provider, EnvironmentProviders } from '@angular/core';
+import { InjectionToken, Provider, Signal, EnvironmentProviders } from '@angular/core';
 import { KrnOverlayHostResolver, KrnPlatformAdapter } from '@kern-ui/angular/cdk';
+import { KrnI18nValue } from '@kern-ui/angular/i18n';
 
 declare const KRN_BRAND_STEPS: readonly [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
 type KrnBrandStep = (typeof KRN_BRAND_STEPS)[number];
@@ -1055,6 +1056,28 @@ declare const KRN_ENGLISH_TRANSLATIONS: Readonly<KrnTranslations>;
  */
 declare function createKrnTranslations(patch?: KrnTranslationsPatch): Readonly<KrnTranslations>;
 /**
+ * Reactive, injector-scoped locale and translation state.
+ *
+ * Existing `KRN_TRANSLATIONS` consumers receive the stable `dictionary` view;
+ * its frozen property getters read the same signal, so templates and computed
+ * values react without replacing the public translation schema.
+ */
+declare class KrnI18n {
+  private readonly localeState;
+  private readonly translationState;
+  readonly locale: Signal<string>;
+  readonly translations: Signal<Readonly<KrnTranslations>>;
+  readonly dictionary: Readonly<KrnTranslations>;
+  /** Updates locale formatting while retaining the active dictionary. */
+  setLocale(locale: string): void;
+  /** Replaces the complete dictionary derived from Kern's English schema. */
+  setTranslations(translations: KrnTranslationsPatch): void;
+  /** Updates locale and copy through one synchronous runtime operation. */
+  activate(locale: string, translations: KrnTranslationsPatch): void;
+  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnI18n, never>;
+  static ɵprov: _angular_core.ɵɵInjectableDeclaration<KrnI18n>;
+}
+/**
  * Replaceable application-wide UI copy. Component-level label inputs remain
  * available for one-off overrides.
  */
@@ -1077,7 +1100,8 @@ interface KrnConfig {
   readonly translations?: KrnTranslationsPatch;
 }
 declare const KRN_CONFIG: InjectionToken<Readonly<KrnConfig>>;
-declare const KRN_LOCALE: InjectionToken<string>;
+/** Active locale source; read direct injections with `krnReadI18nValue`. */
+declare const KRN_LOCALE: InjectionToken<KrnI18nValue<string>>;
 declare const KRN_DIRECTION: InjectionToken<KrnDirection>;
 declare const KRN_MOTION: InjectionToken<KrnMotionPreference>;
 /**
@@ -1089,6 +1113,31 @@ declare const KRN_MOTION: InjectionToken<KrnMotionPreference>;
  * tokens follow that registry.
  */
 declare function provideKrn(config?: KrnConfig): EnvironmentProviders;
+
+/**
+ * Immutable date/time seed captured once for an application injector.
+ *
+ * Server rendering transfers the same reference to the hydrating browser so
+ * date-only defaults cannot change with the browser's local time zone during
+ * hydration. The seed fields retain server semantics; `todayAt` uses the time
+ * zone of the runtime that materialized this token.
+ */
+interface KrnDateTimeSnapshot {
+  /** Epoch milliseconds returned by the configured Kern platform clock. */
+  readonly now: number;
+  /** Seed IANA time-zone identifier used to derive the transferred `today`. */
+  readonly timeZone: string;
+  /** Calendar date at `now` in `timeZone`, formatted as `YYYY-MM-DD`. */
+  readonly today: string;
+  /** Derives a calendar date for a live epoch in the active runtime time zone. */
+  readonly todayAt: (now: number) => string;
+}
+/**
+ * The deterministic hydration seed used by date-only controls. Controls derive
+ * live client dates through `todayAt` after their first hydrated render.
+ * Override this token in a child injector for an explicitly scoped clock.
+ */
+declare const KRN_DATE_TIME_SNAPSHOT: InjectionToken<Readonly<KrnDateTimeSnapshot>>;
 
 interface KrnLocalePack {
   readonly locale: string;
@@ -1225,6 +1274,7 @@ export {
   KRN_BRAND_STEPS,
   KRN_BUILT_IN_ICONS,
   KRN_CONFIG,
+  KRN_DATE_TIME_SNAPSHOT,
   KRN_DIRECTION,
   KRN_ENGLISH_TRANSLATIONS,
   KRN_EN_US_LOCALE,
@@ -1237,6 +1287,7 @@ export {
   KRN_TOKEN_MANIFEST,
   KRN_TOKEN_NAMES,
   KRN_TRANSLATIONS,
+  KrnI18n,
   KrnIcon,
   KrnIconRegistry,
   KrnThemeDirective,
@@ -1268,6 +1319,7 @@ export type {
   KrnDataDisplayTranslations,
   KrnDataGridTranslations,
   KrnDatePickerTranslations,
+  KrnDateTimeSnapshot,
   KrnDensity,
   KrnDirection,
   KrnElevation,

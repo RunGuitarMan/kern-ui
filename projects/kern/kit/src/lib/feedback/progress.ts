@@ -7,7 +7,9 @@ import {
   input,
   numberAttribute,
 } from '@angular/core';
-import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
+import { krnResolvedLocale } from '../reactive-locale';
 
 @Component({
   selector: 'krn-progress-bar',
@@ -15,7 +17,7 @@ import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'progressbar',
-    '[attr.aria-label]': 'ariaLabel()',
+    '[attr.aria-label]': 'resolvedAriaLabel()',
     '[attr.aria-valuemin]': '0',
     '[attr.aria-valuemax]': 'safeMax()',
     '[attr.aria-valuenow]': 'indeterminate() ? null : safeValue()',
@@ -82,7 +84,11 @@ export class KrnProgressBar {
   readonly value = input(0, { transform: numberAttribute });
   readonly max = input(100, { transform: numberAttribute });
   readonly indeterminate = input(false, { transform: booleanAttribute });
-  readonly ariaLabel = input(this.translations.feedback.progress);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.feedback.progress,
+  );
   readonly valueText = input('');
   protected readonly safeMax = computed(() => Math.max(1, this.max()));
   protected readonly safeValue = computed(() =>
@@ -99,7 +105,7 @@ export class KrnProgressBar {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'progressbar',
-    '[attr.aria-label]': 'ariaLabel()',
+    '[attr.aria-label]': 'resolvedAriaLabel()',
     '[attr.aria-valuemin]': '0',
     '[attr.aria-valuemax]': 'safeMax()',
     '[attr.aria-valuenow]': 'indeterminate() ? null : safeValue()',
@@ -183,8 +189,13 @@ export class KrnCircularProgress {
   readonly max = input(100, { transform: numberAttribute });
   readonly indeterminate = input(false, { transform: booleanAttribute });
   readonly showValue = input(false, { transform: booleanAttribute });
-  readonly ariaLabel = input(this.translations.feedback.progress);
-  readonly locale = input<string | string[]>(inject(KRN_LOCALE));
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.feedback.progress,
+  );
+  readonly locale = input<string | string[] | undefined>();
+  private readonly resolvedLocale = krnResolvedLocale(this.locale);
   protected readonly safeMax = computed(() => Math.max(1, this.max()));
   protected readonly safeValue = computed(() =>
     Math.min(Math.max(0, this.value()), this.safeMax()),
@@ -192,7 +203,7 @@ export class KrnCircularProgress {
   protected readonly percentage = computed(() => (this.safeValue() / this.safeMax()) * 100);
   private readonly percentageFormatter = computed(
     () =>
-      new Intl.NumberFormat(this.locale(), {
+      new Intl.NumberFormat(this.resolvedLocale(), {
         style: 'percent',
         maximumFractionDigits: 0,
       }),
@@ -209,7 +220,7 @@ export class KrnCircularProgress {
   selector: 'krn-spinner',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { role: 'status', '[attr.aria-label]': 'label()' },
+  host: { role: 'status', '[attr.aria-label]': 'resolvedLabel()' },
   template: `<span class="spinner" aria-hidden="true"></span>`,
   styles: `
     :host {
@@ -241,7 +252,11 @@ export class KrnCircularProgress {
 })
 export class KrnSpinner {
   private readonly translations = inject(KRN_TRANSLATIONS);
-  readonly label = input(this.translations.feedback.loading);
+  readonly label = input<string | undefined>();
+  protected readonly resolvedLabel = krnInputFallback(
+    this.label,
+    () => this.translations.feedback.loading,
+  );
 }
 
 @Component({
@@ -327,8 +342,8 @@ export class KrnSkeleton {
         [attr.aria-live]="'polite'"
       >
         <span class="loading-panel">
-          <krn-spinner [label]="label()" />
-          <span>{{ label() }}</span>
+          <krn-spinner [label]="resolvedLabel()" />
+          <span>{{ resolvedLabel() }}</span>
         </span>
       </div>
     }
@@ -392,5 +407,9 @@ export class KrnLoadingOverlay {
   private readonly translations = inject(KRN_TRANSLATIONS);
   readonly active = input(false, { transform: booleanAttribute });
   readonly blocking = input(true, { transform: booleanAttribute });
-  readonly label = input(this.translations.feedback.loadingInProgress);
+  readonly label = input<string | undefined>();
+  protected readonly resolvedLabel = krnInputFallback(
+    this.label,
+    () => this.translations.feedback.loadingInProgress,
+  );
 }

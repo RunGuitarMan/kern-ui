@@ -268,10 +268,10 @@ export class KrnMenu {
   private readonly projectedTrigger = contentChild(KrnMenuTrigger);
   readonly items = input<readonly (KrnNavigationItem & { readonly shortcut?: string })[]>([]);
   readonly open = model(false);
-  readonly triggerLabel = input(this.translations.navigation.actions);
-  readonly triggerAriaLabel = input(this.translations.navigation.openMenu);
-  readonly menuAriaLabel = input(this.translations.navigation.actions);
-  readonly emptyLabel = input(this.translations.navigation.menuEmpty);
+  readonly triggerLabel = input<string | undefined>();
+  readonly triggerAriaLabel = input<string | undefined>();
+  readonly menuAriaLabel = input<string | undefined>();
+  readonly emptyLabel = input<string | undefined>();
   readonly itemSelected = output<KrnNavigationItem>();
   readonly closed = output<'escape' | 'outside' | 'detach' | 'selection'>();
   protected readonly activeIndex = signal(0);
@@ -538,7 +538,7 @@ export class KrnMenubar {
   private readonly translations = inject(KRN_TRANSLATIONS);
   private focusRepairToken = 0;
   readonly items = input<readonly KrnNavigationItem[]>([]);
-  readonly ariaLabel = input(this.translations.navigation.applicationMenu);
+  readonly ariaLabel = input<string | undefined>();
   readonly itemSelected = output<KrnNavigationItem>();
   protected readonly activeIndex = signal(0);
   protected readonly resolvedAriaLabel = computed(
@@ -825,7 +825,7 @@ export class KrnContextMenu {
   readonly items = input<readonly KrnContextMenuItem[], readonly KrnContextMenuItem[]>([], {
     transform: validateContextMenuItems,
   });
-  readonly ariaLabel = input(this.translations.navigation.contextActions);
+  readonly ariaLabel = input<string | undefined>();
   readonly itemSelected = output<KrnContextMenuItem>();
   protected readonly open = signal(false);
   protected readonly origin = signal({ x: 0, y: 0 });

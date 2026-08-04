@@ -186,7 +186,7 @@ async function main() {
   const typedRuntimeExports = Object.entries(manifest.exports ?? {})
     .filter(
       ([subpath, conditions]) =>
-        subpath !== './testing' &&
+        !subpath.startsWith('./testing') &&
         conditions &&
         typeof conditions === 'object' &&
         typeof conditions.types === 'string' &&

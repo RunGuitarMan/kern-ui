@@ -37,14 +37,16 @@ declare class KrnLoginForm {
   readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly errorMessage: _angular_core.InputSignal<string>;
   readonly recoveryHref: _angular_core.InputSignal<string>;
-  readonly submitLabel: _angular_core.InputSignal<string>;
-  readonly emailLabel: _angular_core.InputSignal<string>;
-  readonly emailErrorLabel: _angular_core.InputSignal<string>;
-  readonly passwordLabel: _angular_core.InputSignal<string>;
-  readonly passwordErrorLabel: _angular_core.InputSignal<(minimumLength: number) => string>;
-  readonly rememberLabel: _angular_core.InputSignal<string>;
-  readonly recoveryLabel: _angular_core.InputSignal<string>;
-  readonly loadingLabel: _angular_core.InputSignal<string>;
+  readonly submitLabel: _angular_core.InputSignal<string | undefined>;
+  readonly emailLabel: _angular_core.InputSignal<string | undefined>;
+  readonly emailErrorLabel: _angular_core.InputSignal<string | undefined>;
+  readonly passwordLabel: _angular_core.InputSignal<string | undefined>;
+  readonly passwordErrorLabel: _angular_core.InputSignal<
+    ((minimumLength: number) => string) | undefined
+  >;
+  readonly rememberLabel: _angular_core.InputSignal<string | undefined>;
+  readonly recoveryLabel: _angular_core.InputSignal<string | undefined>;
+  readonly loadingLabel: _angular_core.InputSignal<string | undefined>;
   readonly minimumPasswordLength: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly submitted: _angular_core.OutputEmitterRef<KrnLoginCredentials>;
   protected readonly resolvedMinimumPasswordLength: _angular_core.Signal<number>;
@@ -107,23 +109,26 @@ declare class KrnProfileForm {
   protected readonly timezoneErrorId: string;
   readonly value: _angular_core.InputSignal<KrnProfileValue>;
   readonly timezones: _angular_core.InputSignal<
-    readonly {
-      readonly value: string;
-      readonly label: string;
-    }[]
+    | readonly {
+        readonly value: string;
+        readonly label: string;
+      }[]
+    | undefined
   >;
   readonly saving: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly dirtyMessage: _angular_core.InputSignal<string>;
-  readonly nameLabel: _angular_core.InputSignal<string>;
-  readonly nameErrorLabel: _angular_core.InputSignal<string>;
-  readonly roleLabel: _angular_core.InputSignal<string>;
-  readonly bioLabel: _angular_core.InputSignal<string>;
-  readonly bioErrorLabel: _angular_core.InputSignal<(maximumLength: number) => string>;
+  readonly dirtyMessage: _angular_core.InputSignal<string | undefined>;
+  readonly nameLabel: _angular_core.InputSignal<string | undefined>;
+  readonly nameErrorLabel: _angular_core.InputSignal<string | undefined>;
+  readonly roleLabel: _angular_core.InputSignal<string | undefined>;
+  readonly bioLabel: _angular_core.InputSignal<string | undefined>;
+  readonly bioErrorLabel: _angular_core.InputSignal<
+    ((maximumLength: number) => string) | undefined
+  >;
   readonly bioMaxLength: _angular_core.InputSignalWithTransform<number, unknown>;
-  readonly timezoneLabel: _angular_core.InputSignal<string>;
-  readonly timezoneErrorLabel: _angular_core.InputSignal<string>;
-  readonly savingLabel: _angular_core.InputSignal<string>;
-  readonly saveLabel: _angular_core.InputSignal<string>;
+  readonly timezoneLabel: _angular_core.InputSignal<string | undefined>;
+  readonly timezoneErrorLabel: _angular_core.InputSignal<string | undefined>;
+  readonly savingLabel: _angular_core.InputSignal<string | undefined>;
+  readonly saveLabel: _angular_core.InputSignal<string | undefined>;
   readonly saved: _angular_core.OutputEmitterRef<KrnProfileValue>;
   protected readonly resolvedBioMaxLength: _angular_core.Signal<number>;
   protected readonly resolvedTimezones: _angular_core.Signal<
@@ -194,12 +199,14 @@ declare class KrnMultiStepForm {
   readonly furthestStep: _angular_core.ModelSignal<number>;
   readonly allowStepNavigation: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly orientation: _angular_core.InputSignal<'horizontal' | 'vertical'>;
-  readonly completeLabel: _angular_core.InputSignal<string>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
-  readonly optionalLabel: _angular_core.InputSignal<string>;
-  readonly backLabel: _angular_core.InputSignal<string>;
-  readonly continueLabel: _angular_core.InputSignal<string>;
-  readonly stepCounterLabel: _angular_core.InputSignal<(current: number, total: number) => string>;
+  readonly completeLabel: _angular_core.InputSignal<string | undefined>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  readonly optionalLabel: _angular_core.InputSignal<string | undefined>;
+  readonly backLabel: _angular_core.InputSignal<string | undefined>;
+  readonly continueLabel: _angular_core.InputSignal<string | undefined>;
+  readonly stepCounterLabel: _angular_core.InputSignal<
+    ((current: number, total: number) => string) | undefined
+  >;
   readonly completed: _angular_core.OutputEmitterRef<void>;
   protected readonly validatedSteps: _angular_core.Signal<readonly KrnFormStep[]>;
   protected readonly resolvedOrientation: _angular_core.Signal<'horizontal' | 'vertical'>;
@@ -285,7 +292,7 @@ declare class KrnUserMenu {
   protected readonly menuId: string;
   readonly name: _angular_core.InputSignal<string>;
   readonly detail: _angular_core.InputSignal<string>;
-  readonly menuAriaLabel: _angular_core.InputSignal<string>;
+  readonly menuAriaLabel: _angular_core.InputSignal<string | undefined>;
   readonly open: _angular_core.ModelSignal<boolean>;
   private readonly menu;
   protected readonly resolvedName: _angular_core.Signal<string>;
@@ -326,12 +333,12 @@ declare class KrnUserMenu {
 declare class KrnNotificationCenter {
   private readonly translations;
   protected readonly notificationsId: string;
-  readonly heading: _angular_core.InputSignal<string>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
-  readonly unreadLabel: _angular_core.InputSignal<(count: number) => string>;
-  readonly unreadStateLabel: _angular_core.InputSignal<string>;
-  readonly markAllReadLabel: _angular_core.InputSignal<string>;
-  readonly emptyLabel: _angular_core.InputSignal<string>;
+  readonly heading: _angular_core.InputSignal<string | undefined>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  readonly unreadLabel: _angular_core.InputSignal<((count: number) => string) | undefined>;
+  readonly unreadStateLabel: _angular_core.InputSignal<string | undefined>;
+  readonly markAllReadLabel: _angular_core.InputSignal<string | undefined>;
+  readonly emptyLabel: _angular_core.InputSignal<string | undefined>;
   readonly notifications: _angular_core.InputSignal<readonly KrnNotification[]>;
   readonly markAllRead: _angular_core.OutputEmitterRef<void>;
   readonly notificationSelected: _angular_core.OutputEmitterRef<KrnNotification>;
@@ -370,15 +377,16 @@ declare class KrnNotificationCenter {
 declare class KrnGlobalSearch {
   private readonly ids;
   private readonly generatedResultsId;
+  private readonly inheritedLocale;
   private readonly locale;
   private readonly platform;
   private readonly translations;
   private readonly searchInput;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
-  readonly placeholder: _angular_core.InputSignal<string>;
-  readonly clearLabel: _angular_core.InputSignal<string>;
-  readonly resultsLabel: _angular_core.InputSignal<(label: string) => string>;
-  readonly emptyResultsLabel: _angular_core.InputSignal<(query: string) => string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  readonly placeholder: _angular_core.InputSignal<string | undefined>;
+  readonly clearLabel: _angular_core.InputSignal<string | undefined>;
+  readonly resultsLabel: _angular_core.InputSignal<((label: string) => string) | undefined>;
+  readonly emptyResultsLabel: _angular_core.InputSignal<((query: string) => string) | undefined>;
   readonly results: _angular_core.InputSignal<readonly KrnSearchResult[]>;
   readonly maxResults: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly resultsId: _angular_core.InputSignal<string>;
@@ -440,10 +448,10 @@ declare class KrnGlobalSearch {
 declare class KrnFilterBar {
   private readonly translations;
   private readonly filterSelects;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
-  readonly allLabel: _angular_core.InputSignal<string>;
-  readonly activeLabel: _angular_core.InputSignal<(count: number) => string>;
-  readonly clearAllLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  readonly allLabel: _angular_core.InputSignal<string | undefined>;
+  readonly activeLabel: _angular_core.InputSignal<((count: number) => string) | undefined>;
+  readonly clearAllLabel: _angular_core.InputSignal<string | undefined>;
   readonly filters: _angular_core.InputSignal<readonly KrnFilterDefinition[]>;
   readonly values: _angular_core.ModelSignal<Readonly<Partial<Record<string, string>>>>;
   protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
@@ -513,8 +521,8 @@ declare class KrnPageHeader {
 
 declare class KrnSettingsPanel {
   private readonly translations;
-  readonly heading: _angular_core.InputSignal<string>;
-  readonly closeLabel: _angular_core.InputSignal<string>;
+  readonly heading: _angular_core.InputSignal<string | undefined>;
+  readonly closeLabel: _angular_core.InputSignal<string | undefined>;
   readonly initialFocus: _angular_core.InputSignal<string>;
   readonly closeOnEscape: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly closeOnOutside: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -546,9 +554,9 @@ declare class KrnSettingsPanel {
 
 declare class KrnCrudToolbar {
   private readonly translations;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
   readonly selectedCount: _angular_core.InputSignalWithTransform<number, unknown>;
-  readonly selectedLabel: _angular_core.InputSignal<(count: number) => string>;
+  readonly selectedLabel: _angular_core.InputSignal<((count: number) => string) | undefined>;
   protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   protected readonly validatedSelectedCount: _angular_core.Signal<number>;
   protected readonly resolvedSelectedLabel: _angular_core.Signal<string>;
@@ -577,8 +585,8 @@ declare class KrnMasterDetailLayout {
   private readonly translations;
   private readonly masterPane;
   private readonly detailPane;
-  readonly masterLabel: _angular_core.InputSignal<string>;
-  readonly detailLabel: _angular_core.InputSignal<string>;
+  readonly masterLabel: _angular_core.InputSignal<string | undefined>;
+  readonly detailLabel: _angular_core.InputSignal<string | undefined>;
   readonly detailOpen: _angular_core.ModelSignal<boolean>;
   protected readonly resolvedMasterLabel: _angular_core.Signal<string>;
   protected readonly resolvedDetailLabel: _angular_core.Signal<string>;
@@ -627,7 +635,7 @@ declare class KrnDashboardWidget {
 
 declare class KrnMobileNavigation {
   private readonly translations;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
   protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   private normalizeText;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnMobileNavigation, never>;
@@ -658,8 +666,8 @@ declare class KrnResponsiveApplicationShell {
   private readonly overlayId;
   readonly navigationOpen: _angular_core.ModelSignal<boolean>;
   readonly mainId: _angular_core.InputSignal<string>;
-  readonly navigationLabel: _angular_core.InputSignal<string>;
-  readonly closeNavigationLabel: _angular_core.InputSignal<string>;
+  readonly navigationLabel: _angular_core.InputSignal<string | undefined>;
+  readonly closeNavigationLabel: _angular_core.InputSignal<string | undefined>;
   protected readonly resolvedMainId: _angular_core.Signal<string>;
   protected readonly resolvedNavigationLabel: _angular_core.Signal<string>;
   protected readonly resolvedCloseNavigationLabel: _angular_core.Signal<string>;

@@ -7,6 +7,10 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 
+import { createLifecycleAttestation } from '../attest-kern-lifecycle-release.mjs';
+import { buildReleaseLock } from '../prepare-kern-release-lock.mjs';
+import { normalizeSbom } from '../verify-kern-release-artifacts.mjs';
+
 const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const verifier = resolve(workspaceRoot, 'tools/verify-kern-versioned-docs.mjs');
 const releaseVerifier = resolve(workspaceRoot, 'tools/verify-kern-release-artifacts.mjs');
@@ -24,7 +28,15 @@ const releasePolicy = JSON.parse(
 );
 const version = sourceManifest.version;
 const tag = `v${version}`;
-const commit = '0123456789abcdef0123456789abcdef01234567';
+const commit = spawnSync('git', ['rev-parse', 'HEAD'], {
+  cwd: workspaceRoot,
+  encoding: 'utf8',
+}).stdout.trim();
+const workspaceLockContents = await readFile(
+  resolve(workspaceRoot, releasePolicy.sbom.dependencyLock),
+);
+const workspaceLock = JSON.parse(workspaceLockContents);
+const workspaceLockHash = hash(workspaceLockContents);
 const basePath = `/versions/${version}/`;
 const playwrightVersion = workspaceManifest.devDependencies['@playwright/test'];
 const hydrationEvidencePath = 'browser/kern-hydration-evidence.json';
@@ -335,24 +347,31 @@ test('release verification binds both packages and versioned documentation to ch
 
       packageFixture.sbomName = `${packageFixture.slug}-${version}.cdx.json`;
       packageFixture.sbomPath = join(release, packageFixture.sbomName);
-      const sbom = {
-        bomFormat: 'CycloneDX',
-        specVersion: '1.6',
-        metadata: {
-          tools: [{ name: 'npm', version: '11.12.1' }],
-          component: {
-            name: packageFixture.name,
-            version,
-            type: 'library',
-            purl: `pkg:npm/${packageFixture.name.replace('@', '%40')}@${version}`,
-          },
-        },
-        components: Object.keys(packageFixture.dependencies).map((name) => ({
-          name,
-          version: '0.0.0-test',
-          licenses: [{ expression: 'MIT' }],
-        })),
-      };
+      await writeFile(
+        join(packageRoot, 'package-lock.json'),
+        `${JSON.stringify(buildReleaseLock(workspaceLock, packageFixture.manifest), null, 2)}\n`,
+      );
+      const generatedSbom = spawnSync(
+        process.platform === 'win32' ? 'npm.cmd' : 'npm',
+        [
+          'sbom',
+          '--prefix',
+          packageRoot,
+          '--package-lock-only',
+          '--sbom-format',
+          'cyclonedx',
+          '--sbom-type',
+          'library',
+        ],
+        { encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 },
+      );
+      assert.equal(generatedSbom.status, 0, generatedSbom.stderr);
+      const sbom = normalizeSbom(
+        JSON.parse(generatedSbom.stdout),
+        { packageName: packageFixture.name },
+        version,
+        workspaceLockHash,
+      );
       await writeFile(packageFixture.sbomPath, `${JSON.stringify(sbom, null, 2)}\n`);
       packageFixture.tarballHash = hash(await readFile(packageFixture.tarballPath));
       packageFixture.sbomHash = hash(await readFile(packageFixture.sbomPath));
@@ -364,8 +383,19 @@ test('release verification binds both packages and versioned documentation to ch
       docsArchive: hash(await readFile(join(release, docsArchiveName))),
       docsManifest: hash(await readFile(join(release, docsManifestName))),
     };
+    const lifecycleAttestationName = 'lifecycle-attestation.json';
+    const lifecycleAttestationPath = join(release, lifecycleAttestationName);
+    await writeFile(
+      lifecycleAttestationPath,
+      `${JSON.stringify(
+        await createLifecycleAttestation({ version, tag, commit, base: null }),
+        null,
+        2,
+      )}\n`,
+    );
+    artifactHashes.lifecycleAttestation = hash(await readFile(lifecycleAttestationPath));
     const releaseManifest = {
-      schemaVersion: 2,
+      schemaVersion: 4,
       release: {
         version,
         tag,
@@ -387,7 +417,15 @@ test('release verification binds both packages and versioned documentation to ch
       source: {
         repository: releasePolicy.repository,
         commit,
-        workflowRunId: null,
+        workflowRunId: process.env.GITHUB_RUN_ID ?? null,
+        dependencyLock: {
+          file: releasePolicy.sbom.dependencyLock,
+          sha256: workspaceLockHash,
+        },
+        lifecycleAttestation: {
+          file: lifecycleAttestationName,
+          sha256: artifactHashes.lifecycleAttestation,
+        },
       },
       artifacts: {
         documentation: {
@@ -414,6 +452,7 @@ test('release verification binds both packages and versioned documentation to ch
     await writeFile(releaseManifestPath, `${JSON.stringify(releaseManifest, null, 2)}\n`);
     const checksums = [
       `${hash(await readFile(releaseManifestPath))}  release-manifest.json`,
+      `${artifactHashes.lifecycleAttestation}  ${lifecycleAttestationName}`,
       `${artifactHashes.docsArchive}  ${docsArchiveName}`,
       `${artifactHashes.docsManifest}  ${docsManifestName}`,
       ...packageFixtures.flatMap((packageFixture) => [
@@ -422,6 +461,20 @@ test('release verification binds both packages and versioned documentation to ch
       ]),
     ].sort();
     await writeFile(join(release, 'SHA256SUMS'), `${checksums.join('\n')}\n`);
+
+    const gitDirectory = join(temporary, 'release.git');
+    const clonedRepository = spawnSync(
+      'git',
+      ['clone', '--bare', '--no-local', workspaceRoot, gitDirectory],
+      { encoding: 'utf8', maxBuffer: 4 * 1024 * 1024 },
+    );
+    assert.equal(clonedRepository.status, 0, clonedRepository.stderr);
+    const taggedRelease = spawnSync(
+      'git',
+      ['--git-dir', gitDirectory, 'update-ref', `refs/tags/${tag}`, commit],
+      { encoding: 'utf8' },
+    );
+    assert.equal(taggedRelease.status, 0, taggedRelease.stderr);
 
     const verifyRelease = () =>
       spawnSync(
@@ -438,6 +491,7 @@ test('release verification binds both packages and versioned documentation to ch
         {
           cwd: workspaceRoot,
           encoding: 'utf8',
+          env: { ...process.env, GIT_DIR: gitDirectory },
           maxBuffer: 4 * 1024 * 1024,
         },
       );
@@ -448,6 +502,38 @@ test('release verification binds both packages and versioned documentation to ch
       releaseManifest.packages.map(({ name }) => name),
       ['@kern-ui/angular', '@kern-ui/mcp'],
     );
+
+    const originalManifest = await readFile(releaseManifestPath, 'utf8');
+    const originalChecksums = await readFile(join(release, 'SHA256SUMS'), 'utf8');
+    const forgedManifest = JSON.parse(originalManifest);
+    forgedManifest.policy.auditLevel = 'low';
+    forgedManifest.unexpected = true;
+    await writeFile(releaseManifestPath, `${JSON.stringify(forgedManifest, null, 2)}\n`);
+    const forgedManifestHash = hash(await readFile(releaseManifestPath));
+    await writeFile(
+      join(release, 'SHA256SUMS'),
+      originalChecksums.replace(
+        /^[0-9a-f]{64} {2}release-manifest\.json$/m,
+        `${forgedManifestHash}  release-manifest.json`,
+      ),
+    );
+    const forgedPolicy = verifyRelease();
+    assert.notEqual(forgedPolicy.status, 0);
+    assert.match(
+      forgedPolicy.stderr,
+      /Release manifest does not satisfy its JSON Schema|Release manifest does not match/,
+    );
+    await writeFile(releaseManifestPath, originalManifest);
+    await writeFile(join(release, 'SHA256SUMS'), originalChecksums);
+
+    const originalAttestation = await readFile(lifecycleAttestationPath, 'utf8');
+    const tamperedAttestation = JSON.parse(originalAttestation);
+    tamperedAttestation.inputs[0].sha256 = `sha256-${'0'.repeat(64)}`;
+    await writeFile(lifecycleAttestationPath, `${JSON.stringify(tamperedAttestation, null, 2)}\n`);
+    const staleAttestation = verifyRelease();
+    assert.notEqual(staleAttestation.status, 0);
+    assert.match(staleAttestation.stderr, /does not match checked-out source/);
+    await writeFile(lifecycleAttestationPath, originalAttestation);
 
     const companionSbom = packageFixtures.find(({ name }) => name === '@kern-ui/mcp');
     assert.ok(companionSbom);

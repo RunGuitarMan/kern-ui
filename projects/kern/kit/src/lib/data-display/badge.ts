@@ -9,6 +9,7 @@ import {
   output,
 } from '@angular/core';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
 
 export type KrnDisplayTone = 'neutral' | 'brand' | 'info' | 'success' | 'warning' | 'danger';
 
@@ -145,7 +146,7 @@ export class KrnBadge {
         type="button"
         class="remove"
         [disabled]="disabled()"
-        [attr.aria-label]="translations.dataDisplay.removeItem(accessibleLabel())"
+        [attr.aria-label]="translations.dataDisplay.removeItem(resolvedAccessibleLabel())"
         (click)="remove.emit()"
       >
         <span aria-hidden="true">×</span>
@@ -200,7 +201,11 @@ export class KrnChip {
   readonly interactive = input(false, { transform: booleanAttribute });
   readonly removable = input(false, { transform: booleanAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
-  readonly accessibleLabel = input(this.translations.dataDisplay.tag);
+  readonly accessibleLabel = input<string | undefined>();
+  protected readonly resolvedAccessibleLabel = krnInputFallback(
+    this.accessibleLabel,
+    () => this.translations.dataDisplay.tag,
+  );
   readonly remove = output<void>();
 
   protected toggle(): void {

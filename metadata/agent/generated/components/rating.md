@@ -45,13 +45,13 @@ void bootstrapApplication(KernRatingAgentExample);
 
 ## API
 
-| Name        | Kind  | Type      | Required | Default                                | Description                                                                |
-| ----------- | ----- | --------- | -------- | -------------------------------------- | -------------------------------------------------------------------------- |
-| `value`     | model | `number`  | no       | `0`                                    | Controlled component value.                                                |
-| `max`       | input | `number`  | no       | `5`                                    | Largest accepted numeric or temporal value.                                |
-| `disabled`  | input | `boolean` | no       | `false`                                | Prevents user interaction and participates in the disabled-state contract. |
-| `readonly`  | input | `boolean` | no       | `false`                                | Keeps the value perceivable while preventing user edits.                   |
-| `ariaLabel` | input | `string`  | no       | `this.translations.dataDisplay.rating` | Accessible name used when visible content is not sufficient.               |
+| Name        | Kind  | Type                  | Required | Default     | Description                                                                |
+| ----------- | ----- | --------------------- | -------- | ----------- | -------------------------------------------------------------------------- |
+| `value`     | model | `number`              | no       | `0`         | Controlled component value.                                                |
+| `max`       | input | `number`              | no       | `5`         | Largest accepted numeric or temporal value.                                |
+| `disabled`  | input | `boolean`             | no       | `false`     | Prevents user interaction and participates in the disabled-state contract. |
+| `readonly`  | input | `boolean`             | no       | `false`     | Keeps the value perceivable while preventing user edits.                   |
+| `ariaLabel` | input | `string \| undefined` | no       | `undefined` | Accessible name used when visible content is not sufficient.               |
 
 ## Deprecated selectors
 

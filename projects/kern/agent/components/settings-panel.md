@@ -51,15 +51,15 @@ void bootstrapApplication(KernSettingsPanelAgentExample);
 
 ## API
 
-| Name             | Kind   | Type                    | Required | Default                                    | Description                                                              |
-| ---------------- | ------ | ----------------------- | -------- | ------------------------------------------ | ------------------------------------------------------------------------ |
-| `heading`        | input  | `string`                | no       | `this.translations.patterns.settings`      | Human-readable copy for the heading state or control.                    |
-| `closeLabel`     | input  | `string`                | no       | `this.translations.patterns.closeSettings` | Human-readable copy for the close state or control.                      |
-| `initialFocus`   | input  | `string`                | no       | `'first-tabbable'`                         | Identifies the element that receives focus when the modal surface opens. |
-| `closeOnEscape`  | input  | `boolean`               | no       | `true`                                     | Allows Escape to dismiss the topmost owned overlay.                      |
-| `closeOnOutside` | input  | `boolean`               | no       | `true`                                     | Allows an interaction outside the owned overlay to dismiss it.           |
-| `open`           | model  | `boolean`               | no       | `false`                                    | Controls whether the disclosure or overlay surface is visible.           |
-| `closed`         | output | `KrnOverlayCloseReason` | no       | `undefined`                                | Notifies the consumer after the closed interaction completes.            |
+| Name             | Kind   | Type                    | Required | Default            | Description                                                              |
+| ---------------- | ------ | ----------------------- | -------- | ------------------ | ------------------------------------------------------------------------ |
+| `heading`        | input  | `string \| undefined`   | no       | `undefined`        | Human-readable copy for the heading state or control.                    |
+| `closeLabel`     | input  | `string \| undefined`   | no       | `undefined`        | Human-readable copy for the close state or control.                      |
+| `initialFocus`   | input  | `string`                | no       | `'first-tabbable'` | Identifies the element that receives focus when the modal surface opens. |
+| `closeOnEscape`  | input  | `boolean`               | no       | `true`             | Allows Escape to dismiss the topmost owned overlay.                      |
+| `closeOnOutside` | input  | `boolean`               | no       | `true`             | Allows an interaction outside the owned overlay to dismiss it.           |
+| `open`           | model  | `boolean`               | no       | `false`            | Controls whether the disclosure or overlay surface is visible.           |
+| `closed`         | output | `KrnOverlayCloseReason` | no       | `undefined`        | Notifies the consumer after the closed interaction completes.            |
 
 ## Deprecated selectors
 

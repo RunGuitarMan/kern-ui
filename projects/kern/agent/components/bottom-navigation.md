@@ -57,12 +57,12 @@ void bootstrapApplication(KernBottomNavigationAgentExample);
 
 ## API
 
-| Name           | Kind   | Type                               | Required | Default                                | Description                                                          |
-| -------------- | ------ | ---------------------------------- | -------- | -------------------------------------- | -------------------------------------------------------------------- |
-| `items`        | input  | `ReadonlyArray<KrnNavigationItem>` | no       | `[]`                                   | Ordered item collection rendered by the composite widget.            |
-| `value`        | model  | `string \| null`                   | no       | `null`                                 | Controlled component value.                                          |
-| `ariaLabel`    | input  | `string`                           | no       | `this.translations.navigation.primary` | Accessible name used when visible content is not sufficient.         |
-| `itemSelected` | output | `KrnNavigationItem`                | no       | `undefined`                            | Notifies the consumer after the item selected interaction completes. |
+| Name           | Kind   | Type                               | Required | Default     | Description                                                          |
+| -------------- | ------ | ---------------------------------- | -------- | ----------- | -------------------------------------------------------------------- |
+| `items`        | input  | `ReadonlyArray<KrnNavigationItem>` | no       | `[]`        | Ordered item collection rendered by the composite widget.            |
+| `value`        | model  | `string \| null`                   | no       | `null`      | Controlled component value.                                          |
+| `ariaLabel`    | input  | `string \| undefined`              | no       | `undefined` | Accessible name used when visible content is not sufficient.         |
+| `itemSelected` | output | `KrnNavigationItem`                | no       | `undefined` | Notifies the consumer after the item selected interaction completes. |
 
 ## Deprecated selectors
 

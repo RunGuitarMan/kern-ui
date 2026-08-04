@@ -51,12 +51,12 @@ void bootstrapApplication(KernUserMenuAgentExample);
 
 ## API
 
-| Name            | Kind  | Type      | Required | Default                                  | Description                                                               |
-| --------------- | ----- | --------- | -------- | ---------------------------------------- | ------------------------------------------------------------------------- |
-| `name`          | input | `string`  | yes      | `required`                               | Required human-readable name for the represented person, item, or action. |
-| `detail`        | input | `string`  | no       | `''`                                     | Supporting detail text displayed with the primary content.                |
-| `menuAriaLabel` | input | `string`  | no       | `this.translations.patterns.userActions` | Human-readable copy for the menu aria state or control.                   |
-| `open`          | model | `boolean` | no       | `false`                                  | Controls whether the disclosure or overlay surface is visible.            |
+| Name            | Kind  | Type                  | Required | Default     | Description                                                               |
+| --------------- | ----- | --------------------- | -------- | ----------- | ------------------------------------------------------------------------- |
+| `name`          | input | `string`              | yes      | `required`  | Required human-readable name for the represented person, item, or action. |
+| `detail`        | input | `string`              | no       | `''`        | Supporting detail text displayed with the primary content.                |
+| `menuAriaLabel` | input | `string \| undefined` | no       | `undefined` | Human-readable copy for the menu aria state or control.                   |
+| `open`          | model | `boolean`             | no       | `false`     | Controls whether the disclosure or overlay surface is visible.            |
 
 ## Deprecated selectors
 

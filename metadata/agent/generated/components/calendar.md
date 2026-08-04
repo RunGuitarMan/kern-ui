@@ -61,20 +61,20 @@ void bootstrapApplication(KernCalendarAgentExample);
 
 ## API
 
-| Name              | Kind   | Type                               | Required | Default              | Description                                                                 |
-| ----------------- | ------ | ---------------------------------- | -------- | -------------------- | --------------------------------------------------------------------------- |
-| `value`           | model  | `string`                           | no       | `''`                 | Controlled component value.                                                 |
-| `activeMonth`     | model  | `string`                           | no       | `''`                 | Controlled active month state with a matching Angular model-change output.  |
-| `min`             | input  | `string`                           | no       | `''`                 | Smallest accepted numeric or temporal value.                                |
-| `max`             | input  | `string`                           | no       | `''`                 | Largest accepted numeric or temporal value.                                 |
-| `disabledDates`   | input  | `ReadonlySet<string>`              | no       | `new Set<string>()`  | Returns whether a plain date is unavailable for selection.                  |
-| `locale`          | input  | `string`                           | no       | `inject(KRN_LOCALE)` | Locale identifier used for collation, formatting, and component-owned copy. |
-| `labels`          | input  | `Partial<KrnCalendarTranslations>` | no       | `{}`                 | Localized copy overrides for the component-owned interface text.            |
-| `weekStartsOn`    | input  | `0 \| 1`                           | no       | `1`                  | Zero-based weekday used as the first calendar column.                       |
-| `today`           | input  | `string`                           | no       | `''`                 | Deterministic plain date treated as today on both server and client.        |
-| `showTodayAction` | input  | `boolean`                          | no       | `true`               | Controls whether the component applies the show today action behavior.      |
-| `dateSelected`    | output | `string`                           | no       | `undefined`          | Notifies the consumer after the date selected interaction completes.        |
-| `focusedDate`     | model  | `string`                           | no       | `''`                 | Controlled focused date state with a matching Angular model-change output.  |
+| Name              | Kind   | Type                               | Required | Default             | Description                                                                 |
+| ----------------- | ------ | ---------------------------------- | -------- | ------------------- | --------------------------------------------------------------------------- |
+| `value`           | model  | `string`                           | no       | `''`                | Controlled component value.                                                 |
+| `activeMonth`     | model  | `string`                           | no       | `''`                | Controlled active month state with a matching Angular model-change output.  |
+| `min`             | input  | `string`                           | no       | `''`                | Smallest accepted numeric or temporal value.                                |
+| `max`             | input  | `string`                           | no       | `''`                | Largest accepted numeric or temporal value.                                 |
+| `disabledDates`   | input  | `ReadonlySet<string>`              | no       | `new Set<string>()` | Returns whether a plain date is unavailable for selection.                  |
+| `locale`          | input  | `string \| undefined`              | no       | `undefined`         | Locale identifier used for collation, formatting, and component-owned copy. |
+| `labels`          | input  | `Partial<KrnCalendarTranslations>` | no       | `{}`                | Localized copy overrides for the component-owned interface text.            |
+| `weekStartsOn`    | input  | `0 \| 1`                           | no       | `1`                 | Zero-based weekday used as the first calendar column.                       |
+| `today`           | input  | `string`                           | no       | `''`                | Deterministic plain date treated as today on both server and client.        |
+| `showTodayAction` | input  | `boolean`                          | no       | `true`              | Controls whether the component applies the show today action behavior.      |
+| `dateSelected`    | output | `string`                           | no       | `undefined`         | Notifies the consumer after the date selected interaction completes.        |
+| `focusedDate`     | model  | `string`                           | no       | `''`                | Controlled focused date state with a matching Angular model-change output.  |
 
 ## Deprecated selectors
 

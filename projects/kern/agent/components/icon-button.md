@@ -43,13 +43,13 @@ void bootstrapApplication(KernIconButtonAgentExample);
 
 ## API
 
-| Name           | Kind  | Type               | Required | Default                    | Description                                                                                                                        |
-| -------------- | ----- | ------------------ | -------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `size`         | input | `KrnSize`          | no       | `this.options.size`        | Named semantic size resolved through KERN density and sizing tokens.                                                               |
-| `variant`      | input | `KrnActionVariant` | no       | `this.options.variant`     | Named visual hierarchy treatment that preserves the component semantics.                                                           |
-| `tone`         | input | `KrnTone`          | no       | `this.options.tone`        | Semantic intent that selects coordinated text, icon, border, and surface tokens.                                                   |
-| `loading`      | input | `boolean`          | no       | `false`                    | Suppresses duplicate activation and owns `aria-disabled` while retaining focus. Use native `disabled` for ordinary unavailability. |
-| `loadingLabel` | input | `string`           | no       | `this.defaultLoadingLabel` | Accessible loading copy; defaults to the application or closest scoped option.                                                     |
+| Name           | Kind  | Type                  | Required | Default                | Description                                                                                                                        |
+| -------------- | ----- | --------------------- | -------- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `size`         | input | `KrnSize`             | no       | `this.options.size`    | Named semantic size resolved through KERN density and sizing tokens.                                                               |
+| `variant`      | input | `KrnActionVariant`    | no       | `this.options.variant` | Named visual hierarchy treatment that preserves the component semantics.                                                           |
+| `tone`         | input | `KrnTone`             | no       | `this.options.tone`    | Semantic intent that selects coordinated text, icon, border, and surface tokens.                                                   |
+| `loading`      | input | `boolean`             | no       | `false`                | Suppresses duplicate activation and owns `aria-disabled` while retaining focus. Use native `disabled` for ordinary unavailability. |
+| `loadingLabel` | input | `string \| undefined` | no       | `undefined`            | Accessible loading copy; defaults to the application or closest scoped option.                                                     |
 
 ## Deprecated selectors
 

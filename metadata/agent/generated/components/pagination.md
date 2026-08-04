@@ -47,20 +47,20 @@ void bootstrapApplication(KernPaginationAgentExample);
 
 ## API
 
-| Name                  | Kind  | Type                                                                   | Required | Default                                         | Description                                                      |
-| --------------------- | ----- | ---------------------------------------------------------------------- | -------- | ----------------------------------------------- | ---------------------------------------------------------------- |
-| `totalItems`          | input | `number`                                                               | no       | `0`                                             | Total result count used to calculate the available page range.   |
-| `pageSize`            | input | `number`                                                               | no       | `20`                                            | Maximum number of records requested or displayed on one page.    |
-| `siblingCount`        | input | `number`                                                               | no       | `1`                                             | Total number of peer items used to expose hierarchical position. |
-| `page`                | model | `number`                                                               | no       | `1`                                             | One-based controlled page index.                                 |
-| `ariaLabel`           | input | `string`                                                               | no       | `this.translations.navigation.pagination`       | Accessible name used when visible content is not sufficient.     |
-| `previousLabel`       | input | `string`                                                               | no       | `this.translations.navigation.previous`         | Human-readable copy for the previous state or control.           |
-| `nextLabel`           | input | `string`                                                               | no       | `this.translations.navigation.next`             | Human-readable copy for the next state or control.               |
-| `pageLabel`           | input | `string`                                                               | no       | `this.translations.navigation.pageLabel`        | Backward-compatible `{page}` template.                           |
-| `pageLabelFormatter`  | input | `((page: number) => string) \| undefined`                              | no       | `undefined`                                     | Typed alternative to `pageLabel` for locale-specific grammar.    |
-| `emptyLabel`          | input | `string`                                                               | no       | `this.translations.navigation.noResults`        | Accessible copy that explains the empty state.                   |
-| `rangeLabel`          | input | `string`                                                               | no       | `this.translations.navigation.resultRangeLabel` | Backward-compatible `{start}`, `{end}`, and `{total}` template.  |
-| `rangeLabelFormatter` | input | `((start: number, end: number, total: number) => string) \| undefined` | no       | `undefined`                                     | Typed alternative to `rangeLabel` for locale-specific grammar.   |
+| Name                  | Kind  | Type                                                                   | Required | Default     | Description                                                      |
+| --------------------- | ----- | ---------------------------------------------------------------------- | -------- | ----------- | ---------------------------------------------------------------- |
+| `totalItems`          | input | `number`                                                               | no       | `0`         | Total result count used to calculate the available page range.   |
+| `pageSize`            | input | `number`                                                               | no       | `20`        | Maximum number of records requested or displayed on one page.    |
+| `siblingCount`        | input | `number`                                                               | no       | `1`         | Total number of peer items used to expose hierarchical position. |
+| `page`                | model | `number`                                                               | no       | `1`         | One-based controlled page index.                                 |
+| `ariaLabel`           | input | `string \| undefined`                                                  | no       | `undefined` | Accessible name used when visible content is not sufficient.     |
+| `previousLabel`       | input | `string \| undefined`                                                  | no       | `undefined` | Human-readable copy for the previous state or control.           |
+| `nextLabel`           | input | `string \| undefined`                                                  | no       | `undefined` | Human-readable copy for the next state or control.               |
+| `pageLabel`           | input | `string \| undefined`                                                  | no       | `undefined` | Backward-compatible `{page}` template.                           |
+| `pageLabelFormatter`  | input | `((page: number) => string) \| undefined`                              | no       | `undefined` | Typed alternative to `pageLabel` for locale-specific grammar.    |
+| `emptyLabel`          | input | `string \| undefined`                                                  | no       | `undefined` | Accessible copy that explains the empty state.                   |
+| `rangeLabel`          | input | `string \| undefined`                                                  | no       | `undefined` | Backward-compatible `{start}`, `{end}`, and `{total}` template.  |
+| `rangeLabelFormatter` | input | `((start: number, end: number, total: number) => string) \| undefined` | no       | `undefined` | Typed alternative to `rangeLabel` for locale-specific grammar.   |
 
 ## Deprecated selectors
 

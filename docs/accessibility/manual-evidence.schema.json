@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/RunGuitarMan/kern-ui/blob/main/docs/accessibility/manual-evidence.schema.json",
   "title": "Kern manual accessibility evidence",
   "type": "object",
@@ -8,6 +8,7 @@
     "$schema",
     "schemaVersion",
     "libraryVersion",
+    "policy",
     "certification",
     "targetComponentIds",
     "records"
@@ -17,23 +18,53 @@
       "const": "./manual-evidence.schema.json"
     },
     "schemaVersion": {
-      "const": 1
+      "const": 2
     },
     "libraryVersion": {
       "type": "string",
       "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$"
     },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["releaseMaxAgeDays", "promotionMaxAgeDays"],
+      "properties": {
+        "releaseMaxAgeDays": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "promotionMaxAgeDays": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
     "certification": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["status", "statement"],
+      "required": ["status", "statement", "attestedAt", "attestedBy", "evidence"],
       "properties": {
         "status": {
-          "const": "not-certified"
+          "enum": ["not-certified", "certified"]
         },
         "statement": {
           "type": "string",
           "minLength": 20
+        },
+        "attestedAt": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "attestedBy": {
+          "type": ["string", "null"],
+          "minLength": 2
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     },
@@ -50,11 +81,11 @@
       "type": "array",
       "minItems": 1,
       "items": {
-        "$ref": "#/$defs/record"
+        "$ref": "#/definitions/record"
       }
     }
   },
-  "$defs": {
+  "definitions": {
     "namedVersion": {
       "type": "object",
       "additionalProperties": false,
@@ -76,16 +107,16 @@
       "required": ["operatingSystem", "browser", "assistiveTechnology", "input"],
       "properties": {
         "operatingSystem": {
-          "$ref": "#/$defs/namedVersion"
+          "$ref": "#/definitions/namedVersion"
         },
         "browser": {
-          "$ref": "#/$defs/namedVersion"
+          "$ref": "#/definitions/namedVersion"
         },
         "assistiveTechnology": {
-          "$ref": "#/$defs/namedVersion"
+          "$ref": "#/definitions/namedVersion"
         },
         "input": {
-          "$ref": "#/$defs/namedVersion"
+          "$ref": "#/definitions/namedVersion"
         }
       }
     },
@@ -126,7 +157,7 @@
           }
         },
         "environment": {
-          "$ref": "#/$defs/environment"
+          "$ref": "#/definitions/environment"
         },
         "checks": {
           "type": "array",

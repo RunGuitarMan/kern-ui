@@ -94,9 +94,9 @@
       "name": "pickerLabel",
       "property": "pickerLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.colorPicker.chooseColor",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the picker state or control.",
       "descriptionSource": "inferred"
     },
@@ -104,9 +104,9 @@
       "name": "textLabel",
       "property": "textLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.colorPicker.colorValue",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the text state or control.",
       "descriptionSource": "inferred"
     },
@@ -634,7 +634,7 @@
         "componentId": "color-picker",
         "publicName": "pickerLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
@@ -646,7 +646,7 @@
         "componentId": "color-picker",
         "publicName": "textLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {

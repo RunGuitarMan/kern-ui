@@ -1,4 +1,5 @@
-import { InjectionToken } from '@angular/core';
+import { Injectable, InjectionToken, LOCALE_ID, inject, signal } from '@angular/core';
+import type { Signal } from '@angular/core';
 import { KRN_DEFAULT_LOADING_LABEL } from '@kern-ui/angular/i18n';
 
 export interface KrnActionTranslations {
@@ -761,11 +762,108 @@ export function createKrnTranslations(patch: KrnTranslationsPatch = {}): Readonl
   );
 }
 
+/** @internal Initial locale for a DI-scoped `KrnI18n` instance. */
+export const KRN_I18N_INITIAL_LOCALE = new InjectionToken<string>('KRN_I18N_INITIAL_LOCALE', {
+  providedIn: 'root',
+  factory: () => inject(LOCALE_ID),
+});
+
+/** @internal Initial dictionary for a DI-scoped `KrnI18n` instance. */
+export const KRN_I18N_INITIAL_TRANSLATIONS = new InjectionToken<Readonly<KrnTranslations>>(
+  'KRN_I18N_INITIAL_TRANSLATIONS',
+  {
+    providedIn: 'root',
+    factory: () => KRN_ENGLISH_TRANSLATIONS,
+  },
+);
+
+/** Canonicalizes and validates a locale used by Kern runtime APIs. */
+export function normalizeKrnLocale(locale: string): string {
+  const value = locale.trim();
+  if (!value) {
+    throw new Error('Kern locale must be a non-empty BCP 47 language tag.');
+  }
+
+  try {
+    const canonical = Intl.getCanonicalLocales(value)[0];
+    if (canonical) return canonical;
+  } catch {
+    // The public error below is stable across JavaScript engines.
+  }
+
+  throw new Error(`Invalid Kern locale "${value}". Expected a BCP 47 language tag.`);
+}
+
+function createReactiveTranslationView(
+  translations: Signal<Readonly<KrnTranslations>>,
+): Readonly<KrnTranslations> {
+  const registry = {} as Record<string, unknown>;
+
+  for (const [groupName, defaults] of Object.entries(KRN_ENGLISH_TRANSLATIONS)) {
+    const group = {} as Record<string, unknown>;
+    for (const field of Object.keys(defaults)) {
+      Object.defineProperty(group, field, {
+        configurable: false,
+        enumerable: true,
+        get: () =>
+          (
+            translations()[groupName as keyof KrnTranslations] as unknown as Readonly<
+              Record<string, unknown>
+            >
+          )[field],
+      });
+    }
+    Object.defineProperty(registry, groupName, {
+      configurable: false,
+      enumerable: true,
+      value: Object.freeze(group),
+      writable: false,
+    });
+  }
+
+  return Object.freeze(registry) as unknown as Readonly<KrnTranslations>;
+}
+
+/**
+ * Reactive, injector-scoped locale and translation state.
+ *
+ * Existing `KRN_TRANSLATIONS` consumers receive the stable `dictionary` view;
+ * its frozen property getters read the same signal, so templates and computed
+ * values react without replacing the public translation schema.
+ */
+@Injectable({ providedIn: 'root' })
+export class KrnI18n {
+  private readonly localeState = signal(normalizeKrnLocale(inject(KRN_I18N_INITIAL_LOCALE)));
+  private readonly translationState = signal(inject(KRN_I18N_INITIAL_TRANSLATIONS));
+
+  readonly locale = this.localeState.asReadonly();
+  readonly translations = this.translationState.asReadonly();
+  readonly dictionary = createReactiveTranslationView(this.translations);
+
+  /** Updates locale formatting while retaining the active dictionary. */
+  setLocale(locale: string): void {
+    this.localeState.set(normalizeKrnLocale(locale));
+  }
+
+  /** Replaces the complete dictionary derived from Kern's English schema. */
+  setTranslations(translations: KrnTranslationsPatch): void {
+    this.translationState.set(createKrnTranslations(translations));
+  }
+
+  /** Updates locale and copy through one synchronous runtime operation. */
+  activate(locale: string, translations: KrnTranslationsPatch): void {
+    const normalizedLocale = normalizeKrnLocale(locale);
+    const completeTranslations = createKrnTranslations(translations);
+    this.localeState.set(normalizedLocale);
+    this.translationState.set(completeTranslations);
+  }
+}
+
 /**
  * Replaceable application-wide UI copy. Component-level label inputs remain
  * available for one-off overrides.
  */
 export const KRN_TRANSLATIONS = new InjectionToken<Readonly<KrnTranslations>>('KRN_TRANSLATIONS', {
   providedIn: 'root',
-  factory: () => KRN_ENGLISH_TRANSLATIONS,
+  factory: () => inject(KrnI18n).dictionary,
 });

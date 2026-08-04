@@ -48,21 +48,21 @@ void bootstrapApplication(KernColorPickerAgentExample);
 
 ## API
 
-| Name              | Kind   | Type                                  | Required | Default                                     | Description                                                                                      |
-| ----------------- | ------ | ------------------------------------- | -------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`                              | no       | `''`                                        | Stable identifier value used by the id contract.                                                 |
-| `labels`          | input  | `Partial<KrnColorPickerTranslations>` | no       | `{}`                                        | Localized copy overrides for the component-owned interface text.                                 |
-| `pickerLabel`     | input  | `string`                              | no       | `this.translations.colorPicker.chooseColor` | Human-readable copy for the picker state or control.                                             |
-| `textLabel`       | input  | `string`                              | no       | `this.translations.colorPicker.colorValue`  | Human-readable copy for the text state or control.                                               |
-| `ariaLabelledBy`  | input  | `string`                              | no       | `''`                                        | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
-| `ariaDescribedBy` | input  | `string`                              | no       | `''`                                        | Space-separated element ids composed with Form Field hints and validation descriptions.          |
-| `disabled`        | input  | `boolean`                             | no       | `false`                                     | Prevents user interaction and participates in the disabled-state contract.                       |
-| `readonly`        | input  | `boolean`                             | no       | `false`                                     | Keeps the value perceivable while preventing user edits.                                         |
-| `invalid`         | input  | `boolean`                             | no       | `false`                                     | Exposes an externally controlled invalid presentation state.                                     |
-| `tabindex`        | input  | `number`                              | no       | `0`                                         | Native sequential-focus order forwarded to the owned interactive element.                        |
-| `value`           | input  | `string \| undefined`                 | no       | `undefined`                                 | Controlled component value.                                                                      |
-| `open`            | model  | `boolean`                             | no       | `false`                                     | Controls whether the disclosure or overlay surface is visible.                                   |
-| `valueChange`     | output | `string`                              | no       | `undefined`                                 | Notifies the consumer after the value change interaction completes.                              |
+| Name              | Kind   | Type                                  | Required | Default     | Description                                                                                      |
+| ----------------- | ------ | ------------------------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`                              | no       | `''`        | Stable identifier value used by the id contract.                                                 |
+| `labels`          | input  | `Partial<KrnColorPickerTranslations>` | no       | `{}`        | Localized copy overrides for the component-owned interface text.                                 |
+| `pickerLabel`     | input  | `string \| undefined`                 | no       | `undefined` | Human-readable copy for the picker state or control.                                             |
+| `textLabel`       | input  | `string \| undefined`                 | no       | `undefined` | Human-readable copy for the text state or control.                                               |
+| `ariaLabelledBy`  | input  | `string`                              | no       | `''`        | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`                              | no       | `''`        | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `disabled`        | input  | `boolean`                             | no       | `false`     | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean`                             | no       | `false`     | Keeps the value perceivable while preventing user edits.                                         |
+| `invalid`         | input  | `boolean`                             | no       | `false`     | Exposes an externally controlled invalid presentation state.                                     |
+| `tabindex`        | input  | `number`                              | no       | `0`         | Native sequential-focus order forwarded to the owned interactive element.                        |
+| `value`           | input  | `string \| undefined`                 | no       | `undefined` | Controlled component value.                                                                      |
+| `open`            | model  | `boolean`                             | no       | `false`     | Controls whether the disclosure or overlay surface is visible.                                   |
+| `valueChange`     | output | `string`                              | no       | `undefined` | Notifies the consumer after the value change interaction completes.                              |
 
 ## Deprecated selectors
 

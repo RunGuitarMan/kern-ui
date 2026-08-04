@@ -8,6 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
 import type { KrnFeedbackTone } from './feedback.types';
 
 const ALERT_TEMPLATE = `
@@ -27,7 +28,7 @@ const ALERT_TEMPLATE = `
         <div class="actions"><ng-content select="[krnAlertAction]" /></div>
       </div>
       @if (dismissible()) {
-        <button type="button" class="dismiss" [attr.aria-label]="dismissLabel()" (click)="dismiss()">
+        <button type="button" class="dismiss" [attr.aria-label]="resolvedDismissLabel()" (click)="dismiss()">
           <span aria-hidden="true">×</span>
         </button>
       }
@@ -52,7 +53,11 @@ export class KrnAlert {
   readonly title = input('');
   readonly icon = input('');
   readonly dismissible = input(false, { transform: booleanAttribute });
-  readonly dismissLabel = input(this.translations.feedback.dismissMessage);
+  readonly dismissLabel = input<string | undefined>();
+  protected readonly resolvedDismissLabel = krnInputFallback(
+    this.dismissLabel,
+    () => this.translations.feedback.dismissMessage,
+  );
   readonly closed = output<void>();
   protected readonly visible = signal(true);
 

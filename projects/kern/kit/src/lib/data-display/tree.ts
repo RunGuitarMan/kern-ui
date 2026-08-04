@@ -10,7 +10,9 @@ import {
   output,
   viewChildren,
 } from '@angular/core';
-import { KRN_ENGLISH_TRANSLATIONS, KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { KRN_ENGLISH_TRANSLATIONS, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
+import { krnInheritedLocale } from '../reactive-locale';
 import type { KrnTreeChildrenState } from '../navigation/tree.types';
 
 export interface KrnTreeNode {
@@ -49,7 +51,7 @@ function assertValidTreeNodeIds(nodes: readonly KrnTreeNode[]): void {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'tree',
-    '[attr.aria-label]': 'ariaLabel()',
+    '[attr.aria-label]': 'resolvedAriaLabel()',
   },
   template: `
     <ng-container
@@ -205,13 +207,17 @@ function assertValidTreeNodeIds(nodes: readonly KrnTreeNode[]): void {
   `,
 })
 export class KrnTree {
-  private readonly locale = inject(KRN_LOCALE);
+  private readonly locale = krnInheritedLocale();
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly elements = viewChildren<ElementRef<HTMLButtonElement>>('treeItem');
   private typeaheadQuery = '';
   private lastTypeaheadAt = 0;
   readonly nodes = input<readonly KrnTreeNode[]>([]);
-  readonly ariaLabel = input(this.translations.navigation.tree);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.navigation.tree,
+  );
   readonly selected = model('');
   readonly expanded = model<ReadonlySet<string>>(new Set<string>());
   /** Requests children when an unloaded node is expanded or its failed request is retried. */
@@ -374,7 +380,7 @@ export class KrnTree {
 
   private focusTypeaheadMatch(event: KeyboardEvent, currentNode: KrnTreeNode): void {
     const now = event.timeStamp;
-    const key = event.key.toLocaleLowerCase(this.locale);
+    const key = event.key.toLocaleLowerCase(this.locale());
     this.typeaheadQuery = now - this.lastTypeaheadAt > 700 ? key : `${this.typeaheadQuery}${key}`;
     this.lastTypeaheadAt = now;
 
@@ -389,7 +395,7 @@ export class KrnTree {
     const currentIndex = nodes.findIndex(({ node }) => node.id === currentNode.id);
     const candidates = [...nodes.slice(currentIndex + 1), ...nodes.slice(0, currentIndex + 1)];
     const match = candidates.find(({ node }) =>
-      node.label.toLocaleLowerCase(this.locale).startsWith(this.typeaheadQuery),
+      node.label.toLocaleLowerCase(this.locale()).startsWith(this.typeaheadQuery),
     );
     this.focusNode(match?.node);
   }

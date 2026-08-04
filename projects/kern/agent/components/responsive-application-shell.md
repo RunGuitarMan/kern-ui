@@ -59,12 +59,12 @@ void bootstrapApplication(KernResponsiveApplicationShellAgentExample);
 
 ## API
 
-| Name                   | Kind  | Type      | Required | Default                                      | Description                                                                   |
-| ---------------------- | ----- | --------- | -------- | -------------------------------------------- | ----------------------------------------------------------------------------- |
-| `navigationOpen`       | model | `boolean` | no       | `false`                                      | Controlled navigation open state with a matching Angular model-change output. |
-| `mainId`               | input | `string`  | no       | `this.ids.next('main-content')`              | Stable identifier value used by the main contract.                            |
-| `navigationLabel`      | input | `string`  | no       | `this.translations.layout.primaryNavigation` | Human-readable copy for the navigation state or control.                      |
-| `closeNavigationLabel` | input | `string`  | no       | `this.translations.layout.closeNavigation`   | Human-readable copy for the close navigation state or control.                |
+| Name                   | Kind  | Type                  | Required | Default                         | Description                                                                   |
+| ---------------------- | ----- | --------------------- | -------- | ------------------------------- | ----------------------------------------------------------------------------- |
+| `navigationOpen`       | model | `boolean`             | no       | `false`                         | Controlled navigation open state with a matching Angular model-change output. |
+| `mainId`               | input | `string`              | no       | `this.ids.next('main-content')` | Stable identifier value used by the main contract.                            |
+| `navigationLabel`      | input | `string \| undefined` | no       | `undefined`                     | Human-readable copy for the navigation state or control.                      |
+| `closeNavigationLabel` | input | `string \| undefined` | no       | `undefined`                     | Human-readable copy for the close navigation state or control.                |
 
 ## Deprecated selectors
 

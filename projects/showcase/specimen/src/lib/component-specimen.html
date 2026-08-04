@@ -50,7 +50,7 @@
     @switch (item().category) {
       <!-- Layout -->
       @case ('Layout') {
-        @defer (on immediate) {
+        @defer (on immediate; hydrate on immediate) {
           @switch (item().id) {
             @case ('app-shell') {
               <div class="mini-app-shell">
@@ -457,7 +457,7 @@
 
       <!-- Actions -->
       @case ('Actions') {
-        @defer (on immediate) {
+        @defer (on immediate; hydrate on immediate) {
           @switch (item().id) {
             @case ('button') {
               <div class="action-gallery">
@@ -651,7 +651,7 @@
 
       <!-- Forms -->
       @case ('Forms') {
-        @defer (on immediate) {
+        @defer (on immediate; hydrate on immediate) {
           @switch (item().id) {
             @case ('form-field') {
               @if (effectiveScenario() === 'stress') {
@@ -1166,7 +1166,7 @@
                     [id]="stringArgument('id', '')"
                     [open]="booleanArgument('open', false)"
                     [tabindex]="numberArgument('tabindex', 0)"
-                    [today]="stringArgument('today', '2026-07-30')"
+                    [today]="stringArgument('today', '')"
                     [value]="stringArgument('value', '')"
                 /></krn-form-field>
               </div>
@@ -1187,7 +1187,7 @@
                     [min]="stringArgument('min', '')"
                     [open]="booleanArgument('open', false)"
                     [tabindex]="numberArgument('tabindex', 0)"
-                    [today]="stringArgument('today', '2026-07-30')"
+                    [today]="stringArgument('today', '')"
                     [weekStartsOn]="numberArgument('weekStartsOn', 0)"
                 /></krn-form-field>
               </div>
@@ -1308,7 +1308,7 @@
 
       <!-- Navigation -->
       @case ('Navigation') {
-        @defer (on immediate) {
+        @defer (on immediate; hydrate on immediate) {
           @switch (item().id) {
             @case ('breadcrumbs') {
               <div class="navigation-surface">
@@ -1507,7 +1507,7 @@
 
       <!-- Feedback -->
       @case ('Feedback') {
-        @defer (on immediate) {
+        @defer (on immediate; hydrate on immediate) {
           @switch (item().id) {
             @case ('alert') {
               <div class="feedback-stack">
@@ -1844,7 +1844,7 @@
 
       <!-- Data display -->
       @case ('Data display') {
-        @defer (on immediate) {
+        @defer (on immediate; hydrate on immediate) {
           @switch (item().id) {
             @case ('badge') {
               <div class="badge-gallery">
@@ -2295,7 +2295,7 @@
 
       <!-- Patterns -->
       @case ('Patterns') {
-        @defer (on immediate) {
+        @defer (on immediate; hydrate on immediate) {
           @switch (item().id) {
             @case ('user-menu') {
               <krn-user-menu

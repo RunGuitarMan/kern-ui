@@ -2,13 +2,14 @@ import {
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
   ElementRef,
   inject,
   input,
   Renderer2,
 } from '@angular/core';
-import { KRN_LOADING_LABEL } from '@kern-ui/angular/i18n';
+import { KRN_LOADING_LABEL, krnReadI18nValue } from '@kern-ui/angular/i18n';
 import type { KrnActionVariant, KrnSize, KrnTone } from './action-types';
 import { KRN_ICON_BUTTON_OPTIONS } from './icon-button-options';
 import { registerKrnLoadingActivationGuard } from './loading-action';
@@ -18,7 +19,7 @@ import { registerKrnLoadingActivationGuard } from './loading-action';
   template: `
     <span class="krn-action__icon" aria-hidden="true"><ng-content /></span>
     <span class="krn-action__status" role="status" aria-live="polite">
-      {{ loading() ? loadingLabel() : '' }}
+      {{ loading() ? resolvedLoadingLabel() : '' }}
     </span>
   `,
   host: {
@@ -36,7 +37,7 @@ export class KrnIconButton {
   private readonly renderer = inject(Renderer2);
   private readonly destroyRef = inject(DestroyRef);
   private readonly options = inject(KRN_ICON_BUTTON_OPTIONS);
-  private readonly defaultLoadingLabel = this.options.loadingLabel ?? inject(KRN_LOADING_LABEL);
+  private readonly inheritedLoadingLabel = inject(KRN_LOADING_LABEL);
   private readonly syncLoadingAriaDisabled: () => void;
 
   readonly size = input<KrnSize>(this.options.size);
@@ -48,7 +49,13 @@ export class KrnIconButton {
    */
   readonly loading = input(false, { transform: booleanAttribute });
   /** Accessible loading copy; defaults to the application or closest scoped option. */
-  readonly loadingLabel = input(this.defaultLoadingLabel);
+  readonly loadingLabel = input<string | undefined>();
+  protected readonly resolvedLoadingLabel = computed(
+    () =>
+      this.loadingLabel() ??
+      this.options.loadingLabel ??
+      krnReadI18nValue(this.inheritedLoadingLabel),
+  );
 
   constructor() {
     this.syncLoadingAriaDisabled = registerKrnLoadingActivationGuard({

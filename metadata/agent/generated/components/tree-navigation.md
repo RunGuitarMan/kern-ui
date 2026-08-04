@@ -65,16 +65,16 @@ void bootstrapApplication(KernTreeNavigationAgentExample);
 
 ## API
 
-| Name           | Kind   | Type                                   | Required | Default                                       | Description                                                                           |
-| -------------- | ------ | -------------------------------------- | -------- | --------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `items`        | input  | `ReadonlyArray<KrnTreeNavigationItem>` | no       | `[]`                                          | Ordered item collection rendered by the composite widget.                             |
-| `selectedId`   | model  | `string \| null`                       | no       | `null`                                        | Stable id of the currently selected item.                                             |
-| `expandedIds`  | model  | `ReadonlyArray<string>`                | no       | `[]`                                          | Stable ids of the currently expanded hierarchical items.                              |
-| `ariaLabel`    | input  | `string`                               | no       | `this.translations.navigation.navigationTree` | Accessible name used when visible content is not sufficient.                          |
-| `indent`       | input  | `string`                               | no       | `'1rem'`                                      | Logical inline indentation applied for each hierarchical depth level.                 |
-| `showGuides`   | input  | `boolean`                              | no       | `true`                                        | Controls whether the component applies the show guides behavior.                      |
-| `itemSelected` | output | `KrnTreeNavigationItem`                | no       | `undefined`                                   | Notifies the consumer after the item selected interaction completes.                  |
-| `loadChildren` | output | `KrnTreeNavigationItem`                | no       | `undefined`                                   | Requests children when an unloaded item is expanded or its failed request is retried. |
+| Name           | Kind   | Type                                   | Required | Default     | Description                                                                           |
+| -------------- | ------ | -------------------------------------- | -------- | ----------- | ------------------------------------------------------------------------------------- |
+| `items`        | input  | `ReadonlyArray<KrnTreeNavigationItem>` | no       | `[]`        | Ordered item collection rendered by the composite widget.                             |
+| `selectedId`   | model  | `string \| null`                       | no       | `null`      | Stable id of the currently selected item.                                             |
+| `expandedIds`  | model  | `ReadonlyArray<string>`                | no       | `[]`        | Stable ids of the currently expanded hierarchical items.                              |
+| `ariaLabel`    | input  | `string \| undefined`                  | no       | `undefined` | Accessible name used when visible content is not sufficient.                          |
+| `indent`       | input  | `string`                               | no       | `'1rem'`    | Logical inline indentation applied for each hierarchical depth level.                 |
+| `showGuides`   | input  | `boolean`                              | no       | `true`      | Controls whether the component applies the show guides behavior.                      |
+| `itemSelected` | output | `KrnTreeNavigationItem`                | no       | `undefined` | Notifies the consumer after the item selected interaction completes.                  |
+| `loadChildren` | output | `KrnTreeNavigationItem`                | no       | `undefined` | Requests children when an unloaded item is expanded or its failed request is retried. |
 
 ## Deprecated selectors
 

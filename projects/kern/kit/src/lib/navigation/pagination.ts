@@ -183,16 +183,16 @@ export class KrnPagination {
   readonly pageSize = input(20, { transform: numberAttribute });
   readonly siblingCount = input(1, { transform: numberAttribute });
   readonly page = model(1);
-  readonly ariaLabel = input(this.translations.navigation.pagination);
-  readonly previousLabel = input(this.translations.navigation.previous);
-  readonly nextLabel = input(this.translations.navigation.next);
+  readonly ariaLabel = input<string | undefined>();
+  readonly previousLabel = input<string | undefined>();
+  readonly nextLabel = input<string | undefined>();
   /** Backward-compatible `{page}` template. */
-  readonly pageLabel = input(this.translations.navigation.pageLabel);
+  readonly pageLabel = input<string | undefined>();
   /** Typed alternative to `pageLabel` for locale-specific grammar. */
   readonly pageLabelFormatter = input<((page: number) => string) | undefined>(undefined);
-  readonly emptyLabel = input(this.translations.navigation.noResults);
+  readonly emptyLabel = input<string | undefined>();
   /** Backward-compatible `{start}`, `{end}`, and `{total}` template. */
-  readonly rangeLabel = input(this.translations.navigation.resultRangeLabel);
+  readonly rangeLabel = input<string | undefined>();
   /** Typed alternative to `rangeLabel` for locale-specific grammar. */
   readonly rangeLabelFormatter = input<
     ((start: number, end: number, total: number) => string) | undefined
@@ -233,11 +233,13 @@ export class KrnPagination {
     }
     const start = (this.currentPage() - 1) * this.safePageSize() + 1;
     const end = Math.min(total, this.currentPage() * this.safePageSize());
+    const inputRangeLabel = this.rangeLabel();
+    const rangeLabel = inputRangeLabel ?? this.translations.navigation.resultRangeLabel;
     const formatted = krnFormatTranslation(
-      this.rangeLabel(),
+      rangeLabel,
       { start, end, total },
       this.rangeLabelFormatter() ??
-        (this.rangeLabel() === this.translations.navigation.resultRangeLabel
+        (inputRangeLabel === undefined
           ? this.translations.navigation.formatResultRangeLabel
           : undefined),
       start,
@@ -312,13 +314,13 @@ export class KrnPagination {
   }
 
   protected pageAriaLabel(page: number): string {
+    const inputPageLabel = this.pageLabel();
+    const pageLabel = inputPageLabel ?? this.translations.navigation.pageLabel;
     const formatted = krnFormatTranslation(
-      this.pageLabel(),
+      pageLabel,
       { page },
       this.pageLabelFormatter() ??
-        (this.pageLabel() === this.translations.navigation.pageLabel
-          ? this.translations.navigation.formatPageLabel
-          : undefined),
+        (inputPageLabel === undefined ? this.translations.navigation.formatPageLabel : undefined),
       page,
     );
     return (

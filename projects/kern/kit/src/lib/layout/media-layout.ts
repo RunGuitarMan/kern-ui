@@ -399,7 +399,7 @@ export class KrnScrollArea {
   readonly keyboardAccessible = input(true, { transform: booleanAttribute });
 
   /** Names the scrollable region. Blank values omit the region role and accessible name. */
-  readonly ariaLabel = input<string | null>(this.translations.layout.scrollableContent);
+  readonly ariaLabel = input<string | null | undefined>();
 
   /** Controls native scrollbar visibility and gutter allocation. */
   readonly scrollbar = input<'auto' | 'stable' | 'hidden'>('auto');
@@ -412,7 +412,12 @@ export class KrnScrollArea {
     const scrollbar = this.scrollbar();
     return scrollbar === 'stable' || scrollbar === 'hidden' ? scrollbar : 'auto';
   });
-  protected readonly resolvedAriaLabel = computed(() => this.ariaLabel()?.trim() || null);
+  protected readonly resolvedAriaLabel = computed(() => {
+    const inputLabel = this.ariaLabel();
+    const label =
+      inputLabel === undefined ? this.translations.layout.scrollableContent : inputLabel;
+    return label?.trim() || null;
+  });
   protected readonly resolvedMaxBlockSize = computed(() =>
     krnCssLength(this.maxBlockSize(), '100%'),
   );

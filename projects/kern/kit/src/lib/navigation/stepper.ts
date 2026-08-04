@@ -227,8 +227,8 @@ export class KrnStepper {
   readonly completedSteps = input<readonly number[]>([]);
   readonly linear = input(false, { transform: booleanAttribute });
   readonly orientation = input<KrnNavigationOrientation>('horizontal');
-  readonly ariaLabel = input(this.translations.navigation.progress);
-  readonly optionalLabel = input(this.translations.navigation.optional);
+  readonly ariaLabel = input<string | undefined>();
+  readonly optionalLabel = input<string | undefined>();
   protected readonly resolvedOrientation = computed<KrnNavigationOrientation>(() =>
     this.orientation() === 'vertical' ? 'vertical' : 'horizontal',
   );

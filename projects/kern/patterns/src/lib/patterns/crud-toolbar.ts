@@ -86,9 +86,9 @@ import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 })
 export class KrnCrudToolbar {
   private readonly translations = inject(KRN_TRANSLATIONS);
-  readonly ariaLabel = input(this.translations.patterns.actions);
+  readonly ariaLabel = input<typeof this.translations.patterns.actions | undefined>();
   readonly selectedCount = input(0, { transform: numberAttribute });
-  readonly selectedLabel = input(this.translations.patterns.selectedCount);
+  readonly selectedLabel = input<typeof this.translations.patterns.selectedCount | undefined>();
   protected readonly resolvedAriaLabel = computed(() =>
     this.requiredLabel(this.ariaLabel(), this.translations.patterns.actions, 'Actions'),
   );
@@ -109,7 +109,7 @@ export class KrnCrudToolbar {
     return formatted.trim() || translated.trim() || `${count} selected`;
   });
 
-  private requiredLabel(value: string, fallback: string, hardFallback: string): string {
+  private requiredLabel(value: string | undefined, fallback: string, hardFallback: string): string {
     const normalized = typeof value === 'string' ? value.trim() : '';
     const normalizedFallback = typeof fallback === 'string' ? fallback.trim() : '';
     return normalized || normalizedFallback || hardFallback;

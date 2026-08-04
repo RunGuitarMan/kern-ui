@@ -1,10 +1,11 @@
-import type { EnvironmentProviders, Provider } from '@angular/core';
+import type { EnvironmentProviders, Provider, Signal } from '@angular/core';
 import {
   DestroyRef,
+  Injector,
+  effect,
   inject,
   Injectable,
   InjectionToken,
-  LOCALE_ID,
   makeEnvironmentProviders,
   provideEnvironmentInitializer,
 } from '@angular/core';
@@ -12,9 +13,17 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 
 import { KRN_OVERLAY_HOST, KRN_PLATFORM } from '@kern-ui/angular/cdk';
 import type { KrnOverlayHostResolver, KrnPlatformAdapter } from '@kern-ui/angular/cdk';
+import type { KrnI18nValue } from '@kern-ui/angular/i18n';
 import type { KrnDensity, KrnTheme } from '../foundations/tokens';
-import { createKrnTranslations, KRN_TRANSLATIONS } from './i18n';
-import type { KrnTranslationsPatch } from './i18n';
+import {
+  KRN_I18N_INITIAL_LOCALE,
+  KRN_I18N_INITIAL_TRANSLATIONS,
+  KRN_TRANSLATIONS,
+  KrnI18n,
+  createKrnTranslations,
+  normalizeKrnLocale,
+} from './i18n';
+import type { KrnTranslations, KrnTranslationsPatch } from './i18n';
 import {
   captureKrnElementState,
   ownKrnDocumentState,
@@ -42,16 +51,19 @@ export interface KrnConfig {
 }
 
 const EMPTY_CONFIG: Readonly<KrnConfig> = Object.freeze({});
-const KRN_RUNTIME_DOCUMENT_STATE = Symbol('KRN_RUNTIME_DOCUMENT_STATE');
+const KRN_RUNTIME_DOCUMENT_STATE = Symbol.for(
+  '@kern-ui/angular/core/runtime-config-document-state/v1',
+);
 
 export const KRN_CONFIG = new InjectionToken<Readonly<KrnConfig>>('KRN_CONFIG', {
   providedIn: 'root',
   factory: () => EMPTY_CONFIG,
 });
 
-export const KRN_LOCALE = new InjectionToken<string>('KRN_LOCALE', {
+/** Active locale source; read direct injections with `krnReadI18nValue`. */
+export const KRN_LOCALE = new InjectionToken<KrnI18nValue<string>>('KRN_LOCALE', {
   providedIn: 'root',
-  factory: () => inject(LOCALE_ID),
+  factory: () => inject(KrnI18n).locale,
 });
 
 export const KRN_DIRECTION = new InjectionToken<KrnDirection>('KRN_DIRECTION', {
@@ -66,24 +78,6 @@ export const KRN_MOTION = new InjectionToken<KrnMotionPreference>('KRN_MOTION', 
   providedIn: 'root',
   factory: () => 'system',
 });
-
-function normalizedLocale(locale: string): string {
-  const value = locale.trim();
-  if (!value) {
-    throw new Error('Kern locale must be a non-empty BCP 47 language tag.');
-  }
-
-  try {
-    const canonical = Intl.getCanonicalLocales(value)[0];
-    if (canonical) {
-      return canonical;
-    }
-  } catch {
-    // The public error below is stable across JavaScript engines.
-  }
-
-  throw new Error(`Invalid Kern locale "${value}". Expected a BCP 47 language tag.`);
-}
 
 function overlayHostProvider(host: KrnOverlayHost): Provider {
   if (typeof host === 'function') {
@@ -122,14 +116,17 @@ class KrnOverlayContainer extends OverlayContainer {
 }
 
 /**
- * Applies document-level preferences only when the consumer explicitly owns
- * them through `provideKrn`. Injection-token defaults never mutate the host app.
+ * Applies document-level preferences only while an injector owns them through
+ * `provideKrn`. Locale ownership always keeps `html[lang]` aligned with the
+ * active `KrnI18n` scope; bare injection-token defaults do not mutate the host.
  */
 @Injectable()
 class KrnRuntimeConfigService {
   private readonly config = inject(KRN_CONFIG);
+  private readonly i18n = inject(KrnI18n);
   private readonly platform = inject(KRN_PLATFORM);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly injector = inject(Injector);
   private initialized = false;
 
   initialize(): void {
@@ -143,28 +140,33 @@ class KrnRuntimeConfigService {
       return;
     }
 
-    const attributes = [
-      ...(this.config.locale === undefined ? [] : [['lang', this.config.locale] as const]),
-      ...(this.config.direction === undefined ? [] : [['dir', this.config.direction] as const]),
-      ...(this.config.motion === undefined
-        ? []
-        : [['data-krn-motion', this.config.motion] as const]),
+    const attributeNames = [
+      'lang',
+      ...(this.config.direction === undefined ? [] : ['dir']),
+      ...(this.config.motion === undefined ? [] : ['data-krn-motion']),
     ];
-    if (!attributes.length) return;
 
-    ownKrnDocumentState(
+    const ownership = ownKrnDocumentState(
       root,
       KRN_RUNTIME_DOCUMENT_STATE,
       this.destroyRef,
-      () =>
-        captureKrnElementState(
-          root,
-          attributes.map(([name]) => name),
-        ),
+      () => captureKrnElementState(root, attributeNames),
       () => {
-        for (const [name, value] of attributes) root.setAttribute(name, value);
+        root.setAttribute('lang', this.i18n.locale());
+        if (this.config.direction !== undefined) root.setAttribute('dir', this.config.direction);
+        if (this.config.motion !== undefined) {
+          root.setAttribute('data-krn-motion', this.config.motion);
+        }
       },
       (snapshot) => restoreKrnElementState(root, snapshot),
+    );
+
+    effect(
+      () => {
+        const locale = this.i18n.locale();
+        if (ownership.isActive()) root.setAttribute('lang', locale);
+      },
+      { injector: this.injector },
     );
   }
 }
@@ -180,14 +182,25 @@ class KrnRuntimeConfigService {
 export function provideKrn(config: KrnConfig = {}): EnvironmentProviders {
   const frozenConfig = Object.freeze({
     ...config,
-    locale: config.locale === undefined ? undefined : normalizedLocale(config.locale),
+    locale: config.locale === undefined ? undefined : normalizeKrnLocale(config.locale),
   });
   const translations = createKrnTranslations(frozenConfig.translations);
   const providers: Array<Provider | EnvironmentProviders> = [
     { provide: KRN_CONFIG, useValue: frozenConfig },
+    ...(frozenConfig.locale === undefined
+      ? []
+      : [{ provide: KRN_I18N_INITIAL_LOCALE, useValue: frozenConfig.locale }]),
+    { provide: KRN_I18N_INITIAL_TRANSLATIONS, useValue: translations },
+    KrnI18n,
     {
       provide: KRN_TRANSLATIONS,
-      useValue: translations,
+      deps: [KrnI18n],
+      useFactory: (i18n: KrnI18n): Readonly<KrnTranslations> => i18n.dictionary,
+    },
+    {
+      provide: KRN_LOCALE,
+      deps: [KrnI18n],
+      useFactory: (i18n: KrnI18n): Signal<string> => i18n.locale,
     },
     provideKrnTranslationBridge(),
     provideKrnTheme({
@@ -204,9 +217,6 @@ export function provideKrn(config: KrnConfig = {}): EnvironmentProviders {
     { provide: OverlayContainer, useClass: KrnOverlayContainer },
   ];
 
-  if (frozenConfig.locale !== undefined) {
-    providers.push({ provide: KRN_LOCALE, useValue: frozenConfig.locale });
-  }
   if (frozenConfig.direction !== undefined) {
     providers.push({ provide: KRN_DIRECTION, useValue: frozenConfig.direction });
   }

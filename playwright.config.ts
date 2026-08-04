@@ -115,5 +115,25 @@ export default defineConfig({
         launchOptions: {},
       },
     },
+    {
+      name: 'mobile-touch-chromium',
+      testMatch: /mobile-touch\/.*\.spec\.ts/,
+      use: {
+        ...devices['Pixel 7'],
+        baseURL: docsUrl,
+        browserName: 'chromium',
+        ...chromiumLaunchOptions,
+      },
+    },
+    {
+      name: 'mobile-touch-webkit',
+      testMatch: /mobile-touch\/.*\.spec\.ts/,
+      use: {
+        ...devices['iPhone 15'],
+        baseURL: docsUrl,
+        browserName: 'webkit',
+        launchOptions: {},
+      },
+    },
   ],
 });

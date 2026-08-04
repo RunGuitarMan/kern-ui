@@ -90,9 +90,9 @@
       "name": "ariaLabel",
       "property": "ariaLabel",
       "kind": "input",
-      "type": "string | null",
+      "type": "string | null | undefined",
       "required": false,
-      "defaultValue": "this.translations.layout.scrollableContent",
+      "defaultValue": "undefined",
       "description": "Names the scrollable region. Blank values omit the region role and accessible name.",
       "descriptionSource": "source"
     },
@@ -376,7 +376,7 @@
         "componentId": "scroll-area",
         "publicName": "ariaLabel",
         "kind": "input",
-        "type": "string | null",
+        "type": "string | null | undefined",
         "code": "accessibility-copy",
         "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
         "evidence": {

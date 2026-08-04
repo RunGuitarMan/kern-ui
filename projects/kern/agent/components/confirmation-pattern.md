@@ -52,15 +52,15 @@ void bootstrapApplication(KernConfirmationPatternAgentExample);
 
 ## API
 
-| Name           | Kind   | Type      | Required | Default                                    | Description                                                              |
-| -------------- | ------ | --------- | -------- | ------------------------------------------ | ------------------------------------------------------------------------ |
-| `confirming`   | model  | `boolean` | no       | `false`                                    | Controlled confirming state with a matching Angular model-change output. |
-| `requestLabel` | input  | `string`  | no       | `this.translations.feedback.delete`        | Human-readable copy for the request state or control.                    |
-| `prompt`       | input  | `string`  | no       | `this.translations.feedback.confirmPrompt` | Human-readable copy for the prompt state or control.                     |
-| `confirmLabel` | input  | `string`  | no       | `this.translations.feedback.confirm`       | Human-readable copy for the confirm state or control.                    |
-| `cancelLabel`  | input  | `string`  | no       | `this.translations.feedback.cancel`        | Human-readable copy for the cancel state or control.                     |
-| `confirmed`    | output | `void`    | no       | `undefined`                                | Notifies the consumer after the confirmed interaction completes.         |
-| `cancelled`    | output | `void`    | no       | `undefined`                                | Notifies the consumer after the cancelled interaction completes.         |
+| Name           | Kind   | Type                  | Required | Default     | Description                                                              |
+| -------------- | ------ | --------------------- | -------- | ----------- | ------------------------------------------------------------------------ |
+| `confirming`   | model  | `boolean`             | no       | `false`     | Controlled confirming state with a matching Angular model-change output. |
+| `requestLabel` | input  | `string \| undefined` | no       | `undefined` | Human-readable copy for the request state or control.                    |
+| `prompt`       | input  | `string \| undefined` | no       | `undefined` | Human-readable copy for the prompt state or control.                     |
+| `confirmLabel` | input  | `string \| undefined` | no       | `undefined` | Human-readable copy for the confirm state or control.                    |
+| `cancelLabel`  | input  | `string \| undefined` | no       | `undefined` | Human-readable copy for the cancel state or control.                     |
+| `confirmed`    | output | `void`                | no       | `undefined` | Notifies the consumer after the confirmed interaction completes.         |
+| `cancelled`    | output | `void`                | no       | `undefined` | Notifies the consumer after the cancelled interaction completes.         |
 
 ## Deprecated selectors
 

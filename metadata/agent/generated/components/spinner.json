@@ -51,9 +51,9 @@
       "name": "label",
       "property": "label",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.feedback.loading",
+      "defaultValue": "undefined",
       "description": "Visible text that names the control or data value.",
       "descriptionSource": "inferred"
     }

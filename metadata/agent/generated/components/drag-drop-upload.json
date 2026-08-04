@@ -69,9 +69,9 @@
       "name": "label",
       "property": "label",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.forms.chooseFiles",
+      "defaultValue": "undefined",
       "description": "Visible text that names the control or data value.",
       "descriptionSource": "inferred"
     },
@@ -79,9 +79,9 @@
       "name": "locale",
       "property": "locale",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "inject(KRN_LOCALE)",
+      "defaultValue": "undefined",
       "description": "Locale identifier used for collation, formatting, and component-owned copy.",
       "descriptionSource": "inferred"
     },
@@ -199,9 +199,9 @@
       "name": "dropLabel",
       "property": "dropLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.forms.dropFilesHere",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the drop state or control.",
       "descriptionSource": "inferred"
     },
@@ -704,7 +704,7 @@
         "componentId": "drag-drop-upload",
         "publicName": "dropLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
@@ -716,7 +716,7 @@
         "componentId": "drag-drop-upload",
         "publicName": "locale",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "locale-environment",
         "reason": "Locale is owned by the playground environment selector so every locale-sensitive component changes consistently.",
         "evidence": {

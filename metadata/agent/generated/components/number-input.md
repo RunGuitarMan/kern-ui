@@ -54,28 +54,28 @@ void bootstrapApplication(KernNumberInputAgentExample);
 
 ## API
 
-| Name              | Kind   | Type                          | Required | Default                                 | Description                                                                                      |
-| ----------------- | ------ | ----------------------------- | -------- | --------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`                      | no       | `''`                                    | Stable identifier value used by the id contract.                                                 |
-| `name`            | input  | `string`                      | no       | `''`                                    | Required human-readable name for the represented person, item, or action.                        |
-| `placeholder`     | input  | `string`                      | no       | `''`                                    | Short input hint shown only while no value is present.                                           |
-| `ariaLabel`       | input  | `string`                      | no       | `''`                                    | Accessible name used when visible content is not sufficient.                                     |
-| `ariaLabelledBy`  | input  | `string`                      | no       | `''`                                    | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
-| `ariaDescribedBy` | input  | `string`                      | no       | `''`                                    | Space-separated element ids composed with Form Field hints and validation descriptions.          |
-| `autocomplete`    | input  | `string`                      | no       | `'off'`                                 | Native autocomplete purpose forwarded to the editable control.                                   |
-| `inputMode`       | input  | `KrnInputMode`                | no       | `'decimal'`                             | Virtual-keyboard hint forwarded to the editable control.                                         |
-| `value`           | input  | `number \| null \| undefined` | no       | `undefined`                             | Controlled component value.                                                                      |
-| `increaseLabel`   | input  | `string`                      | no       | `this.translations.forms.increaseValue` | Human-readable copy for the increase state or control.                                           |
-| `decreaseLabel`   | input  | `string`                      | no       | `this.translations.forms.decreaseValue` | Human-readable copy for the decrease state or control.                                           |
-| `min`             | input  | `number \| undefined`         | no       | `undefined`                             | Smallest accepted numeric or temporal value.                                                     |
-| `max`             | input  | `number \| undefined`         | no       | `undefined`                             | Largest accepted numeric or temporal value.                                                      |
-| `step`            | input  | `number`                      | no       | `1`                                     | Increment applied by keyboard and pointer value adjustments.                                     |
-| `showSteppers`    | input  | `boolean`                     | no       | `true`                                  | Controls whether the component applies the show steppers behavior.                               |
-| `disabled`        | input  | `boolean`                     | no       | `false`                                 | Prevents user interaction and participates in the disabled-state contract.                       |
-| `readonly`        | input  | `boolean`                     | no       | `false`                                 | Keeps the value perceivable while preventing user edits.                                         |
-| `required`        | input  | `boolean`                     | no       | `false`                                 | Marks the value as required and participates in Angular Forms validation.                        |
-| `invalid`         | input  | `boolean`                     | no       | `false`                                 | Exposes an externally controlled invalid presentation state.                                     |
-| `valueChange`     | output | `number \| null`              | no       | `undefined`                             | Notifies the consumer after the value change interaction completes.                              |
+| Name              | Kind   | Type                          | Required | Default     | Description                                                                                      |
+| ----------------- | ------ | ----------------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`                      | no       | `''`        | Stable identifier value used by the id contract.                                                 |
+| `name`            | input  | `string`                      | no       | `''`        | Required human-readable name for the represented person, item, or action.                        |
+| `placeholder`     | input  | `string`                      | no       | `''`        | Short input hint shown only while no value is present.                                           |
+| `ariaLabel`       | input  | `string`                      | no       | `''`        | Accessible name used when visible content is not sufficient.                                     |
+| `ariaLabelledBy`  | input  | `string`                      | no       | `''`        | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`                      | no       | `''`        | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `autocomplete`    | input  | `string`                      | no       | `'off'`     | Native autocomplete purpose forwarded to the editable control.                                   |
+| `inputMode`       | input  | `KrnInputMode`                | no       | `'decimal'` | Virtual-keyboard hint forwarded to the editable control.                                         |
+| `value`           | input  | `number \| null \| undefined` | no       | `undefined` | Controlled component value.                                                                      |
+| `increaseLabel`   | input  | `string \| undefined`         | no       | `undefined` | Human-readable copy for the increase state or control.                                           |
+| `decreaseLabel`   | input  | `string \| undefined`         | no       | `undefined` | Human-readable copy for the decrease state or control.                                           |
+| `min`             | input  | `number \| undefined`         | no       | `undefined` | Smallest accepted numeric or temporal value.                                                     |
+| `max`             | input  | `number \| undefined`         | no       | `undefined` | Largest accepted numeric or temporal value.                                                      |
+| `step`            | input  | `number`                      | no       | `1`         | Increment applied by keyboard and pointer value adjustments.                                     |
+| `showSteppers`    | input  | `boolean`                     | no       | `true`      | Controls whether the component applies the show steppers behavior.                               |
+| `disabled`        | input  | `boolean`                     | no       | `false`     | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean`                     | no       | `false`     | Keeps the value perceivable while preventing user edits.                                         |
+| `required`        | input  | `boolean`                     | no       | `false`     | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`         | input  | `boolean`                     | no       | `false`     | Exposes an externally controlled invalid presentation state.                                     |
+| `valueChange`     | output | `number \| null`              | no       | `undefined` | Notifies the consumer after the value change interaction completes.                              |
 
 ## Deprecated selectors
 

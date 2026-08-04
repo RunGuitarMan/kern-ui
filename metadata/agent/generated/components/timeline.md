@@ -52,9 +52,9 @@ void bootstrapApplication(KernTimelineAgentExample);
 
 ## API
 
-| Name        | Kind  | Type     | Required | Default                                  | Description                                                  |
-| ----------- | ----- | -------- | -------- | ---------------------------------------- | ------------------------------------------------------------ |
-| `ariaLabel` | input | `string` | no       | `this.translations.dataDisplay.timeline` | Accessible name used when visible content is not sufficient. |
+| Name        | Kind  | Type                  | Required | Default     | Description                                                  |
+| ----------- | ----- | --------------------- | -------- | ----------- | ------------------------------------------------------------ |
+| `ariaLabel` | input | `string \| undefined` | no       | `undefined` | Accessible name used when visible content is not sufficient. |
 
 ## Deprecated selectors
 

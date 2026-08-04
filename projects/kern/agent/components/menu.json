@@ -79,9 +79,9 @@
       "name": "triggerLabel",
       "property": "triggerLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.navigation.actions",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the trigger state or control.",
       "descriptionSource": "inferred"
     },
@@ -89,9 +89,9 @@
       "name": "triggerAriaLabel",
       "property": "triggerAriaLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.navigation.openMenu",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the trigger aria state or control.",
       "descriptionSource": "inferred"
     },
@@ -99,9 +99,9 @@
       "name": "menuAriaLabel",
       "property": "menuAriaLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.navigation.actions",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the menu aria state or control.",
       "descriptionSource": "inferred"
     },
@@ -109,9 +109,9 @@
       "name": "emptyLabel",
       "property": "emptyLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.navigation.menuEmpty",
+      "defaultValue": "undefined",
       "description": "Accessible copy that explains the empty state.",
       "descriptionSource": "inferred"
     },
@@ -423,7 +423,7 @@
         "componentId": "menu",
         "publicName": "emptyLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
@@ -447,7 +447,7 @@
         "componentId": "menu",
         "publicName": "menuAriaLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
         "evidence": {
@@ -459,7 +459,7 @@
         "componentId": "menu",
         "publicName": "triggerAriaLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
         "evidence": {
@@ -471,7 +471,7 @@
         "componentId": "menu",
         "publicName": "triggerLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {

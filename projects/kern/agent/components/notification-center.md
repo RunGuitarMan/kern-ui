@@ -67,17 +67,17 @@ void bootstrapApplication(KernNotificationCenterAgentExample);
 
 ## API
 
-| Name                   | Kind   | Type                             | Required | Default                                         | Description                                                                  |
-| ---------------------- | ------ | -------------------------------- | -------- | ----------------------------------------------- | ---------------------------------------------------------------------------- |
-| `heading`              | input  | `string`                         | no       | `this.translations.patterns.notifications`      | Human-readable copy for the heading state or control.                        |
-| `ariaLabel`            | input  | `string`                         | no       | `this.translations.patterns.notificationCenter` | Accessible name used when visible content is not sufficient.                 |
-| `unreadLabel`          | input  | `(count: number) => string`      | no       | `this.translations.patterns.unreadCount`        | Human-readable copy for the unread state or control.                         |
-| `unreadStateLabel`     | input  | `string`                         | no       | `this.translations.patterns.unread`             | Human-readable copy for the unread state state or control.                   |
-| `markAllReadLabel`     | input  | `string`                         | no       | `this.translations.patterns.markAllRead`        | Human-readable copy for the mark all read state or control.                  |
-| `emptyLabel`           | input  | `string`                         | no       | `this.translations.patterns.notificationsEmpty` | Accessible copy that explains the empty state.                               |
-| `notifications`        | input  | `ReadonlyArray<KrnNotification>` | no       | `[]`                                            | Ordered domain values supplied to the notification collection.               |
-| `markAllRead`          | output | `void`                           | no       | `undefined`                                     | Notifies the consumer after the mark all read interaction completes.         |
-| `notificationSelected` | output | `KrnNotification`                | no       | `undefined`                                     | Notifies the consumer after the notification selected interaction completes. |
+| Name                   | Kind   | Type                                       | Required | Default     | Description                                                                  |
+| ---------------------- | ------ | ------------------------------------------ | -------- | ----------- | ---------------------------------------------------------------------------- |
+| `heading`              | input  | `string \| undefined`                      | no       | `undefined` | Human-readable copy for the heading state or control.                        |
+| `ariaLabel`            | input  | `string \| undefined`                      | no       | `undefined` | Accessible name used when visible content is not sufficient.                 |
+| `unreadLabel`          | input  | `((count: number) => string) \| undefined` | no       | `undefined` | Human-readable copy for the unread state or control.                         |
+| `unreadStateLabel`     | input  | `string \| undefined`                      | no       | `undefined` | Human-readable copy for the unread state state or control.                   |
+| `markAllReadLabel`     | input  | `string \| undefined`                      | no       | `undefined` | Human-readable copy for the mark all read state or control.                  |
+| `emptyLabel`           | input  | `string \| undefined`                      | no       | `undefined` | Accessible copy that explains the empty state.                               |
+| `notifications`        | input  | `ReadonlyArray<KrnNotification>`           | no       | `[]`        | Ordered domain values supplied to the notification collection.               |
+| `markAllRead`          | output | `void`                                     | no       | `undefined` | Notifies the consumer after the mark all read interaction completes.         |
+| `notificationSelected` | output | `KrnNotification`                          | no       | `undefined` | Notifies the consumer after the notification selected interaction completes. |
 
 ## Deprecated selectors
 

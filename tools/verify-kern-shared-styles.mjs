@@ -19,7 +19,9 @@ const sharedStyles = [
     path: join(sourceRoot, 'styles/components/projection.css'),
   },
 ];
-const maxRuntimeBundleBytes = 1_485_000;
+// The reactive locale/input runtime and typed overlay state add 15.5 kB (1.05%) over
+// the pre-hardening 1,480,500-byte bundle. Keep only 4 kB of regression headroom.
+const maxRuntimeBundleBytes = 1_500_000;
 const failures = [];
 
 function walk(directory, extension) {

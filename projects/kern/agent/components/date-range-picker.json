@@ -117,9 +117,9 @@
       "name": "locale",
       "property": "locale",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "inject(KRN_LOCALE)",
+      "defaultValue": "undefined",
       "description": "Locale identifier used for collation, formatting, and component-owned copy.",
       "descriptionSource": "inferred"
     },
@@ -127,9 +127,9 @@
       "name": "today",
       "property": "today",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "toIsoDate(new Date(this.platform.now()))",
+      "defaultValue": "undefined",
       "description": "Deterministic plain date treated as today on both server and client.",
       "descriptionSource": "inferred"
     },
@@ -157,9 +157,9 @@
       "name": "startLabel",
       "property": "startLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.datePicker.startDate",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the start state or control.",
       "descriptionSource": "inferred"
     },
@@ -167,9 +167,9 @@
       "name": "endLabel",
       "property": "endLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.datePicker.endDate",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the end state or control.",
       "descriptionSource": "inferred"
     },
@@ -513,7 +513,7 @@
         "key": "today",
         "label": "Today",
         "kind": "text",
-        "defaultValue": "2026-07-30",
+        "defaultValue": "",
         "testValue": "2026-08-15",
         "description": "Configures the component today contract.",
         "binding": {
@@ -810,7 +810,7 @@
         "componentId": "date-range-picker",
         "publicName": "endLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
@@ -834,7 +834,7 @@
         "componentId": "date-range-picker",
         "publicName": "locale",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "locale-environment",
         "reason": "Locale is owned by the playground environment selector so every locale-sensitive component changes consistently.",
         "evidence": {
@@ -846,7 +846,7 @@
         "componentId": "date-range-picker",
         "publicName": "startLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {

@@ -70,9 +70,9 @@
       "name": "label",
       "property": "label",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.forms.range",
+      "defaultValue": "undefined",
       "description": "Visible text that names the control or data value.",
       "descriptionSource": "inferred"
     },
@@ -80,9 +80,9 @@
       "name": "startLabel",
       "property": "startLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.forms.minimumValue",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the start state or control.",
       "descriptionSource": "inferred"
     },
@@ -90,9 +90,9 @@
       "name": "endLabel",
       "property": "endLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.forms.maximumValue",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the end state or control.",
       "descriptionSource": "inferred"
     },
@@ -605,7 +605,7 @@
         "componentId": "range-slider",
         "publicName": "endLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
@@ -617,7 +617,7 @@
         "componentId": "range-slider",
         "publicName": "startLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {

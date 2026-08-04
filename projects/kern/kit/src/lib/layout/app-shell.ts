@@ -22,6 +22,7 @@ import {
   type KrnOverlayInitialFocus,
 } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
 import type { KrnLayoutSpace } from './layout.types';
 import { krnCssLength } from './layout.types';
 
@@ -38,7 +39,9 @@ import { krnCssLength } from './layout.types';
       [attr.aria-controls]="mobileNavigationId()"
       [attr.aria-expanded]="isMobileNavigationOpen()"
       aria-haspopup="dialog"
-      [attr.aria-label]="isMobileNavigationOpen() ? closeNavigationLabel() : openNavigationLabel()"
+      [attr.aria-label]="
+        isMobileNavigationOpen() ? resolvedCloseNavigationLabel() : resolvedOpenNavigationLabel()
+      "
       (click)="toggleMobileNavigation()"
     >
       <span aria-hidden="true">☰</span>
@@ -58,7 +61,9 @@ import { krnCssLength } from './layout.types';
             : null
         "
         [attr.aria-label]="
-          isMobileNavigationOpen() && !mobileNavigationLabelledBy() ? mobileNavigationLabel() : null
+          isMobileNavigationOpen() && !mobileNavigationLabelledBy()
+            ? resolvedMobileNavigationLabel()
+            : null
         "
         [attr.aria-labelledby]="
           isMobileNavigationOpen() && mobileNavigationLabelledBy()
@@ -75,7 +80,7 @@ import { krnCssLength } from './layout.types';
           <button
             type="button"
             class="krn-shell__mobile-close"
-            [attr.aria-label]="closeNavigationLabel()"
+            [attr.aria-label]="resolvedCloseNavigationLabel()"
             (click)="closeMobileNavigation()"
           >
             <span aria-hidden="true">×</span>
@@ -310,15 +315,27 @@ export class KrnAppShell {
   readonly mobileNavigation = input<'auto' | 'hidden' | 'sidebar' | 'rail'>('auto');
   readonly mobileNavigationOpen = model(false);
   readonly mobileNavigationId = input(this.ids.next('mobile-navigation'));
-  readonly mobileNavigationLabel = input(this.translations.layout.mobileNavigation);
+  readonly mobileNavigationLabel = input<string | undefined>();
+  protected readonly resolvedMobileNavigationLabel = krnInputFallback(
+    this.mobileNavigationLabel,
+    () => this.translations.layout.mobileNavigation,
+  );
   /** Space-separated element ids that name the mobile navigation dialog. */
   readonly mobileNavigationLabelledBy = input('');
   /** Space-separated element ids that describe the mobile navigation dialog. */
   readonly mobileNavigationDescribedBy = input('');
   /** Focus target applied after the mobile navigation dialog opens. */
   readonly mobileNavigationInitialFocus = input<KrnOverlayInitialFocus>('first-tabbable');
-  readonly openNavigationLabel = input(this.translations.layout.openNavigation);
-  readonly closeNavigationLabel = input(this.translations.layout.closeNavigation);
+  readonly openNavigationLabel = input<string | undefined>();
+  protected readonly resolvedOpenNavigationLabel = krnInputFallback(
+    this.openNavigationLabel,
+    () => this.translations.layout.openNavigation,
+  );
+  readonly closeNavigationLabel = input<string | undefined>();
+  protected readonly resolvedCloseNavigationLabel = krnInputFallback(
+    this.closeNavigationLabel,
+    () => this.translations.layout.closeNavigation,
+  );
   readonly mainId = input('main-content');
   protected readonly isMobileNavigationOpen = computed(
     () =>
@@ -546,7 +563,7 @@ export class KrnHeader {
   template: `
     <aside
       class="krn-sidebar"
-      [attr.aria-label]="ariaLabelledBy() ? null : ariaLabel() || null"
+      [attr.aria-label]="ariaLabelledBy() ? null : resolvedAriaLabel() || null"
       [attr.aria-labelledby]="ariaLabelledBy() || null"
       [attr.aria-describedby]="ariaDescribedBy() || null"
       [hidden]="isHidden()"
@@ -657,7 +674,11 @@ export class KrnSidebar {
   readonly collapsedMode = input<'icons' | 'hidden'>('icons');
   readonly width = input<KrnLayoutSpace>('var(--krn-shell-sidebar-width, 17rem)');
   readonly collapsedWidth = input<KrnLayoutSpace>('4rem');
-  readonly ariaLabel = input(this.translations.layout.secondaryNavigation);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.layout.secondaryNavigation,
+  );
   /** Space-separated element ids that name the native complementary landmark. */
   readonly ariaLabelledBy = input('');
   /** Space-separated element ids that describe the native complementary landmark. */
@@ -692,7 +713,7 @@ export class KrnSidebar {
   template: `
     <nav
       class="krn-rail"
-      [attr.aria-label]="ariaLabelledBy() ? null : ariaLabel() || null"
+      [attr.aria-label]="ariaLabelledBy() ? null : resolvedAriaLabel() || null"
       [attr.aria-labelledby]="ariaLabelledBy() || null"
       [attr.aria-describedby]="ariaDescribedBy() || null"
     >
@@ -794,7 +815,11 @@ export class KrnNavigationRail {
   readonly expanded = model(false);
   readonly width = input<KrnLayoutSpace>('var(--krn-shell-rail-width, 3.5rem)');
   readonly expandedWidth = input<KrnLayoutSpace>('14rem');
-  readonly ariaLabel = input(this.translations.layout.primaryNavigation);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.layout.primaryNavigation,
+  );
   /** Space-separated element ids that name the native navigation landmark. */
   readonly ariaLabelledBy = input('');
   /** Space-separated element ids that describe the native navigation landmark. */

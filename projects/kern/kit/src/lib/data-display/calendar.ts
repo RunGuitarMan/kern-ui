@@ -13,8 +13,9 @@ import {
   numberAttribute,
   output,
 } from '@angular/core';
-import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnCalendarTranslations } from '@kern-ui/angular/core';
+import { krnResolvedLocale } from '../reactive-locale';
 
 export interface KrnCalendarDay {
   readonly iso: string;
@@ -273,7 +274,8 @@ export class KrnCalendar {
   readonly min = input('');
   readonly max = input('');
   readonly disabledDates = input<ReadonlySet<string>>(new Set<string>());
-  readonly locale = input(inject(KRN_LOCALE));
+  readonly locale = input<string | undefined>();
+  private readonly resolvedLocale = krnResolvedLocale(this.locale);
   readonly labels = input<Partial<KrnCalendarTranslations>>({});
   readonly weekStartsOn = input<0 | 1, unknown>(1, {
     transform: weekStartsOnAttribute,
@@ -299,15 +301,18 @@ export class KrnCalendar {
   });
   protected readonly monthLabel = computed(() => {
     const [year = 2000, month = 1] = this.visibleMonth().split('-').map(Number);
-    return new Intl.DateTimeFormat(this.locale(), {
+    return new Intl.DateTimeFormat(this.resolvedLocale(), {
       month: 'long',
       year: 'numeric',
       timeZone: 'UTC',
     }).format(new Date(Date.UTC(year, month - 1, 1)));
   });
   protected readonly weekdays = computed(() => {
-    const formatter = new Intl.DateTimeFormat(this.locale(), { weekday: 'long', timeZone: 'UTC' });
-    const shortFormatter = new Intl.DateTimeFormat(this.locale(), {
+    const formatter = new Intl.DateTimeFormat(this.resolvedLocale(), {
+      weekday: 'long',
+      timeZone: 'UTC',
+    });
+    const shortFormatter = new Intl.DateTimeFormat(this.resolvedLocale(), {
       weekday: 'narrow',
       timeZone: 'UTC',
     });
@@ -404,7 +409,7 @@ export class KrnCalendar {
   }
 
   protected dayLabel(value: string): string {
-    return new Intl.DateTimeFormat(this.locale(), {
+    return new Intl.DateTimeFormat(this.resolvedLocale(), {
       weekday: 'long',
       year: 'numeric',
       month: 'long',

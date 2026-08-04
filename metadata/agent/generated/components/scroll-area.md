@@ -56,14 +56,14 @@ void bootstrapApplication(KernScrollAreaAgentExample);
 
 ## API
 
-| Name                 | Kind  | Type                                   | Required | Default                                      | Description                                                                         |
-| -------------------- | ----- | -------------------------------------- | -------- | -------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `axis`               | input | `"both" \| "horizontal" \| "vertical"` | no       | `'vertical'`                                 | Selects the scrollable axis. Invalid runtime values fall back to vertical.          |
-| `maxBlockSize`       | input | `KrnLayoutSpace`                       | no       | `'100%'`                                     | Upper or lower bound applied to the block size value.                               |
-| `maxInlineSize`      | input | `KrnLayoutSpace`                       | no       | `'100%'`                                     | Upper or lower bound applied to the inline size value.                              |
-| `keyboardAccessible` | input | `boolean`                              | no       | `true`                                       | Keeps the native viewport keyboard-scrollable when enabled.                         |
-| `ariaLabel`          | input | `string \| null`                       | no       | `this.translations.layout.scrollableContent` | Names the scrollable region. Blank values omit the region role and accessible name. |
-| `scrollbar`          | input | `"auto" \| "hidden" \| "stable"`       | no       | `'auto'`                                     | Controls native scrollbar visibility and gutter allocation.                         |
+| Name                 | Kind  | Type                                   | Required | Default      | Description                                                                         |
+| -------------------- | ----- | -------------------------------------- | -------- | ------------ | ----------------------------------------------------------------------------------- |
+| `axis`               | input | `"both" \| "horizontal" \| "vertical"` | no       | `'vertical'` | Selects the scrollable axis. Invalid runtime values fall back to vertical.          |
+| `maxBlockSize`       | input | `KrnLayoutSpace`                       | no       | `'100%'`     | Upper or lower bound applied to the block size value.                               |
+| `maxInlineSize`      | input | `KrnLayoutSpace`                       | no       | `'100%'`     | Upper or lower bound applied to the inline size value.                              |
+| `keyboardAccessible` | input | `boolean`                              | no       | `true`       | Keeps the native viewport keyboard-scrollable when enabled.                         |
+| `ariaLabel`          | input | `string \| null \| undefined`          | no       | `undefined`  | Names the scrollable region. Blank values omit the region role and accessible name. |
+| `scrollbar`          | input | `"auto" \| "hidden" \| "stable"`       | no       | `'auto'`     | Controls native scrollbar visibility and gutter allocation.                         |
 
 ## Deprecated selectors
 

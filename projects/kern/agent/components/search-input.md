@@ -53,27 +53,27 @@ void bootstrapApplication(KernSearchInputAgentExample);
 
 ## API
 
-| Name              | Kind   | Type                  | Required | Default                               | Description                                                                                      |
-| ----------------- | ------ | --------------------- | -------- | ------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`              | no       | `''`                                  | Stable identifier value used by the id contract.                                                 |
-| `name`            | input  | `string`              | no       | `''`                                  | Required human-readable name for the represented person, item, or action.                        |
-| `placeholder`     | input  | `string`              | no       | `this.translations.forms.search`      | Short input hint shown only while no value is present.                                           |
-| `ariaLabel`       | input  | `string`              | no       | `this.translations.forms.search`      | Accessible name used when visible content is not sufficient.                                     |
-| `ariaLabelledBy`  | input  | `string`              | no       | `''`                                  | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
-| `ariaDescribedBy` | input  | `string`              | no       | `''`                                  | Space-separated element ids composed with Form Field hints and validation descriptions.          |
-| `clearLabel`      | input  | `string`              | no       | `this.translations.forms.clearSearch` | Human-readable copy for the clear state or control.                                              |
-| `autocomplete`    | input  | `string`              | no       | `'off'`                               | Native autocomplete purpose forwarded to the editable control.                                   |
-| `enterKeyHint`    | input  | `string`              | no       | `'search'`                            | Native virtual-keyboard action hint forwarded to the editable control.                           |
-| `value`           | input  | `string \| undefined` | no       | `undefined`                           | Controlled component value.                                                                      |
-| `minLength`       | input  | `number \| undefined` | no       | `undefined`                           | Upper or lower bound applied to the length value.                                                |
-| `maxLength`       | input  | `number \| undefined` | no       | `undefined`                           | Upper or lower bound applied to the length value.                                                |
-| `spellcheck`      | input  | `boolean`             | no       | `true`                                | Native spell-checking preference forwarded to the editable control.                              |
-| `disabled`        | input  | `boolean`             | no       | `false`                               | Prevents user interaction and participates in the disabled-state contract.                       |
-| `readonly`        | input  | `boolean`             | no       | `false`                               | Keeps the value perceivable while preventing user edits.                                         |
-| `required`        | input  | `boolean`             | no       | `false`                               | Marks the value as required and participates in Angular Forms validation.                        |
-| `invalid`         | input  | `boolean`             | no       | `false`                               | Exposes an externally controlled invalid presentation state.                                     |
-| `valueChange`     | output | `string`              | no       | `undefined`                           | Notifies the consumer after the value change interaction completes.                              |
-| `searchSubmitted` | output | `string`              | no       | `undefined`                           | Notifies the consumer after the search submitted interaction completes.                          |
+| Name              | Kind   | Type                  | Required | Default     | Description                                                                                      |
+| ----------------- | ------ | --------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`              | no       | `''`        | Stable identifier value used by the id contract.                                                 |
+| `name`            | input  | `string`              | no       | `''`        | Required human-readable name for the represented person, item, or action.                        |
+| `placeholder`     | input  | `string \| undefined` | no       | `undefined` | Short input hint shown only while no value is present.                                           |
+| `ariaLabel`       | input  | `string \| undefined` | no       | `undefined` | Accessible name used when visible content is not sufficient.                                     |
+| `ariaLabelledBy`  | input  | `string`              | no       | `''`        | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`              | no       | `''`        | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `clearLabel`      | input  | `string \| undefined` | no       | `undefined` | Human-readable copy for the clear state or control.                                              |
+| `autocomplete`    | input  | `string`              | no       | `'off'`     | Native autocomplete purpose forwarded to the editable control.                                   |
+| `enterKeyHint`    | input  | `string`              | no       | `'search'`  | Native virtual-keyboard action hint forwarded to the editable control.                           |
+| `value`           | input  | `string \| undefined` | no       | `undefined` | Controlled component value.                                                                      |
+| `minLength`       | input  | `number \| undefined` | no       | `undefined` | Upper or lower bound applied to the length value.                                                |
+| `maxLength`       | input  | `number \| undefined` | no       | `undefined` | Upper or lower bound applied to the length value.                                                |
+| `spellcheck`      | input  | `boolean`             | no       | `true`      | Native spell-checking preference forwarded to the editable control.                              |
+| `disabled`        | input  | `boolean`             | no       | `false`     | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean`             | no       | `false`     | Keeps the value perceivable while preventing user edits.                                         |
+| `required`        | input  | `boolean`             | no       | `false`     | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`         | input  | `boolean`             | no       | `false`     | Exposes an externally controlled invalid presentation state.                                     |
+| `valueChange`     | output | `string`              | no       | `undefined` | Notifies the consumer after the value change interaction completes.                              |
+| `searchSubmitted` | output | `string`              | no       | `undefined` | Notifies the consumer after the search submitted interaction completes.                          |
 
 ## Deprecated selectors
 

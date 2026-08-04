@@ -1,10 +1,13 @@
 import {
+  afterNextRender,
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   effect,
   inject,
+  Injectable,
   input,
   model,
   numberAttribute,
@@ -35,10 +38,12 @@ import {
   weekdayLabels,
   type KrnCalendarDay,
 } from './calendar-engine';
-import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
-import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { KRN_PLATFORM, type KrnScheduledHandle } from '@kern-ui/angular/cdk';
+import { KRN_DATE_TIME_SNAPSHOT, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnColorPickerTranslations, KrnTimePickerTranslations } from '@kern-ui/angular/core';
 import type { KrnDatePickerLabels, KrnDateRangeValue } from './form-types';
+import { krnInputFallback } from '../reactive-input';
+import { krnResolvedLocale } from '../reactive-locale';
 import {
   mergeValidationErrors,
   provideKrnFormControl,
@@ -79,6 +84,85 @@ const timeMatchesStep = (value: number, base: number, stepSeconds: number): bool
   const steps = ((value - base) * 60) / stepSeconds;
   return Math.abs(steps - Math.round(steps)) <= 1e-9;
 };
+
+const MAXIMUM_LOCAL_DAY_MILLISECONDS = 30 * 60 * 60 * 1000;
+
+@Injectable()
+class KrnLiveDate {
+  private readonly platform = inject(KRN_PLATFORM);
+  private readonly snapshot = inject(KRN_DATE_TIME_SNAPSHOT);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly value = signal(this.snapshot.today);
+  private scheduled: KrnScheduledHandle | null = null;
+  private active = false;
+  private listening = false;
+  readonly today = this.value.asReadonly();
+
+  constructor() {
+    if (!this.platform.isBrowser) return;
+    afterNextRender(() => this.refresh());
+    this.destroyRef.onDestroy(() => this.teardown());
+  }
+
+  setActive(active: boolean): void {
+    if (!this.platform.isBrowser || active === this.active) return;
+    this.active = active;
+    if (active) {
+      this.listenForClockContextChanges();
+      this.refresh();
+    } else {
+      this.suspend();
+    }
+  }
+
+  refresh(): void {
+    if (!this.platform.isBrowser) return;
+    const now = this.platform.now();
+    const today = this.snapshot.todayAt(now);
+    this.value.set(today);
+    if (this.active) this.scheduleNextDay(now, today);
+  }
+
+  private scheduleNextDay(now: number, today: string): void {
+    this.platform.cancelScheduled(this.scheduled);
+    let beforeBoundary = now;
+    let afterBoundary = now + MAXIMUM_LOCAL_DAY_MILLISECONDS;
+
+    while (afterBoundary - beforeBoundary > 1_000) {
+      const candidate = Math.floor((beforeBoundary + afterBoundary) / 2);
+      if (this.snapshot.todayAt(candidate) === today) beforeBoundary = candidate;
+      else afterBoundary = candidate;
+    }
+
+    this.scheduled = this.platform.schedule(
+      () => this.refresh(),
+      Math.max(1_000, afterBoundary - now + 1_000),
+    );
+  }
+
+  private listenForClockContextChanges(): void {
+    if (this.listening) return;
+    this.listening = true;
+    this.platform.window?.addEventListener('focus', this.refreshOnResume);
+    this.platform.document.addEventListener('visibilitychange', this.refreshOnResume);
+  }
+
+  private readonly refreshOnResume = (): void => this.refresh();
+
+  private teardown(): void {
+    this.active = false;
+    this.suspend();
+  }
+
+  private suspend(): void {
+    this.platform.cancelScheduled(this.scheduled);
+    this.scheduled = null;
+    if (!this.listening) return;
+    this.platform.window?.removeEventListener('focus', this.refreshOnResume);
+    this.platform.document.removeEventListener('visibilitychange', this.refreshOnResume);
+    this.listening = false;
+  }
+}
 
 const closeWhenFocusLeaves = (event: FocusEvent, close: () => void): void => {
   const current = event.currentTarget;
@@ -186,7 +270,7 @@ const connectPickerPopover = (
     class: 'krn-picker-host',
     '[attr.id]': 'null',
   },
-  providers: [...provideKrnFormControl()],
+  providers: [...provideKrnFormControl(), KrnLiveDate],
   template: `
     <div
       class="krn-picker"
@@ -297,7 +381,11 @@ const connectPickerPopover = (
             <button type="button" [disabled]="!controlValue()" (click)="clear()">
               {{ copy().clear }}
             </button>
-            <button type="button" [disabled]="todayDisabled()" (click)="selectDate(today())">
+            <button
+              type="button"
+              [disabled]="todayDisabled()"
+              (click)="selectDate(resolvedToday())"
+            >
               {{ copy().today }}
             </button>
           </div>
@@ -309,13 +397,17 @@ const connectPickerPopover = (
 })
 export class KrnDatePicker {
   private readonly platform = inject(KRN_PLATFORM);
+  private readonly dateTime = inject(KRN_DATE_TIME_SNAPSHOT);
+  private readonly liveDate = inject(KrnLiveDate);
   private readonly translations = inject(KRN_TRANSLATIONS);
   readonly id = input('');
   readonly ariaLabel = input('');
   readonly ariaLabelledBy = input('');
   readonly ariaDescribedBy = input('');
-  readonly locale = input(inject(KRN_LOCALE));
-  readonly today = input(toIsoDate(new Date(this.platform.now())));
+  readonly locale = input<string | undefined>();
+  private readonly resolvedLocale = krnResolvedLocale(this.locale);
+  readonly today = input<string | undefined>();
+  protected readonly resolvedToday = computed(() => this.today() ?? this.liveDate.today());
   readonly weekStartsOn = input(0, { transform: clampWeekStartsOn });
   readonly labels = input<Partial<KrnDatePickerLabels>>({});
   readonly min = input('');
@@ -331,8 +423,10 @@ export class KrnDatePicker {
   readonly value = input<string | undefined>(undefined);
   readonly open = model(false);
   readonly valueChange = output<string>();
-  protected readonly visibleMonth = signal(initialCalendarMonth('', new Date(this.platform.now())));
-  protected readonly focusedDate = signal(this.today());
+  protected readonly visibleMonth = signal(
+    initialCalendarMonth('', parseIsoDate(this.dateTime.today) ?? new Date(this.dateTime.now)),
+  );
+  protected readonly focusedDate = signal(this.resolvedToday());
 
   private readonly formControl = useKrnFormControl(this, '', {
     normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
@@ -352,7 +446,9 @@ export class KrnDatePicker {
     ...this.labels(),
   }));
   protected readonly pickerAriaLabel = computed(() => this.ariaLabel() || this.copy().chooseDate);
-  protected readonly weekdays = computed(() => weekdayLabels(this.locale(), this.weekStartsOn()));
+  protected readonly weekdays = computed(() =>
+    weekdayLabels(this.resolvedLocale(), this.weekStartsOn()),
+  );
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'date', {
     disabled: this.disabled,
     readOnly: this.readOnly,
@@ -367,15 +463,23 @@ export class KrnDatePicker {
   );
   protected readonly calendarId = computed(() => `${this.a11y.id()}-calendar`);
   protected readonly days = computed(() =>
-    calendarDays(this.visibleMonth(), this.min(), this.max(), this.weekStartsOn(), this.today()),
+    calendarDays(
+      this.visibleMonth(),
+      this.min(),
+      this.max(),
+      this.weekStartsOn(),
+      this.resolvedToday(),
+    ),
   );
   protected readonly calendarRows = computed(() => groupCalendarRows(this.days()));
-  protected readonly monthLabel = computed(() => formatMonth(this.visibleMonth(), this.locale()));
+  protected readonly monthLabel = computed(() =>
+    formatMonth(this.visibleMonth(), this.resolvedLocale()),
+  );
   protected readonly formattedValue = computed(() =>
-    formatDate(this.controlValue(), this.locale()),
+    formatDate(this.controlValue(), this.resolvedLocale()),
   );
   protected readonly todayDisabled = computed(() =>
-    dateIsDisabled(this.today(), this.min(), this.max()),
+    dateIsDisabled(this.resolvedToday(), this.min(), this.max()),
   );
   private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
   private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
@@ -385,7 +489,9 @@ export class KrnDatePicker {
   private readonly initializeControlledOpen = effect(() => {
     const value = this.controlValue();
     const open = this.open();
-    this.today();
+    const hasTodayOverride = this.today() !== undefined;
+    untracked(() => this.liveDate.setActive(open && !hasTodayOverride));
+    this.resolvedToday();
     this.min();
     this.max();
     if (open !== this.lastObservedOpen) {
@@ -393,7 +499,10 @@ export class KrnDatePicker {
       this.focusGeneration += 1;
     }
     if (open) {
-      untracked(() => this.prepareOpen(value));
+      untracked(() => {
+        this.refreshToday();
+        this.prepareOpen(value);
+      });
     }
   });
   private readonly syncPanel = effect((onCleanup) => {
@@ -467,6 +576,7 @@ export class KrnDatePicker {
       return;
     }
     const next = !this.open();
+    if (next) this.refreshToday();
     this.setOpen(next);
   }
 
@@ -499,7 +609,7 @@ export class KrnDatePicker {
   }
 
   protected dayLabel(day: KrnCalendarDay): string {
-    return formatFullDate(day.date, this.locale());
+    return formatFullDate(day.date, this.resolvedLocale());
   }
 
   protected selectDate(value: string): void {
@@ -560,7 +670,10 @@ export class KrnDatePicker {
   }
 
   private prepareOpen(value = this.controlValue()): void {
-    const referenceDate = parseIsoDate(this.today()) ?? new Date(this.platform.now());
+    const referenceDate =
+      parseIsoDate(this.resolvedToday()) ??
+      parseIsoDate(this.dateTime.today) ??
+      new Date(this.dateTime.now);
     this.visibleMonth.set(
       clampCalendarMonth(initialCalendarMonth(value, referenceDate), this.min(), this.max()),
     );
@@ -585,7 +698,7 @@ export class KrnDatePicker {
   }
 
   private initialFocusDate(value = this.controlValue()): string {
-    const preferred = value || this.today();
+    const preferred = value || this.resolvedToday();
     if (!dateIsDisabled(preferred, this.min(), this.max())) {
       return preferred;
     }
@@ -601,6 +714,12 @@ export class KrnDatePicker {
   private focusDayButton(iso: string, buttons = this.dayButtons()): void {
     buttons.find((button) => button.nativeElement.dataset['date'] === iso)?.nativeElement.focus();
   }
+
+  private refreshToday(): void {
+    if (this.today() === undefined) {
+      this.liveDate.refresh();
+    }
+  }
 }
 
 @Component({
@@ -609,7 +728,7 @@ export class KrnDatePicker {
     class: 'krn-picker-host',
     '[attr.id]': 'null',
   },
-  providers: [...provideKrnFormControl()],
+  providers: [...provideKrnFormControl(), KrnLiveDate],
   template: `
     <div
       class="krn-picker"
@@ -730,12 +849,12 @@ export class KrnDatePicker {
 
           <div class="krn-range-summary" aria-live="polite">
             <span>
-              <small>{{ startLabel() }}</small>
+              <small>{{ resolvedStartLabel() }}</small>
               <strong>{{ formattedStart() || copy().notSelected }}</strong>
             </span>
             <span aria-hidden="true">→</span>
             <span>
-              <small>{{ endLabel() }}</small>
+              <small>{{ resolvedEndLabel() }}</small>
               <strong>{{ formattedEnd() || copy().notSelected }}</strong>
             </span>
           </div>
@@ -760,17 +879,29 @@ export class KrnDatePicker {
 })
 export class KrnDateRangePicker {
   private readonly platform = inject(KRN_PLATFORM);
+  private readonly dateTime = inject(KRN_DATE_TIME_SNAPSHOT);
+  private readonly liveDate = inject(KrnLiveDate);
   private readonly translations = inject(KRN_TRANSLATIONS);
   readonly id = input('');
   readonly ariaLabel = input('');
   readonly ariaLabelledBy = input('');
   readonly ariaDescribedBy = input('');
-  readonly locale = input(inject(KRN_LOCALE));
-  readonly today = input(toIsoDate(new Date(this.platform.now())));
+  readonly locale = input<string | undefined>();
+  private readonly resolvedLocale = krnResolvedLocale(this.locale);
+  readonly today = input<string | undefined>();
+  protected readonly resolvedToday = computed(() => this.today() ?? this.liveDate.today());
   readonly weekStartsOn = input(0, { transform: clampWeekStartsOn });
   readonly labels = input<Partial<KrnDatePickerLabels>>({});
-  readonly startLabel = input(this.translations.datePicker.startDate);
-  readonly endLabel = input(this.translations.datePicker.endDate);
+  readonly startLabel = input<string | undefined>();
+  protected readonly resolvedStartLabel = krnInputFallback(
+    this.startLabel,
+    () => this.translations.datePicker.startDate,
+  );
+  readonly endLabel = input<string | undefined>();
+  protected readonly resolvedEndLabel = krnInputFallback(
+    this.endLabel,
+    () => this.translations.datePicker.endDate,
+  );
   readonly min = input('');
   readonly max = input('');
   readonly disabled = input(false, { transform: booleanAttribute });
@@ -784,8 +915,10 @@ export class KrnDateRangePicker {
   readonly value = input<KrnDateRangeValue | undefined>(undefined);
   readonly open = model(false);
   readonly valueChange = output<KrnDateRangeValue>();
-  protected readonly visibleMonth = signal(initialCalendarMonth('', new Date(this.platform.now())));
-  protected readonly focusedDate = signal(this.today());
+  protected readonly visibleMonth = signal(
+    initialCalendarMonth('', parseIsoDate(this.dateTime.today) ?? new Date(this.dateTime.now)),
+  );
+  protected readonly focusedDate = signal(this.resolvedToday());
 
   private readonly formControl = useKrnFormControl<KrnDateRangeValue>(
     this,
@@ -812,7 +945,9 @@ export class KrnDateRangePicker {
   protected readonly pickerAriaLabel = computed(
     () => this.ariaLabel() || this.copy().chooseDateRange,
   );
-  protected readonly weekdays = computed(() => weekdayLabels(this.locale(), this.weekStartsOn()));
+  protected readonly weekdays = computed(() =>
+    weekdayLabels(this.resolvedLocale(), this.weekStartsOn()),
+  );
   protected readonly a11y = useKrnControlA11y(this, this.id, this.invalid, 'date-range', {
     disabled: this.disabled,
     readOnly: this.readOnly,
@@ -827,15 +962,23 @@ export class KrnDateRangePicker {
   );
   protected readonly calendarId = computed(() => `${this.a11y.id()}-calendar`);
   protected readonly days = computed(() =>
-    calendarDays(this.visibleMonth(), this.min(), this.max(), this.weekStartsOn(), this.today()),
+    calendarDays(
+      this.visibleMonth(),
+      this.min(),
+      this.max(),
+      this.weekStartsOn(),
+      this.resolvedToday(),
+    ),
   );
   protected readonly calendarRows = computed(() => groupCalendarRows(this.days()));
-  protected readonly monthLabel = computed(() => formatMonth(this.visibleMonth(), this.locale()));
+  protected readonly monthLabel = computed(() =>
+    formatMonth(this.visibleMonth(), this.resolvedLocale()),
+  );
   protected readonly formattedStart = computed(() =>
-    formatDate(this.controlValue().start, this.locale()),
+    formatDate(this.controlValue().start, this.resolvedLocale()),
   );
   protected readonly formattedEnd = computed(() =>
-    formatDate(this.controlValue().end, this.locale()),
+    formatDate(this.controlValue().end, this.resolvedLocale()),
   );
   protected readonly selectionPrompt = computed(() =>
     this.controlValue().start && !this.controlValue().end
@@ -853,8 +996,11 @@ export class KrnDateRangePicker {
   private readonly initializeControlledOpen = effect(() => {
     const value = this.controlValue();
     const open = this.open();
+    const hasTodayOverride = this.today() !== undefined;
+    untracked(() => this.liveDate.setActive(open && !hasTodayOverride));
+    if (open) untracked(() => this.refreshToday());
     const preparationInputs = {
-      today: this.today(),
+      today: this.resolvedToday(),
       min: this.min(),
       max: this.max(),
     };
@@ -973,6 +1119,7 @@ export class KrnDateRangePicker {
       return;
     }
     const next = !this.open();
+    if (next) this.refreshToday();
     this.setOpen(next);
   }
 
@@ -1005,7 +1152,7 @@ export class KrnDateRangePicker {
   }
 
   protected dayLabel(day: KrnCalendarDay): string {
-    return formatFullDate(day.date, this.locale());
+    return formatFullDate(day.date, this.resolvedLocale());
   }
 
   protected isEndpoint(value: string): boolean {
@@ -1074,7 +1221,10 @@ export class KrnDateRangePicker {
   }
 
   private prepareOpen(value = this.controlValue()): void {
-    const referenceDate = parseIsoDate(this.today()) ?? new Date(this.platform.now());
+    const referenceDate =
+      parseIsoDate(this.resolvedToday()) ??
+      parseIsoDate(this.dateTime.today) ??
+      new Date(this.dateTime.now);
     this.visibleMonth.set(
       clampCalendarMonth(
         initialCalendarMonth(value.end || value.start, referenceDate),
@@ -1103,7 +1253,7 @@ export class KrnDateRangePicker {
   }
 
   private initialFocusDate(value = this.controlValue()): string {
-    const preferred = value.end || value.start || this.today();
+    const preferred = value.end || value.start || this.resolvedToday();
     if (!dateIsDisabled(preferred, this.min(), this.max())) {
       return preferred;
     }
@@ -1118,6 +1268,12 @@ export class KrnDateRangePicker {
 
   private focusDayButton(iso: string, buttons = this.dayButtons()): void {
     buttons.find((button) => button.nativeElement.dataset['date'] === iso)?.nativeElement.focus();
+  }
+
+  private refreshToday(): void {
+    if (this.today() === undefined) {
+      this.liveDate.refresh();
+    }
   }
 
   private emitRange(value: KrnDateRangeValue): void {
@@ -1926,8 +2082,16 @@ export class KrnColorPicker {
   private readonly translations = inject(KRN_TRANSLATIONS);
   readonly id = input('');
   readonly labels = input<Partial<KrnColorPickerTranslations>>({});
-  readonly pickerLabel = input(this.translations.colorPicker.chooseColor);
-  readonly textLabel = input(this.translations.colorPicker.colorValue);
+  readonly pickerLabel = input<string | undefined>();
+  protected readonly resolvedPickerLabel = krnInputFallback(
+    this.pickerLabel,
+    () => this.translations.colorPicker.chooseColor,
+  );
+  readonly textLabel = input<string | undefined>();
+  protected readonly resolvedTextLabel = krnInputFallback(
+    this.textLabel,
+    () => this.translations.colorPicker.colorValue,
+  );
   readonly ariaLabelledBy = input('');
   readonly ariaDescribedBy = input('');
   readonly disabled = input(false, { transform: booleanAttribute });
@@ -1958,8 +2122,8 @@ export class KrnColorPicker {
   readonly registerOnValidatorChange = this.formControl.registerOnValidatorChange;
   protected readonly copy = computed(() => ({
     ...this.translations.colorPicker,
-    chooseColor: this.pickerLabel(),
-    colorValue: this.textLabel(),
+    chooseColor: this.resolvedPickerLabel(),
+    colorValue: this.resolvedTextLabel(),
     ...this.labels(),
   }));
   protected readonly presets = [

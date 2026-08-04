@@ -52,11 +52,11 @@ void bootstrapApplication(KernLoadingOverlayAgentExample);
 
 ## API
 
-| Name       | Kind  | Type      | Required | Default                                        | Description                                                                  |
-| ---------- | ----- | --------- | -------- | ---------------------------------------------- | ---------------------------------------------------------------------------- |
-| `active`   | input | `boolean` | no       | `false`                                        | Marks the item as the current interaction target without implying selection. |
-| `blocking` | input | `boolean` | no       | `true`                                         | Marks feedback as requiring attention before the workflow can continue.      |
-| `label`    | input | `string`  | no       | `this.translations.feedback.loadingInProgress` | Visible text that names the control or data value.                           |
+| Name       | Kind  | Type                  | Required | Default     | Description                                                                  |
+| ---------- | ----- | --------------------- | -------- | ----------- | ---------------------------------------------------------------------------- |
+| `active`   | input | `boolean`             | no       | `false`     | Marks the item as the current interaction target without implying selection. |
+| `blocking` | input | `boolean`             | no       | `true`      | Marks feedback as requiring attention before the workflow can continue.      |
+| `label`    | input | `string \| undefined` | no       | `undefined` | Visible text that names the control or data value.                           |
 
 ## Deprecated selectors
 

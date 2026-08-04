@@ -10,8 +10,10 @@ both `types` and `default` conditions. Every discovered TypeScript entrypoint mu
 in `projects/kern/api/entrypoints.json` and have a committed, normalized declaration baseline.
 
 The current baselines cover the root compatibility API, all seven runtime subpaths (`cdk`, `i18n`,
-`core`, `kit`, `addon-grid`, `addon-charts`, and `patterns`), and
-`@kern-ui/angular/testing`.
+`core`, `kit`, `addon-grid`, `addon-charts`, and `patterns`), the compatibility
+`@kern-ui/angular/testing` aggregator, and the family-scoped `testing/actions`,
+`testing/data-display`, `testing/feedback`, `testing/forms`, `testing/layout`,
+`testing/navigation`, and `testing/shared` entrypoints.
 
 An added, removed, or changed public declaration fails CI. After confirming the semantic-version
 impact, migration guidance, and changelog entry, update baselines explicitly:
@@ -90,11 +92,11 @@ The current complex-entrypoint limits were calibrated after the enterprise API p
 
 | Fixture              | Measured raw / gzip |   Limit raw / gzip | Included contract                                                              |
 | -------------------- | ------------------: | -----------------: | ------------------------------------------------------------------------------ |
-| Button               |  157,844 / 50,534 B | 161,000 / 52,000 B | native host, loading state, scoped defaults, English leaf-copy fallback        |
-| Button + direct i18n |  157,921 / 50,546 B | 161,000 / 52,000 B | direct leaf-token override without the complete translation registry           |
-| Select               |  252,356 / 73,435 B | 255,000 / 75,000 B | typed local/remote filtering, controlled loading states, late label resolution |
-| Grid                 |  284,610 / 80,894 B | 292,000 / 83,000 B | server data source, virtualization, pinned regions, explicit async states      |
-| Charts               |  194,605 / 57,022 B | 200,000 / 59,000 B | keyboard marks, source tables, stable empty/loading/error semantics            |
+| Button               |  146,871 / 47,382 B | 161,000 / 52,000 B | native host, loading state, scoped defaults, English leaf-copy fallback        |
+| Button + direct i18n |  146,948 / 47,397 B | 161,000 / 52,000 B | direct leaf-token override without the complete translation registry           |
+| Select               |  266,996 / 77,193 B | 268,000 / 78,000 B | typed local/remote filtering, controlled loading states, late label resolution |
+| Grid                 |  294,403 / 83,450 B | 296,000 / 84,000 B | server data source, virtualization, pinned regions, explicit async states      |
+| Charts               |  205,123 / 60,106 B | 206,000 / 61,000 B | keyboard marks, source tables, stable empty/loading/error semantics            |
 
 Root and direct-subpath fixtures must still stay within 1 KiB raw and 512 B gzip of one another.
 Any future increase must update this evidence table with fresh production measurements.
@@ -104,7 +106,7 @@ repository tooling rather than representing a consumer bundle:
 
 | Application | Measured initial | Warning / error | Included shell contract                                                          |
 | ----------- | ---------------: | --------------: | -------------------------------------------------------------------------------- |
-| Docs        |          1.31 MB |  1.32 / 1.36 MB | catalog navigation, SSR, agent discovery, playground, and deterministic previews |
+| Docs        |        629.35 kB |    650 / 700 kB | catalog navigation, SSR, agent discovery, playground, and deterministic previews |
 
 These thresholds leave only a small reviewed regression allowance. Consumer-facing tree-shaking
 continues to be governed by the substantially tighter isolated fixture budgets above.

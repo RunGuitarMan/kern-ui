@@ -56,28 +56,28 @@ void bootstrapApplication(KernDateRangePickerAgentExample);
 
 ## API
 
-| Name              | Kind   | Type                             | Required | Default                                    | Description                                                                                      |
-| ----------------- | ------ | -------------------------------- | -------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`                         | no       | `''`                                       | Stable identifier value used by the id contract.                                                 |
-| `ariaLabel`       | input  | `string`                         | no       | `''`                                       | Accessible name used when visible content is not sufficient.                                     |
-| `ariaLabelledBy`  | input  | `string`                         | no       | `''`                                       | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
-| `ariaDescribedBy` | input  | `string`                         | no       | `''`                                       | Space-separated element ids composed with Form Field hints and validation descriptions.          |
-| `locale`          | input  | `string`                         | no       | `inject(KRN_LOCALE)`                       | Locale identifier used for collation, formatting, and component-owned copy.                      |
-| `today`           | input  | `string`                         | no       | `toIsoDate(new Date(this.platform.now()))` | Deterministic plain date treated as today on both server and client.                             |
-| `weekStartsOn`    | input  | `number`                         | no       | `0`                                        | Zero-based weekday used as the first calendar column.                                            |
-| `labels`          | input  | `Partial<KrnDatePickerLabels>`   | no       | `{}`                                       | Localized copy overrides for the component-owned interface text.                                 |
-| `startLabel`      | input  | `string`                         | no       | `this.translations.datePicker.startDate`   | Human-readable copy for the start state or control.                                              |
-| `endLabel`        | input  | `string`                         | no       | `this.translations.datePicker.endDate`     | Human-readable copy for the end state or control.                                                |
-| `min`             | input  | `string`                         | no       | `''`                                       | Smallest accepted numeric or temporal value.                                                     |
-| `max`             | input  | `string`                         | no       | `''`                                       | Largest accepted numeric or temporal value.                                                      |
-| `disabled`        | input  | `boolean`                        | no       | `false`                                    | Prevents user interaction and participates in the disabled-state contract.                       |
-| `readonly`        | input  | `boolean`                        | no       | `false`                                    | Keeps the value perceivable while preventing user edits.                                         |
-| `required`        | input  | `boolean`                        | no       | `false`                                    | Marks the value as required and participates in Angular Forms validation.                        |
-| `invalid`         | input  | `boolean`                        | no       | `false`                                    | Exposes an externally controlled invalid presentation state.                                     |
-| `tabindex`        | input  | `number`                         | no       | `0`                                        | Native sequential-focus order forwarded to the owned interactive element.                        |
-| `value`           | input  | `KrnDateRangeValue \| undefined` | no       | `undefined`                                | Controlled component value.                                                                      |
-| `open`            | model  | `boolean`                        | no       | `false`                                    | Controls whether the disclosure or overlay surface is visible.                                   |
-| `valueChange`     | output | `KrnDateRangeValue`              | no       | `undefined`                                | Notifies the consumer after the value change interaction completes.                              |
+| Name              | Kind   | Type                             | Required | Default     | Description                                                                                      |
+| ----------------- | ------ | -------------------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`                         | no       | `''`        | Stable identifier value used by the id contract.                                                 |
+| `ariaLabel`       | input  | `string`                         | no       | `''`        | Accessible name used when visible content is not sufficient.                                     |
+| `ariaLabelledBy`  | input  | `string`                         | no       | `''`        | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`                         | no       | `''`        | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `locale`          | input  | `string \| undefined`            | no       | `undefined` | Locale identifier used for collation, formatting, and component-owned copy.                      |
+| `today`           | input  | `string \| undefined`            | no       | `undefined` | Deterministic plain date treated as today on both server and client.                             |
+| `weekStartsOn`    | input  | `number`                         | no       | `0`         | Zero-based weekday used as the first calendar column.                                            |
+| `labels`          | input  | `Partial<KrnDatePickerLabels>`   | no       | `{}`        | Localized copy overrides for the component-owned interface text.                                 |
+| `startLabel`      | input  | `string \| undefined`            | no       | `undefined` | Human-readable copy for the start state or control.                                              |
+| `endLabel`        | input  | `string \| undefined`            | no       | `undefined` | Human-readable copy for the end state or control.                                                |
+| `min`             | input  | `string`                         | no       | `''`        | Smallest accepted numeric or temporal value.                                                     |
+| `max`             | input  | `string`                         | no       | `''`        | Largest accepted numeric or temporal value.                                                      |
+| `disabled`        | input  | `boolean`                        | no       | `false`     | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean`                        | no       | `false`     | Keeps the value perceivable while preventing user edits.                                         |
+| `required`        | input  | `boolean`                        | no       | `false`     | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`         | input  | `boolean`                        | no       | `false`     | Exposes an externally controlled invalid presentation state.                                     |
+| `tabindex`        | input  | `number`                         | no       | `0`         | Native sequential-focus order forwarded to the owned interactive element.                        |
+| `value`           | input  | `KrnDateRangeValue \| undefined` | no       | `undefined` | Controlled component value.                                                                      |
+| `open`            | model  | `boolean`                        | no       | `false`     | Controls whether the disclosure or overlay surface is visible.                                   |
+| `valueChange`     | output | `KrnDateRangeValue`              | no       | `undefined` | Notifies the consumer after the value change interaction completes.                              |
 
 ## Deprecated selectors
 
@@ -148,19 +148,19 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument       | Control | Default        | Test value          | Binding                         | Description                                       |
-| -------------- | ------- | -------------- | ------------------- | ------------------------------- | ------------------------------------------------- |
-| `disabled`     | boolean | `false`        | `true`              | input `disabled` (property)     | Prevents user interaction.                        |
-| `readOnly`     | boolean | `false`        | `true`              | input `readonly` (property)     | Keeps the value focusable while preventing edits. |
-| `required`     | boolean | `false`        | `true`              | input `required` (property)     | Marks the control as required.                    |
-| `invalid`      | boolean | `false`        | `true`              | input `invalid` (property)      | Exposes the invalid visual and ARIA state.        |
-| `id`           | text    | `""`           | `"Alternate value"` | input `id` (property)           | Configures the component id contract.             |
-| `max`          | text    | `""`           | `"2026-11-30"`      | input `max` (property)          | Configures the component max contract.            |
-| `min`          | text    | `""`           | `"2026-02-01"`      | input `min` (property)          | Configures the component min contract.            |
-| `open`         | boolean | `false`        | `true`              | model `open`                    | Controlled disclosure or overlay state.           |
-| `tabindex`     | number  | `0`            | `1`                 | input `tabindex` (property)     | Configures the component tabindex contract.       |
-| `today`        | text    | `"2026-07-30"` | `"2026-08-15"`      | input `today` (property)        | Configures the component today contract.          |
-| `weekStartsOn` | number  | `0`            | `1`                 | input `weekStartsOn` (property) | Configures the component weekStartsOn contract.   |
+| Argument       | Control | Default | Test value          | Binding                         | Description                                       |
+| -------------- | ------- | ------- | ------------------- | ------------------------------- | ------------------------------------------------- |
+| `disabled`     | boolean | `false` | `true`              | input `disabled` (property)     | Prevents user interaction.                        |
+| `readOnly`     | boolean | `false` | `true`              | input `readonly` (property)     | Keeps the value focusable while preventing edits. |
+| `required`     | boolean | `false` | `true`              | input `required` (property)     | Marks the control as required.                    |
+| `invalid`      | boolean | `false` | `true`              | input `invalid` (property)      | Exposes the invalid visual and ARIA state.        |
+| `id`           | text    | `""`    | `"Alternate value"` | input `id` (property)           | Configures the component id contract.             |
+| `max`          | text    | `""`    | `"2026-11-30"`      | input `max` (property)          | Configures the component max contract.            |
+| `min`          | text    | `""`    | `"2026-02-01"`      | input `min` (property)          | Configures the component min contract.            |
+| `open`         | boolean | `false` | `true`              | model `open`                    | Controlled disclosure or overlay state.           |
+| `tabindex`     | number  | `0`     | `1`                 | input `tabindex` (property)     | Configures the component tabindex contract.       |
+| `today`        | text    | `""`    | `"2026-08-15"`      | input `today` (property)        | Configures the component today contract.          |
+| `weekStartsOn` | number  | `0`     | `1`                 | input `weekStartsOn` (property) | Configures the component weekStartsOn contract.   |
 
 Exact API exclusions:
 

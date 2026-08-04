@@ -10,7 +10,9 @@ import {
   numberAttribute,
   viewChildren,
 } from '@angular/core';
-import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
+import { krnResolvedLocale } from '../reactive-locale';
 
 @Component({
   selector: 'krn-meter',
@@ -90,7 +92,8 @@ import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
   `,
 })
 export class KrnMeter {
-  readonly locale = input<string | string[]>(inject(KRN_LOCALE));
+  readonly locale = input<string | string[] | undefined>();
+  private readonly resolvedLocale = krnResolvedLocale(this.locale);
   readonly label = input.required<string>();
   readonly value = input.required<number>();
   readonly min = input(0, { transform: numberAttribute });
@@ -108,7 +111,7 @@ export class KrnMeter {
   );
   private readonly percentageFormatter = computed(
     () =>
-      new Intl.NumberFormat(this.locale(), {
+      new Intl.NumberFormat(this.resolvedLocale(), {
         style: 'percent',
         maximumFractionDigits: 0,
       }),
@@ -133,7 +136,7 @@ export class KrnMeter {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'radiogroup',
-    '[attr.aria-label]': 'ariaLabel()',
+    '[attr.aria-label]': 'resolvedAriaLabel()',
     '[attr.aria-readonly]': 'readonly()',
   },
   template: `
@@ -222,7 +225,11 @@ export class KrnRating {
   readonly max = input(5, { transform: numberAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly readonly = input(false, { transform: booleanAttribute });
-  readonly ariaLabel = input(this.translations.dataDisplay.rating);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.dataDisplay.rating,
+  );
   protected readonly items = computed(() =>
     Array.from({ length: Math.max(1, this.max()) }, (_, index) => index + 1),
   );

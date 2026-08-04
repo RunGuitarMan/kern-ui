@@ -95,9 +95,9 @@
       "name": "loadingLabel",
       "property": "loadingLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.defaultLoadingLabel",
+      "defaultValue": "undefined",
       "description": "Accessible loading copy; defaults to the application or closest scoped option.",
       "descriptionSource": "source"
     }
@@ -449,7 +449,7 @@
         "componentId": "icon-button",
         "publicName": "loadingLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {

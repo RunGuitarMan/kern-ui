@@ -62,20 +62,20 @@ void bootstrapApplication(KernMultiStepFormAgentExample);
 
 ## API
 
-| Name                  | Kind   | Type                                         | Required | Default                                   | Description                                                                 |
-| --------------------- | ------ | -------------------------------------------- | -------- | ----------------------------------------- | --------------------------------------------------------------------------- |
-| `steps`               | input  | `ReadonlyArray<KrnFormStep>`                 | yes      | `required`                                | Ordered domain values supplied to the step collection.                      |
-| `current`             | model  | `number`                                     | no       | `0`                                       | Controlled current state with a matching Angular model-change output.       |
-| `furthestStep`        | model  | `number`                                     | no       | `0`                                       | Controlled furthest step state with a matching Angular model-change output. |
-| `allowStepNavigation` | input  | `boolean`                                    | no       | `true`                                    | Controls whether the component applies the allow step navigation behavior.  |
-| `orientation`         | input  | `"horizontal" \| "vertical"`                 | no       | `'horizontal'`                            | Defines the logical axis used by layout and keyboard navigation.            |
-| `completeLabel`       | input  | `string`                                     | no       | `this.translations.patterns.complete`     | Human-readable copy for the complete state or control.                      |
-| `ariaLabel`           | input  | `string`                                     | no       | `this.translations.patterns.formProgress` | Accessible name used when visible content is not sufficient.                |
-| `optionalLabel`       | input  | `string`                                     | no       | `this.translations.patterns.optional`     | Human-readable copy for the optional state or control.                      |
-| `backLabel`           | input  | `string`                                     | no       | `this.translations.patterns.back`         | Human-readable copy for the back state or control.                          |
-| `continueLabel`       | input  | `string`                                     | no       | `this.translations.patterns.continue`     | Human-readable copy for the continue state or control.                      |
-| `stepCounterLabel`    | input  | `(current: number, total: number) => string` | no       | `this.translations.patterns.stepCounter`  | Human-readable copy for the step counter state or control.                  |
-| `completed`           | output | `void`                                       | no       | `undefined`                               | Notifies the consumer after the completed interaction completes.            |
+| Name                  | Kind   | Type                                                        | Required | Default        | Description                                                                 |
+| --------------------- | ------ | ----------------------------------------------------------- | -------- | -------------- | --------------------------------------------------------------------------- |
+| `steps`               | input  | `ReadonlyArray<KrnFormStep>`                                | yes      | `required`     | Ordered domain values supplied to the step collection.                      |
+| `current`             | model  | `number`                                                    | no       | `0`            | Controlled current state with a matching Angular model-change output.       |
+| `furthestStep`        | model  | `number`                                                    | no       | `0`            | Controlled furthest step state with a matching Angular model-change output. |
+| `allowStepNavigation` | input  | `boolean`                                                   | no       | `true`         | Controls whether the component applies the allow step navigation behavior.  |
+| `orientation`         | input  | `"horizontal" \| "vertical"`                                | no       | `'horizontal'` | Defines the logical axis used by layout and keyboard navigation.            |
+| `completeLabel`       | input  | `string \| undefined`                                       | no       | `undefined`    | Human-readable copy for the complete state or control.                      |
+| `ariaLabel`           | input  | `string \| undefined`                                       | no       | `undefined`    | Accessible name used when visible content is not sufficient.                |
+| `optionalLabel`       | input  | `string \| undefined`                                       | no       | `undefined`    | Human-readable copy for the optional state or control.                      |
+| `backLabel`           | input  | `string \| undefined`                                       | no       | `undefined`    | Human-readable copy for the back state or control.                          |
+| `continueLabel`       | input  | `string \| undefined`                                       | no       | `undefined`    | Human-readable copy for the continue state or control.                      |
+| `stepCounterLabel`    | input  | `((current: number, total: number) => string) \| undefined` | no       | `undefined`    | Human-readable copy for the step counter state or control.                  |
+| `completed`           | output | `void`                                                      | no       | `undefined`    | Notifies the consumer after the completed interaction completes.            |
 
 ## Deprecated selectors
 

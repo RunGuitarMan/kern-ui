@@ -90,9 +90,9 @@
       "name": "dismissLabel",
       "property": "dismissLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.feedback.dismissMessage",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the dismiss state or control.",
       "descriptionSource": "inferred"
     },
@@ -358,7 +358,7 @@
         "componentId": "banner",
         "publicName": "dismissLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {

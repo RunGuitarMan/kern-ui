@@ -19,8 +19,8 @@ peer installation as evidence of support.
 The compatibility contract includes:
 
 - the `@kern-ui/angular` compatibility entry point; the `/cdk`, `/i18n`, `/core`, `/kit`,
-  `/addon-grid`, `/addon-charts`, `/patterns`, and `/testing` entry points; declared style
-  subpaths; and their exported declarations;
+  `/addon-grid`, `/addon-charts`, `/patterns`, `/testing`, and declared `/testing/*` entry points;
+  declared style subpaths; and their exported declarations;
 - the optional `@kern-ui/mcp` executable, programmatic API, and declared agent-contract subpaths;
 - component and directive selectors;
 - inputs, models, outputs, defaults, required state, and generic type behavior;

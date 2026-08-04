@@ -1,0 +1,26 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "docs-vite-smoke",
+  "projectType": "application",
+  "root": "tools/vite-smoke",
+  "sourceRoot": "projects/docs/src",
+  "cli": {
+    "cache": {
+      "enabled": true,
+      "environment": "all",
+      "path": ".nx/cache/angular-vite-smoke"
+    }
+  },
+  "tags": ["scope:tools", "type:application", "publishable:false"],
+  "targets": {
+    "serve": {
+      "executor": "@angular/build:dev-server",
+      "cache": false,
+      "continuous": true,
+      "options": {
+        "buildTarget": "docs:build:development",
+        "prebundle": true
+      }
+    }
+  }
+}

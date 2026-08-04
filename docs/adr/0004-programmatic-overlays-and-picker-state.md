@@ -30,8 +30,12 @@ specified together.
 Programmatic content is owned by the Kit-level `KrnOverlayService`; CDK retains only platform,
 stacking, background, and focus coordination. `KrnOverlayRef<Result, DismissReason>` settles once
 after exit and disposal, supports component and `TemplateRef` content with scoped injection, and
-dismisses owned descendants before their parent. Navigation, service destruction, parent close,
-outside interaction, platform close request, and SSR are explicit typed outcomes.
+dismisses owned descendants before their parent. Component content uses one reusable
+`defineKrnOverlayContent<Data, Result, DismissReason>(Component)` value for
+`injectKrnOverlayData`, `injectKrnOverlayRef`, and `open`; raw component overloads are intentionally
+excluded because independent call-site generics cannot prove the content's data or result type.
+Navigation, service destruction, parent close, outside interaction, platform close request, and
+SSR are explicit typed outcomes.
 
 On the server, `open()` creates no DOM or view and returns a replay-settled `ssr` dismissal. An
 initially visible server-rendered surface must use the declarative component API. Externally

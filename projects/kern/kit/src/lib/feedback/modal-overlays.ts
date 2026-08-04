@@ -25,6 +25,7 @@ import {
   type KrnScheduledHandle,
 } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
 import type { KrnOverlayCloseReason, KrnOverlayPosition } from './feedback.types';
 
 function nullableBooleanAttribute(value: unknown): boolean | null {
@@ -53,7 +54,7 @@ const OVERLAY_TEMPLATE = `
         [attr.aria-modal]="open() ? 'true' : null"
         [attr.aria-labelledby]="title() ? surface.titleId : null"
         [attr.aria-describedby]="description() ? surface.descriptionId : null"
-        [attr.aria-label]="title() ? null : ariaLabel()"
+        [attr.aria-label]="title() ? null : resolvedAriaLabel()"
         tabindex="-1"
         [cdkTrapFocus]="open() && !surface.closing()"
         [cdkTrapFocusAutoCapture]="false"
@@ -73,7 +74,7 @@ const OVERLAY_TEMPLATE = `
               }
             </div>
             @if (showClose()) {
-              <button type="button" class="close" [attr.aria-label]="closeLabel()" (click)="surface.close('action')">
+              <button type="button" class="close" [attr.aria-label]="resolvedCloseLabel()" (click)="surface.close('action')">
                 <span aria-hidden="true">×</span>
               </button>
             }
@@ -406,9 +407,17 @@ export class KrnDialog {
   readonly title = input('');
   readonly description = input('');
   readonly eyebrow = input('');
-  readonly ariaLabel = input(this.translations.feedback.dialog);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.feedback.dialog,
+  );
   readonly showClose = input(true, { transform: booleanAttribute });
-  readonly closeLabel = input(this.translations.feedback.close);
+  readonly closeLabel = input<string | undefined>();
+  protected readonly resolvedCloseLabel = krnInputFallback(
+    this.closeLabel,
+    () => this.translations.feedback.close,
+  );
   readonly closeOnEscape = input(true, { transform: booleanAttribute });
   readonly closeOnOutside = input<boolean | null, unknown>(null, {
     transform: nullableBooleanAttribute,
@@ -443,9 +452,17 @@ export class KrnAlertDialog {
   readonly title = input('');
   readonly description = input('');
   readonly eyebrow = input('');
-  readonly ariaLabel = input(this.translations.feedback.dialog);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.feedback.dialog,
+  );
   readonly showClose = input(true, { transform: booleanAttribute });
-  readonly closeLabel = input(this.translations.feedback.close);
+  readonly closeLabel = input<string | undefined>();
+  protected readonly resolvedCloseLabel = krnInputFallback(
+    this.closeLabel,
+    () => this.translations.feedback.close,
+  );
   readonly closeOnEscape = input(true, { transform: booleanAttribute });
   readonly closeOnOutside = input<boolean | null, unknown>(null, {
     transform: nullableBooleanAttribute,
@@ -480,9 +497,17 @@ export class KrnDrawer {
   readonly title = input('');
   readonly description = input('');
   readonly eyebrow = input('');
-  readonly ariaLabel = input(this.translations.feedback.dialog);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.feedback.dialog,
+  );
   readonly showClose = input(true, { transform: booleanAttribute });
-  readonly closeLabel = input(this.translations.feedback.close);
+  readonly closeLabel = input<string | undefined>();
+  protected readonly resolvedCloseLabel = krnInputFallback(
+    this.closeLabel,
+    () => this.translations.feedback.close,
+  );
   readonly closeOnEscape = input(true, { transform: booleanAttribute });
   readonly closeOnOutside = input<boolean | null, unknown>(null, {
     transform: nullableBooleanAttribute,
@@ -517,9 +542,17 @@ export class KrnBottomSheet {
   readonly title = input('');
   readonly description = input('');
   readonly eyebrow = input('');
-  readonly ariaLabel = input(this.translations.feedback.dialog);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.feedback.dialog,
+  );
   readonly showClose = input(true, { transform: booleanAttribute });
-  readonly closeLabel = input(this.translations.feedback.close);
+  readonly closeLabel = input<string | undefined>();
+  protected readonly resolvedCloseLabel = krnInputFallback(
+    this.closeLabel,
+    () => this.translations.feedback.close,
+  );
   readonly closeOnEscape = input(true, { transform: booleanAttribute });
   readonly closeOnOutside = input<boolean | null, unknown>(null, {
     transform: nullableBooleanAttribute,

@@ -50,11 +50,11 @@ void bootstrapApplication(KernErrorStateAgentExample);
 
 ## API
 
-| Name          | Kind  | Type              | Required | Default                                      | Description                                                                      |
-| ------------- | ----- | ----------------- | -------- | -------------------------------------------- | -------------------------------------------------------------------------------- |
-| `title`       | input | `string`          | no       | `this.translations.feedback.errorStateTitle` | Visible title that also names the component surface or data view.                |
-| `description` | input | `string`          | no       | `''`                                         | Visible supporting description for the component content.                        |
-| `tone`        | input | `KrnFeedbackTone` | no       | `'danger'`                                   | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
+| Name          | Kind  | Type                  | Required | Default     | Description                                                                      |
+| ------------- | ----- | --------------------- | -------- | ----------- | -------------------------------------------------------------------------------- |
+| `title`       | input | `string \| undefined` | no       | `undefined` | Visible title that also names the component surface or data view.                |
+| `description` | input | `string`              | no       | `''`        | Visible supporting description for the component content.                        |
+| `tone`        | input | `KrnFeedbackTone`     | no       | `'danger'`  | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
 
 ## Deprecated selectors
 

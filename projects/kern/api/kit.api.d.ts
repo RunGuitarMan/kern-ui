@@ -61,15 +61,18 @@ declare class KrnAppShell {
   readonly mobileNavigation: _angular_core.InputSignal<'auto' | 'hidden' | 'sidebar' | 'rail'>;
   readonly mobileNavigationOpen: _angular_core.ModelSignal<boolean>;
   readonly mobileNavigationId: _angular_core.InputSignal<string>;
-  readonly mobileNavigationLabel: _angular_core.InputSignal<string>;
+  readonly mobileNavigationLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedMobileNavigationLabel: _angular_core.Signal<string>;
   /** Space-separated element ids that name the mobile navigation dialog. */
   readonly mobileNavigationLabelledBy: _angular_core.InputSignal<string>;
   /** Space-separated element ids that describe the mobile navigation dialog. */
   readonly mobileNavigationDescribedBy: _angular_core.InputSignal<string>;
   /** Focus target applied after the mobile navigation dialog opens. */
   readonly mobileNavigationInitialFocus: _angular_core.InputSignal<string>;
-  readonly openNavigationLabel: _angular_core.InputSignal<string>;
-  readonly closeNavigationLabel: _angular_core.InputSignal<string>;
+  readonly openNavigationLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedOpenNavigationLabel: _angular_core.Signal<string>;
+  readonly closeNavigationLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedCloseNavigationLabel: _angular_core.Signal<string>;
   readonly mainId: _angular_core.InputSignal<string>;
   protected readonly isMobileNavigationOpen: _angular_core.Signal<boolean>;
   protected readonly resolvedSidebarWidth: _angular_core.Signal<string>;
@@ -163,7 +166,8 @@ declare class KrnSidebar {
   readonly collapsedMode: _angular_core.InputSignal<'hidden' | 'icons'>;
   readonly width: _angular_core.InputSignal<KrnLayoutSpace>;
   readonly collapsedWidth: _angular_core.InputSignal<KrnLayoutSpace>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   /** Space-separated element ids that name the native complementary landmark. */
   readonly ariaLabelledBy: _angular_core.InputSignal<string>;
   /** Space-separated element ids that describe the native complementary landmark. */
@@ -202,7 +206,8 @@ declare class KrnNavigationRail {
   readonly expanded: _angular_core.ModelSignal<boolean>;
   readonly width: _angular_core.InputSignal<KrnLayoutSpace>;
   readonly expandedWidth: _angular_core.InputSignal<KrnLayoutSpace>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   /** Space-separated element ids that name the native navigation landmark. */
   readonly ariaLabelledBy: _angular_core.InputSignal<string>;
   /** Space-separated element ids that describe the native navigation landmark. */
@@ -490,7 +495,7 @@ declare class KrnScrollArea {
   /** Keeps the native viewport keyboard-scrollable when enabled. */
   readonly keyboardAccessible: _angular_core.InputSignalWithTransform<boolean, unknown>;
   /** Names the scrollable region. Blank values omit the region role and accessible name. */
-  readonly ariaLabel: _angular_core.InputSignal<string | null>;
+  readonly ariaLabel: _angular_core.InputSignal<string | null | undefined>;
   /** Controls native scrollbar visibility and gutter allocation. */
   readonly scrollbar: _angular_core.InputSignal<'auto' | 'hidden' | 'stable'>;
   protected readonly resolvedAxis: _angular_core.Signal<'horizontal' | 'vertical' | 'both'>;
@@ -678,7 +683,7 @@ declare class KrnResizeHandle {
   protected readonly managedMax: _angular_core.WritableSignal<number>;
   protected readonly managedValue: _angular_core.WritableSignal<number>;
   protected readonly managedDisabled: _angular_core.WritableSignal<boolean>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
   readonly ariaValueText: _angular_core.InputSignal<string | null>;
   protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
   protected readonly resolvedAriaValueText: _angular_core.Signal<string>;
@@ -754,7 +759,7 @@ declare class KrnButton {
   private readonly renderer;
   private readonly destroyRef;
   private readonly options;
-  private readonly defaultLoadingLabel;
+  private readonly inheritedLoadingLabel;
   private readonly syncLoadingAriaDisabled;
   readonly size: _angular_core.InputSignal<KrnSize>;
   readonly variant: _angular_core.InputSignal<KrnActionVariant>;
@@ -765,7 +770,8 @@ declare class KrnButton {
    */
   readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
   /** Accessible loading copy; defaults to the application or closest scoped option. */
-  readonly loadingLabel: _angular_core.InputSignal<string>;
+  readonly loadingLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedLoadingLabel: _angular_core.Signal<string>;
   constructor();
   protected ngDoCheck(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnButton, never>;
@@ -792,7 +798,7 @@ declare class KrnFloatingActionButton {
   private readonly renderer;
   private readonly destroyRef;
   private readonly options;
-  private readonly defaultLoadingLabel;
+  private readonly inheritedLoadingLabel;
   private readonly syncLoadingAriaDisabled;
   readonly size: _angular_core.InputSignal<KrnSize>;
   readonly variant: _angular_core.InputSignal<KrnActionVariant>;
@@ -804,7 +810,8 @@ declare class KrnFloatingActionButton {
    */
   readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
   /** Accessible loading copy; defaults to the application or closest scoped option. */
-  readonly loadingLabel: _angular_core.InputSignal<string>;
+  readonly loadingLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedLoadingLabel: _angular_core.Signal<string>;
   constructor();
   protected ngDoCheck(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnFloatingActionButton, never>;
@@ -893,7 +900,7 @@ declare class KrnIconButton {
   private readonly renderer;
   private readonly destroyRef;
   private readonly options;
-  private readonly defaultLoadingLabel;
+  private readonly inheritedLoadingLabel;
   private readonly syncLoadingAriaDisabled;
   readonly size: _angular_core.InputSignal<KrnSize>;
   readonly variant: _angular_core.InputSignal<KrnActionVariant>;
@@ -904,7 +911,8 @@ declare class KrnIconButton {
    */
   readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
   /** Accessible loading copy; defaults to the application or closest scoped option. */
-  readonly loadingLabel: _angular_core.InputSignal<string>;
+  readonly loadingLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedLoadingLabel: _angular_core.Signal<string>;
   constructor();
   protected ngDoCheck(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnIconButton, never>;
@@ -1163,7 +1171,7 @@ declare class KrnCopyButton {
   private readonly platform;
   private readonly destroyRef;
   private readonly options;
-  private readonly labels;
+  private readonly inheritedLabels;
   private resetTimer;
   private activeAttempt;
   /** Exact text captured once at activation and written to the clipboard. */
@@ -1176,13 +1184,17 @@ declare class KrnCopyButton {
    */
   readonly ariaLabel: _angular_core.InputSignal<string>;
   /** Localized visible fallback used only when no action label is projected. */
-  readonly copyLabel: _angular_core.InputSignal<string>;
+  readonly copyLabel: _angular_core.InputSignal<string | undefined>;
   /** Loading announcement while the asynchronous write is in flight. */
-  readonly copyingLabel: _angular_core.InputSignal<string>;
+  readonly copyingLabel: _angular_core.InputSignal<string | undefined>;
   /** Success announcement paired with the visible success indicator. */
-  readonly copiedLabel: _angular_core.InputSignal<string>;
+  readonly copiedLabel: _angular_core.InputSignal<string | undefined>;
   /** Failure announcement paired with the visible error indicator. */
-  readonly errorLabel: _angular_core.InputSignal<string>;
+  readonly errorLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedCopyLabel: _angular_core.Signal<string>;
+  protected readonly resolvedCopyingLabel: _angular_core.Signal<string>;
+  protected readonly resolvedCopiedLabel: _angular_core.Signal<string>;
+  protected readonly resolvedErrorLabel: _angular_core.Signal<string>;
   readonly size: _angular_core.InputSignal<KrnSize>;
   readonly variant: _angular_core.InputSignal<KrnActionVariant>;
   readonly tone: _angular_core.InputSignal<KrnTone>;
@@ -1405,6 +1417,7 @@ declare class KrnDropdownButton {
 declare class KrnSplitButton {
   private readonly options;
   private readonly splitHost;
+  private readonly inheritedMenuLabel;
   readonly size: _angular_core.InputSignal<KrnSize>;
   readonly variant: _angular_core.InputSignal<KrnActionVariant>;
   readonly tone: _angular_core.InputSignal<KrnTone>;
@@ -1419,7 +1432,8 @@ declare class KrnSplitButton {
   readonly matchTriggerWidth: _angular_core.InputSignalWithTransform<boolean, unknown>;
   /** Closes after an enabled menu item activates; use the keep-open marker for one item. */
   readonly closeOnSelection: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly menuLabel: _angular_core.InputSignal<string>;
+  readonly menuLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedMenuLabel: Signal<string>;
   readonly primaryAction: _angular_core.OutputEmitterRef<MouseEvent>;
   private readonly menuPanel;
   protected readonly menu: KrnMenuButtonController;
@@ -1703,13 +1717,17 @@ type KrnAutocompleteMode = 'list' | 'both' | 'inline' | 'none';
 
 declare class KrnDatePicker {
   private readonly platform;
+  private readonly dateTime;
+  private readonly liveDate;
   private readonly translations;
   readonly id: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly ariaLabelledBy: _angular_core.InputSignal<string>;
   readonly ariaDescribedBy: _angular_core.InputSignal<string>;
-  readonly locale: _angular_core.InputSignal<string>;
-  readonly today: _angular_core.InputSignal<string>;
+  readonly locale: _angular_core.InputSignal<string | undefined>;
+  private readonly resolvedLocale;
+  readonly today: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedToday: _angular_core.Signal<string>;
   readonly weekStartsOn: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly labels: _angular_core.InputSignal<Partial<KrnDatePickerLabels>>;
   readonly min: _angular_core.InputSignal<string>;
@@ -1794,6 +1812,7 @@ declare class KrnDatePicker {
   private initialFocusDate;
   private focusDate;
   private focusDayButton;
+  private refreshToday;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDatePicker, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnDatePicker,
@@ -1827,17 +1846,23 @@ declare class KrnDatePicker {
 }
 declare class KrnDateRangePicker {
   private readonly platform;
+  private readonly dateTime;
+  private readonly liveDate;
   private readonly translations;
   readonly id: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly ariaLabelledBy: _angular_core.InputSignal<string>;
   readonly ariaDescribedBy: _angular_core.InputSignal<string>;
-  readonly locale: _angular_core.InputSignal<string>;
-  readonly today: _angular_core.InputSignal<string>;
+  readonly locale: _angular_core.InputSignal<string | undefined>;
+  private readonly resolvedLocale;
+  readonly today: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedToday: _angular_core.Signal<string>;
   readonly weekStartsOn: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly labels: _angular_core.InputSignal<Partial<KrnDatePickerLabels>>;
-  readonly startLabel: _angular_core.InputSignal<string>;
-  readonly endLabel: _angular_core.InputSignal<string>;
+  readonly startLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedStartLabel: _angular_core.Signal<string>;
+  readonly endLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedEndLabel: _angular_core.Signal<string>;
   readonly min: _angular_core.InputSignal<string>;
   readonly max: _angular_core.InputSignal<string>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -1927,6 +1952,7 @@ declare class KrnDateRangePicker {
   private initialFocusDate;
   private focusDate;
   private focusDayButton;
+  private refreshToday;
   private emitRange;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDateRangePicker, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
@@ -2089,8 +2115,10 @@ declare class KrnColorPicker {
   private readonly translations;
   readonly id: _angular_core.InputSignal<string>;
   readonly labels: _angular_core.InputSignal<Partial<KrnColorPickerTranslations>>;
-  readonly pickerLabel: _angular_core.InputSignal<string>;
-  readonly textLabel: _angular_core.InputSignal<string>;
+  readonly pickerLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedPickerLabel: _angular_core.Signal<string>;
+  readonly textLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedTextLabel: _angular_core.Signal<string>;
   readonly ariaLabelledBy: _angular_core.InputSignal<string>;
   readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -2213,7 +2241,8 @@ declare class KrnOtpInput {
   private readonly inputElement;
   private readonly slotElements;
   readonly id: _angular_core.InputSignal<string>;
-  readonly label: _angular_core.InputSignal<string>;
+  readonly label: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedLabel: _angular_core.Signal<string>;
   readonly length: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly numericOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly autocomplete: _angular_core.InputSignal<string>;
@@ -2295,9 +2324,12 @@ declare class KrnTagsInput {
   private feedbackTimer;
   private feedbackId;
   readonly id: _angular_core.InputSignal<string>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
-  readonly inputLabel: _angular_core.InputSignal<string>;
-  readonly placeholder: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
+  readonly inputLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedInputLabel: _angular_core.Signal<string>;
+  readonly placeholder: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedPlaceholder: _angular_core.Signal<string>;
   readonly ariaLabelledBy: _angular_core.InputSignal<string>;
   readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly autocomplete: _angular_core.InputSignal<string>;
@@ -2388,7 +2420,8 @@ declare class KrnSlider {
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
   readonly label: _angular_core.InputSignal<string>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   readonly min: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly max: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly step: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -2464,9 +2497,12 @@ declare class KrnRangeSlider {
   private readonly endInput;
   protected readonly translations: Readonly<_kern_ui_angular_core.KrnTranslations>;
   readonly id: _angular_core.InputSignal<string>;
-  readonly label: _angular_core.InputSignal<string>;
-  readonly startLabel: _angular_core.InputSignal<string>;
-  readonly endLabel: _angular_core.InputSignal<string>;
+  readonly label: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedLabel: _angular_core.Signal<string>;
+  readonly startLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedStartLabel: _angular_core.Signal<string>;
+  readonly endLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedEndLabel: _angular_core.Signal<string>;
   readonly min: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly max: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly step: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -2632,10 +2668,14 @@ declare class KrnSelect<T = string> {
   #private;
   private readonly trigger;
   readonly id: _angular_core.InputSignal<string>;
-  readonly placeholder: _angular_core.InputSignal<string>;
-  readonly emptyText: _angular_core.InputSignal<string>;
-  readonly loadingText: _angular_core.InputSignal<string>;
-  readonly errorText: _angular_core.InputSignal<string>;
+  readonly placeholder: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedPlaceholder: Signal<string>;
+  readonly emptyText: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedEmptyText: Signal<string>;
+  readonly loadingText: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedLoadingText: Signal<string>;
+  readonly errorText: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedErrorText: Signal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly ariaLabelledBy: _angular_core.InputSignal<string>;
   readonly ariaDescribedBy: _angular_core.InputSignal<string>;
@@ -2726,10 +2766,14 @@ declare class KrnMultiSelect<T = string> {
   private readonly translations;
   private readonly trigger;
   readonly id: _angular_core.InputSignal<string>;
-  readonly placeholder: _angular_core.InputSignal<string>;
-  readonly emptyText: _angular_core.InputSignal<string>;
-  readonly loadingText: _angular_core.InputSignal<string>;
-  readonly errorText: _angular_core.InputSignal<string>;
+  readonly placeholder: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedPlaceholder: Signal<string>;
+  readonly emptyText: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedEmptyText: Signal<string>;
+  readonly loadingText: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedLoadingText: Signal<string>;
+  readonly errorText: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedErrorText: Signal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly ariaLabelledBy: _angular_core.InputSignal<string>;
   readonly ariaDescribedBy: _angular_core.InputSignal<string>;
@@ -2833,14 +2877,19 @@ declare class KrnCombobox {
     unknown
   >;
   readonly id: _angular_core.InputSignal<string>;
-  readonly placeholder: _angular_core.InputSignal<string>;
-  readonly emptyText: _angular_core.InputSignal<string>;
-  readonly loadingText: _angular_core.InputSignal<string>;
-  readonly errorText: _angular_core.InputSignal<string>;
+  readonly placeholder: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedPlaceholder: Signal<string>;
+  readonly emptyText: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedEmptyText: Signal<string>;
+  readonly loadingText: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedLoadingText: Signal<string>;
+  readonly errorText: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedErrorText: Signal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly ariaLabelledBy: _angular_core.InputSignal<string>;
   readonly ariaDescribedBy: _angular_core.InputSignal<string>;
-  readonly toggleLabel: _angular_core.InputSignal<string>;
+  readonly toggleLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedToggleLabel: Signal<string>;
   readonly name: _angular_core.InputSignal<string>;
   readonly options: _angular_core.InputSignal<readonly KrnSelectOption<string>[]>;
   /** Controls whether options are interactive or replaced by an announced loading/error state. */
@@ -2951,14 +3000,19 @@ declare class KrnAutocomplete {
     unknown
   >;
   readonly id: _angular_core.InputSignal<string>;
-  readonly placeholder: _angular_core.InputSignal<string>;
-  readonly emptyText: _angular_core.InputSignal<string>;
-  readonly loadingText: _angular_core.InputSignal<string>;
-  readonly errorText: _angular_core.InputSignal<string>;
+  readonly placeholder: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedPlaceholder: Signal<string>;
+  readonly emptyText: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedEmptyText: Signal<string>;
+  readonly loadingText: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedLoadingText: Signal<string>;
+  readonly errorText: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedErrorText: Signal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly ariaLabelledBy: _angular_core.InputSignal<string>;
   readonly ariaDescribedBy: _angular_core.InputSignal<string>;
-  readonly toggleLabel: _angular_core.InputSignal<string>;
+  readonly toggleLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedToggleLabel: Signal<string>;
   readonly name: _angular_core.InputSignal<string>;
   readonly options: _angular_core.InputSignal<readonly KrnSelectOption<string>[]>;
   /** Controls whether options are interactive or replaced by an announced loading/error state. */
@@ -3425,7 +3479,8 @@ declare class KrnSegmentedControl<T = string> {
   readonly optionTemplate: _angular_core.InputSignal<TemplateRef<
     KrnSegmentOptionContext<T>
   > | null>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   readonly ariaLabelledBy: _angular_core.InputSignal<string>;
   readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly orientation: _angular_core.InputSignal<KrnOrientation>;
@@ -3669,10 +3724,14 @@ declare class KrnPasswordInput {
   readonly value: _angular_core.InputSignal<string | undefined>;
   readonly minLength: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
   readonly maxLength: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
-  readonly showLabel: _angular_core.InputSignal<string>;
-  readonly hideLabel: _angular_core.InputSignal<string>;
-  readonly showText: _angular_core.InputSignal<string>;
-  readonly hideText: _angular_core.InputSignal<string>;
+  readonly showLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedShowLabel: _angular_core.Signal<string>;
+  readonly hideLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedHideLabel: _angular_core.Signal<string>;
+  readonly showText: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedShowText: _angular_core.Signal<string>;
+  readonly hideText: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedHideText: _angular_core.Signal<string>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -3745,11 +3804,14 @@ declare class KrnSearchInput {
   private composing;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
-  readonly placeholder: _angular_core.InputSignal<string>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly placeholder: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedPlaceholder: _angular_core.Signal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   readonly ariaLabelledBy: _angular_core.InputSignal<string>;
   readonly ariaDescribedBy: _angular_core.InputSignal<string>;
-  readonly clearLabel: _angular_core.InputSignal<string>;
+  readonly clearLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedClearLabel: _angular_core.Signal<string>;
   readonly autocomplete: _angular_core.InputSignal<string>;
   readonly enterKeyHint: _angular_core.InputSignal<string>;
   readonly value: _angular_core.InputSignal<string | undefined>;
@@ -3834,8 +3896,10 @@ declare class KrnNumberInput {
   readonly autocomplete: _angular_core.InputSignal<string>;
   readonly inputMode: _angular_core.InputSignal<KrnInputMode>;
   readonly value: _angular_core.InputSignal<number | null | undefined>;
-  readonly increaseLabel: _angular_core.InputSignal<string>;
-  readonly decreaseLabel: _angular_core.InputSignal<string>;
+  readonly increaseLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedIncreaseLabel: _angular_core.Signal<string>;
+  readonly decreaseLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedDecreaseLabel: _angular_core.Signal<string>;
   readonly min: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
   readonly max: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
   readonly step: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -3916,8 +3980,10 @@ declare class KrnFileUpload {
   #private;
   protected readonly translations: Readonly<_kern_ui_angular_core.KrnTranslations>;
   readonly id: _angular_core.InputSignal<string>;
-  readonly label: _angular_core.InputSignal<string>;
-  readonly locale: _angular_core.InputSignal<string>;
+  readonly label: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedLabel: Signal<string>;
+  readonly locale: _angular_core.InputSignal<string | undefined>;
+  private readonly resolvedLocale;
   readonly description: _angular_core.InputSignal<string>;
   readonly accept: _angular_core.InputSignal<string>;
   readonly multiple: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -3996,8 +4062,10 @@ declare class KrnDropUpload {
   protected readonly platform: _kern_ui_angular_cdk.KrnPlatformAdapter;
   protected readonly translations: Readonly<_kern_ui_angular_core.KrnTranslations>;
   readonly id: _angular_core.InputSignal<string>;
-  readonly label: _angular_core.InputSignal<string>;
-  readonly locale: _angular_core.InputSignal<string>;
+  readonly label: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedLabel: Signal<string>;
+  readonly locale: _angular_core.InputSignal<string | undefined>;
+  private readonly resolvedLocale;
   readonly description: _angular_core.InputSignal<string>;
   readonly accept: _angular_core.InputSignal<string>;
   readonly multiple: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -4009,7 +4077,8 @@ declare class KrnDropUpload {
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly filesChange: OutputEmitterRef<readonly File[]>;
   readonly rejected: OutputEmitterRef<readonly KrnUploadRejection[]>;
-  readonly dropLabel: _angular_core.InputSignal<string>;
+  readonly dropLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedDropLabel: Signal<string>;
   readonly ariaLabelledBy: _angular_core.InputSignal<string>;
   readonly ariaDescribedBy: _angular_core.InputSignal<string>;
   readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -4151,14 +4220,15 @@ declare class KrnBreadcrumbs {
   readonly items: _angular_core.InputSignal<readonly KrnBreadcrumbItem[]>;
   readonly maxItems: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly separator: _angular_core.InputSignal<string>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
-  readonly moreLabel: _angular_core.InputSignal<string>;
-  readonly showAllLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  readonly moreLabel: _angular_core.InputSignal<string | undefined>;
+  readonly showAllLabel: _angular_core.InputSignal<string | undefined>;
   readonly itemActivated: _angular_core.OutputEmitterRef<KrnBreadcrumbItem>;
   protected readonly expanded: _angular_core.WritableSignal<boolean>;
   protected readonly resolvedMaxItems: _angular_core.Signal<number>;
   protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
   protected readonly resolvedShowAllLabel: _angular_core.Signal<string>;
+  protected readonly resolvedMoreLabel: _angular_core.Signal<string>;
   protected readonly currentIndex: _angular_core.Signal<number>;
   protected readonly ellipsis: _angular_core.Signal<VisibleBreadcrumb>;
   protected readonly visibleItems: _angular_core.Signal<readonly VisibleBreadcrumb[]>;
@@ -4196,7 +4266,7 @@ declare class KrnTabs {
   readonly items: _angular_core.InputSignal<readonly KrnTabItem[]>;
   readonly value: _angular_core.ModelSignal<string | null>;
   readonly orientation: _angular_core.InputSignal<KrnNavigationOrientation>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
   protected readonly resolvedOrientation: _angular_core.Signal<KrnNavigationOrientation>;
   protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
   protected readonly selectedId: _angular_core.Signal<string | null>;
@@ -4233,16 +4303,16 @@ declare class KrnPagination {
   readonly pageSize: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly siblingCount: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly page: _angular_core.ModelSignal<number>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
-  readonly previousLabel: _angular_core.InputSignal<string>;
-  readonly nextLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  readonly previousLabel: _angular_core.InputSignal<string | undefined>;
+  readonly nextLabel: _angular_core.InputSignal<string | undefined>;
   /** Backward-compatible `{page}` template. */
-  readonly pageLabel: _angular_core.InputSignal<string>;
+  readonly pageLabel: _angular_core.InputSignal<string | undefined>;
   /** Typed alternative to `pageLabel` for locale-specific grammar. */
   readonly pageLabelFormatter: _angular_core.InputSignal<((page: number) => string) | undefined>;
-  readonly emptyLabel: _angular_core.InputSignal<string>;
+  readonly emptyLabel: _angular_core.InputSignal<string | undefined>;
   /** Backward-compatible `{start}`, `{end}`, and `{total}` template. */
-  readonly rangeLabel: _angular_core.InputSignal<string>;
+  readonly rangeLabel: _angular_core.InputSignal<string | undefined>;
   /** Typed alternative to `rangeLabel` for locale-specific grammar. */
   readonly rangeLabelFormatter: _angular_core.InputSignal<
     ((start: number, end: number, total: number) => string) | undefined
@@ -4299,8 +4369,8 @@ declare class KrnStepper {
   readonly completedSteps: _angular_core.InputSignal<readonly number[]>;
   readonly linear: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly orientation: _angular_core.InputSignal<KrnNavigationOrientation>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
-  readonly optionalLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  readonly optionalLabel: _angular_core.InputSignal<string | undefined>;
   protected readonly resolvedOrientation: _angular_core.Signal<KrnNavigationOrientation>;
   protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
   protected readonly resolvedOptionalLabel: _angular_core.Signal<string>;
@@ -4363,10 +4433,10 @@ declare class KrnMenu {
     })[]
   >;
   readonly open: _angular_core.ModelSignal<boolean>;
-  readonly triggerLabel: _angular_core.InputSignal<string>;
-  readonly triggerAriaLabel: _angular_core.InputSignal<string>;
-  readonly menuAriaLabel: _angular_core.InputSignal<string>;
-  readonly emptyLabel: _angular_core.InputSignal<string>;
+  readonly triggerLabel: _angular_core.InputSignal<string | undefined>;
+  readonly triggerAriaLabel: _angular_core.InputSignal<string | undefined>;
+  readonly menuAriaLabel: _angular_core.InputSignal<string | undefined>;
+  readonly emptyLabel: _angular_core.InputSignal<string | undefined>;
   readonly itemSelected: _angular_core.OutputEmitterRef<KrnNavigationItem>;
   readonly closed: _angular_core.OutputEmitterRef<'escape' | 'outside' | 'detach' | 'selection'>;
   protected readonly activeIndex: _angular_core.WritableSignal<number>;
@@ -4433,7 +4503,7 @@ declare class KrnMenubar {
   private readonly translations;
   private focusRepairToken;
   readonly items: _angular_core.InputSignal<readonly KrnNavigationItem[]>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
   readonly itemSelected: _angular_core.OutputEmitterRef<KrnNavigationItem>;
   protected readonly activeIndex: _angular_core.WritableSignal<number>;
   protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
@@ -4468,7 +4538,7 @@ declare class KrnContextMenu {
     readonly KrnContextMenuItem[],
     readonly KrnContextMenuItem[]
   >;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
   readonly itemSelected: _angular_core.OutputEmitterRef<KrnContextMenuItem>;
   protected readonly open: _angular_core.WritableSignal<boolean>;
   protected readonly origin: _angular_core.WritableSignal<{
@@ -4556,7 +4626,7 @@ declare class KrnTreeNavigation {
   readonly items: _angular_core.InputSignal<readonly KrnTreeNavigationItem[]>;
   readonly selectedId: _angular_core.ModelSignal<string | null>;
   readonly expandedIds: _angular_core.ModelSignal<readonly string[]>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
   readonly indent: _angular_core.InputSignal<string>;
   readonly showGuides: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly itemSelected: _angular_core.OutputEmitterRef<KrnTreeNavigationItem>;
@@ -4621,7 +4691,7 @@ declare class KrnBottomNavigation {
     readonly KrnNavigationItem[]
   >;
   readonly value: _angular_core.ModelSignal<string | null>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
   readonly itemSelected: _angular_core.OutputEmitterRef<KrnNavigationItem>;
   protected readonly columnCount: _angular_core.Signal<number>;
   protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
@@ -4655,8 +4725,8 @@ declare class KrnTableOfContents {
   >;
   readonly activeId: _angular_core.ModelSignal<string | null>;
   readonly observe: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly title: _angular_core.InputSignal<string>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly title: _angular_core.InputSignal<string | undefined>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
   readonly itemActivated: _angular_core.OutputEmitterRef<KrnTocItem>;
   protected readonly resolvedTitle: _angular_core.Signal<string | null>;
   protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
@@ -4686,7 +4756,7 @@ declare class KrnBackButton {
   private readonly location;
   private readonly translations;
   readonly href: _angular_core.InputSignal<string | null>;
-  readonly label: _angular_core.InputSignal<string>;
+  readonly label: _angular_core.InputSignal<string | undefined>;
   readonly activated: _angular_core.OutputEmitterRef<void>;
   protected readonly resolvedHref: _angular_core.Signal<string | null>;
   protected readonly resolvedLabel: _angular_core.Signal<string>;
@@ -4712,7 +4782,7 @@ declare class KrnSkipLink {
   private readonly platform;
   private readonly translations;
   readonly targetId: _angular_core.InputSignal<string>;
-  readonly label: _angular_core.InputSignal<string>;
+  readonly label: _angular_core.InputSignal<string | undefined>;
   readonly activated: _angular_core.OutputEmitterRef<void>;
   protected readonly resolvedTargetId: _angular_core.Signal<string>;
   protected readonly resolvedLabel: _angular_core.Signal<string>;
@@ -4762,12 +4832,13 @@ declare class KrnCommandPalette {
   >;
   readonly open: _angular_core.ModelSignal<boolean>;
   readonly query: _angular_core.ModelSignal<string>;
-  readonly title: _angular_core.InputSignal<string>;
+  readonly title: _angular_core.InputSignal<string | undefined>;
   readonly description: _angular_core.InputSignal<string>;
-  readonly placeholder: _angular_core.InputSignal<string>;
-  readonly resultsLabel: _angular_core.InputSignal<string>;
-  readonly closeShortcut: _angular_core.InputSignal<string>;
-  readonly locale: _angular_core.InputSignal<string | string[]>;
+  readonly placeholder: _angular_core.InputSignal<string | undefined>;
+  readonly resultsLabel: _angular_core.InputSignal<string | undefined>;
+  readonly closeShortcut: _angular_core.InputSignal<string | undefined>;
+  readonly locale: _angular_core.InputSignal<string | string[] | undefined>;
+  private readonly resolvedLocale;
   readonly labels: _angular_core.InputSignal<Partial<KrnCommandPaletteLabels>>;
   readonly selected: _angular_core.OutputEmitterRef<KrnCommandItem>;
   readonly closed: _angular_core.OutputEmitterRef<'escape' | 'outside' | 'selection'>;
@@ -4848,7 +4919,8 @@ declare class KrnAlert {
   readonly title: _angular_core.InputSignal<string>;
   readonly icon: _angular_core.InputSignal<string>;
   readonly dismissible: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly dismissLabel: _angular_core.InputSignal<string>;
+  readonly dismissLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedDismissLabel: _angular_core.Signal<string>;
   readonly closed: _angular_core.OutputEmitterRef<void>;
   protected readonly visible: _angular_core.WritableSignal<boolean>;
   protected toneIcon(): string;
@@ -4924,7 +4996,8 @@ declare class KrnToastViewport {
   readonly maxVisible: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly maxExpanded: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly labels: _angular_core.InputSignal<Partial<KrnToastTranslations>>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   readonly expanded: _angular_core.ModelSignal<boolean>;
   protected readonly copy: _angular_core.Signal<{
     ariaLabel: string;
@@ -4971,7 +5044,8 @@ declare class KrnProgressBar {
   readonly value: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly max: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly indeterminate: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   readonly valueText: _angular_core.InputSignal<string>;
   protected readonly safeMax: _angular_core.Signal<number>;
   protected readonly safeValue: _angular_core.Signal<number>;
@@ -5001,8 +5075,10 @@ declare class KrnCircularProgress {
   readonly max: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly indeterminate: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly showValue: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
-  readonly locale: _angular_core.InputSignal<string | string[]>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
+  readonly locale: _angular_core.InputSignal<string | string[] | undefined>;
+  private readonly resolvedLocale;
   protected readonly safeMax: _angular_core.Signal<number>;
   protected readonly safeValue: _angular_core.Signal<number>;
   protected readonly percentage: _angular_core.Signal<number>;
@@ -5031,7 +5107,8 @@ declare class KrnCircularProgress {
 }
 declare class KrnSpinner {
   private readonly translations;
-  readonly label: _angular_core.InputSignal<string>;
+  readonly label: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedLabel: _angular_core.Signal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnSpinner, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnSpinner,
@@ -5070,7 +5147,8 @@ declare class KrnLoadingOverlay {
   private readonly translations;
   readonly active: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly blocking: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly label: _angular_core.InputSignal<string>;
+  readonly label: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedLabel: _angular_core.Signal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnLoadingOverlay, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnLoadingOverlay,
@@ -5091,10 +5169,12 @@ declare class KrnLoadingOverlay {
 
 declare class KrnEmptyState {
   protected readonly translations: Readonly<_kern_ui_angular_core.KrnTranslations>;
-  readonly title: _angular_core.InputSignal<string>;
+  readonly title: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedTitle: _angular_core.Signal<string>;
   readonly description: _angular_core.InputSignal<string>;
   readonly tone: _angular_core.InputSignal<KrnFeedbackTone>;
   protected stateKind(): 'empty' | 'error' | 'success';
+  protected defaultTitle(): string;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnEmptyState, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnEmptyState,
@@ -5113,18 +5193,15 @@ declare class KrnEmptyState {
   >;
 }
 declare class KrnErrorState extends KrnEmptyState {
-  readonly title: _angular_core.InputSignal<string>;
   readonly tone: _angular_core.InputSignal<KrnFeedbackTone>;
   protected stateKind(): 'empty' | 'error' | 'success';
+  protected defaultTitle(): string;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnErrorState, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnErrorState,
     'krn-error-state',
     never,
-    {
-      title: { alias: 'title'; required: false; isSignal: true };
-      tone: { alias: 'tone'; required: false; isSignal: true };
-    },
+    { tone: { alias: 'tone'; required: false; isSignal: true } },
     {},
     never,
     ['[krnStateVisual]', '*', '[krnStateAction]'],
@@ -5133,18 +5210,15 @@ declare class KrnErrorState extends KrnEmptyState {
   >;
 }
 declare class KrnSuccessState extends KrnEmptyState {
-  readonly title: _angular_core.InputSignal<string>;
   readonly tone: _angular_core.InputSignal<KrnFeedbackTone>;
   protected stateKind(): 'empty' | 'error' | 'success';
+  protected defaultTitle(): string;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnSuccessState, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnSuccessState,
     'krn-success-state',
     never,
-    {
-      title: { alias: 'title'; required: false; isSignal: true };
-      tone: { alias: 'tone'; required: false; isSignal: true };
-    },
+    { tone: { alias: 'tone'; required: false; isSignal: true } },
     {},
     never,
     ['[krnStateVisual]', '*', '[krnStateAction]'],
@@ -5155,10 +5229,14 @@ declare class KrnSuccessState extends KrnEmptyState {
 declare class KrnConfirmation {
   private readonly translations;
   readonly confirming: _angular_core.ModelSignal<boolean>;
-  readonly requestLabel: _angular_core.InputSignal<string>;
-  readonly prompt: _angular_core.InputSignal<string>;
-  readonly confirmLabel: _angular_core.InputSignal<string>;
-  readonly cancelLabel: _angular_core.InputSignal<string>;
+  readonly requestLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedRequestLabel: _angular_core.Signal<string>;
+  readonly prompt: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedPrompt: _angular_core.Signal<string>;
+  readonly confirmLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedConfirmLabel: _angular_core.Signal<string>;
+  readonly cancelLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedCancelLabel: _angular_core.Signal<string>;
   readonly confirmed: _angular_core.OutputEmitterRef<void>;
   readonly cancelled: _angular_core.OutputEmitterRef<void>;
   protected confirm(): void;
@@ -5243,7 +5321,8 @@ declare class KrnPopover {
   private readonly panel;
   protected readonly panelId: string;
   readonly open: _angular_core.ModelSignal<boolean>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   readonly autoFocus: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly closed: _angular_core.OutputEmitterRef<'escape' | 'outside' | 'api'>;
   protected readonly positions: (
@@ -5291,7 +5370,8 @@ declare class KrnHoverCard {
   private readonly translations;
   protected readonly open: _angular_core.WritableSignal<boolean>;
   protected readonly panelId: string;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   readonly openDelay: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly closeDelay: _angular_core.InputSignalWithTransform<number, unknown>;
   private openTimer;
@@ -5394,9 +5474,11 @@ declare class KrnDialog {
   readonly title: _angular_core.InputSignal<string>;
   readonly description: _angular_core.InputSignal<string>;
   readonly eyebrow: _angular_core.InputSignal<string>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: Signal<string>;
   readonly showClose: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly closeLabel: _angular_core.InputSignal<string>;
+  readonly closeLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedCloseLabel: Signal<string>;
   readonly closeOnEscape: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly closeOnOutside: _angular_core.InputSignalWithTransform<boolean | null, unknown>;
   readonly initialFocus: _angular_core.InputSignal<string>;
@@ -5442,9 +5524,11 @@ declare class KrnAlertDialog {
   readonly title: _angular_core.InputSignal<string>;
   readonly description: _angular_core.InputSignal<string>;
   readonly eyebrow: _angular_core.InputSignal<string>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: Signal<string>;
   readonly showClose: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly closeLabel: _angular_core.InputSignal<string>;
+  readonly closeLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedCloseLabel: Signal<string>;
   readonly closeOnEscape: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly closeOnOutside: _angular_core.InputSignalWithTransform<boolean | null, unknown>;
   readonly initialFocus: _angular_core.InputSignal<string>;
@@ -5490,9 +5574,11 @@ declare class KrnDrawer {
   readonly title: _angular_core.InputSignal<string>;
   readonly description: _angular_core.InputSignal<string>;
   readonly eyebrow: _angular_core.InputSignal<string>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: Signal<string>;
   readonly showClose: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly closeLabel: _angular_core.InputSignal<string>;
+  readonly closeLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedCloseLabel: Signal<string>;
   readonly closeOnEscape: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly closeOnOutside: _angular_core.InputSignalWithTransform<boolean | null, unknown>;
   readonly initialFocus: _angular_core.InputSignal<string>;
@@ -5538,9 +5624,11 @@ declare class KrnBottomSheet {
   readonly title: _angular_core.InputSignal<string>;
   readonly description: _angular_core.InputSignal<string>;
   readonly eyebrow: _angular_core.InputSignal<string>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: Signal<string>;
   readonly showClose: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly closeLabel: _angular_core.InputSignal<string>;
+  readonly closeLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedCloseLabel: Signal<string>;
   readonly closeOnEscape: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly closeOnOutside: _angular_core.InputSignalWithTransform<boolean | null, unknown>;
   readonly initialFocus: _angular_core.InputSignal<string>;
@@ -5612,8 +5700,40 @@ declare abstract class KrnOverlayRef<
 }
 /** Data injected into component content opened by `KrnOverlayService`. */
 declare const KRN_OVERLAY_DATA: InjectionToken<unknown>;
-/** Typed access to `KRN_OVERLAY_DATA` from programmatic component content. */
-declare function injectKrnOverlayData<Data>(): Data;
+declare const KRN_OVERLAY_CONTENT_BRAND: unique symbol;
+/**
+ * Reusable type contract for component content opened by `KrnOverlayService`.
+ *
+ * Keep the contract next to the component and use the same value both when
+ * injecting overlay context and when opening it. This makes `Data`, `Result`,
+ * and custom dismiss reasons one compile-time contract instead of unrelated
+ * call-site assertions.
+ */
+interface KrnOverlayContent<
+  Data = undefined,
+  Result = void,
+  CustomDismissReason extends string = never,
+> {
+  readonly component: Type<unknown>;
+  /** @internal Required nominal and invariant compile-time contract. */
+  readonly [KRN_OVERLAY_CONTENT_BRAND]: (
+    value: readonly [Data, Result, CustomDismissReason],
+  ) => readonly [Data, Result, CustomDismissReason];
+}
+/** Defines the shared type contract for one programmatic overlay component. */
+declare function defineKrnOverlayContent<
+  Data = undefined,
+  Result = void,
+  CustomDismissReason extends string = never,
+>(component: Type<unknown>): KrnOverlayContent<Data, Result, CustomDismissReason>;
+/** Typed access to overlay data, bound to the component's shared contract. */
+declare function injectKrnOverlayData<Data, Result, CustomDismissReason extends string>(
+  _content: KrnOverlayContent<Data, Result, CustomDismissReason>,
+): Data;
+/** Typed access to the overlay ref, bound to the component's shared contract. */
+declare function injectKrnOverlayRef<Data, Result, CustomDismissReason extends string>(
+  _content: KrnOverlayContent<Data, Result, CustomDismissReason>,
+): KrnOverlayRef<Result, KrnOverlayDismissReason | CustomDismissReason>;
 /** Context stamped into programmatic `TemplateRef` content. */
 interface KrnOverlayTemplateContext<
   Data,
@@ -5662,11 +5782,11 @@ declare class KrnOverlayService {
   private destroying;
   constructor();
   open<Result = void, CustomDismissReason extends string = never>(
-    content: Type<unknown>,
+    content: KrnOverlayContent<undefined, Result, CustomDismissReason>,
     config?: KrnOverlayConfig<undefined>,
   ): KrnOverlayRef<Result, KrnOverlayDismissReason | CustomDismissReason>;
-  open<Data, Result = void, CustomDismissReason extends string = never>(
-    content: Type<unknown>,
+  open<Data, Result, CustomDismissReason extends string = never>(
+    content: KrnOverlayContent<Data, Result, CustomDismissReason>,
     config: KrnOverlayConfig<Data>,
   ): KrnOverlayRef<Result, KrnOverlayDismissReason | CustomDismissReason>;
   open<Data, Result = void, CustomDismissReason extends string = never>(
@@ -5702,7 +5822,8 @@ declare class KrnCalendar {
   readonly min: _angular_core.InputSignal<string>;
   readonly max: _angular_core.InputSignal<string>;
   readonly disabledDates: _angular_core.InputSignal<ReadonlySet<string>>;
-  readonly locale: _angular_core.InputSignal<string>;
+  readonly locale: _angular_core.InputSignal<string | undefined>;
+  private readonly resolvedLocale;
   readonly labels: _angular_core.InputSignal<Partial<KrnCalendarTranslations>>;
   readonly weekStartsOn: _angular_core.InputSignalWithTransform<0 | 1, unknown>;
   readonly today: _angular_core.InputSignal<string>;
@@ -5797,7 +5918,8 @@ declare class KrnChip {
   readonly interactive: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly removable: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly accessibleLabel: _angular_core.InputSignal<string>;
+  readonly accessibleLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAccessibleLabel: _angular_core.Signal<string>;
   readonly remove: _angular_core.OutputEmitterRef<void>;
   protected toggle(): void;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnChip, never>;
@@ -5821,7 +5943,8 @@ declare class KrnChip {
 }
 
 declare class KrnAvatar {
-  readonly locale: _angular_core.InputSignal<string>;
+  readonly locale: _angular_core.InputSignal<string | undefined>;
+  private readonly resolvedLocale;
   readonly src: _angular_core.InputSignal<string | undefined>;
   readonly alt: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
@@ -5852,7 +5975,8 @@ declare class KrnAvatar {
 }
 declare class KrnAvatarGroup {
   private readonly translations;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   readonly overlap: _angular_core.InputSignal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnAvatarGroup, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
@@ -5949,7 +6073,8 @@ declare class KrnDescriptionItem {
 declare class KrnList {
   private readonly translations;
   readonly role: _angular_core.InputSignal<'list' | 'listbox'>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnList, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnList,
@@ -6008,7 +6133,8 @@ declare class KrnDisclosure {
 }
 declare class KrnAccordion {
   private readonly translations;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnAccordion, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnAccordion,
@@ -6025,7 +6151,8 @@ declare class KrnAccordion {
 
 declare class KrnTimeline {
   private readonly translations;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnTimeline, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnTimeline,
@@ -6074,7 +6201,8 @@ declare class KrnTree {
   private typeaheadQuery;
   private lastTypeaheadAt;
   readonly nodes: _angular_core.InputSignal<readonly KrnTreeNode[]>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   readonly selected: _angular_core.ModelSignal<string>;
   readonly expanded: _angular_core.ModelSignal<ReadonlySet<string>>;
   /** Requests children when an unloaded node is expanded or its failed request is retried. */
@@ -6176,7 +6304,8 @@ declare class KrnKeyboardShortcut {
 }
 
 declare class KrnMeter {
-  readonly locale: _angular_core.InputSignal<string | string[]>;
+  readonly locale: _angular_core.InputSignal<string | string[] | undefined>;
+  private readonly resolvedLocale;
   readonly label: _angular_core.InputSignal<string>;
   readonly value: _angular_core.InputSignal<number>;
   readonly min: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -6220,7 +6349,8 @@ declare class KrnRating {
   readonly max: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   protected readonly items: _angular_core.Signal<number[]>;
   protected setValue(value: number): void;
   protected onKeydown(event: KeyboardEvent): void;
@@ -6405,7 +6535,9 @@ export {
   KrnValidationMessage,
   KrnOtpInput as KrnVerificationCode,
   KrnTabs as KrnVerticalTabs,
+  defineKrnOverlayContent,
   injectKrnOverlayData,
+  injectKrnOverlayRef,
   krnCssLength,
   provideKrnButtonGroupOptions,
   provideKrnButtonOptions,
@@ -6455,6 +6587,7 @@ export type {
   KrnOrientation,
   KrnOverlayCloseReason,
   KrnOverlayConfig,
+  KrnOverlayContent,
   KrnOverlayDismissReason,
   KrnOverlayOutcome,
   KrnOverlayPosition,

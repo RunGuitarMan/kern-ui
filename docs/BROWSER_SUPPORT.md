@@ -5,12 +5,12 @@ coverage, not only to whether a component appears to render.
 
 ## Support tiers
 
-| Tier | Targets                                       | Release evidence                                      |
-| ---- | --------------------------------------------- | ----------------------------------------------------- |
-| 1    | Latest Playwright Chromium, Firefox, WebKit   | Behavioral, semantic, keyboard, and a11y smoke suites |
-| 1    | Latest Playwright Chromium                    | Full E2E, responsive, and visual regression suites    |
-| 2    | Current branded Chrome, Edge, Firefox, Safari | Reproduction and fix verification for reported bugs   |
-| 3    | Mobile browsers, webviews, Electron           | Best effort                                           |
+| Tier | Targets                                       | Release evidence                                            |
+| ---- | --------------------------------------------- | ----------------------------------------------------------- |
+| 1    | Latest Playwright Chromium, Firefox, WebKit   | Behavioral, semantic, keyboard, and a11y smoke suites       |
+| 1    | Latest Playwright Chromium                    | Full E2E, responsive, and visual regression suites          |
+| 2    | Current branded Chrome, Edge, Firefox, Safari | Reproduction and fix verification for reported bugs         |
+| 3    | Mobile browsers, webviews, Electron           | Risk-based mobile/touch emulation; real devices best effort |
 
 Tier 1 failures block release. Browser revisions are locked by the repository's Playwright version
 and installed together in CI. The cross-engine suite concentrates on platform-sensitive widget
@@ -23,17 +23,20 @@ validation to their application release gate. Internet Explorer is not supported
 
 The Playwright projects cover:
 
-| Project                                   | Coverage                                                       |
-| ----------------------------------------- | -------------------------------------------------------------- |
-| `e2e`                                     | Chromium user flows, component behavior, keyboard contracts    |
-| `a11y`                                    | Full Chromium automated accessibility suite                    |
-| `responsive`                              | Chromium viewport, zoom, reflow, and responsive behavior       |
-| `visual`                                  | Deterministic Chromium Docs preview screenshots                |
-| `performance`                             | Large-data DOM, frame latency, form, heap, and cleanup budgets |
-| `cross-browser-{chromium,firefox,webkit}` | Tier 1 hydration, semantics, keyboard/focus, and axe smoke     |
+| Project                                   | Coverage                                                                  |
+| ----------------------------------------- | ------------------------------------------------------------------------- |
+| `e2e`                                     | Chromium user flows, component behavior, keyboard contracts               |
+| `a11y`                                    | Full Chromium automated accessibility suite                               |
+| `responsive`                              | Chromium viewport, zoom, reflow, and responsive behavior                  |
+| `visual`                                  | Deterministic Chromium Docs preview screenshots                           |
+| `performance`                             | Large-data DOM, frame latency, form, heap, and cleanup budgets            |
+| `cross-browser-{chromium,firefox,webkit}` | Tier 1 hydration, semantics, keyboard/focus, and axe smoke                |
+| `mobile-touch-{chromium,webkit}`          | Android/iPhone overlay, form, pointer, and internal-scroll risk contracts |
 
 The focused Tier 1 matrix runs with `npm run test:browsers`. `npm run test:e2e` remains the complete
 Playwright release suite and includes the focused matrix plus the Chromium-only full suites.
+The risk-based mobile matrix runs with `npm run test:mobile-touch`; it proves mobile/touch browser
+behavior but does not replace VoiceOver/TalkBack execution on physical hardware.
 
 ## Consumer and build environments
 

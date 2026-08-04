@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, input, model, output } from '@angular/core';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
 import type { KrnFeedbackTone } from './feedback.types';
 
 const STATE_TEMPLATE = `
@@ -32,7 +33,7 @@ const STATE_TEMPLATE = `
         }
       }
     </div>
-    <h2>{{ title() }}</h2>
+    <h2>{{ resolvedTitle() }}</h2>
     @if (description()) {
       <p>{{ description() }}</p>
     }
@@ -54,12 +55,17 @@ const STATE_STYLES = `
 })
 export class KrnEmptyState {
   protected readonly translations = inject(KRN_TRANSLATIONS);
-  readonly title = input(this.translations.feedback.emptyStateTitle);
+  readonly title = input<string | undefined>();
+  protected readonly resolvedTitle = krnInputFallback(this.title, () => this.defaultTitle());
   readonly description = input('');
   readonly tone = input<KrnFeedbackTone>('neutral');
 
   protected stateKind(): 'empty' | 'error' | 'success' {
     return 'empty';
+  }
+
+  protected defaultTitle(): string {
+    return this.translations.feedback.emptyStateTitle;
   }
 }
 
@@ -71,11 +77,14 @@ export class KrnEmptyState {
   styles: STATE_STYLES,
 })
 export class KrnErrorState extends KrnEmptyState {
-  override readonly title = input(this.translations.feedback.errorStateTitle);
   override readonly tone = input<KrnFeedbackTone>('danger');
 
   protected override stateKind(): 'empty' | 'error' | 'success' {
     return 'error';
+  }
+
+  protected override defaultTitle(): string {
+    return this.translations.feedback.errorStateTitle;
   }
 }
 
@@ -87,11 +96,14 @@ export class KrnErrorState extends KrnEmptyState {
   styles: STATE_STYLES,
 })
 export class KrnSuccessState extends KrnEmptyState {
-  override readonly title = input(this.translations.feedback.successStateTitle);
   override readonly tone = input<KrnFeedbackTone>('success');
 
   protected override stateKind(): 'empty' | 'error' | 'success' {
     return 'success';
+  }
+
+  protected override defaultTitle(): string {
+    return this.translations.feedback.successStateTitle;
   }
 }
 
@@ -102,13 +114,15 @@ export class KrnSuccessState extends KrnEmptyState {
   template: `
     @if (!confirming()) {
       <button type="button" class="request" (click)="confirming.set(true)">
-        {{ requestLabel() }}
+        {{ resolvedRequestLabel() }}
       </button>
     } @else {
-      <div class="confirmation" role="group" [attr.aria-label]="prompt()">
-        <span>{{ prompt() }}</span>
-        <button type="button" class="confirm" (click)="confirm()">{{ confirmLabel() }}</button>
-        <button type="button" class="cancel" (click)="cancel()">{{ cancelLabel() }}</button>
+      <div class="confirmation" role="group" [attr.aria-label]="resolvedPrompt()">
+        <span>{{ resolvedPrompt() }}</span>
+        <button type="button" class="confirm" (click)="confirm()">
+          {{ resolvedConfirmLabel() }}
+        </button>
+        <button type="button" class="cancel" (click)="cancel()">{{ resolvedCancelLabel() }}</button>
       </div>
     }
   `,
@@ -158,10 +172,26 @@ export class KrnSuccessState extends KrnEmptyState {
 export class KrnConfirmation {
   private readonly translations = inject(KRN_TRANSLATIONS);
   readonly confirming = model(false);
-  readonly requestLabel = input(this.translations.feedback.delete);
-  readonly prompt = input(this.translations.feedback.confirmPrompt);
-  readonly confirmLabel = input(this.translations.feedback.confirm);
-  readonly cancelLabel = input(this.translations.feedback.cancel);
+  readonly requestLabel = input<string | undefined>();
+  protected readonly resolvedRequestLabel = krnInputFallback(
+    this.requestLabel,
+    () => this.translations.feedback.delete,
+  );
+  readonly prompt = input<string | undefined>();
+  protected readonly resolvedPrompt = krnInputFallback(
+    this.prompt,
+    () => this.translations.feedback.confirmPrompt,
+  );
+  readonly confirmLabel = input<string | undefined>();
+  protected readonly resolvedConfirmLabel = krnInputFallback(
+    this.confirmLabel,
+    () => this.translations.feedback.confirm,
+  );
+  readonly cancelLabel = input<string | undefined>();
+  protected readonly resolvedCancelLabel = krnInputFallback(
+    this.cancelLabel,
+    () => this.translations.feedback.cancel,
+  );
   readonly confirmed = output<void>();
   readonly cancelled = output<void>();
 

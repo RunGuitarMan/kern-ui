@@ -19,6 +19,7 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import type { KrnOrientation } from '../actions/action-types';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
 import type {
   KrnIdentityMatcher,
   KrnSegmentDisabledHandler,
@@ -879,7 +880,7 @@ export class KrnSwitch {
       role="radiogroup"
       [attr.aria-describedby]="effectiveDescribedBy()"
       [attr.aria-invalid]="a11y.invalid()"
-      [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel()"
+      [attr.aria-label]="effectiveLabelledBy() ? null : resolvedAriaLabel()"
       [attr.aria-labelledby]="effectiveLabelledBy()"
       [attr.aria-disabled]="isDisabled()"
       [attr.aria-orientation]="orientation()"
@@ -928,7 +929,11 @@ export class KrnSegmentedControl<T = string> {
     (option) => option.disabled ?? false,
   );
   readonly optionTemplate = input<TemplateRef<KrnSegmentOptionContext<T>> | null>(null);
-  readonly ariaLabel = input(this.translations.forms.chooseOption);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.forms.chooseOption,
+  );
   readonly ariaLabelledBy = input('');
   readonly ariaDescribedBy = input('');
   readonly orientation = input<KrnOrientation>('horizontal');

@@ -1,10 +1,17 @@
 {
   "$schema": "./manual-evidence.schema.json",
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "libraryVersion": "0.1.0",
+  "policy": {
+    "releaseMaxAgeDays": 365,
+    "promotionMaxAgeDays": 180
+  },
   "certification": {
     "status": "not-certified",
-    "statement": "No manual assistive-technology certification is claimed; every matrix record is pending execution."
+    "statement": "No manual assistive-technology certification is claimed; every matrix record is pending execution.",
+    "attestedAt": null,
+    "attestedBy": null,
+    "evidence": []
   },
   "targetComponentIds": [
     "app-shell",
@@ -76,7 +83,7 @@
       ],
       "status": "pending",
       "required": true,
-      "releaseBlocking": false,
+      "releaseBlocking": true,
       "testedAt": null,
       "tester": null,
       "verifiedBy": null,
@@ -133,7 +140,7 @@
       ],
       "status": "pending",
       "required": true,
-      "releaseBlocking": false,
+      "releaseBlocking": true,
       "testedAt": null,
       "tester": null,
       "verifiedBy": null,
@@ -191,7 +198,7 @@
       ],
       "status": "pending",
       "required": true,
-      "releaseBlocking": false,
+      "releaseBlocking": true,
       "testedAt": null,
       "tester": null,
       "verifiedBy": null,
@@ -239,7 +246,7 @@
       "checks": ["keyboard", "focus-order", "focus-restoration"],
       "status": "pending",
       "required": true,
-      "releaseBlocking": false,
+      "releaseBlocking": true,
       "testedAt": null,
       "tester": null,
       "verifiedBy": null,
@@ -285,7 +292,7 @@
       "checks": ["keyboard", "focus-order", "high-contrast"],
       "status": "pending",
       "required": true,
-      "releaseBlocking": false,
+      "releaseBlocking": true,
       "testedAt": null,
       "tester": null,
       "verifiedBy": null,
@@ -329,7 +336,7 @@
       "checks": ["keyboard", "zoom-200", "zoom-400", "reflow"],
       "status": "pending",
       "required": true,
-      "releaseBlocking": false,
+      "releaseBlocking": true,
       "testedAt": null,
       "tester": null,
       "verifiedBy": null,

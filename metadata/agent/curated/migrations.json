@@ -120,6 +120,16 @@
     "automatic": false
   },
   {
+    "id": "reactive-i18n-token-values",
+    "from": "Direct injection of KRN_LOCALE, KRN_LOADING_LABEL, KRN_COPY_LABELS, or KRN_MORE_ACTIONS_LABEL as a fixed value",
+    "to": "Read KrnI18nValue<T> with krnReadI18nValue inside a computed value or another reactive context",
+    "summary": "These tokens now carry either a fixed scoped override or a Signal supplied by provideKrn. Existing primitive/object useValue overrides remain valid; only code that directly reads the injected token must unwrap it.",
+    "components": [],
+    "before": "const locale = inject(KRN_LOCALE);\nconst formatter = new Intl.DateTimeFormat(locale);",
+    "after": "const localeSource = inject(KRN_LOCALE);\nconst locale = computed(() => krnReadI18nValue(localeSource));\nconst formatter = computed(() => new Intl.DateTimeFormat(locale()));",
+    "automatic": false
+  },
+  {
     "id": "form-field-control-owned-state",
     "from": "KrnFormField id, required, disabled, readonly, and state inputs",
     "to": "The projected control id/native state and its Angular FormControl status",
@@ -187,7 +197,7 @@
       "bottom-sheet"
     ],
     "before": "export class AccountDialog extends KrnOverlaySurface { /* inherited component internals */ }",
-    "after": "const ref = inject(KrnOverlayService).open(AccountDialogContent, { variant: 'dialog', data: account });",
+    "after": "const ACCOUNT_DIALOG = defineKrnOverlayContent<Account>(AccountDialogContent);\nconst ref = inject(KrnOverlayService).open(ACCOUNT_DIALOG, { variant: 'dialog', data: account });",
     "automatic": false
   },
   {

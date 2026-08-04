@@ -93,9 +93,9 @@
       "name": "accessibleLabel",
       "property": "accessibleLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.dataDisplay.tag",
+      "defaultValue": "undefined",
       "description": "Accessible name for the complete composite widget.",
       "descriptionSource": "inferred"
     },
@@ -405,7 +405,7 @@
         "componentId": "chip",
         "publicName": "accessibleLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {

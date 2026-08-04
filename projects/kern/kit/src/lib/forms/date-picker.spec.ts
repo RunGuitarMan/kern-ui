@@ -1,6 +1,21 @@
 import { Component, signal, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { KRN_DATE_TIME_SNAPSHOT, type KrnDateTimeSnapshot } from '@kern-ui/angular/core';
 import { KrnDatePicker } from './date-time-controls';
+
+const SCOPED_DATE_TIME: Readonly<KrnDateTimeSnapshot> = Object.freeze({
+  now: Date.UTC(2040, 5, 1, 12),
+  timeZone: 'UTC',
+  today: '2040-06-01',
+  todayAt: () => '2040-06-02',
+});
+
+@Component({
+  imports: [KrnDatePicker],
+  providers: [{ provide: KRN_DATE_TIME_SNAPSHOT, useValue: SCOPED_DATE_TIME }],
+  template: `<krn-date-picker [open]="true" />`,
+})
+class ScopedDatePickerHost {}
 
 @Component({
   imports: [KrnDatePicker],
@@ -33,6 +48,43 @@ describe('KrnDatePicker', () => {
   afterEach(() => {
     vi.restoreAllMocks();
     TestBed.resetTestingModule();
+  });
+
+  it('uses the current day after creation and refreshes a mounted calendar after rollover', async () => {
+    const dateNow = vi.spyOn(Date, 'now').mockReturnValue(Date.UTC(2026, 0, 1, 12));
+    const snapshot = TestBed.inject(KRN_DATE_TIME_SNAPSHOT);
+    const currentNow = Date.UTC(2026, 0, 4, 12);
+    dateNow.mockReturnValue(currentNow);
+
+    const fixture = TestBed.createComponent(KrnDatePicker);
+    fixture.componentInstance.open.set(true);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(snapshot.todayAt(currentNow)).not.toBe(snapshot.today);
+    expect(
+      (fixture.nativeElement.querySelector('[data-today="true"]') as HTMLElement).dataset['date'],
+    ).toBe(snapshot.todayAt(currentNow));
+
+    const rolloverNow = Date.UTC(2026, 0, 7, 12);
+    dateNow.mockReturnValue(rolloverNow);
+    fixture.nativeElement.ownerDocument.defaultView.dispatchEvent(new Event('focus'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(
+      (fixture.nativeElement.querySelector('[data-today="true"]') as HTMLElement).dataset['date'],
+    ).toBe(snapshot.todayAt(rolloverNow));
+  });
+
+  it('keeps a child-injector clock override for the live date after first render', async () => {
+    const fixture = TestBed.createComponent(ScopedDatePickerHost);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(
+      (fixture.nativeElement.querySelector('[data-today="true"]') as HTMLElement).dataset['date'],
+    ).toBe('2040-06-02');
   });
 
   it('owns a standalone value, supports controlled open, and emits only accepted dates', async () => {

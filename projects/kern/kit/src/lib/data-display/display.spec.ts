@@ -1,16 +1,36 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { KRN_LOCALE, KrnI18n, provideKrn } from '@kern-ui/angular/core';
 
 import {
+  KrnAvatar,
+  KrnAvatarGroup,
+  KrnAccordion,
   KrnBadge,
+  KrnCard,
   KrnChip,
   KrnCodeBlock,
   KrnDescriptionItem,
   KrnDescriptionList,
+  KrnDisclosure,
+  KrnKeyboardShortcut,
+  KrnListItem,
   KrnMeter,
   KrnRating,
+  KrnResponsiveMedia,
+  KrnStat,
+  KrnTimeline,
   KrnTree,
 } from './display';
+
+@Component({
+  imports: [KrnAvatar],
+  template: `
+    <krn-avatar data-testid="inherited" name="istanbul" />
+    <krn-avatar data-testid="explicit" name="istanbul" locale="en-US" />
+  `,
+})
+class ReactiveLocaleAvatarHost {}
 
 @Component({
   imports: [KrnChip],
@@ -28,6 +48,55 @@ class ChipHost {}
   `,
 })
 class DescriptionListHost {}
+
+describe('KrnAvatar locale', () => {
+  it('reacts to the injector locale while retaining an explicit component locale', async () => {
+    TestBed.configureTestingModule({
+      imports: [ReactiveLocaleAvatarHost],
+      providers: [provideKrn({ locale: 'en-US' })],
+    });
+    const fixture = TestBed.createComponent(ReactiveLocaleAvatarHost);
+    await fixture.whenStable();
+
+    TestBed.inject(KrnI18n).setLocale('tr-TR');
+    fixture.detectChanges();
+
+    const inherited = fixture.nativeElement.querySelector(
+      '[data-testid="inherited"] span',
+    ) as HTMLElement;
+    const explicit = fixture.nativeElement.querySelector(
+      '[data-testid="explicit"] span',
+    ) as HTMLElement;
+    expect(inherited.textContent?.trim()).toBe('İ');
+    expect(explicit.textContent?.trim()).toBe('I');
+
+    const laterFixture = TestBed.createComponent(ReactiveLocaleAvatarHost);
+    await laterFixture.whenStable();
+    expect(
+      (laterFixture.nativeElement as HTMLElement)
+        .querySelector('[data-testid="inherited"] span')
+        ?.textContent?.trim(),
+    ).toBe('İ');
+  });
+
+  it('keeps an explicit fixed locale even when it equals the initial application locale', async () => {
+    TestBed.configureTestingModule({
+      imports: [ReactiveLocaleAvatarHost],
+      providers: [provideKrn({ locale: 'en-US' }), { provide: KRN_LOCALE, useValue: 'en-US' }],
+    });
+    const fixture = TestBed.createComponent(ReactiveLocaleAvatarHost);
+    await fixture.whenStable();
+
+    TestBed.inject(KrnI18n).setLocale('tr-TR');
+    fixture.detectChanges();
+
+    expect(
+      (fixture.nativeElement as HTMLElement)
+        .querySelector('[data-testid="inherited"] span')
+        ?.textContent?.trim(),
+    ).toBe('I');
+  });
+});
 
 describe('KrnDescriptionList', () => {
   it('keeps every term and description as direct children of a native description list', async () => {
@@ -159,6 +228,87 @@ describe('KrnCodeBlock', () => {
     expect(element.querySelector('.token-decorator')?.textContent).toBe('@Component');
     expect(element.querySelector('.token-tag')?.textContent).toBe('<button');
     expect(element.querySelector('.token-attribute')?.textContent).toBe('[disabled]');
+  });
+});
+
+describe('component-specific data display contracts', () => {
+  it('gives grouped people, disclosures, and timelines native grouping semantics', async () => {
+    await TestBed.configureTestingModule({
+      imports: [KrnAccordion, KrnAvatarGroup, KrnTimeline],
+      providers: [provideKrn()],
+    }).compileComponents();
+
+    const avatarGroup = TestBed.createComponent(KrnAvatarGroup);
+    const accordion = TestBed.createComponent(KrnAccordion);
+    const timeline = TestBed.createComponent(KrnTimeline);
+    for (const fixture of [avatarGroup, accordion, timeline]) fixture.detectChanges();
+
+    expect((avatarGroup.nativeElement as HTMLElement).getAttribute('role')).toBe('group');
+    expect((avatarGroup.nativeElement as HTMLElement).getAttribute('aria-label')).toBeTruthy();
+    expect((accordion.nativeElement as HTMLElement).getAttribute('role')).toBe('group');
+    expect((accordion.nativeElement as HTMLElement).getAttribute('aria-label')).toBeTruthy();
+    expect((timeline.nativeElement as HTMLElement).getAttribute('role')).toBe('list');
+    expect((timeline.nativeElement as HTMLElement).getAttribute('aria-label')).toBeTruthy();
+  });
+
+  it('materializes card and stat state on their public host contracts', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnCard, KrnStat] }).compileComponents();
+
+    const card = TestBed.createComponent(KrnCard);
+    card.componentRef.setInput('heading', 'Quarterly revenue');
+    card.componentRef.setInput('interactive', true);
+    card.detectChanges();
+    expect((card.nativeElement as HTMLElement).tabIndex).toBe(0);
+    expect((card.nativeElement as HTMLElement).querySelector('h3')?.textContent).toContain(
+      'Quarterly revenue',
+    );
+
+    const stat = TestBed.createComponent(KrnStat);
+    stat.componentRef.setInput('label', 'Revenue');
+    stat.componentRef.setInput('value', '$42k');
+    stat.componentRef.setInput('trend', 'up');
+    stat.detectChanges();
+    expect((stat.nativeElement as HTMLElement).getAttribute('data-trend')).toBe('up');
+    expect((stat.nativeElement as HTMLElement).textContent).toContain('$42k');
+  });
+
+  it('exposes selected list items and open disclosures through native state', async () => {
+    await TestBed.configureTestingModule({
+      imports: [KrnDisclosure, KrnListItem],
+    }).compileComponents();
+
+    const listItem = TestBed.createComponent(KrnListItem);
+    listItem.componentRef.setInput('heading', 'Workspace');
+    listItem.componentRef.setInput('selected', true);
+    listItem.detectChanges();
+    expect((listItem.nativeElement as HTMLElement).getAttribute('role')).toBe('listitem');
+    expect((listItem.nativeElement as HTMLElement).hasAttribute('data-selected')).toBe(true);
+
+    const disclosure = TestBed.createComponent(KrnDisclosure);
+    disclosure.componentRef.setInput('heading', 'Billing details');
+    disclosure.componentRef.setInput('open', true);
+    disclosure.detectChanges();
+    const details = (disclosure.nativeElement as HTMLElement).querySelector('details');
+    expect(details?.open).toBe(true);
+    expect(details?.querySelector('summary')?.textContent).toContain('Billing details');
+  });
+
+  it('renders keyboard shortcut keys and responsive media sizing as explicit host state', async () => {
+    await TestBed.configureTestingModule({
+      imports: [KrnKeyboardShortcut, KrnResponsiveMedia],
+      providers: [provideKrn()],
+    }).compileComponents();
+
+    const shortcut = TestBed.createComponent(KrnKeyboardShortcut);
+    shortcut.componentRef.setInput('keys', ['Control', 'K']);
+    shortcut.detectChanges();
+    expect((shortcut.nativeElement as HTMLElement).querySelectorAll('kbd')).toHaveLength(2);
+    expect((shortcut.nativeElement as HTMLElement).getAttribute('aria-label')).toBeTruthy();
+
+    const media = TestBed.createComponent(KrnResponsiveMedia);
+    media.componentRef.setInput('aspectRatio', '4 / 3');
+    media.detectChanges();
+    expect((media.nativeElement as HTMLElement).style.aspectRatio).toBe('4 / 3');
   });
 });
 

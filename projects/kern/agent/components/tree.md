@@ -65,13 +65,13 @@ void bootstrapApplication(KernTreeAgentExample);
 
 ## API
 
-| Name           | Kind   | Type                         | Required | Default                             | Description                                                                           |
-| -------------- | ------ | ---------------------------- | -------- | ----------------------------------- | ------------------------------------------------------------------------------------- |
-| `nodes`        | input  | `ReadonlyArray<KrnTreeNode>` | no       | `[]`                                | Hierarchical nodes whose ids must be stable and unique across the complete tree.      |
-| `ariaLabel`    | input  | `string`                     | no       | `this.translations.navigation.tree` | Accessible name used when visible content is not sufficient.                          |
-| `selected`     | model  | `string`                     | no       | `''`                                | Controlled selected state, distinct from keyboard focus.                              |
-| `expanded`     | model  | `ReadonlySet<string>`        | no       | `new Set<string>()`                 | Controlled expanded state for a disclosure or hierarchical item.                      |
-| `loadChildren` | output | `KrnTreeNode`                | no       | `undefined`                         | Requests children when an unloaded node is expanded or its failed request is retried. |
+| Name           | Kind   | Type                         | Required | Default             | Description                                                                           |
+| -------------- | ------ | ---------------------------- | -------- | ------------------- | ------------------------------------------------------------------------------------- |
+| `nodes`        | input  | `ReadonlyArray<KrnTreeNode>` | no       | `[]`                | Hierarchical nodes whose ids must be stable and unique across the complete tree.      |
+| `ariaLabel`    | input  | `string \| undefined`        | no       | `undefined`         | Accessible name used when visible content is not sufficient.                          |
+| `selected`     | model  | `string`                     | no       | `''`                | Controlled selected state, distinct from keyboard focus.                              |
+| `expanded`     | model  | `ReadonlySet<string>`        | no       | `new Set<string>()` | Controlled expanded state for a disclosure or hierarchical item.                      |
+| `loadChildren` | output | `KrnTreeNode`                | no       | `undefined`         | Requests children when an unloaded node is expanded or its failed request is retried. |
 
 ## Deprecated selectors
 

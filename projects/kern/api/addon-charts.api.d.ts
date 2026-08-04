@@ -63,6 +63,7 @@ interface KrnTooltipPosition {
 declare class KrnChart {
   private readonly destroyRef;
   private readonly platform;
+  private readonly inheritedLocale;
   private readonly translations;
   private readonly host;
   protected readonly tableId: string;
@@ -81,7 +82,8 @@ declare class KrnChart {
   readonly negativeValuePolicy: _angular_core.InputSignal<KrnChartNegativeValuePolicy>;
   /** Limits the accessible text summary while the full data table remains available. */
   readonly summaryItemLimit: _angular_core.InputSignal<number>;
-  readonly locale: _angular_core.InputSignal<string | string[]>;
+  readonly locale: _angular_core.InputSignal<string | string[] | undefined>;
+  private readonly resolvedLocale;
   readonly labels: _angular_core.InputSignal<Partial<KrnChartLabels>>;
   readonly valueFormatter: _angular_core.InputSignal<KrnChartValueFormatter | null>;
   readonly percentFormatter: _angular_core.InputSignal<KrnChartValueFormatter | null>;
@@ -181,7 +183,7 @@ declare class KrnLineChart {
   readonly description: _angular_core.InputSignal<string>;
   readonly data: _angular_core.InputSignal<readonly KrnChartDatum[]>;
   readonly palette: _angular_core.InputSignal<readonly string[]>;
-  readonly locale: _angular_core.InputSignal<string | string[]>;
+  readonly locale: _angular_core.InputSignal<string | string[] | undefined>;
   readonly labels: _angular_core.InputSignal<Partial<KrnChartLabels>>;
   readonly valueFormatter: _angular_core.InputSignal<KrnChartValueFormatter | null>;
   readonly percentFormatter: _angular_core.InputSignal<KrnChartValueFormatter | null>;
@@ -229,7 +231,7 @@ declare class KrnBarChart {
   readonly description: _angular_core.InputSignal<string>;
   readonly data: _angular_core.InputSignal<readonly KrnChartDatum[]>;
   readonly palette: _angular_core.InputSignal<readonly string[]>;
-  readonly locale: _angular_core.InputSignal<string | string[]>;
+  readonly locale: _angular_core.InputSignal<string | string[] | undefined>;
   readonly labels: _angular_core.InputSignal<Partial<KrnChartLabels>>;
   readonly valueFormatter: _angular_core.InputSignal<KrnChartValueFormatter | null>;
   readonly percentFormatter: _angular_core.InputSignal<KrnChartValueFormatter | null>;
@@ -277,7 +279,7 @@ declare class KrnDonutChart {
   readonly description: _angular_core.InputSignal<string>;
   readonly data: _angular_core.InputSignal<readonly KrnChartDatum[]>;
   readonly palette: _angular_core.InputSignal<readonly string[]>;
-  readonly locale: _angular_core.InputSignal<string | string[]>;
+  readonly locale: _angular_core.InputSignal<string | string[] | undefined>;
   readonly labels: _angular_core.InputSignal<Partial<KrnChartLabels>>;
   readonly valueFormatter: _angular_core.InputSignal<KrnChartValueFormatter | null>;
   readonly percentFormatter: _angular_core.InputSignal<KrnChartValueFormatter | null>;

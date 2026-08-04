@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideKrn } from '@kern-ui/angular/core';
+import { KrnI18n, provideKrn } from '@kern-ui/angular/core';
+import { KRN_LOADING_LABEL } from '@kern-ui/angular/i18n';
 import { KrnButton } from './button';
 import {
   KRN_BUTTON_DEFAULT_OPTIONS,
@@ -101,6 +102,55 @@ class LoadingCopyOptionsHost {}
 
 describe('KrnButton', () => {
   afterEach(() => TestBed.resetTestingModule());
+
+  it('reacts to application loading copy while instance and option overrides stay authoritative', async () => {
+    TestBed.configureTestingModule({ providers: [provideKrn()] });
+    const fixture = TestBed.createComponent(KrnButton);
+    fixture.componentRef.setInput('loading', true);
+    fixture.detectChanges();
+
+    TestBed.inject(KrnI18n).setTranslations({
+      feedback: { loadingInProgress: 'Saving reactively…' },
+    });
+    fixture.detectChanges();
+
+    expect(
+      (fixture.nativeElement as HTMLElement).querySelector('[role="status"]')?.textContent?.trim(),
+    ).toBe('Saving reactively…');
+
+    const laterFixture = TestBed.createComponent(KrnButton);
+    laterFixture.componentRef.setInput('loading', true);
+    laterFixture.detectChanges();
+    expect(
+      (laterFixture.nativeElement as HTMLElement)
+        .querySelector('[role="status"]')
+        ?.textContent?.trim(),
+    ).toBe('Saving reactively…');
+
+    fixture.componentRef.setInput('loadingLabel', 'Instance saving…');
+    fixture.detectChanges();
+    expect(
+      (fixture.nativeElement as HTMLElement).querySelector('[role="status"]')?.textContent?.trim(),
+    ).toBe('Instance saving…');
+  });
+
+  it('keeps an explicit fixed leaf override even when it equals the initial label', () => {
+    TestBed.configureTestingModule({
+      providers: [provideKrn(), { provide: KRN_LOADING_LABEL, useValue: 'Loading…' }],
+    });
+    const fixture = TestBed.createComponent(KrnButton);
+    fixture.componentRef.setInput('loading', true);
+    fixture.detectChanges();
+
+    TestBed.inject(KrnI18n).setTranslations({
+      feedback: { loadingInProgress: 'Should not replace the fixed boundary' },
+    });
+    fixture.detectChanges();
+
+    expect(
+      (fixture.nativeElement as HTMLElement).querySelector('[role="status"]')?.textContent?.trim(),
+    ).toBe('Loading…');
+  });
 
   it('enhances the native button instead of proxying its semantic contract', async () => {
     const fixture = TestBed.createComponent(NativeButtonHost);

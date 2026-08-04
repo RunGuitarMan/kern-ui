@@ -48,23 +48,23 @@ void bootstrapApplication(KernSliderAgentExample);
 
 ## API
 
-| Name             | Kind   | Type                                       | Required | Default                         | Description                                                                |
-| ---------------- | ------ | ------------------------------------------ | -------- | ------------------------------- | -------------------------------------------------------------------------- |
-| `id`             | input  | `string`                                   | no       | `''`                            | Stable identifier value used by the id contract.                           |
-| `name`           | input  | `string`                                   | no       | `''`                            | Required human-readable name for the represented person, item, or action.  |
-| `label`          | input  | `string`                                   | no       | `''`                            | Visible text that names the control or data value.                         |
-| `ariaLabel`      | input  | `string`                                   | no       | `this.translations.forms.value` | Accessible name used when visible content is not sufficient.               |
-| `min`            | input  | `number`                                   | no       | `0`                             | Smallest accepted numeric or temporal value.                               |
-| `max`            | input  | `number`                                   | no       | `100`                           | Largest accepted numeric or temporal value.                                |
-| `step`           | input  | `number`                                   | no       | `1`                             | Increment applied by keyboard and pointer value adjustments.               |
-| `disabled`       | input  | `boolean`                                  | no       | `false`                         | Prevents user interaction and participates in the disabled-state contract. |
-| `readonly`       | input  | `boolean`                                  | no       | `false`                         | Keeps the value perceivable while preventing user edits.                   |
-| `invalid`        | input  | `boolean`                                  | no       | `false`                         | Exposes an externally controlled invalid presentation state.               |
-| `showValue`      | input  | `boolean`                                  | no       | `true`                          | Controls whether the component applies the show value behavior.            |
-| `tabindex`       | input  | `number`                                   | no       | `0`                             | Native sequential-focus order forwarded to the owned interactive element.  |
-| `value`          | input  | `number \| undefined`                      | no       | `undefined`                     | Controlled component value.                                                |
-| `valueFormatter` | input  | `((value: number) => string) \| undefined` | no       | `undefined`                     | Formats a domain value for visible and accessible presentation.            |
-| `valueChange`    | output | `number`                                   | no       | `undefined`                     | Notifies the consumer after the value change interaction completes.        |
+| Name             | Kind   | Type                                       | Required | Default     | Description                                                                |
+| ---------------- | ------ | ------------------------------------------ | -------- | ----------- | -------------------------------------------------------------------------- |
+| `id`             | input  | `string`                                   | no       | `''`        | Stable identifier value used by the id contract.                           |
+| `name`           | input  | `string`                                   | no       | `''`        | Required human-readable name for the represented person, item, or action.  |
+| `label`          | input  | `string`                                   | no       | `''`        | Visible text that names the control or data value.                         |
+| `ariaLabel`      | input  | `string \| undefined`                      | no       | `undefined` | Accessible name used when visible content is not sufficient.               |
+| `min`            | input  | `number`                                   | no       | `0`         | Smallest accepted numeric or temporal value.                               |
+| `max`            | input  | `number`                                   | no       | `100`       | Largest accepted numeric or temporal value.                                |
+| `step`           | input  | `number`                                   | no       | `1`         | Increment applied by keyboard and pointer value adjustments.               |
+| `disabled`       | input  | `boolean`                                  | no       | `false`     | Prevents user interaction and participates in the disabled-state contract. |
+| `readonly`       | input  | `boolean`                                  | no       | `false`     | Keeps the value perceivable while preventing user edits.                   |
+| `invalid`        | input  | `boolean`                                  | no       | `false`     | Exposes an externally controlled invalid presentation state.               |
+| `showValue`      | input  | `boolean`                                  | no       | `true`      | Controls whether the component applies the show value behavior.            |
+| `tabindex`       | input  | `number`                                   | no       | `0`         | Native sequential-focus order forwarded to the owned interactive element.  |
+| `value`          | input  | `number \| undefined`                      | no       | `undefined` | Controlled component value.                                                |
+| `valueFormatter` | input  | `((value: number) => string) \| undefined` | no       | `undefined` | Formats a domain value for visible and accessible presentation.            |
+| `valueChange`    | output | `number`                                   | no       | `undefined` | Notifies the consumer after the value change interaction completes.        |
 
 ## Deprecated selectors
 

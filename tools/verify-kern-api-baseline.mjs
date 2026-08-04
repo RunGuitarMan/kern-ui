@@ -10,6 +10,11 @@ const packageManifestPath = join(packageRoot, 'package.json');
 const apiRoot = join(workspaceRoot, 'projects/kern/api');
 const baselineConfigPath = join(apiRoot, 'entrypoints.json');
 const writeMode = process.argv.includes('--write');
+const selectedSubpaths = new Set(
+  process.argv
+    .filter((argument) => argument.startsWith('--subpath='))
+    .map((argument) => argument.slice('--subpath='.length)),
+);
 
 function fail(message) {
   console.error(`Kern API baseline verification failed: ${message}`);
@@ -140,8 +145,15 @@ async function main() {
     }
   }
   if (process.exitCode) return;
+  for (const subpath of selectedSubpaths) {
+    if (!configuredBySubpath.has(subpath)) {
+      fail(`selected entrypoint "${subpath}" has no baseline configuration.`);
+    }
+  }
+  if (process.exitCode) return;
 
   for (const entry of configured) {
+    if (selectedSubpaths.size > 0 && !selectedSubpaths.has(entry.subpath)) continue;
     const discoveredEntrypoint = discoveredBySubpath.get(entry.subpath);
     const declarationsPath = resolve(packageRoot, discoveredEntrypoint.declarations);
     const runtimePath = resolve(packageRoot, discoveredEntrypoint.runtime);
@@ -192,7 +204,11 @@ async function main() {
   }
 
   if (!process.exitCode) {
-    console.log(`Kern API baselines verified: ${configured.length} typed package entrypoint(s).`);
+    console.log(
+      `Kern API baselines verified: ${
+        selectedSubpaths.size || configured.length
+      } typed package entrypoint(s).`,
+    );
   }
 }
 

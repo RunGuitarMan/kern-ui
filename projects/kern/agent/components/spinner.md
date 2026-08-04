@@ -43,9 +43,9 @@ void bootstrapApplication(KernSpinnerAgentExample);
 
 ## API
 
-| Name    | Kind  | Type     | Required | Default                              | Description                                        |
-| ------- | ----- | -------- | -------- | ------------------------------------ | -------------------------------------------------- |
-| `label` | input | `string` | no       | `this.translations.feedback.loading` | Visible text that names the control or data value. |
+| Name    | Kind  | Type                  | Required | Default     | Description                                        |
+| ------- | ----- | --------------------- | -------- | ----------- | -------------------------------------------------- |
+| `label` | input | `string \| undefined` | no       | `undefined` | Visible text that names the control or data value. |
 
 ## Deprecated selectors
 

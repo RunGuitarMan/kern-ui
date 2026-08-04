@@ -18,10 +18,13 @@ import { stableTypeText } from '../../scripts/lib/stable-type-text.mjs';
 import {
   componentStatusIssues,
   discoverLifecycleCatalogFromSource,
+  lifecyclePromotionTransitions,
+  promotionManualEvidenceIssues,
   symbolDependencyStatusIssues,
 } from '../verify-kern-lifecycle.mjs';
 import './kern-release-identity.test.mjs';
 import './kern-versioned-docs.test.mjs';
+import './kern-testing-entrypoint.test.mjs';
 
 const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const lifecycleScript = resolve(workspaceRoot, 'tools/verify-kern-lifecycle.mjs');
@@ -30,10 +33,16 @@ const componentInventoryScript = resolve(
   'tools/verify-kern-component-inventory.mjs',
 );
 const accessibilityScript = resolve(workspaceRoot, 'tools/verify-kern-accessibility-evidence.mjs');
+const lifecycleEvidenceGenerator = resolve(
+  workspaceRoot,
+  'scripts/generate-lifecycle-evidence.mjs',
+);
+const lifecycleEvidencePath = resolve(workspaceRoot, 'projects/kern/api/lifecycle-evidence.json');
 const packagePolicyScript = resolve(workspaceRoot, 'tools/verify-kern-package-policy.mjs');
 const componentInventoryPath = resolve(workspaceRoot, 'projects/kern/api/component-inventory.json');
 const agentRoot = resolve(workspaceRoot, 'projects/kern/agent');
 const docsReleaseIdentityPath = resolve(workspaceRoot, 'projects/docs/src/app/release-identity.ts');
+const ciWorkflowPath = resolve(workspaceRoot, '.github/workflows/ci.yml');
 
 function run(script, ...arguments_) {
   return spawnSync(process.execPath, [script, ...arguments_], {
@@ -85,6 +94,28 @@ async function temporaryJson(name, value) {
   const path = join(directory, name);
   await writeFile(path, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
   return { directory, path };
+}
+
+function certifiedManualEvidence(evidence, { attestedAt, testedAt }) {
+  const certified = structuredClone(evidence);
+  for (const record of certified.records.filter((candidate) => candidate.required)) {
+    record.status = 'pass';
+    record.testedAt = testedAt;
+    record.tester = 'Manual tester';
+    record.verifiedBy = 'Independent reviewer';
+    record.evidence = ['docs/accessibility/manual-evidence.json'];
+    for (const environment of Object.values(record.environment)) {
+      environment.version = 'fixture-1';
+    }
+  }
+  certified.certification = {
+    status: 'certified',
+    statement: 'All required manual evidence records were independently reviewed.',
+    attestedAt,
+    attestedBy: 'Release reviewer',
+    evidence: ['docs/accessibility/manual-evidence.json'],
+  };
+  return certified;
 }
 
 test('catalog selector literals support attribute selectors without generator inference', () => {
@@ -424,7 +455,7 @@ test('component and agent generators share the stable type serializer', async ()
 test('committed lifecycle and manual evidence registries verify', () => {
   const lifecycle = run(lifecycleScript);
   assert.equal(lifecycle.status, 0, lifecycle.stderr);
-  assert.match(lifecycle.stdout, /131 catalog entries, 472 public symbols/);
+  assert.match(lifecycle.stdout, /131 catalog entries, 483 public symbols/);
 
   const componentInventory = run(componentInventoryScript);
   assert.equal(componentInventory.status, 0, componentInventory.stderr);
@@ -437,6 +468,7 @@ test('committed lifecycle and manual evidence registries verify', () => {
   assert.equal(accessibility.status, 0, accessibility.stderr);
   assert.match(accessibility.stdout, /0 pass, 0 fail, 7 pending/);
   assert.match(accessibility.stdout, /not-certified/);
+  assert.match(accessibility.stdout, /mode=local/);
 
   const packagePolicy = run(packagePolicyScript);
   assert.equal(packagePolicy.status, 0, packagePolicy.stderr);
@@ -582,13 +614,14 @@ test('lifecycle verification rejects an unregistered public symbol', async () =>
   }
 });
 
-test('Angular CLI caching is local-only where Vite prebundling needs it', async () => {
+test('Nx owns persistent task caching while Vite uses an ephemeral prebundle cache', async () => {
   const projectsResult = runNx('show', 'projects', '--json');
   assert.equal(projectsResult.status, 0, projectsResult.stderr);
   const projectNames = JSON.parse(projectsResult.stdout);
   assert.ok(projectNames.length > 0, 'Nx must discover at least one project');
 
   const angularProjects = [];
+  const viteSmokeProjects = [];
   for (const name of projectNames) {
     const projectResult = runNx('show', 'project', name, '--json');
     assert.equal(projectResult.status, 0, projectResult.stderr);
@@ -600,17 +633,29 @@ test('Angular CLI caching is local-only where Vite prebundling needs it', async 
     const developmentServer = Object.values(project.targets ?? {}).find(
       (target) => (target.executor ?? target.builder) === '@angular/build:dev-server',
     );
-    if (developmentServer) {
+    if (name === 'docs-vite-smoke') {
+      assert.ok(developmentServer, `${path} must configure the Angular Vite development server`);
+      viteSmokeProjects.push(name);
       assert.equal(project.cli?.cache?.enabled, true, `${path} must enable Vite prebundling`);
       assert.equal(
         project.cli?.cache?.environment,
-        'local',
-        `${path} must not introduce a second CI cache owner`,
+        'all',
+        `${path} must enable the isolated smoke cache in every environment`,
+      );
+      assert.equal(
+        project.cli?.cache?.path,
+        '.nx/cache/angular-vite-smoke',
+        `${path} must keep the local Vite cache inside the Nx-owned cache root`,
       );
       assert.equal(
         developmentServer.options?.prebundle,
         true,
-        `${path} must explicitly keep Vite dependency prebundling enabled`,
+        `${path} must explicitly exercise Vite dependency prebundling`,
+      );
+      assert.equal(
+        developmentServer.options?.buildTarget,
+        'docs:build:development',
+        `${path} must exercise the real Docs application build`,
       );
     } else {
       assert.equal(
@@ -621,13 +666,57 @@ test('Angular CLI caching is local-only where Vite prebundling needs it', async 
     }
   }
   assert.ok(angularProjects.length > 0, 'Nx must discover at least one Angular project');
+  assert.deepEqual(viteSmokeProjects, ['docs-vite-smoke']);
 
   const smoke = await readFile(resolve(workspaceRoot, 'tools/smoke-kern-vite-dev.mjs'), 'utf8');
-  assert.match(smoke, /CI: 'false'/, 'the dedicated smoke must exercise local CLI caching in CI');
+  const compilerCacheAdapter = await readFile(
+    resolve(workspaceRoot, 'tools/vite-smoke/in-memory-angular-compiler-cache.mjs'),
+    'utf8',
+  );
+  assert.match(smoke, /from '@playwright\/test'/, 'the smoke must launch a real browser');
+  assert.doesNotMatch(smoke, /CI:\s*'false'/, 'the smoke must preserve the caller CI mode');
+  assert.match(smoke, /'docs-vite-smoke'/, 'the smoke must use the isolated Vite cache owner');
+  assert.match(
+    smoke,
+    /in-memory-angular-compiler-cache\.mjs/,
+    'the isolated smoke must not enable Angular compiler LMDB caching',
+  );
+  assert.equal(
+    [...smoke.matchAll(/await rm\(viteCacheRoot/g)].length,
+    2,
+    'the smoke must clear its ephemeral Vite cache before and after execution',
+  );
+  assert.match(
+    compilerCacheAdapter,
+    /lmdb\.open =/,
+    'the adapter must replace only nested Angular LMDB stores',
+  );
+  assert.doesNotMatch(
+    compilerCacheAdapter,
+    /process\.versions/,
+    'the adapter must preserve Node worker and Atomics platform detection',
+  );
   assert.match(
     smoke,
     /Prebundling has been configured but will not be used/,
     'the smoke must fail when Angular disables configured prebundling',
+  );
+  assert.match(
+    smoke,
+    /component-specimen-dropdown-button/,
+    'the smoke must hydrate a lazy component specimen',
+  );
+  assert.match(
+    smoke,
+    /component-specimen-form-field/,
+    'the smoke must cross a lazy route-category boundary',
+  );
+  assert.match(smoke, /getByRole\('menu'\)/, 'the smoke must exercise an interactive overlay');
+  assert.match(smoke, /routeScriptResponses/, 'the smoke must observe a lazy Vite script request');
+  assert.match(
+    smoke,
+    /Kern Vite development server browser smoke test passed/,
+    'the smoke must execute the Vite browser runtime',
   );
   assert.match(
     smoke,
@@ -748,6 +837,309 @@ test('manual evidence cannot claim pass without execution metadata and artifacts
   } finally {
     await rm(temporary.directory, { recursive: true, force: true });
   }
+});
+
+test('manual evidence is validated against its declared JSON Schema', async () => {
+  const evidence = JSON.parse(
+    await readFile(resolve(workspaceRoot, 'docs/accessibility/manual-evidence.json'), 'utf8'),
+  );
+  evidence.untrackedClaim = true;
+  const temporary = await temporaryJson('manual-evidence.json', evidence);
+  try {
+    const result = run(accessibilityScript, `--evidence=${temporary.path}`);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /Manual evidence does not satisfy its JSON Schema/);
+    assert.match(result.stderr, /must NOT have additional properties/);
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('mandatory manual evidence records cannot disable required release gates', async () => {
+  const evidence = JSON.parse(
+    await readFile(resolve(workspaceRoot, 'docs/accessibility/manual-evidence.json'), 'utf8'),
+  );
+  const record = evidence.records.find(({ id }) => id === 'nvda-firefox-windows');
+  assert.ok(record, 'fixture requires the mandatory NVDA record');
+  record.required = false;
+  record.releaseBlocking = false;
+  const temporary = await temporaryJson('manual-evidence.json', evidence);
+  try {
+    const result = run(accessibilityScript, `--evidence=${temporary.path}`);
+    assert.notEqual(result.status, 0);
+    assert.match(
+      result.stderr,
+      /Required manual evidence record "nvda-firefox-windows" must set required=true/,
+    );
+    assert.match(
+      result.stderr,
+      /Required manual evidence record "nvda-firefox-windows" must set releaseBlocking=true/,
+    );
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('fresh post-test certification satisfies release and promotion timing gates', async () => {
+  const evidence = JSON.parse(
+    await readFile(resolve(workspaceRoot, 'docs/accessibility/manual-evidence.json'), 'utf8'),
+  );
+  const now = Date.now();
+  const certified = certifiedManualEvidence(evidence, {
+    testedAt: new Date(now - 2 * 60 * 60 * 1000).toISOString(),
+    attestedAt: new Date(now - 60 * 60 * 1000).toISOString(),
+  });
+  const temporary = await temporaryJson('manual-evidence.json', certified);
+  try {
+    const release = run(accessibilityScript, `--evidence=${temporary.path}`, '--mode=release');
+    assert.equal(release.status, 0, release.stderr);
+    const promotion = run(
+      accessibilityScript,
+      `--evidence=${temporary.path}`,
+      '--mode=promotion',
+      '--components=select',
+    );
+    assert.equal(promotion.status, 0, promotion.stderr);
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('release certification cannot be attested in the future', async () => {
+  const evidence = JSON.parse(
+    await readFile(resolve(workspaceRoot, 'docs/accessibility/manual-evidence.json'), 'utf8'),
+  );
+  const now = Date.now();
+  const certified = certifiedManualEvidence(evidence, {
+    testedAt: new Date(now - 2 * 60 * 60 * 1000).toISOString(),
+    attestedAt: new Date(now + 60 * 60 * 1000).toISOString(),
+  });
+  const temporary = await temporaryJson('manual-evidence.json', certified);
+  try {
+    const result = run(accessibilityScript, `--evidence=${temporary.path}`, '--mode=release');
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /certification\.attestedAt not to be in the future/);
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('release certification must satisfy the release freshness policy', async () => {
+  const evidence = JSON.parse(
+    await readFile(resolve(workspaceRoot, 'docs/accessibility/manual-evidence.json'), 'utf8'),
+  );
+  evidence.policy.releaseMaxAgeDays = 1;
+  const now = Date.now();
+  const certified = certifiedManualEvidence(evidence, {
+    testedAt: new Date(now - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    attestedAt: new Date(now - 2 * 24 * 60 * 60 * 1000).toISOString(),
+  });
+  const temporary = await temporaryJson('manual-evidence.json', certified);
+  try {
+    const result = run(accessibilityScript, `--evidence=${temporary.path}`, '--mode=release');
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /Release gate requires certification no older than 1 day/);
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('promotion certification must postdate its required passing records', async () => {
+  const evidence = JSON.parse(
+    await readFile(resolve(workspaceRoot, 'docs/accessibility/manual-evidence.json'), 'utf8'),
+  );
+  const now = Date.now();
+  const certified = certifiedManualEvidence(evidence, {
+    testedAt: new Date(now - 60 * 60 * 1000).toISOString(),
+    attestedAt: new Date(now - 2 * 60 * 60 * 1000).toISOString(),
+  });
+  const temporary = await temporaryJson('manual-evidence.json', certified);
+  try {
+    const result = run(
+      accessibilityScript,
+      `--evidence=${temporary.path}`,
+      '--mode=promotion',
+      '--components=select',
+    );
+    assert.notEqual(result.status, 0);
+    assert.match(
+      result.stderr,
+      /Promotion gate for "select" certification must be at or after required passing record/,
+    );
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('manual evidence remains non-blocking locally but blocks a release while required runs are pending', () => {
+  const local = run(accessibilityScript);
+  assert.equal(local.status, 0, local.stderr);
+
+  const release = run(accessibilityScript, '--mode=release');
+  assert.notEqual(release.status, 0);
+  assert.match(release.stderr, /Release gate requires "nvda-firefox-windows" to pass/);
+  assert.match(release.stderr, /current status is pending/);
+});
+
+test('manual evidence blocks stable promotion without component-scoped passing AT records', () => {
+  const result = run(accessibilityScript, '--mode=promotion', '--components=select');
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /Promotion gate for "select" requires/);
+  assert.match(result.stderr, /current status is pending/);
+});
+
+test('lifecycle evidence is materialized and release mode requires an attestation', async () => {
+  const generated = run(lifecycleEvidenceGenerator);
+  assert.equal(generated.status, 0, generated.stderr);
+
+  const evidence = JSON.parse(await readFile(lifecycleEvidencePath, 'utf8'));
+  assert.equal(evidence.components.length, 131);
+  const button = evidence.components.find((component) => component.id === 'button');
+  assert.ok(button, 'fixture requires Button lifecycle evidence');
+  assert.deepEqual(button.evidence.find((item) => item.kind === 'unit')?.artifactIds, [
+    'unit-button',
+  ]);
+  assert.equal(
+    evidence.artifacts['unit-button']?.path,
+    'projects/kern/kit/src/lib/actions/button.spec.ts',
+  );
+  assert.equal(evidence.artifacts['unit-button']?.anchor, 'KrnButton');
+  const numberInput = evidence.components.find((component) => component.id === 'number-input');
+  assert.ok(numberInput, 'fixture requires Number Input lifecycle evidence');
+  assert.equal(numberInput.evidence.find((item) => item.kind === 'mobile-touch')?.status, 'linked');
+
+  const release = run(lifecycleScript, '--mode=release');
+  assert.notEqual(release.status, 0);
+  assert.match(release.stderr, /Release lifecycle mode requires --release-attestation=PATH/);
+});
+
+test('lifecycle evidence rejects stale artifacts and unresolved promotion requirements', async () => {
+  const evidence = JSON.parse(await readFile(lifecycleEvidencePath, 'utf8'));
+  evidence.artifacts['catalog-a11y'].sha256 = `sha256-${'0'.repeat(64)}`;
+  const temporary = await temporaryJson('lifecycle-evidence.json', evidence);
+  try {
+    const stale = run(lifecycleScript, `--evidence=${temporary.path}`);
+    assert.notEqual(stale.status, 0);
+    assert.match(stale.stderr, /artifact "catalog-a11y" is stale/);
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+
+  const promotion = run(lifecycleScript, '--mode=promotion', '--components=command-palette');
+  assert.notEqual(promotion.status, 0);
+  assert.match(
+    promotion.stderr,
+    /promotion gate requires linked lifecycle evidence "command-palette:runtime-performance"/i,
+  );
+  assert.match(promotion.stderr, /requires certified manual AT evidence/);
+});
+
+test('lifecycle transition detection gates only beta or experimental promotions to stable', () => {
+  const lifecycle = (status, evidenceProfile, owner = 'kern/forms') => ({
+    catalogGroups: [
+      {
+        status,
+        evidenceProfile,
+        owner,
+        ids: ['select'],
+      },
+    ],
+  });
+  const beta = lifecycle('beta', 'beta-promotion');
+  const stable = lifecycle('stable', 'beta-promotion');
+
+  assert.deepEqual(lifecyclePromotionTransitions(beta, stable), [
+    {
+      fromEvidenceProfile: 'beta-promotion',
+      fromStatus: 'beta',
+      id: 'select',
+      toEvidenceProfile: 'beta-promotion',
+      toStatus: 'stable',
+    },
+  ]);
+  assert.deepEqual(
+    lifecyclePromotionTransitions(stable, lifecycle('stable', 'stable-release', 'kern/platform')),
+    [],
+    'ordinary edits to an already-stable component must not reopen promotion',
+  );
+  assert.equal(
+    lifecyclePromotionTransitions(lifecycle('experimental', 'experimental-incubation'), stable)[0]
+      ?.id,
+    'select',
+  );
+});
+
+test('transition-aware lifecycle gate rejects pending manual evidence and accepts fresh certification', () => {
+  const now = Date.parse('2026-08-03T12:00:00.000Z');
+  const item = { recordIds: ['nvda-firefox-windows'] };
+  const pending = {
+    certification: { status: 'not-certified' },
+    policy: { promotionMaxAgeDays: 30 },
+    records: [{ id: 'nvda-firefox-windows', status: 'pending', testedAt: null }],
+  };
+  assert.deepEqual(promotionManualEvidenceIssues('select', item, pending, now), [
+    'Promotion gate for "select" requires certified manual AT evidence.',
+    'Promotion gate for "select" requires passing manual record "nvda-firefox-windows".',
+  ]);
+
+  const certified = structuredClone(pending);
+  certified.certification.status = 'certified';
+  certified.records[0] = {
+    id: 'nvda-firefox-windows',
+    status: 'pass',
+    testedAt: '2026-08-02T12:00:00.000Z',
+  };
+  assert.deepEqual(promotionManualEvidenceIssues('select', item, certified, now), []);
+});
+
+test('lifecycle verifier automatically applies promotion evidence when a base status becomes stable', async () => {
+  const base = JSON.parse(
+    await readFile(resolve(workspaceRoot, 'projects/kern/api/lifecycle.json'), 'utf8'),
+  );
+  const current = structuredClone(base);
+  const sourceGroup = current.catalogGroups.find(({ ids }) => ids.includes('select'));
+  assert.equal(sourceGroup?.status, 'beta');
+  sourceGroup.ids = sourceGroup.ids.filter((id) => id !== 'select');
+  current.catalogGroups.push({
+    category: sourceGroup.category,
+    status: 'stable',
+    owner: sourceGroup.owner,
+    evidenceProfile: 'beta-promotion',
+    ids: ['select'],
+  });
+  const [baseFile, currentFile] = await Promise.all([
+    temporaryJson('base-lifecycle.json', base),
+    temporaryJson('current-lifecycle.json', current),
+  ]);
+  try {
+    const result = run(
+      lifecycleScript,
+      `--lifecycle=${currentFile.path}`,
+      `--base-lifecycle=${baseFile.path}`,
+    );
+    assert.notEqual(result.status, 0);
+    assert.match(
+      result.stderr,
+      /Promotion gate for "select" requires certified manual AT evidence/,
+    );
+    assert.match(result.stderr, /Promotion gate for "select" requires passing manual record/);
+  } finally {
+    await Promise.all(
+      [baseFile, currentFile].map(({ directory }) =>
+        rm(directory, { recursive: true, force: true }),
+      ),
+    );
+  }
+});
+
+test('CI compares lifecycle promotions with the exact pull request or push base commit', async () => {
+  const workflow = await readFile(ciWorkflowPath, 'utf8');
+  assert.match(workflow, /fetch-depth: 0/);
+  assert.match(
+    workflow,
+    /KERN_LIFECYCLE_BASE_REF: \$\{\{ github\.event\.pull_request\.base\.sha \|\| github\.event\.before \}\}/,
+  );
+  assert.match(workflow, /verify-kern-lifecycle\.mjs "--base-ref=\$\{KERN_LIFECYCLE_BASE_REF\}"/);
 });
 
 test('package policy rejects publication without provenance', async () => {

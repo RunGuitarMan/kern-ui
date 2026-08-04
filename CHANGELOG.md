@@ -28,6 +28,8 @@ contract or upgrade decision.
   gates.
 - The isolated `@kern-ui/angular/testing` secondary entry point with harnesses for buttons, forms,
   selection controls, date/time controls, navigation, feedback, uploads, dialogs, and data grid.
+- Narrow `@kern-ui/angular/testing/{actions,data-display,feedback,forms,layout,navigation}` harness
+  entrypoints; `/testing` remains a compatibility aggregator with identical class identities.
 - Typed shared-copy contracts across component families plus locale-aware search and generated
   value labels.
 - Complete English and Russian locale packs with schema-parity verification.
@@ -44,6 +46,34 @@ contract or upgrade decision.
 
 ### Changed
 
+- Coordinated document-level locale, direction, motion, theme, density, and brand ownership through
+  a versioned per-document registry, including applications that load more than one physical Kern
+  bundle.
+- Added injector-scoped `KrnI18n` signals for runtime locale and translation changes. Existing
+  frozen `KRN_TRANSLATIONS` views remain source-compatible and now track the active dictionary;
+  explicit component locale and label inputs still take precedence. `KRN_LOCALE` and the
+  lightweight `KRN_LOADING_LABEL`, `KRN_COPY_LABELS`, and `KRN_MORE_ACTIONS_LABEL` tokens now
+  resolve to `KrnI18nValue<T>` (`T | Signal<T>`) so fixed scoped overrides and reactive
+  application values have unambiguous precedence. Code that injects these tokens directly must
+  read them with `krnReadI18nValue`; existing primitive/object `useValue` overrides remain valid.
+- Translation-backed locale and label inputs are now optional local overrides instead of
+  construction-time snapshots. Unbound input signals therefore return `undefined`; consumers that
+  inspected those signals directly should bind an explicit value or assert the rendered/effective
+  label through a component harness.
+- Added the transferable `KRN_DATE_TIME_SNAPSHOT` hydration seed so Date Picker and Date Range
+  Picker keep identical initial calendar dates across SSR and hydration, then follow the client
+  time zone and local-day rollover. The seed is retained for every Angular root and physical Kern
+  bundle instead of becoming a process-lifetime clock.
+- Replaced unchecked component overloads of `KrnOverlayService.open(Component, config)` with a
+  reusable `defineKrnOverlayContent<Data, Result, DismissReason>(Component)` contract. Use the same
+  contract with `injectKrnOverlayData`, `injectKrnOverlayRef`, and `open` so data and result types
+  cannot diverge between content and caller.
+- Changed synchronized Angular/MCP publication to stage and verify both exact tarballs before
+  promoting `latest` or `next`, with rollback on partial tag promotion. Release SBOMs now derive
+  from the committed dependency lock and bind its digest without invocation-specific metadata.
+- Materialized per-component lifecycle evidence with source/artifact hashes, made fresh certified
+  manual AT records release-blocking, and added Chromium/WebKit mobile-touch gates for the highest
+  risk overlay, form, pointer, and scrolling interactions.
 - Migrated contributor orchestration from the Angular CLI workspace to Nx while preserving the
   published package entrypoints and consumer setup; consolidated component exploration in Docs
   and removed the legacy Lab application.

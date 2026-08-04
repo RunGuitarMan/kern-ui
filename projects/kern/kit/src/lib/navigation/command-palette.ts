@@ -14,8 +14,9 @@ import {
 } from '@angular/core';
 import { A11yModule, LiveAnnouncer } from '@angular/cdk/a11y';
 import { KRN_PLATFORM, KrnIdService, KrnOverlayCoordinator } from '@kern-ui/angular/cdk';
-import { KRN_LOCALE, KRN_TRANSLATIONS, krnFormatTranslation } from '@kern-ui/angular/core';
+import { KRN_TRANSLATIONS, krnFormatTranslation } from '@kern-ui/angular/core';
 import type { KrnCommandItem } from './navigation.types';
+import { krnResolvedLocale } from '../reactive-locale';
 
 function validateCommandItems(items: readonly KrnCommandItem[]): readonly KrnCommandItem[] {
   const ids = new Set<string>();
@@ -361,12 +362,13 @@ export class KrnCommandPalette {
   });
   readonly open = model(false);
   readonly query = model('');
-  readonly title = input(this.translations.navigation.commandPalette);
+  readonly title = input<string | undefined>();
   readonly description = input('');
-  readonly placeholder = input(this.translations.navigation.searchCommandsPlaceholder);
-  readonly resultsLabel = input(this.translations.navigation.commands);
-  readonly closeShortcut = input(this.translations.navigation.escapeShortcut);
-  readonly locale = input<string | string[]>(inject(KRN_LOCALE));
+  readonly placeholder = input<string | undefined>();
+  readonly resultsLabel = input<string | undefined>();
+  readonly closeShortcut = input<string | undefined>();
+  readonly locale = input<string | string[] | undefined>();
+  private readonly resolvedLocale = krnResolvedLocale(this.locale);
   readonly labels = input<Partial<KrnCommandPaletteLabels>>({});
   readonly selected = output<KrnCommandItem>();
   readonly closed = output<'escape' | 'outside' | 'selection'>();
@@ -419,7 +421,7 @@ export class KrnCommandPalette {
     ),
   );
   protected readonly filteredItems = computed(() => {
-    const locale = this.locale();
+    const locale = this.resolvedLocale();
     const query = normalizeSearchText(this.query().trim(), locale);
     if (!query) return this.items().filter((item) => !item.disabled);
     return this.items().filter((item) => {

@@ -52,9 +52,9 @@
       "name": "title",
       "property": "title",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.feedback.successStateTitle",
+      "defaultValue": "undefined",
       "description": "Visible title that also names the component surface or data view.",
       "descriptionSource": "inferred"
     },

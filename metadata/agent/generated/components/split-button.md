@@ -53,20 +53,20 @@ void bootstrapApplication(KernSplitButtonAgentExample);
 
 ## API
 
-| Name                | Kind   | Type               | Required | Default                          | Description                                                                         |
-| ------------------- | ------ | ------------------ | -------- | -------------------------------- | ----------------------------------------------------------------------------------- |
-| `size`              | input  | `KrnSize`          | no       | `this.options.size`              | Named semantic size resolved through KERN density and sizing tokens.                |
-| `variant`           | input  | `KrnActionVariant` | no       | `this.options.variant`           | Named visual hierarchy treatment that preserves the component semantics.            |
-| `tone`              | input  | `KrnTone`          | no       | `this.options.tone`              | Semantic intent that selects coordinated text, icon, border, and surface tokens.    |
-| `disabled`          | input  | `boolean`          | no       | `false`                          | Prevents user interaction and participates in the disabled-state contract.          |
-| `loading`           | input  | `boolean`          | no       | `false`                          | Prevents duplicate actions and exposes accessible busy state.                       |
-| `open`              | model  | `boolean`          | no       | `false`                          | Controls whether the disclosure or overlay surface is visible.                      |
-| `menuAlign`         | input  | `KrnMenuAlignment` | no       | `this.options.menuAlign`         | Logical horizontal alignment used before the CDK collision fallbacks.               |
-| `menuOffset`        | input  | `number`           | no       | `this.options.menuOffset`        | Non-negative logical gap in CSS pixels between the trigger and menu.                |
-| `matchTriggerWidth` | input  | `boolean`          | no       | `this.options.matchTriggerWidth` | Makes the connected overlay exactly as wide as the complete trigger origin.         |
-| `closeOnSelection`  | input  | `boolean`          | no       | `true`                           | Closes after an enabled menu item activates; use the keep-open marker for one item. |
-| `menuLabel`         | input  | `string`           | no       | `inject(KRN_MORE_ACTIONS_LABEL)` | Human-readable copy for the menu state or control.                                  |
-| `primaryAction`     | output | `MouseEvent`       | no       | `undefined`                      | Notifies the consumer after the primary action interaction completes.               |
+| Name                | Kind   | Type                  | Required | Default                          | Description                                                                         |
+| ------------------- | ------ | --------------------- | -------- | -------------------------------- | ----------------------------------------------------------------------------------- |
+| `size`              | input  | `KrnSize`             | no       | `this.options.size`              | Named semantic size resolved through KERN density and sizing tokens.                |
+| `variant`           | input  | `KrnActionVariant`    | no       | `this.options.variant`           | Named visual hierarchy treatment that preserves the component semantics.            |
+| `tone`              | input  | `KrnTone`             | no       | `this.options.tone`              | Semantic intent that selects coordinated text, icon, border, and surface tokens.    |
+| `disabled`          | input  | `boolean`             | no       | `false`                          | Prevents user interaction and participates in the disabled-state contract.          |
+| `loading`           | input  | `boolean`             | no       | `false`                          | Prevents duplicate actions and exposes accessible busy state.                       |
+| `open`              | model  | `boolean`             | no       | `false`                          | Controls whether the disclosure or overlay surface is visible.                      |
+| `menuAlign`         | input  | `KrnMenuAlignment`    | no       | `this.options.menuAlign`         | Logical horizontal alignment used before the CDK collision fallbacks.               |
+| `menuOffset`        | input  | `number`              | no       | `this.options.menuOffset`        | Non-negative logical gap in CSS pixels between the trigger and menu.                |
+| `matchTriggerWidth` | input  | `boolean`             | no       | `this.options.matchTriggerWidth` | Makes the connected overlay exactly as wide as the complete trigger origin.         |
+| `closeOnSelection`  | input  | `boolean`             | no       | `true`                           | Closes after an enabled menu item activates; use the keep-open marker for one item. |
+| `menuLabel`         | input  | `string \| undefined` | no       | `undefined`                      | Human-readable copy for the menu state or control.                                  |
+| `primaryAction`     | output | `MouseEvent`          | no       | `undefined`                      | Notifies the consumer after the primary action interaction completes.               |
 
 ## Deprecated selectors
 

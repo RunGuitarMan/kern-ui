@@ -12,6 +12,7 @@ const runtimeEntrypointsConfigPath = join(
   workspaceRoot,
   'projects/kern/api/runtime-entrypoints.json',
 );
+const testingEntrypointsConfigPath = join(workspaceRoot, 'projects/kern/testing/entrypoints.json');
 const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const failures = [];
 
@@ -298,7 +299,12 @@ function validateCases(value) {
 }
 
 async function main() {
-  for (const requiredPath of [packageRoot, fixtureTemplateRoot, runtimeEntrypointsConfigPath]) {
+  for (const requiredPath of [
+    packageRoot,
+    fixtureTemplateRoot,
+    runtimeEntrypointsConfigPath,
+    testingEntrypointsConfigPath,
+  ]) {
     if (!existsSync(requiredPath)) {
       throw new Error(
         `Required path is missing: ${relative(workspaceRoot, requiredPath)}. ` +
@@ -311,6 +317,7 @@ async function main() {
     JSON.parse(await readFile(join(fixtureTemplateRoot, 'cases.json'), 'utf8')),
   );
   const runtimeEntrypointsConfig = JSON.parse(await readFile(runtimeEntrypointsConfigPath, 'utf8'));
+  const testingEntrypointsConfig = JSON.parse(await readFile(testingEntrypointsConfigPath, 'utf8'));
   if (
     !runtimeEntrypointsConfig ||
     !Array.isArray(runtimeEntrypointsConfig.entrypoints) ||
@@ -323,8 +330,12 @@ async function main() {
   const requiredSubpaths = [
     '.',
     ...runtimeEntrypointsConfig.entrypoints.map((entrypoint) => entrypoint.subpath),
-    './testing',
+    testingEntrypointsConfig.aggregator?.subpath,
+    ...(testingEntrypointsConfig.entrypoints ?? []).map((entrypoint) => entrypoint.subpath),
   ];
+  if (!requiredSubpaths.every((subpath) => typeof subpath === 'string')) {
+    throw new Error('Invalid projects/kern/testing/entrypoints.json structure.');
+  }
   if (new Set(requiredSubpaths).size !== requiredSubpaths.length) {
     throw new Error('Required packed package subpaths must be unique.');
   }

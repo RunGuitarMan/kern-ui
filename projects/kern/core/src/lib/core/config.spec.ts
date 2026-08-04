@@ -4,9 +4,14 @@ import { createEnvironmentInjector, EnvironmentInjector } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { KRN_OVERLAY_HOST, KRN_PLATFORM } from '@kern-ui/angular/cdk';
-import { KRN_COPY_LABELS, KRN_LOADING_LABEL, KRN_MORE_ACTIONS_LABEL } from '@kern-ui/angular/i18n';
+import {
+  KRN_COPY_LABELS,
+  KRN_LOADING_LABEL,
+  KRN_MORE_ACTIONS_LABEL,
+  krnReadI18nValue,
+} from '@kern-ui/angular/i18n';
 import { KRN_CONFIG, KRN_DIRECTION, KRN_LOCALE, KRN_MOTION, provideKrn } from './config';
-import { createKrnTranslations, KRN_TRANSLATIONS } from './i18n';
+import { KrnI18n, createKrnTranslations, KRN_TRANSLATIONS } from './i18n';
 import { provideKrnTranslationBridge } from './translation-bridge';
 
 describe('provideKrn', () => {
@@ -53,22 +58,22 @@ describe('provideKrn', () => {
     overlay.setAttribute('data-config-spec-overlay', '');
     document.body.append(overlay);
 
-    expect(TestBed.inject(KRN_LOCALE)).toBe('de-DE');
+    expect(krnReadI18nValue(TestBed.inject(KRN_LOCALE))).toBe('de-DE');
     expect(TestBed.inject(KRN_DIRECTION)).toBe('rtl');
     expect(TestBed.inject(KRN_MOTION)).toBe('reduce');
     const translations = TestBed.inject(KRN_TRANSLATIONS);
     expect(translations.dataGrid.empty).toBe('Keine Daten');
     expect(translations.dataGrid.nextPage).toBe('Next');
     expect(Object.isFrozen(translations.dataGrid)).toBe(true);
-    expect(TestBed.inject(KRN_LOADING_LABEL)).toBe('Wird geladen…');
-    expect(TestBed.inject(KRN_MORE_ACTIONS_LABEL)).toBe('Weitere Aktionen');
-    expect(TestBed.inject(KRN_COPY_LABELS)).toEqual({
+    expect(krnReadI18nValue(TestBed.inject(KRN_LOADING_LABEL))).toBe('Wird geladen…');
+    expect(krnReadI18nValue(TestBed.inject(KRN_MORE_ACTIONS_LABEL))).toBe('Weitere Aktionen');
+    expect(krnReadI18nValue(TestBed.inject(KRN_COPY_LABELS))).toEqual({
       copy: 'Copy to clipboard',
       copied: 'Copied',
       copying: 'Wird kopiert…',
       failed: 'Could not copy',
     });
-    expect(Object.isFrozen(TestBed.inject(KRN_COPY_LABELS))).toBe(true);
+    expect(Object.isFrozen(krnReadI18nValue(TestBed.inject(KRN_COPY_LABELS)))).toBe(true);
     expect(Object.isFrozen(TestBed.inject(KRN_CONFIG))).toBe(true);
     expect(TestBed.inject(KRN_OVERLAY_HOST)()).toBe(overlay);
     expect(document.documentElement.getAttribute('lang')).toBe('de-DE');
@@ -78,6 +83,61 @@ describe('provideKrn', () => {
     TestBed.tick();
     expect(document.documentElement.getAttribute('data-krn-theme')).toBe('dark');
     expect(document.documentElement.getAttribute('data-krn-density')).toBe('compact');
+  });
+
+  it('switches scoped locale and frozen translation views reactively', () => {
+    TestBed.configureTestingModule({
+      providers: [provideKrn({ locale: 'en-US', persistPreferences: false })],
+    });
+    const document = TestBed.inject(DOCUMENT);
+    const i18n = TestBed.inject(KrnI18n);
+    const translations = TestBed.inject(KRN_TRANSLATIONS);
+    const locale = TestBed.inject(KRN_LOCALE);
+    const loadingLabel = TestBed.inject(KRN_LOADING_LABEL);
+    const moreActionsLabel = TestBed.inject(KRN_MORE_ACTIONS_LABEL);
+    const copyLabels = TestBed.inject(KRN_COPY_LABELS);
+
+    expect(Object.isFrozen(translations)).toBe(true);
+    expect(Object.isFrozen(translations.feedback)).toBe(true);
+    expect(translations.feedback.loadingInProgress).toBe('Loading…');
+
+    i18n.activate('ru-ru', {
+      actions: {
+        copied: 'Скопировано',
+        moreActions: 'Другие действия',
+      },
+      feedback: { loadingInProgress: 'Загрузка…' },
+    });
+    TestBed.tick();
+
+    expect(i18n.locale()).toBe('ru-RU');
+    expect(krnReadI18nValue(locale)).toBe('ru-RU');
+    expect(TestBed.inject(KRN_TRANSLATIONS)).toBe(translations);
+    expect(translations.feedback.loadingInProgress).toBe('Загрузка…');
+    expect(krnReadI18nValue(loadingLabel)).toBe('Загрузка…');
+    expect(krnReadI18nValue(moreActionsLabel)).toBe('Другие действия');
+    expect(krnReadI18nValue(copyLabels).copied).toBe('Скопировано');
+    expect(document.documentElement.getAttribute('lang')).toBe('ru-RU');
+  });
+
+  it('tracks runtime locale and restores lang when no initial locale is configured', () => {
+    const document = TestBed.inject(DOCUMENT);
+    const root = document.documentElement;
+    root.setAttribute('lang', 'fr');
+    const owner = createEnvironmentInjector(
+      [provideKrn({ persistPreferences: false })],
+      TestBed.inject(EnvironmentInjector),
+    );
+
+    try {
+      owner.get(KrnI18n).setLocale('ru-ru');
+      TestBed.tick();
+      expect(root.getAttribute('lang')).toBe('ru-RU');
+    } finally {
+      owner.destroy();
+    }
+
+    expect(root.getAttribute('lang')).toBe('fr');
   });
 
   it('resolves loading copy from the final translation provider in the same injector', () => {
@@ -96,9 +156,9 @@ describe('provideKrn', () => {
       ],
     });
 
-    expect(TestBed.inject(KRN_LOADING_LABEL)).toBe('Final registry copy…');
-    expect(TestBed.inject(KRN_MORE_ACTIONS_LABEL)).toBe('Final more actions');
-    expect(TestBed.inject(KRN_COPY_LABELS)).toMatchObject({
+    expect(krnReadI18nValue(TestBed.inject(KRN_LOADING_LABEL))).toBe('Final registry copy…');
+    expect(krnReadI18nValue(TestBed.inject(KRN_MORE_ACTIONS_LABEL))).toBe('Final more actions');
+    expect(krnReadI18nValue(TestBed.inject(KRN_COPY_LABELS))).toMatchObject({
       copied: 'Final copied',
       copying: 'Final copying…',
     });
@@ -119,9 +179,9 @@ describe('provideKrn', () => {
       ],
     });
 
-    expect(TestBed.inject(KRN_LOADING_LABEL)).toBe('Nested registry copy…');
-    expect(TestBed.inject(KRN_MORE_ACTIONS_LABEL)).toBe('Nested more actions');
-    expect(TestBed.inject(KRN_COPY_LABELS).failed).toBe('Nested copy failed');
+    expect(krnReadI18nValue(TestBed.inject(KRN_LOADING_LABEL))).toBe('Nested registry copy…');
+    expect(krnReadI18nValue(TestBed.inject(KRN_MORE_ACTIONS_LABEL))).toBe('Nested more actions');
+    expect(krnReadI18nValue(TestBed.inject(KRN_COPY_LABELS)).failed).toBe('Nested copy failed');
   });
 
   it('exposes the translation bridge as an extensible aggregate provider set', () => {
@@ -254,7 +314,6 @@ describe('provideKrn', () => {
     const nested = createEnvironmentInjector(
       [
         provideKrn({
-          locale: 'en-US',
           direction: 'ltr',
           motion: 'system',
           persistPreferences: false,
@@ -268,8 +327,12 @@ describe('provideKrn', () => {
       expect(root.getAttribute('dir')).toBe('rtl');
       expect(root.getAttribute('data-krn-motion')).toBe('reduce');
 
+      nested.get(KrnI18n).setLocale('ru-RU');
+      TestBed.tick();
+      expect(root.getAttribute('lang')).toBe('de-DE');
+
       owner.destroy();
-      expect(root.getAttribute('lang')).toBe('en-US');
+      expect(root.getAttribute('lang')).toBe('ru-RU');
       expect(root.getAttribute('dir')).toBe('ltr');
       expect(root.getAttribute('data-krn-motion')).toBe('system');
 

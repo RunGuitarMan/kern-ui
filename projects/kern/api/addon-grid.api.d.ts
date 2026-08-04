@@ -107,7 +107,9 @@ interface KrnDataRowOccurrence<T> {
 declare class KrnDataGrid<T> implements AfterViewChecked {
   private readonly host;
   private readonly destroyRef;
+  private readonly ngZone;
   private readonly platform;
+  private readonly inheritedLocale;
   private readonly locale;
   private readonly translations;
   private readonly collator;
@@ -115,6 +117,10 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
   private virtualFocusSubscription;
   private virtualRowResizeObserver;
   private observedVirtualRow;
+  private virtualGridResizeObserver;
+  private observedVirtualGrid;
+  private virtualPinnedFrame;
+  private readonly handleVirtualGridScroll;
   private readonly measuredVirtualRowHeight;
   private columnResizeObserver;
   private readonly observedColumnHeaders;
@@ -128,12 +134,15 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
   readonly rowIdentity: _angular_core.InputSignal<(row: T, index: number) => KrnDataRowKey>;
   readonly mode: _angular_core.InputSignal<KrnDataGridMode>;
   readonly labels: _angular_core.InputSignal<Partial<KrnDataGridTranslations>>;
-  readonly ariaLabel: _angular_core.InputSignal<string>;
+  readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly error: _angular_core.InputSignal<string>;
-  readonly emptyLabel: _angular_core.InputSignal<string>;
+  readonly emptyLabel: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedEmptyLabel: _angular_core.Signal<string>;
   readonly filterable: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly filterPlaceholder: _angular_core.InputSignal<string>;
+  readonly filterPlaceholder: _angular_core.InputSignal<string | undefined>;
+  protected readonly resolvedFilterPlaceholder: _angular_core.Signal<string>;
   readonly filterPredicate: _angular_core.InputSignal<KrnDataFilterPredicate<T> | null>;
   readonly selectable: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly expandable: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -280,6 +289,9 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
   private restoreTabIndex;
   private syncPinnedColumnMeasurements;
   private measurePinnedColumnHeaders;
+  private syncVirtualPinnedAlignment;
+  private scheduleVirtualPinnedAlignment;
+  private alignVirtualPinnedCells;
   private syncVirtualRowMeasurement;
   private measureVirtualRow;
   private eventCell;
@@ -287,6 +299,7 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
   private asHTMLElement;
   private asElement;
   private focusCell;
+  private focusRenderedCell;
   private emitQuery;
   private setColumnWidth;
   private isRtl;

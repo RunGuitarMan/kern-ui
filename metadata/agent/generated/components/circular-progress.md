@@ -50,14 +50,14 @@ void bootstrapApplication(KernCircularProgressAgentExample);
 
 ## API
 
-| Name            | Kind  | Type                      | Required | Default                               | Description                                                                 |
-| --------------- | ----- | ------------------------- | -------- | ------------------------------------- | --------------------------------------------------------------------------- |
-| `value`         | input | `number`                  | no       | `0`                                   | Controlled component value.                                                 |
-| `max`           | input | `number`                  | no       | `100`                                 | Largest accepted numeric or temporal value.                                 |
-| `indeterminate` | input | `boolean`                 | no       | `false`                               | Represents an unknown progress value or a mixed selection state.            |
-| `showValue`     | input | `boolean`                 | no       | `false`                               | Controls whether the component applies the show value behavior.             |
-| `ariaLabel`     | input | `string`                  | no       | `this.translations.feedback.progress` | Accessible name used when visible content is not sufficient.                |
-| `locale`        | input | `Array<string> \| string` | no       | `inject(KRN_LOCALE)`                  | Locale identifier used for collation, formatting, and component-owned copy. |
+| Name            | Kind  | Type                                   | Required | Default     | Description                                                                 |
+| --------------- | ----- | -------------------------------------- | -------- | ----------- | --------------------------------------------------------------------------- |
+| `value`         | input | `number`                               | no       | `0`         | Controlled component value.                                                 |
+| `max`           | input | `number`                               | no       | `100`       | Largest accepted numeric or temporal value.                                 |
+| `indeterminate` | input | `boolean`                              | no       | `false`     | Represents an unknown progress value or a mixed selection state.            |
+| `showValue`     | input | `boolean`                              | no       | `false`     | Controls whether the component applies the show value behavior.             |
+| `ariaLabel`     | input | `string \| undefined`                  | no       | `undefined` | Accessible name used when visible content is not sufficient.                |
+| `locale`        | input | `Array<string> \| string \| undefined` | no       | `undefined` | Locale identifier used for collation, formatting, and component-owned copy. |
 
 ## Deprecated selectors
 

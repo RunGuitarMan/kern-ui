@@ -54,14 +54,14 @@ void bootstrapApplication(KernToastAgentExample);
 
 ## API
 
-| Name          | Kind  | Type                            | Required | Default                             | Description                                                        |
-| ------------- | ----- | ------------------------------- | -------- | ----------------------------------- | ------------------------------------------------------------------ |
-| `position`    | input | `KrnToastPosition`              | no       | `'top-end'`                         | Logical placement of the component relative to its owning surface. |
-| `maxVisible`  | input | `number`                        | no       | `4`                                 | Upper or lower bound applied to the visible value.                 |
-| `maxExpanded` | input | `number`                        | no       | `12`                                | Upper or lower bound applied to the expanded value.                |
-| `labels`      | input | `Partial<KrnToastTranslations>` | no       | `{}`                                | Localized copy overrides for the component-owned interface text.   |
-| `ariaLabel`   | input | `string`                        | no       | `this.translations.toast.ariaLabel` | Accessible name used when visible content is not sufficient.       |
-| `expanded`    | model | `boolean`                       | no       | `false`                             | Controlled expanded state for a disclosure or hierarchical item.   |
+| Name          | Kind  | Type                            | Required | Default     | Description                                                        |
+| ------------- | ----- | ------------------------------- | -------- | ----------- | ------------------------------------------------------------------ |
+| `position`    | input | `KrnToastPosition`              | no       | `'top-end'` | Logical placement of the component relative to its owning surface. |
+| `maxVisible`  | input | `number`                        | no       | `4`         | Upper or lower bound applied to the visible value.                 |
+| `maxExpanded` | input | `number`                        | no       | `12`        | Upper or lower bound applied to the expanded value.                |
+| `labels`      | input | `Partial<KrnToastTranslations>` | no       | `{}`        | Localized copy overrides for the component-owned interface text.   |
+| `ariaLabel`   | input | `string \| undefined`           | no       | `undefined` | Accessible name used when visible content is not sufficient.       |
+| `expanded`    | model | `boolean`                       | no       | `false`     | Controlled expanded state for a disclosure or hierarchical item.   |
 
 ## Deprecated selectors
 

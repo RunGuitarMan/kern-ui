@@ -1,4 +1,5 @@
 import type { DestroyRef } from '@angular/core';
+import { ɵgetKrnDocumentRuntimeChannel } from '@kern-ui/angular/cdk';
 
 interface DocumentStateClaim<T> {
   readonly apply: (snapshot: T) => void;
@@ -13,7 +14,28 @@ interface DocumentStateChannel {
   readonly waiting: DocumentStateClaim<unknown>[];
 }
 
-const documentStateChannels = new WeakMap<object, Map<symbol, DocumentStateChannel>>();
+interface DocumentStateRegistryV1 {
+  readonly targets: WeakMap<object, Map<symbol, DocumentStateChannel>>;
+  readonly version: 1;
+}
+
+const documentStateRegistryChannel = Symbol.for(
+  '@kern-ui/angular/core/document-state-ownership/v1',
+);
+
+function stateChannels(target: HTMLElement): Map<symbol, DocumentStateChannel> {
+  const registry = ɵgetKrnDocumentRuntimeChannel<DocumentStateRegistryV1>(
+    target.ownerDocument,
+    documentStateRegistryChannel,
+    () => ({ targets: new WeakMap(), version: 1 }),
+  );
+  let channels = registry.targets.get(target);
+  if (!channels) {
+    channels = new Map();
+    registry.targets.set(target, channels);
+  }
+  return channels;
+}
 
 export interface KrnDocumentStateOwnership {
   isActive(): boolean;
@@ -26,18 +48,14 @@ export interface KrnDocumentStateOwnership {
  * lazy or embedded environment cannot overwrite or reset its ancestor.
  */
 export function ownKrnDocumentState<T>(
-  target: object,
+  target: HTMLElement,
   channelKey: symbol,
   destroyRef: DestroyRef,
   capture: () => T,
   apply: (snapshot: T) => void,
   restore: (snapshot: T) => void,
 ): KrnDocumentStateOwnership {
-  let channels = documentStateChannels.get(target);
-  if (!channels) {
-    channels = new Map();
-    documentStateChannels.set(target, channels);
-  }
+  const channels = stateChannels(target);
 
   let channel = channels.get(channelKey);
   if (!channel) {
@@ -91,7 +109,14 @@ export function ownKrnDocumentState<T>(
     }
 
     channels.delete(channelKey);
-    if (channels.size === 0) documentStateChannels.delete(target);
+    if (channels.size === 0) {
+      const registry = ɵgetKrnDocumentRuntimeChannel<DocumentStateRegistryV1>(
+        target.ownerDocument,
+        documentStateRegistryChannel,
+        () => ({ targets: new WeakMap(), version: 1 }),
+      );
+      registry.targets.delete(target);
+    }
   };
 
   destroyRef.onDestroy(release);
@@ -158,9 +183,11 @@ export function restoreKrnElementState(
     else element.style.removeProperty(property);
   }
 
-  if (!snapshot.hadStyleAttribute && element.style.length === 0) {
-    element.removeAttribute('style');
-  } else if (snapshot.hadStyleAttribute && !element.hasAttribute('style')) {
-    element.setAttribute('style', '');
+  if (snapshot.styles.size > 0) {
+    if (!snapshot.hadStyleAttribute && element.style.length === 0) {
+      element.removeAttribute('style');
+    } else if (snapshot.hadStyleAttribute && !element.hasAttribute('style')) {
+      element.setAttribute('style', '');
+    }
   }
 }

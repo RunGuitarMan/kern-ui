@@ -54,13 +54,13 @@ void bootstrapApplication(KernProgressBarAgentExample);
 
 ## API
 
-| Name            | Kind  | Type      | Required | Default                               | Description                                                      |
-| --------------- | ----- | --------- | -------- | ------------------------------------- | ---------------------------------------------------------------- |
-| `value`         | input | `number`  | no       | `0`                                   | Controlled component value.                                      |
-| `max`           | input | `number`  | no       | `100`                                 | Largest accepted numeric or temporal value.                      |
-| `indeterminate` | input | `boolean` | no       | `false`                               | Represents an unknown progress value or a mixed selection state. |
-| `ariaLabel`     | input | `string`  | no       | `this.translations.feedback.progress` | Accessible name used when visible content is not sufficient.     |
-| `valueText`     | input | `string`  | no       | `''`                                  | Human-readable copy for the value state or control.              |
+| Name            | Kind  | Type                  | Required | Default     | Description                                                      |
+| --------------- | ----- | --------------------- | -------- | ----------- | ---------------------------------------------------------------- |
+| `value`         | input | `number`              | no       | `0`         | Controlled component value.                                      |
+| `max`           | input | `number`              | no       | `100`       | Largest accepted numeric or temporal value.                      |
+| `indeterminate` | input | `boolean`             | no       | `false`     | Represents an unknown progress value or a mixed selection state. |
+| `ariaLabel`     | input | `string \| undefined` | no       | `undefined` | Accessible name used when visible content is not sufficient.     |
+| `valueText`     | input | `string`              | no       | `''`        | Human-readable copy for the value state or control.              |
 
 ## Deprecated selectors
 

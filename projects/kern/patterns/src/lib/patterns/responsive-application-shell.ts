@@ -185,8 +185,10 @@ export class KrnResponsiveApplicationShell {
   private readonly overlayId = this.ids.next('responsive-navigation-overlay');
   readonly navigationOpen = model(false);
   readonly mainId = input(this.ids.next('main-content'));
-  readonly navigationLabel = input(this.translations.layout.primaryNavigation);
-  readonly closeNavigationLabel = input(this.translations.layout.closeNavigation);
+  readonly navigationLabel = input<typeof this.translations.layout.primaryNavigation | undefined>();
+  readonly closeNavigationLabel = input<
+    typeof this.translations.layout.closeNavigation | undefined
+  >();
   protected readonly resolvedMainId = computed(() => {
     const id = typeof this.mainId() === 'string' ? this.mainId() : '';
     if (!id || /\s/u.test(id)) {
@@ -273,7 +275,7 @@ export class KrnResponsiveApplicationShell {
     }
   }
 
-  private requiredLabel(value: string, fallback: string, hardFallback: string): string {
+  private requiredLabel(value: string | undefined, fallback: string, hardFallback: string): string {
     const normalized = typeof value === 'string' ? value.trim() : '';
     const normalizedFallback = typeof fallback === 'string' ? fallback.trim() : '';
     return normalized || normalizedFallback || hardFallback;

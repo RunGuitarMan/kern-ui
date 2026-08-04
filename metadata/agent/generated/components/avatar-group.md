@@ -49,10 +49,10 @@ void bootstrapApplication(KernAvatarGroupAgentExample);
 
 ## API
 
-| Name        | Kind  | Type     | Required | Default                                | Description                                                                |
-| ----------- | ----- | -------- | -------- | -------------------------------------- | -------------------------------------------------------------------------- |
-| `ariaLabel` | input | `string` | no       | `this.translations.dataDisplay.people` | Accessible name used when visible content is not sufficient.               |
-| `overlap`   | input | `string` | no       | `'0.625rem'`                           | Allows the floating action surface to overlap its adjacent container edge. |
+| Name        | Kind  | Type                  | Required | Default      | Description                                                                |
+| ----------- | ----- | --------------------- | -------- | ------------ | -------------------------------------------------------------------------- |
+| `ariaLabel` | input | `string \| undefined` | no       | `undefined`  | Accessible name used when visible content is not sufficient.               |
+| `overlap`   | input | `string`              | no       | `'0.625rem'` | Allows the floating action surface to overlap its adjacent container edge. |
 
 ## Deprecated selectors
 

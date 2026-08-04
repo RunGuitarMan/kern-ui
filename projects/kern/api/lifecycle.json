@@ -45,6 +45,18 @@
       ]
     }
   },
+  "riskEvidenceProfiles": {
+    "mobile-touch-critical": {
+      "requiredEvidence": "mobile-touch",
+      "appliesToEvidenceProfiles": ["stable-release", "beta-promotion"],
+      "families": {
+        "overlay": "bottom-sheet",
+        "form": "select",
+        "pointer": "number-input",
+        "scroll": "data-grid"
+      }
+    }
+  },
   "catalogGroups": [
     {
       "category": "Actions",
@@ -311,6 +323,13 @@
     },
     {
       "entrypoint": "./cdk",
+      "status": "experimental",
+      "owner": "kern/cdk",
+      "rationale": "ɵ-prefixed cross-entrypoint runtime coordination used by Kern internals; not a consumer extension contract.",
+      "symbols": ["ɵgetKrnDocumentRuntimeChannel"]
+    },
+    {
+      "entrypoint": "./cdk",
       "status": "stable",
       "owner": "kern/cdk",
       "symbols": [
@@ -349,6 +368,7 @@
         "KRN_BRAND_STEPS",
         "KRN_BUILT_IN_ICONS",
         "KRN_CONFIG",
+        "KRN_DATE_TIME_SNAPSHOT",
         "KRN_DIRECTION",
         "KRN_EN_US_LOCALE",
         "KRN_ENGLISH_TRANSLATIONS",
@@ -374,6 +394,7 @@
         "KrnCssReferenceTree",
         "KrnDataDisplayTranslations",
         "KrnDataGridTranslations",
+        "KrnDateTimeSnapshot",
         "KrnDatePickerTranslations",
         "KrnDensity",
         "KrnDirection",
@@ -386,6 +407,7 @@
         "KrnIconName",
         "KrnIconRegistry",
         "KrnIconSize",
+        "KrnI18n",
         "KrnLayoutTranslations",
         "krnFormatTranslation",
         "krnLocaleConfig",
@@ -433,7 +455,9 @@
         "KRN_DEFAULT_MORE_ACTIONS_LABEL",
         "KRN_LOADING_LABEL",
         "KRN_MORE_ACTIONS_LABEL",
-        "KrnCopyLabels"
+        "krnReadI18nValue",
+        "KrnCopyLabels",
+        "KrnI18nValue"
       ]
     },
     {
@@ -457,8 +481,11 @@
         "KrnDateRangeValue",
         "KrnDialog",
         "KrnDrawer",
+        "defineKrnOverlayContent",
+        "injectKrnOverlayRef",
         "KrnMultiSelect",
         "KrnOverlayConfig",
+        "KrnOverlayContent",
         "KrnOverlayDismissReason",
         "KrnOverlayOutcome",
         "KrnOverlayRef",
@@ -709,58 +736,137 @@
     },
     {
       "entrypoint": "./testing",
-      "status": "beta",
+      "status": "stable",
       "owner": "kern/testing",
-      "rationale": "Status follows beta components and their dedicated supporting contracts.",
+      "rationale": "Compatibility-only type re-export; runtime harness ownership remains family-scoped.",
+      "symbols": ["KrnHarnessText"]
+    },
+    {
+      "entrypoint": "./testing/actions",
+      "status": "stable",
+      "owner": "kern/testing/actions",
       "symbols": [
-        "KrnAutocompleteHarness",
+        "KrnButtonGroupHarness",
+        "KrnButtonGroupHarnessFilters",
+        "KrnButtonHarness",
+        "KrnButtonHarnessFilters",
+        "KrnCopyButtonHarness",
+        "KrnCopyButtonHarnessFilters",
+        "KrnDropdownButtonHarness",
+        "KrnDropdownButtonHarnessFilters",
+        "KrnFloatingActionButtonHarness",
+        "KrnFloatingActionButtonHarnessFilters",
+        "KrnIconButtonHarness",
+        "KrnIconButtonHarnessFilters",
+        "KrnLinkHarness",
+        "KrnLinkHarnessFilters",
+        "KrnSplitButtonHarness",
+        "KrnSplitButtonHarnessFilters",
+        "KrnToggleButtonHarness",
+        "KrnToggleButtonHarnessFilters",
+        "KrnToggleGroupHarness",
+        "KrnToggleGroupHarnessFilters"
+      ]
+    },
+    {
+      "entrypoint": "./testing/data-display",
+      "status": "beta",
+      "owner": "kern/testing/data-display",
+      "rationale": "Status follows beta data-display components and their dedicated supporting contracts.",
+      "symbols": [
         "KrnBarChartHarness",
-        "KrnBottomSheetHarness",
         "KrnChartDatumHarness",
         "KrnChartDatumHarnessFilters",
         "KrnChartHarness",
         "KrnChartHarnessFilters",
         "KrnChartTableRowHarness",
-        "KrnColorPickerHarness",
-        "KrnColorPickerHarnessFilters",
-        "KrnColorPresetHarness",
-        "KrnColorPresetHarnessFilters",
-        "KrnComboboxHarness",
-        "KrnCommandPaletteHarness",
-        "KrnCommandPaletteHarnessFilters",
-        "KrnCommandPaletteOptionHarness",
-        "KrnCommandPaletteOptionHarnessFilters",
         "KrnDataGridHarness",
         "KrnDataGridHarnessFilters",
         "KrnDataGridHeaderHarness",
         "KrnDataGridHeaderHarnessFilters",
         "KrnDataGridRowHarness",
         "KrnDataGridRowHarnessFilters",
-        "KrnDialogHarness",
         "KrnDonutChartHarness",
-        "KrnDrawerHarness",
+        "KrnLineChartHarness",
+        "KrnTreeHarness",
+        "KrnTreeItemHarness"
+      ]
+    },
+    {
+      "entrypoint": "./testing/data-display",
+      "status": "stable",
+      "owner": "kern/testing/data-display",
+      "symbols": [
+        "KrnCalendarCellHarness",
+        "KrnCalendarCellHarnessFilters",
+        "KrnCalendarHarness",
+        "KrnCompositeItemHarnessFilters"
+      ]
+    },
+    {
+      "entrypoint": "./testing/feedback",
+      "status": "beta",
+      "owner": "kern/testing/feedback",
+      "rationale": "Status follows beta feedback components and their dedicated supporting contracts.",
+      "symbols": ["KrnBottomSheetHarness", "KrnDialogHarness", "KrnDrawerHarness"]
+    },
+    {
+      "entrypoint": "./testing/feedback",
+      "status": "stable",
+      "owner": "kern/testing/feedback",
+      "symbols": [
+        "KrnAlertDialogHarness",
+        "KrnOverlayHarness",
+        "KrnOverlayHarnessFilters",
+        "KrnToastViewportHarness"
+      ]
+    },
+    {
+      "entrypoint": "./testing/forms",
+      "status": "beta",
+      "owner": "kern/testing/forms",
+      "rationale": "Status follows beta form controls and their dedicated supporting contracts.",
+      "symbols": [
+        "KrnAutocompleteHarness",
+        "KrnColorPickerHarness",
+        "KrnColorPickerHarnessFilters",
+        "KrnColorPresetHarness",
+        "KrnColorPresetHarnessFilters",
+        "KrnComboboxHarness",
+        "KrnDatePickerHarness",
+        "KrnDateRangePickerHarness",
         "KrnEditableComboboxHarness",
         "KrnEditableComboboxHarnessFilters",
         "KrnMultiSelectHarness",
-        "KrnLineChartHarness",
         "KrnPickerHarness",
         "KrnPickerHarnessFilters",
         "KrnSelectHarness",
         "KrnSelectHarnessFilters",
         "KrnSelectOptionHarness",
         "KrnSelectOptionHarnessFilters",
-        "KrnDatePickerHarness",
-        "KrnDateRangePickerHarness",
-        "KrnTimePickerHarness",
-        "KrnTreeHarness",
-        "KrnTreeItemHarness",
-        "KrnTreeNavigationHarness"
+        "KrnTimePickerHarness"
       ]
     },
     {
-      "entrypoint": "./testing",
+      "entrypoint": "./testing/forms",
+      "status": "stable",
+      "owner": "kern/testing/forms",
+      "symbols": [
+        "KrnDropUploadHarness",
+        "KrnDropUploadHarnessFilters",
+        "KrnFileUploadHarness",
+        "KrnFileUploadHarnessFilters",
+        "KrnFormControlHarness",
+        "KrnFormControlHarnessFilters",
+        "KrnFormFieldHarness",
+        "KrnFormFieldHarnessFilters",
+        "KrnUploadHarness"
+      ]
+    },
+    {
+      "entrypoint": "./testing/layout",
       "status": "experimental",
-      "owner": "kern/testing",
+      "owner": "kern/testing/layout",
       "rationale": "Status follows the experimental resizable-panels runtime contract until its API and interaction evidence are promoted.",
       "symbols": [
         "KrnResizablePanelHarness",
@@ -772,51 +878,29 @@
       ]
     },
     {
-      "entrypoint": "./testing",
-      "status": "stable",
-      "owner": "kern/testing",
+      "entrypoint": "./testing/navigation",
+      "status": "beta",
+      "owner": "kern/testing/navigation",
+      "rationale": "Status follows beta navigation components and their dedicated supporting contracts.",
       "symbols": [
-        "KrnAlertDialogHarness",
-        "KrnButtonGroupHarness",
-        "KrnButtonGroupHarnessFilters",
-        "KrnButtonHarness",
-        "KrnButtonHarnessFilters",
-        "KrnCalendarCellHarness",
-        "KrnCalendarCellHarnessFilters",
-        "KrnCalendarHarness",
-        "KrnCompositeItemHarnessFilters",
-        "KrnCopyButtonHarness",
-        "KrnCopyButtonHarnessFilters",
-        "KrnDropdownButtonHarness",
-        "KrnDropdownButtonHarnessFilters",
-        "KrnDropUploadHarness",
-        "KrnDropUploadHarnessFilters",
-        "KrnFileUploadHarness",
-        "KrnFileUploadHarnessFilters",
-        "KrnFormControlHarness",
-        "KrnFormControlHarnessFilters",
-        "KrnFormFieldHarness",
-        "KrnFormFieldHarnessFilters",
-        "KrnFloatingActionButtonHarness",
-        "KrnFloatingActionButtonHarnessFilters",
-        "KrnHarnessText",
-        "KrnIconButtonHarness",
-        "KrnIconButtonHarnessFilters",
-        "KrnLinkHarness",
-        "KrnLinkHarnessFilters",
-        "KrnMenuHarness",
-        "KrnOverlayHarness",
-        "KrnOverlayHarnessFilters",
-        "KrnSplitButtonHarness",
-        "KrnSplitButtonHarnessFilters",
-        "KrnTabsHarness",
-        "KrnToastViewportHarness",
-        "KrnToggleButtonHarness",
-        "KrnToggleButtonHarnessFilters",
-        "KrnToggleGroupHarness",
-        "KrnToggleGroupHarnessFilters",
-        "KrnUploadHarness"
+        "KrnCommandPaletteHarness",
+        "KrnCommandPaletteHarnessFilters",
+        "KrnCommandPaletteOptionHarness",
+        "KrnCommandPaletteOptionHarnessFilters",
+        "KrnTreeNavigationHarness"
       ]
+    },
+    {
+      "entrypoint": "./testing/navigation",
+      "status": "stable",
+      "owner": "kern/testing/navigation",
+      "symbols": ["KrnMenuHarness", "KrnTabsHarness"]
+    },
+    {
+      "entrypoint": "./testing/shared",
+      "status": "stable",
+      "owner": "kern/testing/shared",
+      "symbols": ["KrnHarnessText", "KrnHarnessUtilities"]
     }
   ]
 }

@@ -69,9 +69,9 @@
       "name": "ariaLabel",
       "property": "ariaLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.forms.tags",
+      "defaultValue": "undefined",
       "description": "Accessible name used when visible content is not sufficient.",
       "descriptionSource": "inferred"
     },
@@ -79,9 +79,9 @@
       "name": "inputLabel",
       "property": "inputLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.forms.addTag",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the input state or control.",
       "descriptionSource": "inferred"
     },
@@ -89,9 +89,9 @@
       "name": "placeholder",
       "property": "placeholder",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.forms.addTagPlaceholder",
+      "defaultValue": "undefined",
       "description": "Short input hint shown only while no value is present.",
       "descriptionSource": "inferred"
     },
@@ -711,7 +711,7 @@
         "componentId": "tags-input",
         "publicName": "ariaLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
         "evidence": {
@@ -735,7 +735,7 @@
         "componentId": "tags-input",
         "publicName": "inputLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {

@@ -17,16 +17,47 @@ evidence profile:
 | `experimental-incubation` | Named owner, limitations, and explicit exit criteria            |
 | `recipe-validation`       | Composition, responsive behavior, a11y, and adaptation guidance |
 
-Profiles are requirements, not inferred claims. A registry entry does not claim that an evidence
-item has passed; durable test or manual evidence must exist separately.
+Profiles are requirements, not inferred claims. `projects/kern/api/lifecycle-evidence.json`
+materializes every requirement for every catalog ID. Each automated link is bound to both the
+production source and concrete evidence files by SHA-256; a source or test change makes the record
+stale until it is reviewed and regenerated. Manual entries link exact records from the AT matrix
+and retain their real pending/pass/fail state.
+
+The `mobile-touch-critical` risk profile adds a focused overlay, form, pointer, and internal-scroll
+contract to representative stable/beta components. It runs on both a Chromium Android device
+profile and a WebKit iPhone profile with `isMobile` and `hasTouch` enabled.
+
+The shared keyboard artifact is deliberately an automated smoke contract: every visible enabled
+native control in every exact catalog specimen must be reachable through a real `Tab` key event.
+It is linked together with the owning family unit suite; it does not claim manual screen-reader or
+device-specific keyboard certification.
 
 ## Verification
 
 Run:
 
 ```bash
-node tools/verify-kern-lifecycle.mjs
+npm run verify:lifecycle
 ```
+
+After reviewing changed evidence links, refresh their content hashes with
+`npm run lifecycle:evidence:write`. Release candidates use `--mode=release`; beta/experimental
+promotion uses `--mode=promotion --components=<id>` and rejects missing, pending, or stale
+requirements.
+
+CI also supplies the exact pull-request base SHA (or the preceding push SHA) through `--base-ref`.
+Any `beta`/`experimental` → `stable` transition is therefore promoted automatically even if the
+author omitted the explicit command. The transition must retain the `beta-promotion` evidence
+profile in the promoted lifecycle group, refresh generated evidence, and provide linked runtime,
+consumer, visual, keyboard, and fresh certified manual-AT evidence. Ordinary edits to a component
+that was already stable do not reopen the promotion gate.
+
+Release candidates additionally pass `--release-base-version=<version>`. The verifier reads the
+synchronized public `latest`/`next` versions for both Kern packages, selects the newest SemVer below
+the candidate, requires its exact `v<version>` Git tag to be an ancestor of the release commit, and
+replays transition detection from that immutable published base. Abandoned candidate tags therefore
+cannot erase an unverified promotion. A first release with no public Kern dist-tags has no prior
+transition base.
 
 The verifier fails when:
 
@@ -36,6 +67,8 @@ The verifier fails when:
 - a source declaration tagged `@experimental` is registered as stable or beta;
 - an `@deprecated` API member is missing from the deprecation registry;
 - a deprecation lacks a replacement, migration, documentation anchor, or future removal version.
+- a component lacks a required evidence item, an artifact/source hash is stale, or a strict release
+  or promotion record remains pending.
 
 API baseline changes and lifecycle changes should be reviewed together. Adding a symbol requires
 an intentional maturity decision; promoting a component requires the evidence profile, changelog

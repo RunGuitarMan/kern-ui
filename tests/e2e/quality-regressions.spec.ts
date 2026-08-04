@@ -1499,7 +1499,9 @@ test.describe('Quality regressions: data and feedback', () => {
 });
 
 test.describe('Cross-catalog focus geometry audit', () => {
-  test('visible enabled controls never shift or create overflow when focused', async ({ page }) => {
+  test('visible enabled controls are keyboard reachable without focus geometry shifts', async ({
+    page,
+  }) => {
     test.setTimeout(300_000);
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -1524,11 +1526,12 @@ test.describe('Cross-catalog focus geometry audit', () => {
 
       const result = await page
         .getByTestId(`component-specimen-${item.id}`)
-        .evaluate((specimen) => {
+        .evaluate((specimen, componentId) => {
           const selector =
             'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
           const controls = [...specimen.querySelectorAll<HTMLElement>(selector)];
           const shifts: string[] = [];
+          const keyboardTargets: string[] = [];
 
           for (const [index, control] of controls.entries()) {
             const style = getComputedStyle(control);
@@ -1541,7 +1544,6 @@ test.describe('Cross-catalog focus geometry audit', () => {
             const disabled =
               control.matches(':disabled') || control.getAttribute('aria-disabled') === 'true';
             const visible =
-              !intentionallyExcluded &&
               !disabled &&
               control.tabIndex >= 0 &&
               style.display !== 'none' &&
@@ -1551,31 +1553,80 @@ test.describe('Cross-catalog focus geometry audit', () => {
               control.getClientRects().length > 0;
             if (!visible) continue;
 
-            control.focus({ preventScroll: true });
-            const after = control.getBoundingClientRect();
-            const deltas = {
-              height: Math.abs(after.height - before.height),
-              width: Math.abs(after.width - before.width),
-              x: Math.abs(after.x - before.x),
-              y: Math.abs(after.y - before.y),
-            };
-            if (Object.values(deltas).some((delta) => delta > 1)) {
-              const name =
-                control.getAttribute('aria-label') ||
-                control.textContent?.trim().replace(/\s+/g, ' ').slice(0, 60) ||
-                `${control.tagName.toLowerCase()}[${index}]`;
-              shifts.push(`${name}: ${JSON.stringify(deltas)}`);
+            const sameRadioGroup =
+              control instanceof HTMLInputElement && control.type === 'radio'
+                ? controls.filter(
+                    (candidate): candidate is HTMLInputElement =>
+                      candidate instanceof HTMLInputElement &&
+                      candidate.type === 'radio' &&
+                      candidate.name === control.name,
+                  )
+                : [];
+            const radioTabStop =
+              sameRadioGroup.find((candidate) => candidate.checked) ?? sameRadioGroup[0];
+            if (!(sameRadioGroup.length > 0 && radioTabStop !== control)) {
+              const keyboardId = `${componentId}-${index}`;
+              control.dataset['krnKeyboardEvidence'] = keyboardId;
+              keyboardTargets.push(keyboardId);
             }
-            control.blur();
+
+            if (!intentionallyExcluded) {
+              control.focus({ preventScroll: true });
+              const after = control.getBoundingClientRect();
+              const deltas = {
+                height: Math.abs(after.height - before.height),
+                width: Math.abs(after.width - before.width),
+                x: Math.abs(after.x - before.x),
+                y: Math.abs(after.y - before.y),
+              };
+              if (Object.values(deltas).some((delta) => delta > 1)) {
+                const name =
+                  control.getAttribute('aria-label') ||
+                  control.textContent?.trim().replace(/\s+/g, ' ').slice(0, 60) ||
+                  `${control.tagName.toLowerCase()}[${index}]`;
+                shifts.push(`${name}: ${JSON.stringify(deltas)}`);
+              }
+              control.blur();
+            }
           }
 
           const root = document.documentElement;
           return {
             horizontalOverflow:
               Math.max(root.scrollWidth, document.body.scrollWidth) - root.clientWidth,
+            keyboardTargets,
             shifts,
           };
-        });
+        }, item.id);
+
+      for (const keyboardId of result.keyboardTargets) {
+        await page.evaluate((targetId) => {
+          const target = document.querySelector<HTMLElement>(
+            `[data-krn-keyboard-evidence="${CSS.escape(targetId)}"]`,
+          );
+          if (!target) throw new Error(`Missing keyboard evidence target ${targetId}.`);
+          const sentinel = document.createElement('button');
+          sentinel.type = 'button';
+          sentinel.dataset['krnKeyboardSentinel'] = targetId;
+          sentinel.setAttribute('aria-hidden', 'true');
+          sentinel.style.cssText =
+            'position:fixed;inset:0 auto auto 0;inline-size:1px;block-size:1px;opacity:0;pointer-events:none';
+          target.before(sentinel);
+          sentinel.focus({ preventScroll: true });
+        }, keyboardId);
+        await page.keyboard.press('Tab');
+        const reached = await page.evaluate((targetId) => {
+          const target = document.querySelector<HTMLElement>(
+            `[data-krn-keyboard-evidence="${CSS.escape(targetId)}"]`,
+          );
+          const reachedTarget = document.activeElement === target;
+          document
+            .querySelector(`[data-krn-keyboard-sentinel="${CSS.escape(targetId)}"]`)
+            ?.remove();
+          return reachedTarget;
+        }, keyboardId);
+        if (!reached) failures.push(`${item.id}: ${keyboardId} is not reachable with Tab`);
+      }
 
       if (result.horizontalOverflow > 2) {
         failures.push(`${item.id}: horizontal overflow ${result.horizontalOverflow}px`);

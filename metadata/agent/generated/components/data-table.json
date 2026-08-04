@@ -128,9 +128,9 @@
       "name": "ariaLabel",
       "property": "ariaLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.dataGrid.ariaLabel",
+      "defaultValue": "undefined",
       "description": "Accessible name used when visible content is not sufficient.",
       "descriptionSource": "inferred"
     },
@@ -158,9 +158,9 @@
       "name": "emptyLabel",
       "property": "emptyLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.dataGrid.empty",
+      "defaultValue": "undefined",
       "description": "Accessible copy that explains the empty state.",
       "descriptionSource": "inferred"
     },
@@ -178,9 +178,9 @@
       "name": "filterPlaceholder",
       "property": "filterPlaceholder",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.dataGrid.filterPlaceholder",
+      "defaultValue": "undefined",
       "description": "Short hint displayed in the grid filter input before a query is entered.",
       "descriptionSource": "inferred"
     },
@@ -1018,7 +1018,7 @@
         "componentId": "data-table",
         "publicName": "ariaLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
         "evidence": {
@@ -1078,7 +1078,7 @@
         "componentId": "data-table",
         "publicName": "emptyLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {

@@ -54,14 +54,14 @@ void bootstrapApplication(KernTagAgentExample);
 
 ## API
 
-| Name              | Kind   | Type      | Required | Default                             | Description                                                                   |
-| ----------------- | ------ | --------- | -------- | ----------------------------------- | ----------------------------------------------------------------------------- |
-| `selected`        | model  | `boolean` | no       | `false`                             | Controlled selected state, distinct from keyboard focus.                      |
-| `interactive`     | input  | `boolean` | no       | `false`                             | Enables the documented user interaction for an otherwise presentational item. |
-| `removable`       | input  | `boolean` | no       | `false`                             | Displays a named action for removing the represented value.                   |
-| `disabled`        | input  | `boolean` | no       | `false`                             | Prevents user interaction and participates in the disabled-state contract.    |
-| `accessibleLabel` | input  | `string`  | no       | `this.translations.dataDisplay.tag` | Accessible name for the complete composite widget.                            |
-| `remove`          | output | `void`    | no       | `undefined`                         | Notifies the consumer after the remove interaction completes.                 |
+| Name              | Kind   | Type                  | Required | Default     | Description                                                                   |
+| ----------------- | ------ | --------------------- | -------- | ----------- | ----------------------------------------------------------------------------- |
+| `selected`        | model  | `boolean`             | no       | `false`     | Controlled selected state, distinct from keyboard focus.                      |
+| `interactive`     | input  | `boolean`             | no       | `false`     | Enables the documented user interaction for an otherwise presentational item. |
+| `removable`       | input  | `boolean`             | no       | `false`     | Displays a named action for removing the represented value.                   |
+| `disabled`        | input  | `boolean`             | no       | `false`     | Prevents user interaction and participates in the disabled-state contract.    |
+| `accessibleLabel` | input  | `string \| undefined` | no       | `undefined` | Accessible name for the complete composite widget.                            |
+| `remove`          | output | `void`                | no       | `undefined` | Notifies the consumer after the remove interaction completes.                 |
 
 ## Deprecated selectors
 

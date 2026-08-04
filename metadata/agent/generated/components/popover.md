@@ -50,12 +50,12 @@ void bootstrapApplication(KernPopoverAgentExample);
 
 ## API
 
-| Name        | Kind   | Type                             | Required | Default                                      | Description                                                     |
-| ----------- | ------ | -------------------------------- | -------- | -------------------------------------------- | --------------------------------------------------------------- |
-| `open`      | model  | `boolean`                        | no       | `false`                                      | Controls whether the disclosure or overlay surface is visible.  |
-| `ariaLabel` | input  | `string`                         | no       | `this.translations.feedback.moreInformation` | Accessible name used when visible content is not sufficient.    |
-| `autoFocus` | input  | `boolean`                        | no       | `true`                                       | Controls whether the component applies the auto focus behavior. |
-| `closed`    | output | `"api" \| "escape" \| "outside"` | no       | `undefined`                                  | Notifies the consumer after the closed interaction completes.   |
+| Name        | Kind   | Type                             | Required | Default     | Description                                                     |
+| ----------- | ------ | -------------------------------- | -------- | ----------- | --------------------------------------------------------------- |
+| `open`      | model  | `boolean`                        | no       | `false`     | Controls whether the disclosure or overlay surface is visible.  |
+| `ariaLabel` | input  | `string \| undefined`            | no       | `undefined` | Accessible name used when visible content is not sufficient.    |
+| `autoFocus` | input  | `boolean`                        | no       | `true`      | Controls whether the component applies the auto focus behavior. |
+| `closed`    | output | `"api" \| "escape" \| "outside"` | no       | `undefined` | Notifies the consumer after the closed interaction completes.   |
 
 ## Deprecated selectors
 

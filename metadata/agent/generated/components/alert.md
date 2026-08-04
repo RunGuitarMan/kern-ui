@@ -48,14 +48,14 @@ void bootstrapApplication(KernAlertAgentExample);
 
 ## API
 
-| Name           | Kind   | Type              | Required | Default                                     | Description                                                                      |
-| -------------- | ------ | ----------------- | -------- | ------------------------------------------- | -------------------------------------------------------------------------------- |
-| `tone`         | input  | `KrnFeedbackTone` | no       | `'info'`                                    | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
-| `title`        | input  | `string`          | no       | `''`                                        | Visible title that also names the component surface or data view.                |
-| `icon`         | input  | `string`          | no       | `''`                                        | Semantic icon name rendered alongside the visible component content.             |
-| `dismissible`  | input  | `boolean`         | no       | `false`                                     | Controls whether the user can dismiss the surface before completing an action.   |
-| `dismissLabel` | input  | `string`          | no       | `this.translations.feedback.dismissMessage` | Human-readable copy for the dismiss state or control.                            |
-| `closed`       | output | `void`            | no       | `undefined`                                 | Notifies the consumer after the closed interaction completes.                    |
+| Name           | Kind   | Type                  | Required | Default     | Description                                                                      |
+| -------------- | ------ | --------------------- | -------- | ----------- | -------------------------------------------------------------------------------- |
+| `tone`         | input  | `KrnFeedbackTone`     | no       | `'info'`    | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
+| `title`        | input  | `string`              | no       | `''`        | Visible title that also names the component surface or data view.                |
+| `icon`         | input  | `string`              | no       | `''`        | Semantic icon name rendered alongside the visible component content.             |
+| `dismissible`  | input  | `boolean`             | no       | `false`     | Controls whether the user can dismiss the surface before completing an action.   |
+| `dismissLabel` | input  | `string \| undefined` | no       | `undefined` | Human-readable copy for the dismiss state or control.                            |
+| `closed`       | output | `void`                | no       | `undefined` | Notifies the consumer after the closed interaction completes.                    |
 
 ## Deprecated selectors
 

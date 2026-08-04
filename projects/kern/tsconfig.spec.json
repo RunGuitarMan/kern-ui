@@ -12,7 +12,15 @@
       "@kern-ui/angular/core": ["./core/src/public-api.ts"],
       "@kern-ui/angular/i18n": ["./i18n/src/public-api.ts"],
       "@kern-ui/angular/kit": ["./kit/src/public-api.ts"],
-      "@kern-ui/angular/patterns": ["./patterns/src/public-api.ts"]
+      "@kern-ui/angular/patterns": ["./patterns/src/public-api.ts"],
+      "@kern-ui/angular/testing": ["./testing/src/public-api.ts"],
+      "@kern-ui/angular/testing/actions": ["./testing/actions/src/public-api.ts"],
+      "@kern-ui/angular/testing/data-display": ["./testing/data-display/src/public-api.ts"],
+      "@kern-ui/angular/testing/feedback": ["./testing/feedback/src/public-api.ts"],
+      "@kern-ui/angular/testing/forms": ["./testing/forms/src/public-api.ts"],
+      "@kern-ui/angular/testing/layout": ["./testing/layout/src/public-api.ts"],
+      "@kern-ui/angular/testing/navigation": ["./testing/navigation/src/public-api.ts"],
+      "@kern-ui/angular/testing/shared": ["./testing/shared/src/public-api.ts"]
     },
     "types": ["vitest/globals"]
   },
@@ -25,6 +33,7 @@
     "core/src/**/*.spec.ts",
     "i18n/src/**/*.spec.ts",
     "kit/src/**/*.spec.ts",
-    "patterns/src/**/*.spec.ts"
+    "patterns/src/**/*.spec.ts",
+    "testing/**/*.spec.ts"
   ]
 }

@@ -7,8 +7,7 @@
   "prefix": "kdocs",
   "cli": {
     "cache": {
-      "enabled": true,
-      "environment": "local"
+      "enabled": false
     }
   },
   "implicitDependencies": ["kern", "showcase"],
@@ -80,7 +79,7 @@
     "serve": {
       "executor": "@angular/build:dev-server",
       "options": {
-        "prebundle": true
+        "prebundle": false
       },
       "configurations": {
         "production": {
@@ -139,7 +138,7 @@
       "executor": "nx:run-commands",
       "cache": false,
       "options": {
-        "command": "playwright test"
+        "command": "playwright test --project=e2e --project=a11y --project=responsive --project=visual --project=performance --project=cross-browser-chromium --project=cross-browser-firefox --project=cross-browser-webkit"
       }
     },
     "a11y": {
@@ -175,6 +174,13 @@
       "cache": false,
       "options": {
         "command": "playwright test --project=cross-browser-chromium --project=cross-browser-firefox --project=cross-browser-webkit"
+      }
+    },
+    "mobile-touch": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "command": "playwright test --project=mobile-touch-chromium --project=mobile-touch-webkit"
       }
     }
   }

@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { KRN_PLATFORM, krnIsHtmlElement } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
 import type { KrnRangeValue } from './form-types';
 import {
   maxError,
@@ -57,7 +58,7 @@ const sliderInteractionKeys = new Set([
         type="range"
         [attr.aria-describedby]="a11y.describedBy()"
         [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel()"
+        [attr.aria-label]="effectiveLabelledBy() ? null : resolvedAriaLabel()"
         [attr.aria-labelledby]="effectiveLabelledBy()"
         [attr.aria-readonly]="a11y.readOnly()"
         [attr.aria-valuetext]="formattedValue()"
@@ -85,7 +86,11 @@ export class KrnSlider {
   readonly id = input('');
   readonly name = input('');
   readonly label = input('');
-  readonly ariaLabel = input(this.translations.forms.value);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.forms.value,
+  );
   readonly min = input(0, { transform: numberAttribute });
   readonly max = input(100, { transform: numberAttribute });
   readonly step = input(1, { transform: numberAttribute });
@@ -226,7 +231,7 @@ export class KrnSlider {
       role="group"
       [attr.aria-describedby]="a11y.describedBy()"
       [attr.aria-invalid]="a11y.invalid()"
-      [attr.aria-label]="a11y.labelledBy() ? null : label()"
+      [attr.aria-label]="a11y.labelledBy() ? null : resolvedLabel()"
       [attr.aria-labelledby]="a11y.labelledBy()"
       [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
       [id]="a11y.id()"
@@ -236,7 +241,7 @@ export class KrnSlider {
     >
       <div class="krn-slider__header">
         @if (!a11y.labelledBy()) {
-          <span>{{ label() }}</span>
+          <span>{{ resolvedLabel() }}</span>
         }
         <output>{{ formattedStart() }} – {{ formattedEnd() }}</output>
       </div>
@@ -257,7 +262,7 @@ export class KrnSlider {
           #startInput
           class="krn-range krn-range--overlay krn-range--start"
           type="range"
-          [attr.aria-label]="startLabel()"
+          [attr.aria-label]="resolvedStartLabel()"
           [attr.aria-readonly]="a11y.readOnly()"
           [attr.aria-valuetext]="formattedStart()"
           [disabled]="isDisabled()"
@@ -275,7 +280,7 @@ export class KrnSlider {
           #endInput
           class="krn-range krn-range--overlay krn-range--end"
           type="range"
-          [attr.aria-label]="endLabel()"
+          [attr.aria-label]="resolvedEndLabel()"
           [attr.aria-readonly]="a11y.readOnly()"
           [attr.aria-valuetext]="formattedEnd()"
           [disabled]="isDisabled()"
@@ -300,9 +305,21 @@ export class KrnRangeSlider {
   private readonly endInput = viewChild<ElementRef<HTMLInputElement>>('endInput');
   protected readonly translations = inject(KRN_TRANSLATIONS);
   readonly id = input('');
-  readonly label = input(this.translations.forms.range);
-  readonly startLabel = input(this.translations.forms.minimumValue);
-  readonly endLabel = input(this.translations.forms.maximumValue);
+  readonly label = input<string | undefined>();
+  protected readonly resolvedLabel = krnInputFallback(
+    this.label,
+    () => this.translations.forms.range,
+  );
+  readonly startLabel = input<string | undefined>();
+  protected readonly resolvedStartLabel = krnInputFallback(
+    this.startLabel,
+    () => this.translations.forms.minimumValue,
+  );
+  readonly endLabel = input<string | undefined>();
+  protected readonly resolvedEndLabel = krnInputFallback(
+    this.endLabel,
+    () => this.translations.forms.maximumValue,
+  );
   readonly min = input(0, { transform: numberAttribute });
   readonly max = input(100, { transform: numberAttribute });
   readonly step = input(1, { transform: numberAttribute });

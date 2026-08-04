@@ -59,11 +59,11 @@ void bootstrapApplication(KernMasterDetailLayoutAgentExample);
 
 ## API
 
-| Name          | Kind  | Type      | Required | Default                                 | Description                                                               |
-| ------------- | ----- | --------- | -------- | --------------------------------------- | ------------------------------------------------------------------------- |
-| `masterLabel` | input | `string`  | no       | `this.translations.patterns.masterList` | Human-readable copy for the master state or control.                      |
-| `detailLabel` | input | `string`  | no       | `this.translations.patterns.detail`     | Human-readable copy for the detail state or control.                      |
-| `detailOpen`  | model | `boolean` | no       | `false`                                 | Controlled detail open state with a matching Angular model-change output. |
+| Name          | Kind  | Type                  | Required | Default     | Description                                                               |
+| ------------- | ----- | --------------------- | -------- | ----------- | ------------------------------------------------------------------------- |
+| `masterLabel` | input | `string \| undefined` | no       | `undefined` | Human-readable copy for the master state or control.                      |
+| `detailLabel` | input | `string \| undefined` | no       | `undefined` | Human-readable copy for the detail state or control.                      |
+| `detailOpen`  | model | `boolean`             | no       | `false`     | Controlled detail open state with a matching Angular model-change output. |
 
 ## Deprecated selectors
 

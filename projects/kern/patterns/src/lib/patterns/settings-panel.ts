@@ -43,8 +43,8 @@ import { KrnDrawer, type KrnOverlayCloseReason } from '@kern-ui/angular/kit';
 })
 export class KrnSettingsPanel {
   private readonly translations = inject(KRN_TRANSLATIONS);
-  readonly heading = input(this.translations.patterns.settings);
-  readonly closeLabel = input(this.translations.patterns.closeSettings);
+  readonly heading = input<typeof this.translations.patterns.settings | undefined>();
+  readonly closeLabel = input<typeof this.translations.patterns.closeSettings | undefined>();
   readonly initialFocus = input<KrnOverlayInitialFocus>('first-tabbable');
   readonly closeOnEscape = input(true, { transform: booleanAttribute });
   readonly closeOnOutside = input(true, { transform: booleanAttribute });
@@ -61,7 +61,7 @@ export class KrnSettingsPanel {
     ),
   );
 
-  private requiredLabel(value: string, fallback: string, hardFallback: string): string {
+  private requiredLabel(value: string | undefined, fallback: string, hardFallback: string): string {
     const normalized = typeof value === 'string' ? value.trim() : '';
     const normalizedFallback = typeof fallback === 'string' ? fallback.trim() : '';
     return normalized || normalizedFallback || hardFallback;

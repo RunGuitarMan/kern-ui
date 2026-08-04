@@ -17,6 +17,7 @@ import {
   KRN_TRANSLATIONS,
   krnFormatTranslation,
 } from '@kern-ui/angular/core';
+import { krnReadI18nValue } from '@kern-ui/angular/i18n';
 
 export interface KrnChartDatum {
   /** Stable identity used to preserve keyboard focus across immutable updates. */
@@ -693,6 +694,7 @@ interface KrnTooltipPosition {
 export class KrnChart {
   private readonly destroyRef = inject(DestroyRef);
   private readonly platform = inject(KRN_PLATFORM);
+  private readonly inheritedLocale = inject(KRN_LOCALE);
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   protected readonly tableId = inject(KrnIdService).next('chart-data');
@@ -716,7 +718,10 @@ export class KrnChart {
   readonly negativeValuePolicy = input<KrnChartNegativeValuePolicy>('clamp');
   /** Limits the accessible text summary while the full data table remains available. */
   readonly summaryItemLimit = input(12);
-  readonly locale = input<string | string[]>(inject(KRN_LOCALE));
+  readonly locale = input<string | string[] | undefined>();
+  private readonly resolvedLocale = computed(
+    () => this.locale() ?? krnReadI18nValue(this.inheritedLocale),
+  );
   readonly labels = input<Partial<KrnChartLabels>>({});
   readonly valueFormatter = input<KrnChartValueFormatter | null>(null);
   readonly percentFormatter = input<KrnChartValueFormatter | null>(null);
@@ -781,11 +786,11 @@ export class KrnChart {
     };
   });
   private readonly numberFormatter = computed(
-    () => new Intl.NumberFormat(this.locale(), { maximumFractionDigits: 2 }),
+    () => new Intl.NumberFormat(this.resolvedLocale(), { maximumFractionDigits: 2 }),
   );
   private readonly percentageNumberFormatter = computed(
     () =>
-      new Intl.NumberFormat(this.locale(), {
+      new Intl.NumberFormat(this.resolvedLocale(), {
         style: 'percent',
         maximumFractionDigits: 1,
       }),
@@ -1101,7 +1106,7 @@ export class KrnChart {
   }
 
   protected uppercase(label: string): string {
-    return label.toLocaleUpperCase(this.locale());
+    return label.toLocaleUpperCase(this.resolvedLocale());
   }
 
   protected formattedValue(value: number): string {
@@ -1185,7 +1190,7 @@ export class KrnLineChart {
   readonly description = input('');
   readonly data = input.required<readonly KrnChartDatum[]>();
   readonly palette = input<readonly string[]>(['var(--krn-chart-1, #4f6feb)']);
-  readonly locale = input<string | string[]>(inject(KRN_LOCALE));
+  readonly locale = input<string | string[] | undefined>();
   readonly labels = input<Partial<KrnChartLabels>>({});
   readonly valueFormatter = input<KrnChartValueFormatter | null>(null);
   readonly percentFormatter = input<KrnChartValueFormatter | null>(null);
@@ -1242,7 +1247,7 @@ export class KrnBarChart {
   readonly description = input('');
   readonly data = input.required<readonly KrnChartDatum[]>();
   readonly palette = input<readonly string[]>(['var(--krn-chart-1, #4f6feb)']);
-  readonly locale = input<string | string[]>(inject(KRN_LOCALE));
+  readonly locale = input<string | string[] | undefined>();
   readonly labels = input<Partial<KrnChartLabels>>({});
   readonly valueFormatter = input<KrnChartValueFormatter | null>(null);
   readonly percentFormatter = input<KrnChartValueFormatter | null>(null);
@@ -1305,7 +1310,7 @@ export class KrnDonutChart {
     'var(--krn-chart-5, #8a63a8)',
     'var(--krn-chart-4, #b58633)',
   ]);
-  readonly locale = input<string | string[]>(inject(KRN_LOCALE));
+  readonly locale = input<string | string[] | undefined>();
   readonly labels = input<Partial<KrnChartLabels>>({});
   readonly valueFormatter = input<KrnChartValueFormatter | null>(null);
   readonly percentFormatter = input<KrnChartValueFormatter | null>(null);

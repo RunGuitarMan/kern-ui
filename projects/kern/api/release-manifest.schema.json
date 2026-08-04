@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://kern-ui.dev/schemas/release-manifest.schema.json",
+  "title": "Kern immutable release manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "release", "packages", "source", "artifacts", "policy"],
+  "properties": {
+    "schemaVersion": { "const": 4 },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "tag", "npmDistTag"],
+      "properties": {
+        "version": { "$ref": "#/definitions/version" },
+        "tag": { "type": "string", "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$" },
+        "npmDistTag": { "enum": ["latest", "next"] }
+      }
+    },
+    "packages": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "$ref": "#/definitions/packageArtifact" }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "commit",
+        "workflowRunId",
+        "dependencyLock",
+        "lifecycleAttestation"
+      ],
+      "properties": {
+        "repository": { "type": "string", "format": "uri" },
+        "commit": { "$ref": "#/definitions/commit" },
+        "workflowRunId": {
+          "anyOf": [{ "type": "string", "pattern": "^[1-9][0-9]*$" }, { "type": "null" }]
+        },
+        "dependencyLock": { "$ref": "#/definitions/sourceFile" },
+        "lifecycleAttestation": { "$ref": "#/definitions/artifactFile" }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["documentation"],
+      "properties": {
+        "documentation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["archive", "manifest", "mountPath"],
+          "properties": {
+            "archive": { "$ref": "#/definitions/archiveArtifact" },
+            "manifest": { "$ref": "#/definitions/documentationManifest" },
+            "mountPath": { "type": "string", "pattern": "^/versions/.+/$" }
+          }
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "auditLevel", "allowedLicenses"],
+      "properties": {
+        "file": { "const": "projects/kern/api/release-policy.json" },
+        "auditLevel": { "enum": ["low", "moderate", "high", "critical"] },
+        "allowedLicenses": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "archiveArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "format", "sha256"],
+      "properties": {
+        "file": { "type": "string", "minLength": 1 },
+        "format": { "const": "tar+gzip" },
+        "sha256": { "$ref": "#/definitions/sha256" }
+      }
+    },
+    "artifactFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "sha256"],
+      "properties": {
+        "file": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/definitions/sha256" }
+      }
+    },
+    "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "documentationManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "schemaVersion", "sha256"],
+      "properties": {
+        "file": { "type": "string", "minLength": 1 },
+        "schemaVersion": { "const": 1 },
+        "sha256": { "$ref": "#/definitions/sha256" }
+      }
+    },
+    "packageArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "tarball", "sbom"],
+      "properties": {
+        "name": { "enum": ["@kern-ui/angular", "@kern-ui/mcp"] },
+        "version": { "$ref": "#/definitions/version" },
+        "tarball": { "$ref": "#/definitions/artifactFile" },
+        "sbom": { "$ref": "#/definitions/sbomArtifact" }
+      }
+    },
+    "sbomArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "format", "sha256"],
+      "properties": {
+        "file": { "type": "string", "minLength": 1 },
+        "format": { "const": "CycloneDX" },
+        "sha256": { "$ref": "#/definitions/sha256" }
+      }
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "sourceFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "sha256"],
+      "properties": {
+        "file": { "const": "package-lock.json" },
+        "sha256": { "$ref": "#/definitions/sha256" }
+      }
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$"
+    }
+  }
+}

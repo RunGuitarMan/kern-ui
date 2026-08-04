@@ -58,14 +58,14 @@ void bootstrapApplication(KernTableOfContentsAgentExample);
 
 ## API
 
-| Name            | Kind   | Type                        | Required | Default                                             | Description                                                              |
-| --------------- | ------ | --------------------------- | -------- | --------------------------------------------------- | ------------------------------------------------------------------------ |
-| `items`         | input  | `ReadonlyArray<KrnTocItem>` | no       | `[]`                                                | Ordered item collection rendered by the composite widget.                |
-| `activeId`      | model  | `string \| null`            | no       | `null`                                              | Stable id of the item currently participating in roving focus.           |
-| `observe`       | input  | `boolean`                   | no       | `true`                                              | Enables automatic observation of headings used by the table of contents. |
-| `title`         | input  | `string`                    | no       | `this.translations.navigation.tableOfContentsTitle` | Visible title that also names the component surface or data view.        |
-| `ariaLabel`     | input  | `string`                    | no       | `this.translations.navigation.tableOfContents`      | Accessible name used when visible content is not sufficient.             |
-| `itemActivated` | output | `KrnTocItem`                | no       | `undefined`                                         | Notifies the consumer after the item activated interaction completes.    |
+| Name            | Kind   | Type                        | Required | Default     | Description                                                              |
+| --------------- | ------ | --------------------------- | -------- | ----------- | ------------------------------------------------------------------------ |
+| `items`         | input  | `ReadonlyArray<KrnTocItem>` | no       | `[]`        | Ordered item collection rendered by the composite widget.                |
+| `activeId`      | model  | `string \| null`            | no       | `null`      | Stable id of the item currently participating in roving focus.           |
+| `observe`       | input  | `boolean`                   | no       | `true`      | Enables automatic observation of headings used by the table of contents. |
+| `title`         | input  | `string \| undefined`       | no       | `undefined` | Visible title that also names the component surface or data view.        |
+| `ariaLabel`     | input  | `string \| undefined`       | no       | `undefined` | Accessible name used when visible content is not sufficient.             |
+| `itemActivated` | output | `KrnTocItem`                | no       | `undefined` | Notifies the consumer after the item activated interaction completes.    |
 
 ## Deprecated selectors
 

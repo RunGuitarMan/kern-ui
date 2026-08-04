@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { bootstrapApplication } from '@angular/platform-browser';
 import { renderApplication } from '@angular/platform-server';
 import { provideKrn } from '@kern-ui/angular/core';
-import { KrnOverlayService } from './programmatic-overlay';
+import { KrnOverlayService, defineKrnOverlayContent } from './programmatic-overlay';
 
 @Component({
   selector: 'krn-programmatic-ssr-content-spec',
@@ -10,6 +10,10 @@ import { KrnOverlayService } from './programmatic-overlay';
   template: `This content must not be instantiated on the server.`,
 })
 class SsrOverlayContent {}
+
+const SSR_OVERLAY = defineKrnOverlayContent<{ readonly accountId: string }, string>(
+  SsrOverlayContent,
+);
 
 @Component({
   selector: 'krn-programmatic-ssr-host-spec',
@@ -27,7 +31,7 @@ class SsrOverlayHost {
 
   constructor() {
     const overlays = inject(KrnOverlayService);
-    const ref = overlays.open<{ readonly accountId: string }, string>(SsrOverlayContent, {
+    const ref = overlays.open(SSR_OVERLAY, {
       data: { accountId: 'account-42' },
       title: 'Server overlay',
     });

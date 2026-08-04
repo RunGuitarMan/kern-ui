@@ -51,7 +51,7 @@ interface PersistedThemeState {
 const THEMES = new Set<KrnTheme>(['light', 'dark', 'system', 'high-contrast']);
 const DENSITIES = new Set<KrnDensity>(['compact', 'comfortable', 'spacious']);
 const DEFAULT_PREFERENCE_STORAGE_KEY = 'krn.preferences';
-const KRN_THEME_DOCUMENT_STATE = Symbol('KRN_THEME_DOCUMENT_STATE');
+const KRN_THEME_DOCUMENT_STATE = Symbol.for('@kern-ui/angular/core/theme-document-state/v1');
 const THEME_DOCUMENT_ATTRIBUTES = [
   'data-krn-theme-mode',
   'data-krn-theme',

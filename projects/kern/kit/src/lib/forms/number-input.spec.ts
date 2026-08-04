@@ -112,6 +112,29 @@ describe('KrnNumberInput', () => {
     expect(valueChange).toHaveBeenLastCalledWith(1.000000000000001);
   });
 
+  it('does not suppress the compatibility click for touch stepper activation', async () => {
+    const fixture = TestBed.createComponent(KrnNumberInput);
+    fixture.componentRef.setInput('min', 1);
+    fixture.componentRef.setInput('step', 5);
+    await fixture.whenStable();
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    const increase = fixture.nativeElement.querySelector('button') as HTMLButtonElement;
+    const pointerDown = new MouseEvent('pointerdown', {
+      bubbles: true,
+      button: 0,
+      cancelable: true,
+    });
+    Object.defineProperty(pointerDown, 'pointerType', { value: 'touch' });
+
+    increase.dispatchEvent(pointerDown);
+    expect(pointerDown.defaultPrevented).toBe(false);
+    increase.click();
+    await fixture.whenStable();
+
+    expect(input.valueAsNumber).toBe(6);
+    expect(input.ownerDocument.activeElement).toBe(input);
+  });
+
   it('deduplicates repeated native number input events', async () => {
     const fixture = TestBed.createComponent(KrnNumberInput);
     const onChange = vi.fn();

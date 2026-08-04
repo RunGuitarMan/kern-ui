@@ -53,27 +53,27 @@ void bootstrapApplication(KernPasswordInputAgentExample);
 
 ## API
 
-| Name              | Kind   | Type                  | Required | Default                                | Description                                                                                      |
-| ----------------- | ------ | --------------------- | -------- | -------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`              | no       | `''`                                   | Stable identifier value used by the id contract.                                                 |
-| `name`            | input  | `string`              | no       | `''`                                   | Required human-readable name for the represented person, item, or action.                        |
-| `placeholder`     | input  | `string`              | no       | `''`                                   | Short input hint shown only while no value is present.                                           |
-| `ariaLabel`       | input  | `string`              | no       | `''`                                   | Accessible name used when visible content is not sufficient.                                     |
-| `ariaLabelledBy`  | input  | `string`              | no       | `''`                                   | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
-| `ariaDescribedBy` | input  | `string`              | no       | `''`                                   | Space-separated element ids composed with Form Field hints and validation descriptions.          |
-| `autocomplete`    | input  | `string`              | no       | `'current-password'`                   | Native autocomplete purpose forwarded to the editable control.                                   |
-| `value`           | input  | `string \| undefined` | no       | `undefined`                            | Controlled component value.                                                                      |
-| `minLength`       | input  | `number \| undefined` | no       | `undefined`                            | Upper or lower bound applied to the length value.                                                |
-| `maxLength`       | input  | `number \| undefined` | no       | `undefined`                            | Upper or lower bound applied to the length value.                                                |
-| `showLabel`       | input  | `string`              | no       | `this.translations.forms.showPassword` | Human-readable copy for the show state or control.                                               |
-| `hideLabel`       | input  | `string`              | no       | `this.translations.forms.hidePassword` | Human-readable copy for the hide state or control.                                               |
-| `showText`        | input  | `string`              | no       | `this.translations.forms.show`         | Human-readable copy for the show state or control.                                               |
-| `hideText`        | input  | `string`              | no       | `this.translations.forms.hide`         | Human-readable copy for the hide state or control.                                               |
-| `disabled`        | input  | `boolean`             | no       | `false`                                | Prevents user interaction and participates in the disabled-state contract.                       |
-| `readonly`        | input  | `boolean`             | no       | `false`                                | Keeps the value perceivable while preventing user edits.                                         |
-| `required`        | input  | `boolean`             | no       | `false`                                | Marks the value as required and participates in Angular Forms validation.                        |
-| `invalid`         | input  | `boolean`             | no       | `false`                                | Exposes an externally controlled invalid presentation state.                                     |
-| `valueChange`     | output | `string`              | no       | `undefined`                            | Notifies the consumer after the value change interaction completes.                              |
+| Name              | Kind   | Type                  | Required | Default              | Description                                                                                      |
+| ----------------- | ------ | --------------------- | -------- | -------------------- | ------------------------------------------------------------------------------------------------ |
+| `id`              | input  | `string`              | no       | `''`                 | Stable identifier value used by the id contract.                                                 |
+| `name`            | input  | `string`              | no       | `''`                 | Required human-readable name for the represented person, item, or action.                        |
+| `placeholder`     | input  | `string`              | no       | `''`                 | Short input hint shown only while no value is present.                                           |
+| `ariaLabel`       | input  | `string`              | no       | `''`                 | Accessible name used when visible content is not sufficient.                                     |
+| `ariaLabelledBy`  | input  | `string`              | no       | `''`                 | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
+| `ariaDescribedBy` | input  | `string`              | no       | `''`                 | Space-separated element ids composed with Form Field hints and validation descriptions.          |
+| `autocomplete`    | input  | `string`              | no       | `'current-password'` | Native autocomplete purpose forwarded to the editable control.                                   |
+| `value`           | input  | `string \| undefined` | no       | `undefined`          | Controlled component value.                                                                      |
+| `minLength`       | input  | `number \| undefined` | no       | `undefined`          | Upper or lower bound applied to the length value.                                                |
+| `maxLength`       | input  | `number \| undefined` | no       | `undefined`          | Upper or lower bound applied to the length value.                                                |
+| `showLabel`       | input  | `string \| undefined` | no       | `undefined`          | Human-readable copy for the show state or control.                                               |
+| `hideLabel`       | input  | `string \| undefined` | no       | `undefined`          | Human-readable copy for the hide state or control.                                               |
+| `showText`        | input  | `string \| undefined` | no       | `undefined`          | Human-readable copy for the show state or control.                                               |
+| `hideText`        | input  | `string \| undefined` | no       | `undefined`          | Human-readable copy for the hide state or control.                                               |
+| `disabled`        | input  | `boolean`             | no       | `false`              | Prevents user interaction and participates in the disabled-state contract.                       |
+| `readonly`        | input  | `boolean`             | no       | `false`              | Keeps the value perceivable while preventing user edits.                                         |
+| `required`        | input  | `boolean`             | no       | `false`              | Marks the value as required and participates in Angular Forms validation.                        |
+| `invalid`         | input  | `boolean`             | no       | `false`              | Exposes an externally controlled invalid presentation state.                                     |
+| `valueChange`     | output | `string`              | no       | `undefined`          | Notifies the consumer after the value change interaction completes.                              |
 
 ## Deprecated selectors
 

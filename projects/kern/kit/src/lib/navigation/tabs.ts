@@ -215,7 +215,7 @@ export class KrnTabs {
   readonly orientation = input<KrnNavigationOrientation>(
     this.host.nativeElement.localName === 'krn-vertical-tabs' ? 'vertical' : 'horizontal',
   );
-  readonly ariaLabel = input(this.translations.navigation.sections);
+  readonly ariaLabel = input<string | undefined>();
   protected readonly resolvedOrientation = computed<KrnNavigationOrientation>(() =>
     this.orientation() === 'vertical' ? 'vertical' : 'horizontal',
   );

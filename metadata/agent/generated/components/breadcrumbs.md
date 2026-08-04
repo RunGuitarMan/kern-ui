@@ -48,15 +48,15 @@ void bootstrapApplication(KernBreadcrumbsAgentExample);
 
 ## API
 
-| Name            | Kind   | Type                               | Required | Default                                          | Description                                                           |
-| --------------- | ------ | ---------------------------------- | -------- | ------------------------------------------------ | --------------------------------------------------------------------- |
-| `items`         | input  | `ReadonlyArray<KrnBreadcrumbItem>` | no       | `[]`                                             | Ordered item collection rendered by the composite widget.             |
-| `maxItems`      | input  | `number`                           | no       | `5`                                              | Upper or lower bound applied to the items value.                      |
-| `separator`     | input  | `string`                           | no       | `'›'`                                            | Visible text inserted between adjacent values or navigation segments. |
-| `ariaLabel`     | input  | `string`                           | no       | `this.translations.navigation.breadcrumb`        | Accessible name used when visible content is not sufficient.          |
-| `moreLabel`     | input  | `string`                           | no       | `this.translations.navigation.breadcrumbMore`    | Human-readable copy for the more state or control.                    |
-| `showAllLabel`  | input  | `string`                           | no       | `this.translations.navigation.breadcrumbShowAll` | Human-readable copy for the show all state or control.                |
-| `itemActivated` | output | `KrnBreadcrumbItem`                | no       | `undefined`                                      | Notifies the consumer after the item activated interaction completes. |
+| Name            | Kind   | Type                               | Required | Default     | Description                                                           |
+| --------------- | ------ | ---------------------------------- | -------- | ----------- | --------------------------------------------------------------------- |
+| `items`         | input  | `ReadonlyArray<KrnBreadcrumbItem>` | no       | `[]`        | Ordered item collection rendered by the composite widget.             |
+| `maxItems`      | input  | `number`                           | no       | `5`         | Upper or lower bound applied to the items value.                      |
+| `separator`     | input  | `string`                           | no       | `'›'`       | Visible text inserted between adjacent values or navigation segments. |
+| `ariaLabel`     | input  | `string \| undefined`              | no       | `undefined` | Accessible name used when visible content is not sufficient.          |
+| `moreLabel`     | input  | `string \| undefined`              | no       | `undefined` | Human-readable copy for the more state or control.                    |
+| `showAllLabel`  | input  | `string \| undefined`              | no       | `undefined` | Human-readable copy for the show all state or control.                |
+| `itemActivated` | output | `KrnBreadcrumbItem`                | no       | `undefined` | Notifies the consumer after the item activated interaction completes. |
 
 ## Deprecated selectors
 

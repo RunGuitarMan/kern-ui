@@ -58,21 +58,21 @@ void bootstrapApplication(KernLoginFormAgentExample);
 
 ## API
 
-| Name                    | Kind   | Type                                | Required | Default                                            | Description                                                      |
-| ----------------------- | ------ | ----------------------------------- | -------- | -------------------------------------------------- | ---------------------------------------------------------------- |
-| `loading`               | input  | `boolean`                           | no       | `false`                                            | Prevents duplicate actions and exposes accessible busy state.    |
-| `errorMessage`          | input  | `string`                            | no       | `''`                                               | Human-readable copy for the error state or control.              |
-| `recoveryHref`          | input  | `string`                            | no       | `''`                                               | Destination URL for the error-state recovery action.             |
-| `submitLabel`           | input  | `string`                            | no       | `this.translations.patterns.signIn`                | Human-readable copy for the submit state or control.             |
-| `emailLabel`            | input  | `string`                            | no       | `this.translations.patterns.email`                 | Human-readable copy for the email state or control.              |
-| `emailErrorLabel`       | input  | `string`                            | no       | `this.translations.patterns.invalidEmail`          | Human-readable copy for the email error state or control.        |
-| `passwordLabel`         | input  | `string`                            | no       | `this.translations.patterns.password`              | Human-readable copy for the password state or control.           |
-| `passwordErrorLabel`    | input  | `(minimumLength: number) => string` | no       | `this.translations.patterns.minimumPasswordLength` | Human-readable copy for the password error state or control.     |
-| `rememberLabel`         | input  | `string`                            | no       | `this.translations.patterns.rememberMe`            | Human-readable copy for the remember state or control.           |
-| `recoveryLabel`         | input  | `string`                            | no       | `this.translations.patterns.forgotPassword`        | Human-readable copy for the recovery state or control.           |
-| `loadingLabel`          | input  | `string`                            | no       | `this.translations.patterns.signingIn`             | Human-readable copy for the loading state or control.            |
-| `minimumPasswordLength` | input  | `number`                            | no       | `8`                                                | Upper or lower bound applied to the password length value.       |
-| `submitted`             | output | `KrnLoginCredentials`               | no       | `undefined`                                        | Notifies the consumer after the submitted interaction completes. |
+| Name                    | Kind   | Type                                               | Required | Default     | Description                                                      |
+| ----------------------- | ------ | -------------------------------------------------- | -------- | ----------- | ---------------------------------------------------------------- |
+| `loading`               | input  | `boolean`                                          | no       | `false`     | Prevents duplicate actions and exposes accessible busy state.    |
+| `errorMessage`          | input  | `string`                                           | no       | `''`        | Human-readable copy for the error state or control.              |
+| `recoveryHref`          | input  | `string`                                           | no       | `''`        | Destination URL for the error-state recovery action.             |
+| `submitLabel`           | input  | `string \| undefined`                              | no       | `undefined` | Human-readable copy for the submit state or control.             |
+| `emailLabel`            | input  | `string \| undefined`                              | no       | `undefined` | Human-readable copy for the email state or control.              |
+| `emailErrorLabel`       | input  | `string \| undefined`                              | no       | `undefined` | Human-readable copy for the email error state or control.        |
+| `passwordLabel`         | input  | `string \| undefined`                              | no       | `undefined` | Human-readable copy for the password state or control.           |
+| `passwordErrorLabel`    | input  | `((minimumLength: number) => string) \| undefined` | no       | `undefined` | Human-readable copy for the password error state or control.     |
+| `rememberLabel`         | input  | `string \| undefined`                              | no       | `undefined` | Human-readable copy for the remember state or control.           |
+| `recoveryLabel`         | input  | `string \| undefined`                              | no       | `undefined` | Human-readable copy for the recovery state or control.           |
+| `loadingLabel`          | input  | `string \| undefined`                              | no       | `undefined` | Human-readable copy for the loading state or control.            |
+| `minimumPasswordLength` | input  | `number`                                           | no       | `8`         | Upper or lower bound applied to the password length value.       |
+| `submitted`             | output | `KrnLoginCredentials`                              | no       | `undefined` | Notifies the consumer after the submitted interaction completes. |
 
 ## Deprecated selectors
 

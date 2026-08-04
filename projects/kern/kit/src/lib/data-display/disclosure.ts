@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, input, model } from '@angular/core';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { krnInputFallback } from '../reactive-input';
 
 @Component({
   selector: 'krn-disclosure',
@@ -99,7 +100,7 @@ export class KrnDisclosure {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'group',
-    '[attr.aria-label]': 'ariaLabel()',
+    '[attr.aria-label]': 'resolvedAriaLabel()',
   },
   template: `<ng-content />`,
   styles: `
@@ -111,5 +112,9 @@ export class KrnDisclosure {
 })
 export class KrnAccordion {
   private readonly translations = inject(KRN_TRANSLATIONS);
-  readonly ariaLabel = input(this.translations.dataDisplay.accordion);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = krnInputFallback(
+    this.ariaLabel,
+    () => this.translations.dataDisplay.accordion,
+  );
 }

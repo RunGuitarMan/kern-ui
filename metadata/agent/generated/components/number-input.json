@@ -151,9 +151,9 @@
       "name": "increaseLabel",
       "property": "increaseLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.forms.increaseValue",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the increase state or control.",
       "descriptionSource": "inferred"
     },
@@ -161,9 +161,9 @@
       "name": "decreaseLabel",
       "property": "decreaseLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.forms.decreaseValue",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the decrease state or control.",
       "descriptionSource": "inferred"
     },
@@ -786,7 +786,7 @@
         "componentId": "number-input",
         "publicName": "decreaseLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
@@ -798,7 +798,7 @@
         "componentId": "number-input",
         "publicName": "increaseLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {

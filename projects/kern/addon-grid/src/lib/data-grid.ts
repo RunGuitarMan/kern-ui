@@ -6,6 +6,7 @@ import {
   Component,
   DestroyRef,
   ElementRef,
+  NgZone,
   afterEveryRender,
   booleanAttribute,
   computed,
@@ -23,6 +24,7 @@ import type { Subscription } from 'rxjs';
 import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
 import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnDataGridTranslations } from '@kern-ui/angular/core';
+import { krnReadI18nValue } from '@kern-ui/angular/i18n';
 
 export type KrnDataRowKey = string | number;
 export type KrnDataSortDirection = 'asc' | 'desc';
@@ -360,9 +362,6 @@ const GRID_CELL_ACTION_SELECTOR = [
                   class="selection-cell"
                   aria-colindex="1"
                   [attr.data-pinned]="hasPinnedStartColumns() ? 'start' : null"
-                  [style.inset-inline-start]="
-                    hasPinnedStartColumns() ? utilityColumnOffset(0) : null
-                  "
                   [attr.tabindex]="
                     focusCellPosition().row === rowIndex && focusCellPosition().column === 0
                       ? 0
@@ -391,8 +390,6 @@ const GRID_CELL_ACTION_SELECTOR = [
                   [style.inline-size.px]="columnWidth(column)"
                   [attr.data-pinned]="column.pinned ?? null"
                   [attr.data-pin-boundary]="columnPinBoundary(column)"
-                  [style.inset-inline-start]="columnPinnedStart(column)"
-                  [style.inset-inline-end]="columnPinnedEnd(column)"
                   [attr.data-align]="column.align ?? 'start'"
                   [attr.data-priority]="column.priority ?? 'secondary'"
                   [attr.tabindex]="
@@ -1030,8 +1027,15 @@ const GRID_CELL_ACTION_SELECTOR = [
     }
     .virtual-grid {
       position: relative;
+      display: grid;
+      grid-template-columns: minmax(100%, max-content);
       max-inline-size: 100%;
       overflow: auto;
+    }
+    .virtual-grid > cdk-virtual-scroll-viewport {
+      inline-size: 100%;
+      max-inline-size: none;
+      overflow-x: hidden;
     }
     .virtual-row-measure {
       position: absolute;
@@ -1066,9 +1070,17 @@ const GRID_CELL_ACTION_SELECTOR = [
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .virtual-header > [data-pinned],
-    .virtual-row > [data-pinned] {
+    .virtual-header > [data-pinned] {
       position: sticky;
+    }
+    .virtual-row > [data-pinned] {
+      position: relative;
+    }
+    .virtual-row > [data-pinned='start'] {
+      transform: translateX(var(--krn-virtual-pin-start-translate, 0px));
+    }
+    .virtual-row > [data-pinned='end'] {
+      transform: translateX(var(--krn-virtual-pin-end-translate, 0px));
     }
     .virtual-header > .selection-cell,
     .virtual-row > .selection-cell {
@@ -1135,18 +1147,29 @@ const GRID_CELL_ACTION_SELECTOR = [
 export class KrnDataGrid<T> implements AfterViewChecked {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly ngZone = inject(NgZone);
   private readonly platform = inject(KRN_PLATFORM);
-  private readonly locale = inject(KRN_LOCALE);
+  private readonly inheritedLocale = inject(KRN_LOCALE);
+  private readonly locale = computed(() => krnReadI18nValue(this.inheritedLocale));
   private readonly translations = inject(KRN_TRANSLATIONS);
-  private readonly collator = new Intl.Collator(this.locale, {
-    numeric: true,
-    sensitivity: 'base',
-    usage: 'sort',
-  });
+  private readonly collator = computed(
+    () =>
+      new Intl.Collator(this.locale(), {
+        numeric: true,
+        sensitivity: 'base',
+        usage: 'sort',
+      }),
+  );
   private readonly viewport = viewChild(CdkVirtualScrollViewport);
   private virtualFocusSubscription: Subscription | null = null;
   private virtualRowResizeObserver: ResizeObserver | null = null;
   private observedVirtualRow: HTMLElement | null = null;
+  private virtualGridResizeObserver: ResizeObserver | null = null;
+  private observedVirtualGrid: HTMLElement | null = null;
+  private virtualPinnedFrame: number | null = null;
+  private readonly handleVirtualGridScroll = (): void => {
+    if (this.observedVirtualGrid) this.scheduleVirtualPinnedAlignment(this.observedVirtualGrid);
+  };
   private readonly measuredVirtualRowHeight = signal<number | null>(null);
   private columnResizeObserver: ResizeObserver | null = null;
   private readonly observedColumnHeaders = new Set<HTMLElement>();
@@ -1202,12 +1225,21 @@ export class KrnDataGrid<T> implements AfterViewChecked {
   readonly rowIdentity = input.required<(row: T, index: number) => KrnDataRowKey>();
   readonly mode = input<KrnDataGridMode>({ kind: 'client', pagination: true });
   readonly labels = input<Partial<KrnDataGridTranslations>>({});
-  readonly ariaLabel = input(this.translations.dataGrid.ariaLabel);
+  readonly ariaLabel = input<string | undefined>();
+  protected readonly resolvedAriaLabel = computed(
+    () => this.ariaLabel() ?? this.translations.dataGrid.ariaLabel,
+  );
   readonly loading = input(false, { transform: booleanAttribute });
   readonly error = input('');
-  readonly emptyLabel = input(this.translations.dataGrid.empty);
+  readonly emptyLabel = input<string | undefined>();
+  protected readonly resolvedEmptyLabel = computed(
+    () => this.emptyLabel() ?? this.translations.dataGrid.empty,
+  );
   readonly filterable = input(true, { transform: booleanAttribute });
-  readonly filterPlaceholder = input(this.translations.dataGrid.filterPlaceholder);
+  readonly filterPlaceholder = input<string | undefined>();
+  protected readonly resolvedFilterPlaceholder = computed(
+    () => this.filterPlaceholder() ?? this.translations.dataGrid.filterPlaceholder,
+  );
   readonly filterPredicate = input<KrnDataFilterPredicate<T> | null>(null);
   readonly selectable = input(false, { transform: booleanAttribute });
   readonly expandable = input(false, { transform: booleanAttribute });
@@ -1224,9 +1256,9 @@ export class KrnDataGrid<T> implements AfterViewChecked {
     const fallback = this.translations.dataGrid;
     const copy = {
       ...fallback,
-      ariaLabel: this.ariaLabel(),
-      empty: this.emptyLabel(),
-      filterPlaceholder: this.filterPlaceholder(),
+      ariaLabel: this.resolvedAriaLabel(),
+      empty: this.resolvedEmptyLabel(),
+      filterPlaceholder: this.resolvedFilterPlaceholder(),
       ...this.labels(),
     };
     return {
@@ -1326,7 +1358,7 @@ export class KrnDataGrid<T> implements AfterViewChecked {
             ? predicate(row, query, columns)
             : columns.some((column) =>
                 String(column.filterValue?.(row) ?? this.value(row, column) ?? '')
-                  .toLocaleLowerCase(this.locale)
+                  .toLocaleLowerCase(this.locale())
                   .includes(query),
               ),
         )
@@ -1343,7 +1375,7 @@ export class KrnDataGrid<T> implements AfterViewChecked {
         const rightValue = column.sortValue?.(right) ?? this.value(right, column);
         const comparison = column.compare
           ? column.compare(leftValue, rightValue, left, right)
-          : this.collator.compare(String(leftValue ?? ''), String(rightValue ?? ''));
+          : this.collator().compare(String(leftValue ?? ''), String(rightValue ?? ''));
         return comparison === 0
           ? leftOccurrence.sourceIndex - rightOccurrence.sourceIndex
           : comparison * direction;
@@ -1353,7 +1385,7 @@ export class KrnDataGrid<T> implements AfterViewChecked {
   });
 
   private normalizeForSearch(value: string): string {
-    return value.toLocaleLowerCase(this.locale);
+    return value.toLocaleLowerCase(this.locale());
   }
 
   protected readonly totalRowCount = computed(() => {
@@ -1435,11 +1467,15 @@ export class KrnDataGrid<T> implements AfterViewChecked {
       mixedReadWrite: () => {
         this.syncVirtualRowMeasurement();
         this.syncPinnedColumnMeasurements();
+        this.syncVirtualPinnedAlignment();
       },
     });
     this.destroyRef.onDestroy(() => {
       this.virtualFocusSubscription?.unsubscribe();
       this.virtualRowResizeObserver?.disconnect();
+      this.virtualGridResizeObserver?.disconnect();
+      this.observedVirtualGrid?.removeEventListener('scroll', this.handleVirtualGridScroll);
+      this.platform.cancelAnimationFrame(this.virtualPinnedFrame);
       this.columnResizeObserver?.disconnect();
       this.restoreManagedTabIndexes();
     });
@@ -1945,6 +1981,75 @@ export class KrnDataGrid<T> implements AfterViewChecked {
     this.measuredColumnWidths.set(measured);
   }
 
+  private syncVirtualPinnedAlignment(): void {
+    const grid = this.isVirtual()
+      ? this.host.nativeElement.querySelector<HTMLElement>('.virtual-grid')
+      : null;
+    if (grid !== this.observedVirtualGrid) {
+      this.observedVirtualGrid?.removeEventListener('scroll', this.handleVirtualGridScroll);
+      this.virtualGridResizeObserver?.disconnect();
+      this.virtualGridResizeObserver = null;
+      this.platform.cancelAnimationFrame(this.virtualPinnedFrame);
+      this.virtualPinnedFrame = null;
+      this.observedVirtualGrid = grid;
+
+      const ResizeObserverConstructor = this.platform.window?.ResizeObserver;
+      if (grid) {
+        this.ngZone.runOutsideAngular(() => {
+          grid.addEventListener('scroll', this.handleVirtualGridScroll, { passive: true });
+          if (ResizeObserverConstructor) {
+            this.virtualGridResizeObserver = new ResizeObserverConstructor(() =>
+              this.scheduleVirtualPinnedAlignment(grid),
+            );
+            this.virtualGridResizeObserver.observe(grid);
+          }
+        });
+      }
+    }
+
+    if (grid) this.scheduleVirtualPinnedAlignment(grid);
+  }
+
+  private scheduleVirtualPinnedAlignment(grid: HTMLElement): void {
+    if (this.virtualPinnedFrame !== null) return;
+
+    const frame = this.ngZone.runOutsideAngular(() =>
+      this.platform.requestAnimationFrame(() => {
+        this.virtualPinnedFrame = null;
+        if (grid === this.observedVirtualGrid) this.alignVirtualPinnedCells(grid);
+      }),
+    );
+    if (frame === null) {
+      this.alignVirtualPinnedCells(grid);
+    } else {
+      this.virtualPinnedFrame = frame;
+    }
+  }
+
+  private alignVirtualPinnedCells(grid: HTMLElement): void {
+    for (const edge of ['start', 'end'] as const) {
+      const property = `--krn-virtual-pin-${edge}-translate`;
+      const bodyCell = grid.querySelector<HTMLElement>(
+        `.virtual-row > [data-pinned="${edge}"][data-cell]`,
+      );
+      const position = bodyCell ? this.cellPosition(bodyCell) : null;
+      const headerCell = position
+        ? grid.querySelector<HTMLElement>(`[data-cell="-1-${position.column}"]`)
+        : null;
+      if (!bodyCell || !headerCell) {
+        grid.style.setProperty(property, '0px');
+        continue;
+      }
+
+      const current = Number.parseFloat(grid.style.getPropertyValue(property)) || 0;
+      const delta = headerCell.getBoundingClientRect().left - bodyCell.getBoundingClientRect().left;
+      if (Math.abs(delta) < 0.25) continue;
+
+      const next = Math.round((current + delta) * 100) / 100;
+      grid.style.setProperty(property, `${next}px`);
+    }
+  }
+
   private syncVirtualRowMeasurement(): void {
     const row = this.isVirtual()
       ? this.host.nativeElement.querySelector<HTMLElement>('.virtual-row-measure')
@@ -2008,9 +2113,11 @@ export class KrnDataGrid<T> implements AfterViewChecked {
 
   private focusCell(row: number, column: number): void {
     const focus = (): void => {
-      this.host.nativeElement
-        .querySelector<HTMLElement>(`[data-cell="${row}-${column}"]`)
-        ?.focus({ preventScroll: true });
+      this.focusRenderedCell(
+        this.host.nativeElement.querySelector<HTMLElement>(`[data-cell="${row}-${column}"]`),
+        row,
+        column,
+      );
     };
     if (!this.isVirtual() || row < 0) {
       this.platform.queueMicrotask(focus);
@@ -2040,9 +2147,24 @@ export class KrnDataGrid<T> implements AfterViewChecked {
       if (element) {
         this.virtualFocusSubscription?.unsubscribe();
         this.virtualFocusSubscription = null;
-        element.focus({ preventScroll: true });
+        this.focusRenderedCell(element, row, column);
       }
     });
+  }
+
+  private focusRenderedCell(cell: HTMLElement | null, row: number, column: number): void {
+    if (!cell) return;
+
+    cell.focus({ preventScroll: true });
+    const inlineTarget =
+      this.isVirtual() && row >= 0
+        ? this.host.nativeElement.querySelector<HTMLElement>(`[data-cell="-1-${column}"]`)
+        : cell;
+    inlineTarget?.scrollIntoView?.({
+      block: 'nearest',
+      inline: 'nearest',
+      container: 'nearest',
+    } as ScrollIntoViewOptions);
   }
 
   private emitQuery(): void {

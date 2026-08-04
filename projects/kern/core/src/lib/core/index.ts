@@ -1,7 +1,9 @@
 export { KRN_CONFIG, KRN_DIRECTION, KRN_LOCALE, KRN_MOTION, provideKrn } from './config';
+export { KRN_DATE_TIME_SNAPSHOT } from './date-time';
 export {
   KRN_ENGLISH_TRANSLATIONS,
   KRN_TRANSLATIONS,
+  KrnI18n,
   createKrnTranslations,
   krnFormatTranslation,
 } from './i18n';
@@ -21,6 +23,7 @@ export {
 export { provideKrnTranslationBridge } from './translation-bridge';
 
 export type { KrnConfig, KrnDirection, KrnMotionPreference, KrnOverlayHost } from './config';
+export type { KrnDateTimeSnapshot } from './date-time';
 export type {
   KrnActionTranslations,
   KrnCalendarTranslations,

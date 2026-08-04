@@ -63,7 +63,8 @@ Use the narrow entrypoint that owns the capability:
 | `@kern-ui/angular/addon-grid`   | Virtualized enterprise data grid                        |
 | `@kern-ui/angular/addon-charts` | Accessible chart components                             |
 | `@kern-ui/angular/patterns`     | Opinionated product compositions                        |
-| `@kern-ui/angular/testing`      | Angular CDK component harnesses                         |
+| `@kern-ui/angular/testing`      | Compatibility aggregator for Angular CDK harnesses      |
+| `@kern-ui/angular/testing/*`    | Family-scoped Angular CDK component harnesses           |
 
 `@kern-ui/angular` remains a supported compatibility aggregator and preserves the same runtime
 identities as direct imports. Deep source imports and undeclared family paths such as
@@ -186,7 +187,10 @@ lightweight `KRN_LOADING_LABEL`, `KRN_COPY_LABELS`, and `KRN_MORE_ACTIONS_LABEL`
 shared registry so importing leaf actions does not retain the complete translation dictionary in
 a narrow bundle. A low-level nested locale boundary that provides `KRN_TRANSLATIONS` directly must
 also install `provideKrnTranslationBridge()` at that boundary; direct leaf-token overrides remain
-available from `@kern-ui/angular/i18n`. Component label inputs are the narrowest one-off override.
+available from `@kern-ui/angular/i18n`. These leaf tokens and `KRN_LOCALE` expose
+`KrnI18nValue<T>`: `provideKrn` supplies a reactive `Signal<T>`, while a direct primitive/object
+provider remains a fixed scoped boundary. Direct token consumers should call
+`krnReadI18nValue(tokenValue)`. Component label inputs are the narrowest one-off override.
 
 The overlay host is resolved whenever Angular CDK requests its container, so a host rendered after
 bootstrap is supported; a missing host falls back to `document.body`. Use a dedicated host element
@@ -259,10 +263,12 @@ await more.click();
 await bold.click();
 ```
 
-`@kern-ui/angular/testing` is a physical, test-only secondary entry point. Its bundle imports no
-Kern runtime entry point and ships in lockstep with the component package. Harness methods and
-filters are the supported locator API; internal classes and component DOM structure are not
-application-facing contracts.
+`@kern-ui/angular/testing` is a thin compatibility aggregator. New tests can import only the
+needed owner from `/testing/actions`, `/testing/data-display`, `/testing/feedback`,
+`/testing/forms`, `/testing/layout`, or `/testing/navigation`; all expose the same class identities
+as the aggregator. These test-only bundles import no Kern runtime entry point and ship in lockstep
+with the component package. Harness methods and filters are the supported locator API; internal
+classes and component DOM structure are not application-facing contracts.
 
 ## Generators and diagnostics
 

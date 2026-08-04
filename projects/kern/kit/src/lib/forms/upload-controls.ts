@@ -14,8 +14,10 @@ import {
   viewChild,
 } from '@angular/core';
 import { KRN_PLATFORM, krnIsNode } from '@kern-ui/angular/cdk';
-import { KRN_LOCALE, KRN_TRANSLATIONS } from '@kern-ui/angular/core';
+import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import type { KrnUploadRejection } from './form-types';
+import { krnInputFallback } from '../reactive-input';
+import { krnResolvedLocale } from '../reactive-locale';
 import {
   maxLengthError,
   mergeValidationErrors,
@@ -38,7 +40,6 @@ const sameFile = (left: File, right: File): boolean =>
 
 interface KrnUploadHost {
   readonly id: Signal<string>;
-  readonly locale: Signal<string>;
   readonly accept: Signal<string>;
   readonly multiple: Signal<boolean>;
   readonly maxSize: Signal<number>;
@@ -73,6 +74,7 @@ class KrnUploadController {
   constructor(
     private readonly host: KrnUploadHost,
     private readonly fileInput: Signal<ElementRef<HTMLInputElement> | undefined>,
+    private readonly locale: Signal<string>,
   ) {
     this.formControl = useKrnFormControl(this, [] as readonly File[], {
       normalizeIncomingValue: (value) => this.normalizeIncomingValue(value),
@@ -218,7 +220,9 @@ class KrnUploadController {
     if (!Number.isFinite(bytes)) {
       return this.translations.forms.unlimited;
     }
-    const formatter = new Intl.NumberFormat(this.host.locale(), { maximumFractionDigits: 1 });
+    const formatter = new Intl.NumberFormat(this.locale(), {
+      maximumFractionDigits: 1,
+    });
     if (bytes < 1024) {
       return `${formatter.format(bytes)} B`;
     }
@@ -302,7 +306,7 @@ class KrnUploadController {
         (blur)="touch()"
         (click)="openPicker()"
       >
-        {{ label() }}
+        {{ resolvedLabel() }}
       </button>
       @if (description()) {
         <span class="krn-message" [id]="descriptionId()">{{ description() }}</span>
@@ -349,8 +353,13 @@ class KrnUploadController {
 export class KrnFileUpload {
   protected readonly translations = inject(KRN_TRANSLATIONS);
   readonly id = input('');
-  readonly label = input(this.translations.forms.chooseFiles);
-  readonly locale = input(inject(KRN_LOCALE));
+  readonly label = input<string | undefined>();
+  protected readonly resolvedLabel = krnInputFallback(
+    this.label,
+    () => this.translations.forms.chooseFiles,
+  );
+  readonly locale = input<string | undefined>();
+  private readonly resolvedLocale = krnResolvedLocale(this.locale);
   readonly description = input('');
   readonly accept = input('');
   readonly multiple = input(false, { transform: booleanAttribute });
@@ -368,7 +377,7 @@ export class KrnFileUpload {
   readonly value = input<readonly File[] | undefined>(undefined);
 
   private readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
-  readonly #controller = new KrnUploadController(this, this.fileInput);
+  readonly #controller = new KrnUploadController(this, this.fileInput, this.resolvedLocale);
   protected readonly rejections = this.#controller.rejections;
   protected readonly controlValue = this.#controller.controlValue;
   protected readonly formDisabled = this.#controller.formDisabled;
@@ -456,7 +465,7 @@ export class KrnFileUpload {
         tabindex="-1"
         (change)="selectFromInput($event)"
       />
-      <strong [id]="dropLabelId()">{{ dropLabel() }}</strong>
+      <strong [id]="dropLabelId()">{{ resolvedDropLabel() }}</strong>
       @if (description()) {
         <span class="krn-message" [id]="descriptionId()">{{ description() }}</span>
       }
@@ -475,7 +484,7 @@ export class KrnFileUpload {
         (blur)="touch()"
         (click)="openPicker()"
       >
-        {{ label() }}
+        {{ resolvedLabel() }}
       </button>
       @if (a11y.required()) {
         <span class="krn-visually-hidden" [id]="requiredDescriptionId()">
@@ -517,8 +526,13 @@ export class KrnDropUpload {
   protected readonly platform = inject(KRN_PLATFORM);
   protected readonly translations = inject(KRN_TRANSLATIONS);
   readonly id = input('');
-  readonly label = input(this.translations.forms.chooseFiles);
-  readonly locale = input(inject(KRN_LOCALE));
+  readonly label = input<string | undefined>();
+  protected readonly resolvedLabel = krnInputFallback(
+    this.label,
+    () => this.translations.forms.chooseFiles,
+  );
+  readonly locale = input<string | undefined>();
+  private readonly resolvedLocale = krnResolvedLocale(this.locale);
   readonly description = input('');
   readonly accept = input('');
   readonly multiple = input(false, { transform: booleanAttribute });
@@ -530,14 +544,18 @@ export class KrnDropUpload {
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly filesChange = output<readonly File[]>();
   readonly rejected = output<readonly KrnUploadRejection[]>();
-  readonly dropLabel = input(this.translations.forms.dropFilesHere);
+  readonly dropLabel = input<string | undefined>();
+  protected readonly resolvedDropLabel = krnInputFallback(
+    this.dropLabel,
+    () => this.translations.forms.dropFilesHere,
+  );
   readonly ariaLabelledBy = input('');
   readonly ariaDescribedBy = input('');
   readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
   readonly value = input<readonly File[] | undefined>(undefined);
 
   private readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
-  readonly #controller = new KrnUploadController(this, this.fileInput);
+  readonly #controller = new KrnUploadController(this, this.fileInput, this.resolvedLocale);
   protected readonly rejections = this.#controller.rejections;
   protected readonly controlValue = this.#controller.controlValue;
   protected readonly formDisabled = this.#controller.formDisabled;

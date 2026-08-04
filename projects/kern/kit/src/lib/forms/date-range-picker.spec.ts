@@ -1,6 +1,7 @@
 import { Component, signal, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { KRN_DATE_TIME_SNAPSHOT } from '@kern-ui/angular/core';
 import { KrnDateRangePicker } from './date-time-controls';
 import type { KrnDateRangeValue } from './form-types';
 
@@ -49,6 +50,23 @@ describe('KrnDateRangePicker', () => {
   afterEach(() => {
     vi.restoreAllMocks();
     TestBed.resetTestingModule();
+  });
+
+  it('uses the current day for a control created after the hydration seed day', async () => {
+    const dateNow = vi.spyOn(Date, 'now').mockReturnValue(Date.UTC(2026, 0, 1, 12));
+    const snapshot = TestBed.inject(KRN_DATE_TIME_SNAPSHOT);
+    const currentNow = Date.UTC(2026, 0, 4, 12);
+    dateNow.mockReturnValue(currentNow);
+
+    const fixture = TestBed.createComponent(KrnDateRangePicker);
+    fixture.componentInstance.open.set(true);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(snapshot.todayAt(currentNow)).not.toBe(snapshot.today);
+    expect(
+      (fixture.nativeElement.querySelector('[data-today="true"]') as HTMLElement).dataset['date'],
+    ).toBe(snapshot.todayAt(currentNow));
   });
 
   it('normalizes standalone ranges and emits only structural user changes', async () => {

@@ -73,9 +73,9 @@
       "name": "navigationLabel",
       "property": "navigationLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.layout.primaryNavigation",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the navigation state or control.",
       "descriptionSource": "inferred"
     },
@@ -83,9 +83,9 @@
       "name": "closeNavigationLabel",
       "property": "closeNavigationLabel",
       "kind": "input",
-      "type": "string",
+      "type": "string | undefined",
       "required": false,
-      "defaultValue": "this.translations.layout.closeNavigation",
+      "defaultValue": "undefined",
       "description": "Human-readable copy for the close navigation state or control.",
       "descriptionSource": "inferred"
     }
@@ -343,7 +343,7 @@
         "componentId": "responsive-application-shell",
         "publicName": "closeNavigationLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
@@ -367,7 +367,7 @@
         "componentId": "responsive-application-shell",
         "publicName": "navigationLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | undefined",
         "code": "accessibility-copy",
         "reason": "This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string.",
         "evidence": {
