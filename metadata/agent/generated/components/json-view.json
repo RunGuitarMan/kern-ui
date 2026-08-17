@@ -1,0 +1,500 @@
+{
+  "id": "json-view",
+  "name": "JSON View",
+  "category": "Data display",
+  "kind": "component",
+  "selector": "krn-json-view",
+  "selectors": ["krn-json-view"],
+  "selectorDeprecations": [],
+  "symbol": "KrnJsonView",
+  "canonicalSymbol": "KrnJsonView",
+  "canonicalId": "json-view",
+  "owner": "kit",
+  "importPath": "@kern-ui/angular/kit",
+  "aliases": {
+    "symbols": [],
+    "selectors": [],
+    "componentIds": []
+  },
+  "summary": "JSON View. Renders structured JSON as a collapsible, searchable tree with typed syntax color and selectable text.",
+  "acceptanceStates": [
+    "default",
+    "overflow",
+    "long text",
+    "dark",
+    "high contrast",
+    "compact",
+    "RTL",
+    "mobile",
+    "hover",
+    "focus-visible",
+    "active",
+    "disabled",
+    "collapsed",
+    "expanded",
+    "highlighted",
+    "wrapped"
+  ],
+  "lifecycle": {
+    "status": "beta",
+    "compatibility": "Available for controlled production evaluation; the contract may still be refined.",
+    "owner": "kern/data-display",
+    "evidenceProfile": "beta-promotion",
+    "requiredEvidence": [
+      "api-baseline",
+      "unit",
+      "ssr",
+      "hydration",
+      "keyboard",
+      "automated-a11y",
+      "manual-at",
+      "visual-regression",
+      "runtime-performance",
+      "consumer-harness"
+    ],
+    "rationale": "The structured-data tree remains beta while large-payload performance, controlled expansion, and manual assistive-technology evidence mature.",
+    "knownLimitations": [
+      "The component intentionally renders read-only JSON-compatible values and does not provide inline editing or schema validation.",
+      "Consumers must paginate, summarize, or virtualize very large payloads before passing them to the component."
+    ],
+    "promotionCriteria": [
+      "Public API, defaults, aliases and entrypoint ownership are reviewed.",
+      "SSR/hydration, keyboard, accessibility and visual evidence are linked.",
+      "Runtime scale limits and consumer testing contract are documented.",
+      "Migration impact is classified before lifecycle promotion."
+    ],
+    "replacement": null
+  },
+  "api": [
+    {
+      "name": "data",
+      "property": "data",
+      "kind": "input",
+      "type": "KrnJsonValue",
+      "required": true,
+      "defaultValue": "required",
+      "description": "JSON-compatible value rendered as an inspectable hierarchy.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "ariaLabel",
+      "property": "ariaLabel",
+      "kind": "input",
+      "type": "string",
+      "required": false,
+      "defaultValue": "'JSON'",
+      "description": "Accessible name announced for the JSON tree.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "defaultExpandDepth",
+      "property": "defaultExpandDepth",
+      "kind": "input",
+      "type": "number",
+      "required": false,
+      "defaultValue": "2",
+      "description": "Number of hierarchy levels expanded when data first renders.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "expandedPaths",
+      "property": "expandedPaths",
+      "kind": "model",
+      "type": "ReadonlyArray<string> | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Controlled JSON-pointer paths, or null to keep expansion state internal.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "highlightPattern",
+      "property": "highlightPattern",
+      "kind": "input",
+      "type": "RegExp | string | null",
+      "required": false,
+      "defaultValue": "null",
+      "description": "Text or regular expression highlighted in visible keys and primitive values.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "sortKeys",
+      "property": "sortKeys",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Sorts object keys with locale-aware comparison while preserving array order.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "wrap",
+      "property": "wrap",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Allows long keys and values to wrap inside the viewport.",
+      "descriptionSource": "source"
+    }
+  ],
+  "slots": [],
+  "forms": {
+    "controlValueAccessor": false,
+    "validator": false,
+    "valueType": null,
+    "reactiveForms": false,
+    "templateDrivenForms": false,
+    "stateInputs": [],
+    "notes": []
+  },
+  "a11y": {
+    "target": "WCAG 2.2 AA",
+    "keyboard": [
+      "Arrow Up and Arrow Down move the single roving focus through visible properties.",
+      "Arrow Right expands or enters a branch; Arrow Left collapses it or returns to its parent.",
+      "Home and End move to the first and last visible property; Enter or Space toggles a branch."
+    ],
+    "notes": [
+      "The tree exposes each visible property's hierarchy, sibling position, and expansion state.",
+      "Keys and typed primitive values remain text, so syntax color is never the only representation.",
+      "Highlighting uses a visible mark treatment without replacing the underlying accessible text."
+    ],
+    "manualValidationRequired": true
+  },
+  "ssr": {
+    "status": "supported-with-consumer-validation",
+    "hydration": "consumer-validation-required",
+    "evidenceScope": "library-docs-route-smoke",
+    "notes": [
+      "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+    ]
+  },
+  "examples": [
+    {
+      "id": "minimal",
+      "title": "Inspectable deployment payload",
+      "kind": "minimal",
+      "language": "typescript",
+      "code": "/**\n * Inspectable deployment payload\n *\n * Render structured JSON with accessible tree navigation and a highlighted field.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnJsonView } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-json-view-agent-example',\n  standalone: true,\n  imports: [KrnJsonView],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-json-view\n      ariaLabel=\"Deployment payload\"\n      [data]=\"payload\"\n      [defaultExpandDepth]=\"2\"\n      highlightPattern=\"active\"\n    />\n  `,\n})\nexport class KernJsonViewAgentExample {\n  readonly payload = {\n    deployment: { id: 'dep_01KERN', active: true, replicas: 3 },\n    region: 'eu-central',\n    error: null,\n  } as const;\n}\n\nvoid bootstrapApplication(KernJsonViewAgentExample);\n",
+      "verification": "compiled",
+      "source": "examples/json-view.ts"
+    }
+  ],
+  "related": ["badge", "status-badge", "chip", "tag"],
+  "keywords": [
+    "json-view",
+    "JSON View",
+    "Data display",
+    "krn-json-view",
+    "KrnJsonView",
+    "data",
+    "ariaLabel",
+    "defaultExpandDepth",
+    "expandedPaths",
+    "highlightPattern",
+    "sortKeys",
+    "wrap"
+  ],
+  "guidance": {
+    "useWhen": "Use JSON View when users need to inspect structured application data while preserving hierarchy, value types, and copyable text.",
+    "avoidWhen": "Use Code Block for an immutable source excerpt, and a purpose-built detail view when users must edit or act on individual fields."
+  },
+  "commonMistakes": [
+    "Do not omit required inputs: `data`.",
+    "Importing from an undeclared family path or a source implementation file.",
+    "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+    "Assuming the documentation SSR build replaces validation of the consuming application."
+  ],
+  "checklist": [
+    "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+    "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+    "Provide every required input and keep collection identities stable across updates.",
+    "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+    "Test the consuming SSR/hydration route when server rendering is enabled.",
+    "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+  ],
+  "documentation": {
+    "route": "components/json-view",
+    "json": "components/json-view.json",
+    "markdown": "components/json-view.md"
+  },
+  "playground": {
+    "route": "preview/json-view",
+    "scenarios": ["default"],
+    "controls": [
+      {
+        "key": "defaultExpandDepth",
+        "label": "Expanded depth",
+        "kind": "number",
+        "defaultValue": 2,
+        "testValue": 3,
+        "description": "Sets how many JSON hierarchy levels open initially.",
+        "binding": {
+          "kind": "input",
+          "publicName": "defaultExpandDepth",
+          "syntax": "property"
+        },
+        "min": 0,
+        "max": 8,
+        "step": 1
+      },
+      {
+        "key": "highlightPattern",
+        "label": "Highlight",
+        "kind": "text",
+        "defaultValue": "",
+        "testValue": "Alternate value",
+        "description": "Highlights matching text; an empty value leaves the JSON unmarked.",
+        "binding": {
+          "kind": "input",
+          "publicName": "highlightPattern",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "sortKeys",
+        "label": "Sort keys",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Sorts object keys alphabetically.",
+        "binding": {
+          "kind": "input",
+          "publicName": "sortKeys",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "wrap",
+        "label": "Wrap lines",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Wraps long keys and values inside the viewport.",
+        "binding": {
+          "kind": "input",
+          "publicName": "wrap",
+          "syntax": "property"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "default",
+        "label": "Default",
+        "scenario": "default",
+        "args": {}
+      },
+      {
+        "id": "overflow",
+        "label": "overflow",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "overflow",
+          "label": "overflow",
+          "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+        }
+      },
+      {
+        "id": "long-text",
+        "label": "long text",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "content",
+          "mode": "long-text",
+          "label": "long text",
+          "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "scenario": "default",
+        "environment": {
+          "theme": "dark"
+        },
+        "args": {}
+      },
+      {
+        "id": "high-contrast",
+        "label": "High contrast",
+        "scenario": "default",
+        "environment": {
+          "theme": "high-contrast"
+        },
+        "args": {}
+      },
+      {
+        "id": "compact",
+        "label": "Compact",
+        "scenario": "default",
+        "environment": {
+          "density": "compact"
+        },
+        "args": {}
+      },
+      {
+        "id": "rtl",
+        "label": "RTL",
+        "scenario": "default",
+        "environment": {
+          "direction": "rtl"
+        },
+        "args": {}
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile",
+        "scenario": "default",
+        "environment": {
+          "viewport": "phone"
+        },
+        "args": {}
+      },
+      {
+        "id": "hover",
+        "label": "hover",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "hover",
+          "description": "The fixture exposes the hover status without claiming a public component input."
+        }
+      },
+      {
+        "id": "focus-visible",
+        "label": "focus-visible",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "focus-visible",
+          "description": "The fixture exposes the focus visible status without claiming a public component input."
+        }
+      },
+      {
+        "id": "active",
+        "label": "active",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "active",
+          "description": "The fixture exposes the active status without claiming a public component input."
+        }
+      },
+      {
+        "id": "disabled",
+        "label": "disabled",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "disabled",
+          "description": "The fixture exposes the disabled status without claiming a public component input."
+        }
+      },
+      {
+        "id": "collapsed",
+        "label": "collapsed",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "constrained",
+          "label": "collapsed",
+          "description": "The fixture uses an alternate deterministic boundary to expose layout behavior."
+        }
+      },
+      {
+        "id": "expanded",
+        "label": "expanded",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "layout",
+          "mode": "expanded",
+          "label": "expanded",
+          "description": "The fixture uses an alternate deterministic boundary to expose layout behavior."
+        }
+      },
+      {
+        "id": "highlighted",
+        "label": "highlighted",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "highlighted",
+          "description": "The fixture exposes the highlighted status without claiming a public component input."
+        }
+      },
+      {
+        "id": "wrapped",
+        "label": "wrapped",
+        "scenario": "default",
+        "args": {},
+        "fixtureEffect": {
+          "kind": "status",
+          "mode": "neutral",
+          "label": "wrapped",
+          "description": "The fixture exposes the wrapped status without claiming a public component input."
+        }
+      }
+    ],
+    "apiCoverage": {
+      "publicInputsAndModels": 7,
+      "controlled": 4,
+      "excluded": 3,
+      "unclassified": 0
+    },
+    "exclusions": [
+      {
+        "componentId": "json-view",
+        "publicName": "ariaLabel",
+        "kind": "input",
+        "type": "string",
+        "code": "accessibility-copy",
+        "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+        "evidence": {
+          "category": "a11y-test",
+          "pointer": "tests/a11y/accessibility.spec.ts#json-view"
+        }
+      },
+      {
+        "componentId": "json-view",
+        "publicName": "data",
+        "kind": "input",
+        "type": "KrnJsonValue",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/json-view?state=default"
+        }
+      },
+      {
+        "componentId": "json-view",
+        "publicName": "expandedPaths",
+        "kind": "model",
+        "type": "ReadonlyArray<string> | null",
+        "code": "complex-data",
+        "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/json-view?state=default"
+        }
+      }
+    ]
+  }
+}

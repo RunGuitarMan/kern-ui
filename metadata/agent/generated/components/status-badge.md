@@ -43,10 +43,12 @@ void bootstrapApplication(KernStatusBadgeAgentExample);
 
 ## API
 
-| Name     | Kind  | Type             | Required | Default     | Description                                                                      |
-| -------- | ----- | ---------------- | -------- | ----------- | -------------------------------------------------------------------------------- |
-| `tone`   | input | `KrnDisplayTone` | no       | `'neutral'` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
-| `status` | input | `boolean`        | no       | `false`     | Current domain status rendered as visible text and a non-color-only treatment.   |
+| Name      | Kind  | Type              | Required | Default     | Description                                                                      |
+| --------- | ----- | ----------------- | -------- | ----------- | -------------------------------------------------------------------------------- |
+| `tone`    | input | `KrnDisplayTone`  | no       | `'neutral'` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
+| `status`  | input | `boolean`         | no       | `false`     | Current domain status rendered as visible text and a non-color-only treatment.   |
+| `variant` | input | `KrnBadgeVariant` | no       | `'subtle'`  | Controls whether the badge uses a filled, tinted, or outlined surface.           |
+| `size`    | input | `KrnBadgeSize`    | no       | `'md'`      | Controls the badge height, horizontal padding, and text density.                 |
 
 ## Deprecated selectors
 
@@ -54,6 +56,7 @@ _No deprecated selectors._
 
 ## Content slots
 
+- `[krnBadgeIcon]` — Projects content matching [krnBadgeIcon].
 - `*` — Projects default component content.
 
 ## Angular Forms
@@ -94,8 +97,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/status-badge`
 
 Scenarios: `default`.
-Public API coverage: 2/2
-directly controlled; 0 exact exclusions; 0 unclassified.
+Public API coverage: 2/4
+directly controlled; 2 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -108,7 +111,10 @@ component inputs or models.
 
 Exact API exclusions:
 
-_No excluded public API members._
+| Public API | Category     | Evidence                                              | Reason                                                                                           |
+| ---------- | ------------ | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `size`     | complex-data | `specimen-fixture:preview/status-badge?state=default` | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture. |
+| `variant`  | complex-data | `specimen-fixture:preview/status-badge?state=default` | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture. |
 
 Presets:
 

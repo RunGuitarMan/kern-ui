@@ -58,6 +58,8 @@ void bootstrapApplication(KernBottomSheetAgentExample);
 | Name              | Kind   | Type                           | Required | Default            | Description                                                              |
 | ----------------- | ------ | ------------------------------ | -------- | ------------------ | ------------------------------------------------------------------------ |
 | `open`            | model  | `boolean`                      | no       | `false`            | Controls whether the disclosure or overlay surface is visible.           |
+| `modal`           | input  | `boolean`                      | no       | `true`             | Blocks background interaction and traps focus while the sheet is open.   |
+| `size`            | input  | `KrnOverlaySize`               | no       | `'md'`             | Selects the sheet's maximum block size.                                  |
 | `title`           | input  | `string`                       | no       | `''`               | Visible title that also names the component surface or data view.        |
 | `description`     | input  | `string`                       | no       | `''`               | Visible supporting description for the component content.                |
 | `eyebrow`         | input  | `string`                       | no       | `''`               | Human-readable copy for the eyebrow state or control.                    |
@@ -125,7 +127,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/bottom-sheet`
 
 Scenarios: `default`.
-Public API coverage: 7/13
+Public API coverage: 9/15
 directly controlled; 6 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -135,6 +137,8 @@ component inputs or models.
 | Argument         | Control | Default               | Test value                        | Binding                           | Description                                                                                      |
 | ---------------- | ------- | --------------------- | --------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------ |
 | `open`           | boolean | `false`               | `true`                            | model `open`                      | Opens the mobile action sheet.                                                                   |
+| `size`           | select  | `"md"`                | `"sm"`                            | input `size` (property)           | Sets the sheet width.                                                                            |
+| `modal`          | boolean | `true`                | `false`                           | input `modal` (property)          | Controls focus trapping and backdrop behavior.                                                   |
 | `closeOnOutside` | select  | `null`                | `true`                            | input `closeOnOutside` (property) | Inherits the surface policy by default, or explicitly enables or disables outside-click closing. |
 | `closeOnEscape`  | boolean | `true`                | `false`                           | input `closeOnEscape` (property)  | Configures the component closeOnEscape contract.                                                 |
 | `description`    | text    | `""`                  | `"Alternate value"`               | input `description` (property)    | Configures the component description contract.                                                   |

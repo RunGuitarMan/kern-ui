@@ -1242,6 +1242,11 @@ test.describe('Quality regressions: data and feedback', () => {
           .getAnimations()
           .filter((animation) => 'transitionProperty' in animation)
           .map((animation) => String(Reflect.get(animation, 'transitionProperty')));
+      const translateDistance = (value: string): number =>
+        [...value.matchAll(/-?\d*\.?\d+/g)].reduce(
+          (distance, match) => Math.max(distance, Math.abs(Number.parseFloat(match[0]))),
+          0,
+        );
       const backdropStyle = getComputedStyle(backdropElement);
       const surfaceStyle = getComputedStyle(surfaceElement);
 
@@ -1250,7 +1255,7 @@ test.describe('Quality regressions: data and feedback', () => {
         backdropTransitions: transitionProperties(backdropElement),
         surfaceOpacity: Number.parseFloat(surfaceStyle.opacity),
         surfaceTransitions: transitionProperties(surfaceElement),
-        surfaceTranslate: Math.abs(Number.parseFloat(surfaceStyle.translate) || 0),
+        surfaceTranslate: translateDistance(surfaceStyle.translate),
       };
     });
 
@@ -1328,6 +1333,11 @@ test.describe('Quality regressions: data and feedback', () => {
           .getAnimations()
           .filter((animation) => 'transitionProperty' in animation)
           .map((animation) => String(Reflect.get(animation, 'transitionProperty')));
+      const translateDistance = (value: string): number =>
+        [...value.matchAll(/-?\d*\.?\d+/g)].reduce(
+          (distance, match) => Math.max(distance, Math.abs(Number.parseFloat(match[0]))),
+          0,
+        );
       const backdropStyle = getComputedStyle(backdropElement);
       const surfaceStyle = getComputedStyle(surfaceElement);
 
@@ -1336,7 +1346,7 @@ test.describe('Quality regressions: data and feedback', () => {
         backdropTransitions: transitionProperties(backdropElement),
         surfaceOpacity: Number.parseFloat(surfaceStyle.opacity),
         surfaceTransitions: transitionProperties(surfaceElement),
-        surfaceTranslate: Math.abs(Number.parseFloat(surfaceStyle.translate) || 0),
+        surfaceTranslate: translateDistance(surfaceStyle.translate),
       };
     });
 
@@ -1474,7 +1484,7 @@ test.describe('Quality regressions: data and feedback', () => {
 
     const viewport = page.locator('krn-toast-viewport');
     const renderedToasts = viewport.locator('.toast');
-    await expect(renderedToasts).toHaveCount(4);
+    await expect(renderedToasts).toHaveCount(3);
     await expect(viewport.locator('.stack-controls')).toContainText('12 notifications');
     expect(
       await renderedToasts.count(),
@@ -1483,13 +1493,25 @@ test.describe('Quality regressions: data and feedback', () => {
 
     await renderedToasts.first().getByRole('button', { name: 'Dismiss notification' }).click();
     await expect(viewport.locator('.stack-controls')).toContainText('11 notifications');
-    await expect(renderedToasts).toHaveCount(4);
+    await expect(renderedToasts).toHaveCount(3);
 
     await viewport.locator('.toast-stack').hover();
     await page.waitForTimeout(320);
     const firstToast = await renderedToasts.nth(0).boundingBox();
     const secondToast = await renderedToasts.nth(1).boundingBox();
-    expect((secondToast?.y ?? 0) - (firstToast?.y ?? 0)).toBeGreaterThan(40);
+    expect(Math.abs((secondToast?.y ?? 0) - (firstToast?.y ?? 0))).toBeGreaterThan(40);
+
+    if (!firstToast || !secondToast) throw new Error('Expanded toast geometry was unavailable.');
+    const upperToast = firstToast.y < secondToast.y ? firstToast : secondToast;
+    const lowerToast = firstToast.y < secondToast.y ? secondToast : firstToast;
+    await page.mouse.move(
+      firstToast.x + firstToast.width / 2,
+      (upperToast.y + upperToast.height + lowerToast.y) / 2,
+    );
+    for (let sample = 0; sample < 6; sample += 1) {
+      await page.waitForTimeout(40);
+      await expect(viewport).toHaveAttribute('data-pointer-expanded', 'true');
+    }
 
     await viewport.getByRole('button', { name: 'Clear all' }).click();
     await expect(renderedToasts).toHaveCount(0);

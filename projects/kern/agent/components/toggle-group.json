@@ -63,6 +63,26 @@
       "descriptionSource": "source"
     },
     {
+      "name": "size",
+      "property": "size",
+      "kind": "input",
+      "type": "KrnSize",
+      "required": false,
+      "defaultValue": "'sm'",
+      "description": "Controls the density of every direct toggle without repeating size on each item.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "connected",
+      "property": "connected",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Joins direct toggles into a single segmented control surface.",
+      "descriptionSource": "source"
+    },
+    {
       "name": "multiple",
       "property": "multiple",
       "kind": "input",
@@ -167,6 +187,8 @@
     "controlled string values",
     "scoped group defaults",
     "orientation",
+    "size",
+    "connected",
     "multiple",
     "disabled",
     "values"
@@ -223,6 +245,46 @@
             "value": "vertical"
           }
         ]
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "kind": "select",
+        "defaultValue": "sm",
+        "testValue": "md",
+        "description": "Changes the segmented control density.",
+        "binding": {
+          "kind": "input",
+          "publicName": "size",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "sm",
+            "value": "sm"
+          },
+          {
+            "label": "md",
+            "value": "md"
+          },
+          {
+            "label": "lg",
+            "value": "lg"
+          }
+        ]
+      },
+      {
+        "key": "connected",
+        "label": "Connected",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Joins toggles into one segmented surface.",
+        "binding": {
+          "kind": "input",
+          "publicName": "connected",
+          "syntax": "property"
+        }
       },
       {
         "key": "multiple",
@@ -379,11 +441,19 @@
           "label": "unselected",
           "description": "The fixture exposes the unselected status without claiming a public component input."
         }
+      },
+      {
+        "id": "separated",
+        "label": "Separated",
+        "scenario": "default",
+        "args": {
+          "connected": false
+        }
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 4,
-      "controlled": 3,
+      "publicInputsAndModels": 6,
+      "controlled": 5,
       "excluded": 1,
       "unclassified": 0
     },

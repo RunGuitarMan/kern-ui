@@ -14,14 +14,14 @@
     "projects/showcase/src/lib/catalog.ts"
   ],
   "summary": {
-    "selectorCount": 149,
-    "implementationCount": 138,
-    "componentCount": 133,
+    "selectorCount": 150,
+    "implementationCount": 139,
+    "componentCount": 134,
     "directiveCount": 5,
-    "catalogEntryCount": 131,
-    "catalogReviewUnitCount": 126,
+    "catalogEntryCount": 132,
+    "catalogReviewUnitCount": 127,
     "catalogAliasEntryCount": 5,
-    "publicReviewUnitCount": 135,
+    "publicReviewUnitCount": 136,
     "supportingReviewUnitCount": 9,
     "internalImplementationCount": 3,
     "selectorAliasCount": 11
@@ -1043,6 +1043,44 @@
           "status": "stable",
           "owner": "kern/data-display",
           "evidenceProfile": "stable-release"
+        }
+      ],
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "catalogIds": []
+      }
+    },
+    {
+      "reviewUnit": "kit:KrnJsonView",
+      "symbol": "KrnJsonView",
+      "kind": "component",
+      "entrypoint": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "family": "data-display",
+      "source": "projects/kern/kit/src/lib/data-display/json-view.ts",
+      "visibility": "public",
+      "role": "catalog",
+      "reviewWith": null,
+      "lifecycle": {
+        "status": "beta",
+        "owner": "kern/kit"
+      },
+      "canonicalPublicSymbol": "KrnJsonView",
+      "canonicalSelector": "krn-json-view",
+      "publicSymbols": ["KrnJsonView"],
+      "selectors": ["krn-json-view"],
+      "selectorDeprecations": [],
+      "catalog": [
+        {
+          "id": "json-view",
+          "name": "JSON View",
+          "category": "Data display",
+          "selector": "krn-json-view",
+          "variantOf": null,
+          "status": "beta",
+          "owner": "kern/data-display",
+          "evidenceProfile": "beta-promotion"
         }
       ],
       "aliases": {

@@ -1,11 +1,11 @@
 :host {
   --_badge-accent: var(--krn-color-text-muted, #5d6470);
   --_badge-color: var(--krn-color-text-muted, #5d6470);
-  --_badge-tint: var(--krn-color-surface-subtle, #f5f6f7);
+  --_badge-on: var(--krn-color-text-inverse, #fff);
   --_badge-surface: color-mix(
-    in oklch,
-    var(--krn-color-surface-raised, #fff) 86%,
-    var(--_badge-tint)
+    in oklab,
+    var(--_badge-accent) 16%,
+    var(--krn-color-surface-raised, #fff)
   );
   display: inline-flex;
   min-block-size: 1.5rem;
@@ -13,12 +13,14 @@
   align-items: center;
   justify-content: center;
   gap: 0.375rem;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid color-mix(in oklch, var(--_badge-accent) 22%, var(--krn-color-border, #d8dbe0));
+  padding: 0.2rem 0.625rem;
+  border: 1px solid color-mix(in oklab, var(--_badge-accent) 36%, var(--krn-color-border, #d8dbe0));
   border-radius: var(--krn-radius-pill, 999px);
   color: var(--_badge-color);
   background: var(--_badge-surface);
-  box-shadow: inset 0 1px color-mix(in oklch, white 5%, transparent);
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 6%),
+    0 1px 2px rgb(0 0 0 / 4%);
   font: 600 0.75rem/1.05 var(--krn-font-family-ui, sans-serif);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.004em;
@@ -26,38 +28,63 @@
   vertical-align: middle;
   white-space: nowrap;
 }
+:host([data-size='sm']) {
+  min-block-size: 1.25rem;
+  gap: 0.25rem;
+  padding: 0.125rem 0.45rem;
+  font-size: 0.6875rem;
+}
+:host([data-size='lg']) {
+  min-block-size: 1.75rem;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8125rem;
+}
+:host([data-variant='outline']) {
+  --_badge-surface: transparent;
+}
+:host([data-variant='solid']) {
+  --_badge-color: var(--_badge-on);
+  --_badge-surface: var(--_badge-accent);
+  border-color: var(--_badge-accent);
+  box-shadow: none;
+}
 :host([data-tone='brand']) {
   --_badge-accent: var(--krn-color-primary, #4666da);
   --_badge-color: var(--krn-color-brand-text, #1d4ed8);
-  --_badge-tint: var(--krn-color-primary-subtle, #e8edff);
+  --_badge-on: var(--krn-color-on-primary, #fff);
 }
 :host([data-tone='success']) {
   --_badge-accent: var(--krn-color-success, #176b49);
   --_badge-color: var(--krn-color-success-text, #176b49);
-  --_badge-tint: var(--krn-color-success-subtle, #e4f3eb);
+  --_badge-on: var(--krn-color-on-success, #fff);
 }
 :host([data-tone='warning']) {
   --_badge-accent: var(--krn-color-warning, #725400);
   --_badge-color: var(--krn-color-warning-text, #725400);
-  --_badge-tint: var(--krn-color-warning-subtle, #fff1d0);
+  --_badge-on: var(--krn-color-on-warning, #fff);
 }
 :host([data-tone='danger']) {
   --_badge-accent: var(--krn-color-danger, #a02d2d);
   --_badge-color: var(--krn-color-danger-text, #a02d2d);
-  --_badge-tint: var(--krn-color-danger-subtle, #fce8ea);
+  --_badge-on: var(--krn-color-on-danger, #fff);
 }
 :host([data-tone='info']) {
   --_badge-accent: var(--krn-color-info, #245ea7);
   --_badge-color: var(--krn-color-info-text, #245ea7);
-  --_badge-tint: var(--krn-color-info-subtle, #e5effb);
+  --_badge-on: var(--krn-color-on-info, #fff);
 }
 :host([data-status]) {
   --_badge-surface: color-mix(
-    in oklch,
-    var(--krn-color-surface-raised, #fff) 94%,
-    var(--_badge-tint)
+    in oklab,
+    var(--_badge-accent) 14%,
+    var(--krn-color-surface-raised, #fff)
   );
-  border-color: color-mix(in oklch, var(--_badge-accent) 18%, var(--krn-color-border, #d8dbe0));
+  border-color: color-mix(in oklab, var(--_badge-accent) 30%, var(--krn-color-border, #d8dbe0));
+}
+:host([data-variant='solid']) {
+  --_badge-color: var(--_badge-on);
+  --_badge-surface: var(--_badge-accent);
+  border-color: var(--_badge-accent);
 }
 .marker {
   inline-size: 0.4rem;
@@ -66,7 +93,22 @@
   border: 0;
   border-radius: 50%;
   background: var(--_badge-accent);
-  box-shadow: 0 0 0 2px color-mix(in oklch, var(--_badge-accent) 11%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--_badge-accent) 15%, transparent);
+}
+.icon:empty {
+  display: none;
+}
+.icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+.icon > :where(svg) {
+  inline-size: 1em;
+  block-size: 1em;
+}
+:host([data-variant='solid']) .marker {
+  background: currentColor;
+  box-shadow: 0 0 0 2px color-mix(in oklab, currentColor 18%, transparent);
 }
 @media (forced-colors: active) {
   :host {

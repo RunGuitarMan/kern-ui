@@ -61,6 +61,26 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "modal",
+      "property": "modal",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Blocks background interaction and traps focus while the alert dialog is open.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "size",
+      "property": "size",
+      "kind": "input",
+      "type": "KrnOverlaySize",
+      "required": false,
+      "defaultValue": "'md'",
+      "description": "Selects the alert dialog's maximum inline size.",
+      "descriptionSource": "source"
+    },
+    {
       "name": "title",
       "property": "title",
       "kind": "input",
@@ -265,6 +285,7 @@
     "modal",
     "focus trap",
     "open",
+    "size",
     "title",
     "description",
     "eyebrow",
@@ -382,6 +403,19 @@
         "binding": {
           "kind": "input",
           "publicName": "eyebrow",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "modal",
+        "label": "Modal",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Configures the component modal contract.",
+        "binding": {
+          "kind": "input",
+          "publicName": "modal",
           "syntax": "property"
         }
       },
@@ -538,9 +572,9 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 13,
-      "controlled": 7,
-      "excluded": 6,
+      "publicInputsAndModels": 15,
+      "controlled": 8,
+      "excluded": 7,
       "unclassified": 0
     },
     "exclusions": [
@@ -609,6 +643,18 @@
         "publicName": "restoreFocus",
         "kind": "input",
         "type": "HTMLElement | false | null",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/alert-dialog?state=default"
+        }
+      },
+      {
+        "componentId": "alert-dialog",
+        "publicName": "size",
+        "kind": "input",
+        "type": "KrnOverlaySize",
         "code": "complex-data",
         "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
         "evidence": {

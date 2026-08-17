@@ -353,6 +353,14 @@ export const KERN_RUNTIME_COMPONENTS = {
     source: 'projects/kern/kit/src/lib/actions/toggle-group.ts',
     api: [
       {
+        name: 'connected',
+        property: 'connected',
+        kind: 'input',
+        type: 'boolean',
+        required: false,
+        defaultValue: 'true',
+      },
+      {
         name: 'disabled',
         property: 'disabled',
         kind: 'input',
@@ -375,6 +383,14 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOrientation',
         required: false,
         defaultValue: 'this.options.orientation',
+      },
+      {
+        name: 'size',
+        property: 'size',
+        kind: 'input',
+        type: 'KrnSize',
+        required: false,
+        defaultValue: "'sm'",
       },
       {
         name: 'values',
@@ -429,6 +445,14 @@ export const KERN_RUNTIME_COMPONENTS = {
     kind: 'component',
     source: 'projects/kern/kit/src/lib/feedback/alert.ts',
     api: [
+      {
+        name: 'appearance',
+        property: 'appearance',
+        kind: 'input',
+        type: 'KrnAlertAppearance',
+        required: false,
+        defaultValue: "'subtle'",
+      },
       {
         name: 'dismissible',
         property: 'dismissible',
@@ -557,6 +581,14 @@ export const KERN_RUNTIME_COMPONENTS = {
         defaultValue: "'first-tabbable'",
       },
       {
+        name: 'modal',
+        property: 'modal',
+        kind: 'input',
+        type: 'boolean',
+        required: false,
+        defaultValue: 'true',
+      },
+      {
         name: 'restoreFocus',
         property: 'restoreFocus',
         kind: 'input',
@@ -571,6 +603,14 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+      },
+      {
+        name: 'size',
+        property: 'size',
+        kind: 'input',
+        type: 'KrnOverlaySize',
+        required: false,
+        defaultValue: "'md'",
       },
       {
         name: 'title',
@@ -1086,6 +1126,14 @@ export const KERN_RUNTIME_COMPONENTS = {
     source: 'projects/kern/kit/src/lib/data-display/badge.ts',
     api: [
       {
+        name: 'size',
+        property: 'size',
+        kind: 'input',
+        type: 'KrnBadgeSize',
+        required: false,
+        defaultValue: "'md'",
+      },
+      {
         name: 'status',
         property: 'status',
         kind: 'input',
@@ -1101,6 +1149,14 @@ export const KERN_RUNTIME_COMPONENTS = {
         required: false,
         defaultValue: "'neutral'",
       },
+      {
+        name: 'variant',
+        property: 'variant',
+        kind: 'input',
+        type: 'KrnBadgeVariant',
+        required: false,
+        defaultValue: "'subtle'",
+      },
     ],
   },
   'krn-banner': {
@@ -1108,6 +1164,14 @@ export const KERN_RUNTIME_COMPONENTS = {
     kind: 'component',
     source: 'projects/kern/kit/src/lib/feedback/alert.ts',
     api: [
+      {
+        name: 'appearance',
+        property: 'appearance',
+        kind: 'input',
+        type: 'KrnAlertAppearance',
+        required: false,
+        defaultValue: "'subtle'",
+      },
       {
         name: 'dismissible',
         property: 'dismissible',
@@ -1394,6 +1458,14 @@ export const KERN_RUNTIME_COMPONENTS = {
         defaultValue: "'first-tabbable'",
       },
       {
+        name: 'modal',
+        property: 'modal',
+        kind: 'input',
+        type: 'boolean',
+        required: false,
+        defaultValue: 'true',
+      },
+      {
         name: 'restoreFocus',
         property: 'restoreFocus',
         kind: 'input',
@@ -1408,6 +1480,14 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+      },
+      {
+        name: 'size',
+        property: 'size',
+        kind: 'input',
+        type: 'KrnOverlaySize',
+        required: false,
+        defaultValue: "'md'",
       },
       {
         name: 'title',
@@ -3989,6 +4069,14 @@ export const KERN_RUNTIME_COMPONENTS = {
         defaultValue: "'first-tabbable'",
       },
       {
+        name: 'modal',
+        property: 'modal',
+        kind: 'input',
+        type: 'boolean',
+        required: false,
+        defaultValue: 'true',
+      },
+      {
         name: 'restoreFocus',
         property: 'restoreFocus',
         kind: 'input',
@@ -4003,6 +4091,14 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+      },
+      {
+        name: 'size',
+        property: 'size',
+        kind: 'input',
+        type: 'KrnOverlaySize',
+        required: false,
+        defaultValue: "'md'",
       },
       {
         name: 'title',
@@ -4449,6 +4545,14 @@ export const KERN_RUNTIME_COMPONENTS = {
         defaultValue: "'first-tabbable'",
       },
       {
+        name: 'modal',
+        property: 'modal',
+        kind: 'input',
+        type: 'boolean',
+        required: false,
+        defaultValue: 'false',
+      },
+      {
         name: 'restoreFocus',
         property: 'restoreFocus',
         kind: 'input',
@@ -4463,6 +4567,22 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+      },
+      {
+        name: 'side',
+        property: 'side',
+        kind: 'input',
+        type: 'KrnOverlaySide',
+        required: false,
+        defaultValue: "'right'",
+      },
+      {
+        name: 'size',
+        property: 'size',
+        kind: 'input',
+        type: 'KrnOverlaySize',
+        required: false,
+        defaultValue: "'md'",
       },
       {
         name: 'title',
@@ -5400,6 +5520,69 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+      },
+    ],
+  },
+  'krn-json-view': {
+    className: 'KrnJsonView',
+    kind: 'component',
+    source: 'projects/kern/kit/src/lib/data-display/json-view.ts',
+    api: [
+      {
+        name: 'ariaLabel',
+        property: 'ariaLabel',
+        kind: 'input',
+        type: 'string',
+        required: false,
+        defaultValue: "'JSON'",
+      },
+      {
+        name: 'data',
+        property: 'data',
+        kind: 'input',
+        type: 'KrnJsonValue',
+        required: true,
+        defaultValue: 'required',
+      },
+      {
+        name: 'defaultExpandDepth',
+        property: 'defaultExpandDepth',
+        kind: 'input',
+        type: 'number',
+        required: false,
+        defaultValue: '2',
+      },
+      {
+        name: 'highlightPattern',
+        property: 'highlightPattern',
+        kind: 'input',
+        type: 'RegExp | string | null',
+        required: false,
+        defaultValue: 'null',
+      },
+      {
+        name: 'sortKeys',
+        property: 'sortKeys',
+        kind: 'input',
+        type: 'boolean',
+        required: false,
+        defaultValue: 'false',
+      },
+      {
+        name: 'wrap',
+        property: 'wrap',
+        kind: 'input',
+        type: 'boolean',
+        required: false,
+        defaultValue: 'true',
+      },
+      {
+        name: 'expandedPaths',
+        property: 'expandedPaths',
+        kind: 'model',
+        type: 'ReadonlyArray<string> | null',
+        required: false,
+        defaultValue: 'null',
       },
     ],
   },
@@ -6385,6 +6568,14 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+      },
+      {
+        name: 'size',
+        property: 'size',
+        kind: 'input',
+        type: 'KrnSize',
+        required: false,
+        defaultValue: "'md'",
       },
       {
         name: 'stringify',
@@ -8506,6 +8697,14 @@ export const KERN_RUNTIME_COMPONENTS = {
         defaultValue: 'null',
       },
       {
+        name: 'size',
+        property: 'size',
+        kind: 'input',
+        type: 'KrnSize',
+        required: false,
+        defaultValue: "'md'",
+      },
+      {
         name: 'stringify',
         property: 'stringify',
         kind: 'input',
@@ -8944,7 +9143,7 @@ export const KERN_RUNTIME_COMPONENTS = {
         kind: 'input',
         type: 'number',
         required: false,
-        defaultValue: '12',
+        defaultValue: '8',
       },
       {
         name: 'maxVisible',
@@ -8952,7 +9151,7 @@ export const KERN_RUNTIME_COMPONENTS = {
         kind: 'input',
         type: 'number',
         required: false,
-        defaultValue: '4',
+        defaultValue: '3',
       },
       {
         name: 'position',
@@ -8960,7 +9159,7 @@ export const KERN_RUNTIME_COMPONENTS = {
         kind: 'input',
         type: 'KrnToastPosition',
         required: false,
-        defaultValue: "'top-end'",
+        defaultValue: "'bottom-end'",
       },
       {
         name: 'expanded',
@@ -9228,6 +9427,14 @@ export const KERN_RUNTIME_COMPONENTS = {
     source: 'projects/kern/kit/src/lib/data-display/badge.ts',
     api: [
       {
+        name: 'size',
+        property: 'size',
+        kind: 'input',
+        type: 'KrnBadgeSize',
+        required: false,
+        defaultValue: "'md'",
+      },
+      {
         name: 'status',
         property: 'status',
         kind: 'input',
@@ -9242,6 +9449,14 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnDisplayTone',
         required: false,
         defaultValue: "'neutral'",
+      },
+      {
+        name: 'variant',
+        property: 'variant',
+        kind: 'input',
+        type: 'KrnBadgeVariant',
+        required: false,
+        defaultValue: "'subtle'",
       },
     ],
   },
@@ -10293,7 +10508,7 @@ export const KERN_RUNTIME_COMPONENTS = {
         kind: 'input',
         type: 'number',
         required: false,
-        defaultValue: '12',
+        defaultValue: '8',
       },
       {
         name: 'maxVisible',
@@ -10301,7 +10516,7 @@ export const KERN_RUNTIME_COMPONENTS = {
         kind: 'input',
         type: 'number',
         required: false,
-        defaultValue: '4',
+        defaultValue: '3',
       },
       {
         name: 'position',
@@ -10309,7 +10524,7 @@ export const KERN_RUNTIME_COMPONENTS = {
         kind: 'input',
         type: 'KrnToastPosition',
         required: false,
-        defaultValue: "'top-end'",
+        defaultValue: "'bottom-end'",
       },
       {
         name: 'expanded',
@@ -10348,7 +10563,7 @@ export const KERN_RUNTIME_COMPONENTS = {
         kind: 'input',
         type: 'number',
         required: false,
-        defaultValue: '12',
+        defaultValue: '8',
       },
       {
         name: 'maxVisible',
@@ -10356,7 +10571,7 @@ export const KERN_RUNTIME_COMPONENTS = {
         kind: 'input',
         type: 'number',
         required: false,
-        defaultValue: '4',
+        defaultValue: '3',
       },
       {
         name: 'position',
@@ -10364,7 +10579,7 @@ export const KERN_RUNTIME_COMPONENTS = {
         kind: 'input',
         type: 'KrnToastPosition',
         required: false,
-        defaultValue: "'top-end'",
+        defaultValue: "'bottom-end'",
       },
       {
         name: 'expanded',

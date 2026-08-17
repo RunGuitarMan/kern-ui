@@ -26,6 +26,7 @@
       [tabindex]="isDisabled() ? -1 : tabIndex()"
       (expandedChange)="setOpen($event)"
     >
+      <span class="krn-select-leading"><ng-content select="[krnPrefix]" /></span>
       @if (selectedOption(); as selected) {
         <span class="krn-select-value">
           @if (selectedTemplate(); as template) {
@@ -40,7 +41,10 @@
       } @else {
         <span class="krn-select-placeholder">{{ resolvedPlaceholder() }}</span>
       }
-      <span class="krn-select-chevron" aria-hidden="true"></span>
+      <span class="krn-select-trailing">
+        <ng-content select="[krnSuffix]" />
+        <span class="krn-select-chevron" aria-hidden="true"></span>
+      </span>
     </button>
   </span>
   @if (open() && optionsState() !== 'ready') {

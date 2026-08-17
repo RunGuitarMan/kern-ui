@@ -19,15 +19,15 @@ const index = JSON.parse(
 );
 
 describe('KERN agent DX examples', () => {
-  it('keeps the closed recipe registry aligned with all 131 catalog entries', () => {
+  it('keeps the closed recipe registry aligned with all 132 catalog entries', () => {
     const componentIds = manifest.components.map((component) => component.id).sort();
     const recipeIds = Object.keys(KERN_AGENT_EXAMPLE_RECIPES).sort();
     const exampleIds = index.examples.map((example) => example.id).sort();
 
-    assert.equal(componentIds.length, 131);
+    assert.equal(componentIds.length, 132);
     assert.deepEqual(recipeIds, componentIds);
     assert.deepEqual(exampleIds, componentIds);
-    assert.equal(index.total, 131);
+    assert.equal(index.total, 132);
   });
 
   it('keeps generated repository and package sources deterministic', () => {
@@ -37,7 +37,7 @@ describe('KERN agent DX examples', () => {
       timeout: 30_000,
     });
     assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
-    assert.match(result.stdout, /131 explicit standalone sources/);
+    assert.match(result.stdout, /132 explicit standalone sources/);
     assert.match(result.stdout, /is current/);
   });
 

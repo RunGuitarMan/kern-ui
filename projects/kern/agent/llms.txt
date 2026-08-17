@@ -144,6 +144,7 @@ KERN is a standalone Angular component library for enterprise product interfaces
 - [Data Grid](./components/data-grid.md): `krn-data-grid`, beta, import from `@kern-ui/angular/addon-grid`.
 - [Calendar](./components/calendar.md): `krn-calendar`, stable, import from `@kern-ui/angular/kit`.
 - [Code Block](./components/code-block.md): `krn-code-block`, stable, import from `@kern-ui/angular/kit`.
+- [JSON View](./components/json-view.md): `krn-json-view`, beta, import from `@kern-ui/angular/kit`.
 - [Keyboard Shortcut](./components/keyboard-shortcut.md): `krn-keyboard-shortcut`, stable, import from `@kern-ui/angular/kit`.
 - [Meter](./components/meter.md): `krn-meter`, stable, import from `@kern-ui/angular/kit`.
 - [Rating](./components/rating.md): `krn-rating`, stable, import from `@kern-ui/angular/kit`.

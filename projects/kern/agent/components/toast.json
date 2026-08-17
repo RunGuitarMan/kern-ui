@@ -54,7 +54,7 @@
       "kind": "input",
       "type": "KrnToastPosition",
       "required": false,
-      "defaultValue": "'top-end'",
+      "defaultValue": "'bottom-end'",
       "description": "Logical placement of the component relative to its owning surface.",
       "descriptionSource": "inferred"
     },
@@ -64,7 +64,7 @@
       "kind": "input",
       "type": "number",
       "required": false,
-      "defaultValue": "4",
+      "defaultValue": "3",
       "description": "Upper or lower bound applied to the visible value.",
       "descriptionSource": "inferred"
     },
@@ -74,7 +74,7 @@
       "kind": "input",
       "type": "number",
       "required": false,
-      "defaultValue": "12",
+      "defaultValue": "8",
       "description": "Upper or lower bound applied to the expanded value.",
       "descriptionSource": "inferred"
     },
@@ -207,8 +207,8 @@
         "key": "maxExpanded",
         "label": "Max Expanded",
         "kind": "number",
-        "defaultValue": 12,
-        "testValue": 13,
+        "defaultValue": 8,
+        "testValue": 9,
         "description": "Configures the component maxExpanded contract.",
         "binding": {
           "kind": "input",
@@ -223,8 +223,8 @@
         "key": "maxVisible",
         "label": "Max Visible",
         "kind": "number",
-        "defaultValue": 4,
-        "testValue": 5,
+        "defaultValue": 3,
+        "testValue": 4,
         "description": "Configures the component maxVisible contract.",
         "binding": {
           "kind": "input",
@@ -239,7 +239,7 @@
         "key": "position",
         "label": "Position",
         "kind": "select",
-        "defaultValue": "top-end",
+        "defaultValue": "bottom-end",
         "testValue": "top-start",
         "description": "Configures the component position contract.",
         "binding": {

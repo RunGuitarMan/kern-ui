@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import type { Provider } from '@angular/core';
 import { KRN_PLATFORM } from '@kern-ui/angular/cdk';
-import type { KrnOrientation } from './action-types';
+import type { KrnOrientation, KrnSize } from './action-types';
 import { KRN_TOGGLE_GROUP } from './toggle-group-controller';
 import type { KrnToggleGroupController, KrnToggleGroupItem } from './toggle-group-controller';
 import { KRN_TOGGLE_GROUP_OPTIONS } from './toggle-group-options';
@@ -34,6 +34,8 @@ const TOGGLE_GROUP_PROVIDER: Provider = {
     '[attr.aria-orientation]': 'orientation()',
     '[attr.data-multiple]': 'multiple()',
     '[attr.data-orientation]': 'orientation()',
+    '[attr.data-connected]': 'connected()',
+    '[attr.data-size]': 'size()',
     '(keydown)': 'navigate($event)',
   },
   templateUrl: './toggle-group.html',
@@ -49,6 +51,10 @@ export class KrnToggleGroup {
 
   /** Defines both the visual layout axis and the toolbar Arrow-key axis. */
   readonly orientation = input<KrnOrientation>(this.options.orientation);
+  /** Controls the density of every direct toggle without repeating size on each item. */
+  readonly size = input<KrnSize>('sm');
+  /** Joins direct toggles into a single segmented control surface. */
+  readonly connected = input(true, { transform: booleanAttribute });
   /** Allows multiple pressed values; false exposes at most one effective pressed value. */
   readonly multiple = input(this.options.multiple, { transform: booleanAttribute });
   /** Disables every registered native toggle and all group-owned value transitions. */

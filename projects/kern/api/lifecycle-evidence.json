@@ -7,7 +7,7 @@
     "agent-aot-verifier": {
       "path": "tools/verify-kern-agent-dx.mjs",
       "anchor": "Packed-package AOT emitted",
-      "sha256": "sha256-3bdac20326190f75bfde46ba58194948e6c813ec6a9648585b293d2d1efd2ff3"
+      "sha256": "sha256-60a1ec3e95023300122b40dcd938f17f837bb11ff799372cf33a8ba4e426cb32"
     },
     "agent-example-autocomplete": {
       "path": "projects/kern/agent/examples/autocomplete.ts",
@@ -74,6 +74,11 @@
       "anchor": "",
       "sha256": "sha256-26bf7642875f88c48a34e05625bfb79c877f6de3c1663c71301b66e9678c961b"
     },
+    "agent-example-json-view": {
+      "path": "projects/kern/agent/examples/json-view.ts",
+      "anchor": "",
+      "sha256": "sha256-87182862e21a8f7cd3aa9bf7799c8138de8728a75a2fbbb416acfe0e9d45c8c1"
+    },
     "agent-example-line-chart": {
       "path": "projects/kern/agent/examples/line-chart.ts",
       "anchor": "",
@@ -117,7 +122,7 @@
     "api-kit": {
       "path": "projects/kern/api/kit.api.d.ts",
       "anchor": "",
-      "sha256": "sha256-abc9734482df2df1adbd3d682acce3939bbe441ccdd52e19b97f99d47a40fdf2"
+      "sha256": "sha256-712e739d7d16adf6a029ddcbf0b5306834889cb762f7057b7a2e9f2d30b1360d"
     },
     "api-patterns": {
       "path": "projects/kern/api/patterns.api.d.ts",
@@ -132,17 +137,17 @@
     "catalog-hydration": {
       "path": "tests/e2e/component-specimens.spec.ts",
       "anchor": "hydration preserves every server-rendered specimen node",
-      "sha256": "sha256-de5db89e2bb2b3babf62b1404ad1197a7e01e697f68202e45d1cedfe81d8aa6a"
+      "sha256": "sha256-c5bbad0de45a8ab182de6181bcc7fd3d930c5f68b45b50b71733c29b9d12bd87"
     },
     "catalog-keyboard": {
       "path": "tests/e2e/quality-regressions.spec.ts",
       "anchor": "visible enabled controls are keyboard reachable without focus geometry shifts",
-      "sha256": "sha256-be614d726b4832612f41faddb874626b9dddd6eea8f905acf3842eefda6dbc82"
+      "sha256": "sha256-13bfe9287fcba8d6aad4eeae89ed7b9e8a1bba050dd91722cdfaa84d8373e62b"
     },
     "catalog-ssr": {
       "path": "tests/e2e/component-specimens.spec.ts",
       "anchor": "raw SSR response contains every exact catalog route specimen",
-      "sha256": "sha256-de5db89e2bb2b3babf62b1404ad1197a7e01e697f68202e45d1cedfe81d8aa6a"
+      "sha256": "sha256-c5bbad0de45a8ab182de6181bcc7fd3d930c5f68b45b50b71733c29b9d12bd87"
     },
     "catalog-visual": {
       "path": "tests/visual/visual.spec.ts",
@@ -297,12 +302,12 @@
     "unit-alert": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnAlert",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-alert-dialog": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnAlertDialog",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-app-shell": {
       "path": "projects/kern/kit/src/lib/layout/app-shell.spec.ts",
@@ -342,7 +347,7 @@
     "unit-banner": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnBanner",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-bar-chart": {
       "path": "projects/kern/addon-charts/src/lib/charts/charts.spec.ts",
@@ -357,7 +362,7 @@
     "unit-bottom-sheet": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnBottomSheet",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-breadcrumbs": {
       "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
@@ -412,7 +417,7 @@
     "unit-circular-progress": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnCircularProgress",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-cluster": {
       "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
@@ -442,7 +447,7 @@
     "unit-confirmation-pattern": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnConfirmation",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-container": {
       "path": "projects/kern/kit/src/lib/layout/container.spec.ts",
@@ -497,7 +502,7 @@
     "unit-dialog": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnDialog",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-disclosure": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
@@ -522,7 +527,7 @@
     "unit-drawer": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnDrawer",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-dropdown-button": {
       "path": "projects/kern/kit/src/lib/actions/dropdown-button.spec.ts",
@@ -532,12 +537,12 @@
     "unit-empty-state": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnEmptyState",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-error-state": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnErrorState",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-file-upload": {
       "path": "projects/kern/kit/src/lib/forms/file-upload.spec.ts",
@@ -582,7 +587,7 @@
     "unit-hover-card": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnHoverCard",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-icon-button": {
       "path": "projects/kern/kit/src/lib/actions/icon-button.spec.ts",
@@ -593,6 +598,11 @@
       "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
       "anchor": "KrnInline",
       "sha256": "sha256-0a234944c165df35f357990e5014723972abfd23dac320b3c89534c09a1b5d53"
+    },
+    "unit-json-view": {
+      "path": "projects/kern/kit/src/lib/data-display/json-view.spec.ts",
+      "anchor": "KrnJsonView",
+      "sha256": "sha256-10f45b882b37c438a8151cc4c7545cb701dc964c0e5da6c2ca9576601e7451a8"
     },
     "unit-keyboard-shortcut": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
@@ -627,7 +637,7 @@
     "unit-loading-overlay": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnLoadingOverlay",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-login-form": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
@@ -707,7 +717,7 @@
     "unit-popover": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnPopover",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-profile-form": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
@@ -717,7 +727,7 @@
     "unit-progress-bar": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnProgressBar",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-radio": {
       "path": "projects/kern/kit/src/lib/forms/radio.spec.ts",
@@ -792,7 +802,7 @@
     "unit-skeleton": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnSkeleton",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-skip-link": {
       "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
@@ -812,7 +822,7 @@
     "unit-spinner": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnSpinner",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-split-button": {
       "path": "projects/kern/kit/src/lib/actions/split-button.spec.ts",
@@ -847,7 +857,7 @@
     "unit-success-state": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnSuccessState",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-switch": {
       "path": "projects/kern/kit/src/lib/forms/switch.spec.ts",
@@ -897,7 +907,7 @@
     "unit-toast": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnToastViewport",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-toggle-button": {
       "path": "projects/kern/kit/src/lib/actions/toggle-button.spec.ts",
@@ -912,7 +922,7 @@
     "unit-tooltip": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnTooltip",
-      "sha256": "sha256-b39ddaaff47150368ae22beffa1b122889fc96e78a5349dbfdb1ef3958b4aaf3"
+      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
     },
     "unit-tree": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
@@ -973,7 +983,7 @@
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
       "source": "projects/kern/kit/src/lib/feedback/alert.ts",
-      "sourceSha256": "sha256-07ee253d1db624d6610e0ee37ee5562653e57cfd5cf930f53767e994cde6c63f",
+      "sourceSha256": "sha256-6aa12764d1c6d186cd76e73fae3e30d1304329cc6cb6d584656ea5cffd1ae86d",
       "symbol": "KrnAlert",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -994,7 +1004,7 @@
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
       "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
-      "sourceSha256": "sha256-7593ae33262bef5496ea0e201f97032a8ff0a623e24c0e7498735a91f66eceaa",
+      "sourceSha256": "sha256-8c56af6909a79abce878a85e2e125d94a1f81bb88cd5182b78b9f0d6f48b6254",
       "symbol": "KrnAlertDialog",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -1057,7 +1067,7 @@
       "evidenceProfile": "beta-promotion",
       "owner": "kern/forms",
       "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
-      "sourceSha256": "sha256-23e052c1c68392b95440ae4bdf3f8215c3b40958abe2c853d4adad1d1c6da946",
+      "sourceSha256": "sha256-e1fcfcbe8bfc01e8d0c1fad9c480eeb60909531b1c2eed69cf90f55f45b562fe",
       "symbol": "KrnAutocomplete",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -1158,7 +1168,7 @@
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
       "source": "projects/kern/kit/src/lib/data-display/badge.ts",
-      "sourceSha256": "sha256-5b2bc6a2b8761c6b88215e078ba8a0cfa0960b1604f645211c2a293aa2b81963",
+      "sourceSha256": "sha256-28b1f556e959a3db2616cab9950fdc819531bb04ede352163c4967d15e391bb0",
       "symbol": "KrnBadge",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -1179,7 +1189,7 @@
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
       "source": "projects/kern/kit/src/lib/feedback/alert.ts",
-      "sourceSha256": "sha256-07ee253d1db624d6610e0ee37ee5562653e57cfd5cf930f53767e994cde6c63f",
+      "sourceSha256": "sha256-6aa12764d1c6d186cd76e73fae3e30d1304329cc6cb6d584656ea5cffd1ae86d",
       "symbol": "KrnBanner",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -1259,7 +1269,7 @@
       "evidenceProfile": "beta-promotion",
       "owner": "kern/feedback",
       "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
-      "sourceSha256": "sha256-7593ae33262bef5496ea0e201f97032a8ff0a623e24c0e7498735a91f66eceaa",
+      "sourceSha256": "sha256-8c56af6909a79abce878a85e2e125d94a1f81bb88cd5182b78b9f0d6f48b6254",
       "symbol": "KrnBottomSheet",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -1486,7 +1496,7 @@
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
       "source": "projects/kern/kit/src/lib/data-display/badge.ts",
-      "sourceSha256": "sha256-5b2bc6a2b8761c6b88215e078ba8a0cfa0960b1604f645211c2a293aa2b81963",
+      "sourceSha256": "sha256-28b1f556e959a3db2616cab9950fdc819531bb04ede352163c4967d15e391bb0",
       "symbol": "KrnChip",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -1608,7 +1618,7 @@
       "evidenceProfile": "beta-promotion",
       "owner": "kern/forms",
       "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
-      "sourceSha256": "sha256-23e052c1c68392b95440ae4bdf3f8215c3b40958abe2c853d4adad1d1c6da946",
+      "sourceSha256": "sha256-e1fcfcbe8bfc01e8d0c1fad9c480eeb60909531b1c2eed69cf90f55f45b562fe",
       "symbol": "KrnCombobox",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -2010,7 +2020,7 @@
       "evidenceProfile": "beta-promotion",
       "owner": "kern/feedback",
       "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
-      "sourceSha256": "sha256-7593ae33262bef5496ea0e201f97032a8ff0a623e24c0e7498735a91f66eceaa",
+      "sourceSha256": "sha256-8c56af6909a79abce878a85e2e125d94a1f81bb88cd5182b78b9f0d6f48b6254",
       "symbol": "KrnDialog",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -2159,7 +2169,7 @@
       "evidenceProfile": "beta-promotion",
       "owner": "kern/feedback",
       "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
-      "sourceSha256": "sha256-7593ae33262bef5496ea0e201f97032a8ff0a623e24c0e7498735a91f66eceaa",
+      "sourceSha256": "sha256-8c56af6909a79abce878a85e2e125d94a1f81bb88cd5182b78b9f0d6f48b6254",
       "symbol": "KrnDrawer",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -2484,6 +2494,48 @@
       ]
     },
     {
+      "id": "json-view",
+      "status": "beta",
+      "evidenceProfile": "beta-promotion",
+      "owner": "kern/data-display",
+      "source": "projects/kern/kit/src/lib/data-display/json-view.ts",
+      "sourceSha256": "sha256-a7c7e7b1e0b5e1869e8d4b9e50029ae78b021ff27baf7205bb11242516d84237",
+      "symbol": "KrnJsonView",
+      "evidence": [
+        { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
+        { "kind": "unit", "status": "linked", "artifactIds": ["unit-json-view"] },
+        { "kind": "ssr", "status": "linked", "artifactIds": ["catalog-ssr", "ssr-server"] },
+        {
+          "kind": "hydration",
+          "status": "linked",
+          "artifactIds": ["catalog-hydration", "ssr-server"]
+        },
+        {
+          "kind": "keyboard",
+          "status": "linked",
+          "artifactIds": ["catalog-keyboard", "unit-json-view"]
+        },
+        { "kind": "automated-a11y", "status": "linked", "artifactIds": ["catalog-a11y"] },
+        {
+          "kind": "manual-at",
+          "status": "pending",
+          "recordIds": [],
+          "reason": "The component is not yet materialized in the required manual AT matrix."
+        },
+        { "kind": "visual-regression", "status": "linked", "artifactIds": ["catalog-visual"] },
+        {
+          "kind": "runtime-performance",
+          "status": "pending",
+          "reason": "No component-family runtime budget is linked yet."
+        },
+        {
+          "kind": "consumer-harness",
+          "status": "linked",
+          "artifactIds": ["agent-example-json-view", "agent-aot-verifier"]
+        }
+      ]
+    },
+    {
       "id": "keyboard-shortcut",
       "status": "stable",
       "evidenceProfile": "stable-release",
@@ -2780,7 +2832,7 @@
       "evidenceProfile": "beta-promotion",
       "owner": "kern/forms",
       "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
-      "sourceSha256": "sha256-23e052c1c68392b95440ae4bdf3f8215c3b40958abe2c853d4adad1d1c6da946",
+      "sourceSha256": "sha256-e1fcfcbe8bfc01e8d0c1fad9c480eeb60909531b1c2eed69cf90f55f45b562fe",
       "symbol": "KrnMultiSelect",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -2838,7 +2890,7 @@
       "evidenceProfile": "stable-release",
       "owner": "kern/forms",
       "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
-      "sourceSha256": "sha256-23e052c1c68392b95440ae4bdf3f8215c3b40958abe2c853d4adad1d1c6da946",
+      "sourceSha256": "sha256-e1fcfcbe8bfc01e8d0c1fad9c480eeb60909531b1c2eed69cf90f55f45b562fe",
       "symbol": "KrnNativeSelect",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -3274,7 +3326,7 @@
       "evidenceProfile": "beta-promotion",
       "owner": "kern/forms",
       "source": "projects/kern/kit/src/lib/forms/select-controls.ts",
-      "sourceSha256": "sha256-23e052c1c68392b95440ae4bdf3f8215c3b40958abe2c853d4adad1d1c6da946",
+      "sourceSha256": "sha256-e1fcfcbe8bfc01e8d0c1fad9c480eeb60909531b1c2eed69cf90f55f45b562fe",
       "symbol": "KrnSelect",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -3549,7 +3601,7 @@
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
       "source": "projects/kern/kit/src/lib/data-display/badge.ts",
-      "sourceSha256": "sha256-5b2bc6a2b8761c6b88215e078ba8a0cfa0960b1604f645211c2a293aa2b81963",
+      "sourceSha256": "sha256-28b1f556e959a3db2616cab9950fdc819531bb04ede352163c4967d15e391bb0",
       "symbol": "KrnBadge",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -3675,7 +3727,7 @@
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
       "source": "projects/kern/kit/src/lib/data-display/badge.ts",
-      "sourceSha256": "sha256-5b2bc6a2b8761c6b88215e078ba8a0cfa0960b1604f645211c2a293aa2b81963",
+      "sourceSha256": "sha256-28b1f556e959a3db2616cab9950fdc819531bb04ede352163c4967d15e391bb0",
       "symbol": "KrnChip",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -3814,7 +3866,7 @@
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
       "source": "projects/kern/kit/src/lib/feedback/toast.ts",
-      "sourceSha256": "sha256-08ff49893f3586690a1cf44da910d59238e80b35f2c43fb1bcc394a72f3f7531",
+      "sourceSha256": "sha256-f07247c946dff019a48c23d6129699c7ac50bb2a13a7829344e0bb832ac45875",
       "symbol": "KrnToastViewport",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -3856,7 +3908,7 @@
       "evidenceProfile": "stable-release",
       "owner": "kern/actions",
       "source": "projects/kern/kit/src/lib/actions/toggle-group.ts",
-      "sourceSha256": "sha256-f50d0c74e6d530128126e4987b78faf2c637c2d7865964e0b70fc9901a58c9e0",
+      "sourceSha256": "sha256-a6e62dc46aaa72be42bcf89ed3ae9b65ce29895d060591c05545a3216e02d950",
       "symbol": "KrnToggleGroup",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },

@@ -58,6 +58,8 @@ void bootstrapApplication(KernToggleGroupAgentExample);
 | Name          | Kind  | Type                    | Required | Default                    | Description                                                                         |
 | ------------- | ----- | ----------------------- | -------- | -------------------------- | ----------------------------------------------------------------------------------- |
 | `orientation` | input | `KrnOrientation`        | no       | `this.options.orientation` | Defines both the visual layout axis and the toolbar Arrow-key axis.                 |
+| `size`        | input | `KrnSize`               | no       | `'sm'`                     | Controls the density of every direct toggle without repeating size on each item.    |
+| `connected`   | input | `boolean`               | no       | `true`                     | Joins direct toggles into a single segmented control surface.                       |
 | `multiple`    | input | `boolean`               | no       | `this.options.multiple`    | Allows multiple pressed values; false exposes at most one effective pressed value.  |
 | `disabled`    | input | `boolean`               | no       | `false`                    | Disables every registered native toggle and all group-owned value transitions.      |
 | `values`      | model | `ReadonlyArray<string>` | no       | `[]`                       | Controlled stable string values; user transitions always emit a fresh frozen array. |
@@ -117,7 +119,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/toggle-group`
 
 Scenarios: `default`.
-Public API coverage: 3/4
+Public API coverage: 5/6
 directly controlled; 1 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -127,6 +129,8 @@ component inputs or models.
 | Argument      | Control | Default        | Test value   | Binding                        | Description                                                                         |
 | ------------- | ------- | -------------- | ------------ | ------------------------------ | ----------------------------------------------------------------------------------- |
 | `orientation` | select  | `"horizontal"` | `"vertical"` | input `orientation` (property) | Changes the visual layout and Arrow-key axis exposed by the toolbar.                |
+| `size`        | select  | `"sm"`         | `"md"`       | input `size` (property)        | Changes the segmented control density.                                              |
+| `connected`   | boolean | `true`         | `false`      | input `connected` (property)   | Joins toggles into one segmented surface.                                           |
 | `multiple`    | boolean | `false`        | `true`       | input `multiple` (property)    | Allows more than one toggle to be selected.                                         |
 | `disabled`    | boolean | `false`        | `true`       | input `disabled` (property)    | Disables every native toggle button while preserving perceivable toolbar semantics. |
 
@@ -152,6 +156,7 @@ Presets:
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
 - `selected` — selected; scenario `default`; fixture effect `status/neutral` — selected: The fixture exposes the selected status without claiming a public component input..
 - `unselected` — unselected; scenario `default`; fixture effect `status/neutral` — unselected: The fixture exposes the unselected status without claiming a public component input..
+- `separated` — Separated; scenario `default`; `connected=false`.
 
 ## Related
 

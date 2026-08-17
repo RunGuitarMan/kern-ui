@@ -12,6 +12,8 @@ import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import { krnInputFallback } from '../reactive-input';
 
 export type KrnDisplayTone = 'neutral' | 'brand' | 'info' | 'success' | 'warning' | 'danger';
+export type KrnBadgeVariant = 'solid' | 'subtle' | 'outline';
+export type KrnBadgeSize = 'sm' | 'md' | 'lg';
 
 @Component({
   selector: 'krn-badge, krn-status-badge',
@@ -19,6 +21,8 @@ export type KrnDisplayTone = 'neutral' | 'brand' | 'info' | 'success' | 'warning
   host: {
     '[attr.data-tone]': 'tone()',
     '[attr.data-status]': 'status() ? "" : null',
+    '[attr.data-variant]': 'variant()',
+    '[attr.data-size]': 'size()',
   },
   templateUrl: './badge.html',
   styleUrl: './badge.css',
@@ -26,6 +30,10 @@ export type KrnDisplayTone = 'neutral' | 'brand' | 'info' | 'success' | 'warning
 export class KrnBadge {
   readonly tone = input<KrnDisplayTone>('neutral');
   readonly status = input(false, { transform: booleanAttribute });
+  /** Controls whether the badge uses a filled, tinted, or outlined surface. */
+  readonly variant = input<KrnBadgeVariant>('subtle');
+  /** Controls the badge height, horizontal padding, and text density. */
+  readonly size = input<KrnBadgeSize>('md');
 }
 
 @Component({

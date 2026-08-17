@@ -12,6 +12,6 @@ it('keeps the compiler-backed agent contract deterministic and current', () => {
     timeout: 30_000,
   });
   assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
-  assert.match(result.stdout, /131 components/);
+  assert.match(result.stdout, /132 components/);
   assert.match(result.stdout, /agent contract is current/);
 });

@@ -5,7 +5,7 @@
   "generatedFrom": "tools/agent-dx/example-recipes.mjs",
   "requiredStyles": "@kern-ui/angular/styles/kern.css",
   "verificationCommand": "node tools/verify-kern-agent-dx.mjs",
-  "total": 131,
+  "total": 132,
   "examples": [
     {
       "id": "app-shell",
@@ -1568,6 +1568,20 @@
       "riskTags": ["controlled-state"],
       "assertions": ["[(copied)]=\"copied\""],
       "sourceDigest": "sha256-606d8372693187709c8b9a0452d6617478f58bead073418261afd86e5db340a4"
+    },
+    {
+      "id": "json-view",
+      "title": "Inspectable deployment payload",
+      "scenario": "Render structured JSON with accessible tree navigation and a highlighted field.",
+      "selector": "krn-json-view",
+      "symbol": "KrnJsonView",
+      "importPath": "@kern-ui/angular/kit",
+      "className": "KernJsonViewAgentExample",
+      "source": "json-view.ts",
+      "verification": "packed-package-aot",
+      "riskTags": ["data-display", "keyboard", "typed-collection"],
+      "assertions": ["[data]=\"payload\"", "[defaultExpandDepth]=\"2\""],
+      "sourceDigest": "sha256-87182862e21a8f7cd3aa9bf7799c8138de8728a75a2fbbb416acfe0e9d45c8c1"
     },
     {
       "id": "keyboard-shortcut",

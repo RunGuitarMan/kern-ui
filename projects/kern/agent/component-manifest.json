@@ -73,7 +73,7 @@
       "@kern-ui/angular/patterns",
       "@kern-ui/angular/testing"
     ],
-    "sourceDigest": "sha256-8f2f19de85bc431edc8a64d172accce86d638b5a4e7df26f0ce70f4fe0bce7f7"
+    "sourceDigest": "sha256-8bbbcd8c8aec9148ec8bb0c5e0d0599e8f80360d493d64282d56ab069d53ee06"
   },
   "components": [
     {
@@ -9320,6 +9320,26 @@
           "descriptionSource": "source"
         },
         {
+          "name": "size",
+          "property": "size",
+          "kind": "input",
+          "type": "KrnSize",
+          "required": false,
+          "defaultValue": "'sm'",
+          "description": "Controls the density of every direct toggle without repeating size on each item.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "connected",
+          "property": "connected",
+          "kind": "input",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "Joins direct toggles into a single segmented control surface.",
+          "descriptionSource": "source"
+        },
+        {
           "name": "multiple",
           "property": "multiple",
           "kind": "input",
@@ -9424,6 +9444,8 @@
         "controlled string values",
         "scoped group defaults",
         "orientation",
+        "size",
+        "connected",
         "multiple",
         "disabled",
         "values"
@@ -9480,6 +9502,46 @@
                 "value": "vertical"
               }
             ]
+          },
+          {
+            "key": "size",
+            "label": "Size",
+            "kind": "select",
+            "defaultValue": "sm",
+            "testValue": "md",
+            "description": "Changes the segmented control density.",
+            "binding": {
+              "kind": "input",
+              "publicName": "size",
+              "syntax": "property"
+            },
+            "options": [
+              {
+                "label": "sm",
+                "value": "sm"
+              },
+              {
+                "label": "md",
+                "value": "md"
+              },
+              {
+                "label": "lg",
+                "value": "lg"
+              }
+            ]
+          },
+          {
+            "key": "connected",
+            "label": "Connected",
+            "kind": "boolean",
+            "defaultValue": true,
+            "testValue": false,
+            "description": "Joins toggles into one segmented surface.",
+            "binding": {
+              "kind": "input",
+              "publicName": "connected",
+              "syntax": "property"
+            }
           },
           {
             "key": "multiple",
@@ -9636,11 +9698,19 @@
               "label": "unselected",
               "description": "The fixture exposes the unselected status without claiming a public component input."
             }
+          },
+          {
+            "id": "separated",
+            "label": "Separated",
+            "scenario": "default",
+            "args": {
+              "connected": false
+            }
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 4,
-          "controlled": 3,
+          "publicInputsAndModels": 6,
+          "controlled": 5,
           "excluded": 1,
           "unclassified": 0
         },
@@ -19677,6 +19747,16 @@
           "descriptionSource": "inferred"
         },
         {
+          "name": "size",
+          "property": "size",
+          "kind": "input",
+          "type": "KrnSize",
+          "required": false,
+          "defaultValue": "'md'",
+          "description": "Controls the custom select trigger height and content density.",
+          "descriptionSource": "source"
+        },
+        {
           "name": "placeholder",
           "property": "placeholder",
           "kind": "input",
@@ -19917,7 +19997,20 @@
           "descriptionSource": "inferred"
         }
       ],
-      "slots": [],
+      "slots": [
+        {
+          "name": "krnPrefix",
+          "selector": "[krnPrefix]",
+          "required": false,
+          "description": "Projects content matching [krnPrefix]."
+        },
+        {
+          "name": "krnSuffix",
+          "selector": "[krnSuffix]",
+          "required": false,
+          "description": "Projects content matching [krnSuffix]."
+        }
+      ],
       "forms": {
         "controlValueAccessor": true,
         "validator": true,
@@ -19985,6 +20078,7 @@
         "typed option",
         "reactive forms",
         "id",
+        "size",
         "placeholder",
         "emptyText",
         "loadingText",
@@ -20053,6 +20147,33 @@
               "publicName": "placeholder",
               "syntax": "property"
             }
+          },
+          {
+            "key": "size",
+            "label": "Size",
+            "kind": "select",
+            "defaultValue": "md",
+            "testValue": "sm",
+            "description": "Changes the control height.",
+            "binding": {
+              "kind": "input",
+              "publicName": "size",
+              "syntax": "property"
+            },
+            "options": [
+              {
+                "label": "sm",
+                "value": "sm"
+              },
+              {
+                "label": "md",
+                "value": "md"
+              },
+              {
+                "label": "lg",
+                "value": "lg"
+              }
+            ]
           },
           {
             "key": "optionsState",
@@ -20425,8 +20546,8 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 23,
-          "controlled": 12,
+          "publicInputsAndModels": 24,
+          "controlled": 13,
           "excluded": 11,
           "unclassified": 0
         },
@@ -20644,6 +20765,16 @@
           "descriptionSource": "inferred"
         },
         {
+          "name": "size",
+          "property": "size",
+          "kind": "input",
+          "type": "KrnSize",
+          "required": false,
+          "defaultValue": "'md'",
+          "description": "Controls the native select trigger height and content density.",
+          "descriptionSource": "source"
+        },
+        {
           "name": "placeholder",
           "property": "placeholder",
           "kind": "input",
@@ -20804,7 +20935,20 @@
           "descriptionSource": "inferred"
         }
       ],
-      "slots": [],
+      "slots": [
+        {
+          "name": "krnPrefix",
+          "selector": "[krnPrefix]",
+          "required": false,
+          "description": "Projects content matching [krnPrefix]."
+        },
+        {
+          "name": "krnSuffix",
+          "selector": "[krnSuffix]",
+          "required": false,
+          "description": "Projects content matching [krnSuffix]."
+        }
+      ],
       "forms": {
         "controlValueAccessor": true,
         "validator": true,
@@ -20863,6 +21007,7 @@
         "single choice",
         "id",
         "name",
+        "size",
         "placeholder",
         "ariaLabel",
         "ariaLabelledBy",
@@ -20922,6 +21067,33 @@
               "publicName": "placeholder",
               "syntax": "property"
             }
+          },
+          {
+            "key": "size",
+            "label": "Size",
+            "kind": "select",
+            "defaultValue": "md",
+            "testValue": "sm",
+            "description": "Changes the control height.",
+            "binding": {
+              "kind": "input",
+              "publicName": "size",
+              "syntax": "property"
+            },
+            "options": [
+              {
+                "label": "sm",
+                "value": "sm"
+              },
+              {
+                "label": "md",
+                "value": "md"
+              },
+              {
+                "label": "lg",
+                "value": "lg"
+              }
+            ]
           },
           {
             "key": "disabled",
@@ -21166,8 +21338,8 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 17,
-          "controlled": 7,
+          "publicInputsAndModels": 18,
+          "controlled": 8,
           "excluded": 10,
           "unclassified": 0
         },
@@ -38316,6 +38488,16 @@
           "descriptionSource": "inferred"
         },
         {
+          "name": "appearance",
+          "property": "appearance",
+          "kind": "input",
+          "type": "KrnAlertAppearance",
+          "required": false,
+          "defaultValue": "'subtle'",
+          "description": "Selects the alert surface treatment without changing its semantic tone.",
+          "descriptionSource": "source"
+        },
+        {
           "name": "title",
           "property": "title",
           "kind": "input",
@@ -38368,7 +38550,13 @@
       ],
       "slots": [
         {
-          "name": "default",
+          "name": "krnAlertIcon",
+          "selector": "[krnAlertIcon]",
+          "required": false,
+          "description": "Projects content matching [krnAlertIcon]."
+        },
+        {
+          "name": "default-2",
           "selector": "*",
           "required": false,
           "description": "Projects default component content."
@@ -38427,6 +38615,7 @@
         "krn-alert",
         "KrnAlert",
         "tone",
+        "appearance",
         "title",
         "icon",
         "dismissible",
@@ -38491,6 +38680,33 @@
               {
                 "label": "danger",
                 "value": "danger"
+              }
+            ]
+          },
+          {
+            "key": "appearance",
+            "label": "Appearance",
+            "kind": "select",
+            "defaultValue": "subtle",
+            "testValue": "outline",
+            "description": "Changes the alert surface contrast.",
+            "binding": {
+              "kind": "input",
+              "publicName": "appearance",
+              "syntax": "property"
+            },
+            "options": [
+              {
+                "label": "subtle",
+                "value": "subtle"
+              },
+              {
+                "label": "outline",
+                "value": "outline"
+              },
+              {
+                "label": "contrast",
+                "value": "contrast"
               }
             ]
           },
@@ -38620,8 +38836,8 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 5,
-          "controlled": 4,
+          "publicInputsAndModels": 6,
+          "controlled": 5,
           "excluded": 1,
           "unclassified": 0
         },
@@ -38698,6 +38914,16 @@
           "defaultValue": "'info'",
           "description": "Semantic intent that selects coordinated text, icon, border, and surface tokens.",
           "descriptionSource": "inferred"
+        },
+        {
+          "name": "appearance",
+          "property": "appearance",
+          "kind": "input",
+          "type": "KrnAlertAppearance",
+          "required": false,
+          "defaultValue": "'subtle'",
+          "description": "Selects the alert surface treatment without changing its semantic tone.",
+          "descriptionSource": "source"
         },
         {
           "name": "title",
@@ -38811,6 +39037,7 @@
         "krn-banner",
         "KrnBanner",
         "tone",
+        "appearance",
         "title",
         "icon",
         "dismissible",
@@ -39004,12 +39231,24 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 5,
+          "publicInputsAndModels": 6,
           "controlled": 4,
-          "excluded": 1,
+          "excluded": 2,
           "unclassified": 0
         },
         "exclusions": [
+          {
+            "componentId": "banner",
+            "publicName": "appearance",
+            "kind": "input",
+            "type": "KrnAlertAppearance",
+            "code": "complex-data",
+            "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+            "evidence": {
+              "category": "specimen-fixture",
+              "pointer": "preview/banner?state=default"
+            }
+          },
           {
             "componentId": "banner",
             "publicName": "dismissLabel",
@@ -39081,7 +39320,7 @@
           "kind": "input",
           "type": "KrnToastPosition",
           "required": false,
-          "defaultValue": "'top-end'",
+          "defaultValue": "'bottom-end'",
           "description": "Logical placement of the component relative to its owning surface.",
           "descriptionSource": "inferred"
         },
@@ -39091,7 +39330,7 @@
           "kind": "input",
           "type": "number",
           "required": false,
-          "defaultValue": "4",
+          "defaultValue": "3",
           "description": "Upper or lower bound applied to the visible value.",
           "descriptionSource": "inferred"
         },
@@ -39101,7 +39340,7 @@
           "kind": "input",
           "type": "number",
           "required": false,
-          "defaultValue": "12",
+          "defaultValue": "8",
           "description": "Upper or lower bound applied to the expanded value.",
           "descriptionSource": "inferred"
         },
@@ -39234,8 +39473,8 @@
             "key": "maxExpanded",
             "label": "Max Expanded",
             "kind": "number",
-            "defaultValue": 12,
-            "testValue": 13,
+            "defaultValue": 8,
+            "testValue": 9,
             "description": "Configures the component maxExpanded contract.",
             "binding": {
               "kind": "input",
@@ -39250,8 +39489,8 @@
             "key": "maxVisible",
             "label": "Max Visible",
             "kind": "number",
-            "defaultValue": 4,
-            "testValue": 5,
+            "defaultValue": 3,
+            "testValue": 4,
             "description": "Configures the component maxVisible contract.",
             "binding": {
               "kind": "input",
@@ -39266,7 +39505,7 @@
             "key": "position",
             "label": "Position",
             "kind": "select",
-            "defaultValue": "top-end",
+            "defaultValue": "bottom-end",
             "testValue": "top-start",
             "description": "Configures the component position contract.",
             "binding": {
@@ -40620,6 +40859,26 @@
           "descriptionSource": "inferred"
         },
         {
+          "name": "modal",
+          "property": "modal",
+          "kind": "input",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "Blocks background interaction and traps focus while the dialog is open.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "size",
+          "property": "size",
+          "kind": "input",
+          "type": "KrnOverlaySize",
+          "required": false,
+          "defaultValue": "'md'",
+          "description": "Selects the dialog's maximum inline size.",
+          "descriptionSource": "source"
+        },
+        {
           "name": "title",
           "property": "title",
           "kind": "input",
@@ -40838,6 +41097,7 @@
         "overlay",
         "form dialog",
         "open",
+        "size",
         "title",
         "description",
         "eyebrow",
@@ -40904,6 +41164,46 @@
             "binding": {
               "kind": "input",
               "publicName": "description",
+              "syntax": "property"
+            }
+          },
+          {
+            "key": "size",
+            "label": "Size",
+            "kind": "select",
+            "defaultValue": "md",
+            "testValue": "sm",
+            "description": "Sets the dialog width.",
+            "binding": {
+              "kind": "input",
+              "publicName": "size",
+              "syntax": "property"
+            },
+            "options": [
+              {
+                "label": "sm",
+                "value": "sm"
+              },
+              {
+                "label": "md",
+                "value": "md"
+              },
+              {
+                "label": "lg",
+                "value": "lg"
+              }
+            ]
+          },
+          {
+            "key": "modal",
+            "label": "Modal",
+            "kind": "boolean",
+            "defaultValue": true,
+            "testValue": false,
+            "description": "Traps focus and makes the background inert.",
+            "binding": {
+              "kind": "input",
+              "publicName": "modal",
               "syntax": "property"
             }
           },
@@ -41112,8 +41412,8 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 13,
-          "controlled": 7,
+          "publicInputsAndModels": 15,
+          "controlled": 9,
           "excluded": 6,
           "unclassified": 0
         },
@@ -41254,6 +41554,26 @@
           "defaultValue": "false",
           "description": "Controls whether the disclosure or overlay surface is visible.",
           "descriptionSource": "inferred"
+        },
+        {
+          "name": "modal",
+          "property": "modal",
+          "kind": "input",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "Blocks background interaction and traps focus while the alert dialog is open.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "size",
+          "property": "size",
+          "kind": "input",
+          "type": "KrnOverlaySize",
+          "required": false,
+          "defaultValue": "'md'",
+          "description": "Selects the alert dialog's maximum inline size.",
+          "descriptionSource": "source"
         },
         {
           "name": "title",
@@ -41460,6 +41780,7 @@
         "modal",
         "focus trap",
         "open",
+        "size",
         "title",
         "description",
         "eyebrow",
@@ -41577,6 +41898,19 @@
             "binding": {
               "kind": "input",
               "publicName": "eyebrow",
+              "syntax": "property"
+            }
+          },
+          {
+            "key": "modal",
+            "label": "Modal",
+            "kind": "boolean",
+            "defaultValue": true,
+            "testValue": false,
+            "description": "Configures the component modal contract.",
+            "binding": {
+              "kind": "input",
+              "publicName": "modal",
               "syntax": "property"
             }
           },
@@ -41733,9 +42067,9 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 13,
-          "controlled": 7,
-          "excluded": 6,
+          "publicInputsAndModels": 15,
+          "controlled": 8,
+          "excluded": 7,
           "unclassified": 0
         },
         "exclusions": [
@@ -41804,6 +42138,18 @@
             "publicName": "restoreFocus",
             "kind": "input",
             "type": "HTMLElement | false | null",
+            "code": "complex-data",
+            "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+            "evidence": {
+              "category": "specimen-fixture",
+              "pointer": "preview/alert-dialog?state=default"
+            }
+          },
+          {
+            "componentId": "alert-dialog",
+            "publicName": "size",
+            "kind": "input",
+            "type": "KrnOverlaySize",
             "code": "complex-data",
             "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
             "evidence": {
@@ -41887,6 +42233,36 @@
           "defaultValue": "false",
           "description": "Controls whether the disclosure or overlay surface is visible.",
           "descriptionSource": "inferred"
+        },
+        {
+          "name": "modal",
+          "property": "modal",
+          "kind": "input",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "Blocks background interaction and traps focus while the drawer is open.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "size",
+          "property": "size",
+          "kind": "input",
+          "type": "KrnOverlaySize",
+          "required": false,
+          "defaultValue": "'md'",
+          "description": "Selects the drawer thickness along its entry edge.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "side",
+          "property": "side",
+          "kind": "input",
+          "type": "KrnOverlaySide",
+          "required": false,
+          "defaultValue": "'right'",
+          "description": "Chooses the physical or logical viewport edge from which the drawer enters.",
+          "descriptionSource": "source"
         },
         {
           "name": "title",
@@ -42105,6 +42481,9 @@
         "overlay",
         "focus trap",
         "open",
+        "modal",
+        "size",
+        "side",
         "title",
         "description",
         "eyebrow",
@@ -42157,6 +42536,77 @@
             "binding": {
               "kind": "model",
               "publicName": "open"
+            }
+          },
+          {
+            "key": "side",
+            "label": "Side",
+            "kind": "select",
+            "defaultValue": "right",
+            "testValue": "top",
+            "description": "Chooses the viewport edge.",
+            "binding": {
+              "kind": "input",
+              "publicName": "side",
+              "syntax": "property"
+            },
+            "options": [
+              {
+                "label": "top",
+                "value": "top"
+              },
+              {
+                "label": "right",
+                "value": "right"
+              },
+              {
+                "label": "bottom",
+                "value": "bottom"
+              },
+              {
+                "label": "left",
+                "value": "left"
+              }
+            ]
+          },
+          {
+            "key": "size",
+            "label": "Size",
+            "kind": "select",
+            "defaultValue": "md",
+            "testValue": "sm",
+            "description": "Sets the sheet width or height.",
+            "binding": {
+              "kind": "input",
+              "publicName": "size",
+              "syntax": "property"
+            },
+            "options": [
+              {
+                "label": "sm",
+                "value": "sm"
+              },
+              {
+                "label": "md",
+                "value": "md"
+              },
+              {
+                "label": "lg",
+                "value": "lg"
+              }
+            ]
+          },
+          {
+            "key": "modal",
+            "label": "Modal",
+            "kind": "boolean",
+            "defaultValue": false,
+            "testValue": true,
+            "description": "Controls focus trapping and backdrop behavior.",
+            "binding": {
+              "kind": "input",
+              "publicName": "modal",
+              "syntax": "property"
             }
           },
           {
@@ -42378,8 +42828,8 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 13,
-          "controlled": 7,
+          "publicInputsAndModels": 16,
+          "controlled": 10,
           "excluded": 6,
           "unclassified": 0
         },
@@ -42532,6 +42982,26 @@
           "defaultValue": "false",
           "description": "Controls whether the disclosure or overlay surface is visible.",
           "descriptionSource": "inferred"
+        },
+        {
+          "name": "modal",
+          "property": "modal",
+          "kind": "input",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "Blocks background interaction and traps focus while the sheet is open.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "size",
+          "property": "size",
+          "kind": "input",
+          "type": "KrnOverlaySize",
+          "required": false,
+          "defaultValue": "'md'",
+          "description": "Selects the sheet's maximum block size.",
+          "descriptionSource": "source"
         },
         {
           "name": "title",
@@ -42739,6 +43209,8 @@
         "krn-bottom-sheet",
         "KrnBottomSheet",
         "open",
+        "modal",
+        "size",
         "title",
         "description",
         "eyebrow",
@@ -42790,6 +43262,46 @@
             "binding": {
               "kind": "model",
               "publicName": "open"
+            }
+          },
+          {
+            "key": "size",
+            "label": "Size",
+            "kind": "select",
+            "defaultValue": "md",
+            "testValue": "sm",
+            "description": "Sets the sheet width.",
+            "binding": {
+              "kind": "input",
+              "publicName": "size",
+              "syntax": "property"
+            },
+            "options": [
+              {
+                "label": "sm",
+                "value": "sm"
+              },
+              {
+                "label": "md",
+                "value": "md"
+              },
+              {
+                "label": "lg",
+                "value": "lg"
+              }
+            ]
+          },
+          {
+            "key": "modal",
+            "label": "Modal",
+            "kind": "boolean",
+            "defaultValue": true,
+            "testValue": false,
+            "description": "Controls focus trapping and backdrop behavior.",
+            "binding": {
+              "kind": "input",
+              "publicName": "modal",
+              "syntax": "property"
             }
           },
           {
@@ -43011,8 +43523,8 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 13,
-          "controlled": 7,
+          "publicInputsAndModels": 15,
+          "controlled": 9,
           "excluded": 6,
           "unclassified": 0
         },
@@ -46201,11 +46713,37 @@
           "defaultValue": "false",
           "description": "Current domain status rendered as visible text and a non-color-only treatment.",
           "descriptionSource": "inferred"
+        },
+        {
+          "name": "variant",
+          "property": "variant",
+          "kind": "input",
+          "type": "KrnBadgeVariant",
+          "required": false,
+          "defaultValue": "'subtle'",
+          "description": "Controls whether the badge uses a filled, tinted, or outlined surface.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "size",
+          "property": "size",
+          "kind": "input",
+          "type": "KrnBadgeSize",
+          "required": false,
+          "defaultValue": "'md'",
+          "description": "Controls the badge height, horizontal padding, and text density.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [
         {
-          "name": "default",
+          "name": "krnBadgeIcon",
+          "selector": "[krnBadgeIcon]",
+          "required": false,
+          "description": "Projects content matching [krnBadgeIcon]."
+        },
+        {
+          "name": "default-2",
           "selector": "*",
           "required": false,
           "description": "Projects default component content."
@@ -46259,7 +46797,9 @@
         "KrnBadge",
         "KrnStatusBadge",
         "tone",
-        "status"
+        "status",
+        "variant",
+        "size"
       ],
       "guidance": {
         "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
@@ -46323,6 +46863,60 @@
               {
                 "label": "danger",
                 "value": "danger"
+              }
+            ]
+          },
+          {
+            "key": "variant",
+            "label": "Variant",
+            "kind": "select",
+            "defaultValue": "subtle",
+            "testValue": "solid",
+            "description": "Changes badge contrast.",
+            "binding": {
+              "kind": "input",
+              "publicName": "variant",
+              "syntax": "property"
+            },
+            "options": [
+              {
+                "label": "solid",
+                "value": "solid"
+              },
+              {
+                "label": "subtle",
+                "value": "subtle"
+              },
+              {
+                "label": "outline",
+                "value": "outline"
+              }
+            ]
+          },
+          {
+            "key": "size",
+            "label": "Size",
+            "kind": "select",
+            "defaultValue": "md",
+            "testValue": "sm",
+            "description": "Changes badge density.",
+            "binding": {
+              "kind": "input",
+              "publicName": "size",
+              "syntax": "property"
+            },
+            "options": [
+              {
+                "label": "sm",
+                "value": "sm"
+              },
+              {
+                "label": "md",
+                "value": "md"
+              },
+              {
+                "label": "lg",
+                "value": "lg"
               }
             ]
           },
@@ -46426,8 +47020,8 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 2,
-          "controlled": 2,
+          "publicInputsAndModels": 4,
+          "controlled": 4,
           "excluded": 0,
           "unclassified": 0
         },
@@ -46501,11 +47095,37 @@
           "defaultValue": "false",
           "description": "Current domain status rendered as visible text and a non-color-only treatment.",
           "descriptionSource": "inferred"
+        },
+        {
+          "name": "variant",
+          "property": "variant",
+          "kind": "input",
+          "type": "KrnBadgeVariant",
+          "required": false,
+          "defaultValue": "'subtle'",
+          "description": "Controls whether the badge uses a filled, tinted, or outlined surface.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "size",
+          "property": "size",
+          "kind": "input",
+          "type": "KrnBadgeSize",
+          "required": false,
+          "defaultValue": "'md'",
+          "description": "Controls the badge height, horizontal padding, and text density.",
+          "descriptionSource": "source"
         }
       ],
       "slots": [
         {
-          "name": "default",
+          "name": "krnBadgeIcon",
+          "selector": "[krnBadgeIcon]",
+          "required": false,
+          "description": "Projects content matching [krnBadgeIcon]."
+        },
+        {
+          "name": "default-2",
           "selector": "*",
           "required": false,
           "description": "Projects default component content."
@@ -46559,7 +47179,9 @@
         "KrnStatusBadge",
         "KrnBadge",
         "tone",
-        "status"
+        "status",
+        "variant",
+        "size"
       ],
       "guidance": {
         "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
@@ -46726,12 +47348,37 @@
           }
         ],
         "apiCoverage": {
-          "publicInputsAndModels": 2,
+          "publicInputsAndModels": 4,
           "controlled": 2,
-          "excluded": 0,
+          "excluded": 2,
           "unclassified": 0
         },
-        "exclusions": []
+        "exclusions": [
+          {
+            "componentId": "status-badge",
+            "publicName": "size",
+            "kind": "input",
+            "type": "KrnBadgeSize",
+            "code": "complex-data",
+            "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+            "evidence": {
+              "category": "specimen-fixture",
+              "pointer": "preview/status-badge?state=default"
+            }
+          },
+          {
+            "componentId": "status-badge",
+            "publicName": "variant",
+            "kind": "input",
+            "type": "KrnBadgeVariant",
+            "code": "complex-data",
+            "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+            "evidence": {
+              "category": "specimen-fixture",
+              "pointer": "preview/status-badge?state=default"
+            }
+          }
+        ]
       }
     },
     {
@@ -54450,6 +55097,506 @@
             "evidence": {
               "category": "a11y-test",
               "pointer": "tests/a11y/accessibility.spec.ts#code-block"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "json-view",
+      "name": "JSON View",
+      "category": "Data display",
+      "kind": "component",
+      "selector": "krn-json-view",
+      "selectors": ["krn-json-view"],
+      "selectorDeprecations": [],
+      "symbol": "KrnJsonView",
+      "canonicalSymbol": "KrnJsonView",
+      "canonicalId": "json-view",
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "aliases": {
+        "symbols": [],
+        "selectors": [],
+        "componentIds": []
+      },
+      "summary": "JSON View. Renders structured JSON as a collapsible, searchable tree with typed syntax color and selectable text.",
+      "acceptanceStates": [
+        "default",
+        "overflow",
+        "long text",
+        "dark",
+        "high contrast",
+        "compact",
+        "RTL",
+        "mobile",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "collapsed",
+        "expanded",
+        "highlighted",
+        "wrapped"
+      ],
+      "lifecycle": {
+        "status": "beta",
+        "compatibility": "Available for controlled production evaluation; the contract may still be refined.",
+        "owner": "kern/data-display",
+        "evidenceProfile": "beta-promotion",
+        "requiredEvidence": [
+          "api-baseline",
+          "unit",
+          "ssr",
+          "hydration",
+          "keyboard",
+          "automated-a11y",
+          "manual-at",
+          "visual-regression",
+          "runtime-performance",
+          "consumer-harness"
+        ],
+        "rationale": "The structured-data tree remains beta while large-payload performance, controlled expansion, and manual assistive-technology evidence mature.",
+        "knownLimitations": [
+          "The component intentionally renders read-only JSON-compatible values and does not provide inline editing or schema validation.",
+          "Consumers must paginate, summarize, or virtualize very large payloads before passing them to the component."
+        ],
+        "promotionCriteria": [
+          "Public API, defaults, aliases and entrypoint ownership are reviewed.",
+          "SSR/hydration, keyboard, accessibility and visual evidence are linked.",
+          "Runtime scale limits and consumer testing contract are documented.",
+          "Migration impact is classified before lifecycle promotion."
+        ],
+        "replacement": null
+      },
+      "api": [
+        {
+          "name": "data",
+          "property": "data",
+          "kind": "input",
+          "type": "KrnJsonValue",
+          "required": true,
+          "defaultValue": "required",
+          "description": "JSON-compatible value rendered as an inspectable hierarchy.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "ariaLabel",
+          "property": "ariaLabel",
+          "kind": "input",
+          "type": "string",
+          "required": false,
+          "defaultValue": "'JSON'",
+          "description": "Accessible name announced for the JSON tree.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "defaultExpandDepth",
+          "property": "defaultExpandDepth",
+          "kind": "input",
+          "type": "number",
+          "required": false,
+          "defaultValue": "2",
+          "description": "Number of hierarchy levels expanded when data first renders.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "expandedPaths",
+          "property": "expandedPaths",
+          "kind": "model",
+          "type": "ReadonlyArray<string> | null",
+          "required": false,
+          "defaultValue": "null",
+          "description": "Controlled JSON-pointer paths, or null to keep expansion state internal.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "highlightPattern",
+          "property": "highlightPattern",
+          "kind": "input",
+          "type": "RegExp | string | null",
+          "required": false,
+          "defaultValue": "null",
+          "description": "Text or regular expression highlighted in visible keys and primitive values.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "sortKeys",
+          "property": "sortKeys",
+          "kind": "input",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "Sorts object keys with locale-aware comparison while preserving array order.",
+          "descriptionSource": "source"
+        },
+        {
+          "name": "wrap",
+          "property": "wrap",
+          "kind": "input",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "Allows long keys and values to wrap inside the viewport.",
+          "descriptionSource": "source"
+        }
+      ],
+      "slots": [],
+      "forms": {
+        "controlValueAccessor": false,
+        "validator": false,
+        "valueType": null,
+        "reactiveForms": false,
+        "templateDrivenForms": false,
+        "stateInputs": [],
+        "notes": []
+      },
+      "a11y": {
+        "target": "WCAG 2.2 AA",
+        "keyboard": [
+          "Arrow Up and Arrow Down move the single roving focus through visible properties.",
+          "Arrow Right expands or enters a branch; Arrow Left collapses it or returns to its parent.",
+          "Home and End move to the first and last visible property; Enter or Space toggles a branch."
+        ],
+        "notes": [
+          "The tree exposes each visible property's hierarchy, sibling position, and expansion state.",
+          "Keys and typed primitive values remain text, so syntax color is never the only representation.",
+          "Highlighting uses a visible mark treatment without replacing the underlying accessible text."
+        ],
+        "manualValidationRequired": true
+      },
+      "ssr": {
+        "status": "supported-with-consumer-validation",
+        "hydration": "consumer-validation-required",
+        "evidenceScope": "library-docs-route-smoke",
+        "notes": [
+          "KERN avoids ambient browser globals in reusable runtime infrastructure.",
+          "Validate the consuming SSR/hydration route, locale, ids and overlay host."
+        ]
+      },
+      "examples": [
+        {
+          "id": "minimal",
+          "title": "Inspectable deployment payload",
+          "kind": "minimal",
+          "language": "typescript",
+          "code": "/**\n * Inspectable deployment payload\n *\n * Render structured JSON with accessible tree navigation and a highlighted field.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnJsonView } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-json-view-agent-example',\n  standalone: true,\n  imports: [KrnJsonView],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-json-view\n      ariaLabel=\"Deployment payload\"\n      [data]=\"payload\"\n      [defaultExpandDepth]=\"2\"\n      highlightPattern=\"active\"\n    />\n  `,\n})\nexport class KernJsonViewAgentExample {\n  readonly payload = {\n    deployment: { id: 'dep_01KERN', active: true, replicas: 3 },\n    region: 'eu-central',\n    error: null,\n  } as const;\n}\n\nvoid bootstrapApplication(KernJsonViewAgentExample);\n",
+          "verification": "compiled",
+          "source": "examples/json-view.ts"
+        }
+      ],
+      "related": ["badge", "status-badge", "chip", "tag"],
+      "keywords": [
+        "json-view",
+        "JSON View",
+        "Data display",
+        "krn-json-view",
+        "KrnJsonView",
+        "data",
+        "ariaLabel",
+        "defaultExpandDepth",
+        "expandedPaths",
+        "highlightPattern",
+        "sortKeys",
+        "wrap"
+      ],
+      "guidance": {
+        "useWhen": "Use JSON View when users need to inspect structured application data while preserving hierarchy, value types, and copyable text.",
+        "avoidWhen": "Use Code Block for an immutable source excerpt, and a purpose-built detail view when users must edit or act on individual fields."
+      },
+      "commonMistakes": [
+        "Do not omit required inputs: `data`.",
+        "Importing from an undeclared family path or a source implementation file.",
+        "Loading only tokens.css instead of the complete styles/kern.css component bundle.",
+        "Assuming the documentation SSR build replaces validation of the consuming application."
+      ],
+      "checklist": [
+        "Import the symbol from its documented owner entrypoint; do not use a deep source import.",
+        "Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.",
+        "Provide every required input and keep collection identities stable across updates.",
+        "Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.",
+        "Test the consuming SSR/hydration route when server rendering is enabled.",
+        "Use @kern-ui/angular/testing harnesses when a component-specific harness is available."
+      ],
+      "documentation": {
+        "route": "components/json-view",
+        "json": "components/json-view.json",
+        "markdown": "components/json-view.md"
+      },
+      "playground": {
+        "route": "preview/json-view",
+        "scenarios": ["default"],
+        "controls": [
+          {
+            "key": "defaultExpandDepth",
+            "label": "Expanded depth",
+            "kind": "number",
+            "defaultValue": 2,
+            "testValue": 3,
+            "description": "Sets how many JSON hierarchy levels open initially.",
+            "binding": {
+              "kind": "input",
+              "publicName": "defaultExpandDepth",
+              "syntax": "property"
+            },
+            "min": 0,
+            "max": 8,
+            "step": 1
+          },
+          {
+            "key": "highlightPattern",
+            "label": "Highlight",
+            "kind": "text",
+            "defaultValue": "",
+            "testValue": "Alternate value",
+            "description": "Highlights matching text; an empty value leaves the JSON unmarked.",
+            "binding": {
+              "kind": "input",
+              "publicName": "highlightPattern",
+              "syntax": "property"
+            }
+          },
+          {
+            "key": "sortKeys",
+            "label": "Sort keys",
+            "kind": "boolean",
+            "defaultValue": false,
+            "testValue": true,
+            "description": "Sorts object keys alphabetically.",
+            "binding": {
+              "kind": "input",
+              "publicName": "sortKeys",
+              "syntax": "property"
+            }
+          },
+          {
+            "key": "wrap",
+            "label": "Wrap lines",
+            "kind": "boolean",
+            "defaultValue": true,
+            "testValue": false,
+            "description": "Wraps long keys and values inside the viewport.",
+            "binding": {
+              "kind": "input",
+              "publicName": "wrap",
+              "syntax": "property"
+            }
+          }
+        ],
+        "presets": [
+          {
+            "id": "default",
+            "label": "Default",
+            "scenario": "default",
+            "args": {}
+          },
+          {
+            "id": "overflow",
+            "label": "overflow",
+            "scenario": "default",
+            "args": {},
+            "fixtureEffect": {
+              "kind": "layout",
+              "mode": "overflow",
+              "label": "overflow",
+              "description": "The fixture deliberately exceeds its normal inline size to expose overflow behavior."
+            }
+          },
+          {
+            "id": "long-text",
+            "label": "long text",
+            "scenario": "default",
+            "args": {},
+            "fixtureEffect": {
+              "kind": "content",
+              "mode": "long-text",
+              "label": "long text",
+              "description": "Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification."
+            }
+          },
+          {
+            "id": "dark",
+            "label": "Dark",
+            "scenario": "default",
+            "environment": {
+              "theme": "dark"
+            },
+            "args": {}
+          },
+          {
+            "id": "high-contrast",
+            "label": "High contrast",
+            "scenario": "default",
+            "environment": {
+              "theme": "high-contrast"
+            },
+            "args": {}
+          },
+          {
+            "id": "compact",
+            "label": "Compact",
+            "scenario": "default",
+            "environment": {
+              "density": "compact"
+            },
+            "args": {}
+          },
+          {
+            "id": "rtl",
+            "label": "RTL",
+            "scenario": "default",
+            "environment": {
+              "direction": "rtl"
+            },
+            "args": {}
+          },
+          {
+            "id": "mobile",
+            "label": "Mobile",
+            "scenario": "default",
+            "environment": {
+              "viewport": "phone"
+            },
+            "args": {}
+          },
+          {
+            "id": "hover",
+            "label": "hover",
+            "scenario": "default",
+            "args": {},
+            "fixtureEffect": {
+              "kind": "status",
+              "mode": "neutral",
+              "label": "hover",
+              "description": "The fixture exposes the hover status without claiming a public component input."
+            }
+          },
+          {
+            "id": "focus-visible",
+            "label": "focus-visible",
+            "scenario": "default",
+            "args": {},
+            "fixtureEffect": {
+              "kind": "status",
+              "mode": "neutral",
+              "label": "focus-visible",
+              "description": "The fixture exposes the focus visible status without claiming a public component input."
+            }
+          },
+          {
+            "id": "active",
+            "label": "active",
+            "scenario": "default",
+            "args": {},
+            "fixtureEffect": {
+              "kind": "status",
+              "mode": "neutral",
+              "label": "active",
+              "description": "The fixture exposes the active status without claiming a public component input."
+            }
+          },
+          {
+            "id": "disabled",
+            "label": "disabled",
+            "scenario": "default",
+            "args": {},
+            "fixtureEffect": {
+              "kind": "status",
+              "mode": "neutral",
+              "label": "disabled",
+              "description": "The fixture exposes the disabled status without claiming a public component input."
+            }
+          },
+          {
+            "id": "collapsed",
+            "label": "collapsed",
+            "scenario": "default",
+            "args": {},
+            "fixtureEffect": {
+              "kind": "layout",
+              "mode": "constrained",
+              "label": "collapsed",
+              "description": "The fixture uses an alternate deterministic boundary to expose layout behavior."
+            }
+          },
+          {
+            "id": "expanded",
+            "label": "expanded",
+            "scenario": "default",
+            "args": {},
+            "fixtureEffect": {
+              "kind": "layout",
+              "mode": "expanded",
+              "label": "expanded",
+              "description": "The fixture uses an alternate deterministic boundary to expose layout behavior."
+            }
+          },
+          {
+            "id": "highlighted",
+            "label": "highlighted",
+            "scenario": "default",
+            "args": {},
+            "fixtureEffect": {
+              "kind": "status",
+              "mode": "neutral",
+              "label": "highlighted",
+              "description": "The fixture exposes the highlighted status without claiming a public component input."
+            }
+          },
+          {
+            "id": "wrapped",
+            "label": "wrapped",
+            "scenario": "default",
+            "args": {},
+            "fixtureEffect": {
+              "kind": "status",
+              "mode": "neutral",
+              "label": "wrapped",
+              "description": "The fixture exposes the wrapped status without claiming a public component input."
+            }
+          }
+        ],
+        "apiCoverage": {
+          "publicInputsAndModels": 7,
+          "controlled": 4,
+          "excluded": 3,
+          "unclassified": 0
+        },
+        "exclusions": [
+          {
+            "componentId": "json-view",
+            "publicName": "ariaLabel",
+            "kind": "input",
+            "type": "string",
+            "code": "accessibility-copy",
+            "reason": "Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change.",
+            "evidence": {
+              "category": "a11y-test",
+              "pointer": "tests/a11y/accessibility.spec.ts#json-view"
+            }
+          },
+          {
+            "componentId": "json-view",
+            "publicName": "data",
+            "kind": "input",
+            "type": "KrnJsonValue",
+            "code": "complex-data",
+            "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+            "evidence": {
+              "category": "specimen-fixture",
+              "pointer": "preview/json-view?state=default"
+            }
+          },
+          {
+            "componentId": "json-view",
+            "publicName": "expandedPaths",
+            "kind": "model",
+            "type": "ReadonlyArray<string> | null",
+            "code": "complex-data",
+            "reason": "Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization.",
+            "evidence": {
+              "category": "specimen-fixture",
+              "pointer": "preview/json-view?state=default"
             }
           }
         ]
@@ -66205,6 +67352,18 @@
       "componentIds": ["alert"]
     },
     {
+      "name": "KrnAlertAppearance",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "type",
+      "type": "KrnAlertAppearance",
+      "deprecated": false,
+      "description": "Public type owned by @kern-ui/angular/kit.",
+      "source": "projects/kern/kit/src/lib/feedback/alert.ts",
+      "componentIds": []
+    },
+    {
       "name": "KrnAlertDialog",
       "aliases": [],
       "owner": "kit",
@@ -66311,6 +67470,30 @@
       "description": "Public class owned by @kern-ui/angular/kit.",
       "source": "projects/kern/kit/src/lib/data-display/badge.ts",
       "componentIds": ["badge", "status-badge"]
+    },
+    {
+      "name": "KrnBadgeSize",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "type",
+      "type": "KrnBadgeSize",
+      "deprecated": false,
+      "description": "Public type owned by @kern-ui/angular/kit.",
+      "source": "projects/kern/kit/src/lib/data-display/badge.ts",
+      "componentIds": []
+    },
+    {
+      "name": "KrnBadgeVariant",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "type",
+      "type": "KrnBadgeVariant",
+      "deprecated": false,
+      "description": "Public type owned by @kern-ui/angular/kit.",
+      "source": "projects/kern/kit/src/lib/data-display/badge.ts",
+      "componentIds": []
     },
     {
       "name": "KrnBanner",
@@ -67093,6 +68276,42 @@
       "componentIds": []
     },
     {
+      "name": "KrnJsonPrimitive",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "type",
+      "type": "KrnJsonPrimitive",
+      "deprecated": false,
+      "description": "Public type owned by @kern-ui/angular/kit.",
+      "source": "projects/kern/kit/src/lib/data-display/json-view.ts",
+      "componentIds": []
+    },
+    {
+      "name": "KrnJsonValue",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "type",
+      "type": "KrnJsonValue",
+      "deprecated": false,
+      "description": "Public type owned by @kern-ui/angular/kit.",
+      "source": "projects/kern/kit/src/lib/data-display/json-view.ts",
+      "componentIds": []
+    },
+    {
+      "name": "KrnJsonView",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "class",
+      "type": "class KrnJsonView",
+      "deprecated": false,
+      "description": "Public class owned by @kern-ui/angular/kit.",
+      "source": "projects/kern/kit/src/lib/data-display/json-view.ts",
+      "componentIds": ["json-view"]
+    },
+    {
       "name": "KrnKeyboardShortcut",
       "aliases": [],
       "owner": "kit",
@@ -67534,6 +68753,30 @@
       "deprecated": false,
       "description": "Opens typed component or template content in one of Kern's modal surfaces.",
       "source": "projects/kern/kit/src/lib/feedback/programmatic-overlay.ts",
+      "componentIds": []
+    },
+    {
+      "name": "KrnOverlaySide",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "type",
+      "type": "KrnOverlaySide",
+      "deprecated": false,
+      "description": "Drawer entry edge. Physical names are convenient for application UI; logical\nnames remain available for writing-mode-aware layouts.",
+      "source": "projects/kern/kit/src/lib/feedback/feedback.types.ts",
+      "componentIds": []
+    },
+    {
+      "name": "KrnOverlaySize",
+      "aliases": [],
+      "owner": "kit",
+      "importPath": "@kern-ui/angular/kit",
+      "kind": "type",
+      "type": "KrnOverlaySize",
+      "deprecated": false,
+      "description": "Public type owned by @kern-ui/angular/kit.",
+      "source": "projects/kern/kit/src/lib/feedback/feedback.types.ts",
       "componentIds": []
     },
     {
@@ -69430,6 +70673,42 @@
       "deprecated": false,
       "description": "Public interface owned by @kern-ui/angular/testing.",
       "source": "projects/kern/testing/actions/src/button-harness.ts",
+      "componentIds": []
+    },
+    {
+      "name": "KrnJsonNodeHarness",
+      "aliases": [],
+      "owner": "testing",
+      "importPath": "@kern-ui/angular/testing",
+      "kind": "class",
+      "type": "class KrnJsonNodeHarness",
+      "deprecated": false,
+      "description": "Public class owned by @kern-ui/angular/testing.",
+      "source": "projects/kern/testing/data-display/src/json-view-harness.ts",
+      "componentIds": []
+    },
+    {
+      "name": "KrnJsonNodeHarnessFilters",
+      "aliases": [],
+      "owner": "testing",
+      "importPath": "@kern-ui/angular/testing",
+      "kind": "interface",
+      "type": "interface KrnJsonNodeHarnessFilters",
+      "deprecated": false,
+      "description": "Public interface owned by @kern-ui/angular/testing.",
+      "source": "projects/kern/testing/data-display/src/json-view-harness.ts",
+      "componentIds": []
+    },
+    {
+      "name": "KrnJsonViewHarness",
+      "aliases": [],
+      "owner": "testing",
+      "importPath": "@kern-ui/angular/testing",
+      "kind": "class",
+      "type": "class KrnJsonViewHarness",
+      "deprecated": false,
+      "description": "Public class owned by @kern-ui/angular/testing.",
+      "source": "projects/kern/testing/data-display/src/json-view-harness.ts",
       "componentIds": []
     },
     {

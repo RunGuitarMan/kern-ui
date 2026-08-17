@@ -51,6 +51,7 @@ void bootstrapApplication(KernAlertAgentExample);
 | Name           | Kind   | Type                  | Required | Default     | Description                                                                      |
 | -------------- | ------ | --------------------- | -------- | ----------- | -------------------------------------------------------------------------------- |
 | `tone`         | input  | `KrnFeedbackTone`     | no       | `'info'`    | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
+| `appearance`   | input  | `KrnAlertAppearance`  | no       | `'subtle'`  | Selects the alert surface treatment without changing its semantic tone.          |
 | `title`        | input  | `string`              | no       | `''`        | Visible title that also names the component surface or data view.                |
 | `icon`         | input  | `string`              | no       | `''`        | Semantic icon name rendered alongside the visible component content.             |
 | `dismissible`  | input  | `boolean`             | no       | `false`     | Controls whether the user can dismiss the surface before completing an action.   |
@@ -63,6 +64,7 @@ _No deprecated selectors._
 
 ## Content slots
 
+- `[krnAlertIcon]` — Projects content matching [krnAlertIcon].
 - `*` — Projects default component content.
 - `[krnAlertAction]` — Projects content matching [krnAlertAction].
 
@@ -104,7 +106,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/alert`
 
 Scenarios: `default`.
-Public API coverage: 4/5
+Public API coverage: 5/6
 directly controlled; 1 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -114,6 +116,7 @@ component inputs or models.
 | Argument      | Control | Default               | Test value                        | Binding                        | Description                                |
 | ------------- | ------- | --------------------- | --------------------------------- | ------------------------------ | ------------------------------------------ |
 | `tone`        | select  | `"success"`           | `"neutral"`                       | input `tone` (property)        | Changes urgency and announcement behavior. |
+| `appearance`  | select  | `"subtle"`            | `"outline"`                       | input `appearance` (property)  | Changes the alert surface contrast.        |
 | `title`       | text    | `"Changes published"` | `"Changes published · alternate"` | input `title` (property)       | Sets the alert heading.                    |
 | `dismissible` | boolean | `true`                | `false`                           | input `dismissible` (property) | Shows a close action.                      |
 | `icon`        | text    | `""`                  | `"Alternate value"`               | input `icon` (property)        | Configures the component icon contract.    |

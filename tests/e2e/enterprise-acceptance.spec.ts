@@ -39,7 +39,7 @@ test.describe('Enterprise browser acceptance contracts', () => {
     test.setTimeout(180_000);
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
 
-    expect(KERN_CATALOG).toHaveLength(131);
+    expect(KERN_CATALOG).toHaveLength(132);
 
     for (const item of KERN_CATALOG) {
       await page.goto(previewUrl({ component: item.id }), { waitUntil: 'domcontentloaded' });

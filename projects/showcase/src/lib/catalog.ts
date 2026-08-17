@@ -84,6 +84,7 @@ const INTERACTIVE_DATA_IDS = /* @__PURE__ */ new Set([
   'accordion',
   'disclosure',
   'tree',
+  'json-view',
   'data-table',
   'data-grid',
   'calendar',
@@ -166,6 +167,9 @@ function statesFor(
     case 'tree':
     case 'tree-navigation':
       states.push('loading branch', 'error branch', 'collapsed', 'expanded', 'selected');
+      break;
+    case 'json-view':
+      states.push('collapsed', 'expanded', 'highlighted', 'wrapped');
       break;
     case 'select':
     case 'multi-select':
@@ -574,6 +578,19 @@ const COMPONENT_OVERRIDES: Readonly<Record<string, KernCatalogDocumentationOverr
     ],
     do: 'Use it for precise scheduling when typing HH:mm is faster than scanning a long list.',
     dont: 'Do not render every hour and minute as scrolling columns.',
+  },
+  'json-view': {
+    summary:
+      'JSON View. Renders structured JSON as a collapsible, searchable tree with typed syntax color and selectable text.',
+    keyboard: [
+      'Arrow Down and Arrow Up move through visible JSON nodes',
+      'Arrow Right expands a collection or moves to its first child',
+      'Arrow Left collapses a collection or moves to its parent',
+      'Home and End move to the first and last visible nodes',
+      'Enter and Space toggle the focused collection',
+    ],
+    do: 'Use it for inspectable API payloads, configuration, and structured diagnostic data.',
+    dont: 'Do not use it as an editable JSON form or for untrusted executable code.',
   },
   'line-chart': {
     keyboard: [

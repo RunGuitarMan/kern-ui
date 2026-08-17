@@ -82,6 +82,16 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "size",
+      "property": "size",
+      "kind": "input",
+      "type": "KrnSize",
+      "required": false,
+      "defaultValue": "'md'",
+      "description": "Controls the custom select trigger height and content density.",
+      "descriptionSource": "source"
+    },
+    {
       "name": "placeholder",
       "property": "placeholder",
       "kind": "input",
@@ -322,7 +332,20 @@
       "descriptionSource": "inferred"
     }
   ],
-  "slots": [],
+  "slots": [
+    {
+      "name": "krnPrefix",
+      "selector": "[krnPrefix]",
+      "required": false,
+      "description": "Projects content matching [krnPrefix]."
+    },
+    {
+      "name": "krnSuffix",
+      "selector": "[krnSuffix]",
+      "required": false,
+      "description": "Projects content matching [krnSuffix]."
+    }
+  ],
   "forms": {
     "controlValueAccessor": true,
     "validator": true,
@@ -390,6 +413,7 @@
     "typed option",
     "reactive forms",
     "id",
+    "size",
     "placeholder",
     "emptyText",
     "loadingText",
@@ -458,6 +482,33 @@
           "publicName": "placeholder",
           "syntax": "property"
         }
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "kind": "select",
+        "defaultValue": "md",
+        "testValue": "sm",
+        "description": "Changes the control height.",
+        "binding": {
+          "kind": "input",
+          "publicName": "size",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "sm",
+            "value": "sm"
+          },
+          {
+            "label": "md",
+            "value": "md"
+          },
+          {
+            "label": "lg",
+            "value": "lg"
+          }
+        ]
       },
       {
         "key": "optionsState",
@@ -830,8 +881,8 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 23,
-      "controlled": 12,
+      "publicInputsAndModels": 24,
+      "controlled": 13,
       "excluded": 11,
       "unclassified": 0
     },

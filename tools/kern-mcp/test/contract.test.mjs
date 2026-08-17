@@ -150,9 +150,9 @@ describe('KERN agent component contract', () => {
       ['theme', 'density', 'direction', 'locale', 'motion', 'viewport'],
     );
     assert.equal(manifest.library.playground.brandColor.parameter, 'brandColor');
-    assert.equal(manifest.components.length, 131);
+    assert.equal(manifest.components.length, 132);
     assert.ok(manifest.symbols.length > 300);
-    assert.equal(new Set(manifest.components.map((component) => component.id)).size, 131);
+    assert.equal(new Set(manifest.components.map((component) => component.id)).size, 132);
 
     for (const component of manifest.components) {
       assert.match(component.importPath, /^@kern-ui\/angular\//);

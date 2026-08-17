@@ -765,6 +765,13 @@
       "importPath": "@kern-ui/angular/kit",
       "lifecycle": "stable"
     },
+    "json-view": {
+      "symbol": "KrnJsonView",
+      "canonicalSymbol": "KrnJsonView",
+      "selector": "krn-json-view",
+      "importPath": "@kern-ui/angular/kit",
+      "lifecycle": "beta"
+    },
     "keyboard-shortcut": {
       "symbol": "KrnKeyboardShortcut",
       "canonicalSymbol": "KrnKeyboardShortcut",
@@ -1251,6 +1258,12 @@
       "owner": "kit",
       "kind": "class"
     },
+    "KrnAlertAppearance": {
+      "canonicalSymbol": "KrnAlertAppearance",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "type"
+    },
     "KrnAlertDialog": {
       "canonicalSymbol": "KrnAlertDialog",
       "importPath": "@kern-ui/angular/kit",
@@ -1316,6 +1329,18 @@
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "class"
+    },
+    "KrnBadgeSize": {
+      "canonicalSymbol": "KrnBadgeSize",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "type"
+    },
+    "KrnBadgeVariant": {
+      "canonicalSymbol": "KrnBadgeVariant",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "type"
     },
     "KrnBanner": {
       "canonicalSymbol": "KrnBanner",
@@ -2529,6 +2554,42 @@
       "owner": "cdk",
       "kind": "interface"
     },
+    "KrnJsonNodeHarness": {
+      "canonicalSymbol": "KrnJsonNodeHarness",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "class"
+    },
+    "KrnJsonNodeHarnessFilters": {
+      "canonicalSymbol": "KrnJsonNodeHarnessFilters",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "interface"
+    },
+    "KrnJsonPrimitive": {
+      "canonicalSymbol": "KrnJsonPrimitive",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "type"
+    },
+    "KrnJsonValue": {
+      "canonicalSymbol": "KrnJsonValue",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "type"
+    },
+    "KrnJsonView": {
+      "canonicalSymbol": "KrnJsonView",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "class"
+    },
+    "KrnJsonViewHarness": {
+      "canonicalSymbol": "KrnJsonViewHarness",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "class"
+    },
     "KrnKeyboardShortcut": {
       "canonicalSymbol": "KrnKeyboardShortcut",
       "importPath": "@kern-ui/angular/kit",
@@ -2906,6 +2967,18 @@
       "importPath": "@kern-ui/angular/kit",
       "owner": "kit",
       "kind": "class"
+    },
+    "KrnOverlaySide": {
+      "canonicalSymbol": "KrnOverlaySide",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "type"
+    },
+    "KrnOverlaySize": {
+      "canonicalSymbol": "KrnOverlaySize",
+      "importPath": "@kern-ui/angular/kit",
+      "owner": "kit",
+      "kind": "type"
     },
     "KrnOverlayTemplateContext": {
       "canonicalSymbol": "KrnOverlayTemplateContext",

@@ -50,6 +50,7 @@ void bootstrapApplication(KernBannerAgentExample);
 | Name           | Kind   | Type                  | Required | Default     | Description                                                                      |
 | -------------- | ------ | --------------------- | -------- | ----------- | -------------------------------------------------------------------------------- |
 | `tone`         | input  | `KrnFeedbackTone`     | no       | `'info'`    | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
+| `appearance`   | input  | `KrnAlertAppearance`  | no       | `'subtle'`  | Selects the alert surface treatment without changing its semantic tone.          |
 | `title`        | input  | `string`              | no       | `''`        | Visible title that also names the component surface or data view.                |
 | `icon`         | input  | `string`              | no       | `''`        | Semantic icon name rendered alongside the visible component content.             |
 | `dismissible`  | input  | `boolean`             | no       | `false`     | Controls whether the user can dismiss the surface before completing an action.   |
@@ -103,8 +104,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/banner`
 
 Scenarios: `default`.
-Public API coverage: 4/5
-directly controlled; 1 exact exclusions; 0 unclassified.
+Public API coverage: 4/6
+directly controlled; 2 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -121,6 +122,7 @@ Exact API exclusions:
 
 | Public API     | Category           | Evidence                                            | Reason                                                                                                                                                               |
 | -------------- | ------------------ | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `appearance`   | complex-data       | `specimen-fixture:preview/banner?state=default`     | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                     |
 | `dismissLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#banner` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:

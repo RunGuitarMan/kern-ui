@@ -4,6 +4,7 @@
   [attr.data-invalid]="a11y.invalid()"
   [attr.data-readonly]="a11y.readOnly()"
 >
+  <span class="krn-select-leading"><ng-content select="[krnPrefix]" /></span>
   <select
     #select
     class="krn-select-native"
@@ -43,7 +44,8 @@
       </option>
     }
   </select>
-  <span class="krn-control-affix" aria-hidden="true">
+  <span class="krn-select-trailing" aria-hidden="true">
+    <ng-content select="[krnSuffix]" />
     <span class="krn-select-chevron"></span>
   </span>
 </span>

@@ -123,7 +123,7 @@ invariant(
   typeof normalizeStateId === 'function',
   'normalizeKernPlaygroundStateId must be exported for agents and registry tooling.',
 );
-invariant(catalog.length === 131, `Expected 131 catalog components, received ${catalog.length}.`);
+invariant(catalog.length === 132, `Expected 132 catalog components, received ${catalog.length}.`);
 invariant(
   definitions.length === catalog.length,
   `Expected ${catalog.length} playground definitions, received ${definitions.length}.`,
@@ -581,16 +581,16 @@ invariant(
   `Playground control binding provenance is invalid:\n- ${bindingIssues.join('\n- ')}`,
 );
 invariant(
-  apiCoverage.publicInputsAndModels === 1031,
-  `Expected 1031 public inputs/models, received ${apiCoverage.publicInputsAndModels}.`,
+  apiCoverage.publicInputsAndModels === 1057,
+  `Expected 1057 public inputs/models, received ${apiCoverage.publicInputsAndModels}.`,
 );
 invariant(
-  apiCoverage.controlled === 644,
-  `Expected 644 directly controlled public inputs/models, received ${apiCoverage.controlled}.`,
+  apiCoverage.controlled === 663,
+  `Expected 663 directly controlled public inputs/models, received ${apiCoverage.controlled}.`,
 );
 invariant(
-  apiCoverage.excluded === 387,
-  `Expected 387 exact API exclusions, received ${apiCoverage.excluded}.`,
+  apiCoverage.excluded === 394,
+  `Expected 394 exact API exclusions, received ${apiCoverage.excluded}.`,
 );
 invariant(apiCoverage.unclassified === 0, 'Public playground API contains unclassified members.');
 invariant(

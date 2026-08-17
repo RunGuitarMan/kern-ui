@@ -455,13 +455,13 @@ test('component and agent generators share the stable type serializer', async ()
 test('committed lifecycle and manual evidence registries verify', () => {
   const lifecycle = run(lifecycleScript);
   assert.equal(lifecycle.status, 0, lifecycle.stderr);
-  assert.match(lifecycle.stdout, /131 catalog entries, 483 public symbols/);
+  assert.match(lifecycle.stdout, /132 catalog entries, 494 public symbols/);
 
   const componentInventory = run(componentInventoryScript);
   assert.equal(componentInventory.status, 0, componentInventory.stderr);
   assert.match(
     componentInventory.stdout,
-    /135 public review units \(126 catalog \+ 9 supporting\), 3 internal, 149 selectors/,
+    /136 public review units \(127 catalog \+ 9 supporting\), 3 internal, 150 selectors/,
   );
 
   const accessibility = run(accessibilityScript);
@@ -993,7 +993,7 @@ test('lifecycle evidence is materialized and release mode requires an attestatio
   assert.equal(generated.status, 0, generated.stderr);
 
   const evidence = JSON.parse(await readFile(lifecycleEvidencePath, 'utf8'));
-  assert.equal(evidence.components.length, 131);
+  assert.equal(evidence.components.length, 132);
   const button = evidence.components.find((component) => component.id === 'button');
   assert.ok(button, 'fixture requires Button lifecycle evidence');
   assert.deepEqual(button.evidence.find((item) => item.kind === 'unit')?.artifactIds, [

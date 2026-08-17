@@ -390,6 +390,13 @@
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.
 
+## JSON View
+
+- Do not omit required inputs: `data`.
+- Importing from an undeclared family path or a source implementation file.
+- Loading only tokens.css instead of the complete styles/kern.css component bundle.
+- Assuming the documentation SSR build replaces validation of the consuming application.
+
 ## Keyboard Shortcut
 
 - Do not omit required inputs: `keys`.

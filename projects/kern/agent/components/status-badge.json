@@ -65,11 +65,37 @@
       "defaultValue": "false",
       "description": "Current domain status rendered as visible text and a non-color-only treatment.",
       "descriptionSource": "inferred"
+    },
+    {
+      "name": "variant",
+      "property": "variant",
+      "kind": "input",
+      "type": "KrnBadgeVariant",
+      "required": false,
+      "defaultValue": "'subtle'",
+      "description": "Controls whether the badge uses a filled, tinted, or outlined surface.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "size",
+      "property": "size",
+      "kind": "input",
+      "type": "KrnBadgeSize",
+      "required": false,
+      "defaultValue": "'md'",
+      "description": "Controls the badge height, horizontal padding, and text density.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [
     {
-      "name": "default",
+      "name": "krnBadgeIcon",
+      "selector": "[krnBadgeIcon]",
+      "required": false,
+      "description": "Projects content matching [krnBadgeIcon]."
+    },
+    {
+      "name": "default-2",
       "selector": "*",
       "required": false,
       "description": "Projects default component content."
@@ -123,7 +149,9 @@
     "KrnStatusBadge",
     "KrnBadge",
     "tone",
-    "status"
+    "status",
+    "variant",
+    "size"
   ],
   "guidance": {
     "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
@@ -290,11 +318,36 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 2,
+      "publicInputsAndModels": 4,
       "controlled": 2,
-      "excluded": 0,
+      "excluded": 2,
       "unclassified": 0
     },
-    "exclusions": []
+    "exclusions": [
+      {
+        "componentId": "status-badge",
+        "publicName": "size",
+        "kind": "input",
+        "type": "KrnBadgeSize",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/status-badge?state=default"
+        }
+      },
+      {
+        "componentId": "status-badge",
+        "publicName": "variant",
+        "kind": "input",
+        "type": "KrnBadgeVariant",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/status-badge?state=default"
+        }
+      }
+    ]
   }
 }

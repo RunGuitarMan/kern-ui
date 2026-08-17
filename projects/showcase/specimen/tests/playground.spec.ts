@@ -30,7 +30,7 @@ function definition(id: string): KernPlaygroundDefinition {
 
 describe('KERN playground registry', () => {
   it('covers every catalog item exactly once with an interactive contract', () => {
-    expect(KERN_CATALOG).toHaveLength(131);
+    expect(KERN_CATALOG).toHaveLength(132);
     expect(KERN_PLAYGROUND_DEFINITIONS).toHaveLength(KERN_CATALOG.length);
     expect(Object.isFrozen(KERN_PLAYGROUND_DEFINITIONS)).toBe(true);
     expect(new Set(KERN_PLAYGROUND_DEFINITIONS.map(({ id }) => id)).size).toBe(KERN_CATALOG.length);
@@ -586,12 +586,12 @@ describe('KERN playground registry', () => {
 
   it('classifies every public input/model as one real control or one exact exclusion', () => {
     expect(KERN_PLAYGROUND_API_COVERAGE).toEqual({
-      publicInputsAndModels: 1031,
-      controlled: 644,
-      excluded: 387,
+      publicInputsAndModels: 1057,
+      controlled: 663,
+      excluded: 394,
       unclassified: 0,
     });
-    expect(KERN_PLAYGROUND_API_EXCLUSIONS).toHaveLength(387);
+    expect(KERN_PLAYGROUND_API_EXCLUSIONS).toHaveLength(394);
     expect(Object.values(KERN_PLAYGROUND_AUTO_CONTROL_KEYS).flat().length).toBeGreaterThan(0);
 
     for (const item of KERN_CATALOG) {

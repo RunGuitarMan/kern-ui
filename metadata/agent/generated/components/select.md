@@ -63,6 +63,7 @@ void bootstrapApplication(KernSelectAgentExample);
 | Name               | Kind   | Type                                             | Required | Default                                | Description                                                                                      |
 | ------------------ | ------ | ------------------------------------------------ | -------- | -------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | `id`               | input  | `string`                                         | no       | `''`                                   | Stable identifier value used by the id contract.                                                 |
+| `size`             | input  | `KrnSize`                                        | no       | `'md'`                                 | Controls the custom select trigger height and content density.                                   |
 | `placeholder`      | input  | `string \| undefined`                            | no       | `undefined`                            | Short input hint shown only while no value is present.                                           |
 | `emptyText`        | input  | `string \| undefined`                            | no       | `undefined`                            | Visible and announced copy when the data collection has no items.                                |
 | `loadingText`      | input  | `string \| undefined`                            | no       | `undefined`                            | Visible and announced copy while asynchronous data is loading.                                   |
@@ -94,7 +95,8 @@ _No deprecated selectors._
 
 ## Content slots
 
-_No projected content slots._
+- `[krnPrefix]` — Projects content matching [krnPrefix].
+- `[krnSuffix]` — Projects content matching [krnSuffix].
 
 ## Angular Forms
 
@@ -148,7 +150,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/select`
 
 Scenarios: `default`, `stress`.
-Public API coverage: 12/23
+Public API coverage: 13/24
 directly controlled; 11 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -158,6 +160,7 @@ component inputs or models.
 | Argument       | Control | Default                    | Test value                             | Binding                         | Description                                                          |
 | -------------- | ------- | -------------------------- | -------------------------------------- | ------------------------------- | -------------------------------------------------------------------- |
 | `placeholder`  | text    | `"Choose a plan"`          | `"Choose a plan · alternate"`          | input `placeholder` (property)  | Sets the empty selection prompt.                                     |
+| `size`         | select  | `"md"`                     | `"sm"`                                 | input `size` (property)         | Changes the control height.                                          |
 | `optionsState` | select  | `"ready"`                  | `"loading"`                            | input `optionsState` (property) | Shows ready, loading, or error option content.                       |
 | `emptyText`    | text    | `"No options"`             | `"No options · alternate"`             | input `emptyText` (property)    | Uses locale-aware empty-options copy until explicitly changed.       |
 | `errorText`    | text    | `"Could not load options"` | `"Could not load options · alternate"` | input `errorText` (property)    | Uses locale-aware option-load failure copy until explicitly changed. |

@@ -246,6 +246,25 @@
       "Consumers must verify narrow-layout fallback and safe content width with production forms."
     ]
   },
+  "json-view": {
+    "useWhen": "Use JSON View when users need to inspect structured application data while preserving hierarchy, value types, and copyable text.",
+    "avoidWhen": "Use Code Block for an immutable source excerpt, and a purpose-built detail view when users must edit or act on individual fields.",
+    "keyboard": [
+      "Arrow Up and Arrow Down move the single roving focus through visible properties.",
+      "Arrow Right expands or enters a branch; Arrow Left collapses it or returns to its parent.",
+      "Home and End move to the first and last visible property; Enter or Space toggles a branch."
+    ],
+    "a11yNotes": [
+      "The tree exposes each visible property's hierarchy, sibling position, and expansion state.",
+      "Keys and typed primitive values remain text, so syntax color is never the only representation.",
+      "Highlighting uses a visible mark treatment without replacing the underlying accessible text."
+    ],
+    "lifecycleRationale": "The structured-data tree remains beta while large-payload performance, controlled expansion, and manual assistive-technology evidence mature.",
+    "knownLimitations": [
+      "The component intentionally renders read-only JSON-compatible values and does not provide inline editing or schema validation.",
+      "Consumers must paginate, summarize, or virtualize very large payloads before passing them to the component."
+    ]
+  },
   "line-chart": {
     "useWhen": "Use Line Chart for an ordered trend where direction and change over adjacent values are the primary task.",
     "avoidWhen": "Use Bar Chart for unordered category comparison and a table when exact values dominate.",

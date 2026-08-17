@@ -73,6 +73,36 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "modal",
+      "property": "modal",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Blocks background interaction and traps focus while the drawer is open.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "size",
+      "property": "size",
+      "kind": "input",
+      "type": "KrnOverlaySize",
+      "required": false,
+      "defaultValue": "'md'",
+      "description": "Selects the drawer thickness along its entry edge.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "side",
+      "property": "side",
+      "kind": "input",
+      "type": "KrnOverlaySide",
+      "required": false,
+      "defaultValue": "'right'",
+      "description": "Chooses the physical or logical viewport edge from which the drawer enters.",
+      "descriptionSource": "source"
+    },
+    {
       "name": "title",
       "property": "title",
       "kind": "input",
@@ -281,6 +311,9 @@
     "overlay",
     "focus trap",
     "open",
+    "modal",
+    "size",
+    "side",
     "title",
     "description",
     "eyebrow",
@@ -333,6 +366,77 @@
         "binding": {
           "kind": "model",
           "publicName": "open"
+        }
+      },
+      {
+        "key": "side",
+        "label": "Side",
+        "kind": "select",
+        "defaultValue": "right",
+        "testValue": "top",
+        "description": "Chooses the viewport edge.",
+        "binding": {
+          "kind": "input",
+          "publicName": "side",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "top",
+            "value": "top"
+          },
+          {
+            "label": "right",
+            "value": "right"
+          },
+          {
+            "label": "bottom",
+            "value": "bottom"
+          },
+          {
+            "label": "left",
+            "value": "left"
+          }
+        ]
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "kind": "select",
+        "defaultValue": "md",
+        "testValue": "sm",
+        "description": "Sets the sheet width or height.",
+        "binding": {
+          "kind": "input",
+          "publicName": "size",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "sm",
+            "value": "sm"
+          },
+          {
+            "label": "md",
+            "value": "md"
+          },
+          {
+            "label": "lg",
+            "value": "lg"
+          }
+        ]
+      },
+      {
+        "key": "modal",
+        "label": "Modal",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Controls focus trapping and backdrop behavior.",
+        "binding": {
+          "kind": "input",
+          "publicName": "modal",
+          "syntax": "property"
         }
       },
       {
@@ -554,8 +658,8 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 13,
-      "controlled": 7,
+      "publicInputsAndModels": 16,
+      "controlled": 10,
       "excluded": 6,
       "unclassified": 0
     },

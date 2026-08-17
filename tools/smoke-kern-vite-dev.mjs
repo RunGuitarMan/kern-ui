@@ -235,7 +235,22 @@ async function verifyBrowserRuntime() {
       throw new Error('Component navigation reloaded the document instead of using Angular.');
     }
     if (routeScriptResponses.length === 0) {
-      throw new Error('Cross-category navigation did not load a lazy Vite script chunk.');
+      const loadedLazyChunks = await page.evaluate(
+        () =>
+          performance
+            .getEntriesByType('resource')
+            .filter(
+              (entry) =>
+                entry instanceof PerformanceResourceTiming &&
+                entry.initiatorType === 'script' &&
+                /[/]chunk-[^/]+[.]js(?:[?]|$)/.test(entry.name),
+            ).length,
+      );
+      if (loadedLazyChunks === 0) {
+        throw new Error(
+          'Cross-category navigation neither loaded nor reused a lazy Vite script chunk.',
+        );
+      }
     }
 
     const workspaceName = formFieldSpecimen.getByRole('textbox', { name: /Workspace name/ });

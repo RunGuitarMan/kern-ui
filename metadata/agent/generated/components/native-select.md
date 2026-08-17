@@ -57,6 +57,7 @@ void bootstrapApplication(KernNativeSelectAgentExample);
 | ----------------- | ------ | ----------------------------------- | -------- | -------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | `id`              | input  | `string`                            | no       | `''`                                   | Stable identifier value used by the id contract.                                                 |
 | `name`            | input  | `string`                            | no       | `''`                                   | Required human-readable name for the represented person, item, or action.                        |
+| `size`            | input  | `KrnSize`                           | no       | `'md'`                                 | Controls the native select trigger height and content density.                                   |
 | `placeholder`     | input  | `string`                            | no       | `''`                                   | Short input hint shown only while no value is present.                                           |
 | `ariaLabel`       | input  | `string`                            | no       | `''`                                   | Accessible name used when visible content is not sufficient.                                     |
 | `ariaLabelledBy`  | input  | `string`                            | no       | `''`                                   | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
@@ -80,7 +81,8 @@ _No deprecated selectors._
 
 ## Content slots
 
-_No projected content slots._
+- `[krnPrefix]` — Projects content matching [krnPrefix].
+- `[krnSuffix]` — Projects content matching [krnSuffix].
 
 ## Angular Forms
 
@@ -130,7 +132,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/native-select`
 
 Scenarios: `default`, `stress`.
-Public API coverage: 7/17
+Public API coverage: 8/18
 directly controlled; 10 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -140,6 +142,7 @@ component inputs or models.
 | Argument      | Control | Default             | Test value                      | Binding                        | Description                                       |
 | ------------- | ------- | ------------------- | ------------------------------- | ------------------------------ | ------------------------------------------------- |
 | `placeholder` | text    | `"Choose a region"` | `"Choose a region · alternate"` | input `placeholder` (property) | Sets the empty selection prompt.                  |
+| `size`        | select  | `"md"`              | `"sm"`                          | input `size` (property)        | Changes the control height.                       |
 | `disabled`    | boolean | `false`             | `true`                          | input `disabled` (property)    | Prevents user interaction.                        |
 | `readOnly`    | boolean | `false`             | `true`                          | input `readonly` (property)    | Keeps the value focusable while preventing edits. |
 | `required`    | boolean | `false`             | `true`                          | input `required` (property)    | Marks the control as required.                    |

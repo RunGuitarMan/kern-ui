@@ -582,7 +582,9 @@
                 aria-label="View mode"
                 [multiple]="booleanArgument('multiple')"
                 [disabled]="booleanArgument('disabled', false)"
+                [connected]="booleanArgument('connected', true)"
                 [orientation]="stringArgument('orientation', 'horizontal')"
+                [size]="stringArgument('size', 'sm')"
                 [(values)]="toggleValues"
               >
                 <button krnToggleButton value="list">List</button>
@@ -939,6 +941,7 @@
                   ><krn-select
                     ariaLabel="Workspace plan"
                     [placeholder]="stringArgument('placeholder', 'Choose a plan')"
+                    [size]="stringArgument('size', 'md')"
                     [options]="activeSelectOptions()"
                     [optionsState]="optionsStateArgument('loading')"
                     [(open)]="selectOpen"
@@ -974,6 +977,7 @@
                   ><krn-native-select
                     ariaLabel="Data region"
                     [placeholder]="stringArgument('placeholder', 'Choose a region')"
+                    [size]="stringArgument('size', 'md')"
                     [options]="activeSelectOptions()"
                     [disabled]="booleanArgument('disabled')"
                     [readonly]="booleanArgument('readOnly')"
@@ -1513,6 +1517,7 @@
               <div class="feedback-stack">
                 <krn-alert
                   [tone]="stringArgument('tone', 'success')"
+                  [appearance]="stringArgument('appearance', 'subtle')"
                   [title]="stringArgument('title', 'Changes published')"
                   [dismissible]="booleanArgument('dismissible', true)"
                   [icon]="stringArgument('icon', '')"
@@ -1524,6 +1529,7 @@
             }
             @case ('banner') {
               <krn-banner
+                [appearance]="stringArgument('appearance', 'subtle')"
                 [dismissible]="booleanArgument('dismissible')"
                 [icon]="stringArgument('icon', '')"
                 [title]="stringArgument('title', 'Scheduled maintenance')"
@@ -1539,9 +1545,9 @@
               <krn-toast-viewport
                 ariaLabel="Specimen notifications"
                 [(expanded)]="toastExpanded"
-                [maxExpanded]="numberArgument('maxExpanded', 12)"
-                [maxVisible]="numberArgument('maxVisible', 4)"
-                [position]="stringArgument('position', 'top-end')"
+                [maxExpanded]="numberArgument('maxExpanded', 8)"
+                [maxVisible]="numberArgument('maxVisible', 3)"
+                [position]="stringArgument('position', 'bottom-end')"
               />
             }
             @case ('tooltip') {
@@ -1595,6 +1601,8 @@
                 [title]="stringArgument('title', 'Edit workspace')"
                 [description]="stringArgument('description', 'Changes apply to every member.')"
                 [showClose]="booleanArgument('showClose', true)"
+                [modal]="booleanArgument('modal', true)"
+                [size]="stringArgument('size', 'md')"
                 [closeOnEscape]="booleanArgument('closeOnEscape', true)"
                 [(open)]="surfaceOpen"
                 [closeOnOutside]="nullableBooleanArgument('closeOnOutside')"
@@ -1625,9 +1633,11 @@
               <krn-alert-dialog
                 [(open)]="surfaceOpen"
                 [closeOnOutside]="nullableBooleanArgument('closeOnOutside')"
+                [size]="stringArgument('size', 'md')"
                 [closeOnEscape]="booleanArgument('closeOnEscape', true)"
                 [description]="stringArgument('description', 'This action cannot be undone.')"
                 [eyebrow]="stringArgument('eyebrow', '')"
+                [modal]="booleanArgument('modal', true)"
                 [showClose]="booleanArgument('showClose', true)"
                 [title]="stringArgument('title', 'Delete Northstar?')"
                 ><p>18 automations and 42 reports will also be deleted.</p>
@@ -1654,6 +1664,9 @@
               <krn-drawer
                 [(open)]="surfaceOpen"
                 [closeOnOutside]="nullableBooleanArgument('closeOnOutside')"
+                [modal]="booleanArgument('modal', false)"
+                [side]="stringArgument('side', 'right')"
+                [size]="stringArgument('size', 'md')"
                 [closeOnEscape]="booleanArgument('closeOnEscape', true)"
                 [description]="stringArgument('description', '')"
                 [eyebrow]="stringArgument('eyebrow', 'AUDIT')"
@@ -1678,6 +1691,8 @@
               <krn-bottom-sheet
                 [(open)]="surfaceOpen"
                 [closeOnOutside]="nullableBooleanArgument('closeOnOutside')"
+                [modal]="booleanArgument('modal', true)"
+                [size]="stringArgument('size', 'md')"
                 [closeOnEscape]="booleanArgument('closeOnEscape', true)"
                 [description]="stringArgument('description', '')"
                 [eyebrow]="stringArgument('eyebrow', '')"
@@ -1850,6 +1865,8 @@
               <div class="badge-gallery">
                 <krn-badge
                   [tone]="stringArgument('tone', 'neutral')"
+                  [variant]="stringArgument('variant', 'subtle')"
+                  [size]="stringArgument('size', 'md')"
                   [status]="booleanArgument('status')"
                   >Draft</krn-badge
                 ><krn-badge tone="brand">Pro</krn-badge><krn-badge tone="info">Beta</krn-badge
@@ -1860,6 +1877,8 @@
               <div class="badge-gallery">
                 <krn-status-badge
                   [tone]="stringArgument('tone', 'success')"
+                  [variant]="stringArgument('variant', 'subtle')"
+                  [size]="stringArgument('size', 'md')"
                   [status]="booleanArgument('status', true)"
                   >Healthy</krn-status-badge
                 ><krn-status-badge status tone="warning">Attention</krn-status-badge
@@ -2133,6 +2152,16 @@
                 [languageLabel]="stringArgument('languageLabel', '')"
                 [(copied)]="codeCopied"
                 [code]="stringArgumentOverride('code', codeSnippet)"
+              />
+            }
+            @case ('json-view') {
+              <krn-json-view
+                ariaLabel="Deployment JSON"
+                [data]="jsonPayload"
+                [highlightPattern]="stringArgument('highlightPattern', '')"
+                [defaultExpandDepth]="numberArgument('defaultExpandDepth', 2)"
+                [sortKeys]="booleanArgument('sortKeys', false)"
+                [wrap]="booleanArgument('wrap', true)"
               />
             }
             @case ('keyboard-shortcut') {

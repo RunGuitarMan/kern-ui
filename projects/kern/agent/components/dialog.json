@@ -73,6 +73,26 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "modal",
+      "property": "modal",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "true",
+      "description": "Blocks background interaction and traps focus while the dialog is open.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "size",
+      "property": "size",
+      "kind": "input",
+      "type": "KrnOverlaySize",
+      "required": false,
+      "defaultValue": "'md'",
+      "description": "Selects the dialog's maximum inline size.",
+      "descriptionSource": "source"
+    },
+    {
       "name": "title",
       "property": "title",
       "kind": "input",
@@ -291,6 +311,7 @@
     "overlay",
     "form dialog",
     "open",
+    "size",
     "title",
     "description",
     "eyebrow",
@@ -357,6 +378,46 @@
         "binding": {
           "kind": "input",
           "publicName": "description",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "kind": "select",
+        "defaultValue": "md",
+        "testValue": "sm",
+        "description": "Sets the dialog width.",
+        "binding": {
+          "kind": "input",
+          "publicName": "size",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "sm",
+            "value": "sm"
+          },
+          {
+            "label": "md",
+            "value": "md"
+          },
+          {
+            "label": "lg",
+            "value": "lg"
+          }
+        ]
+      },
+      {
+        "key": "modal",
+        "label": "Modal",
+        "kind": "boolean",
+        "defaultValue": true,
+        "testValue": false,
+        "description": "Traps focus and makes the background inert.",
+        "binding": {
+          "kind": "input",
+          "publicName": "modal",
           "syntax": "property"
         }
       },
@@ -565,8 +626,8 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 13,
-      "controlled": 7,
+      "publicInputsAndModels": 15,
+      "controlled": 9,
       "excluded": 6,
       "unclassified": 0
     },

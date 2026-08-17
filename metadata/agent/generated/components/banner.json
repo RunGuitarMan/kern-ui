@@ -57,6 +57,16 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "appearance",
+      "property": "appearance",
+      "kind": "input",
+      "type": "KrnAlertAppearance",
+      "required": false,
+      "defaultValue": "'subtle'",
+      "description": "Selects the alert surface treatment without changing its semantic tone.",
+      "descriptionSource": "source"
+    },
+    {
       "name": "title",
       "property": "title",
       "kind": "input",
@@ -168,6 +178,7 @@
     "krn-banner",
     "KrnBanner",
     "tone",
+    "appearance",
     "title",
     "icon",
     "dismissible",
@@ -361,12 +372,24 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 5,
+      "publicInputsAndModels": 6,
       "controlled": 4,
-      "excluded": 1,
+      "excluded": 2,
       "unclassified": 0
     },
     "exclusions": [
+      {
+        "componentId": "banner",
+        "publicName": "appearance",
+        "kind": "input",
+        "type": "KrnAlertAppearance",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/banner?state=default"
+        }
+      },
       {
         "componentId": "banner",
         "publicName": "dismissLabel",

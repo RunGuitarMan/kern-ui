@@ -70,7 +70,7 @@ test.describe('Complete component specimen routing', () => {
       }
     });
 
-    expect(KERN_CATALOG).toHaveLength(131);
+    expect(KERN_CATALOG).toHaveLength(132);
 
     for (const item of KERN_CATALOG) {
       activeRoute = item.id;

@@ -7,5 +7,6 @@ export * from './disclosure';
 export * from './timeline';
 export * from './tree';
 export * from './code-block';
+export * from './json-view';
 export * from './meter';
 export * from './responsive-media';

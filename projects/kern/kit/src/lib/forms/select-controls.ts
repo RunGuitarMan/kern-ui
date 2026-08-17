@@ -26,6 +26,7 @@ import { Combobox, ComboboxPopup, ComboboxWidget } from '@angular/aria/combobox'
 import { Listbox, Option } from '@angular/aria/listbox';
 import type {
   KrnAutocompleteMode,
+  KrnControlSize,
   KrnIdentityMatcher,
   KrnOptionDisabledHandler,
   KrnOptionFilter,
@@ -83,6 +84,7 @@ const focusStayedWithin = (event: FocusEvent): boolean => {
     class: 'krn-select-host',
     '[attr.id]': 'null',
     '[attr.tabindex]': 'null',
+    '[attr.data-size]': 'size()',
   },
   providers: [...provideKrnFormControl()],
   templateUrl: './native-select.html',
@@ -92,6 +94,8 @@ export class KrnNativeSelect<T = string> {
   private readonly select = viewChild<ElementRef<HTMLSelectElement>>('select');
   readonly id = input('');
   readonly name = input('');
+  /** Controls the native select trigger height and content density. */
+  readonly size = input<KrnControlSize>('md');
   readonly placeholder = input('');
   readonly ariaLabel = input('');
   readonly ariaLabelledBy = input('');
@@ -253,6 +257,8 @@ export class KrnNativeSelect<T = string> {
     class: 'krn-select-host',
     '[attr.id]': 'null',
     '[attr.tabindex]': 'null',
+    '[attr.data-size]': 'size()',
+    '[attr.data-open]': 'open()',
   },
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, NgTemplateOutlet, Option],
   providers: [...provideKrnFormControl()],
@@ -263,6 +269,8 @@ export class KrnSelect<T = string> {
   readonly #translations = inject(KRN_TRANSLATIONS);
   private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
   readonly id = input('');
+  /** Controls the custom select trigger height and content density. */
+  readonly size = input<KrnControlSize>('md');
   readonly placeholder = input<string | undefined>();
   protected readonly resolvedPlaceholder = krnInputFallback(
     this.placeholder,

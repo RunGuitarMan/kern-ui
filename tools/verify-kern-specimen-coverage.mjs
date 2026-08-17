@@ -20,9 +20,9 @@ const renderedIds = new Set(
 const catalogIds = manifest.components.map((component) => component.id);
 const missing = catalogIds.filter((id) => !renderedIds.has(id));
 
-if (manifest.components.length !== 131) {
+if (manifest.components.length !== 132) {
   throw new Error(
-    `Expected the closed 131-component catalog, received ${manifest.components.length}.`,
+    `Expected the closed 132-component catalog, received ${manifest.components.length}.`,
   );
 }
 if (missing.length) {

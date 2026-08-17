@@ -144,6 +144,7 @@ KERN is a standalone Angular component library for enterprise product interfaces
 - [Data Grid](./components/data-grid.md): `krn-data-grid`, beta, import from `@kern-ui/angular/addon-grid`.
 - [Calendar](./components/calendar.md): `krn-calendar`, stable, import from `@kern-ui/angular/kit`.
 - [Code Block](./components/code-block.md): `krn-code-block`, stable, import from `@kern-ui/angular/kit`.
+- [JSON View](./components/json-view.md): `krn-json-view`, beta, import from `@kern-ui/angular/kit`.
 - [Keyboard Shortcut](./components/keyboard-shortcut.md): `krn-keyboard-shortcut`, stable, import from `@kern-ui/angular/kit`.
 - [Meter](./components/meter.md): `krn-meter`, stable, import from `@kern-ui/angular/kit`.
 - [Rating](./components/rating.md): `krn-rating`, stable, import from `@kern-ui/angular/kit`.
@@ -5244,6 +5245,8 @@ void bootstrapApplication(KernToggleGroupAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `orientation` | input | `KrnOrientation` | no | `this.options.orientation` | Defines both the visual layout axis and the toolbar Arrow-key axis. |
+| `size` | input | `KrnSize` | no | `'sm'` | Controls the density of every direct toggle without repeating size on each item. |
+| `connected` | input | `boolean` | no | `true` | Joins direct toggles into a single segmented control surface. |
 | `multiple` | input | `boolean` | no | `this.options.multiple` | Allows multiple pressed values; false exposes at most one effective pressed value. |
 | `disabled` | input | `boolean` | no | `false` | Disables every registered native toggle and all group-owned value transitions. |
 | `values` | model | `ReadonlyArray<string>` | no | `[]` | Controlled stable string values; user transitions always emit a fresh frozen array. |
@@ -5303,7 +5306,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/toggle-group`
 
 Scenarios: `default`.
-Public API coverage: 3/4
+Public API coverage: 5/6
 directly controlled; 1 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -5313,6 +5316,8 @@ component inputs or models.
 | Argument | Control | Default | Test value | Binding | Description |
 | --- | --- | --- | --- | --- | --- |
 | `orientation` | select | `"horizontal"` | `"vertical"` | input `orientation` (property) | Changes the visual layout and Arrow-key axis exposed by the toolbar. |
+| `size` | select | `"sm"` | `"md"` | input `size` (property) | Changes the segmented control density. |
+| `connected` | boolean | `true` | `false` | input `connected` (property) | Joins toggles into one segmented surface. |
 | `multiple` | boolean | `false` | `true` | input `multiple` (property) | Allows more than one toggle to be selected. |
 | `disabled` | boolean | `false` | `true` | input `disabled` (property) | Disables every native toggle button while preserving perceivable toolbar semantics. |
 
@@ -5338,6 +5343,7 @@ Presets:
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
 - `selected` — selected; scenario `default`; fixture effect `status/neutral` — selected: The fixture exposes the selected status without claiming a public component input..
 - `unselected` — unselected; scenario `default`; fixture effect `status/neutral` — unselected: The fixture exposes the unselected status without claiming a public component input..
+- `separated` — Separated; scenario `default`; `connected=false`.
 
 ## Related
 
@@ -8710,6 +8716,7 @@ void bootstrapApplication(KernSelectAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `id` | input | `string` | no | `''` | Stable identifier value used by the id contract. |
+| `size` | input | `KrnSize` | no | `'md'` | Controls the custom select trigger height and content density. |
 | `placeholder` | input | `string \| undefined` | no | `undefined` | Short input hint shown only while no value is present. |
 | `emptyText` | input | `string \| undefined` | no | `undefined` | Visible and announced copy when the data collection has no items. |
 | `loadingText` | input | `string \| undefined` | no | `undefined` | Visible and announced copy while asynchronous data is loading. |
@@ -8741,7 +8748,8 @@ _No deprecated selectors._
 
 ## Content slots
 
-_No projected content slots._
+- `[krnPrefix]` — Projects content matching [krnPrefix].
+- `[krnSuffix]` — Projects content matching [krnSuffix].
 
 ## Angular Forms
 
@@ -8795,7 +8803,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/select`
 
 Scenarios: `default`, `stress`.
-Public API coverage: 12/23
+Public API coverage: 13/24
 directly controlled; 11 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -8805,6 +8813,7 @@ component inputs or models.
 | Argument | Control | Default | Test value | Binding | Description |
 | --- | --- | --- | --- | --- | --- |
 | `placeholder` | text | `"Choose a plan"` | `"Choose a plan · alternate"` | input `placeholder` (property) | Sets the empty selection prompt. |
+| `size` | select | `"md"` | `"sm"` | input `size` (property) | Changes the control height. |
 | `optionsState` | select | `"ready"` | `"loading"` | input `optionsState` (property) | Shows ready, loading, or error option content. |
 | `emptyText` | text | `"No options"` | `"No options · alternate"` | input `emptyText` (property) | Uses locale-aware empty-options copy until explicitly changed. |
 | `errorText` | text | `"Could not load options"` | `"Could not load options · alternate"` | input `errorText` (property) | Uses locale-aware option-load failure copy until explicitly changed. |
@@ -8952,6 +8961,7 @@ void bootstrapApplication(KernNativeSelectAgentExample);
 | --- | --- | --- | --- | --- | --- |
 | `id` | input | `string` | no | `''` | Stable identifier value used by the id contract. |
 | `name` | input | `string` | no | `''` | Required human-readable name for the represented person, item, or action. |
+| `size` | input | `KrnSize` | no | `'md'` | Controls the native select trigger height and content density. |
 | `placeholder` | input | `string` | no | `''` | Short input hint shown only while no value is present. |
 | `ariaLabel` | input | `string` | no | `''` | Accessible name used when visible content is not sufficient. |
 | `ariaLabelledBy` | input | `string` | no | `''` | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
@@ -8975,7 +8985,8 @@ _No deprecated selectors._
 
 ## Content slots
 
-_No projected content slots._
+- `[krnPrefix]` — Projects content matching [krnPrefix].
+- `[krnSuffix]` — Projects content matching [krnSuffix].
 
 ## Angular Forms
 
@@ -9025,7 +9036,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/native-select`
 
 Scenarios: `default`, `stress`.
-Public API coverage: 7/17
+Public API coverage: 8/18
 directly controlled; 10 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -9035,6 +9046,7 @@ component inputs or models.
 | Argument | Control | Default | Test value | Binding | Description |
 | --- | --- | --- | --- | --- | --- |
 | `placeholder` | text | `"Choose a region"` | `"Choose a region · alternate"` | input `placeholder` (property) | Sets the empty selection prompt. |
+| `size` | select | `"md"` | `"sm"` | input `size` (property) | Changes the control height. |
 | `disabled` | boolean | `false` | `true` | input `disabled` (property) | Prevents user interaction. |
 | `readOnly` | boolean | `false` | `true` | input `readonly` (property) | Keeps the value focusable while preventing edits. |
 | `required` | boolean | `false` | `true` | input `required` (property) | Marks the control as required. |
@@ -14793,6 +14805,7 @@ void bootstrapApplication(KernAlertAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `tone` | input | `KrnFeedbackTone` | no | `'info'` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
+| `appearance` | input | `KrnAlertAppearance` | no | `'subtle'` | Selects the alert surface treatment without changing its semantic tone. |
 | `title` | input | `string` | no | `''` | Visible title that also names the component surface or data view. |
 | `icon` | input | `string` | no | `''` | Semantic icon name rendered alongside the visible component content. |
 | `dismissible` | input | `boolean` | no | `false` | Controls whether the user can dismiss the surface before completing an action. |
@@ -14805,6 +14818,7 @@ _No deprecated selectors._
 
 ## Content slots
 
+- `[krnAlertIcon]` — Projects content matching [krnAlertIcon].
 - `*` — Projects default component content.
 - `[krnAlertAction]` — Projects content matching [krnAlertAction].
 
@@ -14846,7 +14860,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/alert`
 
 Scenarios: `default`.
-Public API coverage: 4/5
+Public API coverage: 5/6
 directly controlled; 1 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -14856,6 +14870,7 @@ component inputs or models.
 | Argument | Control | Default | Test value | Binding | Description |
 | --- | --- | --- | --- | --- | --- |
 | `tone` | select | `"success"` | `"neutral"` | input `tone` (property) | Changes urgency and announcement behavior. |
+| `appearance` | select | `"subtle"` | `"outline"` | input `appearance` (property) | Changes the alert surface contrast. |
 | `title` | text | `"Changes published"` | `"Changes published · alternate"` | input `title` (property) | Sets the alert heading. |
 | `dismissible` | boolean | `true` | `false` | input `dismissible` (property) | Shows a close action. |
 | `icon` | text | `""` | `"Alternate value"` | input `icon` (property) | Configures the component icon contract. |
@@ -14955,6 +14970,7 @@ void bootstrapApplication(KernBannerAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `tone` | input | `KrnFeedbackTone` | no | `'info'` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
+| `appearance` | input | `KrnAlertAppearance` | no | `'subtle'` | Selects the alert surface treatment without changing its semantic tone. |
 | `title` | input | `string` | no | `''` | Visible title that also names the component surface or data view. |
 | `icon` | input | `string` | no | `''` | Semantic icon name rendered alongside the visible component content. |
 | `dismissible` | input | `boolean` | no | `false` | Controls whether the user can dismiss the surface before completing an action. |
@@ -15008,8 +15024,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/banner`
 
 Scenarios: `default`.
-Public API coverage: 4/5
-directly controlled; 1 exact exclusions; 0 unclassified.
+Public API coverage: 4/6
+directly controlled; 2 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -15026,6 +15042,7 @@ Exact API exclusions:
 
 | Public API | Category | Evidence | Reason |
 | --- | --- | --- | --- |
+| `appearance` | complex-data | `specimen-fixture:preview/banner?state=default` | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture. |
 | `dismissLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#banner` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
 
 Presets:
@@ -15123,9 +15140,9 @@ void bootstrapApplication(KernToastAgentExample);
 
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
-| `position` | input | `KrnToastPosition` | no | `'top-end'` | Logical placement of the component relative to its owning surface. |
-| `maxVisible` | input | `number` | no | `4` | Upper or lower bound applied to the visible value. |
-| `maxExpanded` | input | `number` | no | `12` | Upper or lower bound applied to the expanded value. |
+| `position` | input | `KrnToastPosition` | no | `'bottom-end'` | Logical placement of the component relative to its owning surface. |
+| `maxVisible` | input | `number` | no | `3` | Upper or lower bound applied to the visible value. |
+| `maxExpanded` | input | `number` | no | `8` | Upper or lower bound applied to the expanded value. |
 | `labels` | input | `Partial<KrnToastTranslations>` | no | `{}` | Localized copy overrides for the component-owned interface text. |
 | `ariaLabel` | input | `string \| undefined` | no | `undefined` | Accessible name used when visible content is not sufficient. |
 | `expanded` | model | `boolean` | no | `false` | Controlled expanded state for a disclosure or hierarchical item. |
@@ -15188,9 +15205,9 @@ component inputs or models.
 | Argument | Control | Default | Test value | Binding | Description |
 | --- | --- | --- | --- | --- | --- |
 | `expanded` | boolean | `false` | `true` | model `expanded` | Expands the toast viewport stack. |
-| `maxExpanded` | number | `12` | `13` | input `maxExpanded` (property) | Configures the component maxExpanded contract. |
-| `maxVisible` | number | `4` | `5` | input `maxVisible` (property) | Configures the component maxVisible contract. |
-| `position` | select | `"top-end"` | `"top-start"` | input `position` (property) | Configures the component position contract. |
+| `maxExpanded` | number | `8` | `9` | input `maxExpanded` (property) | Configures the component maxExpanded contract. |
+| `maxVisible` | number | `3` | `4` | input `maxVisible` (property) | Configures the component maxVisible contract. |
+| `position` | select | `"bottom-end"` | `"top-start"` | input `position` (property) | Configures the component position contract. |
 
 Exact API exclusions:
 
@@ -15811,6 +15828,8 @@ void bootstrapApplication(KernDialogAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `open` | model | `boolean` | no | `false` | Controls whether the disclosure or overlay surface is visible. |
+| `modal` | input | `boolean` | no | `true` | Blocks background interaction and traps focus while the dialog is open. |
+| `size` | input | `KrnOverlaySize` | no | `'md'` | Selects the dialog's maximum inline size. |
 | `title` | input | `string` | no | `''` | Visible title that also names the component surface or data view. |
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
 | `eyebrow` | input | `string` | no | `''` | Human-readable copy for the eyebrow state or control. |
@@ -15878,7 +15897,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/dialog`
 
 Scenarios: `default`.
-Public API coverage: 7/13
+Public API coverage: 9/15
 directly controlled; 6 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -15889,6 +15908,8 @@ component inputs or models.
 | --- | --- | --- | --- | --- | --- |
 | `title` | text | `"Edit workspace"` | `"Edit workspace · alternate"` | input `title` (property) | Sets the dialog heading. |
 | `description` | text | `"Changes apply to every member."` | `"Changes apply to every member. · alternate"` | input `description` (property) | Sets the dialog description. |
+| `size` | select | `"md"` | `"sm"` | input `size` (property) | Sets the dialog width. |
+| `modal` | boolean | `true` | `false` | input `modal` (property) | Traps focus and makes the background inert. |
 | `open` | boolean | `false` | `true` | model `open` | Opens the modal surface. |
 | `showClose` | boolean | `true` | `false` | input `showClose` (property) | Shows the close icon action. |
 | `closeOnEscape` | boolean | `true` | `false` | input `closeOnEscape` (property) | Allows Escape to dismiss the dialog. |
@@ -16013,6 +16034,8 @@ void bootstrapApplication(KernAlertDialogAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `open` | model | `boolean` | no | `false` | Controls whether the disclosure or overlay surface is visible. |
+| `modal` | input | `boolean` | no | `true` | Blocks background interaction and traps focus while the alert dialog is open. |
+| `size` | input | `KrnOverlaySize` | no | `'md'` | Selects the alert dialog's maximum inline size. |
 | `title` | input | `string` | no | `''` | Visible title that also names the component surface or data view. |
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
 | `eyebrow` | input | `string` | no | `''` | Human-readable copy for the eyebrow state or control. |
@@ -16079,8 +16102,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/alert-dialog`
 
 Scenarios: `default`.
-Public API coverage: 7/13
-directly controlled; 6 exact exclusions; 0 unclassified.
+Public API coverage: 8/15
+directly controlled; 7 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -16093,6 +16116,7 @@ component inputs or models.
 | `closeOnEscape` | boolean | `true` | `false` | input `closeOnEscape` (property) | Configures the component closeOnEscape contract. |
 | `description` | text | `"This action cannot be undone."` | `"This action cannot be undone. · alternate"` | input `description` (property) | Configures the component description contract. |
 | `eyebrow` | text | `""` | `"Alternate value"` | input `eyebrow` (property) | Configures the component eyebrow contract. |
+| `modal` | boolean | `true` | `false` | input `modal` (property) | Configures the component modal contract. |
 | `showClose` | boolean | `true` | `false` | input `showClose` (property) | Configures the component showClose contract. |
 | `title` | text | `"Delete Northstar?"` | `"Delete Northstar? · alternate"` | input `title` (property) | Configures the component title contract. |
 
@@ -16106,6 +16130,7 @@ Exact API exclusions:
 | `contentTemplate` | template | `component-example:agent/components/alert-dialog.json#/examples/0` | Template inputs require a compiled Angular fixture and cannot be represented by a scalar URL-safe control. |
 | `initialFocus` | dom-wiring | `a11y-test:tests/a11y/accessibility.spec.ts#alert-dialog` | DOM identity/focus wiring must stay deterministic so labels, overlays, and hydration references remain valid. |
 | `restoreFocus` | complex-data | `specimen-fixture:preview/alert-dialog?state=default` | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture. |
+| `size` | complex-data | `specimen-fixture:preview/alert-dialog?state=default` | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture. |
 
 Presets:
 
@@ -16210,6 +16235,9 @@ void bootstrapApplication(KernDrawerAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `open` | model | `boolean` | no | `false` | Controls whether the disclosure or overlay surface is visible. |
+| `modal` | input | `boolean` | no | `false` | Blocks background interaction and traps focus while the drawer is open. |
+| `size` | input | `KrnOverlaySize` | no | `'md'` | Selects the drawer thickness along its entry edge. |
+| `side` | input | `KrnOverlaySide` | no | `'right'` | Chooses the physical or logical viewport edge from which the drawer enters. |
 | `title` | input | `string` | no | `''` | Visible title that also names the component surface or data view. |
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
 | `eyebrow` | input | `string` | no | `''` | Human-readable copy for the eyebrow state or control. |
@@ -16277,7 +16305,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/drawer`
 
 Scenarios: `default`.
-Public API coverage: 7/13
+Public API coverage: 10/16
 directly controlled; 6 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -16287,6 +16315,9 @@ component inputs or models.
 | Argument | Control | Default | Test value | Binding | Description |
 | --- | --- | --- | --- | --- | --- |
 | `open` | boolean | `false` | `true` | model `open` | Opens the edge-aligned drawer. |
+| `side` | select | `"right"` | `"top"` | input `side` (property) | Chooses the viewport edge. |
+| `size` | select | `"md"` | `"sm"` | input `size` (property) | Sets the sheet width or height. |
+| `modal` | boolean | `false` | `true` | input `modal` (property) | Controls focus trapping and backdrop behavior. |
 | `closeOnOutside` | select | `null` | `true` | input `closeOnOutside` (property) | Inherits the surface policy by default, or explicitly enables or disables outside-click closing. |
 | `closeOnEscape` | boolean | `true` | `false` | input `closeOnEscape` (property) | Configures the component closeOnEscape contract. |
 | `description` | text | `""` | `"Alternate value"` | input `description` (property) | Configures the component description contract. |
@@ -16409,6 +16440,8 @@ void bootstrapApplication(KernBottomSheetAgentExample);
 | Name | Kind | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- | --- |
 | `open` | model | `boolean` | no | `false` | Controls whether the disclosure or overlay surface is visible. |
+| `modal` | input | `boolean` | no | `true` | Blocks background interaction and traps focus while the sheet is open. |
+| `size` | input | `KrnOverlaySize` | no | `'md'` | Selects the sheet's maximum block size. |
 | `title` | input | `string` | no | `''` | Visible title that also names the component surface or data view. |
 | `description` | input | `string` | no | `''` | Visible supporting description for the component content. |
 | `eyebrow` | input | `string` | no | `''` | Human-readable copy for the eyebrow state or control. |
@@ -16476,7 +16509,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/bottom-sheet`
 
 Scenarios: `default`.
-Public API coverage: 7/13
+Public API coverage: 9/15
 directly controlled; 6 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -16486,6 +16519,8 @@ component inputs or models.
 | Argument | Control | Default | Test value | Binding | Description |
 | --- | --- | --- | --- | --- | --- |
 | `open` | boolean | `false` | `true` | model `open` | Opens the mobile action sheet. |
+| `size` | select | `"md"` | `"sm"` | input `size` (property) | Sets the sheet width. |
+| `modal` | boolean | `true` | `false` | input `modal` (property) | Controls focus trapping and backdrop behavior. |
 | `closeOnOutside` | select | `null` | `true` | input `closeOnOutside` (property) | Inherits the surface policy by default, or explicitly enables or disables outside-click closing. |
 | `closeOnEscape` | boolean | `true` | `false` | input `closeOnEscape` (property) | Configures the component closeOnEscape contract. |
 | `description` | text | `""` | `"Alternate value"` | input `description` (property) | Configures the component description contract. |
@@ -18062,6 +18097,8 @@ void bootstrapApplication(KernBadgeAgentExample);
 | --- | --- | --- | --- | --- | --- |
 | `tone` | input | `KrnDisplayTone` | no | `'neutral'` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
 | `status` | input | `boolean` | no | `false` | Current domain status rendered as visible text and a non-color-only treatment. |
+| `variant` | input | `KrnBadgeVariant` | no | `'subtle'` | Controls whether the badge uses a filled, tinted, or outlined surface. |
+| `size` | input | `KrnBadgeSize` | no | `'md'` | Controls the badge height, horizontal padding, and text density. |
 
 ## Deprecated selectors
 
@@ -18069,6 +18106,7 @@ _No deprecated selectors._
 
 ## Content slots
 
+- `[krnBadgeIcon]` — Projects content matching [krnBadgeIcon].
 - `*` — Projects default component content.
 
 ## Angular Forms
@@ -18109,7 +18147,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/badge`
 
 Scenarios: `default`.
-Public API coverage: 2/2
+Public API coverage: 4/4
 directly controlled; 0 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -18119,6 +18157,8 @@ component inputs or models.
 | Argument | Control | Default | Test value | Binding | Description |
 | --- | --- | --- | --- | --- | --- |
 | `tone` | select | `"neutral"` | `"brand"` | input `tone` (property) | Changes the semantic color treatment. |
+| `variant` | select | `"subtle"` | `"solid"` | input `variant` (property) | Changes badge contrast. |
+| `size` | select | `"md"` | `"sm"` | input `size` (property) | Changes badge density. |
 | `status` | boolean | `false` | `true` | input `status` (property) | Shows a status dot. |
 
 Exact API exclusions:
@@ -18211,6 +18251,8 @@ void bootstrapApplication(KernStatusBadgeAgentExample);
 | --- | --- | --- | --- | --- | --- |
 | `tone` | input | `KrnDisplayTone` | no | `'neutral'` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
 | `status` | input | `boolean` | no | `false` | Current domain status rendered as visible text and a non-color-only treatment. |
+| `variant` | input | `KrnBadgeVariant` | no | `'subtle'` | Controls whether the badge uses a filled, tinted, or outlined surface. |
+| `size` | input | `KrnBadgeSize` | no | `'md'` | Controls the badge height, horizontal padding, and text density. |
 
 ## Deprecated selectors
 
@@ -18218,6 +18260,7 @@ _No deprecated selectors._
 
 ## Content slots
 
+- `[krnBadgeIcon]` — Projects content matching [krnBadgeIcon].
 - `*` — Projects default component content.
 
 ## Angular Forms
@@ -18258,8 +18301,8 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/status-badge`
 
 Scenarios: `default`.
-Public API coverage: 2/2
-directly controlled; 0 exact exclusions; 0 unclassified.
+Public API coverage: 2/4
+directly controlled; 2 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
@@ -18272,7 +18315,10 @@ component inputs or models.
 
 Exact API exclusions:
 
-_No excluded public API members._
+| Public API | Category | Evidence | Reason |
+| --- | --- | --- | --- |
+| `size` | complex-data | `specimen-fixture:preview/status-badge?state=default` | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture. |
+| `variant` | complex-data | `specimen-fixture:preview/status-badge?state=default` | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture. |
 
 Presets:
 
@@ -21411,6 +21457,196 @@ Presets:
 ## Common mistakes
 
 - Do not omit required inputs: `code`.
+- Importing from an undeclared family path or a source implementation file.
+- Loading only tokens.css instead of the complete styles/kern.css component bundle.
+- Assuming the documentation SSR build replaces validation of the consuming application.
+
+## Ship checklist
+
+- [ ] Import the symbol from its documented owner entrypoint; do not use a deep source import.
+- [ ] Load @kern-ui/angular/styles/kern.css exactly once in the application's global styles.
+- [ ] Provide every required input and keep collection identities stable across updates.
+- [ ] Verify keyboard, focus, visible labels, invalid state, long text, RTL and 200% zoom.
+- [ ] Test the consuming SSR/hydration route when server rendering is enabled.
+- [ ] Use @kern-ui/angular/testing harnesses when a component-specific harness is available.
+
+---
+
+# JSON View
+
+- ID: `json-view`
+- Selector: `krn-json-view`
+- Import: `import { KrnJsonView } from '@kern-ui/angular/kit';`
+- Canonical symbol: `KrnJsonView`
+- Lifecycle: **beta**
+- Category: Data display
+
+JSON View. Renders structured JSON as a collapsible, searchable tree with typed syntax color and selectable text.
+
+## Use
+
+Use JSON View when users need to inspect structured application data while preserving hierarchy, value types, and copyable text.
+
+Avoid: Use Code Block for an immutable source excerpt, and a purpose-built detail view when users must edit or act on individual fields.
+
+## Compile-verified standalone Angular example
+
+```ts
+/**
+ * Inspectable deployment payload
+ *
+ * Render structured JSON with accessible tree navigation and a highlighted field.
+ *
+ * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.
+ */
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { KrnJsonView } from '@kern-ui/angular/kit';
+
+@Component({
+  selector: 'app-kern-json-view-agent-example',
+  standalone: true,
+  imports: [KrnJsonView],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <krn-json-view
+      ariaLabel="Deployment payload"
+      [data]="payload"
+      [defaultExpandDepth]="2"
+      highlightPattern="active"
+    />
+  `,
+})
+export class KernJsonViewAgentExample {
+  readonly payload = {
+    deployment: { id: 'dep_01KERN', active: true, replicas: 3 },
+    region: 'eu-central',
+    error: null,
+  } as const;
+}
+
+void bootstrapApplication(KernJsonViewAgentExample);
+
+```
+
+## API
+
+| Name | Kind | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- | --- |
+| `data` | input | `KrnJsonValue` | yes | `required` | JSON-compatible value rendered as an inspectable hierarchy. |
+| `ariaLabel` | input | `string` | no | `'JSON'` | Accessible name announced for the JSON tree. |
+| `defaultExpandDepth` | input | `number` | no | `2` | Number of hierarchy levels expanded when data first renders. |
+| `expandedPaths` | model | `ReadonlyArray<string> \| null` | no | `null` | Controlled JSON-pointer paths, or null to keep expansion state internal. |
+| `highlightPattern` | input | `RegExp \| string \| null` | no | `null` | Text or regular expression highlighted in visible keys and primitive values. |
+| `sortKeys` | input | `boolean` | no | `false` | Sorts object keys with locale-aware comparison while preserving array order. |
+| `wrap` | input | `boolean` | no | `true` | Allows long keys and values to wrap inside the viewport. |
+
+## Deprecated selectors
+
+_No deprecated selectors._
+
+## Content slots
+
+_No projected content slots._
+
+## Angular Forms
+
+Not an Angular Forms value accessor.
+
+## Accessibility
+
+- Arrow Up and Arrow Down move the single roving focus through visible properties.
+- Arrow Right expands or enters a branch; Arrow Left collapses it or returns to its parent.
+- Home and End move to the first and last visible property; Enter or Space toggles a branch.
+- The tree exposes each visible property's hierarchy, sibling position, and expansion state.
+- Keys and typed primitive values remain text, so syntax color is never the only representation.
+- Highlighting uses a visible mark treatment without replacing the underlying accessible text.
+
+Manual assistive-technology validation remains required in the consuming application.
+
+## SSR and hydration
+
+- KERN avoids ambient browser globals in reusable runtime infrastructure.
+- Validate the consuming SSR/hydration route, locale, ids and overlay host.
+
+Hydration evidence scope: `library-docs-route-smoke`; status:
+`consumer-validation-required`.
+
+## Acceptance states
+
+- default
+- overflow
+- long text
+- dark
+- high contrast
+- compact
+- RTL
+- mobile
+- hover
+- focus-visible
+- active
+- disabled
+- collapsed
+- expanded
+- highlighted
+- wrapped
+
+## Interactive playground
+
+Route: `preview/json-view`
+
+Scenarios: `default`.
+Public API coverage: 4/7
+directly controlled; 3 exact exclusions; 0 unclassified.
+Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
+configure the deterministic documentation specimen and are not public component inputs.
+Preset fixture effects are documentation-only rendering metadata; never serialize them as
+component inputs or models.
+
+| Argument | Control | Default | Test value | Binding | Description |
+| --- | --- | --- | --- | --- | --- |
+| `defaultExpandDepth` | number | `2` | `3` | input `defaultExpandDepth` (property) | Sets how many JSON hierarchy levels open initially. |
+| `highlightPattern` | text | `""` | `"Alternate value"` | input `highlightPattern` (property) | Highlights matching text; an empty value leaves the JSON unmarked. |
+| `sortKeys` | boolean | `false` | `true` | input `sortKeys` (property) | Sorts object keys alphabetically. |
+| `wrap` | boolean | `true` | `false` | input `wrap` (property) | Wraps long keys and values inside the viewport. |
+
+Exact API exclusions:
+
+| Public API | Category | Evidence | Reason |
+| --- | --- | --- | --- |
+| `ariaLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#json-view` | Low-value duplicate accessibility copy is validated by the a11y fixture and kept stable while visual parameters change. |
+| `data` | complex-data | `specimen-fixture:preview/json-view?state=default` | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture. |
+| `expandedPaths` | complex-data | `specimen-fixture:preview/json-view?state=default` | Collection and data-source inputs require typed identities and deterministic fixtures rather than scalar serialization. |
+
+Presets:
+
+- `default` — Default; scenario `default`.
+- `overflow` — overflow; scenario `default`; fixture effect `layout/overflow` — overflow: The fixture deliberately exceeds its normal inline size to expose overflow behavior..
+- `long-text` — long text; scenario `default`; fixture effect `content/long-text` — long text: Northstar enterprise workspace policy configuration with deliberately extended content for wrapping and truncation verification..
+- `dark` — Dark; scenario `default`; theme `dark`.
+- `high-contrast` — High contrast; scenario `default`; theme `high-contrast`.
+- `compact` — Compact; scenario `default`; density `compact`.
+- `rtl` — RTL; scenario `default`; direction `rtl`.
+- `mobile` — Mobile; scenario `default`; viewport `phone`.
+- `hover` — hover; scenario `default`; fixture effect `status/neutral` — hover: The fixture exposes the hover status without claiming a public component input..
+- `focus-visible` — focus-visible; scenario `default`; fixture effect `status/neutral` — focus-visible: The fixture exposes the focus visible status without claiming a public component input..
+- `active` — active; scenario `default`; fixture effect `status/neutral` — active: The fixture exposes the active status without claiming a public component input..
+- `disabled` — disabled; scenario `default`; fixture effect `status/neutral` — disabled: The fixture exposes the disabled status without claiming a public component input..
+- `collapsed` — collapsed; scenario `default`; fixture effect `layout/constrained` — collapsed: The fixture uses an alternate deterministic boundary to expose layout behavior..
+- `expanded` — expanded; scenario `default`; fixture effect `layout/expanded` — expanded: The fixture uses an alternate deterministic boundary to expose layout behavior..
+- `highlighted` — highlighted; scenario `default`; fixture effect `status/neutral` — highlighted: The fixture exposes the highlighted status without claiming a public component input..
+- `wrapped` — wrapped; scenario `default`; fixture effect `status/neutral` — wrapped: The fixture exposes the wrapped status without claiming a public component input..
+
+## Related
+
+- `badge`
+- `status-badge`
+- `chip`
+- `tag`
+
+## Common mistakes
+
+- Do not omit required inputs: `data`.
 - Importing from an undeclared family path or a source implementation file.
 - Loading only tokens.css instead of the complete styles/kern.css component bundle.
 - Assuming the documentation SSR build replaces validation of the consuming application.

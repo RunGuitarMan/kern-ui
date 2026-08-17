@@ -11,6 +11,8 @@ import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import { krnInputFallback } from '../reactive-input';
 import type { KrnFeedbackTone } from './feedback.types';
 
+export type KrnAlertAppearance = 'subtle' | 'outline' | 'contrast';
+
 @Component({
   selector: 'krn-alert',
   standalone: true,
@@ -21,6 +23,8 @@ import type { KrnFeedbackTone } from './feedback.types';
 export class KrnAlert {
   private readonly translations = inject(KRN_TRANSLATIONS);
   readonly tone = input<KrnFeedbackTone>('info');
+  /** Selects the alert surface treatment without changing its semantic tone. */
+  readonly appearance = input<KrnAlertAppearance>('subtle');
   readonly title = input('');
   readonly icon = input('');
   readonly dismissible = input(false, { transform: booleanAttribute });

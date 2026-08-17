@@ -65,11 +65,37 @@
       "defaultValue": "false",
       "description": "Current domain status rendered as visible text and a non-color-only treatment.",
       "descriptionSource": "inferred"
+    },
+    {
+      "name": "variant",
+      "property": "variant",
+      "kind": "input",
+      "type": "KrnBadgeVariant",
+      "required": false,
+      "defaultValue": "'subtle'",
+      "description": "Controls whether the badge uses a filled, tinted, or outlined surface.",
+      "descriptionSource": "source"
+    },
+    {
+      "name": "size",
+      "property": "size",
+      "kind": "input",
+      "type": "KrnBadgeSize",
+      "required": false,
+      "defaultValue": "'md'",
+      "description": "Controls the badge height, horizontal padding, and text density.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [
     {
-      "name": "default",
+      "name": "krnBadgeIcon",
+      "selector": "[krnBadgeIcon]",
+      "required": false,
+      "description": "Projects content matching [krnBadgeIcon]."
+    },
+    {
+      "name": "default-2",
       "selector": "*",
       "required": false,
       "description": "Projects default component content."
@@ -123,7 +149,9 @@
     "KrnBadge",
     "KrnStatusBadge",
     "tone",
-    "status"
+    "status",
+    "variant",
+    "size"
   ],
   "guidance": {
     "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
@@ -187,6 +215,60 @@
           {
             "label": "danger",
             "value": "danger"
+          }
+        ]
+      },
+      {
+        "key": "variant",
+        "label": "Variant",
+        "kind": "select",
+        "defaultValue": "subtle",
+        "testValue": "solid",
+        "description": "Changes badge contrast.",
+        "binding": {
+          "kind": "input",
+          "publicName": "variant",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "solid",
+            "value": "solid"
+          },
+          {
+            "label": "subtle",
+            "value": "subtle"
+          },
+          {
+            "label": "outline",
+            "value": "outline"
+          }
+        ]
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "kind": "select",
+        "defaultValue": "md",
+        "testValue": "sm",
+        "description": "Changes badge density.",
+        "binding": {
+          "kind": "input",
+          "publicName": "size",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "sm",
+            "value": "sm"
+          },
+          {
+            "label": "md",
+            "value": "md"
+          },
+          {
+            "label": "lg",
+            "value": "lg"
           }
         ]
       },
@@ -290,8 +372,8 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 2,
-      "controlled": 2,
+      "publicInputsAndModels": 4,
+      "controlled": 4,
       "excluded": 0,
       "unclassified": 0
     },

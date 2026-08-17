@@ -38,7 +38,7 @@ import {
   type KrnOverlayInitialFocus,
 } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
-import type { KrnOverlayCloseReason } from './feedback.types';
+import type { KrnOverlayCloseReason, KrnOverlaySide, KrnOverlaySize } from './feedback.types';
 import { KrnAlertDialog, KrnBottomSheet, KrnDialog, KrnDrawer } from './modal-overlays';
 
 export type KrnOverlayVariant = 'dialog' | 'alert-dialog' | 'drawer' | 'bottom-sheet';
@@ -142,6 +142,9 @@ export type KrnOverlayConfig<Data = undefined> = {
   readonly description?: string;
   readonly ariaLabel?: string;
   readonly showClose?: boolean;
+  readonly modal?: boolean;
+  readonly side?: KrnOverlaySide;
+  readonly size?: KrnOverlaySize;
   readonly closeOnEscape?: boolean;
   readonly closeOnOutside?: boolean | null;
   readonly closeOnNavigation?: boolean;
@@ -164,6 +167,9 @@ interface NormalizedOverlayConfig {
   readonly description: string;
   readonly ariaLabel: string;
   readonly showClose: boolean;
+  readonly modal: boolean;
+  readonly side: KrnOverlaySide;
+  readonly size: KrnOverlaySize;
   readonly closeOnEscape: boolean;
   readonly closeOnOutside: boolean | null;
   readonly closeOnNavigation: boolean;
@@ -477,12 +483,16 @@ export class KrnOverlayService {
     parentInjector: Injector,
   ): NormalizedOverlayConfig {
     const translations = parentInjector.get(KRN_TRANSLATIONS, this.translations);
+    const variant = config.variant ?? 'dialog';
     return Object.freeze({
-      variant: config.variant ?? 'dialog',
+      variant,
       title: config.title ?? '',
       description: config.description ?? '',
       ariaLabel: config.ariaLabel ?? translations.feedback.dialog,
       showClose: config.showClose ?? true,
+      modal: config.modal ?? variant !== 'drawer',
+      side: config.side ?? 'right',
+      size: config.size ?? 'md',
       closeOnEscape: config.closeOnEscape ?? true,
       closeOnOutside: config.closeOnOutside ?? null,
       closeOnNavigation: config.closeOnNavigation ?? true,

@@ -729,12 +729,33 @@ krn-form-field[data-valid='true'] .krn-control-shell:not([data-invalid='true']) 
     var(--krn-font-family-sans, 'Geist Variable', sans-serif);
   gap: var(--krn-space-2, 0.5rem);
   inline-size: 100%;
-  justify-content: space-between;
+  justify-content: flex-start;
   min-block-size: calc(var(--_control-height) - 2px);
   min-inline-size: 0;
   outline: 0;
   padding: var(--krn-space-2, 0.5rem) var(--krn-space-3, 0.75rem);
   text-align: start;
+}
+
+.krn-select-leading,
+.krn-select-trailing {
+  align-items: center;
+  color: var(--_control-muted);
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: var(--krn-space-1, 0.25rem);
+}
+
+.krn-select-leading:empty {
+  display: none;
+}
+
+.krn-select-trailing {
+  margin-inline-start: auto;
+}
+
+.krn-select-native + .krn-select-trailing {
+  padding-inline-end: var(--krn-space-3, 0.75rem);
 }
 
 .krn-select-trigger--multiple {
@@ -766,6 +787,14 @@ krn-form-field[data-valid='true'] .krn-control-shell:not([data-invalid='true']) 
   inline-size: 0.5rem;
   rotate: 45deg;
   translate: 0 -0.15rem;
+  transition:
+    rotate var(--krn-motion-duration-interaction, 140ms) var(--krn-ease-standard, ease),
+    translate var(--krn-motion-duration-interaction, 140ms) var(--krn-ease-standard, ease);
+}
+
+krn-select[data-open='true'] .krn-select-chevron {
+  rotate: 225deg;
+  translate: 0 0.1rem;
 }
 
 .krn-listbox {
@@ -792,7 +821,20 @@ krn-form-field[data-valid='true'] .krn-control-shell:not([data-invalid='true']) 
   padding: var(--krn-space-1, 0.25rem);
   position: absolute;
   scrollbar-width: thin;
+  transform-origin: top center;
+  animation: krn-select-popup-enter 150ms cubic-bezier(0.16, 1, 0.3, 1) both;
   z-index: var(--krn-z-popover, 700);
+}
+
+@keyframes krn-select-popup-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .krn-option {
@@ -815,10 +857,18 @@ krn-form-field[data-valid='true'] .krn-control-shell:not([data-invalid='true']) 
     color var(--krn-motion-duration-interaction) var(--krn-ease-standard, ease);
 }
 
-.krn-option:is(:hover, [data-active='true'], [data-highlighted='true']):not(
-    [aria-disabled='true']
-  ) {
-  background: var(--krn-color-surface-hover, #edf1ef);
+.krn-option:is(
+    :hover,
+    [data-active='true'],
+    [data-active]:not([data-active='false']),
+    [data-highlighted='true'],
+    [data-highlighted]:not([data-highlighted='false'])
+  ):not([aria-disabled='true']) {
+  background: color-mix(
+    in oklab,
+    var(--krn-color-text, #17201c) 7%,
+    var(--krn-color-surface-overlay, #fff)
+  );
 }
 
 .krn-option[aria-selected='true'] {
@@ -831,9 +881,13 @@ krn-form-field[data-valid='true'] .krn-control-shell:not([data-invalid='true']) 
   color: var(--_control-fg);
 }
 
-.krn-option[aria-selected='true']:is(:hover, [data-active='true'], [data-highlighted='true']):not(
-    [aria-disabled='true']
-  ) {
+.krn-option[aria-selected='true']:is(
+    :hover,
+    [data-active='true'],
+    [data-active]:not([data-active='false']),
+    [data-highlighted='true'],
+    [data-highlighted]:not([data-highlighted='false'])
+  ):not([aria-disabled='true']) {
   background: color-mix(
     in oklab,
     var(--_control-accent) 16%,
@@ -2054,14 +2108,24 @@ krn-form-field[data-valid='true'] .krn-control-shell:not([data-invalid='true']) 
   html:not([data-krn-motion='full']) .krn-control-shell,
   html:not([data-krn-motion='full']) .krn-choice__mark,
   html:not([data-krn-motion='full']) .krn-switch .krn-choice__mark::after,
-  html:not([data-krn-motion='full']) .krn-upload {
+  html:not([data-krn-motion='full']) .krn-upload,
+  html:not([data-krn-motion='full']) .krn-select-chevron {
     transition: none;
   }
 
   html:not([data-krn-motion='full']) .krn-tag-input > .krn-token,
-  html:not([data-krn-motion='full']) .krn-tag-feedback {
+  html:not([data-krn-motion='full']) .krn-tag-feedback,
+  html:not([data-krn-motion='full']) .krn-listbox {
     animation: none;
   }
+}
+
+html[data-krn-motion='reduce'] .krn-select-chevron {
+  transition: none;
+}
+
+html[data-krn-motion='reduce'] .krn-listbox {
+  animation: none;
 }
 
 @media (pointer: coarse) {

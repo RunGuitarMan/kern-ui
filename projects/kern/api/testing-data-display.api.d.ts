@@ -241,6 +241,24 @@ declare class KrnTreeHarness extends ComponentHarness {
   selectItem(filters: KrnCompositeItemHarnessFilters): Promise<void>;
 }
 
+interface KrnJsonNodeHarnessFilters extends BaseHarnessFilters {
+  readonly path?: string;
+  readonly text?: KrnHarnessText;
+  readonly expanded?: boolean;
+}
+declare class KrnJsonNodeHarness extends ComponentHarness {
+  static readonly hostSelector = 'krn-json-view [role="treeitem"]';
+  static with(options?: KrnJsonNodeHarnessFilters): HarnessPredicate<KrnJsonNodeHarness>;
+  getPath(): Promise<string | null>;
+  getText(): Promise<string>;
+  isExpanded(): Promise<boolean | null>;
+  toggle(): Promise<void>;
+}
+declare class KrnJsonViewHarness extends ComponentHarness {
+  static readonly hostSelector = 'krn-json-view';
+  getNodes(filters?: KrnJsonNodeHarnessFilters): Promise<readonly KrnJsonNodeHarness[]>;
+}
+
 export {
   KrnBarChartHarness,
   KrnCalendarCellHarness,
@@ -252,6 +270,8 @@ export {
   KrnDataGridHeaderHarness,
   KrnDataGridRowHarness,
   KrnDonutChartHarness,
+  KrnJsonNodeHarness,
+  KrnJsonViewHarness,
   KrnLineChartHarness,
   KrnTreeHarness,
   KrnTreeItemHarness,
@@ -264,4 +284,5 @@ export type {
   KrnDataGridHarnessFilters,
   KrnDataGridHeaderHarnessFilters,
   KrnDataGridRowHarnessFilters,
+  KrnJsonNodeHarnessFilters,
 };

@@ -28,6 +28,7 @@ import type {
 } from './feedback.types';
 
 const toastExitDuration = 160;
+const toastPointerIntentDelay = 80;
 
 interface ToastTimer {
   handle: KrnScheduledHandle | null;
@@ -67,7 +68,10 @@ export class KrnToastService {
       message,
       title: options.title,
       tone: options.tone ?? 'neutral',
-      duration: options.duration ?? (options.actionLabel || options.action ? 0 : 5000),
+      duration: options.preserve
+        ? 0
+        : (options.duration ?? (options.actionLabel || options.action ? 8000 : 5000)),
+      preserve: options.preserve ?? false,
       dismissible: options.dismissible ?? true,
       actionLabel: options.actionLabel,
       action: options.action,
@@ -89,8 +93,20 @@ export class KrnToastService {
     return this.show(message, { ...options, tone: 'success' });
   }
 
+  message(message: string, options: Omit<KrnToastOptions, 'tone'> = {}): string {
+    return this.show(message, { ...options, tone: 'neutral' });
+  }
+
+  info(message: string, options: Omit<KrnToastOptions, 'tone'> = {}): string {
+    return this.show(message, { ...options, tone: 'info' });
+  }
+
+  warning(message: string, options: Omit<KrnToastOptions, 'tone'> = {}): string {
+    return this.show(message, { ...options, tone: 'warning' });
+  }
+
   error(message: string, options: Omit<KrnToastOptions, 'tone'> = {}): string {
-    return this.show(message, { ...options, tone: 'danger', duration: options.duration ?? 0 });
+    return this.show(message, { ...options, tone: 'danger' });
   }
 
   dismiss(id: string): void {
@@ -215,6 +231,8 @@ export class KrnToastService {
   host: {
     role: 'region',
     '[attr.data-position]': 'position()',
+    '[attr.data-expanded]': 'expanded()',
+    '[attr.data-pointer-expanded]': 'pointerExpanded()',
     '[attr.aria-label]': 'copy().ariaLabel',
   },
   templateUrl: './toast.html',
@@ -223,10 +241,13 @@ export class KrnToastService {
 export class KrnToastViewport {
   protected readonly service = inject(KrnToastService);
   private readonly platform = inject(KRN_PLATFORM);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly translations = inject(KRN_TRANSLATIONS);
-  readonly position = input<KrnToastPosition>('top-end');
-  readonly maxVisible = input(4, { transform: numberAttribute });
-  readonly maxExpanded = input(12, { transform: numberAttribute });
+  private pointerExpandTimer: KrnScheduledHandle | null = null;
+  private pointerCollapseTimer: KrnScheduledHandle | null = null;
+  readonly position = input<KrnToastPosition>('bottom-end');
+  readonly maxVisible = input(3, { transform: numberAttribute });
+  readonly maxExpanded = input(8, { transform: numberAttribute });
   readonly labels = input<Partial<KrnToastTranslations>>({});
   readonly ariaLabel = input<string | undefined>();
   protected readonly resolvedAriaLabel = krnInputFallback(
@@ -234,6 +255,7 @@ export class KrnToastViewport {
     () => this.translations.toast.ariaLabel,
   );
   readonly expanded = model(false);
+  protected readonly pointerExpanded = signal(false);
   protected readonly copy = computed(() => ({
     ...this.translations.toast,
     ariaLabel: this.resolvedAriaLabel(),
@@ -258,6 +280,13 @@ export class KrnToastViewport {
     () => this.totalToasts() - this.visibleToastCount(),
   );
 
+  constructor() {
+    this.destroyRef.onDestroy(() => {
+      this.cancelPointerExpand();
+      this.cancelPointerCollapse();
+    });
+  }
+
   protected toneIcon(toast: KrnToastRecord): string {
     return { neutral: '•', info: 'i', success: '✓', warning: '!', danger: '!' }[
       toast.tone ?? 'neutral'
@@ -270,6 +299,55 @@ export class KrnToastViewport {
       return;
     }
     this.service.resume(id, 'focus');
+  }
+
+  protected expandFromPointer(): void {
+    this.cancelPointerCollapse();
+    this.pauseVisibleToasts();
+    if (this.pointerExpanded() || this.pointerExpandTimer !== null) return;
+
+    const expand = (): void => {
+      this.pointerExpandTimer = null;
+      this.pointerExpanded.set(true);
+    };
+    this.pointerExpandTimer = this.platform.schedule(expand, toastPointerIntentDelay);
+    if (this.pointerExpandTimer === null) expand();
+  }
+
+  protected collapseFromPointer(): void {
+    this.cancelPointerExpand();
+    this.cancelPointerCollapse();
+    if (!this.pointerExpanded()) {
+      this.resumeVisibleToasts();
+      return;
+    }
+    const collapse = (): void => {
+      this.pointerCollapseTimer = null;
+      this.pointerExpanded.set(false);
+      this.resumeVisibleToasts();
+    };
+    this.pointerCollapseTimer = this.platform.schedule(collapse, 100);
+    if (this.pointerCollapseTimer === null) collapse();
+  }
+
+  private pauseVisibleToasts(): void {
+    this.visibleToasts().forEach((toast) => this.service.pause(toast.id, 'pointer'));
+  }
+
+  private resumeVisibleToasts(): void {
+    this.visibleToasts().forEach((toast) => this.service.resume(toast.id, 'pointer'));
+  }
+
+  private cancelPointerExpand(): void {
+    if (this.pointerExpandTimer === null) return;
+    this.platform.cancelScheduled(this.pointerExpandTimer);
+    this.pointerExpandTimer = null;
+  }
+
+  private cancelPointerCollapse(): void {
+    if (this.pointerCollapseTimer === null) return;
+    this.platform.cancelScheduled(this.pointerCollapseTimer);
+    this.pointerCollapseTimer = null;
   }
 }
 

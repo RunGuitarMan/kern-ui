@@ -1042,6 +1042,8 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
       'Changes the visual layout and Arrow-key axis exposed by the toolbar.',
       ['horizontal', 'vertical'],
     ),
+    select('size', 'Size', 'sm', 'Changes the segmented control density.', ['sm', 'md', 'lg']),
+    boolean('connected', 'Connected', true, 'Joins toggles into one segmented surface.'),
     boolean('multiple', 'Multiple', false, 'Allows more than one toggle to be selected.'),
     boolean(
       'disabled',
@@ -1740,6 +1742,7 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
   ],
   select: [
     text('placeholder', 'Placeholder', 'Choose a plan', 'Sets the empty selection prompt.'),
+    select('size', 'Size', 'md', 'Changes the control height.', ['sm', 'md', 'lg']),
     select(
       'optionsState',
       'Options state',
@@ -1773,6 +1776,7 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
   ],
   'native-select': [
     text('placeholder', 'Placeholder', 'Choose a region', 'Sets the empty selection prompt.'),
+    select('size', 'Size', 'md', 'Changes the control height.', ['sm', 'md', 'lg']),
     disabled,
     readOnly,
     required,
@@ -1922,6 +1926,11 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
       'warning',
       'danger',
     ]),
+    select('appearance', 'Appearance', 'subtle', 'Changes the alert surface contrast.', [
+      'subtle',
+      'outline',
+      'contrast',
+    ]),
     text('title', 'Title', 'Changes published', 'Sets the alert heading.'),
     boolean('dismissible', 'Dismissible', true, 'Shows a close action.'),
   ],
@@ -1975,6 +1984,8 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
       'Changes apply to every member.',
       'Sets the dialog description.',
     ),
+    select('size', 'Size', 'md', 'Sets the dialog width.', ['sm', 'md', 'lg']),
+    boolean('modal', 'Modal', true, 'Traps focus and makes the background inert.'),
     boolean('open', 'Open', false, 'Opens the modal surface.', modelBinding('open')),
     boolean('showClose', 'Show close', true, 'Shows the close icon action.'),
     boolean('closeOnEscape', 'Close on Escape', true, 'Allows Escape to dismiss the dialog.'),
@@ -1986,10 +1997,20 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
   ],
   drawer: [
     boolean('open', 'Open', false, 'Opens the edge-aligned drawer.', modelBinding('open')),
+    select('side', 'Side', 'right', 'Chooses the viewport edge.', [
+      'top',
+      'right',
+      'bottom',
+      'left',
+    ]),
+    select('size', 'Size', 'md', 'Sets the sheet width or height.', ['sm', 'md', 'lg']),
+    boolean('modal', 'Modal', false, 'Controls focus trapping and backdrop behavior.'),
     closeOnOutside,
   ],
   'bottom-sheet': [
     boolean('open', 'Open', false, 'Opens the mobile action sheet.', modelBinding('open')),
+    select('size', 'Size', 'md', 'Sets the sheet width.', ['sm', 'md', 'lg']),
+    boolean('modal', 'Modal', true, 'Controls focus trapping and backdrop behavior.'),
     closeOnOutside,
   ],
   'loading-overlay': [
@@ -2056,7 +2077,34 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
     number('siblingCount', 'Sibling pages', 1, 'Sets pages shown beside the current page.', 0, 4),
     number('page', 'Current page', 1, 'Controls the active page.', 1, 13, 1, modelBinding('page')),
   ],
-  badge: [displayTone, boolean('status', 'Status marker', false, 'Shows a status dot.')],
+  'json-view': [
+    number(
+      'defaultExpandDepth',
+      'Expanded depth',
+      2,
+      'Sets how many JSON hierarchy levels open initially.',
+      0,
+      8,
+    ),
+    text(
+      'highlightPattern',
+      'Highlight',
+      '',
+      'Highlights matching text; an empty value leaves the JSON unmarked.',
+    ),
+    boolean('sortKeys', 'Sort keys', false, 'Sorts object keys alphabetically.'),
+    boolean('wrap', 'Wrap lines', true, 'Wraps long keys and values inside the viewport.'),
+  ],
+  badge: [
+    displayTone,
+    select('variant', 'Variant', 'subtle', 'Changes badge contrast.', [
+      'solid',
+      'subtle',
+      'outline',
+    ]),
+    select('size', 'Size', 'md', 'Changes badge density.', ['sm', 'md', 'lg']),
+    boolean('status', 'Status marker', false, 'Shows a status dot.'),
+  ],
   'status-badge': [
     select('tone', 'Tone', 'success', 'Changes the semantic status color.', [
       'neutral',

@@ -27,6 +27,8 @@
     class="toast-stack"
     [style.--_stack-count]="visibleToasts().length"
     [attr.aria-label]="visibleToasts().length > 1 ? copy().stackLabel : null"
+    (pointerenter)="expandFromPointer()"
+    (pointerleave)="collapseFromPointer()"
   >
     @for (toast of visibleToasts(); track toast.id; let index = $index) {
       <article
@@ -36,12 +38,12 @@
         [style.--_stack-index]="index"
         [attr.role]="toast.tone === 'danger' ? 'alert' : 'status'"
         [attr.aria-atomic]="true"
-        (mouseenter)="service.pause(toast.id, 'pointer')"
-        (mouseleave)="service.resume(toast.id, 'pointer')"
         (focusin)="service.pause(toast.id, 'focus')"
         (focusout)="onToastFocusout($event, toast.id)"
       >
-        <span class="indicator" aria-hidden="true">{{ toneIcon(toast) }}</span>
+        @if (toast.tone && toast.tone !== 'neutral') {
+          <span class="indicator" aria-hidden="true">{{ toneIcon(toast) }}</span>
+        }
         <div class="copy">
           @if (toast.title) {
             <strong>{{ toast.title }}</strong>

@@ -1103,6 +1103,10 @@ declare class KrnToggleGroup {
   private items;
   /** Defines both the visual layout axis and the toolbar Arrow-key axis. */
   readonly orientation: _angular_core.InputSignal<KrnOrientation>;
+  /** Controls the density of every direct toggle without repeating size on each item. */
+  readonly size: _angular_core.InputSignal<KrnSize>;
+  /** Joins direct toggles into a single segmented control surface. */
+  readonly connected: _angular_core.InputSignalWithTransform<boolean, unknown>;
   /** Allows multiple pressed values; false exposes at most one effective pressed value. */
   readonly multiple: _angular_core.InputSignalWithTransform<boolean, unknown>;
   /** Disables every registered native toggle and all group-owned value transitions. */
@@ -1125,6 +1129,8 @@ declare class KrnToggleGroup {
     never,
     {
       orientation: { alias: 'orientation'; required: false; isSignal: true };
+      size: { alias: 'size'; required: false; isSignal: true };
+      connected: { alias: 'connected'; required: false; isSignal: true };
       multiple: { alias: 'multiple'; required: false; isSignal: true };
       disabled: { alias: 'disabled'; required: false; isSignal: true };
       values: { alias: 'values'; required: false; isSignal: true };
@@ -2590,6 +2596,8 @@ declare class KrnNativeSelect<T = string> {
   private readonly select;
   readonly id: _angular_core.InputSignal<string>;
   readonly name: _angular_core.InputSignal<string>;
+  /** Controls the native select trigger height and content density. */
+  readonly size: _angular_core.InputSignal<_kern_ui_angular_kit.KrnSize>;
   readonly placeholder: _angular_core.InputSignal<string>;
   readonly ariaLabel: _angular_core.InputSignal<string>;
   readonly ariaLabelledBy: _angular_core.InputSignal<string>;
@@ -2641,6 +2649,7 @@ declare class KrnNativeSelect<T = string> {
     {
       id: { alias: 'id'; required: false; isSignal: true };
       name: { alias: 'name'; required: false; isSignal: true };
+      size: { alias: 'size'; required: false; isSignal: true };
       placeholder: { alias: 'placeholder'; required: false; isSignal: true };
       ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
       ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
@@ -2659,7 +2668,7 @@ declare class KrnNativeSelect<T = string> {
     },
     { valueChange: 'valueChange' },
     never,
-    never,
+    ['[krnPrefix]', '[krnSuffix]'],
     true,
     never
   >;
@@ -2668,6 +2677,8 @@ declare class KrnSelect<T = string> {
   #private;
   private readonly trigger;
   readonly id: _angular_core.InputSignal<string>;
+  /** Controls the custom select trigger height and content density. */
+  readonly size: _angular_core.InputSignal<_kern_ui_angular_kit.KrnSize>;
   readonly placeholder: _angular_core.InputSignal<string | undefined>;
   protected readonly resolvedPlaceholder: Signal<string>;
   readonly emptyText: _angular_core.InputSignal<string | undefined>;
@@ -2732,6 +2743,7 @@ declare class KrnSelect<T = string> {
     never,
     {
       id: { alias: 'id'; required: false; isSignal: true };
+      size: { alias: 'size'; required: false; isSignal: true };
       placeholder: { alias: 'placeholder'; required: false; isSignal: true };
       emptyText: { alias: 'emptyText'; required: false; isSignal: true };
       loadingText: { alias: 'loadingText'; required: false; isSignal: true };
@@ -2757,7 +2769,7 @@ declare class KrnSelect<T = string> {
     },
     { open: 'openChange'; valueChange: 'valueChange'; selectionChange: 'selectionChange' },
     never,
-    never,
+    ['[krnPrefix]', '[krnSuffix]'],
     true,
     never
   >;
@@ -4897,6 +4909,9 @@ interface KrnToastOptions {
   readonly title?: string;
   readonly tone?: KrnFeedbackTone;
   readonly duration?: number;
+  /** Keeps the toast present until explicitly dismissed. */
+  /** Keeps the toast visible until the user dismisses it or application code removes it. */
+  readonly preserve?: boolean;
   readonly dismissible?: boolean;
   readonly actionLabel?: string;
   readonly action?: () => void;
@@ -4911,11 +4926,21 @@ interface KrnToastRecord extends KrnToastOptions {
  * request (for example Android Back or an assistive-technology dismiss gesture).
  */
 type KrnOverlayCloseReason = 'api' | 'escape' | 'outside' | 'action';
-type KrnOverlayPosition = 'center' | 'inline-end' | 'bottom';
+/**
+ * Drawer entry edge. Physical names are convenient for application UI; logical
+ * names remain available for writing-mode-aware layouts.
+ */
+type KrnOverlaySide =
+  'top' | 'right' | 'bottom' | 'left' | 'block-start' | 'inline-end' | 'block-end' | 'inline-start';
+type KrnOverlayPosition = 'center' | KrnOverlaySide;
+type KrnOverlaySize = 'sm' | 'md' | 'lg';
 
+type KrnAlertAppearance = 'subtle' | 'outline' | 'contrast';
 declare class KrnAlert {
   private readonly translations;
   readonly tone: _angular_core.InputSignal<KrnFeedbackTone>;
+  /** Selects the alert surface treatment without changing its semantic tone. */
+  readonly appearance: _angular_core.InputSignal<KrnAlertAppearance>;
   readonly title: _angular_core.InputSignal<string>;
   readonly icon: _angular_core.InputSignal<string>;
   readonly dismissible: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -4932,6 +4957,7 @@ declare class KrnAlert {
     never,
     {
       tone: { alias: 'tone'; required: false; isSignal: true };
+      appearance: { alias: 'appearance'; required: false; isSignal: true };
       title: { alias: 'title'; required: false; isSignal: true };
       icon: { alias: 'icon'; required: false; isSignal: true };
       dismissible: { alias: 'dismissible'; required: false; isSignal: true };
@@ -4939,7 +4965,7 @@ declare class KrnAlert {
     },
     { closed: 'closed' },
     never,
-    ['*', '[krnAlertAction]'],
+    ['[krnAlertIcon]', '*', '[krnAlertAction]'],
     true,
     never
   >;
@@ -4973,6 +4999,9 @@ declare class KrnToastService {
   constructor();
   show(message: string, options?: KrnToastOptions): string;
   success(message: string, options?: Omit<KrnToastOptions, 'tone'>): string;
+  message(message: string, options?: Omit<KrnToastOptions, 'tone'>): string;
+  info(message: string, options?: Omit<KrnToastOptions, 'tone'>): string;
+  warning(message: string, options?: Omit<KrnToastOptions, 'tone'>): string;
   error(message: string, options?: Omit<KrnToastOptions, 'tone'>): string;
   dismiss(id: string): void;
   dismissMany(ids: readonly string[]): void;
@@ -4991,7 +5020,10 @@ declare class KrnToastService {
 declare class KrnToastViewport {
   protected readonly service: KrnToastService;
   private readonly platform;
+  private readonly destroyRef;
   private readonly translations;
+  private pointerExpandTimer;
+  private pointerCollapseTimer;
   readonly position: _angular_core.InputSignal<KrnToastPosition>;
   readonly maxVisible: _angular_core.InputSignalWithTransform<number, unknown>;
   readonly maxExpanded: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -4999,6 +5031,7 @@ declare class KrnToastViewport {
   readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
   protected readonly resolvedAriaLabel: _angular_core.Signal<string>;
   readonly expanded: _angular_core.ModelSignal<boolean>;
+  protected readonly pointerExpanded: _angular_core.WritableSignal<boolean>;
   protected readonly copy: _angular_core.Signal<{
     ariaLabel: string;
     stackLabel: string;
@@ -5016,8 +5049,15 @@ declare class KrnToastViewport {
   protected readonly visibleToasts: _angular_core.Signal<KrnToastRecord[]>;
   protected readonly visibleToastCount: _angular_core.Signal<number>;
   protected readonly hiddenToastCount: _angular_core.Signal<number>;
+  constructor();
   protected toneIcon(toast: KrnToastRecord): string;
   protected onToastFocusout(event: FocusEvent, id: string): void;
+  protected expandFromPointer(): void;
+  protected collapseFromPointer(): void;
+  private pauseVisibleToasts;
+  private resumeVisibleToasts;
+  private cancelPointerExpand;
+  private cancelPointerCollapse;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnToastViewport, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnToastViewport,
@@ -5417,6 +5457,7 @@ declare class KrnHoverCard {
 }
 
 interface KrnOverlaySurfaceDefinition {
+  readonly kind: 'dialog' | 'alert-dialog' | 'drawer' | 'bottom-sheet';
   readonly position: KrnOverlayPosition;
   readonly role: 'dialog' | 'alertdialog';
   readonly closeOnOutside: boolean;
@@ -5425,6 +5466,7 @@ interface KrnOverlaySurfaceHost {
   readonly open: ModelSignal<boolean>;
   readonly closeOnEscape: Signal<boolean>;
   readonly closeOnOutside: Signal<boolean | null>;
+  readonly modal: Signal<boolean>;
   readonly initialFocus: Signal<KrnOverlayInitialFocus>;
   readonly restoreFocus: Signal<HTMLElement | false | null>;
   readonly closed: OutputEmitterRef<KrnOverlayCloseReason>;
@@ -5435,16 +5477,19 @@ declare class KrnOverlaySurfaceController {
   private readonly surfaceHost;
   private readonly resolvePanel;
   private readonly definition;
+  private readonly resolvePosition?;
   private readonly ids;
   private readonly platform;
   private readonly host;
   private readonly coordinator;
   private readonly destroyRef;
+  private enterTimer;
   private exitTimer;
   private focusTimer;
   private lifecycle;
   private coordinatorActive;
   readonly rendered: _angular_core.WritableSignal<boolean>;
+  readonly entering: _angular_core.WritableSignal<boolean>;
   readonly closing: _angular_core.WritableSignal<boolean>;
   private readonly overlayId;
   readonly titleId: string;
@@ -5453,24 +5498,33 @@ declare class KrnOverlaySurfaceController {
     surfaceHost: KrnOverlaySurfaceHost,
     resolvePanel: () => HTMLElement | undefined,
     definition: KrnOverlaySurfaceDefinition,
+    resolvePosition?: (() => KrnOverlayPosition) | undefined,
   );
   surfacePosition(): KrnOverlayPosition;
+  surfaceKind(): KrnOverlaySurfaceDefinition['kind'];
   surfaceRole(): 'dialog' | 'alertdialog';
   defaultOutsideClose(): boolean;
   close(reason: KrnOverlayCloseReason): void;
   onBackdropTransitionEnd(event: TransitionEvent): void;
   onBackdropAnimationEnd(event: AnimationEvent): void;
   onBackdropPointerdown(event: PointerEvent): void;
+  onSurfaceKeydown(event: KeyboardEvent): void;
   private prefersReducedMotion;
   private beginOpen;
   private beginExit;
   private finishExit;
   private cancelExit;
+  private beginEnter;
+  private cancelEnter;
   private cancelFocus;
 }
 declare class KrnDialog {
   private readonly translations;
   readonly open: ModelSignal<boolean>;
+  /** Blocks background interaction and traps focus while the dialog is open. */
+  readonly modal: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Selects the dialog's maximum inline size. */
+  readonly size: _angular_core.InputSignal<KrnOverlaySize>;
   readonly title: _angular_core.InputSignal<string>;
   readonly description: _angular_core.InputSignal<string>;
   readonly eyebrow: _angular_core.InputSignal<string>;
@@ -5498,6 +5552,8 @@ declare class KrnDialog {
     never,
     {
       open: { alias: 'open'; required: false; isSignal: true };
+      modal: { alias: 'modal'; required: false; isSignal: true };
+      size: { alias: 'size'; required: false; isSignal: true };
       title: { alias: 'title'; required: false; isSignal: true };
       description: { alias: 'description'; required: false; isSignal: true };
       eyebrow: { alias: 'eyebrow'; required: false; isSignal: true };
@@ -5521,6 +5577,10 @@ declare class KrnDialog {
 declare class KrnAlertDialog {
   private readonly translations;
   readonly open: ModelSignal<boolean>;
+  /** Blocks background interaction and traps focus while the alert dialog is open. */
+  readonly modal: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Selects the alert dialog's maximum inline size. */
+  readonly size: _angular_core.InputSignal<KrnOverlaySize>;
   readonly title: _angular_core.InputSignal<string>;
   readonly description: _angular_core.InputSignal<string>;
   readonly eyebrow: _angular_core.InputSignal<string>;
@@ -5548,6 +5608,8 @@ declare class KrnAlertDialog {
     never,
     {
       open: { alias: 'open'; required: false; isSignal: true };
+      modal: { alias: 'modal'; required: false; isSignal: true };
+      size: { alias: 'size'; required: false; isSignal: true };
       title: { alias: 'title'; required: false; isSignal: true };
       description: { alias: 'description'; required: false; isSignal: true };
       eyebrow: { alias: 'eyebrow'; required: false; isSignal: true };
@@ -5571,6 +5633,12 @@ declare class KrnAlertDialog {
 declare class KrnDrawer {
   private readonly translations;
   readonly open: ModelSignal<boolean>;
+  /** Blocks background interaction and traps focus while the drawer is open. */
+  readonly modal: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Selects the drawer thickness along its entry edge. */
+  readonly size: _angular_core.InputSignal<KrnOverlaySize>;
+  /** Chooses the physical or logical viewport edge from which the drawer enters. */
+  readonly side: _angular_core.InputSignal<KrnOverlaySide>;
   readonly title: _angular_core.InputSignal<string>;
   readonly description: _angular_core.InputSignal<string>;
   readonly eyebrow: _angular_core.InputSignal<string>;
@@ -5598,6 +5666,9 @@ declare class KrnDrawer {
     never,
     {
       open: { alias: 'open'; required: false; isSignal: true };
+      modal: { alias: 'modal'; required: false; isSignal: true };
+      size: { alias: 'size'; required: false; isSignal: true };
+      side: { alias: 'side'; required: false; isSignal: true };
       title: { alias: 'title'; required: false; isSignal: true };
       description: { alias: 'description'; required: false; isSignal: true };
       eyebrow: { alias: 'eyebrow'; required: false; isSignal: true };
@@ -5621,6 +5692,10 @@ declare class KrnDrawer {
 declare class KrnBottomSheet {
   private readonly translations;
   readonly open: ModelSignal<boolean>;
+  /** Blocks background interaction and traps focus while the sheet is open. */
+  readonly modal: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Selects the sheet's maximum block size. */
+  readonly size: _angular_core.InputSignal<KrnOverlaySize>;
   readonly title: _angular_core.InputSignal<string>;
   readonly description: _angular_core.InputSignal<string>;
   readonly eyebrow: _angular_core.InputSignal<string>;
@@ -5648,6 +5723,8 @@ declare class KrnBottomSheet {
     never,
     {
       open: { alias: 'open'; required: false; isSignal: true };
+      modal: { alias: 'modal'; required: false; isSignal: true };
+      size: { alias: 'size'; required: false; isSignal: true };
       title: { alias: 'title'; required: false; isSignal: true };
       description: { alias: 'description'; required: false; isSignal: true };
       eyebrow: { alias: 'eyebrow'; required: false; isSignal: true };
@@ -5751,6 +5828,9 @@ type KrnOverlayConfig<Data = undefined> = {
   readonly description?: string;
   readonly ariaLabel?: string;
   readonly showClose?: boolean;
+  readonly modal?: boolean;
+  readonly side?: KrnOverlaySide;
+  readonly size?: KrnOverlaySize;
   readonly closeOnEscape?: boolean;
   readonly closeOnOutside?: boolean | null;
   readonly closeOnNavigation?: boolean;
@@ -5893,9 +5973,15 @@ declare class KrnCalendar {
 }
 
 type KrnDisplayTone = 'neutral' | 'brand' | 'info' | 'success' | 'warning' | 'danger';
+type KrnBadgeVariant = 'solid' | 'subtle' | 'outline';
+type KrnBadgeSize = 'sm' | 'md' | 'lg';
 declare class KrnBadge {
   readonly tone: _angular_core.InputSignal<KrnDisplayTone>;
   readonly status: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Controls whether the badge uses a filled, tinted, or outlined surface. */
+  readonly variant: _angular_core.InputSignal<KrnBadgeVariant>;
+  /** Controls the badge height, horizontal padding, and text density. */
+  readonly size: _angular_core.InputSignal<KrnBadgeSize>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnBadge, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnBadge,
@@ -5904,10 +5990,12 @@ declare class KrnBadge {
     {
       tone: { alias: 'tone'; required: false; isSignal: true };
       status: { alias: 'status'; required: false; isSignal: true };
+      variant: { alias: 'variant'; required: false; isSignal: true };
+      size: { alias: 'size'; required: false; isSignal: true };
     },
     {},
     never,
-    ['*'],
+    ['[krnBadgeIcon]', '*'],
     true,
     never
   >;
@@ -6303,6 +6391,97 @@ declare class KrnKeyboardShortcut {
   >;
 }
 
+type KrnJsonPrimitive = string | number | boolean | null;
+type KrnJsonValue =
+  | KrnJsonPrimitive
+  | readonly KrnJsonValue[]
+  | {
+      readonly [key: string]: KrnJsonValue;
+    };
+type KrnJsonKind = 'array' | 'object' | 'string' | 'number' | 'boolean' | 'null' | 'circular';
+interface KrnJsonNode {
+  readonly type: 'node';
+  readonly id: string;
+  readonly path: string;
+  readonly parentPath: string | null;
+  readonly key: string | null;
+  readonly value: unknown;
+  readonly kind: KrnJsonKind;
+  readonly level: number;
+  readonly index: number;
+  readonly setSize: number;
+  readonly expandable: boolean;
+  readonly childCount: number;
+}
+interface KrnJsonClosingLine {
+  readonly type: 'closing';
+  readonly id: string;
+  readonly level: number;
+  readonly bracket: '}' | ']';
+}
+type KrnJsonLine = KrnJsonNode | KrnJsonClosingLine;
+interface KrnJsonSegment {
+  readonly value: string;
+  readonly highlighted: boolean;
+}
+declare class KrnJsonView {
+  private readonly host;
+  private readonly platform;
+  private readonly internalExpanded;
+  private previousData;
+  private previousDepth;
+  /** JSON-compatible value rendered as an inspectable hierarchy. */
+  readonly data: _angular_core.InputSignal<KrnJsonValue>;
+  /** Accessible name announced for the JSON tree. */
+  readonly ariaLabel: _angular_core.InputSignal<string>;
+  /** Number of hierarchy levels expanded when data first renders. */
+  readonly defaultExpandDepth: _angular_core.InputSignalWithTransform<number, unknown>;
+  /** Controlled JSON-pointer paths, or null to keep expansion state internal. */
+  readonly expandedPaths: _angular_core.ModelSignal<readonly string[] | null>;
+  /** Text or regular expression highlighted in visible keys and primitive values. */
+  readonly highlightPattern: _angular_core.InputSignal<string | RegExp | null>;
+  /** Sorts object keys with locale-aware comparison while preserving array order. */
+  readonly sortKeys: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  /** Allows long keys and values to wrap inside the viewport. */
+  readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
+  protected readonly activePath: _angular_core.WritableSignal<string>;
+  protected readonly expanded: _angular_core.Signal<Set<string>>;
+  protected readonly lines: _angular_core.Signal<readonly KrnJsonLine[]>;
+  private readonly nodes;
+  constructor();
+  protected isExpanded(node: KrnJsonNode): boolean;
+  protected openingBracket(node: KrnJsonNode): '{' | '[';
+  protected closingBracket(node: KrnJsonNode): '}' | ']';
+  protected primitive(node: KrnJsonNode): string;
+  protected segments(value: string): readonly KrnJsonSegment[];
+  protected toggle(node: KrnJsonNode): void;
+  protected activate(event: MouseEvent, node: KrnJsonNode): void;
+  protected onKeydown(event: KeyboardEvent): void;
+  private moveFocus;
+  private defaultExpandedPaths;
+  private buildLines;
+  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnJsonView, never>;
+  static ɵcmp: _angular_core.ɵɵComponentDeclaration<
+    KrnJsonView,
+    'krn-json-view',
+    never,
+    {
+      data: { alias: 'data'; required: true; isSignal: true };
+      ariaLabel: { alias: 'ariaLabel'; required: false; isSignal: true };
+      defaultExpandDepth: { alias: 'defaultExpandDepth'; required: false; isSignal: true };
+      expandedPaths: { alias: 'expandedPaths'; required: false; isSignal: true };
+      highlightPattern: { alias: 'highlightPattern'; required: false; isSignal: true };
+      sortKeys: { alias: 'sortKeys'; required: false; isSignal: true };
+      wrap: { alias: 'wrap'; required: false; isSignal: true };
+    },
+    { expandedPaths: 'expandedPathsChange' },
+    never,
+    never,
+    true,
+    never
+  >;
+}
+
 declare class KrnMeter {
   readonly locale: _angular_core.InputSignal<string | string[] | undefined>;
   private readonly resolvedLocale;
@@ -6465,6 +6644,7 @@ export {
   KrnHoverCard,
   KrnIconButton,
   KrnInline,
+  KrnJsonView,
   KrnKeyboardShortcut,
   KrnLabel,
   KrnLink,
@@ -6550,7 +6730,10 @@ export {
 };
 export type {
   KrnActionVariant,
+  KrnAlertAppearance,
   KrnAutocompleteMode,
+  KrnBadgeSize,
+  KrnBadgeVariant,
   KrnBreadcrumbItem,
   KrnButtonGroupOptions,
   KrnButtonOptions,
@@ -6571,6 +6754,8 @@ export type {
   KrnIconButtonOptions,
   KrnIdentityMatcher,
   KrnInputMode,
+  KrnJsonPrimitive,
+  KrnJsonValue,
   KrnLayoutAlignment,
   KrnLayoutAxis,
   KrnLayoutJustification,
@@ -6591,6 +6776,8 @@ export type {
   KrnOverlayDismissReason,
   KrnOverlayOutcome,
   KrnOverlayPosition,
+  KrnOverlaySide,
+  KrnOverlaySize,
   KrnOverlayTemplateContext,
   KrnOverlayVariant,
   KrnRangeValue,

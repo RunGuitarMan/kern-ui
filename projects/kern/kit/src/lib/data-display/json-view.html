@@ -1,0 +1,64 @@
+<div class="tree" role="tree" [attr.aria-label]="ariaLabel()" (keydown)="onKeydown($event)">
+  @for (line of lines(); track line.id) {
+    @if (line.type === 'node') {
+      <div
+        class="row"
+        role="treeitem"
+        [attr.data-json-path]="line.path"
+        [attr.data-kind]="line.kind"
+        [attr.aria-level]="line.level"
+        [attr.aria-posinset]="line.index + 1"
+        [attr.aria-setsize]="line.setSize"
+        [attr.aria-expanded]="line.expandable ? isExpanded(line) : null"
+        [attr.tabindex]="activePath() === line.path ? 0 : -1"
+        [style.--_json-level]="line.level - 1"
+        (click)="activate($event, line)"
+      >
+        <span
+          class="disclosure"
+          [attr.data-visible]="line.expandable"
+          aria-hidden="true"
+          (click)="toggle(line); $event.stopPropagation()"
+        ></span>
+        @if (line.key !== null) {
+          <span class="key">
+            @for (segment of segments(line.key); track $index) {
+              @if (segment.highlighted) {
+                <mark>{{ segment.value }}</mark>
+              } @else {
+                <span class="segment">{{ segment.value }}</span>
+              }
+            }
+          </span>
+          <span class="punctuation">: </span>
+        }
+        @if (line.expandable) {
+          <span class="punctuation">{{ openingBracket(line) }}</span>
+          @if (!isExpanded(line)) {
+            <span class="summary">{{ line.childCount }} items</span>
+            <span class="punctuation">{{ closingBracket(line) }}</span>
+          }
+        } @else {
+          <span class="value" [attr.data-kind]="line.kind">
+            @for (segment of segments(primitive(line)); track $index) {
+              @if (segment.highlighted) {
+                <mark>{{ segment.value }}</mark>
+              } @else {
+                <span class="segment">{{ segment.value }}</span>
+              }
+            }
+          </span>
+        }
+      </div>
+    } @else {
+      <div
+        class="row closing"
+        role="presentation"
+        [style.--_json-level]="line.level - 1"
+        aria-hidden="true"
+      >
+        <span class="disclosure"></span><span class="punctuation">{{ line.bracket }}</span>
+      </div>
+    }
+  }
+</div>

@@ -58,6 +58,8 @@ void bootstrapApplication(KernDialogAgentExample);
 | Name              | Kind   | Type                           | Required | Default            | Description                                                              |
 | ----------------- | ------ | ------------------------------ | -------- | ------------------ | ------------------------------------------------------------------------ |
 | `open`            | model  | `boolean`                      | no       | `false`            | Controls whether the disclosure or overlay surface is visible.           |
+| `modal`           | input  | `boolean`                      | no       | `true`             | Blocks background interaction and traps focus while the dialog is open.  |
+| `size`            | input  | `KrnOverlaySize`               | no       | `'md'`             | Selects the dialog's maximum inline size.                                |
 | `title`           | input  | `string`                       | no       | `''`               | Visible title that also names the component surface or data view.        |
 | `description`     | input  | `string`                       | no       | `''`               | Visible supporting description for the component content.                |
 | `eyebrow`         | input  | `string`                       | no       | `''`               | Human-readable copy for the eyebrow state or control.                    |
@@ -125,7 +127,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/dialog`
 
 Scenarios: `default`.
-Public API coverage: 7/13
+Public API coverage: 9/15
 directly controlled; 6 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -136,6 +138,8 @@ component inputs or models.
 | ---------------- | ------- | ---------------------------------- | ---------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------ |
 | `title`          | text    | `"Edit workspace"`                 | `"Edit workspace · alternate"`                 | input `title` (property)          | Sets the dialog heading.                                                                         |
 | `description`    | text    | `"Changes apply to every member."` | `"Changes apply to every member. · alternate"` | input `description` (property)    | Sets the dialog description.                                                                     |
+| `size`           | select  | `"md"`                             | `"sm"`                                         | input `size` (property)           | Sets the dialog width.                                                                           |
+| `modal`          | boolean | `true`                             | `false`                                        | input `modal` (property)          | Traps focus and makes the background inert.                                                      |
 | `open`           | boolean | `false`                            | `true`                                         | model `open`                      | Opens the modal surface.                                                                         |
 | `showClose`      | boolean | `true`                             | `false`                                        | input `showClose` (property)      | Shows the close icon action.                                                                     |
 | `closeOnEscape`  | boolean | `true`                             | `false`                                        | input `closeOnEscape` (property)  | Allows Escape to dismiss the dialog.                                                             |

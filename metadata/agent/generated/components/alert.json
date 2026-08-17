@@ -57,6 +57,16 @@
       "descriptionSource": "inferred"
     },
     {
+      "name": "appearance",
+      "property": "appearance",
+      "kind": "input",
+      "type": "KrnAlertAppearance",
+      "required": false,
+      "defaultValue": "'subtle'",
+      "description": "Selects the alert surface treatment without changing its semantic tone.",
+      "descriptionSource": "source"
+    },
+    {
       "name": "title",
       "property": "title",
       "kind": "input",
@@ -109,7 +119,13 @@
   ],
   "slots": [
     {
-      "name": "default",
+      "name": "krnAlertIcon",
+      "selector": "[krnAlertIcon]",
+      "required": false,
+      "description": "Projects content matching [krnAlertIcon]."
+    },
+    {
+      "name": "default-2",
       "selector": "*",
       "required": false,
       "description": "Projects default component content."
@@ -168,6 +184,7 @@
     "krn-alert",
     "KrnAlert",
     "tone",
+    "appearance",
     "title",
     "icon",
     "dismissible",
@@ -232,6 +249,33 @@
           {
             "label": "danger",
             "value": "danger"
+          }
+        ]
+      },
+      {
+        "key": "appearance",
+        "label": "Appearance",
+        "kind": "select",
+        "defaultValue": "subtle",
+        "testValue": "outline",
+        "description": "Changes the alert surface contrast.",
+        "binding": {
+          "kind": "input",
+          "publicName": "appearance",
+          "syntax": "property"
+        },
+        "options": [
+          {
+            "label": "subtle",
+            "value": "subtle"
+          },
+          {
+            "label": "outline",
+            "value": "outline"
+          },
+          {
+            "label": "contrast",
+            "value": "contrast"
           }
         ]
       },
@@ -361,8 +405,8 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 5,
-      "controlled": 4,
+      "publicInputsAndModels": 6,
+      "controlled": 5,
       "excluded": 1,
       "unclassified": 0
     },

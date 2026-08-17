@@ -81,7 +81,15 @@
       "status": "beta",
       "owner": "kern/data-display",
       "evidenceProfile": "beta-promotion",
-      "ids": ["bar-chart", "data-grid", "data-table", "donut-chart", "line-chart", "tree"]
+      "ids": [
+        "bar-chart",
+        "data-grid",
+        "data-table",
+        "donut-chart",
+        "json-view",
+        "line-chart",
+        "tree"
+      ]
     },
     {
       "category": "Data display",
@@ -481,6 +489,9 @@
         "KrnDateRangeValue",
         "KrnDialog",
         "KrnDrawer",
+        "KrnJsonPrimitive",
+        "KrnJsonValue",
+        "KrnJsonView",
         "defineKrnOverlayContent",
         "injectKrnOverlayRef",
         "KrnMultiSelect",
@@ -536,6 +547,7 @@
         "KrnAccordion",
         "KrnActionVariant",
         "KrnAlert",
+        "KrnAlertAppearance",
         "KrnAlertDialog",
         "KrnAppShell",
         "KrnAspectRatio",
@@ -543,6 +555,8 @@
         "KrnAvatarGroup",
         "KrnBackButton",
         "KrnBadge",
+        "KrnBadgeSize",
+        "KrnBadgeVariant",
         "KrnBanner",
         "KrnBottomNavigation",
         "KrnBreadcrumbItem",
@@ -626,6 +640,8 @@
         "KrnOptionTrackBy",
         "KrnOverlayCloseReason",
         "KrnOverlayPosition",
+        "KrnOverlaySide",
+        "KrnOverlaySize",
         "KrnPagination",
         "KrnPasswordInput",
         "KrnPopover",
@@ -788,6 +804,9 @@
         "KrnDataGridRowHarnessFilters",
         "KrnDonutChartHarness",
         "KrnLineChartHarness",
+        "KrnJsonNodeHarness",
+        "KrnJsonNodeHarnessFilters",
+        "KrnJsonViewHarness",
         "KrnTreeHarness",
         "KrnTreeItemHarness"
       ]

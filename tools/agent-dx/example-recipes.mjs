@@ -1778,6 +1778,27 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
     riskTags: ['controlled-state'],
     assertions: ['[(copied)]="copied"'],
   }),
+  'json-view': defineRecipe({
+    title: 'Inspectable deployment payload',
+    scenario: 'Render structured JSON with accessible tree navigation and a highlighted field.',
+    template: `
+      <krn-json-view
+        ariaLabel="Deployment payload"
+        [data]="payload"
+        [defaultExpandDepth]="2"
+        highlightPattern="active"
+      />
+    `,
+    members: [
+      `readonly payload = {
+        deployment: { id: 'dep_01KERN', active: true, replicas: 3 },
+        region: 'eu-central',
+        error: null,
+      } as const;`,
+    ],
+    riskTags: ['data-display', 'keyboard', 'typed-collection'],
+    assertions: ['[data]="payload"', '[defaultExpandDepth]="2"'],
+  }),
   'keyboard-shortcut': defineRecipe({
     title: 'Command shortcut hint',
     scenario: 'Expose the ordered keys for a common command.',

@@ -4,62 +4,85 @@
 .alert {
   --tone: var(--krn-color-info);
   --tone-ink: var(--krn-color-info-text, var(--tone));
-  --tone-subtle: var(--krn-color-info-subtle);
+  --tone-on: var(--krn-color-on-info, white);
+  --tone-surface: color-mix(in oklab, var(--tone) 19%, var(--krn-color-surface-raised));
+  --tone-border: color-mix(in oklab, var(--tone) 54%, var(--krn-color-border));
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: start;
-  gap: var(--krn-space-3);
-  padding: var(--krn-space-4);
-  border: var(--krn-border-width-1) solid
-    color-mix(in oklch, var(--tone) 30%, var(--krn-color-border));
-  border-radius: var(--krn-radius-md);
-  background: color-mix(in oklch, var(--krn-color-surface-raised) 88%, var(--tone-subtle));
+  gap: var(--krn-space-2);
+  padding: var(--krn-space-3);
+  border: var(--krn-border-width-1) solid var(--tone-border);
+  border-radius: var(--krn-radius-lg, 0.75rem);
+  background: var(--tone-surface);
   color: var(--krn-color-text);
-  box-shadow: inset calc(var(--krn-border-width-1) * 2) 0 0 var(--tone);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 4%);
+}
+.alert[data-appearance='outline'] {
+  background: var(--krn-color-surface-raised);
+}
+.alert[data-appearance='contrast'] {
+  --tone-surface: color-mix(in oklab, var(--tone) 31%, var(--krn-color-surface-raised));
+  --tone-border: color-mix(in oklab, var(--tone) 72%, var(--krn-color-border));
 }
 .alert[data-tone='neutral'] {
   --tone: var(--krn-color-text-muted);
   --tone-ink: var(--krn-color-text);
-  --tone-subtle: var(--krn-color-surface-subtle);
+  --tone-on: var(--krn-color-text-inverse, white);
+  --tone-surface: var(--krn-color-surface-sunken);
+  --tone-border: var(--krn-color-border);
+}
+.alert[data-tone='info'] {
+  --tone: var(--krn-color-info);
+  --tone-ink: var(--krn-color-info-text, var(--tone));
+  --tone-on: var(--krn-color-on-info, white);
 }
 .alert[data-tone='success'] {
   --tone: var(--krn-color-success);
   --tone-ink: var(--krn-color-success-text, var(--tone));
-  --tone-subtle: var(--krn-color-success-subtle);
+  --tone-on: var(--krn-color-on-success, white);
 }
 .alert[data-tone='warning'] {
   --tone: var(--krn-color-warning);
   --tone-ink: var(--krn-color-warning-text, var(--tone));
-  --tone-subtle: var(--krn-color-warning-subtle);
+  --tone-on: var(--krn-color-on-warning, white);
 }
 .alert[data-tone='danger'] {
   --tone: var(--krn-color-danger);
   --tone-ink: var(--krn-color-danger-text, var(--tone));
-  --tone-subtle: var(--krn-color-danger-subtle);
+  --tone-on: var(--krn-color-on-danger, white);
 }
 .indicator {
-  display: grid;
-  inline-size: var(--krn-control-height-sm);
-  block-size: var(--krn-control-height-sm);
-  border: var(--krn-border-width-1) solid color-mix(in oklch, var(--tone) 28%, transparent);
-  border-radius: var(--krn-radius-full);
+  display: inline-grid;
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+  margin-block-start: 0.1rem;
   place-items: center;
-  background: color-mix(in oklch, var(--tone) 9%, transparent);
   color: var(--tone-ink);
   font-size: var(--krn-font-size-xs);
   font-weight: var(--krn-font-weight-bold);
+  line-height: 1;
+}
+.indicator > :where(svg) {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+.indicator:has([krnAlertIcon]) .indicator-fallback {
+  display: none;
 }
 .content {
   display: grid;
-  gap: var(--krn-space-1);
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.125rem var(--krn-space-3);
   min-inline-size: 0;
-  padding-block: var(--krn-space-1);
 }
 strong {
+  grid-column: 1;
   font-weight: var(--krn-font-weight-semibold);
   letter-spacing: -0.006em;
 }
 .body {
+  grid-column: 1;
   color: color-mix(in oklch, var(--krn-color-text-muted) 92%, var(--tone-ink));
   line-height: var(--krn-line-height-body);
 }
@@ -67,10 +90,24 @@ strong {
   display: none;
 }
 .actions {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-items: center;
+  align-self: center;
   display: flex;
   flex-wrap: wrap;
   gap: var(--krn-space-2);
-  padding-block-start: var(--krn-space-2);
+  padding-block-start: 0;
+}
+@media (max-width: 35rem) {
+  .content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .actions {
+    grid-column: 1;
+    grid-row: auto;
+    padding-block-start: var(--krn-space-2);
+  }
 }
 .dismiss {
   display: grid;
@@ -90,7 +127,7 @@ strong {
     color var(--krn-motion-duration-interaction) var(--krn-motion-ease-standard);
 }
 .dismiss:hover {
-  background: color-mix(in oklch, var(--krn-color-surface-hover) 86%, var(--tone-subtle));
+  background: color-mix(in oklab, var(--tone) 13%, transparent);
   color: var(--krn-color-text);
 }
 .dismiss:focus-visible {

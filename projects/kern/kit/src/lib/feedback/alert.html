@@ -2,10 +2,14 @@
   <section
     class="alert"
     [attr.data-tone]="tone()"
+    [attr.data-appearance]="appearance()"
     [attr.role]="tone() === 'danger' ? 'alert' : 'status'"
     [attr.aria-live]="tone() === 'danger' ? 'assertive' : 'polite'"
   >
-    <span class="indicator" aria-hidden="true">{{ icon() || toneIcon() }}</span>
+    <span class="indicator" aria-hidden="true">
+      <ng-content select="[krnAlertIcon]" />
+      <span class="indicator-fallback">{{ icon() || toneIcon() }}</span>
+    </span>
     <div class="content">
       @if (title()) {
         <strong>{{ title() }}</strong>

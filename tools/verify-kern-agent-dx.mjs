@@ -165,8 +165,8 @@ async function verifyRepositoryContracts(manifest) {
   const indexIds = index.examples.map((example) => example.id);
   const recipeIds = Object.keys(KERN_AGENT_EXAMPLE_RECIPES);
 
-  if (manifest.components.length !== 131) {
-    fail(`Expected the current 131-entry catalog, found ${manifest.components.length}.`);
+  if (manifest.components.length !== 132) {
+    fail(`Expected the current 132-entry catalog, found ${manifest.components.length}.`);
   }
   if (index.total !== manifest.components.length || index.examples.length !== index.total) {
     fail('Agent example index total does not match the component manifest.');

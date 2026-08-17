@@ -55,23 +55,26 @@ void bootstrapApplication(KernDrawerAgentExample);
 
 ## API
 
-| Name              | Kind   | Type                           | Required | Default            | Description                                                              |
-| ----------------- | ------ | ------------------------------ | -------- | ------------------ | ------------------------------------------------------------------------ |
-| `open`            | model  | `boolean`                      | no       | `false`            | Controls whether the disclosure or overlay surface is visible.           |
-| `title`           | input  | `string`                       | no       | `''`               | Visible title that also names the component surface or data view.        |
-| `description`     | input  | `string`                       | no       | `''`               | Visible supporting description for the component content.                |
-| `eyebrow`         | input  | `string`                       | no       | `''`               | Human-readable copy for the eyebrow state or control.                    |
-| `ariaLabel`       | input  | `string \| undefined`          | no       | `undefined`        | Accessible name used when visible content is not sufficient.             |
-| `showClose`       | input  | `boolean`                      | no       | `true`             | Controls whether the component applies the show close behavior.          |
-| `closeLabel`      | input  | `string \| undefined`          | no       | `undefined`        | Human-readable copy for the close state or control.                      |
-| `closeOnEscape`   | input  | `boolean`                      | no       | `true`             | Allows Escape to dismiss the topmost owned overlay.                      |
-| `closeOnOutside`  | input  | `boolean \| null`              | no       | `null`             | Allows an interaction outside the owned overlay to dismiss it.           |
-| `initialFocus`    | input  | `string`                       | no       | `'first-tabbable'` | Identifies the element that receives focus when the modal surface opens. |
-| `restoreFocus`    | input  | `HTMLElement \| false \| null` | no       | `null`             | Explicit focus return target, or `false` to disable focus restoration.   |
-| `contentTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template used to render the component body with its typed context.       |
-| `actionsTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template used to render product-owned actions in the designated slot.    |
-| `closed`          | output | `KrnOverlayCloseReason`        | no       | `undefined`        | Notifies the consumer after the closed interaction completes.            |
-| `afterExited`     | output | `void`                         | no       | `undefined`        | Emits after exit motion and global modal cleanup have completed.         |
+| Name              | Kind   | Type                           | Required | Default            | Description                                                                 |
+| ----------------- | ------ | ------------------------------ | -------- | ------------------ | --------------------------------------------------------------------------- |
+| `open`            | model  | `boolean`                      | no       | `false`            | Controls whether the disclosure or overlay surface is visible.              |
+| `modal`           | input  | `boolean`                      | no       | `false`            | Blocks background interaction and traps focus while the drawer is open.     |
+| `size`            | input  | `KrnOverlaySize`               | no       | `'md'`             | Selects the drawer thickness along its entry edge.                          |
+| `side`            | input  | `KrnOverlaySide`               | no       | `'right'`          | Chooses the physical or logical viewport edge from which the drawer enters. |
+| `title`           | input  | `string`                       | no       | `''`               | Visible title that also names the component surface or data view.           |
+| `description`     | input  | `string`                       | no       | `''`               | Visible supporting description for the component content.                   |
+| `eyebrow`         | input  | `string`                       | no       | `''`               | Human-readable copy for the eyebrow state or control.                       |
+| `ariaLabel`       | input  | `string \| undefined`          | no       | `undefined`        | Accessible name used when visible content is not sufficient.                |
+| `showClose`       | input  | `boolean`                      | no       | `true`             | Controls whether the component applies the show close behavior.             |
+| `closeLabel`      | input  | `string \| undefined`          | no       | `undefined`        | Human-readable copy for the close state or control.                         |
+| `closeOnEscape`   | input  | `boolean`                      | no       | `true`             | Allows Escape to dismiss the topmost owned overlay.                         |
+| `closeOnOutside`  | input  | `boolean \| null`              | no       | `null`             | Allows an interaction outside the owned overlay to dismiss it.              |
+| `initialFocus`    | input  | `string`                       | no       | `'first-tabbable'` | Identifies the element that receives focus when the modal surface opens.    |
+| `restoreFocus`    | input  | `HTMLElement \| false \| null` | no       | `null`             | Explicit focus return target, or `false` to disable focus restoration.      |
+| `contentTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template used to render the component body with its typed context.          |
+| `actionsTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template used to render product-owned actions in the designated slot.       |
+| `closed`          | output | `KrnOverlayCloseReason`        | no       | `undefined`        | Notifies the consumer after the closed interaction completes.               |
+| `afterExited`     | output | `void`                         | no       | `undefined`        | Emits after exit motion and global modal cleanup have completed.            |
 
 ## Deprecated selectors
 
@@ -125,7 +128,7 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/drawer`
 
 Scenarios: `default`.
-Public API coverage: 7/13
+Public API coverage: 10/16
 directly controlled; 6 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
@@ -135,6 +138,9 @@ component inputs or models.
 | Argument         | Control | Default             | Test value                      | Binding                           | Description                                                                                      |
 | ---------------- | ------- | ------------------- | ------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------ |
 | `open`           | boolean | `false`             | `true`                          | model `open`                      | Opens the edge-aligned drawer.                                                                   |
+| `side`           | select  | `"right"`           | `"top"`                         | input `side` (property)           | Chooses the viewport edge.                                                                       |
+| `size`           | select  | `"md"`              | `"sm"`                          | input `size` (property)           | Sets the sheet width or height.                                                                  |
+| `modal`          | boolean | `false`             | `true`                          | input `modal` (property)          | Controls focus trapping and backdrop behavior.                                                   |
 | `closeOnOutside` | select  | `null`              | `true`                          | input `closeOnOutside` (property) | Inherits the surface policy by default, or explicitly enables or disables outside-click closing. |
 | `closeOnEscape`  | boolean | `true`              | `false`                         | input `closeOnEscape` (property)  | Configures the component closeOnEscape contract.                                                 |
 | `description`    | text    | `""`                | `"Alternate value"`             | input `description` (property)    | Configures the component description contract.                                                   |

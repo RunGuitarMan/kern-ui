@@ -13,7 +13,7 @@ describe('KERN Docs and preview example integration', () => {
       encoding: 'utf8',
     });
     assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
-    assert.match(result.stdout, /131 packed-package AOT examples/);
+    assert.match(result.stdout, /132 packed-package AOT examples/);
   });
 
   it('uses the compile-verified registry instead of handwritten fallback snippets', async () => {
@@ -52,7 +52,7 @@ describe('KERN Docs and preview example integration', () => {
       encoding: 'utf8',
     });
     assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
-    assert.match(result.stdout, /131\/131 catalog components/);
+    assert.match(result.stdout, /132\/132 catalog components/);
   });
 
   it('publishes complete, executable playground metadata for every catalog entry', () => {
@@ -63,7 +63,7 @@ describe('KERN Docs and preview example integration', () => {
     assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
     assert.match(
       result.stdout,
-      /131\/131 components; \d+ controls \(\d+\/\d+ public API, \d+ exact exclusions, 0 unclassified\); \d+ executable presets; \d+ fixture effects; 0 unmapped acceptance states/,
+      /132\/132 components; \d+ controls \(\d+\/\d+ public API, \d+ exact exclusions, 0 unclassified\); \d+ executable presets; \d+ fixture effects; 0 unmapped acceptance states/,
     );
   });
 });

@@ -131,7 +131,40 @@ describe('Kern feedback', () => {
     expect(service.toasts()).toHaveLength(0);
   });
 
-  it('keeps actionable toasts persistent unless a duration is explicitly provided', async () => {
+  it('keeps pointer expansion stable while crossing toast gaps', async () => {
+    vi.useFakeTimers();
+    try {
+      await TestBed.configureTestingModule({ imports: [KrnToastViewport] }).compileComponents();
+      const fixture = TestBed.createComponent(KrnToastViewport);
+      const service = TestBed.inject(KrnToastService);
+      service.success('Deployment ready', { duration: 0 });
+      service.warning('Review quota', { duration: 0 });
+      fixture.detectChanges();
+
+      const host = fixture.nativeElement as HTMLElement;
+      const stack = host.querySelector('.toast-stack') as HTMLElement;
+      stack.dispatchEvent(new Event('pointerenter'));
+      await vi.advanceTimersByTimeAsync(80);
+      fixture.detectChanges();
+      expect(host.getAttribute('data-pointer-expanded')).toBe('true');
+
+      stack.dispatchEvent(new Event('pointerleave'));
+      await vi.advanceTimersByTimeAsync(50);
+      stack.dispatchEvent(new Event('pointerenter'));
+      await vi.advanceTimersByTimeAsync(100);
+      fixture.detectChanges();
+      expect(host.getAttribute('data-pointer-expanded')).toBe('true');
+
+      stack.dispatchEvent(new Event('pointerleave'));
+      await vi.advanceTimersByTimeAsync(100);
+      fixture.detectChanges();
+      expect(host.getAttribute('data-pointer-expanded')).toBe('false');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('gives actionable toasts more reading time and preserves only explicit persistent records', async () => {
     vi.useFakeTimers();
     try {
       await TestBed.configureTestingModule({ imports: [KrnToastViewport] }).compileComponents();
@@ -140,8 +173,11 @@ describe('Kern feedback', () => {
         actionLabel: 'Open',
         action: () => undefined,
       });
+      service.show('Connection lost', { preserve: true });
 
-      await vi.advanceTimersByTimeAsync(30_000);
+      expect(service.toasts()[0]?.duration).toBe(8_000);
+      expect(service.toasts()[1]?.duration).toBe(0);
+      await vi.advanceTimersByTimeAsync(8_500);
       expect(service.toasts()).toHaveLength(1);
       expect(service.toasts()[0]?.duration).toBe(0);
     } finally {
@@ -667,6 +703,38 @@ describe('Kern feedback', () => {
     second.nativeElement.remove();
   });
 
+  it('supports a non-modal drawer on any logical side without inerting the page', async () => {
+    const background = document.createElement('button');
+    background.textContent = 'Background action';
+    document.body.append(background);
+    const previousOverflow = document.body.style.overflow;
+    const fixture = await create(KrnDrawer, {
+      open: true,
+      title: 'Navigation details',
+      modal: false,
+      side: 'inline-start',
+      size: 'lg',
+    });
+
+    const backdrop = fixture.nativeElement.querySelector('.backdrop') as HTMLElement;
+    const surface = backdrop.querySelector('.surface') as HTMLElement;
+    expect(backdrop.dataset['position']).toBe('inline-start');
+    expect(backdrop.dataset['size']).toBe('lg');
+    expect(backdrop.dataset['modal']).toBe('false');
+    expect(surface.hasAttribute('aria-modal')).toBe(false);
+    expect(background.inert).not.toBe(true);
+    expect(document.body.style.overflow).toBe(previousOverflow);
+
+    surface.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.open()).toBe(false);
+    expect(background.inert).not.toBe(true);
+    expect(document.body.style.overflow).toBe(previousOverflow);
+
+    fixture.destroy();
+    background.remove();
+  });
+
   it('keeps a closing drawer present only for its exit animation', async () => {
     vi.stubGlobal(
       'matchMedia',
@@ -702,8 +770,8 @@ describe('Kern feedback', () => {
     expect(closingBackdrop.dataset['state']).toBe('closing');
     expect(closingBackdrop.getAttribute('aria-hidden')).toBe('true');
     expect(closingBackdrop.hasAttribute('inert')).toBe(true);
-    expect(trigger.inert).toBe(true);
-    expect(document.body.style.overflow).toBe('hidden');
+    expect(trigger.inert).not.toBe(true);
+    expect(document.body.style.overflow).toBe(previousOverflow);
     expect(exitCount).toBe(0);
 
     const nestedSurface = document.createElement('div');
@@ -730,7 +798,7 @@ describe('Kern feedback', () => {
     fixture.detectChanges();
     expect(closeReasons).toEqual(['action', 'action']);
     expect(fixture.nativeElement.querySelector('.backdrop')).toBeNull();
-    expect(trigger.inert).toBe(false);
+    expect(trigger.inert).not.toBe(true);
     expect(document.body.style.overflow).toBe(previousOverflow);
     expect(exitCount).toBe(1);
     await new Promise<void>((resolve) => queueMicrotask(resolve));

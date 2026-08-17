@@ -176,7 +176,7 @@
   transform: translateY(1px);
 }
 
-.specimen-canvas.specimen-canvas > :is(krn-dropdown-button, krn-split-button) {
+.specimen-canvas.specimen-canvas > :is(krn-dropdown-button, krn-split-button, div[krnToggleGroup]) {
   inline-size: max-content;
   justify-self: center;
 }
