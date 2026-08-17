@@ -1,9 +1,7 @@
-import { DOCUMENT, Location, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   LOCALE_ID,
-  PLATFORM_ID,
   computed,
   effect,
   inject,
@@ -17,7 +15,6 @@ import {
   KernComponentSpecimen,
   findKernPlaygroundDefinition,
   type KernPlaygroundControl,
-  type KernPlaygroundEnvironment,
   type KernPlaygroundValue,
   type KernPlaygroundValues,
   type KernSpecimenScenario,
@@ -33,14 +30,20 @@ import {
 } from '@kern-ui/angular/core';
 import { KrnCodeBlock, KrnCopyButton } from '@kern-ui/angular/kit';
 
-import type { DocsDensity } from '../preferences';
+import {
+  DocsPreferences,
+  type DocsBaseTheme,
+  type DocsDensity,
+  type DocsLocale,
+  type DocsMotion,
+  type DocsViewport,
+} from '../preferences';
 
 type PreviewTheme = 'system' | 'light' | 'dark' | 'high-contrast';
 type PreviewDirection = 'ltr' | 'rtl';
-type PreviewLocale = 'en-US' | 'ru-RU';
-type PreviewMotion = 'system' | 'reduce' | 'full';
-type PreviewViewport = 'responsive' | 'phone' | 'tablet';
-type EnvironmentKey = 'theme' | 'density' | 'direction' | 'locale' | 'motion' | 'viewport';
+type PreviewLocale = DocsLocale;
+type PreviewMotion = DocsMotion;
+type PreviewViewport = DocsViewport;
 
 const THEMES: readonly PreviewTheme[] = ['system', 'light', 'dark', 'high-contrast'];
 const DENSITIES: readonly DocsDensity[] = ['compact', 'comfortable', 'spacious'];
@@ -62,10 +65,6 @@ const ENVIRONMENT_DEFAULTS = {
 
 function includesValue<T extends string>(values: readonly T[], value: string | null): value is T {
   return value !== null && values.includes(value as T);
-}
-
-function readSelect(event: Event): string {
-  return (event.currentTarget as HTMLSelectElement).value;
 }
 
 function readInput(event: Event): string {
@@ -273,21 +272,13 @@ export class ComponentPlayground {
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly location = inject(Location);
-  private readonly document = inject(DOCUMENT);
-  private readonly browser = isPlatformBrowser(inject(PLATFORM_ID));
+  private readonly prefs = inject(DocsPreferences);
   private readonly queryParams = toSignal(this.route.queryParamMap, {
     initialValue: this.route.snapshot.queryParamMap,
   });
 
   protected readonly activeTab = signal<'preview' | 'code'>('preview');
   protected readonly resetRevision = signal(0);
-  protected readonly themes = THEMES;
-  protected readonly densities = DENSITIES;
-  protected readonly directions = DIRECTIONS;
-  protected readonly locales = LOCALES;
-  protected readonly motions = MOTIONS;
-  protected readonly viewports = VIEWPORTS;
   protected readonly definition = computed(() => {
     const definition = findKernPlaygroundDefinition(this.item().id);
     if (!definition) {
@@ -322,15 +313,15 @@ export class ComponentPlayground {
     const value = this.queryParams().get('direction');
     return includesValue(DIRECTIONS, value) ? value : 'ltr';
   });
-  protected readonly locale = computed<PreviewLocale>(() => {
+  private readonly requestedLocale = computed<PreviewLocale>(() => {
     const value = this.queryParams().get('locale');
     return includesValue(LOCALES, value) ? value : 'en-US';
   });
-  protected readonly motion = computed<PreviewMotion>(() => {
+  private readonly requestedMotion = computed<PreviewMotion>(() => {
     const value = this.queryParams().get('motion');
     return includesValue(MOTIONS, value) ? value : 'system';
   });
-  protected readonly brandColor = computed(() =>
+  private readonly requestedBrandColor = computed(() =>
     normalizeBrandColor(this.queryParams().get('brandColor')),
   );
   private readonly requestedViewport = computed<PreviewViewport>(() => {
@@ -363,31 +354,61 @@ export class ComponentPlayground {
       args: this.requestedArgs(),
     }),
   );
-  protected readonly theme = computed<PreviewTheme>(
-    () => this.resolvedState().environment.theme ?? this.requestedTheme(),
+  private readonly isolatedTheme = computed<PreviewTheme>(() => {
+    const params = this.queryParams();
+    if (params.has('theme') || params.has('contrast')) return this.requestedTheme();
+    return this.resolvedState().environment.theme ?? this.requestedTheme();
+  });
+  protected readonly baseTheme = computed<DocsBaseTheme>(() => {
+    if (!this.isolated()) return this.prefs.baseTheme();
+    const theme = this.isolatedTheme();
+    return theme === 'high-contrast' ? 'system' : theme;
+  });
+  protected readonly contrast = computed(() => {
+    if (!this.isolated()) return this.prefs.contrastMode();
+    return (
+      this.isolatedTheme() === 'high-contrast' || this.queryParams().get('contrast') === 'true'
+    );
+  });
+  protected readonly theme = computed<PreviewTheme>(() =>
+    this.contrast() ? 'high-contrast' : this.baseTheme(),
   );
-  protected readonly density = computed<DocsDensity>(
-    () => this.resolvedState().environment.density ?? this.requestedDensity(),
+  protected readonly contrastScheme = computed(() => {
+    const theme = this.baseTheme();
+    return theme === 'dark' ? 'dark' : theme === 'light' ? 'light' : 'light dark';
+  });
+  protected readonly density = computed<DocsDensity>(() =>
+    this.isolated()
+      ? this.queryParams().has('density')
+        ? this.requestedDensity()
+        : (this.resolvedState().environment.density ?? this.requestedDensity())
+      : this.prefs.density(),
   );
-  protected readonly direction = computed<PreviewDirection>(
-    () => this.resolvedState().environment.direction ?? this.requestedDirection(),
+  protected readonly direction = computed<PreviewDirection>(() =>
+    this.isolated()
+      ? this.queryParams().has('direction')
+        ? this.requestedDirection()
+        : (this.resolvedState().environment.direction ?? this.requestedDirection())
+      : this.prefs.direction(),
   );
-  protected readonly viewport = computed<PreviewViewport>(
-    () => this.resolvedState().environment.viewport ?? this.requestedViewport(),
+  protected readonly viewport = computed<PreviewViewport>(() =>
+    this.isolated()
+      ? this.queryParams().has('viewport')
+        ? this.requestedViewport()
+        : (this.resolvedState().environment.viewport ?? this.requestedViewport())
+      : this.prefs.viewport(),
+  );
+  protected readonly locale = computed<PreviewLocale>(() =>
+    this.isolated() ? this.requestedLocale() : this.prefs.locale(),
+  );
+  protected readonly motion = computed<PreviewMotion>(() =>
+    this.isolated() ? this.requestedMotion() : this.prefs.motion(),
+  );
+  protected readonly brandColor = computed(() =>
+    this.isolated() ? this.requestedBrandColor() : this.prefs.brand(),
   );
   protected readonly scenario = computed<KernSpecimenScenario>(() => this.resolvedState().scenario);
   protected readonly args = computed<KernPlaygroundValues>(() => this.resolvedState().args);
-  protected readonly shareUrl = computed(() => {
-    const relative = this.router.serializeUrl(
-      this.router.createUrlTree([], {
-        relativeTo: this.route,
-        queryParams: this.canonicalQuery(),
-      }),
-    );
-    if (!this.browser) return relative;
-    const external = this.location.prepareExternalUrl(relative);
-    return new URL(external, this.document.baseURI).href;
-  });
   protected readonly configuredCode = computed(() => {
     return materializePublicBindings(
       this.code(),
@@ -396,7 +417,20 @@ export class ComponentPlayground {
       this.args(),
     );
   });
-  protected readonly previewQuery = computed(() => this.canonicalQuery());
+  protected readonly previewQuery = computed(() => {
+    const query = this.canonicalQuery();
+    if (this.isolated()) return query;
+    query['theme'] = this.prefs.baseTheme();
+    query['density'] = this.prefs.density();
+    query['direction'] = this.prefs.direction();
+    query['locale'] = this.prefs.locale();
+    query['motion'] = this.prefs.motion();
+    query['brandColor'] = this.prefs.brand();
+    query['viewport'] = this.prefs.viewport();
+    if (this.prefs.contrastMode()) query['contrast'] = 'true';
+    else delete query['contrast'];
+    return query;
+  });
 
   constructor() {
     effect(() => {
@@ -406,7 +440,32 @@ export class ComponentPlayground {
 
     effect(() => {
       this.item().id;
-      if (!this.browser) return;
+      if (this.isolated()) return;
+      const params = this.queryParams();
+      const theme = params.get('theme');
+      if (includesValue(THEMES, theme)) {
+        this.prefs.theme.set(theme === 'high-contrast' ? 'system' : theme);
+      }
+      if (params.has('contrast') || theme === 'high-contrast') {
+        this.prefs.highContrast.set(theme === 'high-contrast' || params.get('contrast') === 'true');
+      }
+      const density = params.get('density');
+      if (includesValue(DENSITIES, density)) this.prefs.density.set(density);
+      const direction = params.get('direction');
+      if (includesValue(DIRECTIONS, direction)) this.prefs.direction.set(direction);
+      const locale = params.get('locale');
+      if (includesValue(LOCALES, locale)) this.prefs.locale.set(locale);
+      const motion = params.get('motion');
+      if (includesValue(MOTIONS, motion)) this.prefs.motion.set(motion);
+      const viewport = params.get('viewport');
+      if (includesValue(VIEWPORTS, viewport)) this.prefs.viewport.set(viewport);
+      if (params.has('brandColor')) {
+        this.prefs.brand.set(normalizeBrandColor(params.get('brandColor')));
+      }
+    });
+
+    effect(() => {
+      this.item().id;
       const current = Object.fromEntries(
         this.queryParams().keys.map((key) => [key, this.queryParams().get(key) ?? '']),
       );
@@ -421,31 +480,12 @@ export class ComponentPlayground {
     });
   }
 
-  protected environmentLabel(value: string): string {
-    if (value === 'high-contrast') return 'High contrast';
-    return value.charAt(0).toUpperCase() + value.slice(1);
-  }
-
   protected viewportLabel(): string {
     return {
       responsive: 'Fluid canvas',
       phone: '390 px',
       tablet: '768 px',
     }[this.viewport()];
-  }
-
-  protected setEnvironment(key: EnvironmentKey, event: Event): void {
-    const query: Record<string, string | null> = { [key]: readSelect(event) };
-    const preset = this.selectedPreset();
-    const environmentKey = key as keyof KernPlaygroundEnvironment;
-    if (preset && key !== 'locale' && owns(preset.environment ?? {}, environmentKey)) {
-      query['state'] = null;
-    }
-    this.updateQuery(query);
-  }
-
-  protected setBrandColor(event: Event): void {
-    this.updateQuery({ brandColor: readInput(event) });
   }
 
   protected booleanArg(control: KernPlaygroundControl): boolean {
@@ -528,6 +568,8 @@ export class ComponentPlayground {
     const theme = includesValue(THEMES, source['theme'])
       ? source['theme']
       : ENVIRONMENT_DEFAULTS.theme;
+    const contrast = source['contrast'] === 'true' || theme === 'high-contrast';
+    const baseTheme = theme === 'high-contrast' ? ENVIRONMENT_DEFAULTS.theme : theme;
     const density = includesValue(DENSITIES, source['density'])
       ? source['density']
       : ENVIRONMENT_DEFAULTS.density;
@@ -557,9 +599,10 @@ export class ComponentPlayground {
       this.presets()[0];
     const presetEnvironment = preset?.environment ?? {};
 
-    if (!owns(presetEnvironment, 'theme') && theme !== ENVIRONMENT_DEFAULTS.theme) {
-      query['theme'] = theme;
+    if (!owns(presetEnvironment, 'theme') && baseTheme !== ENVIRONMENT_DEFAULTS.theme) {
+      query['theme'] = baseTheme;
     }
+    if (!owns(presetEnvironment, 'theme') && contrast) query['contrast'] = 'true';
     if (!owns(presetEnvironment, 'density') && density !== ENVIRONMENT_DEFAULTS.density) {
       query['density'] = density;
     }

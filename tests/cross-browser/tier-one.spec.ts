@@ -80,18 +80,13 @@ test.describe('Tier 1 browser contract', () => {
       .getByTestId('component-specimen-button')
       .getByRole('button', { name: 'Publish changes' });
     const assertPlaygroundState = async (): Promise<void> => {
-      await expect(page.getByTestId('theme-control')).toHaveValue('high-contrast');
-      await expect(page.getByTestId('density-control')).toHaveValue('spacious');
-      await expect(page.getByTestId('direction-control')).toHaveValue('rtl');
-      await expect(page.getByTestId('locale-control')).toHaveValue('ru-RU');
-      await expect(page.getByTestId('motion-control')).toHaveValue('reduce');
-      await expect(page.getByTestId('brand-color-control')).toHaveValue('#d95831');
-      await expect(page.getByTestId('viewport-control')).toHaveValue('phone');
+      await expect(page.getByTestId('preview-controls')).toHaveCount(0);
       await expect(page.getByRole('combobox', { name: 'Variant' })).toHaveValue('soft');
       await expect(page.getByRole('checkbox', { name: 'Loading' })).toBeChecked();
       await expect(stage).toHaveAttribute('data-krn-theme-mode', 'high-contrast');
       await expect(stage).toHaveAttribute('data-krn-density', 'spacious');
       await expect(stage).toHaveAttribute('dir', 'rtl');
+      await expect(stage).toHaveAttribute('lang', 'ru-RU');
       await expect(stage).toHaveAttribute('data-krn-motion', 'reduce');
       await expect(stage).toHaveAttribute('data-state', 'loading');
       await expect(primaryAction).toHaveAttribute('data-variant', 'soft');

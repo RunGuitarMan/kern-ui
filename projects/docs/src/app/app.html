@@ -28,27 +28,115 @@
         </div>
       }
       <nav aria-label="Project links">
-        <div class="appearance-controls" role="group" aria-label="Appearance">
-          <button
-            class="color-mode-toggle"
-            type="button"
-            [attr.aria-label]="colorModeLabel()"
-            [attr.title]="colorModeLabel()"
-            [attr.data-mode]="darkMode() ? 'dark' : 'light'"
-            (click)="toggleColorMode()"
-          >
-            <span aria-hidden="true"></span>
-          </button>
+        <div
+          class="environment-toolbar"
+          data-testid="preview-controls"
+          role="group"
+          aria-label="Preview environment"
+        >
+          <label class="environment-select theme-select" title="Theme">
+            <span>Theme</span>
+            <select
+              data-testid="theme-control"
+              aria-label="Theme"
+              [value]="prefs.baseTheme()"
+              (change)="setTheme($event)"
+            >
+              <option value="system">System</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </label>
           <button
             class="contrast-toggle"
             type="button"
+            data-testid="contrast-control"
             aria-label="High contrast"
-            title="High contrast"
-            [attr.aria-pressed]="contrastMode()"
+            [attr.title]="'High contrast · ' + prefs.baseTheme()"
+            [attr.aria-pressed]="prefs.contrastMode()"
             (click)="toggleContrast()"
           >
             <span aria-hidden="true"></span>
           </button>
+
+          <label class="environment-select density-select" title="Density">
+            <span>Density</span>
+            <select
+              data-testid="density-control"
+              aria-label="Density"
+              [value]="prefs.density()"
+              (change)="setDensity($event)"
+            >
+              <option value="compact">Compact</option>
+              <option value="comfortable">Comfortable</option>
+              <option value="spacious">Spacious</option>
+            </select>
+          </label>
+
+          <label class="environment-select direction-select" title="Text direction">
+            <span>Direction</span>
+            <select
+              data-testid="direction-control"
+              aria-label="Direction"
+              [value]="prefs.direction()"
+              (change)="setDirection($event)"
+            >
+              <option value="ltr">LTR</option>
+              <option value="rtl">RTL</option>
+            </select>
+          </label>
+
+          <label class="environment-select locale-select" title="Locale">
+            <span>Locale</span>
+            <select
+              data-testid="locale-control"
+              aria-label="Locale"
+              [value]="prefs.locale()"
+              (change)="setLocale($event)"
+            >
+              <option value="en-US">EN</option>
+              <option value="ru-RU">RU</option>
+            </select>
+          </label>
+
+          <label class="environment-select motion-select" title="Motion">
+            <span>Motion</span>
+            <select
+              data-testid="motion-control"
+              aria-label="Motion"
+              [value]="prefs.motion()"
+              (change)="setMotion($event)"
+            >
+              <option value="system">System</option>
+              <option value="reduce">Reduce</option>
+              <option value="full">Full</option>
+            </select>
+          </label>
+
+          <label class="brand-control" title="Brand color">
+            <span>Brand color</span>
+            <input
+              type="color"
+              data-testid="brand-color-control"
+              aria-label="Brand color"
+              [value]="prefs.brand()"
+              (change)="setBrandColor($event)"
+            />
+          </label>
+
+          <label class="environment-select viewport-select" title="Canvas width">
+            <span>Canvas</span>
+            <select
+              data-testid="viewport-control"
+              aria-label="Canvas width"
+              [value]="prefs.viewport()"
+              (change)="setViewport($event)"
+            >
+              <option value="responsive">Fluid</option>
+              <option value="phone">390 px</option>
+              <option value="tablet">768 px</option>
+            </select>
+          </label>
         </div>
         <a routerLink="/accessibility">WCAG 2.2 AA</a>
         <span class="angular-version"><i aria-hidden="true"></i>Angular 22</span>

@@ -59,13 +59,23 @@ test.describe('Docs smoke contracts', () => {
     await settlePage(page);
 
     const root = page.locator('html');
-    await page.getByRole('button', { name: 'Switch to dark theme' }).click();
+    const stage = page.getByTestId('specimen-stage');
+    await page.getByTestId('theme-control').selectOption('dark');
     await expect(root).toHaveAttribute('data-krn-theme-mode', 'dark');
+    await expect(stage).toHaveAttribute('data-krn-theme-mode', 'dark');
 
     const contrast = page.getByRole('button', { name: 'High contrast' });
     await contrast.click();
     await expect(contrast).toHaveAttribute('aria-pressed', 'true');
     await expect(root).toHaveAttribute('data-krn-theme-mode', 'high-contrast');
+    await expect(root).toHaveAttribute('data-krn-contrast-scheme', 'dark');
+    await expect(stage).toHaveAttribute('data-krn-theme-mode', 'high-contrast');
+    await expect(stage).toHaveAttribute('data-krn-contrast-scheme', 'dark');
+
+    await page.getByTestId('theme-control').selectOption('light');
+    await expect(root).toHaveAttribute('data-krn-theme-mode', 'high-contrast');
+    await expect(root).toHaveAttribute('data-krn-contrast-scheme', 'light');
+    await expect(stage).toHaveAttribute('data-krn-contrast-scheme', 'light');
     assertNoRuntimeErrors();
   });
 
@@ -112,38 +122,8 @@ test.describe('Docs preview smoke contracts', () => {
     await settlePage(page);
 
     await expect(page.getByTestId('docs-preview-root')).toBeVisible();
-    await expect(page.getByTestId('preview-controls')).toBeVisible();
+    await expect(page.getByTestId('preview-controls')).toHaveCount(0);
     await expect(page.getByTestId('component-specimen-data-grid')).toBeVisible();
-    await expect(page.getByTestId('theme-control').locator('option')).toHaveText([
-      'System',
-      'Light',
-      'Dark',
-      'High contrast',
-    ]);
-    await expect(page.getByTestId('density-control').locator('option')).toHaveText([
-      'Compact',
-      'Comfortable',
-      'Spacious',
-    ]);
-    await expect(page.getByTestId('direction-control').locator('option')).toHaveText([
-      'LTR',
-      'RTL',
-    ]);
-    await expect(page.getByTestId('locale-control').locator('option')).toHaveText([
-      'en-US',
-      'ru-RU',
-    ]);
-    await expect(page.getByTestId('motion-control').locator('option')).toHaveText([
-      'System',
-      'Reduce',
-      'Full',
-    ]);
-    await expect(page.getByTestId('brand-color-control')).toHaveValue('#4666da');
-    await expect(page.getByTestId('viewport-control').locator('option')).toHaveText([
-      'Responsive',
-      'Phone',
-      'Tablet',
-    ]);
     await expect(page.getByTestId('scenario-control')).toHaveCount(0);
     await expect(page.locator('.state-presets')).toHaveCount(0);
     const stage = page.getByTestId('specimen-stage');
@@ -186,26 +166,24 @@ test.describe('Docs preview smoke contracts', () => {
     assertNoRuntimeErrors();
   });
 
-  test('applies every supported preview environment setting to the isolated specimen', async ({
+  test('applies every header environment setting to the document and specimen', async ({
     page,
   }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
 
-    await page.goto(DOCS_URL);
-    await settlePage(page);
-    const docsEnvironment = await documentEnvironment(page);
-
-    await page.goto(previewUrl({ component: 'data-grid' }));
+    await page.goto(`${DOCS_URL}/components/data-grid`);
     await settlePage(page);
 
+    const root = page.locator('html');
     const stage = page.getByTestId('specimen-stage');
     const previewPanel = page.locator('#preview-panel');
     const specimen = page.getByTestId('component-specimen-data-grid');
 
-    for (const theme of ['system', 'light', 'dark', 'high-contrast'] as const) {
+    for (const theme of ['system', 'light', 'dark'] as const) {
       await page.getByTestId('theme-control').selectOption(theme);
       await expectQueryParam(page, 'theme', theme === 'system' ? null : theme);
       await expect(stage).toHaveAttribute('data-krn-theme-mode', theme);
+      await expect(root).toHaveAttribute('data-krn-theme-mode', theme);
       await expect
         .poll(async () => {
           const [stageSurface, specimenSurface] = await Promise.all([
@@ -221,10 +199,24 @@ test.describe('Docs preview smoke contracts', () => {
         .toBe(true);
     }
 
+    const contrast = page.getByTestId('contrast-control');
+    await page.getByTestId('theme-control').selectOption('dark');
+    await contrast.click();
+    await expectQueryParam(page, 'contrast', 'true');
+    await expect(root).toHaveAttribute('data-krn-theme-mode', 'high-contrast');
+    await expect(root).toHaveAttribute('data-krn-contrast-scheme', 'dark');
+    await expect(stage).toHaveAttribute('data-krn-theme-mode', 'high-contrast');
+    await expect(stage).toHaveAttribute('data-krn-contrast-scheme', 'dark');
+    await page.getByTestId('theme-control').selectOption('light');
+    await expect(root).toHaveAttribute('data-krn-contrast-scheme', 'light');
+    await expect(stage).toHaveAttribute('data-krn-contrast-scheme', 'light');
+    await contrast.click();
+
     for (const density of ['compact', 'comfortable', 'spacious'] as const) {
       await page.getByTestId('density-control').selectOption(density);
       await expectQueryParam(page, 'density', density === 'comfortable' ? null : density);
       await expect(stage).toHaveAttribute('data-krn-density', density);
+      await expect(root).toHaveAttribute('data-krn-density', density);
       await expect
         .poll(async () => {
           const [stageHeight, specimenHeight] = await Promise.all([
@@ -244,18 +236,21 @@ test.describe('Docs preview smoke contracts', () => {
       await page.getByTestId('direction-control').selectOption(direction);
       await expectQueryParam(page, 'direction', direction === 'ltr' ? null : direction);
       await expect(stage).toHaveAttribute('dir', direction);
+      await expect(root).toHaveAttribute('dir', direction);
     }
 
     for (const locale of ['en-US', 'ru-RU'] as const) {
       await page.getByTestId('locale-control').selectOption(locale);
       await expectQueryParam(page, 'locale', locale === 'en-US' ? null : locale);
       await expect(stage).toHaveAttribute('lang', locale);
+      await expect(root).toHaveAttribute('lang', locale);
     }
 
     for (const motion of ['system', 'reduce', 'full'] as const) {
       await page.getByTestId('motion-control').selectOption(motion);
       await expectQueryParam(page, 'motion', motion === 'system' ? null : motion);
       await expect(stage).toHaveAttribute('data-krn-motion', motion);
+      await expect(root).toHaveAttribute('data-krn-motion', motion);
       await expect
         .poll(() =>
           stage.evaluate((element) => {
@@ -299,7 +294,6 @@ test.describe('Docs preview smoke contracts', () => {
       await expect(previewPanel).toHaveAttribute('data-viewport', viewport);
     }
 
-    await expectDocumentEnvironment(page, docsEnvironment);
     assertNoRuntimeErrors();
   });
 
@@ -411,17 +405,21 @@ test.describe('Docs preview smoke contracts', () => {
     await expect(primaryAction).toHaveAttribute('data-variant', 'soft');
     await expect(primaryAction).not.toHaveAttribute('aria-busy');
     await expect(primaryAction.getByRole('status')).toHaveText('Загрузка…');
-    await expect(page.getByTestId('specimen-stage')).toHaveAttribute('data-state', 'loading');
-    await expect(page.getByTestId('specimen-stage')).toHaveAttribute('data-krn-motion', 'reduce');
-    await expect(page.getByTestId('brand-color-control')).toHaveValue('#d95831');
+    const stage = page.getByTestId('specimen-stage');
+    await expect(stage).toHaveAttribute('data-state', 'loading');
+    await expect(stage).toHaveAttribute('data-krn-motion', 'reduce');
+    await expect(stage).toHaveAttribute('data-krn-theme-mode', 'high-contrast');
+    await expect(stage).toHaveAttribute('data-krn-density', 'spacious');
+    await expect(stage).toHaveAttribute('dir', 'rtl');
+    await expect(stage).toHaveAttribute('lang', 'ru-RU');
+    await expect(page.locator('#preview-panel')).toHaveAttribute('data-viewport', 'phone');
 
     await page.reload();
     await settlePage(page);
     await expect(page).toHaveURL(sharedUrl);
     await expect(page.getByRole('combobox', { name: 'Variant' })).toHaveValue('soft');
     await expect(page.getByRole('checkbox', { name: 'Loading' })).toBeChecked();
-    await expect(page.getByTestId('motion-control')).toHaveValue('reduce');
-    await expect(page.getByTestId('brand-color-control')).toHaveValue('#d95831');
+    await expect(stage).toHaveAttribute('data-krn-motion', 'reduce');
     await expect(primaryAction).toHaveAttribute('data-variant', 'soft');
     await expect(primaryAction).not.toHaveAttribute('aria-busy');
     await expect(primaryAction.getByRole('status')).toHaveText('Загрузка…');
@@ -433,13 +431,12 @@ test.describe('Docs preview smoke contracts', () => {
     );
     await settlePage(page);
 
-    await expect(page.getByTestId('theme-control')).toHaveValue('system');
-    await expect(page.getByTestId('density-control')).toHaveValue('comfortable');
-    await expect(page.getByTestId('direction-control')).toHaveValue('ltr');
-    await expect(page.getByTestId('locale-control')).toHaveValue('en-US');
-    await expect(page.getByTestId('motion-control')).toHaveValue('system');
-    await expect(page.getByTestId('brand-color-control')).toHaveValue('#4666da');
-    await expect(page.getByTestId('viewport-control')).toHaveValue('responsive');
+    await expect(stage).toHaveAttribute('data-krn-theme-mode', 'system');
+    await expect(stage).toHaveAttribute('data-krn-density', 'comfortable');
+    await expect(stage).toHaveAttribute('dir', 'ltr');
+    await expect(stage).toHaveAttribute('lang', 'en-US');
+    await expect(stage).toHaveAttribute('data-krn-motion', 'system');
+    await expect(page.locator('#preview-panel')).toHaveAttribute('data-viewport', 'responsive');
     await expect(page.getByTestId('scenario-control')).toHaveCount(0);
     await expect(page.getByRole('combobox', { name: 'Variant' })).toHaveValue('solid');
     await expect(page.getByRole('checkbox', { name: 'Loading' })).not.toBeChecked();
@@ -528,8 +525,8 @@ test.describe('Docs preview smoke contracts', () => {
     await select.click();
     await expect(page.getByRole('status').getByText('Загрузка вариантов…')).toBeVisible();
 
-    await page.getByTestId('locale-control').selectOption('en-US');
-    await expectQueryParam(page, 'locale', null);
+    await page.goto(previewUrl({ component: 'select', state: 'async-loading', direction: 'rtl' }));
+    await settlePage(page);
     await expect(stage).toHaveAttribute('lang', 'en-US');
     await expect(stage).toHaveAttribute('dir', 'rtl');
     await expect(select).toHaveAttribute('aria-busy', 'true');

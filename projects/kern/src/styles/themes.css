@@ -247,6 +247,16 @@
       0 0 0 calc(var(--krn-focus-ring-offset) + var(--krn-focus-ring-width)) Highlight;
   }
 
+  [data-krn-theme='high-contrast'][data-krn-contrast-scheme='light'],
+  [data-krn-theme-mode='high-contrast'][data-krn-contrast-scheme='light'] {
+    color-scheme: light;
+  }
+
+  [data-krn-theme='high-contrast'][data-krn-contrast-scheme='dark'],
+  [data-krn-theme-mode='high-contrast'][data-krn-contrast-scheme='dark'] {
+    color-scheme: dark;
+  }
+
   @media (prefers-color-scheme: dark) {
     :root:not([data-krn-theme]),
     [data-krn-theme-mode='system']:not([data-krn-theme]) {

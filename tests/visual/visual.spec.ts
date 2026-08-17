@@ -20,7 +20,12 @@ test.describe('Deterministic visual baselines', () => {
     await expect(page.locator('.workbench')).toHaveScreenshot('docs-button-specimen.png');
   });
 
-  test('Docs preview loading action specimen and controls', async ({ page }) => {
+  test('Docs component environment controls and loading action specimen', async ({ page }) => {
+    await page.goto(`${DOCS_URL}/components/button`);
+    await settlePage(page);
+
+    await expect(page.getByTestId('preview-controls')).toHaveScreenshot('preview-controls.png');
+
     await page.goto(
       previewUrl({
         component: 'button',
@@ -32,7 +37,6 @@ test.describe('Deterministic visual baselines', () => {
     );
     await settlePage(page);
 
-    await expect(page.getByTestId('preview-controls')).toHaveScreenshot('preview-controls.png');
     await expect(page.getByTestId('specimen-stage')).toHaveScreenshot('preview-button-loading.png');
   });
 

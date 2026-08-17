@@ -111,14 +111,14 @@ test.describe('Round two: documentation and preview contracts', () => {
         };
       });
 
+    await page.getByTestId('theme-control').selectOption('light');
     const light = await themeSnapshot();
 
-    await page.locator('.environment-panel > summary').click();
     await page.getByTestId('theme-control').selectOption('dark');
     await expect(page.locator('#code-panel')).toHaveAttribute('data-krn-theme', 'dark');
     const dark = await themeSnapshot();
 
-    await page.getByTestId('theme-control').selectOption('high-contrast');
+    await page.getByTestId('contrast-control').click();
     await expect(page.locator('#code-panel')).toHaveAttribute('data-krn-theme', 'high-contrast');
     const highContrast = await themeSnapshot();
 
@@ -143,7 +143,6 @@ test.describe('Round two: documentation and preview contracts', () => {
       readonly range: string;
     }> => {
       const specimen = await openSpecimen(page, 'date-range-picker');
-      await page.locator('.environment-panel > summary').click();
       await page.getByTestId('theme-control').selectOption(theme);
       await expect(page.getByTestId('specimen-stage')).toHaveAttribute('data-krn-theme', theme);
 
@@ -528,7 +527,7 @@ test.describe('Round two: navigation and layout geometry', () => {
     expect(light.radius).toBeGreaterThanOrEqual(6);
     expect(light.boxShadow).not.toBe('none');
 
-    await page.getByRole('button', { name: 'Switch to dark theme' }).click();
+    await page.getByTestId('theme-control').selectOption('dark');
     const dark = await header.evaluate((element) => {
       const style = getComputedStyle(element);
       return {

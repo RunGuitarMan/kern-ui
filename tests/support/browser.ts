@@ -19,6 +19,7 @@ export interface PreviewUrlState {
   readonly component?: string;
   readonly scenario?: PreviewScenario;
   readonly theme?: PreviewTheme;
+  readonly contrast?: boolean;
   readonly density?: PreviewDensity;
   readonly direction?: PreviewDirection;
   readonly locale?: PreviewLocale;
@@ -71,6 +72,7 @@ export function previewUrl(state: PreviewUrlState = {}): string {
     locale: state.locale ?? 'en-US',
   });
   if (state.viewport !== undefined) query.set('viewport', state.viewport);
+  if (state.contrast === true) query.set('contrast', 'true');
   if (state.motion !== undefined) query.set('motion', state.motion);
   if (state.brandColor !== undefined) query.set('brandColor', state.brandColor);
   if (state.state !== undefined) query.set('state', state.state);

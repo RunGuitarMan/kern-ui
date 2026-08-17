@@ -17,7 +17,14 @@ import {
 import { filter, map, startWith } from 'rxjs';
 
 import { DocsGlobalSearch } from './docs-global-search';
-import { DocsPreferences } from './preferences';
+import {
+  DocsPreferences,
+  type DocsBaseTheme,
+  type DocsDensity,
+  type DocsLocale,
+  type DocsMotion,
+  type DocsViewport,
+} from './preferences';
 import { KERN_DOCS_RELEASE_STATE_LABEL, KERN_DOCS_VERSION_LABEL } from './release-identity';
 
 @Component({
@@ -54,13 +61,6 @@ export class App {
   );
   protected readonly currentPath = computed(() => this.currentUrl().split(/[?#]/, 1)[0] || '/');
   protected readonly previewMode = computed(() => this.currentPath().startsWith('/preview/'));
-  protected readonly darkMode = computed(() => this.prefs.theme() === 'dark');
-  protected readonly contrastMode = computed(
-    () => this.prefs.highContrast() || this.prefs.theme() === 'contrast',
-  );
-  protected readonly colorModeLabel = computed(() =>
-    this.darkMode() ? 'Switch to light theme' : 'Switch to dark theme',
-  );
   private readonly expandedCategories = signal<ReadonlySet<KernCategory>>(
     new Set<KernCategory>(['Actions']),
   );
@@ -92,18 +92,69 @@ export class App {
     this.prefs.navigationOpen.update((value) => !value);
   }
 
-  protected toggleColorMode(): void {
-    this.prefs.highContrast.set(false);
-    this.prefs.theme.set(this.darkMode() ? 'light' : 'dark');
+  protected setTheme(event: Event): void {
+    const value = (event.currentTarget as HTMLSelectElement).value as DocsBaseTheme;
+    if (this.prefs.theme() === 'contrast') this.prefs.highContrast.set(true);
+    this.prefs.theme.set(value);
+    this.updateEnvironmentQuery('theme', value, 'system');
   }
 
   protected toggleContrast(): void {
     if (this.prefs.theme() === 'contrast') {
       this.prefs.theme.set('system');
-      this.prefs.highContrast.set(false);
-      return;
+      this.prefs.highContrast.set(true);
     }
     this.prefs.highContrast.update((value) => !value);
+    this.updateEnvironmentQuery('contrast', this.prefs.contrastMode() ? 'true' : null, null);
+  }
+
+  protected setDensity(event: Event): void {
+    const value = (event.currentTarget as HTMLSelectElement).value as DocsDensity;
+    this.prefs.density.set(value);
+    this.updateEnvironmentQuery('density', value, 'comfortable');
+  }
+
+  protected setDirection(event: Event): void {
+    const value = (event.currentTarget as HTMLSelectElement).value as 'ltr' | 'rtl';
+    this.prefs.direction.set(value);
+    this.updateEnvironmentQuery('direction', value, 'ltr');
+  }
+
+  protected setLocale(event: Event): void {
+    const value = (event.currentTarget as HTMLSelectElement).value as DocsLocale;
+    this.prefs.locale.set(value);
+    this.updateEnvironmentQuery('locale', value, 'en-US');
+  }
+
+  protected setMotion(event: Event): void {
+    const value = (event.currentTarget as HTMLSelectElement).value as DocsMotion;
+    this.prefs.motion.set(value);
+    this.updateEnvironmentQuery('motion', value, 'system');
+  }
+
+  protected setViewport(event: Event): void {
+    const value = (event.currentTarget as HTMLSelectElement).value as DocsViewport;
+    this.prefs.viewport.set(value);
+    this.updateEnvironmentQuery('viewport', value, 'responsive');
+  }
+
+  protected setBrandColor(event: Event): void {
+    const value = (event.currentTarget as HTMLInputElement).value.toLowerCase();
+    this.prefs.brand.set(value);
+    this.updateEnvironmentQuery('brandColor', value, '#4666da');
+  }
+
+  private updateEnvironmentQuery(
+    key: string,
+    value: string | null,
+    defaultValue: string | null,
+  ): void {
+    if (!this.currentPath().startsWith('/components/')) return;
+    void this.router.navigate([], {
+      queryParams: { [key]: value === defaultValue ? null : value },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   protected categoryOpen(category: KernCategory): boolean {

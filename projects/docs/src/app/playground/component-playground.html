@@ -59,11 +59,16 @@
       [attr.dir]="direction()"
       [attr.lang]="locale()"
       [attr.data-krn-motion]="motion()"
+      [attr.data-krn-contrast-scheme]="contrast() ? baseTheme() : null"
+      [style.color-scheme]="contrast() ? contrastScheme() : null"
       [attr.data-state]="state()"
     >
       <div class="preview-ruler" aria-hidden="true">
         <span>{{ viewportLabel() }}</span>
-        <span>{{ theme() }} / {{ density() }} / {{ direction().toUpperCase() }}</span>
+        <span>
+          {{ contrast() ? 'high contrast ' + baseTheme() : theme() }} / {{ density() }} /
+          {{ direction().toUpperCase() }}
+        </span>
       </div>
       <div class="preview-canvas">
         <kdocs-preview-fixture
@@ -90,6 +95,8 @@
     [attr.dir]="direction()"
     [attr.lang]="locale()"
     [attr.data-krn-motion]="motion()"
+    [attr.data-krn-contrast-scheme]="contrast() ? baseTheme() : null"
+    [style.color-scheme]="contrast() ? contrastScheme() : null"
   >
     <div class="code-intro">
       <div>
@@ -193,128 +200,4 @@
   } @else {
     <p class="fixture-note">This example has no configurable primitive properties.</p>
   }
-
-  <details class="environment-panel" [attr.open]="isolated() ? '' : null">
-    <summary>
-      <span>
-        <strong>Preview environment</strong>
-        <small>Theme, locale, density, direction, motion and canvas</small>
-      </span>
-      <span class="environment-value">{{ theme() }} · {{ viewportLabel() }}</span>
-    </summary>
-
-    <div class="environment-controls" data-testid="preview-controls">
-      <label>
-        <span>Theme</span>
-        <select
-          data-testid="theme-control"
-          aria-label="Preview theme"
-          [value]="theme()"
-          (change)="setEnvironment('theme', $event)"
-        >
-          @for (option of themes; track option) {
-            <option [value]="option" [attr.selected]="theme() === option ? '' : null">
-              {{ environmentLabel(option) }}
-            </option>
-          }
-        </select>
-      </label>
-
-      <label>
-        <span>Density</span>
-        <select
-          data-testid="density-control"
-          aria-label="Preview density"
-          [value]="density()"
-          (change)="setEnvironment('density', $event)"
-        >
-          @for (option of densities; track option) {
-            <option [value]="option" [attr.selected]="density() === option ? '' : null">
-              {{ environmentLabel(option) }}
-            </option>
-          }
-        </select>
-      </label>
-
-      <label>
-        <span>Direction</span>
-        <select
-          data-testid="direction-control"
-          aria-label="Preview direction"
-          [value]="direction()"
-          (change)="setEnvironment('direction', $event)"
-        >
-          @for (option of directions; track option) {
-            <option [value]="option" [attr.selected]="direction() === option ? '' : null">
-              {{ option.toUpperCase() }}
-            </option>
-          }
-        </select>
-      </label>
-
-      <label>
-        <span>Locale</span>
-        <select
-          data-testid="locale-control"
-          aria-label="Preview locale"
-          [value]="locale()"
-          (change)="setEnvironment('locale', $event)"
-        >
-          @for (option of locales; track option) {
-            <option [value]="option" [attr.selected]="locale() === option ? '' : null">
-              {{ option }}
-            </option>
-          }
-        </select>
-      </label>
-
-      <label>
-        <span>Motion</span>
-        <select
-          data-testid="motion-control"
-          aria-label="Preview motion tokens"
-          [value]="motion()"
-          (change)="setEnvironment('motion', $event)"
-        >
-          @for (option of motions; track option) {
-            <option [value]="option" [attr.selected]="motion() === option ? '' : null">
-              {{ environmentLabel(option) }}
-            </option>
-          }
-        </select>
-      </label>
-
-      <label>
-        <span>Brand</span>
-        <input
-          type="color"
-          data-testid="brand-color-control"
-          aria-label="Preview brand color"
-          [value]="brandColor()"
-          (change)="setBrandColor($event)"
-        />
-      </label>
-
-      <label>
-        <span>Canvas</span>
-        <select
-          data-testid="viewport-control"
-          aria-label="Preview canvas width"
-          [value]="viewport()"
-          (change)="setEnvironment('viewport', $event)"
-        >
-          @for (option of viewports; track option) {
-            <option [value]="option" [attr.selected]="viewport() === option ? '' : null">
-              {{ environmentLabel(option) }}
-            </option>
-          }
-        </select>
-      </label>
-    </div>
-
-    <footer class="environment-footer">
-      <span>Environment settings are shared through the preview URL.</span>
-      <krn-copy-button [value]="shareUrl()">Copy preview link</krn-copy-button>
-    </footer>
-  </details>
 </section>

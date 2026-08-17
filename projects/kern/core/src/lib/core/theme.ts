@@ -66,6 +66,12 @@ function validBrandColor(value: unknown): value is string | null {
   return value === null || (typeof value === 'string' && generateKrnBrandPalette(value) !== null);
 }
 
+function colorSchemeFor(element: HTMLElement, theme: KrnResolvedTheme): string {
+  if (theme !== 'high-contrast') return theme;
+  const requested = element.getAttribute('data-krn-contrast-scheme');
+  return requested === 'light' || requested === 'dark' ? requested : 'light dark';
+}
+
 function readPersistedThemeState(
   storage: Pick<Storage, 'getItem'> | null,
   storageKey: string,
@@ -165,7 +171,7 @@ export function applyKrnPrepaintTheme(
   root.setAttribute('data-krn-theme-mode', theme);
   root.setAttribute('data-krn-theme', resolvedTheme);
   root.setAttribute('data-krn-density', density);
-  root.style.colorScheme = resolvedTheme === 'high-contrast' ? 'light dark' : resolvedTheme;
+  root.style.colorScheme = colorSchemeFor(root, resolvedTheme);
 
   for (const step of KRN_BRAND_STEPS) {
     root.style.removeProperty(`--krn-color-brand-${step}`);
@@ -338,7 +344,7 @@ export class KrnThemeService {
     element.setAttribute('data-krn-theme-mode', mode);
     element.setAttribute('data-krn-theme', resolved);
     element.setAttribute('data-krn-density', density);
-    element.style.colorScheme = resolved === 'high-contrast' ? 'light dark' : resolved;
+    element.style.colorScheme = colorSchemeFor(element, resolved);
 
     for (const step of KRN_BRAND_STEPS) {
       element.style.removeProperty(`--krn-color-brand-${step}`);

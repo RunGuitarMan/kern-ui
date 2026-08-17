@@ -33,6 +33,7 @@ describe('KrnThemeService', () => {
     delete root.dataset['krnTheme'];
     delete root.dataset['krnThemeMode'];
     delete root.dataset['krnDensity'];
+    delete root.dataset['krnContrastScheme'];
     root.removeAttribute('style');
   });
 
@@ -91,6 +92,21 @@ describe('KrnThemeService', () => {
     expect(service.resolvedTheme()).toBe('dark');
     expect(root.dataset['krnTheme']).toBe('dark');
     expect(root.dataset['krnDensity']).toBe('compact');
+  });
+
+  it('resolves high contrast against an explicit light or dark color scheme', () => {
+    TestBed.configureTestingModule({
+      providers: [provideKrnTheme({ persist: false })],
+    });
+    const service = TestBed.inject(KrnThemeService);
+    const root = TestBed.inject(DOCUMENT).documentElement;
+
+    root.setAttribute('data-krn-contrast-scheme', 'dark');
+    service.setTheme('high-contrast');
+    TestBed.tick();
+
+    expect(root.dataset['krnTheme']).toBe('high-contrast');
+    expect(root.style.colorScheme).toBe('dark');
   });
 
   it('generates and removes brand properties without accepting invalid input', () => {

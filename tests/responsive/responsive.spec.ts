@@ -106,7 +106,7 @@ test.describe('Responsive, RTL, and text zoom contracts', () => {
     await page.addStyleTag({ content: 'html { font-size: 200% !important; }' });
     await settlePage(page);
 
-    await expect(page.getByTestId('preview-controls')).toBeVisible();
+    await expect(page.getByTestId('preview-controls')).toHaveCount(0);
     await expect(page.getByTestId('component-specimen-text-input')).toBeVisible();
     await expectNoPageOverflow(page);
   });
@@ -132,7 +132,7 @@ test.describe('Responsive, RTL, and text zoom contracts', () => {
     const specimen = page.getByTestId('component-specimen-data-grid');
     const internalScroller = specimen.locator('.table-scroll');
     await expect(specimen).toBeVisible();
-    await expect(page.getByTestId('preview-controls')).toBeVisible();
+    await expect(page.getByTestId('preview-controls')).toHaveCount(0);
     await expect
       .poll(() => internalScroller.evaluate((element) => element.scrollWidth > element.clientWidth))
       .toBe(true);
