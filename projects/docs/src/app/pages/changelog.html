@@ -1,22 +1,31 @@
 <article class="page">
   <krn-page-header
     index="10"
-    eyebrow="Changelog"
-    heading="Every release, clearly documented."
-    description="Kern follows semantic versioning. Accessibility regressions and public API changes are documented as product changes, not hidden as implementation details."
+    [eyebrow]="i18n.t('changelog.eyebrow', 'Changelog')"
+    [heading]="i18n.t('changelog.heading', 'Every release, clearly documented.')"
+    [description]="
+      i18n.t(
+        'changelog.description',
+        'Kern follows semantic versioning. Accessibility regressions and public API changes are documented as product changes, not hidden as implementation details.'
+      )
+    "
   >
     <krn-badge tone="brand">{{ docsVersionLabel }}</krn-badge>
   </krn-page-header>
 
   <section class="release">
     <aside>
-      <strong>{{ docsReleaseHeading }}</strong>
-      <span class="release-target">Version {{ docsVersion }}</span>
-      <krn-badge status tone="brand">{{ docsReleaseStateLabel }}</krn-badge>
+      <strong>{{ i18n.t('changelog.releaseHeading', docsReleaseHeading) }}</strong>
+      <span class="release-target"
+        >{{ i18n.t('changelog.version', 'Version') }} {{ docsVersion }}</span
+      >
+      <krn-badge status tone="brand">{{
+        i18n.t('changelog.releaseState', docsReleaseStateLabel)
+      }}</krn-badge>
     </aside>
     <div>
-      <h2>{{ docsReleaseTitle }}</h2>
-      @for (group of groups; track group.title) {
+      <h2>{{ i18n.t('changelog.releaseTitle', docsReleaseTitle) }}</h2>
+      @for (group of groups(); track group.title) {
         <section>
           <h3>{{ group.title }}</h3>
           <ul>

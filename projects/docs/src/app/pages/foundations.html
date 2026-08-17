@@ -1,52 +1,63 @@
 <article class="page">
   <krn-page-header
     index="01"
-    eyebrow="Foundations"
-    heading="A semantic system, not a paint box."
-    description="Kern separates primitives from product meaning. Components consume semantic roles, while applications can safely change theme, density, direction, and brand at runtime."
+    [eyebrow]="i18n.t('foundations.eyebrow', 'Foundations')"
+    [heading]="i18n.t('foundations.heading', 'A semantic system, not a paint box.')"
+    [description]="
+      i18n.t(
+        'foundations.description',
+        'Kern separates primitives from product meaning. Components consume semantic roles, while applications can safely change theme, density, direction, and brand at runtime.'
+      )
+    "
   >
-    <krn-badge status tone="success">CSS + TypeScript parity</krn-badge>
+    <krn-badge status tone="success">{{
+      i18n.t('foundations.parity', 'CSS + TypeScript parity')
+    }}</krn-badge>
   </krn-page-header>
 
   <section class="theme-studio">
     <header>
-      <p>01.1 / THEME STUDIO</p>
-      <h2>Calibrate the system live.</h2>
+      <p>01.1 / {{ i18n.t('foundations.themeStudio', 'THEME STUDIO') }}</p>
+      <h2>{{ i18n.t('foundations.calibrate', 'Calibrate the system live.') }}</h2>
     </header>
     <div class="studio-controls">
       <fieldset>
-        <legend>Theme</legend>
+        <legend>{{ i18n.t('home.theme', 'Theme') }}</legend>
         @for (theme of themes; track theme) {
           <button
             type="button"
             [attr.aria-pressed]="prefs.theme() === theme"
             (click)="prefs.theme.set(theme)"
           >
-            {{ theme }}
+            {{
+              theme === 'contrast'
+                ? i18n.t('playground.highContrast', 'High contrast')
+                : optionLabel(theme)
+            }}
           </button>
         }
       </fieldset>
       <fieldset>
-        <legend>Density</legend>
+        <legend>{{ i18n.t('home.density', 'Density') }}</legend>
         @for (density of densities; track density) {
           <button
             type="button"
             [attr.aria-pressed]="prefs.density() === density"
             (click)="prefs.density.set(density)"
           >
-            {{ density }}
+            {{ optionLabel(density) }}
           </button>
         }
       </fieldset>
       <label>
-        <span>Brand source</span>
+        <span>{{ i18n.t('foundations.brandSource', 'Brand source') }}</span>
         <div>
           <input type="color" [value]="prefs.brand()" (input)="setBrand($event)" />
           <code>{{ prefs.brand() }}</code>
         </div>
       </label>
       <button class="direction" type="button" (click)="prefs.direction.update(toggleDirection)">
-        Direction: {{ prefs.direction().toUpperCase() }}
+        {{ i18n.t('home.direction', 'Direction') }}: {{ prefs.direction().toUpperCase() }}
       </button>
     </div>
     <div class="palette">
@@ -61,18 +72,22 @@
 
   <section class="foundation-section">
     <header>
-      <p>01.2 / COLOR</p>
-      <h2>Meaning survives the theme.</h2>
+      <p>01.2 / {{ i18n.t('foundations.color', 'COLOR') }}</p>
+      <h2>{{ i18n.t('foundations.colorHeading', 'Meaning survives the theme.') }}</h2>
       <p>
-        Each intent owns surface, border, text, solid, and on-solid roles. Color is reinforced by
-        shape and copy.
+        {{
+          i18n.t(
+            'foundations.colorDescription',
+            'Each intent owns surface, border, text, solid, and on-solid roles. Color is reinforced by shape and copy.'
+          )
+        }}
       </p>
     </header>
     <div class="semantic-colors">
       @for (color of semanticColors; track color.name) {
         <article [style.--sample]="color.value">
           <span></span>
-          <strong>{{ color.name }}</strong>
+          <strong>{{ i18n.term(color.name) }}</strong>
           <code>{{ color.value }}</code>
         </article>
       }
@@ -81,32 +96,51 @@
 
   <section class="foundation-section type-section">
     <header>
-      <p>01.3 / TYPE</p>
-      <h2>Geist, tuned for interface clarity.</h2>
+      <p>01.3 / {{ i18n.t('foundations.type', 'TYPE') }}</p>
+      <h2>
+        {{ i18n.t('foundations.typeHeading', 'IBM Plex, tuned for dense interface clarity.') }}
+      </h2>
       <p>
-        One variable family covers Latin and Cyrillic; monospaced figures carry coordinates, tokens,
-        and operational data.
+        {{
+          i18n.t(
+            'foundations.typeDescription',
+            'A coordinated condensed sans and mono family covers Latin and Cyrillic; monospaced figures carry coordinates, tokens, and operational data.'
+          )
+        }}
       </p>
     </header>
     <div class="type-specimens">
-      <div class="display-type"><span>64 / 68</span>Precision without sterility.</div>
+      <div class="display-type">
+        <span>64 / 68</span
+        >{{ i18n.t('foundations.displaySample', 'Precision without sterility.') }}
+      </div>
       <div class="heading-type"><span>28 / 34</span>Плотная и ясная иерархия.</div>
       <div class="body-type">
         <span>16 / 24</span>
-        Product interfaces need room for nuance: labels that remain visible, numbers that align, and
-        instructions that still work at 200% zoom.
+        {{
+          i18n.t(
+            'foundations.bodySample',
+            'Product interfaces need room for nuance: labels that remain visible, numbers that align, and instructions that still work at 200% zoom.'
+          )
+        }}
       </div>
-      <div class="label-type"><span>12 / 16</span>07 / CONTROL LABEL</div>
+      <div class="label-type">
+        <span>12 / 16</span>{{ i18n.t('foundations.controlLabel', '07 / CONTROL LABEL') }}
+      </div>
     </div>
   </section>
 
   <section class="foundation-section">
     <header>
-      <p>01.4 / SPACING + DENSITY</p>
-      <h2>A 4px baseline with optical exceptions.</h2>
+      <p>01.4 / {{ i18n.t('foundations.spacing', 'SPACING + DENSITY') }}</p>
+      <h2>{{ i18n.t('foundations.spacingHeading', 'A 4px baseline with optical exceptions.') }}</h2>
       <p>
-        Density changes control rhythm, not text size. Coarse pointers retain a 44px minimum
-        interaction target.
+        {{
+          i18n.t(
+            'foundations.spacingDescription',
+            'Density changes control rhythm, not text size. Coarse pointers retain a 44px minimum interaction target.'
+          )
+        }}
       </p>
     </header>
     <div class="spacing-scale">
@@ -122,11 +156,15 @@
 
   <section class="foundation-section">
     <header>
-      <p>01.5 / MOTION</p>
-      <h2>Motion confirms geometry and cause.</h2>
+      <p>01.5 / {{ i18n.t('foundations.motion', 'MOTION') }}</p>
+      <h2>{{ i18n.t('foundations.motionHeading', 'Motion confirms geometry and cause.') }}</h2>
       <p>
-        Durations are short, displacement stays between two and six pixels, and reduced motion
-        removes transforms.
+        {{
+          i18n.t(
+            'foundations.motionDescription',
+            'Durations are short, displacement stays between two and six pixels, and reduced motion removes transforms.'
+          )
+        }}
       </p>
     </header>
     <div class="motion-grid">
@@ -134,7 +172,7 @@
         <button type="button" [style.--duration]="motion.duration">
           <i></i>
           <strong>{{ motion.duration }}</strong>
-          <span>{{ motion.label }}</span>
+          <span>{{ i18n.term(motion.label) }}</span>
         </button>
       }
     </div>
@@ -142,20 +180,32 @@
 
   <section class="foundation-section token-explorer">
     <header>
-      <p>01.6 / TOKEN EXPLORER</p>
-      <h2>{{ tokenRows.length }} typed public token names.</h2>
+      <p>01.6 / {{ i18n.t('foundations.tokenExplorer', 'TOKEN EXPLORER') }}</p>
+      <h2>
+        {{ tokenRows.length }}
+        {{ i18n.t('foundations.tokensHeading', 'typed public token names.') }}
+      </h2>
       <p>
-        The same contract is available through CSS custom properties and the
-        <code>krnTokens</code> TypeScript record.
+        {{
+          i18n.t(
+            'foundations.tokensDescription',
+            'The same contract is available through CSS custom properties and the TypeScript record.'
+          )
+        }}
+        <code>krnTokens</code>.
       </p>
     </header>
-    <div class="token-table" tabindex="0" aria-label="Scrollable token table">
+    <div
+      class="token-table"
+      tabindex="0"
+      [attr.aria-label]="i18n.t('foundations.tokenTable', 'Scrollable token table')"
+    >
       <table>
         <thead>
           <tr>
-            <th>Group</th>
-            <th>Name</th>
-            <th>CSS custom property</th>
+            <th>{{ i18n.t('foundations.group', 'Group') }}</th>
+            <th>{{ i18n.t('foundations.name', 'Name') }}</th>
+            <th>{{ i18n.t('foundations.cssProperty', 'CSS custom property') }}</th>
           </tr>
         </thead>
         <tbody>

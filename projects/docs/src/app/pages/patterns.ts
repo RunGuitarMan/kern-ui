@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { KrnBarChart, type KrnChartDatum } from '@kern-ui/angular/addon-charts';
 import { KrnAlert, KrnBadge, KrnButton } from '@kern-ui/angular/kit';
 import {
@@ -17,6 +17,8 @@ import {
   type KrnNotification,
   type KrnProfileValue,
 } from '@kern-ui/angular/patterns';
+
+import { DocsI18n } from '../docs-i18n';
 
 @Component({
   selector: 'kdocs-patterns-page',
@@ -41,6 +43,7 @@ import {
   styleUrl: './patterns.css',
 })
 export class PatternsPage {
+  protected readonly i18n = inject(DocsI18n);
   protected readonly selectedCount = signal(0);
   protected readonly detailOpen = signal(false);
   protected readonly selectedWorkspace = signal(1);
@@ -63,35 +66,58 @@ export class PatternsPage {
     { label: 'Dev', value: 124 },
     { label: 'Local', value: 37 },
   ];
-  protected readonly notifications = signal<readonly KrnNotification[]>([
+  private readonly readNotifications = signal<ReadonlySet<string>>(new Set());
+  protected readonly notifications = computed<readonly KrnNotification[]>(() => [
     {
       id: 'n1',
-      title: 'Seat threshold reached',
-      detail: 'Fieldnote is using 96% of its available seats.',
-      timestamp: '8 minutes ago',
-      read: false,
+      title: this.i18n.t('patterns.seatThreshold', 'Seat threshold reached'),
+      detail: this.i18n.t(
+        'patterns.seatThresholdDetail',
+        'Fieldnote is using 96% of its available seats.',
+      ),
+      timestamp: this.i18n.t('patterns.minutes8', '8 minutes ago'),
+      read: this.readNotifications().has('n1'),
       tone: 'warning',
     },
     {
       id: 'n2',
-      title: 'Export completed',
-      detail: 'The Q3 audit package is ready to download.',
-      timestamp: '34 minutes ago',
-      read: false,
+      title: this.i18n.t('patterns.exportCompleted', 'Export completed'),
+      detail: this.i18n.t(
+        'patterns.exportCompletedDetail',
+        'The Q3 audit package is ready to download.',
+      ),
+      timestamp: this.i18n.t('patterns.minutes34', '34 minutes ago'),
+      read: this.readNotifications().has('n2'),
       tone: 'success',
     },
   ]);
-  protected readonly steps = signal<readonly KrnFormStep[]>([
-    { id: 'workspace', label: 'Workspace', description: 'Identity', valid: true },
-    { id: 'people', label: 'People', description: 'Collaborators', optional: true, valid: true },
-    { id: 'review', label: 'Review', description: 'Policy', valid: true },
+  protected readonly steps = computed<readonly KrnFormStep[]>(() => [
+    {
+      id: 'workspace',
+      label: this.i18n.t('patterns.workspace', 'Workspace'),
+      description: this.i18n.t('patterns.identity', 'Identity'),
+      valid: true,
+    },
+    {
+      id: 'people',
+      label: this.i18n.t('patterns.people', 'People'),
+      description: this.i18n.t('patterns.collaborators', 'Collaborators'),
+      optional: true,
+      valid: true,
+    },
+    {
+      id: 'review',
+      label: this.i18n.t('patterns.review', 'Review'),
+      description: this.i18n.t('patterns.policy', 'Policy'),
+      valid: true,
+    },
   ]);
-  protected readonly profile: KrnProfileValue = {
+  protected readonly profile = computed<KrnProfileValue>(() => ({
     name: 'Avery Cole',
-    role: 'Operations lead',
-    bio: 'Designing calm systems for complicated work.',
+    role: this.i18n.t('patterns.operationsLead', 'Operations lead'),
+    bio: this.i18n.t('patterns.profileBio', 'Designing calm systems for complicated work.'),
     timezone: 'Europe/London',
-  };
+  }));
 
   protected selectWorkspace(id: number): void {
     this.selectedWorkspace.set(id);
@@ -100,14 +126,28 @@ export class PatternsPage {
   }
 
   protected markAllRead(): void {
-    this.notifications.update((items) => items.map((item) => ({ ...item, read: true })));
+    this.readNotifications.set(new Set(['n1', 'n2']));
   }
 
   protected signedIn(credentials: KrnLoginCredentials): void {
-    this.loginMessage.set(`Signed in as ${credentials.email}.`);
+    this.loginMessage.set(
+      this.i18n.russian()
+        ? `Выполнен вход: ${credentials.email}.`
+        : `Signed in as ${credentials.email}.`,
+    );
   }
 
   protected profileSaved(value: KrnProfileValue): void {
-    this.profileMessage.set(`${value.name}'s profile was saved.`);
+    this.profileMessage.set(
+      this.i18n.russian()
+        ? `Профиль пользователя ${value.name} сохранён.`
+        : `${value.name}'s profile was saved.`,
+    );
+  }
+
+  protected workspaceState(state: 'Healthy' | 'Attention'): string {
+    return state === 'Healthy'
+      ? this.i18n.t('patterns.healthy', 'Healthy')
+      : this.i18n.t('patterns.attention', 'Attention');
   }
 }

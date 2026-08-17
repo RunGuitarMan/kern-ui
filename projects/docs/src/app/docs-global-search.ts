@@ -1,9 +1,18 @@
-import { ChangeDetectionStrategy, Component, effect, inject, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  viewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { KrnGlobalSearch, type KrnSearchResult } from '@kern-ui/angular/patterns';
 import { KERN_CATALOG } from '@kern-ui/showcase';
 import { filter, map, startWith } from 'rxjs';
+
+import { DocsI18n } from './docs-i18n';
 
 @Component({
   selector: 'kdocs-global-search',
@@ -14,6 +23,7 @@ import { filter, map, startWith } from 'rxjs';
 })
 export class DocsGlobalSearch {
   private readonly router = inject(Router);
+  protected readonly i18n = inject(DocsI18n);
   private readonly search = viewChild<KrnGlobalSearch>('search');
   private readonly currentUrl = toSignal(
     this.router.events.pipe(
@@ -24,13 +34,18 @@ export class DocsGlobalSearch {
     { initialValue: this.router.url },
   );
 
-  protected readonly results: readonly KrnSearchResult[] = KERN_CATALOG.map((item) => ({
-    id: item.id,
-    label: item.name,
-    description: item.summary,
-    group: item.category,
-    keywords: [item.selector, item.category],
-  }));
+  protected readonly results = computed<readonly KrnSearchResult[]>(() =>
+    KERN_CATALOG.map((source) => {
+      const item = this.i18n.catalogItem(source);
+      return {
+        id: item.id,
+        label: item.name,
+        description: item.summary,
+        group: this.i18n.category(item.category),
+        keywords: [item.selector, item.category, this.i18n.category(item.category)],
+      };
+    }),
+  );
 
   constructor() {
     effect(() => {

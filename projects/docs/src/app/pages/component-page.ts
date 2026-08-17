@@ -12,15 +12,8 @@ import { findKernAgentExample, type KernAgentExample } from '@kern-ui/showcase/e
 import { KrnBreadcrumbs, KrnCopyButton, type KrnBreadcrumbItem } from '@kern-ui/angular/kit';
 
 import { ComponentPlayground } from '../playground/component-playground';
+import { DocsI18n } from '../docs-i18n';
 import { DataGridExamples } from './data-grid-examples';
-
-const STATUS_DESCRIPTIONS: Readonly<Record<KernComponentStatus, string>> = {
-  stable: 'Supported contract; the documented compatibility policy applies.',
-  beta: 'Available for controlled production evaluation; the contract may still be refined.',
-  experimental: 'Early contract that may change in a pre-1.0 minor release.',
-  recipe: 'An adaptable composition rather than a sealed primitive.',
-  deprecated: 'Temporarily supported with a documented replacement.',
-};
 
 @Component({
   selector: 'kdocs-component-page',
@@ -32,10 +25,15 @@ const STATUS_DESCRIPTIONS: Readonly<Record<KernComponentStatus, string>> = {
 export class ComponentPage {
   private readonly route = inject(ActivatedRoute);
   private readonly title = inject(Title);
+  protected readonly i18n = inject(DocsI18n);
   private readonly params = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
   });
-  protected readonly item = computed(() => findKernComponent(this.params().get('id') ?? ''));
+  private readonly sourceItem = computed(() => findKernComponent(this.params().get('id') ?? ''));
+  protected readonly item = computed(() => {
+    const item = this.sourceItem();
+    return item ? this.i18n.catalogItem(item) : undefined;
+  });
   protected readonly agentExample = computed<KernAgentExample | null>(() => {
     const current = this.item();
     return current ? (findKernAgentExample(current.id) ?? null) : null;
@@ -53,23 +51,28 @@ export class ComponentPage {
   constructor() {
     effect(() => {
       const item = this.item();
-      this.title.setTitle(item ? `${item.name} · Kern` : 'Component not found · Kern');
+      this.title.setTitle(
+        item
+          ? `${item.name} · Kern`
+          : `${this.i18n.t('component.notFound', 'Component not found')} · Kern`,
+      );
     });
   }
 
   protected breadcrumbs(name: string): readonly KrnBreadcrumbItem[] {
     return [
-      { label: 'Overview', href: '/' },
+      { label: this.i18n.t('shell.overview', 'Overview'), href: '/' },
       { label: name, current: true },
     ];
   }
 
   protected variantName(item: KernCatalogItem): string {
-    return findKernComponent(item.variantOf ?? '')?.name ?? item.variantOf ?? '';
+    const variant = findKernComponent(item.variantOf ?? '');
+    return variant ? this.i18n.componentName(variant) : (item.variantOf ?? '');
   }
 
   protected statusDescription(status: KernComponentStatus): string {
-    return STATUS_DESCRIPTIONS[status];
+    return this.i18n.statusDescription(status);
   }
 
   protected codeExample(): string {

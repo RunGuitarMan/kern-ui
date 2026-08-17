@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ApplicationRef,
   computed,
   effect,
   inject,
@@ -17,6 +18,7 @@ import {
 import { filter, map, startWith } from 'rxjs';
 
 import { DocsGlobalSearch } from './docs-global-search';
+import { DocsI18n } from './docs-i18n';
 import {
   DocsPreferences,
   type DocsBaseTheme,
@@ -29,13 +31,15 @@ import { KERN_DOCS_RELEASE_STATE_LABEL, KERN_DOCS_VERSION_LABEL } from './releas
 
 @Component({
   selector: 'kdocs-root',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, DocsGlobalSearch],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
+  private readonly application = inject(ApplicationRef);
   private readonly router = inject(Router);
+  protected readonly i18n = inject(DocsI18n);
   protected readonly prefs = inject(DocsPreferences);
   protected readonly categories = KERN_CATEGORIES;
   protected readonly catalog = KERN_CATALOG_INDEX;
@@ -51,6 +55,9 @@ export class App {
   ]
     .map((id) => this.catalog.find((item) => item.id === id))
     .filter((item): item is (typeof this.catalog)[number] => Boolean(item));
+  protected readonly sidebarNames = computed(
+    () => new Map(this.catalog.map((item) => [item.id, this.i18n.componentName(item)] as const)),
+  );
   private readonly currentUrl = toSignal(
     this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd),
@@ -88,6 +95,14 @@ export class App {
     return catalogIndexByCategory(category);
   }
 
+  protected optionLabel(value: string): string {
+    return this.i18n.term(value.charAt(0).toUpperCase() + value.slice(1));
+  }
+
+  protected tr(key: string, english: string): string {
+    return this.i18n.tFor(this.prefs.locale(), key, english);
+  }
+
   protected toggleNavigation(): void {
     this.prefs.navigationOpen.update((value) => !value);
   }
@@ -123,7 +138,9 @@ export class App {
   protected setLocale(event: Event): void {
     const value = (event.currentTarget as HTMLSelectElement).value as DocsLocale;
     this.prefs.locale.set(value);
-    this.updateEnvironmentQuery('locale', value, 'en-US');
+    const prepared = this.i18n.prepare(value);
+    const navigation = this.updateEnvironmentQuery('locale', value, 'en-US');
+    void Promise.all([prepared, navigation]).then(() => this.application.tick());
   }
 
   protected setMotion(event: Event): void {
@@ -148,9 +165,9 @@ export class App {
     key: string,
     value: string | null,
     defaultValue: string | null,
-  ): void {
-    if (!this.currentPath().startsWith('/components/')) return;
-    void this.router.navigate([], {
+  ): Promise<boolean> {
+    if (!this.currentPath().startsWith('/components/')) return Promise.resolve(false);
+    return this.router.navigate([], {
       queryParams: { [key]: value === defaultValue ? null : value },
       queryParamsHandling: 'merge',
       replaceUrl: true,

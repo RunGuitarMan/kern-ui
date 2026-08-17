@@ -44,10 +44,11 @@
     --krn-color-blue-700: oklch(42% 0.125 251);
     --krn-color-violet-500: oklch(59% 0.15 315);
 
-    /* Geist Sans and Mono are self-hosted by the workspace. */
+    /* IBM Plex Sans Condensed and Mono are self-hosted by the workspace. */
     --krn-font-family-sans:
-      'Geist Variable', Geist, Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --krn-font-family-mono: 'Geist Mono Variable', 'SFMono-Regular', 'SF Mono', Consolas, monospace;
+      'IBM Plex Sans Condensed', 'Arial Narrow', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+      sans-serif;
+    --krn-font-family-mono: 'IBM Plex Mono', 'SFMono-Regular', 'SF Mono', Consolas, monospace;
     --krn-font-size-xs: 0.75rem;
     --krn-font-size-sm: 0.8125rem;
     --krn-font-size-md: 0.9375rem;

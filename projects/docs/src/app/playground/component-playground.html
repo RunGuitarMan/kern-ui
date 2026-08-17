@@ -6,19 +6,19 @@
 >
   <header class="workbench-toolbar">
     <div class="workbench-title">
-      <p>Example</p>
-      <h2 id="playground-heading">Try {{ item().name }}</h2>
+      <p>{{ tr('playground.example', 'Example') }}</p>
+      <h2 id="playground-heading">{{ tr('playground.try', 'Try') }} {{ item().name }}</h2>
     </div>
 
     <div class="toolbar-actions">
-      <div class="view-tabs" role="group" aria-label="Example view">
+      <div class="view-tabs" role="group" [attr.aria-label]="tr('playground.view', 'Example view')">
         <button
           type="button"
           [attr.aria-pressed]="activeTab() === 'preview'"
           aria-controls="preview-panel"
           (click)="activeTab.set('preview')"
         >
-          Preview
+          {{ tr('playground.preview', 'Preview') }}
         </button>
         <button
           type="button"
@@ -26,7 +26,7 @@
           aria-controls="code-panel"
           (click)="activeTab.set('code')"
         >
-          Code
+          {{ tr('playground.code', 'Code') }}
         </button>
       </div>
       @if (!isolated()) {
@@ -36,11 +36,15 @@
           [routerLink]="['/preview', item().id]"
           [queryParams]="previewQuery()"
         >
-          Open canvas
+          {{ tr('playground.openCanvas', 'Open canvas') }}
         </a>
       }
-      <button class="reset-button" type="button" (click)="reset()">Reset</button>
-      <krn-copy-button [value]="configuredCode()">Copy code</krn-copy-button>
+      <button class="reset-button" type="button" (click)="reset()">
+        {{ tr('playground.reset', 'Reset') }}
+      </button>
+      <krn-copy-button [value]="configuredCode()">{{
+        tr('playground.copyCode', 'Copy code')
+      }}</krn-copy-button>
     </div>
   </header>
 
@@ -66,7 +70,12 @@
       <div class="preview-ruler" aria-hidden="true">
         <span>{{ viewportLabel() }}</span>
         <span>
-          {{ contrast() ? 'high contrast ' + baseTheme() : theme() }} / {{ density() }} /
+          {{
+            contrast()
+              ? tr('playground.highContrast', 'high contrast') + ' ' + environmentLabel(baseTheme())
+              : environmentLabel(theme())
+          }}
+          / {{ environmentLabel(density()) }} /
           {{ direction().toUpperCase() }}
         </span>
       </div>
@@ -87,7 +96,7 @@
   <div
     id="code-panel"
     class="code-panel"
-    aria-label="Angular code example"
+    [attr.aria-label]="tr('playground.codeAria', 'Angular code example')"
     [hidden]="activeTab() !== 'code'"
     [krnTheme]="theme()"
     [krnDensity]="density()"
@@ -101,12 +110,19 @@
     <div class="code-intro">
       <div>
         <span>Angular</span>
-        <strong>Copy this configured example into your application.</strong>
-        <small
-          >Base scaffold is strict-AOT verified; current controls form a preview snapshot.</small
-        >
+        <strong>{{
+          tr('playground.copyConfigured', 'Copy this configured example into your application.')
+        }}</strong>
+        <small>{{
+          tr(
+            'playground.codeNote',
+            'Base scaffold is strict-AOT verified; current controls form a preview snapshot.'
+          )
+        }}</small>
       </div>
-      <krn-copy-button [value]="configuredCode()">Copy code</krn-copy-button>
+      <krn-copy-button [value]="configuredCode()">{{
+        tr('playground.copyCode', 'Copy code')
+      }}</krn-copy-button>
     </div>
     <krn-code-block language="typescript" [code]="configuredCode()" />
   </div>
@@ -115,29 +131,31 @@
     <section class="property-panel" aria-labelledby="property-heading">
       <header>
         <div>
-          <span>Properties</span>
-          <strong id="property-heading">Configure the example</strong>
+          <span>{{ tr('playground.properties', 'Properties') }}</span>
+          <strong id="property-heading">{{
+            tr('playground.configure', 'Configure the example')
+          }}</strong>
         </div>
-        <small>{{ controls().length }} properties</small>
+        <small>{{ controls().length }} {{ tr('playground.propertiesCount', 'properties') }}</small>
       </header>
       <div class="property-table">
         @for (control of controls(); track control.key) {
           <label
-            [attr.title]="control.description"
+            [attr.title]="controlDescription(control)"
             [attr.data-control-key]="control.key"
             [attr.data-binding-kind]="control.binding.kind"
           >
             <span class="property-name">
-              <strong>{{ control.label }}</strong>
+              <strong>{{ controlLabel(control) }}</strong>
               <code>{{ control.key }}</code>
             </span>
-            <small>{{ control.description }}</small>
+            <small>{{ controlDescription(control) }}</small>
 
             @switch (control.kind) {
               @case ('boolean') {
                 <input
                   type="checkbox"
-                  [attr.aria-label]="control.label"
+                  [attr.aria-label]="controlLabel(control)"
                   [checked]="booleanArg(control)"
                   [attr.checked]="booleanArg(control) ? '' : null"
                   (change)="setBooleanArg(control, $event)"
@@ -145,7 +163,7 @@
               }
               @case ('select') {
                 <select
-                  [attr.aria-label]="control.label"
+                  [attr.aria-label]="controlLabel(control)"
                   [value]="stringArg(control)"
                   (change)="setStringArg(control, $event)"
                 >
@@ -154,7 +172,7 @@
                       [value]="serializedValue(option.value)"
                       [attr.selected]="optionSelected(control, option.value) ? '' : null"
                     >
-                      {{ option.label }}
+                      {{ controlOptionLabel(option.label) }}
                     </option>
                   }
                 </select>
@@ -162,7 +180,7 @@
               @case ('number') {
                 <input
                   type="number"
-                  [attr.aria-label]="control.label"
+                  [attr.aria-label]="controlLabel(control)"
                   [min]="control.min ?? null"
                   [max]="control.max ?? null"
                   [step]="control.step ?? 1"
@@ -174,7 +192,7 @@
                 <span class="range-control">
                   <input
                     type="range"
-                    [attr.aria-label]="control.label"
+                    [attr.aria-label]="controlLabel(control)"
                     [min]="control.min ?? 0"
                     [max]="control.max ?? 100"
                     [step]="control.step ?? 1"
@@ -187,7 +205,7 @@
               @default {
                 <input
                   type="text"
-                  [attr.aria-label]="control.label"
+                  [attr.aria-label]="controlLabel(control)"
                   [value]="stringArg(control)"
                   (change)="setStringArg(control, $event)"
                 />
@@ -198,6 +216,8 @@
       </div>
     </section>
   } @else {
-    <p class="fixture-note">This example has no configurable primitive properties.</p>
+    <p class="fixture-note">
+      {{ tr('playground.noProperties', 'This example has no configurable primitive properties.') }}
+    </p>
   }
 </section>

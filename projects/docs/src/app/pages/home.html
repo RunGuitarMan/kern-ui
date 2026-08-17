@@ -2,61 +2,75 @@
   <section class="hero" aria-labelledby="home-title">
     <div class="hero-copy">
       <p class="product-mark"><span aria-hidden="true"></span>Kern UI · Angular 22</p>
-      <h1 id="home-title">One rhythm. Any product.</h1>
+      <h1 id="home-title">{{ i18n.t('home.title', 'One rhythm. Any product.') }}</h1>
       <p class="hero-summary">
-        Accessible Angular components, semantic tokens, and product patterns for teams building real
-        application interfaces.
+        {{
+          i18n.t(
+            'home.summary',
+            'Accessible Angular components, semantic tokens, and product patterns for teams building real application interfaces.'
+          )
+        }}
       </p>
       <div class="hero-actions">
         <a class="primary-action" routerLink="/components/button">
-          Browse components <span aria-hidden="true">→</span>
+          {{ i18n.t('home.browse', 'Browse components') }} <span aria-hidden="true">→</span>
         </a>
-        <a routerLink="/foundations">Understand the system</a>
+        <a routerLink="/foundations">{{ i18n.t('home.understand', 'Understand the system') }}</a>
       </div>
-      <ul class="hero-facts" aria-label="Library coverage">
+      <ul class="hero-facts" [attr.aria-label]="i18n.t('home.coverage', 'Library coverage')">
         <li>
-          <strong>{{ coverage.components }}</strong> catalog entries
+          <strong>{{ coverage.components }}</strong>
+          {{ i18n.t('home.catalogEntries', 'catalog entries') }}
         </li>
-        <li><strong>AA</strong> accessibility target</li>
-        <li><strong>4</strong> runtime themes</li>
+        <li>
+          <strong>AA</strong> {{ i18n.t('home.accessibilityTarget', 'accessibility target') }}
+        </li>
+        <li><strong>4</strong> {{ i18n.t('home.runtimeThemes', 'runtime themes') }}</li>
       </ul>
     </div>
 
     <aside class="quick-start" aria-labelledby="quick-start-title">
       <header>
         <div>
-          <span>Quick start</span>
-          <h2 id="quick-start-title">Install. Theme. Build.</h2>
+          <span>{{ i18n.t('home.quickStart', 'Quick start') }}</span>
+          <h2 id="quick-start-title">{{ i18n.t('home.quickTitle', 'Install. Theme. Build.') }}</h2>
         </div>
-        <span class="time">≈ 2 min</span>
+        <span class="time">{{ i18n.t('home.minutes', '≈ 2 min') }}</span>
       </header>
       <ol>
         <li>
           <span>1</span>
           <div>
-            <strong>Install the package</strong>
+            <strong>{{ i18n.t('home.install', 'Install the package') }}</strong>
             <code>npm i @kern-ui/angular @angular/cdk @angular/aria</code>
           </div>
         </li>
         <li>
           <span>2</span>
           <div>
-            <strong>Load the shared styles</strong>
+            <strong>{{ i18n.t('home.styles', 'Load the shared styles') }}</strong>
             <code>&#64;import '@kern-ui/angular/styles/kern.css';</code>
           </div>
         </li>
         <li>
           <span>3</span>
           <div>
-            <strong>Import only what you use</strong>
-            <p>Every standalone component can be adopted independently.</p>
+            <strong>{{ i18n.t('home.import', 'Import only what you use') }}</strong>
+            <p>
+              {{
+                i18n.t(
+                  'home.importDescription',
+                  'Every standalone component can be adopted independently.'
+                )
+              }}
+            </p>
           </div>
         </li>
       </ol>
       <pre
         class="quick-code"
         tabindex="0"
-        aria-label="Kern provider setup"
+        [attr.aria-label]="i18n.t('home.providerSetup', 'Kern provider setup')"
       ><code [textContent]="providerSetup"></code></pre>
     </aside>
   </section>
@@ -64,16 +78,20 @@
   <section class="start-here" aria-labelledby="start-heading">
     <header class="section-heading">
       <div>
-        <span>Start here</span>
-        <h2 id="start-heading">Choose the shortest path.</h2>
+        <span>{{ i18n.t('home.startHere', 'Start here') }}</span>
+        <h2 id="start-heading">{{ i18n.t('home.shortestPath', 'Choose the shortest path.') }}</h2>
       </div>
       <p>
-        Use the library by task. Each component page opens with a working example and copy-ready
-        Angular code.
+        {{
+          i18n.t(
+            'home.startDescription',
+            'Use the library by task. Each component page opens with a working example and copy-ready Angular code.'
+          )
+        }}
       </p>
     </header>
     <div class="route-grid">
-      @for (route of startRoutes; track route.href) {
+      @for (route of startRoutes(); track route.href) {
         <a [routerLink]="route.href">
           <span class="route-index">{{ route.index }}</span>
           <div>
@@ -90,21 +108,30 @@
   <section class="popular" aria-labelledby="popular-heading">
     <header class="section-heading">
       <div>
-        <span>Common building blocks</span>
-        <h2 id="popular-heading">Go straight to the component.</h2>
+        <span>{{ i18n.t('home.commonBlocks', 'Common building blocks') }}</span>
+        <h2 id="popular-heading">
+          {{ i18n.t('home.straightToComponent', 'Go straight to the component.') }}
+        </h2>
       </div>
       <p>
-        These routes cover the most common product work: actions, forms, overlays, data, and
-        responsive application structure.
+        {{
+          i18n.t(
+            'home.commonDescription',
+            'These routes cover the most common product work: actions, forms, overlays, data, and responsive application structure.'
+          )
+        }}
       </p>
     </header>
-    <nav class="component-links" aria-label="Popular components">
+    <nav
+      class="component-links"
+      [attr.aria-label]="i18n.t('home.popularComponents', 'Popular components')"
+    >
       @for (item of featured; track item.id; let index = $index) {
         <a [routerLink]="['/components', item.id]">
           <span>{{ (index + 1).toString().padStart(2, '0') }}</span>
           <div>
-            <strong>{{ item.name }}</strong>
-            <small>{{ item.category }}</small>
+            <strong>{{ i18n.componentName(item) }}</strong>
+            <small>{{ i18n.category(item.category) }}</small>
           </div>
           <span aria-hidden="true">→</span>
         </a>
@@ -114,16 +141,22 @@
 
   <section class="preferences" aria-labelledby="preferences-heading">
     <div>
-      <span>Documentation preview</span>
-      <h2 id="preferences-heading">Make the examples match your product context.</h2>
+      <span>{{ i18n.t('home.preview', 'Documentation preview') }}</span>
+      <h2 id="preferences-heading">
+        {{ i18n.t('home.matchContext', 'Make the examples match your product context.') }}
+      </h2>
       <p>
-        These controls update every live specimen in the documentation. They do not change the
-        public API examples.
+        {{
+          i18n.t(
+            'home.previewDescription',
+            'These controls update every live specimen in the documentation. They do not change the public API examples.'
+          )
+        }}
       </p>
     </div>
     <div class="preference-panel">
       <fieldset>
-        <legend>Theme</legend>
+        <legend>{{ i18n.t('home.theme', 'Theme') }}</legend>
         <div class="segmented">
           @for (theme of themes; track theme) {
             <button
@@ -131,13 +164,17 @@
               [attr.aria-pressed]="prefs.theme() === theme"
               (click)="prefs.theme.set(theme)"
             >
-              {{ theme === 'contrast' ? 'High contrast' : titleCase(theme) }}
+              {{
+                theme === 'contrast'
+                  ? i18n.t('playground.highContrast', 'High contrast')
+                  : titleCase(theme)
+              }}
             </button>
           }
         </div>
       </fieldset>
       <label>
-        <span>Density</span>
+        <span>{{ i18n.t('home.density', 'Density') }}</span>
         <select [value]="prefs.density()" (change)="setDensity($event)">
           @for (density of densities; track density) {
             <option [value]="density">{{ titleCase(density) }}</option>
@@ -150,10 +187,13 @@
         [attr.aria-pressed]="prefs.direction() === 'rtl'"
         (click)="prefs.direction.update(toggleDirection)"
       >
-        <span>Direction</span>
+        <span>{{ i18n.t('home.direction', 'Direction') }}</span>
         <strong>{{ prefs.direction().toUpperCase() }}</strong>
       </button>
-      <a routerLink="/accessibility">Accessibility guidance <span aria-hidden="true">→</span></a>
+      <a routerLink="/accessibility"
+        >{{ i18n.t('home.accessibilityGuidance', 'Accessibility guidance') }}
+        <span aria-hidden="true">→</span></a
+      >
     </div>
   </section>
 </article>

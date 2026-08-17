@@ -1,9 +1,13 @@
 <main class="preview-page" data-testid="docs-preview-root">
   @if (item(); as current) {
     <header class="preview-header">
-      <a [routerLink]="['/components', current.id]" aria-label="Return to component docs">KERN</a>
+      <a
+        [routerLink]="['/components', current.id]"
+        [attr.aria-label]="tr('preview.return', 'Return to component docs')"
+        >KERN</a
+      >
       <div>
-        <span>Docs / deterministic preview</span>
+        <span>{{ tr('preview.label', 'Docs / deterministic preview') }}</span>
         <strong>{{ current.name }}</strong>
       </div>
       <code>&lt;{{ current.selector }}&gt;</code>
@@ -11,9 +15,9 @@
     <kdocs-component-playground [item]="current" [code]="codeExample()" [isolated]="true" />
   } @else {
     <section class="preview-not-found">
-      <span>404 / PREVIEW</span>
-      <h1>Unknown component fixture.</h1>
-      <a routerLink="/">Return to documentation</a>
+      <span>{{ tr('preview.notFoundCode', '404 / PREVIEW') }}</span>
+      <h1>{{ tr('preview.notFound', 'Unknown component fixture.') }}</h1>
+      <a routerLink="/">{{ tr('preview.returnDocs', 'Return to documentation') }}</a>
     </section>
   }
 </main>

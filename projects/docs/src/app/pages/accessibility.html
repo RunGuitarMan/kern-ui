@@ -1,27 +1,45 @@
 <article class="page">
   <krn-page-header
     index="09"
-    eyebrow="Accessibility"
-    heading="WCAG 2.2 AA is the floor."
-    description="Kern treats semantics, keyboard mechanics, focus, contrast, zoom, motion, RTL, and resilient content as one product-quality contract."
+    [eyebrow]="i18n.t('accessibility.eyebrow', 'Accessibility')"
+    [heading]="i18n.t('accessibility.heading', 'WCAG 2.2 AA is the floor.')"
+    [description]="
+      i18n.t(
+        'accessibility.description',
+        'Kern treats semantics, keyboard mechanics, focus, contrast, zoom, motion, RTL, and resilient content as one product-quality contract.'
+      )
+    "
   >
-    <krn-badge status tone="success">Keyboard first</krn-badge>
-    <krn-badge status tone="success">Forced colors</krn-badge>
+    <krn-badge status tone="success">{{
+      i18n.t('accessibility.keyboardFirst', 'Keyboard first')
+    }}</krn-badge>
+    <krn-badge status tone="success">{{
+      i18n.t('accessibility.forcedColors', 'Forced colors')
+    }}</krn-badge>
   </krn-page-header>
 
   <section class="lead">
     <div>
-      <p>09.1 / PRINCIPLE</p>
-      <h2>Accessible by structure, verified by behavior.</h2>
+      <p>09.1 / {{ i18n.t('accessibility.principle', 'PRINCIPLE') }}</p>
+      <h2>
+        {{ i18n.t('accessibility.structure', 'Accessible by structure, verified by behavior.') }}
+      </h2>
     </div>
-    <krn-alert tone="info" title="Automation is not certification">
-      axe catches a valuable subset of issues. Kern also tests focus order, announcements, keyboard
-      workflows, content reflow, pointer targets, and real browser rendering.
+    <krn-alert
+      tone="info"
+      [title]="i18n.t('accessibility.notCertification', 'Automation is not certification')"
+    >
+      {{
+        i18n.t(
+          'accessibility.alert',
+          'axe catches a valuable subset of issues. Kern also tests focus order, announcements, keyboard workflows, content reflow, pointer targets, and real browser rendering.'
+        )
+      }}
     </krn-alert>
   </section>
 
   <section class="pillars">
-    @for (pillar of pillars; track pillar.index) {
+    @for (pillar of pillars(); track pillar.index) {
       <article>
         <span>{{ pillar.index }}</span>
         <h3>{{ pillar.title }}</h3>
@@ -37,21 +55,34 @@
 
   <section class="matrix-section">
     <header>
-      <p>09.2 / VERIFICATION MATRIX</p>
-      <h2>One acceptance matrix for every stable component.</h2>
+      <p>09.2 / {{ i18n.t('accessibility.matrix', 'VERIFICATION MATRIX') }}</p>
+      <h2>
+        {{
+          i18n.t('accessibility.matrixHeading', 'One acceptance matrix for every stable component.')
+        }}
+      </h2>
       <p>
-        All {{ coverage.components }} catalog entries declare expected visual and interaction
-        states. The matrix is a release requirement, not proof that every state has a dedicated
-        screenshot or manual assistive-technology certificate.
+        {{
+          i18n.t(
+            'accessibility.matrixDescription',
+            'All catalog entries declare expected visual and interaction states. The matrix is a release requirement, not proof that every state has a dedicated screenshot or manual assistive-technology certificate.'
+          )
+        }}
       </p>
     </header>
-    <div class="matrix" role="table" aria-label="Accessibility verification matrix">
+    <div
+      class="matrix"
+      role="table"
+      [attr.aria-label]="i18n.t('accessibility.matrixAria', 'Accessibility verification matrix')"
+    >
       <div role="row" class="matrix-head">
-        <span role="columnheader">Dimension</span>
-        <span role="columnheader">Repository evidence</span>
-        <span role="columnheader">Human review</span>
+        <span role="columnheader">{{ i18n.t('accessibility.dimension', 'Dimension') }}</span>
+        <span role="columnheader">{{
+          i18n.t('accessibility.repositoryEvidence', 'Repository evidence')
+        }}</span>
+        <span role="columnheader">{{ i18n.t('accessibility.humanReview', 'Human review') }}</span>
       </div>
-      @for (row of matrix; track row.dimension) {
+      @for (row of matrix(); track row.dimension) {
         <div role="row">
           <strong role="rowheader">{{ row.dimension }}</strong>
           <span role="cell">{{ row.automation }}</span>
@@ -63,11 +94,13 @@
 
   <section class="keyboard-section">
     <header>
-      <p>09.3 / KEYBOARD</p>
-      <h2>Composite widgets have explicit contracts.</h2>
+      <p>09.3 / {{ i18n.t('accessibility.keyboard', 'KEYBOARD') }}</p>
+      <h2>
+        {{ i18n.t('accessibility.keyboardHeading', 'Composite widgets have explicit contracts.') }}
+      </h2>
     </header>
     <div class="keyboard-grid">
-      @for (widget of keyboardContracts; track widget.name) {
+      @for (widget of keyboardContracts(); track widget.name) {
         <article>
           <h3>{{ widget.name }}</h3>
           @for (binding of widget.bindings; track binding.keys) {
@@ -83,37 +116,50 @@
 
   <section class="zoom-section">
     <header>
-      <p>09.4 / REFLOW + CONTRAST</p>
-      <h2>Design for meaningful reflow at 200%.</h2>
+      <p>09.4 / {{ i18n.t('accessibility.reflow', 'REFLOW + CONTRAST') }}</p>
+      <h2>{{ i18n.t('accessibility.reflowHeading', 'Design for meaningful reflow at 200%.') }}</h2>
       <p>
-        Logical properties and container queries are the implementation tools; representative
-        responsive suites verify narrow and enlarged-text surfaces. High contrast is a structural
-        theme, while forced-color behavior still requires Windows review.
+        {{
+          i18n.t(
+            'accessibility.reflowDescription',
+            'Logical properties and container queries are the implementation tools; representative responsive suites verify narrow and enlarged-text surfaces. High contrast is a structural theme, while forced-color behavior still requires Windows review.'
+          )
+        }}
       </p>
     </header>
     <div class="contrast-demo">
       <div>
-        <span>Light</span>
-        <strong>Text remains calm and legible.</strong>
-        <a [routerLink]="[]" fragment="forced-colors">Visible link affordance</a>
+        <span>{{ i18n.t('accessibility.light', 'Light') }}</span>
+        <strong>{{ i18n.t('accessibility.lightCopy', 'Text remains calm and legible.') }}</strong>
+        <a [routerLink]="[]" fragment="forced-colors">{{
+          i18n.t('accessibility.visibleLink', 'Visible link affordance')
+        }}</a>
       </div>
       <div class="dark">
-        <span>Dark</span>
-        <strong>Carbon surfaces keep their hierarchy.</strong>
-        <a [routerLink]="[]" fragment="forced-colors">Visible link affordance</a>
+        <span>{{ i18n.t('accessibility.dark', 'Dark') }}</span>
+        <strong>{{
+          i18n.t('accessibility.darkCopy', 'Carbon surfaces keep their hierarchy.')
+        }}</strong>
+        <a [routerLink]="[]" fragment="forced-colors">{{
+          i18n.t('accessibility.visibleLink', 'Visible link affordance')
+        }}</a>
       </div>
       <div class="contrast" id="forced-colors">
-        <span>High contrast</span>
-        <strong>Structure does not depend on shadow.</strong>
-        <a [routerLink]="[]" fragment="forced-colors">Underlined link affordance</a>
+        <span>{{ i18n.t('accessibility.contrast', 'High contrast') }}</span>
+        <strong>{{
+          i18n.t('accessibility.contrastCopy', 'Structure does not depend on shadow.')
+        }}</strong>
+        <a [routerLink]="[]" fragment="forced-colors">{{
+          i18n.t('accessibility.underlinedLink', 'Underlined link affordance')
+        }}</a>
       </div>
     </div>
   </section>
 
   <section class="code-section">
     <header>
-      <p>09.5 / CONSUMER RULE</p>
-      <h2>Keep names visible and errors specific.</h2>
+      <p>09.5 / {{ i18n.t('accessibility.consumerRule', 'CONSUMER RULE') }}</p>
+      <h2>{{ i18n.t('accessibility.namesErrors', 'Keep names visible and errors specific.') }}</h2>
     </header>
     <krn-code-block
       language="html"

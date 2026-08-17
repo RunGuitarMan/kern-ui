@@ -15,17 +15,17 @@
 >
   <header class="specimen-ident">
     <div>
-      <span>Preview</span>
+      <span>{{ localized('Preview', 'Предпросмотр') }}</span>
       <strong>{{ item().name }}</strong>
     </div>
     <code>{{ item().selector }}</code>
   </header>
 
   <div class="specimen-canvas" id="specimen">
-    <span class="live-indicator"><i></i> Interactive</span>
+    <span class="live-indicator"><i></i> {{ localized('Interactive', 'Интерактивный') }}</span>
     @if (appliedArguments().length) {
       <div class="applied-arguments" data-testid="applied-playground-arguments">
-        <span>Applied parameters</span>
+        <span>{{ localized('Applied parameters', 'Применённые параметры') }}</span>
         @for (argument of appliedArguments(); track argument.key) {
           <code [attr.data-applied-control]="argument.key">
             {{ argument.label }} = {{ argument.value }}
@@ -468,12 +468,16 @@
                   [size]="stringArgument('size', 'md')"
                   [loading]="booleanArgument('loading')"
                 >
-                  Publish changes
+                  {{ localized('Publish changes', 'Опубликовать изменения') }}
                 </button>
-                <button krnButton variant="outline" tone="neutral">Preview</button>
-                <button krnButton variant="ghost" tone="danger">Delete</button>
-                <button krnButton loading>Publishing</button>
-                <button krnButton disabled>Unavailable</button>
+                <button krnButton variant="outline" tone="neutral">
+                  {{ localized('Preview', 'Предпросмотр') }}
+                </button>
+                <button krnButton variant="ghost" tone="danger">
+                  {{ localized('Delete', 'Удалить') }}
+                </button>
+                <button krnButton loading>{{ localized('Publishing', 'Публикация') }}</button>
+                <button krnButton disabled>{{ localized('Unavailable', 'Недоступно') }}</button>
               </div>
             }
             @case ('icon-button') {

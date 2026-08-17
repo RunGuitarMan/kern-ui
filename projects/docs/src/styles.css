@@ -1,5 +1,14 @@
-@import '@fontsource-variable/geist';
-@import '@fontsource-variable/geist-mono';
+@import '@ibm/plex-sans-condensed/fonts/split/woff2/IBMPlexSansCondensed-Regular.css';
+@import '@ibm/plex-sans-condensed/fonts/split/woff2/IBMPlexSansCondensed-Text.css';
+@import '@ibm/plex-sans-condensed/fonts/split/woff2/IBMPlexSansCondensed-Medium.css';
+@import '@ibm/plex-sans-condensed/fonts/split/woff2/IBMPlexSansCondensed-SemiBold.css';
+@import '@ibm/plex-sans-condensed/fonts/split/woff2/IBMPlexSansCondensed-Bold.css';
+@import '@ibm/plex-sans-condensed/fonts/split/woff2/IBMPlexSansCondensed-Italic.css';
+@import '@ibm/plex-mono/fonts/split/woff2/IBMPlexMono-Regular.css';
+@import '@ibm/plex-mono/fonts/split/woff2/IBMPlexMono-Medium.css';
+@import '@ibm/plex-mono/fonts/split/woff2/IBMPlexMono-SemiBold.css';
+@import '@ibm/plex-mono/fonts/split/woff2/IBMPlexMono-Bold.css';
+@import '@ibm/plex-mono/fonts/split/woff2/IBMPlexMono-Italic.css';
 @import '../../kern/src/styles/kern.css';
 
 :root {

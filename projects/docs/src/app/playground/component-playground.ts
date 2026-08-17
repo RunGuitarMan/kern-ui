@@ -38,6 +38,7 @@ import {
   type DocsMotion,
   type DocsViewport,
 } from '../preferences';
+import { DocsI18n } from '../docs-i18n';
 
 type PreviewTheme = 'system' | 'light' | 'dark' | 'high-contrast';
 type PreviewDirection = 'ltr' | 'rtl';
@@ -273,6 +274,7 @@ export class ComponentPlayground {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly prefs = inject(DocsPreferences);
+  private readonly i18n = inject(DocsI18n);
   private readonly queryParams = toSignal(this.route.queryParamMap, {
     initialValue: this.route.snapshot.queryParamMap,
   });
@@ -482,10 +484,35 @@ export class ComponentPlayground {
 
   protected viewportLabel(): string {
     return {
-      responsive: 'Fluid canvas',
-      phone: '390 px',
-      tablet: '768 px',
+      responsive: this.tr('playground.fluidCanvas', 'Fluid canvas'),
+      phone: this.tr('playground.phoneCanvas', 'Phone · 390 px'),
+      tablet: this.tr('playground.tabletCanvas', 'Tablet · 768 px'),
     }[this.viewport()];
+  }
+
+  protected tr(key: string, english: string): string {
+    return this.i18n.tFor(this.locale(), key, english);
+  }
+
+  protected environmentLabel(value: string): string {
+    const title = value.charAt(0).toUpperCase() + value.slice(1);
+    return this.i18n.termFor(this.locale(), title);
+  }
+
+  protected controlLabel(control: KernPlaygroundControl): string {
+    return this.i18n.termFor(this.locale(), control.label);
+  }
+
+  protected controlDescription(control: KernPlaygroundControl): string {
+    return this.i18n.apiDescriptionFor(this.locale(), {
+      name: control.key,
+      kind: control.binding.kind === 'model' ? 'model' : 'input',
+      description: control.description,
+    });
+  }
+
+  protected controlOptionLabel(label: string): string {
+    return this.i18n.termFor(this.locale(), label);
   }
 
   protected booleanArg(control: KernPlaygroundControl): boolean {

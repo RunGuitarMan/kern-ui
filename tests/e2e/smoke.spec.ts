@@ -79,6 +79,33 @@ test.describe('Docs smoke contracts', () => {
     assertNoRuntimeErrors();
   });
 
+  test('switches the complete documentation interface between English and Russian', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    await page.goto(`${DOCS_URL}/components/button`);
+    await settlePage(page);
+
+    const locale = page.getByTestId('locale-control');
+    await locale.selectOption('ru-RU');
+
+    await expect(page.locator('html')).toHaveAttribute('lang', 'ru-RU');
+    await expect(page.getByRole('heading', { level: 1, name: 'Кнопка' })).toBeVisible();
+    await expect(page.getByPlaceholder('Перейти к компоненту…')).toBeVisible();
+    await expect(page.getByRole('complementary', { name: 'Документация' })).toContainText(
+      'Основные компоненты',
+    );
+    await expect(page.getByRole('heading', { level: 2, name: 'Попробуйте Кнопка' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Сбросить' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Опубликовать изменения' })).toBeVisible();
+
+    await locale.selectOption('en-US');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en-US');
+    await expect(page.getByRole('heading', { level: 1, name: 'Button' })).toBeVisible();
+    await expect(page.getByPlaceholder('Jump to a component…')).toBeVisible();
+    assertNoRuntimeErrors();
+  });
+
   const routes = [
     { path: '/foundations', heading: 'A semantic system, not a paint box.' },
     { path: '/components/button', heading: 'Button' },
@@ -138,6 +165,18 @@ test.describe('Docs preview smoke contracts', () => {
       'stress',
     );
     await expectDocumentEnvironment(page, docsEnvironment);
+    assertNoRuntimeErrors();
+  });
+
+  test('hydrates Russian copy in an isolated preview URL', async ({ page }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    await page.goto(previewUrl({ component: 'button', locale: 'ru-RU' }));
+    await settlePage(page);
+
+    await expect(page.getByTestId('specimen-stage')).toHaveAttribute('lang', 'ru-RU');
+    await expect(page.locator('.preview-header strong')).toHaveText('Кнопка');
+    await expect(page.getByRole('heading', { level: 2, name: 'Попробуйте Кнопка' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Опубликовать изменения' })).toBeVisible();
     assertNoRuntimeErrors();
   });
 

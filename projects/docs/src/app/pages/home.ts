@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KERN_CATALOG_INDEX } from '@kern-ui/showcase/catalog-index';
 
 import { DocsPreferences, type DocsDensity, type DocsTheme } from '../preferences';
+import { DocsI18n } from '../docs-i18n';
 
 interface StartRoute {
   readonly index: string;
@@ -22,6 +23,7 @@ interface StartRoute {
 })
 export class HomePage {
   protected readonly prefs = inject(DocsPreferences);
+  protected readonly i18n = inject(DocsI18n);
   protected readonly coverage = { components: KERN_CATALOG_INDEX.length } as const;
   protected readonly providerSetup = `import { provideKrn } from '@kern-ui/angular/core';
 
@@ -33,32 +35,41 @@ export const appConfig = {
   protected readonly toggleDirection = (value: 'ltr' | 'rtl'): 'ltr' | 'rtl' =>
     value === 'ltr' ? 'rtl' : 'ltr';
 
-  protected readonly startRoutes: readonly StartRoute[] = [
+  protected readonly startRoutes = computed<readonly StartRoute[]>(() => [
     {
       index: '01',
-      eyebrow: 'Foundations',
-      title: 'Adopt tokens and themes',
-      description: 'Color, type, spacing, density, motion, and runtime theme contracts.',
+      eyebrow: this.i18n.t('shell.foundations', 'Foundations'),
+      title: this.i18n.t('home.routeFoundationsTitle', 'Adopt tokens and themes'),
+      description: this.i18n.t(
+        'home.routeFoundationsDescription',
+        'Color, type, spacing, density, motion, and runtime theme contracts.',
+      ),
       href: '/foundations',
-      cta: 'Open foundations',
+      cta: this.i18n.t('home.routeFoundationsCta', 'Open foundations'),
     },
     {
       index: '02',
-      eyebrow: 'Components',
-      title: 'Build an interaction',
-      description: 'Start with a focused live example, then copy the minimal Angular setup.',
+      eyebrow: this.i18n.t('shell.components', 'Components'),
+      title: this.i18n.t('home.routeComponentsTitle', 'Build an interaction'),
+      description: this.i18n.t(
+        'home.routeComponentsDescription',
+        'Start with a focused live example, then copy the minimal Angular setup.',
+      ),
       href: '/components/button',
-      cta: 'Browse components',
+      cta: this.i18n.t('home.routeComponentsCta', 'Browse components'),
     },
     {
       index: '03',
-      eyebrow: 'Patterns',
-      title: 'Compose a product flow',
-      description: 'Adaptable recipes for forms, settings, navigation, and data-heavy screens.',
+      eyebrow: this.i18n.t('shell.patterns', 'Patterns'),
+      title: this.i18n.t('home.routePatternsTitle', 'Compose a product flow'),
+      description: this.i18n.t(
+        'home.routePatternsDescription',
+        'Adaptable recipes for forms, settings, navigation, and data-heavy screens.',
+      ),
       href: '/patterns',
-      cta: 'View patterns',
+      cta: this.i18n.t('home.routePatternsCta', 'View patterns'),
     },
-  ];
+  ]);
 
   protected readonly featured = [
     'button',
@@ -76,6 +87,6 @@ export const appConfig = {
   }
 
   protected titleCase(value: string): string {
-    return value[0]?.toUpperCase() + value.slice(1);
+    return this.i18n.term(value[0]?.toUpperCase() + value.slice(1));
   }
 }

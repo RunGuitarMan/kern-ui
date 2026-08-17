@@ -4,6 +4,7 @@ import { KrnBadge, KrnCodeBlock } from '@kern-ui/angular/kit';
 import { KrnPageHeader } from '@kern-ui/angular/patterns';
 
 import { DocsPreferences, type DocsDensity, type DocsTheme } from '../preferences';
+import { DocsI18n } from '../docs-i18n';
 
 interface TokenRow {
   readonly group: string;
@@ -31,6 +32,7 @@ function flattenTokens(value: object): readonly TokenRow[] {
 })
 export class FoundationsPage {
   protected readonly prefs = inject(DocsPreferences);
+  protected readonly i18n = inject(DocsI18n);
   protected readonly themes: readonly DocsTheme[] = ['system', 'light', 'dark', 'contrast'];
   protected readonly densities: readonly DocsDensity[] = ['compact', 'comfortable', 'spacious'];
   protected readonly tokenRows = flattenTokens(KRN_TOKEN_NAMES);
@@ -76,5 +78,9 @@ export class FoundationsPage {
 
   protected setBrand(event: Event): void {
     this.prefs.brand.set((event.currentTarget as HTMLInputElement).value);
+  }
+
+  protected optionLabel(value: string): string {
+    return this.i18n.term(value.charAt(0).toUpperCase() + value.slice(1));
   }
 }

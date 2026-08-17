@@ -8,6 +8,7 @@ import {
   inject,
   Injectable,
   input,
+  LOCALE_ID,
   signal,
   viewChild,
 } from '@angular/core';
@@ -740,6 +741,11 @@ export class KernComponentSpecimen {
     return value === 'constrained' || value === 'expanded' ? value : 'default';
   });
 
+  protected localized(english: string, russian: string): string {
+    return this.locale === 'ru-RU' ? russian : english;
+  }
+
+  private readonly locale = inject(LOCALE_ID);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly toasts = inject(KrnToastService);
   private readonly clipboardWriter = inject(KernSpecimenClipboardWriter);

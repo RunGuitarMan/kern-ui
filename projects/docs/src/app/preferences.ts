@@ -1,6 +1,6 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Injectable, PLATFORM_ID, computed, effect, inject, signal } from '@angular/core';
-import { KrnThemeService } from '@kern-ui/angular/core';
+import { KRN_LOCALE_PACKS, KrnI18n, KrnThemeService } from '@kern-ui/angular/core';
 
 export type DocsTheme = 'system' | 'light' | 'dark' | 'contrast';
 export type DocsBaseTheme = Exclude<DocsTheme, 'contrast'>;
@@ -12,6 +12,7 @@ export type DocsViewport = 'responsive' | 'phone' | 'tablet';
 @Injectable({ providedIn: 'root' })
 export class DocsPreferences {
   private readonly document = inject(DOCUMENT);
+  private readonly i18n = inject(KrnI18n);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly themeService = inject(KrnThemeService);
 
@@ -41,8 +42,11 @@ export class DocsPreferences {
   constructor() {
     effect(() => {
       const root = this.document.documentElement;
+      const locale = this.locale();
+      const localePack = KRN_LOCALE_PACKS[locale];
+      this.i18n.activate(localePack.locale, localePack.translations);
       root.setAttribute('dir', this.direction());
-      root.setAttribute('lang', this.locale());
+      root.setAttribute('lang', locale);
       root.setAttribute('data-krn-motion', this.motion());
       root.setAttribute('data-krn-contrast-scheme', this.baseTheme());
       this.themeService.setTheme(this.appliedTheme());

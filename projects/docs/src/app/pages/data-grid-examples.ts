@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import {
   KrnDataGrid,
   type KrnDataColumn,
@@ -12,6 +12,8 @@ import {
   KrnCopyButton,
   KrnNumberInput,
 } from '@kern-ui/angular/kit';
+
+import { DocsI18n } from '../docs-i18n';
 
 type OrderStatus = 'Paid' | 'Pending' | 'Refunded';
 type TaskStatus = 'Completed' | 'In progress' | 'Pending';
@@ -244,6 +246,7 @@ export class TaskStatusGrid {
   styleUrl: './data-grid-examples.css',
 })
 export class DataGridExamples {
+  protected readonly i18n = inject(DocsI18n);
   protected readonly ordersCode = ORDERS_EXAMPLE_CODE;
   protected readonly quantityCode = QUANTITY_EXAMPLE_CODE;
   protected readonly tasksCode = TASKS_EXAMPLE_CODE;
@@ -291,18 +294,24 @@ export class DataGridExamples {
       accent: 'mint',
     },
   ];
-  protected readonly orderColumns: readonly KrnDataColumn<OrderExample>[] = [
-    { key: 'id', label: 'Order', sortable: true, width: 110 },
+  protected readonly orderColumns = computed<readonly KrnDataColumn<OrderExample>[]>(() => [
+    { key: 'id', label: this.i18n.t('grid.order', 'Order'), sortable: true, width: 110 },
     {
       key: 'customer',
-      label: 'Customer',
+      label: this.i18n.t('grid.customer', 'Customer'),
       sortable: true,
       width: 270,
       filterValue: (row) => `${row.customer} ${row.date}`,
     },
-    { key: 'status', label: 'Status', sortable: true, width: 140 },
-    { key: 'amount', label: 'Amount', sortable: true, align: 'end', width: 160 },
-  ];
+    { key: 'status', label: this.i18n.t('grid.status', 'Status'), sortable: true, width: 140 },
+    {
+      key: 'amount',
+      label: this.i18n.t('grid.amount', 'Amount'),
+      sortable: true,
+      align: 'end',
+      width: 160,
+    },
+  ]);
   protected readonly orderIdentity = (row: OrderExample): KrnDataRowKey => row.id;
 
   protected readonly cartLines = signal<readonly CartLineExample[]>([
@@ -310,17 +319,17 @@ export class DataGridExamples {
     { id: 'beta', item: 'Item Beta', quantity: 2, price: 20 },
     { id: 'gamma', item: 'Item Gamma', quantity: 1, price: 30 },
   ]);
-  protected readonly cartColumns: readonly KrnDataColumn<CartLineExample>[] = [
-    { key: 'item', label: 'Item', width: 160 },
-    { key: 'quantity', label: 'Quantity', width: 120 },
+  protected readonly cartColumns = computed<readonly KrnDataColumn<CartLineExample>[]>(() => [
+    { key: 'item', label: this.i18n.t('grid.item', 'Item'), width: 160 },
+    { key: 'quantity', label: this.i18n.t('grid.quantity', 'Quantity'), width: 120 },
     {
       key: 'total',
-      label: 'Price',
+      label: this.i18n.t('grid.price', 'Price'),
       accessor: (row) => row.price * row.quantity,
       align: 'end',
       width: 110,
     },
-  ];
+  ]);
   protected readonly cartIdentity = (row: CartLineExample): KrnDataRowKey => row.id;
   protected readonly cartTotal = computed(() =>
     this.cartLines().reduce((sum, line) => sum + line.quantity * line.price, 0),
@@ -331,16 +340,19 @@ export class DataGridExamples {
     { id: 'api', task: 'Implement API', status: 'In progress' },
     { id: 'tests', task: 'Write tests', status: 'Pending' },
   ];
-  protected readonly taskColumns: readonly KrnDataColumn<TaskExample>[] = [
-    { key: 'task', label: 'Task', width: 240 },
-    { key: 'status', label: 'Status', align: 'end', width: 150 },
-  ];
+  protected readonly taskColumns = computed<readonly KrnDataColumn<TaskExample>[]>(() => [
+    { key: 'task', label: this.i18n.t('grid.task', 'Task'), width: 240 },
+    { key: 'status', label: this.i18n.t('grid.status', 'Status'), align: 'end', width: 150 },
+  ]);
   protected readonly taskIdentity = (row: TaskExample): KrnDataRowKey => row.id;
 
-  private readonly currency = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
+  private readonly currency = computed(
+    () =>
+      new Intl.NumberFormat(this.i18n.russian() ? 'ru-RU' : 'en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }),
+  );
 
   protected orderTone(status: OrderStatus): 'success' | 'warning' | 'danger' {
     if (status === 'Paid') return 'success';
@@ -362,6 +374,55 @@ export class DataGridExamples {
   }
 
   protected money(value: number): string {
-    return this.currency.format(value);
+    return this.currency().format(value);
+  }
+
+  protected orderStatusLabel(status: OrderStatus): string {
+    return {
+      Paid: this.i18n.t('grid.paid', 'Paid'),
+      Pending: this.i18n.t('grid.pending', 'Pending'),
+      Refunded: this.i18n.t('grid.refunded', 'Refunded'),
+    }[status];
+  }
+
+  protected taskStatusLabel(status: TaskStatus): string {
+    return {
+      Completed: this.i18n.t('grid.completed', 'Completed'),
+      'In progress': this.i18n.t('grid.inProgress', 'In progress'),
+      Pending: this.i18n.t('grid.pending', 'Pending'),
+    }[status];
+  }
+
+  protected taskLabel(task: string): string {
+    return (
+      {
+        'Design homepage': this.i18n.t('grid.designHomepage', 'Design homepage'),
+        'Implement API': this.i18n.t('grid.implementApi', 'Implement API'),
+        'Write tests': this.i18n.t('grid.writeTests', 'Write tests'),
+      }[task] ?? task
+    );
+  }
+
+  protected itemLabel(item: string): string {
+    return (
+      {
+        'Item Alpha': this.i18n.t('grid.itemAlpha', 'Item Alpha'),
+        'Item Beta': this.i18n.t('grid.itemBeta', 'Item Beta'),
+        'Item Gamma': this.i18n.t('grid.itemGamma', 'Item Gamma'),
+      }[item] ?? item
+    );
+  }
+
+  protected orderDate(date: string): string {
+    if (!this.i18n.russian()) return date;
+    return (
+      {
+        'Feb 1, 2026': '1 февр. 2026 г.',
+        'Jan 28, 2026': '28 янв. 2026 г.',
+        'Jan 25, 2026': '25 янв. 2026 г.',
+        'Jan 22, 2026': '22 янв. 2026 г.',
+        'Jan 18, 2026': '18 янв. 2026 г.',
+      }[date] ?? date
+    );
   }
 }

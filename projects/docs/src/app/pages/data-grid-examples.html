@@ -1,12 +1,18 @@
 <section id="specimen-examples" class="examples" aria-labelledby="data-grid-examples-heading">
   <header class="examples-heading">
     <div>
-      <p>Compositions</p>
-      <h2 id="data-grid-examples-heading">Data Grid in real product UI</h2>
+      <p>{{ i18n.t('grid.compositions', 'Compositions') }}</p>
+      <h2 id="data-grid-examples-heading">
+        {{ i18n.t('grid.heading', 'Data Grid in real product UI') }}
+      </h2>
     </div>
     <p>
-      Typed columns become product UI when they are composed with identity, status, and form
-      controls. Every example uses the real Data Grid API and includes independent copy-ready code.
+      {{
+        i18n.t(
+          'grid.description',
+          'Typed columns become product UI when they are composed with identity, status, and form controls. Every example uses the real Data Grid API and includes independent copy-ready code.'
+        )
+      }}
     </p>
   </header>
 
@@ -26,13 +32,13 @@
                   />
                   <span>
                     <strong>{{ row.customer }}</strong>
-                    <small>{{ row.date }}</small>
+                    <small>{{ orderDate(row.date) }}</small>
                   </span>
                 </span>
               }
               @case ('status') {
                 <krn-badge status size="sm" [tone]="orderTone(row.status)">
-                  {{ row.status }}
+                  {{ orderStatusLabel(row.status) }}
                 </krn-badge>
               }
               @case ('amount') {
@@ -45,10 +51,10 @@
           </ng-template>
 
           <krn-data-grid
-            ariaLabel="Recent customer orders"
-            filterPlaceholder="Find an order or customer"
+            [ariaLabel]="i18n.t('grid.ordersAria', 'Recent customer orders')"
+            [filterPlaceholder]="i18n.t('grid.findOrder', 'Find an order or customer')"
             [data]="orders"
-            [columns]="orderColumns"
+            [columns]="orderColumns()"
             [rowIdentity]="orderIdentity"
             [mode]="staticMode"
             [defaultCellTemplate]="orderCell"
@@ -60,27 +66,36 @@
       <header class="example-card-heading">
         <div class="example-title">
           <div>
-            <h3>Recent orders</h3>
-            <p>Searchable and sortable rows with identity, payment state, and aligned money.</p>
+            <h3>{{ i18n.t('grid.recentOrders', 'Recent orders') }}</h3>
+            <p>
+              {{
+                i18n.t(
+                  'grid.ordersDescription',
+                  'Searchable and sortable rows with identity, payment state, and aligned money.'
+                )
+              }}
+            </p>
           </div>
         </div>
         <krn-copy-button
-          ariaLabel="Copy Recent orders example code"
+          [ariaLabel]="i18n.t('grid.copyOrders', 'Copy Recent orders example code')"
           size="sm"
           variant="outline"
           [value]="ordersCode"
         >
-          Copy code
+          {{ i18n.t('grid.copyCode', 'Copy code') }}
         </krn-copy-button>
       </header>
 
       <details class="example-code">
         <summary>
-          <span>View Angular code</span>
+          <span>{{ i18n.t('grid.viewCode', 'View Angular code') }}</span>
           <small>Data Grid + Avatar + Badge</small>
         </summary>
         <div class="code-surface">
-          <krn-copy-button [value]="ordersCode">Copy code</krn-copy-button>
+          <krn-copy-button [value]="ordersCode">{{
+            i18n.t('grid.copyCode', 'Copy code')
+          }}</krn-copy-button>
           <krn-code-block language="typescript" [code]="ordersCode" />
         </div>
       </details>
@@ -95,7 +110,9 @@
                 @case ('quantity') {
                   <krn-number-input
                     class="quantity-input"
-                    [ariaLabel]="'Quantity for ' + row.item"
+                    [ariaLabel]="
+                      i18n.t('grid.quantityFor', 'Quantity for') + ' ' + itemLabel(row.item)
+                    "
                     [value]="row.quantity"
                     [min]="0"
                     [max]="99"
@@ -107,15 +124,15 @@
                   <span class="money">{{ money(row.price * row.quantity) }}</span>
                 }
                 @default {
-                  <strong class="item-name">{{ value }}</strong>
+                  <strong class="item-name">{{ itemLabel(value) }}</strong>
                 }
               }
             </ng-template>
 
             <krn-data-grid
-              ariaLabel="Editable order quantities"
+              [ariaLabel]="i18n.t('grid.editableAria', 'Editable order quantities')"
               [data]="cartLines()"
-              [columns]="cartColumns"
+              [columns]="cartColumns()"
               [rowIdentity]="cartIdentity"
               [mode]="staticMode"
               [defaultCellTemplate]="quantityCell"
@@ -123,7 +140,7 @@
               [resizable]="false"
             />
             <p class="grid-total">
-              <span>Total</span>
+              <span>{{ i18n.t('grid.total', 'Total') }}</span>
               <strong aria-live="polite" data-testid="quantity-total">
                 {{ money(cartTotal()) }}
               </strong>
@@ -134,27 +151,36 @@
         <header class="example-card-heading">
           <div class="example-title">
             <div>
-              <h3>Editable order</h3>
-              <p>A custom grid cell updates typed signal data and recalculates the total.</p>
+              <h3>{{ i18n.t('grid.editableOrder', 'Editable order') }}</h3>
+              <p>
+                {{
+                  i18n.t(
+                    'grid.editableDescription',
+                    'A custom grid cell updates typed signal data and recalculates the total.'
+                  )
+                }}
+              </p>
             </div>
           </div>
           <krn-copy-button
-            ariaLabel="Copy Editable order example code"
+            [ariaLabel]="i18n.t('grid.copyEditable', 'Copy Editable order example code')"
             size="sm"
             variant="outline"
             [value]="quantityCode"
           >
-            Copy code
+            {{ i18n.t('grid.copyCode', 'Copy code') }}
           </krn-copy-button>
         </header>
 
         <details class="example-code">
           <summary>
-            <span>View Angular code</span>
+            <span>{{ i18n.t('grid.viewCode', 'View Angular code') }}</span>
             <small>Data Grid + Number Input + signal state</small>
           </summary>
           <div class="code-surface">
-            <krn-copy-button [value]="quantityCode">Copy code</krn-copy-button>
+            <krn-copy-button [value]="quantityCode">{{
+              i18n.t('grid.copyCode', 'Copy code')
+            }}</krn-copy-button>
             <krn-code-block language="typescript" [code]="quantityCode" />
           </div>
         </details>
@@ -166,17 +192,17 @@
             <ng-template #taskCell let-value let-row="row" let-column="column">
               @if (column.key === 'status') {
                 <krn-badge status [tone]="taskTone(row.status)">
-                  {{ row.status }}
+                  {{ taskStatusLabel(row.status) }}
                 </krn-badge>
               } @else {
-                <strong class="task-name">{{ value }}</strong>
+                <strong class="task-name">{{ taskLabel(value) }}</strong>
               }
             </ng-template>
 
             <krn-data-grid
-              ariaLabel="Delivery task status"
+              [ariaLabel]="i18n.t('grid.deliveryAria', 'Delivery task status')"
               [data]="tasks"
-              [columns]="taskColumns"
+              [columns]="taskColumns()"
               [rowIdentity]="taskIdentity"
               [mode]="staticMode"
               [defaultCellTemplate]="taskCell"
@@ -190,27 +216,36 @@
         <header class="example-card-heading">
           <div class="example-title">
             <div>
-              <h3>Delivery status</h3>
-              <p>A compact grid mode with calm, meaningful status surfaces.</p>
+              <h3>{{ i18n.t('grid.deliveryStatus', 'Delivery status') }}</h3>
+              <p>
+                {{
+                  i18n.t(
+                    'grid.deliveryDescription',
+                    'A compact grid mode with calm, meaningful status surfaces.'
+                  )
+                }}
+              </p>
             </div>
           </div>
           <krn-copy-button
-            ariaLabel="Copy Delivery status example code"
+            [ariaLabel]="i18n.t('grid.copyDelivery', 'Copy Delivery status example code')"
             size="sm"
             variant="outline"
             [value]="tasksCode"
           >
-            Copy code
+            {{ i18n.t('grid.copyCode', 'Copy code') }}
           </krn-copy-button>
         </header>
 
         <details class="example-code">
           <summary>
-            <span>View Angular code</span>
+            <span>{{ i18n.t('grid.viewCode', 'View Angular code') }}</span>
             <small>Compact Data Grid + semantic status badges</small>
           </summary>
           <div class="code-surface">
-            <krn-copy-button [value]="tasksCode">Copy code</krn-copy-button>
+            <krn-copy-button [value]="tasksCode">{{
+              i18n.t('grid.copyCode', 'Copy code')
+            }}</krn-copy-button>
             <krn-code-block language="typescript" [code]="tasksCode" />
           </div>
         </details>
