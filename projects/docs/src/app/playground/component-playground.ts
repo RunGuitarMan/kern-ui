@@ -499,10 +499,6 @@ export class ComponentPlayground {
     return this.i18n.termFor(this.locale(), title);
   }
 
-  protected controlLabel(control: KernPlaygroundControl): string {
-    return this.i18n.termFor(this.locale(), control.label);
-  }
-
   protected controlDescription(control: KernPlaygroundControl): string {
     return this.i18n.apiDescriptionFor(this.locale(), {
       name: control.key,

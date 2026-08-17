@@ -724,7 +724,6 @@ export class KernComponentSpecimen {
         : [
             Object.freeze({
               key: control.key,
-              label: control.label,
               value: typeof value === 'string' ? value : JSON.stringify(value),
             }),
           ];

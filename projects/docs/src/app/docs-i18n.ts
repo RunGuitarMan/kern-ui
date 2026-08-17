@@ -7,9 +7,10 @@ import type {
 } from '@kern-ui/showcase/catalog-index';
 
 import { DocsPreferences } from './preferences';
+import type * as RussianDocsPackModule from './docs-i18n-ru';
 import { RU_SHELL_TERMS, RU_SHELL_TEXT } from './docs-i18n-shell-ru';
 
-type RussianDocsPack = typeof import('./docs-i18n-ru');
+type RussianDocsPack = typeof RussianDocsPackModule;
 
 const EN_STATUS_DESCRIPTIONS: Readonly<Record<KernComponentStatus, string>> = Object.freeze({
   stable: 'Supported contract; the documented compatibility policy applies.',
@@ -56,12 +57,11 @@ export class DocsI18n {
   }
 
   componentName(item: Pick<KernCatalogIndexItem, 'id' | 'name'>): string {
-    return this.componentNameFor(this.prefs.locale(), item);
+    return item.name;
   }
 
-  componentNameFor(locale: string, item: Pick<KernCatalogIndexItem, 'id' | 'name'>): string {
-    if (locale !== 'ru-RU') return item.name;
-    return this.packFor(locale)?.RU_COMPONENT_NAMES[item.id] ?? item.name;
+  componentNameFor(_locale: string, item: Pick<KernCatalogIndexItem, 'id' | 'name'>): string {
+    return item.name;
   }
 
   status(status: KernComponentStatus): string {
@@ -82,7 +82,7 @@ export class DocsI18n {
     if (locale !== 'ru-RU') return item;
     const pack = this.packFor(locale);
     if (!pack) return item;
-    const name = pack.RU_COMPONENT_NAMES[item.id] ?? item.name;
+    const name = item.name;
     return {
       ...item,
       name,

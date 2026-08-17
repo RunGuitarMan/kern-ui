@@ -28,7 +28,7 @@
         <span>{{ localized('Applied parameters', 'Применённые параметры') }}</span>
         @for (argument of appliedArguments(); track argument.key) {
           <code [attr.data-applied-control]="argument.key">
-            {{ argument.label }} = {{ argument.value }}
+            {{ argument.key }} = {{ argument.value }}
           </code>
         }
       </div>

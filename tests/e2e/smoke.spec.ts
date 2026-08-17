@@ -90,14 +90,16 @@ test.describe('Docs smoke contracts', () => {
     await locale.selectOption('ru-RU');
 
     await expect(page.locator('html')).toHaveAttribute('lang', 'ru-RU');
-    await expect(page.getByRole('heading', { level: 1, name: 'Кнопка' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: 'Button' })).toBeVisible();
     await expect(page.getByPlaceholder('Перейти к компоненту…')).toBeVisible();
     await expect(page.getByRole('complementary', { name: 'Документация' })).toContainText(
       'Основные компоненты',
     );
-    await expect(page.getByRole('heading', { level: 2, name: 'Попробуйте Кнопка' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: 'Попробуйте Button' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Сбросить' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Опубликовать изменения' })).toBeVisible();
+    await expect(page.locator('[data-control-key="variant"] .property-name')).toHaveText('variant');
+    await expect(page.locator('[data-control-key="variant"] .property-name strong')).toHaveCount(0);
 
     await locale.selectOption('en-US');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en-US');
@@ -174,8 +176,8 @@ test.describe('Docs preview smoke contracts', () => {
     await settlePage(page);
 
     await expect(page.getByTestId('specimen-stage')).toHaveAttribute('lang', 'ru-RU');
-    await expect(page.locator('.preview-header strong')).toHaveText('Кнопка');
-    await expect(page.getByRole('heading', { level: 2, name: 'Попробуйте Кнопка' })).toBeVisible();
+    await expect(page.locator('.preview-header strong')).toHaveText('Button');
+    await expect(page.getByRole('heading', { level: 2, name: 'Попробуйте Button' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Опубликовать изменения' })).toBeVisible();
     assertNoRuntimeErrors();
   });

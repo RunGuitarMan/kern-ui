@@ -268,14 +268,9 @@
   gap: 0.25rem;
 }
 
-.property-name strong {
-  font-size: 0.8125rem;
-  font-weight: 620;
-}
-
 .property-name code {
-  color: var(--krn-color-text-muted);
-  font: 550 0.6875rem/1 var(--krn-font-family-mono);
+  color: var(--krn-color-text);
+  font: 600 0.8125rem/1.2 var(--krn-font-family-mono);
 }
 
 .property-table > label > small {
