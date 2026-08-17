@@ -6,9 +6,8 @@
 >
   <header class="workbench-toolbar">
     <div class="workbench-title">
-      <p>Interactive playground</p>
-      <h2 id="playground-heading">Configure {{ item().name }}.</h2>
-      <span>Every selection is reflected in the URL and can be shared or replayed.</span>
+      <p>Example</p>
+      <h2 id="playground-heading">Try {{ item().name }}</h2>
     </div>
 
     <div class="toolbar-actions">
@@ -41,176 +40,88 @@
         </a>
       }
       <button class="reset-button" type="button" (click)="reset()">Reset</button>
-      <krn-copy-button [value]="shareUrl()">Copy link</krn-copy-button>
+      <krn-copy-button [value]="configuredCode()">Copy code</krn-copy-button>
     </div>
   </header>
 
-  <div class="environment-controls" data-testid="preview-controls">
-    <label>
-      <span>Theme</span>
-      <select
-        data-testid="theme-control"
-        aria-label="Preview theme"
-        [value]="theme()"
-        (change)="setEnvironment('theme', $event)"
-      >
-        @for (option of themes; track option) {
-          <option [value]="option" [attr.selected]="theme() === option ? '' : null">
-            {{ environmentLabel(option) }}
-          </option>
-        }
-      </select>
-    </label>
-
-    <label>
-      <span>Density</span>
-      <select
-        data-testid="density-control"
-        aria-label="Preview density"
-        [value]="density()"
-        (change)="setEnvironment('density', $event)"
-      >
-        @for (option of densities; track option) {
-          <option [value]="option" [attr.selected]="density() === option ? '' : null">
-            {{ environmentLabel(option) }}
-          </option>
-        }
-      </select>
-    </label>
-
-    <label>
-      <span>Direction</span>
-      <select
-        data-testid="direction-control"
-        aria-label="Preview direction"
-        [value]="direction()"
-        (change)="setEnvironment('direction', $event)"
-      >
-        @for (option of directions; track option) {
-          <option [value]="option" [attr.selected]="direction() === option ? '' : null">
-            {{ option.toUpperCase() }}
-          </option>
-        }
-      </select>
-    </label>
-
-    <label>
-      <span>Locale</span>
-      <select
-        data-testid="locale-control"
-        aria-label="Preview locale"
-        [value]="locale()"
-        (change)="setEnvironment('locale', $event)"
-      >
-        @for (option of locales; track option) {
-          <option [value]="option" [attr.selected]="locale() === option ? '' : null">
-            {{ option }}
-          </option>
-        }
-      </select>
-    </label>
-
-    <label>
-      <span>Motion tokens</span>
-      <select
-        data-testid="motion-control"
-        aria-label="Preview motion tokens"
-        [value]="motion()"
-        (change)="setEnvironment('motion', $event)"
-      >
-        @for (option of motions; track option) {
-          <option [value]="option" [attr.selected]="motion() === option ? '' : null">
-            {{ environmentLabel(option) }}
-          </option>
-        }
-      </select>
-    </label>
-
-    <label>
-      <span>Brand</span>
-      <input
-        type="color"
-        data-testid="brand-color-control"
-        aria-label="Preview brand color"
-        [value]="brandColor()"
-        (change)="setBrandColor($event)"
-      />
-    </label>
-
-    <label>
-      <span>Canvas</span>
-      <select
-        data-testid="viewport-control"
-        aria-label="Preview canvas width"
-        [value]="viewport()"
-        (change)="setEnvironment('viewport', $event)"
-      >
-        @for (option of viewports; track option) {
-          <option [value]="option" [attr.selected]="viewport() === option ? '' : null">
-            {{ environmentLabel(option) }}
-          </option>
-        }
-      </select>
-    </label>
-
-    <label>
-      <span>Scenario</span>
-      <select
-        data-testid="scenario-control"
-        aria-label="Preview scenario"
-        [value]="scenario()"
-        (change)="setEnvironment('scenario', $event)"
-      >
-        @for (option of scenarios(); track option) {
-          <option [value]="option" [attr.selected]="scenario() === option ? '' : null">
-            {{ environmentLabel(option) }}
-          </option>
-        }
-      </select>
-    </label>
+  <div
+    id="preview-panel"
+    class="preview-panel"
+    [hidden]="activeTab() !== 'preview'"
+    [attr.data-viewport]="viewport()"
+  >
+    <div
+      class="preview-stage"
+      data-testid="specimen-stage"
+      [krnTheme]="theme()"
+      [krnDensity]="density()"
+      [krnBrandColor]="brandColor()"
+      [attr.dir]="direction()"
+      [attr.lang]="locale()"
+      [attr.data-krn-motion]="motion()"
+      [attr.data-state]="state()"
+    >
+      <div class="preview-ruler" aria-hidden="true">
+        <span>{{ viewportLabel() }}</span>
+        <span>{{ theme() }} / {{ density() }} / {{ direction().toUpperCase() }}</span>
+      </div>
+      <div class="preview-canvas">
+        <kdocs-preview-fixture
+          [item]="item()"
+          [scenario]="scenario()"
+          [state]="state()"
+          [args]="args()"
+          [locale]="locale()"
+          [resetRevision]="resetRevision()"
+        />
+      </div>
+      <div data-krn-preview-overlay-host></div>
+    </div>
   </div>
 
-  <div class="state-presets" aria-labelledby="state-presets-label">
-    <div>
-      <span id="state-presets-label">States</span>
-      <small>{{ presets().length }} executable presets</small>
+  <div
+    id="code-panel"
+    class="code-panel"
+    aria-label="Angular code example"
+    [hidden]="activeTab() !== 'code'"
+    [krnTheme]="theme()"
+    [krnDensity]="density()"
+    [krnBrandColor]="brandColor()"
+    [attr.dir]="direction()"
+    [attr.lang]="locale()"
+    [attr.data-krn-motion]="motion()"
+  >
+    <div class="code-intro">
+      <div>
+        <span>Angular</span>
+        <strong>Copy this configured example into your application.</strong>
+      </div>
+      <krn-copy-button [value]="configuredCode()">Copy code</krn-copy-button>
     </div>
-    <div class="state-scroll">
-      @for (preset of presets(); track preset.id) {
-        <button
-          type="button"
-          [attr.aria-pressed]="state() === preset.id"
-          [attr.title]="presetDescription(preset)"
-          (click)="applyPreset(preset)"
-        >
-          {{ preset.label }}
-        </button>
-      }
-    </div>
+    <krn-code-block language="typescript" [code]="configuredCode()" />
   </div>
 
   @if (controls().length > 0) {
     <section class="property-panel" aria-labelledby="property-heading">
       <header>
-        <span>Properties</span>
-        <strong id="property-heading">Live component parameters</strong>
-        <small>{{ controls().length }} interactive controls</small>
+        <div>
+          <span>Properties</span>
+          <strong id="property-heading">Configure the example</strong>
+        </div>
+        <small>{{ controls().length }} properties</small>
       </header>
-      <div class="property-grid">
+      <div class="property-table">
         @for (control of controls(); track control.key) {
           <label
             [attr.title]="control.description"
             [attr.data-control-key]="control.key"
             [attr.data-binding-kind]="control.binding.kind"
           >
-            <span>
+            <span class="property-name">
               <strong>{{ control.label }}</strong>
               <code>{{ control.key }}</code>
-              <small>{{ control.description }}</small>
-              <em [attr.data-binding-kind]="control.binding.kind">
-                {{ bindingLabel(control) }}
-              </em>
             </span>
+            <small>{{ control.description }}</small>
 
             @switch (control.kind) {
               @case ('boolean') {
@@ -277,69 +188,130 @@
       </div>
     </section>
   } @else {
-    <p class="fixture-note">
-      This composition is controlled through named scenarios and acceptance-state presets; complex
-      templates and data remain deterministic.
-    </p>
+    <p class="fixture-note">This example has no configurable primitive properties.</p>
   }
 
-  <div
-    id="preview-panel"
-    class="preview-panel"
-    [hidden]="activeTab() !== 'preview'"
-    [attr.data-viewport]="viewport()"
-  >
-    <div
-      class="preview-stage"
-      data-testid="specimen-stage"
-      [krnTheme]="theme()"
-      [krnDensity]="density()"
-      [krnBrandColor]="brandColor()"
-      [attr.dir]="direction()"
-      [attr.lang]="locale()"
-      [attr.data-krn-motion]="motion()"
-      [attr.data-state]="state()"
-    >
-      <div class="preview-ruler" aria-hidden="true">
-        <span>{{ viewportLabel() }}</span>
-        <span>{{ theme() }} / {{ density() }} / {{ direction().toUpperCase() }}</span>
-      </div>
-      <div class="preview-canvas">
-        <kdocs-preview-fixture
-          [item]="item()"
-          [scenario]="scenario()"
-          [state]="state()"
-          [args]="args()"
-          [locale]="locale()"
-          [resetRevision]="resetRevision()"
-        />
-      </div>
-      <div data-krn-preview-overlay-host></div>
-    </div>
-  </div>
+  <details class="environment-panel" [attr.open]="isolated() ? '' : null">
+    <summary>
+      <span>
+        <strong>Preview environment</strong>
+        <small>Theme, locale, density, direction, motion and canvas</small>
+      </span>
+      <span class="environment-value">{{ theme() }} · {{ viewportLabel() }}</span>
+    </summary>
 
-  <div
-    id="code-panel"
-    class="code-panel"
-    aria-label="Angular code example"
-    [hidden]="activeTab() !== 'code'"
-    [krnTheme]="theme()"
-    [krnDensity]="density()"
-    [krnBrandColor]="brandColor()"
-    [attr.dir]="direction()"
-    [attr.lang]="locale()"
-    [attr.data-krn-motion]="motion()"
-  >
-    <div class="code-intro">
-      <div>
-        <span>Replayable configured example</span>
-        <strong
-          >Public primitive bindings replay the canvas; the generated base scaffold is strict-AOT
-          verified against the npm artifact.</strong
+    <div class="environment-controls" data-testid="preview-controls">
+      <label>
+        <span>Theme</span>
+        <select
+          data-testid="theme-control"
+          aria-label="Preview theme"
+          [value]="theme()"
+          (change)="setEnvironment('theme', $event)"
         >
-      </div>
-      <krn-copy-button [value]="configuredCode()">Copy configured example</krn-copy-button>
+          @for (option of themes; track option) {
+            <option [value]="option" [attr.selected]="theme() === option ? '' : null">
+              {{ environmentLabel(option) }}
+            </option>
+          }
+        </select>
+      </label>
+
+      <label>
+        <span>Density</span>
+        <select
+          data-testid="density-control"
+          aria-label="Preview density"
+          [value]="density()"
+          (change)="setEnvironment('density', $event)"
+        >
+          @for (option of densities; track option) {
+            <option [value]="option" [attr.selected]="density() === option ? '' : null">
+              {{ environmentLabel(option) }}
+            </option>
+          }
+        </select>
+      </label>
+
+      <label>
+        <span>Direction</span>
+        <select
+          data-testid="direction-control"
+          aria-label="Preview direction"
+          [value]="direction()"
+          (change)="setEnvironment('direction', $event)"
+        >
+          @for (option of directions; track option) {
+            <option [value]="option" [attr.selected]="direction() === option ? '' : null">
+              {{ option.toUpperCase() }}
+            </option>
+          }
+        </select>
+      </label>
+
+      <label>
+        <span>Locale</span>
+        <select
+          data-testid="locale-control"
+          aria-label="Preview locale"
+          [value]="locale()"
+          (change)="setEnvironment('locale', $event)"
+        >
+          @for (option of locales; track option) {
+            <option [value]="option" [attr.selected]="locale() === option ? '' : null">
+              {{ option }}
+            </option>
+          }
+        </select>
+      </label>
+
+      <label>
+        <span>Motion</span>
+        <select
+          data-testid="motion-control"
+          aria-label="Preview motion tokens"
+          [value]="motion()"
+          (change)="setEnvironment('motion', $event)"
+        >
+          @for (option of motions; track option) {
+            <option [value]="option" [attr.selected]="motion() === option ? '' : null">
+              {{ environmentLabel(option) }}
+            </option>
+          }
+        </select>
+      </label>
+
+      <label>
+        <span>Brand</span>
+        <input
+          type="color"
+          data-testid="brand-color-control"
+          aria-label="Preview brand color"
+          [value]="brandColor()"
+          (change)="setBrandColor($event)"
+        />
+      </label>
+
+      <label>
+        <span>Canvas</span>
+        <select
+          data-testid="viewport-control"
+          aria-label="Preview canvas width"
+          [value]="viewport()"
+          (change)="setEnvironment('viewport', $event)"
+        >
+          @for (option of viewports; track option) {
+            <option [value]="option" [attr.selected]="viewport() === option ? '' : null">
+              {{ environmentLabel(option) }}
+            </option>
+          }
+        </select>
+      </label>
     </div>
-    <krn-code-block language="typescript" [code]="configuredCode()" />
-  </div>
+
+    <footer class="environment-footer">
+      <span>Environment settings are shared through the preview URL.</span>
+      <krn-copy-button [value]="shareUrl()">Copy preview link</krn-copy-button>
+    </footer>
+  </details>
 </section>

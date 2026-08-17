@@ -71,11 +71,8 @@ input {
   cursor: pointer;
 }
 .results button[aria-selected='true'] {
-  border-inline-start: 3px solid var(--krn-color-brand-solid, #4f6feb);
   background: var(--krn-color-brand-surface, #fff0e8);
-}
-.results button:not([aria-selected='true']) {
-  border-inline-start: 3px solid transparent;
+  box-shadow: inset 0 0 0 1px var(--krn-color-brand-border, #9caff5);
 }
 .results span {
   display: grid;
@@ -105,9 +102,10 @@ input {
     border-color: CanvasText;
   }
   .results button[aria-selected='true'] {
-    border-inline-start-color: Highlight;
+    border-color: Highlight;
     color: HighlightText;
     background: Highlight;
+    box-shadow: inset 0 0 0 1px Highlight;
     forced-color-adjust: none;
   }
   .results button[aria-selected='true'] small,

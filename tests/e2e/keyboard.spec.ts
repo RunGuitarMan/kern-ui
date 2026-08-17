@@ -23,6 +23,30 @@ test.describe('Keyboard interaction', () => {
     await expect(page.getByRole('heading', { level: 1, name: 'Button' })).toBeVisible();
   });
 
+  test('typing in global search preserves the current document scroll position', async ({
+    page,
+  }) => {
+    await page.goto(`${DOCS_URL}/components/data-grid`);
+    await settlePage(page);
+    await page.evaluate(() => window.scrollTo({ top: 900 }));
+    const initialScroll = await page.evaluate(() => window.scrollY);
+    expect(initialScroll).toBeGreaterThan(200);
+
+    const search = page.getByRole('combobox', { name: 'Search Kern components' });
+    const searchBounds = await search.boundingBox();
+    expect(searchBounds).not.toBeNull();
+    await page.mouse.click(
+      (searchBounds?.x ?? 0) + (searchBounds?.width ?? 0) / 2,
+      (searchBounds?.y ?? 0) + (searchBounds?.height ?? 0) / 2,
+    );
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(initialScroll);
+    await page.keyboard.type('button');
+    await expect(
+      page.getByRole('listbox', { name: 'Search Kern components results' }),
+    ).toBeVisible();
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(initialScroll);
+  });
+
   test('horizontal tabs use roving focus and arrow navigation', async ({ page }) => {
     await page.goto(`${DOCS_URL}/components/tabs`);
     await settlePage(page);

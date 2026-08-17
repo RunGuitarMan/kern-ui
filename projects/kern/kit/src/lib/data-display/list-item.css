@@ -11,8 +11,8 @@
   border-block-start: 1px solid var(--krn-color-border-subtle, #e0e3e7);
 }
 :host([data-selected]) {
-  box-shadow: inset 3px 0 0 var(--krn-color-brand-solid, #4f6feb);
   background: var(--krn-color-brand-surface, #fff0e8);
+  box-shadow: inset 0 0 0 1px var(--krn-color-brand-border, #9caff5);
 }
 .content {
   display: grid;

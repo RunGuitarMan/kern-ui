@@ -18,7 +18,6 @@ import {
   findKernPlaygroundDefinition,
   type KernPlaygroundControl,
   type KernPlaygroundEnvironment,
-  type KernPlaygroundStatePreset,
   type KernPlaygroundValue,
   type KernPlaygroundValues,
   type KernSpecimenScenario,
@@ -41,8 +40,7 @@ type PreviewDirection = 'ltr' | 'rtl';
 type PreviewLocale = 'en-US' | 'ru-RU';
 type PreviewMotion = 'system' | 'reduce' | 'full';
 type PreviewViewport = 'responsive' | 'phone' | 'tablet';
-type EnvironmentKey =
-  'theme' | 'density' | 'direction' | 'locale' | 'motion' | 'viewport' | 'scenario';
+type EnvironmentKey = 'theme' | 'density' | 'direction' | 'locale' | 'motion' | 'viewport';
 
 const THEMES: readonly PreviewTheme[] = ['system', 'light', 'dark', 'high-contrast'];
 const DENSITIES: readonly DocsDensity[] = ['compact', 'comfortable', 'spacious'];
@@ -391,37 +389,12 @@ export class ComponentPlayground {
     return new URL(external, this.document.baseURI).href;
   });
   protected readonly configuredCode = computed(() => {
-    const fixtureEffect = this.resolvedState().fixtureEffect;
-    const materializedCode = materializePublicBindings(
+    return materializePublicBindings(
       this.code(),
       this.item().selector,
       this.controls(),
       this.args(),
     );
-    const snapshot = [
-      `// KERN preview: ${this.theme()} theme · ${this.density()} density · ${this.direction().toUpperCase()} · ${this.locale()}`,
-      `// Motion tokens: ${this.motion()} · Brand: ${this.brandColor()} · Canvas: ${this.viewport()}`,
-      `// Scenario: ${this.scenario()} · State: ${this.state()}`,
-    ];
-    if (fixtureEffect) {
-      snapshot.push(
-        `// Documentation fixture: ${fixtureEffect.kind}/${fixtureEffect.mode} — ${fixtureEffect.description}`,
-      );
-    }
-    const changed = this.controls().filter(
-      (control) => !Object.is(this.args()[control.key], control.defaultValue),
-    );
-    if (changed.length > 0) {
-      snapshot.push('// Preview controls:');
-      for (const control of changed) {
-        snapshot.push(
-          `//   ${control.key} (${this.bindingLabel(control)}) = ${JSON.stringify(
-            this.args()[control.key],
-          )}`,
-        );
-      }
-    }
-    return `${snapshot.join('\n')}\n${materializedCode}`;
   });
   protected readonly previewQuery = computed(() => this.canonicalQuery());
 
@@ -465,11 +438,7 @@ export class ComponentPlayground {
     const query: Record<string, string | null> = { [key]: readSelect(event) };
     const preset = this.selectedPreset();
     const environmentKey = key as keyof KernPlaygroundEnvironment;
-    if (
-      preset &&
-      ((key === 'scenario' && preset.scenario !== 'default') ||
-        (key !== 'scenario' && key !== 'locale' && owns(preset.environment ?? {}, environmentKey)))
-    ) {
+    if (preset && key !== 'locale' && owns(preset.environment ?? {}, environmentKey)) {
       query['state'] = null;
     }
     this.updateQuery(query);
@@ -477,31 +446,6 @@ export class ComponentPlayground {
 
   protected setBrandColor(event: Event): void {
     this.updateQuery({ brandColor: readInput(event) });
-  }
-
-  protected applyPreset(preset: KernPlaygroundStatePreset): void {
-    this.updateQuery({ state: preset.id === 'default' ? null : preset.id });
-  }
-
-  protected presetDescription(preset: KernPlaygroundStatePreset): string {
-    const effects = [
-      preset.scenario !== 'default' ? `scenario: ${preset.scenario}` : '',
-      ...Object.entries(preset.environment ?? {}).map(([key, value]) => `${key}: ${value}`),
-      ...Object.entries(preset.args).map(([key, value]) => `${key}: ${String(value)}`),
-      preset.visualPseudoState ? `visual state: ${preset.visualPseudoState}` : '',
-      preset.fixtureEffect
-        ? `documentation fixture: ${preset.fixtureEffect.kind}/${preset.fixtureEffect.mode}`
-        : '',
-    ].filter(Boolean);
-    return effects.length > 0 ? `${preset.label} — ${effects.join(', ')}` : preset.label;
-  }
-
-  protected bindingLabel(control: KernPlaygroundControl): string {
-    const binding = control.binding;
-    if (binding.kind === 'input') return `Public input: ${binding.publicName}`;
-    if (binding.kind === 'model') return `Public model: ${binding.publicName}`;
-    if (binding.kind === 'fixture') return `Preview fixture: ${binding.target}`;
-    return 'Preview composition';
   }
 
   protected booleanArg(control: KernPlaygroundControl): boolean {

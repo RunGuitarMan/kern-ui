@@ -250,8 +250,7 @@
   max-inline-size: min(75%, 38rem);
   gap: 0.2rem;
   padding: 0.55rem 0.7rem;
-  border: 1px solid var(--krn-color-border);
-  border-inline-start: 0.25rem solid var(--krn-color-brand);
+  border: 1px solid var(--krn-color-brand-border);
   border-radius: var(--krn-radius-sm);
   color: var(--krn-color-text);
   background: color-mix(in srgb, var(--krn-color-surface-raised) 94%, transparent);
@@ -272,20 +271,20 @@
 }
 
 .fixture-effect-probe[data-effect-kind='data'] {
-  border-inline-start-color: var(--krn-color-info);
+  border-color: var(--krn-color-info);
 }
 
 .fixture-effect-probe[data-effect-mode='success'] {
-  border-inline-start-color: var(--krn-color-success);
+  border-color: var(--krn-color-success);
 }
 
 .fixture-effect-probe[data-effect-mode='warning'] {
-  border-inline-start-color: var(--krn-color-warning);
+  border-color: var(--krn-color-warning);
 }
 
 .fixture-effect-probe[data-effect-mode='danger'],
 .fixture-effect-probe[data-effect-mode='error'] {
-  border-inline-start-color: var(--krn-color-danger);
+  border-color: var(--krn-color-danger);
 }
 
 .fixture-effect-probe[data-effect-mode='long-text'] {

@@ -54,6 +54,13 @@ export class App {
   );
   protected readonly currentPath = computed(() => this.currentUrl().split(/[?#]/, 1)[0] || '/');
   protected readonly previewMode = computed(() => this.currentPath().startsWith('/preview/'));
+  protected readonly darkMode = computed(() => this.prefs.theme() === 'dark');
+  protected readonly contrastMode = computed(
+    () => this.prefs.highContrast() || this.prefs.theme() === 'contrast',
+  );
+  protected readonly colorModeLabel = computed(() =>
+    this.darkMode() ? 'Switch to light theme' : 'Switch to dark theme',
+  );
   private readonly expandedCategories = signal<ReadonlySet<KernCategory>>(
     new Set<KernCategory>(['Actions']),
   );
@@ -83,6 +90,20 @@ export class App {
 
   protected toggleNavigation(): void {
     this.prefs.navigationOpen.update((value) => !value);
+  }
+
+  protected toggleColorMode(): void {
+    this.prefs.highContrast.set(false);
+    this.prefs.theme.set(this.darkMode() ? 'light' : 'dark');
+  }
+
+  protected toggleContrast(): void {
+    if (this.prefs.theme() === 'contrast') {
+      this.prefs.theme.set('system');
+      this.prefs.highContrast.set(false);
+      return;
+    }
+    this.prefs.highContrast.update((value) => !value);
   }
 
   protected categoryOpen(category: KernCategory): boolean {

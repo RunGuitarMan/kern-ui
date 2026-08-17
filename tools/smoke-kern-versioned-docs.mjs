@@ -537,13 +537,6 @@ async function verifyBrowserHydration(origin, basePath, playwrightVersion) {
     const previewSpecimen = page.getByTestId('component-specimen-tabs');
     const previewStage = page.getByTestId('specimen-stage');
     await previewSpecimen.waitFor({ state: 'visible' });
-    const focusVisiblePreset = page
-      .locator('.state-presets')
-      .getByRole('button', { name: 'Focus visible', exact: true });
-    await focusVisiblePreset.click();
-    await page.waitForFunction(
-      () => new URL(window.location.href).searchParams.get('state') === 'focus-visible',
-    );
 
     await selectQueryOption(page, page.getByTestId('theme-control'), 'dark', 'theme');
     await selectQueryOption(page, page.getByTestId('density-control'), 'spacious', 'density');
@@ -564,18 +557,10 @@ async function verifyBrowserHydration(origin, basePath, playwrightVersion) {
     );
 
     assertWithinBase(new URL(page.url()), baseUrl, 'Configured preview');
-    await requireAttribute(previewStage, 'data-state', 'focus-visible', 'Preview stage');
     await requireAttribute(previewStage, 'data-krn-theme-mode', 'dark', 'Preview stage');
     await requireAttribute(previewStage, 'data-krn-density', 'spacious', 'Preview stage');
     await requireAttribute(previewStage, 'dir', 'rtl', 'Preview stage');
     await requireAttribute(previewStage, 'data-krn-motion', 'reduce', 'Preview stage');
-    await requireAttribute(previewSpecimen, 'data-state', 'focus-visible', 'Tabs specimen');
-    await requireAttribute(
-      previewSpecimen,
-      'data-visual-pseudo-state',
-      'focus-visible',
-      'Tabs specimen',
-    );
     await requireAttribute(
       previewSpecimen.getByRole('tablist'),
       'aria-orientation',
@@ -627,25 +612,11 @@ async function verifyBrowserHydration(origin, basePath, playwrightVersion) {
       'settings',
       'Selected-tab control',
     );
-    await requireAttribute(
-      page.locator('.state-presets').getByRole('button', { name: 'Focus visible', exact: true }),
-      'aria-pressed',
-      'true',
-      'Focus-visible state control',
-    );
-
     const reloadedStage = page.getByTestId('specimen-stage');
     const reloadedSpecimen = page.getByTestId('component-specimen-tabs');
-    await requireAttribute(reloadedStage, 'data-state', 'focus-visible', 'Reloaded preview stage');
     await requireAttribute(reloadedStage, 'data-krn-theme-mode', 'dark', 'Reloaded preview stage');
     await requireAttribute(reloadedStage, 'data-krn-density', 'spacious', 'Reloaded preview stage');
     await requireAttribute(reloadedStage, 'dir', 'rtl', 'Reloaded preview stage');
-    await requireAttribute(
-      reloadedSpecimen,
-      'data-visual-pseudo-state',
-      'focus-visible',
-      'Reloaded Tabs specimen',
-    );
     await requireAttribute(
       reloadedSpecimen.getByRole('tablist'),
       'aria-orientation',

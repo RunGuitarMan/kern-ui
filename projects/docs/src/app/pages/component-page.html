@@ -4,9 +4,8 @@
 
     <header class="component-header">
       <div class="component-identity">
-        <p class="eyebrow">
-          <span>{{ categoryIndex(current.category) }}</span>
-          {{ current.category }}
+        <p class="component-meta">
+          <span>{{ current.category }}</span>
           <span
             class="status"
             [attr.data-status]="current.status"
@@ -18,10 +17,6 @@
         </p>
         <h1>{{ current.name }}</h1>
         <p class="summary">{{ current.summary }}</p>
-        <p class="status-description">
-          <strong>Lifecycle</strong>
-          {{ statusDescription(current.status) }}
-        </p>
       </div>
       <div class="component-actions">
         @if (current.variantOf) {
@@ -126,24 +121,6 @@
                 }
               </ul>
             </article>
-          </div>
-        </details>
-
-        <details id="specimen-states">
-          <summary>
-            <span>Quality</span>
-            <strong>States to verify</strong>
-            <small>{{ current.states.length }} states</small>
-          </summary>
-          <div class="detail-content">
-            <ul class="state-list" aria-label="Required states">
-              @for (state of current.states; track state; let index = $index) {
-                <li>
-                  <span>{{ (index + 1).toString().padStart(2, '0') }}</span>
-                  <strong>{{ state }}</strong>
-                </li>
-              }
-            </ul>
           </div>
         </details>
 

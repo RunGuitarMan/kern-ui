@@ -82,8 +82,8 @@ krn-page-header {
 }
 
 .master-list > button[aria-current] {
-  box-shadow: inset 3px 0 0 var(--krn-color-primary);
   background: var(--krn-color-primary-subtle);
+  box-shadow: inset 0 0 0 1px var(--krn-color-brand-border);
 }
 
 .master-list > button:focus-visible,

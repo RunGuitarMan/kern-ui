@@ -63,20 +63,6 @@ export class ComponentPage {
     ];
   }
 
-  protected categoryIndex(category: string): string {
-    return (
-      {
-        Layout: '02',
-        Actions: '03',
-        Forms: '04',
-        Navigation: '05',
-        Feedback: '06',
-        'Data display': '07',
-        Patterns: '08',
-      }[category] ?? '00'
-    );
-  }
-
   protected variantName(item: KernCatalogItem): string {
     return findKernComponent(item.variantOf ?? '')?.name ?? item.variantOf ?? '';
   }

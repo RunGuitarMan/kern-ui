@@ -31,7 +31,7 @@ test.describe('Responsive, RTL, and text zoom contracts', () => {
     await expect(navigationToggle).toHaveAttribute('aria-expanded', 'true');
     await expect(navigation).toHaveClass(/open/);
 
-    await navigation.getByRole('link', { name: 'Text Input Forms' }).click();
+    await navigation.getByRole('link', { name: 'Text Input', exact: true }).first().click();
 
     await expect(page).toHaveURL(/\/components\/text-input$/);
     await expect(page.getByTestId('component-specimen-text-input')).toBeVisible();

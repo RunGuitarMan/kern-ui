@@ -11,6 +11,7 @@
     [attr.aria-activedescendant]="popupVisible() ? activeResultId() : null"
     [value]="query()"
     [placeholder]="placeholder()"
+    (pointerdown)="focusWithoutScroll($event)"
     (input)="onInput($event)"
     (focus)="open.set(true)"
     (keydown)="onKeydown($event)"

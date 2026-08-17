@@ -312,7 +312,7 @@ p {
     box-shadow: none;
   }
   .toast {
-    border-inline-start-color: Highlight;
+    border-color: Highlight;
   }
   .indicator {
     color: CanvasText;

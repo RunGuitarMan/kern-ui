@@ -53,6 +53,22 @@ test.describe('Docs smoke contracts', () => {
     assertNoRuntimeErrors();
   });
 
+  test('exposes document theme and contrast controls beside search', async ({ page }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    await page.goto(`${DOCS_URL}/components/button`);
+    await settlePage(page);
+
+    const root = page.locator('html');
+    await page.getByRole('button', { name: 'Switch to dark theme' }).click();
+    await expect(root).toHaveAttribute('data-krn-theme-mode', 'dark');
+
+    const contrast = page.getByRole('button', { name: 'High contrast' });
+    await contrast.click();
+    await expect(contrast).toHaveAttribute('aria-pressed', 'true');
+    await expect(root).toHaveAttribute('data-krn-theme-mode', 'high-contrast');
+    assertNoRuntimeErrors();
+  });
+
   const routes = [
     { path: '/foundations', heading: 'A semantic system, not a paint box.' },
     { path: '/components/button', heading: 'Button' },
@@ -128,12 +144,8 @@ test.describe('Docs preview smoke contracts', () => {
       'Phone',
       'Tablet',
     ]);
-    await expect(page.getByTestId('scenario-control').locator('option')).toHaveText([
-      'Default',
-      'States',
-      'Stress',
-      'Virtual',
-    ]);
+    await expect(page.getByTestId('scenario-control')).toHaveCount(0);
+    await expect(page.locator('.state-presets')).toHaveCount(0);
     const stage = page.getByTestId('specimen-stage');
     await expect(stage).toHaveAttribute('dir', 'rtl');
     await expect(stage).toHaveAttribute('data-krn-theme-mode', 'dark');
@@ -174,7 +186,9 @@ test.describe('Docs preview smoke contracts', () => {
     assertNoRuntimeErrors();
   });
 
-  test('applies every supported environment variant to the isolated specimen', async ({ page }) => {
+  test('applies every supported preview environment setting to the isolated specimen', async ({
+    page,
+  }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
 
     await page.goto(DOCS_URL);
@@ -285,45 +299,21 @@ test.describe('Docs preview smoke contracts', () => {
       await expect(previewPanel).toHaveAttribute('data-viewport', viewport);
     }
 
-    for (const scenario of ['default', 'states', 'stress', 'virtual'] as const) {
-      await page.getByTestId('scenario-control').selectOption(scenario);
-      await expectQueryParam(page, 'scenario', scenario === 'default' ? null : scenario);
-      await expect(specimen).toHaveAttribute('data-scenario', scenario);
-    }
-
     await expectDocumentEnvironment(page, docsEnvironment);
     assertNoRuntimeErrors();
   });
 
-  test('live inputs and state presets update the rendered component and URL contract', async ({
-    page,
-  }) => {
+  test('live properties update the rendered component and URL contract', async ({ page }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
 
     await page.goto(`${DOCS_URL}/preview/button`);
     await settlePage(page);
 
     const specimen = page.getByTestId('component-specimen-button');
-    const stage = page.getByTestId('specimen-stage');
-    const statePresets = page.locator('.state-presets');
     const primaryAction = specimen.getByRole('button', { name: 'Publish changes' });
     await expect(primaryAction).toHaveAttribute('data-variant', 'solid');
     await expect(primaryAction).toBeEnabled();
-
-    await statePresets.getByRole('button', { name: 'Focus visible', exact: true }).click();
-    await expectQueryParam(page, 'state', 'focus-visible');
-    await expect(specimen).toHaveAttribute('data-visual-pseudo-state', 'focus-visible');
-
-    await statePresets.getByRole('button', { name: 'High contrast', exact: true }).click();
-    await expectQueryParam(page, 'state', 'high-contrast');
-    await expectQueryParam(page, 'theme', null);
-    await expect(page.getByTestId('theme-control')).toHaveValue('high-contrast');
-    await expect(stage).toHaveAttribute('data-krn-theme-mode', 'high-contrast');
-
-    await statePresets.getByRole('button', { name: 'Default', exact: true }).click();
-    await expectQueryParam(page, 'state', null);
-    await expectQueryParam(page, 'theme', null);
-    await expect(specimen).not.toHaveAttribute('data-visual-pseudo-state');
+    await expect(page.locator('.state-presets')).toHaveCount(0);
 
     await page.getByRole('combobox', { name: 'Variant' }).selectOption('soft');
     await expect(page).toHaveURL(/arg\.variant=soft/);
@@ -331,15 +321,10 @@ test.describe('Docs preview smoke contracts', () => {
 
     await expect(specimen.getByRole('button', { name: 'Unavailable' })).toBeDisabled();
 
-    await statePresets.getByRole('button', { name: 'Loading', exact: true }).click();
-    await expect(page).toHaveURL(/state=loading/);
-    await expectQueryParam(page, 'scenario', null);
-    await expectQueryParam(page, 'arg.loading', null);
-    await expect(stage).toHaveAttribute('data-state', 'loading');
-    await expect(specimen).toHaveAttribute('data-scenario', 'default');
-    await expect(primaryAction).not.toHaveAttribute('aria-busy');
+    await page.getByRole('checkbox', { name: 'Loading' }).check();
+    await expectQueryParam(page, 'arg.loading', 'true');
+    await expect(primaryAction).toHaveAttribute('data-loading', 'true');
     await expect(primaryAction).toHaveAttribute('aria-disabled', 'true');
-    await expect(primaryAction).not.toHaveAttribute('disabled');
     await expect(primaryAction.getByRole('status')).toHaveText('Loading…');
     assertNoRuntimeErrors();
   });
@@ -455,7 +440,7 @@ test.describe('Docs preview smoke contracts', () => {
     await expect(page.getByTestId('motion-control')).toHaveValue('system');
     await expect(page.getByTestId('brand-color-control')).toHaveValue('#4666da');
     await expect(page.getByTestId('viewport-control')).toHaveValue('responsive');
-    await expect(page.getByTestId('scenario-control')).toHaveValue('default');
+    await expect(page.getByTestId('scenario-control')).toHaveCount(0);
     await expect(page.getByRole('combobox', { name: 'Variant' })).toHaveValue('solid');
     await expect(page.getByRole('checkbox', { name: 'Loading' })).not.toBeChecked();
     await expect(primaryAction).toHaveAttribute('data-variant', 'solid');
@@ -578,14 +563,13 @@ test.describe('Docs preview smoke contracts', () => {
     await expect(codePanel).not.toContainText(
       'Strict AOT verified against the packed npm artifact.',
     );
-    await expect(codePanel).toContainText('generated base scaffold');
     await expect(codePanel).toContainText('<button krnButton');
     await expect(codePanel).not.toContainText('<button[krnButton]');
     await expect(codePanel).toContainText(`[variant]="'soft'"`);
     await expect(codePanel).toContainText(`[tone]="'danger'"`);
     await expect(codePanel).toContainText(`[size]="'sm'"`);
     await expect(codePanel).toContainText(`[loading]="true"`);
-    await expect(codePanel).toContainText(/variant\s+\(Public input:\s*variant\)\s*=\s*"soft"/);
+    await expect(codePanel).not.toContainText('Public input');
     assertNoRuntimeErrors();
   });
 });

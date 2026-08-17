@@ -37,18 +37,17 @@ ul.branch.with-guides::before {
   min-inline-size: 0;
   align-items: center;
   overflow: hidden;
-  border-inline-start: calc(var(--krn-border-width-1) * 2) solid transparent;
   border-radius: var(--krn-radius-sm);
   transition:
     background var(--krn-motion-duration-interaction) var(--krn-motion-ease-standard),
-    border-color var(--krn-motion-duration-interaction) var(--krn-motion-ease-standard);
+    box-shadow var(--krn-motion-duration-interaction) var(--krn-motion-ease-standard);
 }
 .node-row:hover {
   background: color-mix(in oklch, var(--krn-color-surface-subtle) 72%, transparent);
 }
 .node-row.selected {
-  border-inline-start-color: var(--krn-color-primary);
-  background: var(--krn-color-surface-subtle);
+  background: var(--krn-color-brand-surface);
+  box-shadow: inset 0 0 0 1px var(--krn-color-brand-border);
 }
 .toggle,
 .spacer {
@@ -132,7 +131,7 @@ ul.branch.with-guides::before {
 }
 @media (forced-colors: active) {
   .node-row.selected {
-    border-inline-start-color: Highlight;
+    box-shadow: inset 0 0 0 1px Highlight;
   }
   .node:focus-visible {
     outline-color: Highlight;

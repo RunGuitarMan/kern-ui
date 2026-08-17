@@ -113,7 +113,8 @@ test.describe('Round two: documentation and preview contracts', () => {
 
     const light = await themeSnapshot();
 
-    await page.getByRole('button', { name: 'Dark', exact: true }).click();
+    await page.locator('.environment-panel > summary').click();
+    await page.getByTestId('theme-control').selectOption('dark');
     await expect(page.locator('#code-panel')).toHaveAttribute('data-krn-theme', 'dark');
     const dark = await themeSnapshot();
 
@@ -142,6 +143,7 @@ test.describe('Round two: documentation and preview contracts', () => {
       readonly range: string;
     }> => {
       const specimen = await openSpecimen(page, 'date-range-picker');
+      await page.locator('.environment-panel > summary').click();
       await page.getByTestId('theme-control').selectOption(theme);
       await expect(page.getByTestId('specimen-stage')).toHaveAttribute('data-krn-theme', theme);
 
@@ -526,7 +528,7 @@ test.describe('Round two: navigation and layout geometry', () => {
     expect(light.radius).toBeGreaterThanOrEqual(6);
     expect(light.boxShadow).not.toBe('none');
 
-    await page.getByRole('button', { name: 'Dark', exact: true }).click();
+    await page.getByRole('button', { name: 'Switch to dark theme' }).click();
     const dark = await header.evaluate((element) => {
       const style = getComputedStyle(element);
       return {
@@ -587,7 +589,7 @@ test.describe('Round two: navigation and layout geometry', () => {
     assertNoRuntimeErrors();
   });
 
-  test('menu, tree navigation, and command palette use calm inset active states', async ({
+  test('menu, tree navigation, and command palette use calm full-surface active states', async ({
     page,
   }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
@@ -617,6 +619,7 @@ test.describe('Round two: navigation and layout geometry', () => {
         const style = getComputedStyle(row);
         return {
           background: style.backgroundColor,
+          boxShadow: style.boxShadow,
           radius: style.borderRadius,
           stripeColor: style.borderInlineStartColor,
           stripeStyle: style.borderInlineStartStyle,
@@ -627,9 +630,11 @@ test.describe('Round two: navigation and layout geometry', () => {
     await overview.click();
     const overviewStyle = await selectedStyle(overview);
     expect(overviewStyle).toEqual(automationStyle);
-    expect(overviewStyle.stripeStyle).toBe('solid');
-    expect(Number.parseFloat(overviewStyle.stripeWidth)).toBeGreaterThan(0);
-    expect(overviewStyle.stripeColor).not.toBe('rgba(0, 0, 0, 0)');
+    expect(overviewStyle.background).not.toBe('rgba(0, 0, 0, 0)');
+    expect(overviewStyle.boxShadow).not.toBe('none');
+    expect(Number.parseFloat(overviewStyle.radius)).toBeGreaterThanOrEqual(4);
+    expect(overviewStyle.stripeStyle).toBe('none');
+    expect(Number.parseFloat(overviewStyle.stripeWidth)).toBe(0);
 
     specimen = await openSpecimen(page, 'command-palette');
     const trigger = specimen.getByRole('button', { name: /Open command palette/ });

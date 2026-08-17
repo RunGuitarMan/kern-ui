@@ -33,6 +33,7 @@ export class KrnGlobalSearch {
   private readonly platform = inject(KRN_PLATFORM);
   private readonly translations = inject(KRN_TRANSLATIONS);
   private readonly searchInput = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
+  private interactionScrollPosition: { readonly x: number; readonly y: number } | null = null;
   readonly ariaLabel = input<typeof this.translations.patterns.globalSearch | undefined>();
   readonly placeholder = input<typeof this.translations.patterns.searchPlaceholder | undefined>();
   readonly clearLabel = input<typeof this.translations.patterns.clearSearch | undefined>();
@@ -145,8 +146,34 @@ export class KrnGlobalSearch {
   }
 
   protected onInput(event: Event): void {
+    const view = this.platform.window;
+    const scrollPosition =
+      this.interactionScrollPosition ?? (view ? { x: view.scrollX, y: view.scrollY } : null);
     this.query.set((event.currentTarget as HTMLInputElement).value);
     this.activeIndex.set(0);
+    this.open.set(true);
+    if (view && scrollPosition) {
+      const restore = (): void => {
+        if (view.scrollX !== scrollPosition.x || view.scrollY !== scrollPosition.y) {
+          view.scrollTo(scrollPosition.x, scrollPosition.y);
+        }
+      };
+      this.platform.queueMicrotask(restore);
+      this.platform.schedule(restore);
+      this.platform.requestAnimationFrame(() => {
+        restore();
+        this.platform.requestAnimationFrame(restore);
+      });
+    }
+  }
+
+  protected focusWithoutScroll(event: PointerEvent): void {
+    const input = this.searchInput().nativeElement;
+    const view = this.platform.window;
+    this.interactionScrollPosition = view ? { x: view.scrollX, y: view.scrollY } : null;
+    if (this.platform.document.activeElement === input) return;
+    event.preventDefault();
+    input.focus({ preventScroll: true });
     this.open.set(true);
   }
 
@@ -185,6 +212,7 @@ export class KrnGlobalSearch {
       !(event.currentTarget as Node).contains(event.relatedTarget)
     ) {
       this.open.set(false);
+      this.interactionScrollPosition = null;
     }
   }
 

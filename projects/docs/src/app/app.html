@@ -28,6 +28,28 @@
         </div>
       }
       <nav aria-label="Project links">
+        <div class="appearance-controls" role="group" aria-label="Appearance">
+          <button
+            class="color-mode-toggle"
+            type="button"
+            [attr.aria-label]="colorModeLabel()"
+            [attr.title]="colorModeLabel()"
+            [attr.data-mode]="darkMode() ? 'dark' : 'light'"
+            (click)="toggleColorMode()"
+          >
+            <span aria-hidden="true"></span>
+          </button>
+          <button
+            class="contrast-toggle"
+            type="button"
+            aria-label="High contrast"
+            title="High contrast"
+            [attr.aria-pressed]="contrastMode()"
+            (click)="toggleContrast()"
+          >
+            <span aria-hidden="true"></span>
+          </button>
+        </div>
         <a routerLink="/accessibility">WCAG 2.2 AA</a>
         <span class="angular-version"><i aria-hidden="true"></i>Angular 22</span>
       </nav>
@@ -61,7 +83,6 @@
           @for (item of essentials; track item.id) {
             <a [routerLink]="['/components', item.id]" routerLinkActive="active">
               <span>{{ item.name }}</span>
-              <small>{{ item.category }}</small>
             </a>
           }
         </section>
@@ -80,11 +101,6 @@
               @for (item of itemsFor(category); track item.id) {
                 <a [routerLink]="['/components', item.id]" routerLinkActive="active">
                   <span>{{ item.name }}</span>
-                  @if (item.variantOf) {
-                    <small>variant</small>
-                  } @else if (item.status === 'beta') {
-                    <small>β</small>
-                  }
                 </a>
               }
             </div>
