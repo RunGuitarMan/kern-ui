@@ -1,0 +1,16 @@
+<aside
+  class="krn-sidebar"
+  [attr.aria-label]="ariaLabelledBy() ? null : resolvedAriaLabel() || null"
+  [attr.aria-labelledby]="ariaLabelledBy() || null"
+  [attr.aria-describedby]="ariaDescribedBy() || null"
+  [hidden]="isHidden()"
+  [attr.inert]="isHidden() ? '' : null"
+>
+  <div class="krn-sidebar__header">
+    <ng-content select="[krnSidebarHeader],header" />
+  </div>
+  <div class="krn-sidebar__body"><ng-content /></div>
+  <div class="krn-sidebar__footer">
+    <ng-content select="[krnSidebarFooter],footer" />
+  </div>
+</aside>

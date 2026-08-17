@@ -1,0 +1,49 @@
+:host {
+  display: flex;
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+  flex-direction: column;
+  gap: var(--krn-stack-gap);
+  align-items: var(--krn-stack-align, stretch);
+  justify-content: var(--krn-stack-justify, flex-start);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([data-align='start']) {
+  --krn-stack-align: flex-start;
+}
+:host([data-align='center']) {
+  --krn-stack-align: center;
+}
+:host([data-align='end']) {
+  --krn-stack-align: flex-end;
+}
+:host([data-align='baseline']) {
+  --krn-stack-align: baseline;
+}
+:host([data-align='stretch']) {
+  --krn-stack-align: stretch;
+}
+:host([data-justify='start']) {
+  --krn-stack-justify: flex-start;
+}
+:host([data-justify='center']) {
+  --krn-stack-justify: center;
+}
+:host([data-justify='end']) {
+  --krn-stack-justify: flex-end;
+}
+:host([data-justify='space-between']) {
+  --krn-stack-justify: space-between;
+}
+:host([data-justify='space-around']) {
+  --krn-stack-justify: space-around;
+}
+:host([data-justify='space-evenly']) {
+  --krn-stack-justify: space-evenly;
+}

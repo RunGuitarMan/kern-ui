@@ -1,0 +1,71 @@
+:host {
+  display: block;
+}
+.state {
+  --tone: var(--krn-color-text-muted);
+  --tone-subtle: var(--krn-color-surface-subtle);
+  display: grid;
+  justify-items: center;
+  gap: var(--krn-space-3);
+  max-inline-size: 36rem;
+  margin-inline: auto;
+  padding: clamp(var(--krn-space-6), 7vw, var(--krn-space-12));
+  color: var(--krn-color-text);
+  text-align: center;
+}
+.state[data-tone='success'] {
+  --tone: var(--krn-color-success);
+  --tone-subtle: var(--krn-color-success-subtle);
+}
+.state[data-tone='danger'] {
+  --tone: var(--krn-color-danger);
+  --tone-subtle: var(--krn-color-danger-subtle);
+}
+.visual {
+  display: grid;
+  inline-size: 3.5rem;
+  block-size: 3.5rem;
+  border: var(--krn-border-width-1) solid
+    color-mix(in oklch, var(--tone) 32%, var(--krn-color-border));
+  border-radius: var(--krn-radius-lg);
+  place-items: center;
+  background: color-mix(in oklch, var(--krn-color-surface-raised) 84%, var(--tone-subtle));
+  color: var(--tone);
+  box-shadow: var(--krn-shadow-xs);
+}
+.visual:has([krnStateVisual]) .default-visual {
+  display: none;
+}
+.default-visual {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+h2 {
+  margin: var(--krn-space-1) 0 0;
+  font-size: var(--krn-font-size-xl);
+  line-height: var(--krn-line-height-tight);
+  letter-spacing: -0.018em;
+}
+p,
+.body {
+  max-inline-size: 48ch;
+  margin: 0;
+  color: var(--krn-color-text-muted);
+  line-height: var(--krn-line-height-body);
+}
+.body:empty,
+.actions:empty {
+  display: none;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--krn-space-2);
+  padding-block-start: var(--krn-space-2);
+}

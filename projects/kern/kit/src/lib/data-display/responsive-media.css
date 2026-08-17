@@ -1,0 +1,8 @@
+:host {
+  position: relative;
+  display: block;
+  min-inline-size: 0;
+  overflow: clip;
+  border-radius: var(--krn-radius-surface, 0.75rem);
+  background: var(--krn-color-surface-raised, #f2f3f5);
+}

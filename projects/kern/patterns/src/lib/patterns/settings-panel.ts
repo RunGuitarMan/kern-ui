@@ -19,27 +19,7 @@ import { KrnDrawer, type KrnOverlayCloseReason } from '@kern-ui/angular/kit';
   host: {
     '[attr.data-open]': 'open() ? "" : null',
   },
-  template: `
-    <ng-template #content>
-      <ng-content />
-    </ng-template>
-    <ng-template #actions>
-      <ng-content select="[krnSettingsActions]" />
-    </ng-template>
-    <krn-drawer
-      [open]="open()"
-      (openChange)="open.set($event)"
-      (closed)="closed.emit($event)"
-      [title]="resolvedHeading()"
-      [closeLabel]="resolvedCloseLabel()"
-      [ariaLabel]="resolvedHeading()"
-      [initialFocus]="initialFocus()"
-      [closeOnEscape]="closeOnEscape()"
-      [closeOnOutside]="closeOnOutside()"
-      [contentTemplate]="content"
-      [actionsTemplate]="actions"
-    />
-  `,
+  templateUrl: './settings-panel.html',
 })
 export class KrnSettingsPanel {
   private readonly translations = inject(KRN_TRANSLATIONS);

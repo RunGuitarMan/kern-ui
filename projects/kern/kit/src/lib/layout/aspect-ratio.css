@@ -1,0 +1,52 @@
+krn-aspect-ratio {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+  aspect-ratio: var(--krn-aspect-ratio);
+  overflow: clip;
+  border-radius: inherit;
+  background: var(--krn-color-surface-sunken);
+}
+
+krn-aspect-ratio[hidden] {
+  display: none;
+}
+
+krn-aspect-ratio > .krn-aspect-ratio__content {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  max-block-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+krn-aspect-ratio > .krn-aspect-ratio__content > :is(img, video, iframe, canvas, svg) {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  max-inline-size: 100%;
+  max-block-size: 100%;
+  object-fit: var(--krn-aspect-fit);
+}
+
+krn-aspect-ratio > .krn-aspect-ratio__content > iframe {
+  border: 0;
+}
+
+krn-aspect-ratio[data-fit='cover'] {
+  --krn-aspect-fit: cover;
+}
+krn-aspect-ratio[data-fit='contain'] {
+  --krn-aspect-fit: contain;
+}
+krn-aspect-ratio[data-fit='fill'] {
+  --krn-aspect-fit: fill;
+}
+krn-aspect-ratio[data-fit='none'] {
+  --krn-aspect-fit: none;
+}

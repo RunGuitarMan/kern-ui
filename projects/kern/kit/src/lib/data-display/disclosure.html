@@ -1,0 +1,7 @@
+<details [open]="open()" (toggle)="onToggle($event)">
+  <summary>
+    <span>{{ heading() }}</span>
+    <span class="indicator" aria-hidden="true"></span>
+  </summary>
+  <div class="panel"><ng-content /></div>
+</details>

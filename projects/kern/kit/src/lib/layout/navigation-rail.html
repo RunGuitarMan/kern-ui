@@ -1,0 +1,14 @@
+<nav
+  class="krn-rail"
+  [attr.aria-label]="ariaLabelledBy() ? null : resolvedAriaLabel() || null"
+  [attr.aria-labelledby]="ariaLabelledBy() || null"
+  [attr.aria-describedby]="ariaDescribedBy() || null"
+>
+  <div class="krn-rail__header">
+    <ng-content select="[krnRailHeader],header" />
+  </div>
+  <div class="krn-rail__body"><ng-content /></div>
+  <div class="krn-rail__footer">
+    <ng-content select="[krnRailFooter],footer" />
+  </div>
+</nav>

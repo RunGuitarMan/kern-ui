@@ -1,0 +1,50 @@
+<ng-container
+  [ngTemplateOutlet]="branch"
+  [ngTemplateOutletContext]="{ $implicit: validatedNodes(), depth: 0 }"
+/>
+<ng-template #branch let-branchNodes let-depth="depth">
+  <ul role="group" class="branch" [attr.data-depth]="depth">
+    @for (node of branchNodes; track node.id; let index = $index) {
+      <li role="none">
+        <button
+          #treeItem
+          type="button"
+          role="treeitem"
+          [disabled]="node.disabled"
+          [attr.data-tree-item]="node.id"
+          [attr.aria-level]="depth + 1"
+          [attr.aria-posinset]="index + 1"
+          [attr.aria-setsize]="branchNodes.length"
+          [attr.aria-expanded]="isExpandable(node) ? expanded().has(node.id) : null"
+          [attr.aria-selected]="selected() === node.id"
+          [attr.aria-disabled]="node.disabled || null"
+          [attr.aria-busy]="node.childrenState === 'loading' ? 'true' : null"
+          [attr.aria-invalid]="node.childrenState === 'error' ? 'true' : null"
+          [attr.aria-label]="nodeStateLabel(node)"
+          [attr.tabindex]="isTabStop(node) ? 0 : -1"
+          (click)="activate(node)"
+          (keydown)="onKeydown($event, node)"
+        >
+          <span
+            class="chevron"
+            [class.has-children]="isExpandable(node)"
+            [class.expanded]="expanded().has(node.id)"
+            aria-hidden="true"
+          ></span>
+          <span>{{ node.label }}</span>
+          @if (node.childrenState === 'loading') {
+            <span class="node-state" aria-hidden="true">…</span>
+          } @else if (node.childrenState === 'error') {
+            <span class="node-state node-state--error" aria-hidden="true">!</span>
+          }
+        </button>
+        @if (node.children?.length && expanded().has(node.id)) {
+          <ng-container
+            [ngTemplateOutlet]="branch"
+            [ngTemplateOutletContext]="{ $implicit: node.children, depth: depth + 1 }"
+          />
+        }
+      </li>
+    }
+  </ul>
+</ng-template>

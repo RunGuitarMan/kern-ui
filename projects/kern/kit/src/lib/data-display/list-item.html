@@ -1,0 +1,8 @@
+<ng-content select="[krnListLeading]" />
+<span class="content">
+  @if (heading()) {
+    <strong>{{ heading() }}</strong>
+  }
+  <ng-content />
+</span>
+<ng-content select="[krnListTrailing]" />

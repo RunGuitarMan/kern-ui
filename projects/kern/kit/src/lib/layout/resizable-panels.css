@@ -1,0 +1,36 @@
+:host {
+  display: flex;
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+  isolation: isolate;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([data-orientation='horizontal']) {
+  flex-direction: row;
+  inline-size: 100%;
+}
+
+:host([data-orientation='vertical']) {
+  flex-direction: column;
+  block-size: 100%;
+}
+
+:host([data-resize-axis='x'][data-resizing]) {
+  cursor: col-resize;
+  user-select: none;
+}
+
+:host([data-resize-axis='y'][data-resizing]) {
+  cursor: row-resize;
+  user-select: none;
+}
+
+:host([data-disabled]) {
+  cursor: default;
+}

@@ -1,0 +1,24 @@
+:host {
+  display: block;
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: var(--krn-container-max);
+  min-inline-size: 0;
+  padding-inline: var(--krn-container-gutter);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([data-align='center']) {
+  margin-inline: auto;
+}
+
+:host([data-align='start']) {
+  margin-inline-end: auto;
+}
+
+:host([data-align='end']) {
+  margin-inline-start: auto;
+}

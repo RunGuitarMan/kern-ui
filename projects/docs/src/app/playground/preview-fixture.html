@@ -1,0 +1,17 @@
+@if (locale() === 'ru-RU') {
+  <kdocs-preview-fixture-ru
+    [item]="item()"
+    [scenario]="scenario()"
+    [state]="state()"
+    [args]="args()"
+    [resetRevision]="resetRevision()"
+  />
+} @else {
+  <kdocs-preview-fixture-en
+    [item]="item()"
+    [scenario]="scenario()"
+    [state]="state()"
+    [args]="args()"
+    [resetRevision]="resetRevision()"
+  />
+}

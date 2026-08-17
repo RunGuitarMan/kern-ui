@@ -1,0 +1,38 @@
+<nav class="bottom-nav" [attr.aria-label]="resolvedAriaLabel()">
+  @for (item of items(); track item.id) {
+    @if (item.href && !item.disabled) {
+      <a
+        [href]="item.href"
+        [attr.aria-current]="value() === item.id ? 'page' : null"
+        (click)="select(item)"
+      >
+        @if (item.icon) {
+          <span class="icon" aria-hidden="true">{{ item.icon }}</span>
+        }
+        <span>{{ item.label }}</span>
+        @if (item.badge !== undefined) {
+          <span class="badge" [attr.aria-label]="badgeAriaLabel(item.badge)">
+            {{ badgeText(item.badge) }}
+          </span>
+        }
+      </a>
+    } @else {
+      <button
+        type="button"
+        [disabled]="item.disabled"
+        [attr.aria-current]="value() === item.id ? 'page' : null"
+        (click)="select(item)"
+      >
+        @if (item.icon) {
+          <span class="icon" aria-hidden="true">{{ item.icon }}</span>
+        }
+        <span>{{ item.label }}</span>
+        @if (item.badge !== undefined) {
+          <span class="badge" [attr.aria-label]="badgeAriaLabel(item.badge)">
+            {{ badgeText(item.badge) }}
+          </span>
+        }
+      </button>
+    }
+  }
+</nav>

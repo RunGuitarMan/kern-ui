@@ -1,0 +1,6 @@
+@for (key of keys(); track $index) {
+  <kbd>{{ key }}</kbd>
+  @if (!$last) {
+    <span aria-hidden="true">+</span>
+  }
+}

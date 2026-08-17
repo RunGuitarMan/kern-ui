@@ -116,70 +116,13 @@ export class KrnIconRegistry {
   selector: 'krn-icon',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <svg
-      [attr.viewBox]="definition()?.viewBox ?? '0 0 24 24'"
-      [attr.fill]="definition()?.fill ?? 'none'"
-      [attr.stroke]="definition()?.fill === 'currentColor' ? null : 'currentColor'"
-      [attr.role]="label() ? 'img' : null"
-      [attr.aria-label]="label() || null"
-      [attr.aria-hidden]="label() ? null : 'true'"
-      focusable="false"
-    >
-      @for (path of definition()?.paths ?? []; track path) {
-        <path [attr.d]="path" />
-      }
-    </svg>
-  `,
+  templateUrl: './icon.html',
   host: {
     '[style.--krn-icon-size]': 'resolvedSize()',
     '[attr.data-icon]': 'name()',
     '[attr.data-missing]': 'definition() ? null : ""',
   },
-  styles: `
-    :host {
-      --krn-icon-size: var(--krn-icon-size-md, 1.25rem);
-      display: inline-grid;
-      inline-size: var(--krn-icon-size);
-      block-size: var(--krn-icon-size);
-      place-items: center;
-      color: currentColor;
-      flex: 0 0 auto;
-      line-height: 0;
-    }
-
-    svg {
-      inline-size: 100%;
-      block-size: 100%;
-      overflow: visible;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-width: var(--krn-icon-stroke-width, 1.75);
-      vector-effect: non-scaling-stroke;
-    }
-
-    path {
-      vector-effect: non-scaling-stroke;
-    }
-
-    :host([data-missing]) {
-      outline: 1px dotted currentColor;
-      outline-offset: -2px;
-      opacity: var(--krn-opacity-muted, 0.58);
-    }
-
-    [dir='rtl'] :host([data-icon='chevron-left']),
-    [dir='rtl'] :host([data-icon='chevron-right']) {
-      transform: scaleX(-1);
-    }
-
-    @media (forced-colors: active) {
-      :host {
-        color: CanvasText;
-        forced-color-adjust: auto;
-      }
-    }
-  `,
+  styleUrl: './icon.css',
 })
 export class KrnIcon {
   private readonly registry = inject(KrnIconRegistry);

@@ -1,0 +1,75 @@
+:host {
+  display: block;
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+  padding-inline: var(--krn-divider-inset);
+  color: var(--krn-color-text-muted);
+  writing-mode: horizontal-tb;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.krn-divider {
+  display: flex;
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  align-items: center;
+  gap: var(--krn-space-3);
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+.krn-divider__line {
+  flex: 1 1 auto;
+  block-size: 1px;
+  min-inline-size: 0;
+  min-block-size: 0;
+  background: var(--krn-color-border);
+}
+
+.krn-divider__label {
+  flex: 0 1 auto;
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+  color: var(--krn-color-text-muted);
+  font-size: var(--krn-font-size-xs);
+  font-weight: var(--krn-font-weight-medium);
+  line-height: var(--krn-line-height-tight);
+  letter-spacing: var(--krn-letter-spacing-wide);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+:host([data-orientation='vertical']) {
+  display: inline-block;
+  block-size: 100%;
+  min-block-size: var(--krn-space-4);
+  padding-inline: 0;
+  padding-block: var(--krn-divider-inset);
+}
+
+:host([data-orientation='vertical']) .krn-divider {
+  block-size: 100%;
+  min-block-size: var(--krn-space-4);
+  flex-direction: column;
+}
+
+:host([data-orientation='vertical']) .krn-divider__line {
+  inline-size: 1px;
+  block-size: auto;
+}
+
+:host([data-orientation='vertical']) .krn-divider__label {
+  writing-mode: vertical-rl;
+}
+
+@media (forced-colors: active) {
+  .krn-divider__line {
+    background: CanvasText;
+  }
+}

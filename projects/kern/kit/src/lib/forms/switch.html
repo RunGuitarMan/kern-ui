@@ -1,0 +1,37 @@
+<label
+  class="krn-choice krn-switch"
+  [attr.data-disabled]="isDisabled()"
+  [attr.data-invalid]="a11y.invalid()"
+  [attr.data-readonly]="isReadOnly()"
+>
+  <input
+    #input
+    class="krn-choice__native"
+    type="checkbox"
+    role="switch"
+    [attr.aria-describedby]="effectiveDescribedBy()"
+    [attr.aria-invalid]="a11y.invalid()"
+    [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
+    [attr.aria-labelledby]="effectiveLabelledBy()"
+    [attr.aria-disabled]="isReadOnly() || null"
+    [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
+    [checked]="renderedChecked()"
+    [disabled]="isDisabled()"
+    [id]="a11y.id()"
+    [name]="name()"
+    [required]="a11y.required()"
+    [tabIndex]="tabIndex()"
+    (blur)="touch()"
+    (click)="preventReadonly($event)"
+    (change)="changeValue($event)"
+  />
+  <span class="krn-choice__mark" aria-hidden="true"></span>
+  <span class="krn-choice__text">
+    <span [id]="labelId()"><ng-content /></span>
+    @if (description()) {
+      <span class="krn-choice__description" [id]="descriptionId()">
+        {{ description() }}
+      </span>
+    }
+  </span>
+</label>

@@ -1,0 +1,13 @@
+<header
+  class="krn-header"
+  [attr.aria-label]="ariaLabelledBy() ? null : ariaLabel() || null"
+  [attr.aria-labelledby]="ariaLabelledBy() || null"
+>
+  <div class="krn-header__start">
+    <ng-content select="[krnHeaderStart]" />
+  </div>
+  <div class="krn-header__content"><ng-content /></div>
+  <div class="krn-header__end">
+    <ng-content select="[krnHeaderEnd]" />
+  </div>
+</header>

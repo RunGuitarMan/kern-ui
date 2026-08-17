@@ -14805,7 +14805,8 @@ _No deprecated selectors._
 
 ## Content slots
 
-_No projected content slots._
+- `*` — Projects default component content.
+- `[krnAlertAction]` — Projects content matching [krnAlertAction].
 
 ## Angular Forms
 
@@ -14966,7 +14967,8 @@ _No deprecated selectors._
 
 ## Content slots
 
-_No projected content slots._
+- `*` — Projects default component content.
+- `[krnAlertAction]` — Projects content matching [krnAlertAction].
 
 ## Angular Forms
 
@@ -15830,7 +15832,8 @@ _No deprecated selectors._
 
 ## Content slots
 
-_No projected content slots._
+- `*` — Projects default component content.
+- `[krnDialogAction]` — Projects content matching [krnDialogAction].
 
 ## Angular Forms
 
@@ -16031,7 +16034,8 @@ _No deprecated selectors._
 
 ## Content slots
 
-_No projected content slots._
+- `*` — Projects default component content.
+- `[krnDialogAction]` — Projects content matching [krnDialogAction].
 
 ## Angular Forms
 
@@ -16227,7 +16231,8 @@ _No deprecated selectors._
 
 ## Content slots
 
-_No projected content slots._
+- `*` — Projects default component content.
+- `[krnDialogAction]` — Projects content matching [krnDialogAction].
 
 ## Angular Forms
 
@@ -16425,7 +16430,8 @@ _No deprecated selectors._
 
 ## Content slots
 
-_No projected content slots._
+- `*` — Projects default component content.
+- `[krnDialogAction]` — Projects content matching [krnDialogAction].
 
 ## Angular Forms
 
@@ -17414,7 +17420,9 @@ _No deprecated selectors._
 
 ## Content slots
 
-_No projected content slots._
+- `[krnStateVisual]` — Projects content matching [krnStateVisual].
+- `*` — Projects default component content.
+- `[krnStateAction]` — Projects content matching [krnStateAction].
 
 ## Angular Forms
 
@@ -17575,7 +17583,9 @@ _No deprecated selectors._
 
 ## Content slots
 
-_No projected content slots._
+- `[krnStateVisual]` — Projects content matching [krnStateVisual].
+- `*` — Projects default component content.
+- `[krnStateAction]` — Projects content matching [krnStateAction].
 
 ## Angular Forms
 
@@ -17738,7 +17748,9 @@ _No deprecated selectors._
 
 ## Content slots
 
-_No projected content slots._
+- `[krnStateVisual]` — Projects content matching [krnStateVisual].
+- `*` — Projects default component content.
+- `[krnStateAction]` — Projects content matching [krnStateAction].
 
 ## Angular Forms
 

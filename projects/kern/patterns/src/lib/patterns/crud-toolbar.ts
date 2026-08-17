@@ -17,72 +17,8 @@ import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
     '[attr.aria-label]': 'resolvedAriaLabel()',
     '[attr.data-bulk]': 'validatedSelectedCount() ? "" : null',
   },
-  template: `
-    <div class="primary">
-      <span class="selection-status" role="status" aria-live="polite" aria-atomic="true">{{
-        resolvedSelectedLabel()
-      }}</span>
-      @if (validatedSelectedCount()) {
-        <strong aria-hidden="true">{{ resolvedSelectedLabel() }}</strong>
-      } @else {
-        <ng-content select="[krnToolbarTitle]" />
-      }
-    </div>
-    <div class="actions"><ng-content /></div>
-  `,
-  styles: `
-    :host {
-      display: flex;
-      min-block-size: 3.5rem;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding-inline: 0.75rem;
-      border-block: 1px solid var(--krn-color-border-subtle, #e0e3e7);
-      color: var(--krn-color-text, #252932);
-      background: var(--krn-color-surface, #fff);
-      flex-wrap: wrap;
-    }
-    :host([hidden]) {
-      display: none;
-    }
-    :host([data-bulk]) {
-      border-color: var(--krn-color-brand-border, #dc7352);
-      background: var(--krn-color-brand-surface, #fff0e8);
-    }
-    .primary,
-    .actions {
-      display: flex;
-      min-inline-size: 0;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .actions {
-      flex-wrap: wrap;
-      justify-content: end;
-      margin-inline-start: auto;
-    }
-    .primary {
-      overflow-wrap: anywhere;
-    }
-    .selection-status {
-      position: absolute;
-      inline-size: 1px;
-      block-size: 1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-    }
-    @media (forced-colors: active) {
-      :host,
-      :host([data-bulk]) {
-        border-color: CanvasText;
-      }
-      :host([data-bulk]) {
-        outline: 2px solid Highlight;
-        outline-offset: -2px;
-      }
-    }
-  `,
+  templateUrl: './crud-toolbar.html',
+  styleUrl: './crud-toolbar.css',
 })
 export class KrnCrudToolbar {
   private readonly translations = inject(KRN_TRANSLATIONS);

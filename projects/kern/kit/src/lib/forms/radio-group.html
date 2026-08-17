@@ -1,0 +1,22 @@
+<fieldset
+  #fieldset
+  class="krn-choice-group"
+  role="radiogroup"
+  [attr.aria-describedby]="effectiveDescribedBy()"
+  [attr.aria-invalid]="a11y.invalid()"
+  [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
+  [attr.aria-labelledby]="effectiveLabelledBy()"
+  [attr.aria-readonly]="isReadOnly()"
+  [attr.aria-required]="a11y.required()"
+  [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
+  [attr.data-orientation]="orientation()"
+  [disabled]="isDisabled()"
+  [id]="a11y.id()"
+>
+  @if (label() && !formFieldLabelledBy()) {
+    <legend class="krn-label" [id]="legendId()">{{ label() }}</legend>
+  }
+  <div class="krn-choice-group__options">
+    <ng-content />
+  </div>
+</fieldset>

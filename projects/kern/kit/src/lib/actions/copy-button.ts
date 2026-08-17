@@ -35,41 +35,7 @@ export type KrnCopyState = 'idle' | 'copied' | 'error';
     '[attr.data-tone]': 'tone()',
     '[attr.data-variant]': 'variant()',
   },
-  template: `
-    <button
-      krnButton
-      [attr.aria-label]="ariaLabel() || null"
-      [disabled]="disabled()"
-      [loading]="pending()"
-      loadingLabel=""
-      [size]="size()"
-      [tone]="tone()"
-      [variant]="variant()"
-      (click)="copy()"
-    >
-      <span class="krn-copy-labels">
-        <span class="krn-copy-label">
-          <ng-content>{{ resolvedCopyLabel() }}</ng-content>
-        </span>
-        <span class="krn-copy-indicator" [attr.data-state]="state()" aria-hidden="true">
-          @if (state() === 'copied') {
-            ✓
-          } @else if (state() === 'error') {
-            !
-          }
-        </span>
-      </span>
-    </button>
-    <span class="krn-copy-status" role="status" aria-atomic="true" aria-live="polite">
-      @if (pending()) {
-        {{ resolvedCopyingLabel() }}
-      } @else if (state() === 'copied') {
-        {{ resolvedCopiedLabel() }}
-      } @else if (state() === 'error') {
-        {{ resolvedErrorLabel() }}
-      }
-    </span>
-  `,
+  templateUrl: './copy-button.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnCopyButton {

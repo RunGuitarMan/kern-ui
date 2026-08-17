@@ -1,0 +1,38 @@
+:host {
+  display: block;
+  min-block-size: var(--krn-space-4);
+  overflow: hidden;
+  border-radius: var(--krn-radius-sm);
+  background: var(--krn-color-surface-sunken);
+}
+:host([data-shape='circle']) {
+  aspect-ratio: 1;
+  border-radius: var(--krn-radius-full);
+}
+:host::after {
+  display: block;
+  inline-size: 46%;
+  block-size: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklch, var(--krn-color-surface-raised) 72%, transparent),
+    transparent
+  );
+  content: '';
+  animation: krn-skeleton var(--krn-motion-duration-skeleton) var(--krn-motion-ease-standard)
+    var(--krn-motion-iteration-continuous);
+}
+@keyframes krn-skeleton {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(325%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :host-context(html:not([data-krn-motion='full']))::after {
+    display: none;
+  }
+}

@@ -1,0 +1,24 @@
+:host {
+  display: block;
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: var(--krn-center-max);
+  min-inline-size: 0;
+  margin-inline: auto;
+  padding-inline: var(--krn-center-gutter);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.krn-center__inner {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+:host([data-intrinsic]) .krn-center__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

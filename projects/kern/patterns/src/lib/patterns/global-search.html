@@ -1,0 +1,56 @@
+<div class="searchbox">
+  <span aria-hidden="true">⌕</span>
+  <input
+    #searchInput
+    type="search"
+    role="combobox"
+    aria-autocomplete="list"
+    [attr.aria-label]="resolvedAriaLabel()"
+    [attr.aria-expanded]="popupVisible()"
+    [attr.aria-controls]="popupVisible() ? resolvedResultsId() : null"
+    [attr.aria-activedescendant]="popupVisible() ? activeResultId() : null"
+    [value]="query()"
+    [placeholder]="placeholder()"
+    (input)="onInput($event)"
+    (focus)="open.set(true)"
+    (keydown)="onKeydown($event)"
+  />
+  @if (query()) {
+    <button type="button" [attr.aria-label]="resolvedClearLabel()" (click)="clear()">×</button>
+  }
+</div>
+@if (popupVisible()) {
+  <div
+    class="results"
+    [id]="resolvedResultsId()"
+    role="listbox"
+    [attr.aria-label]="resolvedResultsLabel()"
+  >
+    @if (filteredResults().length) {
+      @for (result of filteredResults(); track result.id; let index = $index) {
+        <button
+          type="button"
+          role="option"
+          [id]="resultOptionId(result.id)"
+          [attr.aria-selected]="index === activeIndex()"
+          tabindex="-1"
+          (pointerenter)="activeIndex.set(index)"
+          (pointerdown)="$event.preventDefault()"
+          (click)="choose(result)"
+        >
+          <span>
+            <strong>{{ result.label }}</strong>
+            @if (result.description) {
+              <small>{{ result.description }}</small>
+            }
+          </span>
+          @if (result.group) {
+            <em>{{ result.group }}</em>
+          }
+        </button>
+      }
+    } @else {
+      <p role="status">{{ resolvedEmptyResultsLabel() }}</p>
+    }
+  </div>
+}

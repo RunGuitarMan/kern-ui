@@ -9,25 +9,8 @@ import { filter, map, startWith } from 'rxjs';
   selector: 'kdocs-global-search',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [KrnGlobalSearch],
-  template: `
-    <krn-global-search
-      #search
-      ariaLabel="Search Kern components"
-      placeholder="Jump to a component…"
-      [results]="results"
-      (resultSelected)="openResult($event)"
-    />
-  `,
-  styles: `
-    :host {
-      display: block;
-      min-inline-size: 0;
-    }
-
-    krn-global-search {
-      inline-size: 100%;
-    }
-  `,
+  templateUrl: './docs-global-search.html',
+  styleUrl: './docs-global-search.css',
 })
 export class DocsGlobalSearch {
   private readonly router = inject(Router);

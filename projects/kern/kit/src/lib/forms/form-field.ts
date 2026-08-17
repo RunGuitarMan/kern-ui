@@ -290,41 +290,7 @@ const FORM_FIELD_PROVIDERS: Provider[] = [
     '[attr.data-state]': 'state()',
     '[attr.data-valid]': 'valid()',
   },
-  template: `
-    <div class="krn-field-heading">
-      @if (label() && !projectedLabel()) {
-        <label
-          class="krn-label"
-          [attr.for]="nativeLabelFor()"
-          [id]="labelId()"
-          (click)="focusControl()"
-        >
-          {{ label() }}
-          @if (required()) {
-            <span class="krn-required" aria-hidden="true">*</span>
-          }
-        </label>
-      }
-      <ng-content select="krn-label" />
-      @if (!required() && optionalText()) {
-        <span class="krn-optional">{{ optionalText() }}</span>
-      }
-    </div>
-
-    <div class="krn-field-control">
-      <ng-content />
-    </div>
-
-    @if (error()) {
-      <p class="krn-message krn-message--error" aria-live="polite" [id]="errorId()">
-        <span class="krn-message__mark" aria-hidden="true">!</span>
-        {{ error() }}
-      </p>
-    } @else if (hint()) {
-      <p class="krn-message" [id]="hintId()">{{ hint() }}</p>
-    }
-    <ng-content select="krn-hint, krn-validation-message" />
-  `,
+  templateUrl: './form-field.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnFormField {
@@ -367,14 +333,7 @@ export class KrnFormField {
 @Component({
   selector: 'krn-label',
   host: { class: 'krn-label-host' },
-  template: `
-    <label class="krn-label" [attr.for]="forId()" [attr.id]="labelId()" (click)="focusControl()">
-      <ng-content />
-      @if (effectiveRequired()) {
-        <span class="krn-required" aria-hidden="true">*</span>
-      }
-    </label>
-  `,
+  templateUrl: './label.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnLabel {
@@ -402,7 +361,7 @@ export class KrnLabel {
     class: 'krn-message-host',
     '[attr.id]': 'null',
   },
-  template: `<p class="krn-message" [id]="id()"><ng-content /></p>`,
+  templateUrl: './hint.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnHint {
@@ -425,12 +384,7 @@ export class KrnHint {
     class: 'krn-message-host',
     '[attr.id]': 'null',
   },
-  template: `
-    <p class="krn-message krn-message--error" [id]="id()" role="alert">
-      <span class="krn-message__mark" aria-hidden="true">!</span>
-      <ng-content />
-    </p>
-  `,
+  templateUrl: './validation-message.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnValidationMessage {

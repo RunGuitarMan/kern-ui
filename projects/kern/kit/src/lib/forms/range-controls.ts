@@ -42,42 +42,7 @@ const sliderInteractionKeys = new Set([
     '[attr.id]': 'null',
   },
   providers: [...provideKrnFormControl()],
-  template: `
-    <div class="krn-slider" [style.--krn-slider-progress]="valuePercent() + '%'">
-      @if (label() || showValue()) {
-        <div class="krn-slider__header">
-          <span [id]="labelId()">{{ label() }}</span>
-          @if (showValue()) {
-            <output [for]="a11y.id()">{{ formattedValue() }}</output>
-          }
-        </div>
-      }
-      <input
-        #input
-        class="krn-range"
-        type="range"
-        [attr.aria-describedby]="a11y.describedBy()"
-        [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="effectiveLabelledBy() ? null : resolvedAriaLabel()"
-        [attr.aria-labelledby]="effectiveLabelledBy()"
-        [attr.aria-readonly]="a11y.readOnly()"
-        [attr.aria-valuetext]="formattedValue()"
-        [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
-        [attr.name]="name() || null"
-        [disabled]="isDisabled()"
-        [id]="a11y.id()"
-        [max]="effectiveMax()"
-        [min]="effectiveMin()"
-        [step]="effectiveStep()"
-        [tabIndex]="isDisabled() ? -1 : tabIndex()"
-        [value]="controlValue()"
-        (blur)="touch()"
-        (input)="updateValue($event)"
-        (keydown)="protectReadOnlyKeyboard($event)"
-        (pointerdown)="protectReadOnlyPointer($event)"
-      />
-    </div>
-  `,
+  templateUrl: './slider.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnSlider {
@@ -225,78 +190,7 @@ export class KrnSlider {
     '[attr.id]': 'null',
   },
   providers: [...provideKrnFormControl()],
-  template: `
-    <div
-      class="krn-slider krn-range-pair"
-      role="group"
-      [attr.aria-describedby]="a11y.describedBy()"
-      [attr.aria-invalid]="a11y.invalid()"
-      [attr.aria-label]="a11y.labelledBy() ? null : resolvedLabel()"
-      [attr.aria-labelledby]="a11y.labelledBy()"
-      [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
-      [id]="a11y.id()"
-      [style.--krn-range-end]="endPercent() + '%'"
-      [style.--krn-range-start]="startPercent() + '%'"
-      (focusout)="handleFocusOut($event)"
-    >
-      <div class="krn-slider__header">
-        @if (!a11y.labelledBy()) {
-          <span>{{ resolvedLabel() }}</span>
-        }
-        <output>{{ formattedStart() }} – {{ formattedEnd() }}</output>
-      </div>
-      <div
-        class="krn-dual-range"
-        [attr.data-active-thumb]="activeThumb()"
-        [attr.data-disabled]="isDisabled()"
-        [attr.data-dragging]="draggingThumb() !== null"
-        (pointercancel)="finishPointerInteraction($event)"
-        (pointerdown)="beginPointerInteraction($event)"
-        (pointermove)="continuePointerInteraction($event)"
-        (pointerup)="finishPointerInteraction($event)"
-      >
-        <div class="krn-dual-range__track" aria-hidden="true">
-          <span class="krn-dual-range__selection"></span>
-        </div>
-        <input
-          #startInput
-          class="krn-range krn-range--overlay krn-range--start"
-          type="range"
-          [attr.aria-label]="resolvedStartLabel()"
-          [attr.aria-readonly]="a11y.readOnly()"
-          [attr.aria-valuetext]="formattedStart()"
-          [disabled]="isDisabled()"
-          [max]="effectiveMax()"
-          [min]="effectiveMin()"
-          [step]="effectiveStep()"
-          [tabIndex]="isDisabled() ? -1 : tabIndex()"
-          [value]="controlValue().start"
-          (focus)="activeThumb.set('start')"
-          (input)="updateStart($event)"
-          (keydown)="protectReadOnlyKeyboard($event)"
-          (pointerdown)="activeThumb.set('start')"
-        />
-        <input
-          #endInput
-          class="krn-range krn-range--overlay krn-range--end"
-          type="range"
-          [attr.aria-label]="resolvedEndLabel()"
-          [attr.aria-readonly]="a11y.readOnly()"
-          [attr.aria-valuetext]="formattedEnd()"
-          [disabled]="isDisabled()"
-          [max]="effectiveMax()"
-          [min]="effectiveMin()"
-          [step]="effectiveStep()"
-          [tabIndex]="isDisabled() ? -1 : tabIndex()"
-          [value]="controlValue().end"
-          (focus)="activeThumb.set('end')"
-          (input)="updateEnd($event)"
-          (keydown)="protectReadOnlyKeyboard($event)"
-          (pointerdown)="activeThumb.set('end')"
-        />
-      </div>
-    </div>
-  `,
+  templateUrl: './range-slider.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnRangeSlider {

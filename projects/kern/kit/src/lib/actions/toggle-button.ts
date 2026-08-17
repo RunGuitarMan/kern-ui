@@ -18,15 +18,7 @@ import type { KrnToggleGroupItem } from './toggle-group-controller';
 
 @Component({
   selector: 'button[krnToggleButton]',
-  template: `
-    <span class="krn-action__icon" aria-hidden="true">
-      <ng-content select="[krnLeadingIcon]" />
-    </span>
-    <span class="krn-action__label"><ng-content /></span>
-    <span class="krn-action__icon" aria-hidden="true">
-      <ng-content select="[krnTrailingIcon]" />
-    </span>
-  `,
+  templateUrl: './toggle-button.html',
   host: {
     class: 'krn-action krn-toggle-action',
     type: 'button',

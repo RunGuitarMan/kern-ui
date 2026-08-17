@@ -1,0 +1,63 @@
+<button
+  #mobileTrigger
+  type="button"
+  class="krn-shell__mobile-trigger"
+  [attr.aria-controls]="mobileNavigationId()"
+  [attr.aria-expanded]="isMobileNavigationOpen()"
+  aria-haspopup="dialog"
+  [attr.aria-label]="
+    isMobileNavigationOpen() ? resolvedCloseNavigationLabel() : resolvedOpenNavigationLabel()
+  "
+  (click)="toggleMobileNavigation()"
+>
+  <span aria-hidden="true">☰</span>
+</button>
+<div class="krn-shell">
+  <div class="krn-shell__header">
+    <ng-content select="krn-header,[krnAppHeader]" />
+  </div>
+  <div
+    #mobilePanel
+    class="krn-shell__navigation"
+    [id]="mobileNavigationId()"
+    [attr.role]="isMobileNavigationOpen() ? 'dialog' : null"
+    [attr.aria-describedby]="
+      isMobileNavigationOpen() && mobileNavigationDescribedBy()
+        ? mobileNavigationDescribedBy()
+        : null
+    "
+    [attr.aria-label]="
+      isMobileNavigationOpen() && !mobileNavigationLabelledBy()
+        ? resolvedMobileNavigationLabel()
+        : null
+    "
+    [attr.aria-labelledby]="
+      isMobileNavigationOpen() && mobileNavigationLabelledBy() ? mobileNavigationLabelledBy() : null
+    "
+    [attr.aria-modal]="isMobileNavigationOpen() ? 'true' : null"
+    [attr.tabindex]="isMobileNavigationOpen() ? '-1' : null"
+    [cdkTrapFocus]="isMobileNavigationOpen()"
+    [cdkTrapFocusAutoCapture]="false"
+    (pointerdown)="closeFromBackdrop($event)"
+  >
+    <div class="krn-shell__navigation-surface" (pointerdown)="$event.stopPropagation()">
+      <button
+        type="button"
+        class="krn-shell__mobile-close"
+        [attr.aria-label]="resolvedCloseNavigationLabel()"
+        (click)="closeMobileNavigation()"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+      <div class="krn-shell__rail">
+        <ng-content select="krn-navigation-rail,[krnAppRail]" />
+      </div>
+      <div class="krn-shell__sidebar">
+        <ng-content select="krn-sidebar,[krnAppSidebar]" />
+      </div>
+    </div>
+  </div>
+  <main #mainElement class="krn-shell__main" [id]="mainId()" tabindex="-1">
+    <ng-content />
+  </main>
+</div>

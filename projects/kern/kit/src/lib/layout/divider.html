@@ -1,0 +1,12 @@
+<div
+  class="krn-divider"
+  role="separator"
+  [attr.aria-label]="resolvedLabel()"
+  [attr.aria-orientation]="resolvedOrientation()"
+>
+  <span class="krn-divider__line" aria-hidden="true"></span>
+  @if (resolvedLabel(); as label) {
+    <span class="krn-divider__label" aria-hidden="true">{{ label }}</span>
+    <span class="krn-divider__line" aria-hidden="true"></span>
+  }
+</div>

@@ -1,0 +1,27 @@
+@if (visible()) {
+  <section
+    class="alert"
+    [attr.data-tone]="tone()"
+    [attr.role]="tone() === 'danger' ? 'alert' : 'status'"
+    [attr.aria-live]="tone() === 'danger' ? 'assertive' : 'polite'"
+  >
+    <span class="indicator" aria-hidden="true">{{ icon() || toneIcon() }}</span>
+    <div class="content">
+      @if (title()) {
+        <strong>{{ title() }}</strong>
+      }
+      <div class="body"><ng-content /></div>
+      <div class="actions"><ng-content select="[krnAlertAction]" /></div>
+    </div>
+    @if (dismissible()) {
+      <button
+        type="button"
+        class="dismiss"
+        [attr.aria-label]="resolvedDismissLabel()"
+        (click)="dismiss()"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    }
+  </section>
+}

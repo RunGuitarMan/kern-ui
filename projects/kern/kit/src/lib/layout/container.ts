@@ -15,39 +15,14 @@ export type KrnContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
   selector: 'krn-container',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<ng-content />`,
+  templateUrl: './container.html',
   host: {
     '[style.--krn-container-max]': 'resolvedMaxWidth()',
     '[style.--krn-container-gutter]': 'resolvedGutter()',
     '[attr.data-size]': 'size()',
     '[attr.data-align]': 'align()',
   },
-  styles: `
-    :host {
-      display: block;
-      box-sizing: border-box;
-      inline-size: 100%;
-      max-inline-size: var(--krn-container-max);
-      min-inline-size: 0;
-      padding-inline: var(--krn-container-gutter);
-    }
-
-    :host([hidden]) {
-      display: none;
-    }
-
-    :host([data-align='center']) {
-      margin-inline: auto;
-    }
-
-    :host([data-align='start']) {
-      margin-inline-end: auto;
-    }
-
-    :host([data-align='end']) {
-      margin-inline-start: auto;
-    }
-  `,
+  styleUrl: './container.css',
 })
 export class KrnContainer {
   readonly size = input<KrnContainerSize>('lg');
@@ -70,38 +45,13 @@ export class KrnContainer {
   selector: 'krn-center',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<div class="krn-center__inner"><ng-content /></div>`,
+  templateUrl: './center.html',
   host: {
     '[style.--krn-center-max]': 'resolvedMaxWidth()',
     '[style.--krn-center-gutter]': 'resolvedGutter()',
     '[attr.data-intrinsic]': 'intrinsic() ? "" : null',
   },
-  styles: `
-    :host {
-      display: block;
-      box-sizing: border-box;
-      inline-size: 100%;
-      max-inline-size: var(--krn-center-max);
-      min-inline-size: 0;
-      margin-inline: auto;
-      padding-inline: var(--krn-center-gutter);
-    }
-
-    :host([hidden]) {
-      display: none;
-    }
-
-    .krn-center__inner {
-      inline-size: 100%;
-      min-inline-size: 0;
-    }
-
-    :host([data-intrinsic]) .krn-center__inner {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-  `,
+  styleUrl: './center.css',
 })
 export class KrnCenter {
   /** Maximum outer inline size as a container token, CSS length, or `full`. */

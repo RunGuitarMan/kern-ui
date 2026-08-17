@@ -1,0 +1,74 @@
+@switch (config.variant) {
+  @case ('alert-dialog') {
+    <krn-alert-dialog
+      [open]="surfaceOpen()"
+      (openChange)="surfaceOpen.set($event)"
+      [title]="config.title"
+      [description]="config.description"
+      [ariaLabel]="config.ariaLabel"
+      [showClose]="config.showClose"
+      [closeOnEscape]="config.closeOnEscape"
+      [closeOnOutside]="config.closeOnOutside"
+      [initialFocus]="config.initialFocus"
+      [restoreFocus]="effectiveRestoreFocus()"
+      (closed)="dismissRequested.emit($event)"
+      (afterExited)="afterExited.emit()"
+    >
+      <ng-template cdkPortalOutlet />
+    </krn-alert-dialog>
+  }
+  @case ('drawer') {
+    <krn-drawer
+      [open]="surfaceOpen()"
+      (openChange)="surfaceOpen.set($event)"
+      [title]="config.title"
+      [description]="config.description"
+      [ariaLabel]="config.ariaLabel"
+      [showClose]="config.showClose"
+      [closeOnEscape]="config.closeOnEscape"
+      [closeOnOutside]="config.closeOnOutside"
+      [initialFocus]="config.initialFocus"
+      [restoreFocus]="effectiveRestoreFocus()"
+      (closed)="dismissRequested.emit($event)"
+      (afterExited)="afterExited.emit()"
+    >
+      <ng-template cdkPortalOutlet />
+    </krn-drawer>
+  }
+  @case ('bottom-sheet') {
+    <krn-bottom-sheet
+      [open]="surfaceOpen()"
+      (openChange)="surfaceOpen.set($event)"
+      [title]="config.title"
+      [description]="config.description"
+      [ariaLabel]="config.ariaLabel"
+      [showClose]="config.showClose"
+      [closeOnEscape]="config.closeOnEscape"
+      [closeOnOutside]="config.closeOnOutside"
+      [initialFocus]="config.initialFocus"
+      [restoreFocus]="effectiveRestoreFocus()"
+      (closed)="dismissRequested.emit($event)"
+      (afterExited)="afterExited.emit()"
+    >
+      <ng-template cdkPortalOutlet />
+    </krn-bottom-sheet>
+  }
+  @default {
+    <krn-dialog
+      [open]="surfaceOpen()"
+      (openChange)="surfaceOpen.set($event)"
+      [title]="config.title"
+      [description]="config.description"
+      [ariaLabel]="config.ariaLabel"
+      [showClose]="config.showClose"
+      [closeOnEscape]="config.closeOnEscape"
+      [closeOnOutside]="config.closeOnOutside"
+      [initialFocus]="config.initialFocus"
+      [restoreFocus]="effectiveRestoreFocus()"
+      (closed)="dismissRequested.emit($event)"
+      (afterExited)="afterExited.emit()"
+    >
+      <ng-template cdkPortalOutlet />
+    </krn-dialog>
+  }
+}

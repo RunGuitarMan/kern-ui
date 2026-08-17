@@ -107,7 +107,20 @@
       "descriptionSource": "inferred"
     }
   ],
-  "slots": [],
+  "slots": [
+    {
+      "name": "default",
+      "selector": "*",
+      "required": false,
+      "description": "Projects default component content."
+    },
+    {
+      "name": "krnAlertAction",
+      "selector": "[krnAlertAction]",
+      "required": false,
+      "description": "Projects content matching [krnAlertAction]."
+    }
+  ],
   "forms": {
     "controlValueAccessor": false,
     "validator": false,

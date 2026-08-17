@@ -79,7 +79,26 @@
       "descriptionSource": "inferred"
     }
   ],
-  "slots": [],
+  "slots": [
+    {
+      "name": "krnStateVisual",
+      "selector": "[krnStateVisual]",
+      "required": false,
+      "description": "Projects content matching [krnStateVisual]."
+    },
+    {
+      "name": "default-2",
+      "selector": "*",
+      "required": false,
+      "description": "Projects default component content."
+    },
+    {
+      "name": "krnStateAction",
+      "selector": "[krnStateAction]",
+      "required": false,
+      "description": "Projects content matching [krnStateAction]."
+    }
+  ],
   "forms": {
     "controlValueAccessor": false,
     "validator": false,

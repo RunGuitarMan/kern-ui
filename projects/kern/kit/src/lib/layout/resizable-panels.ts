@@ -55,7 +55,7 @@ function normalizeSizes(sizes: readonly number[], panelCount: number): readonly 
   selector: 'krn-resizable-panels',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<ng-content />`,
+  templateUrl: './resizable-panels.html',
   host: {
     '[attr.data-orientation]': 'resolvedOrientation()',
     '[attr.data-resize-axis]': 'physicalAxis()',
@@ -63,44 +63,7 @@ function normalizeSizes(sizes: readonly number[], panelCount: number): readonly 
     '[attr.data-disabled]': 'disabled() ? "" : null',
     '(focusin)': 'refreshAxisMetadata()',
   },
-  styles: `
-    :host {
-      display: flex;
-      box-sizing: border-box;
-      max-inline-size: 100%;
-      min-inline-size: 0;
-      min-block-size: 0;
-      isolation: isolate;
-    }
-
-    :host([hidden]) {
-      display: none;
-    }
-
-    :host([data-orientation='horizontal']) {
-      flex-direction: row;
-      inline-size: 100%;
-    }
-
-    :host([data-orientation='vertical']) {
-      flex-direction: column;
-      block-size: 100%;
-    }
-
-    :host([data-resize-axis='x'][data-resizing]) {
-      cursor: col-resize;
-      user-select: none;
-    }
-
-    :host([data-resize-axis='y'][data-resizing]) {
-      cursor: row-resize;
-      user-select: none;
-    }
-
-    :host([data-disabled]) {
-      cursor: default;
-    }
-  `,
+  styleUrl: './resizable-panels.css',
 })
 export class KrnResizablePanels {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -422,7 +385,7 @@ export class KrnResizablePanels {
   selector: 'krn-resizable-panel',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<ng-content />`,
+  templateUrl: './resizable-panel.html',
   host: {
     '[attr.id]': 'resolvedId()',
     '[style.--krn-panel-size]': 'resolvedSize()',
@@ -431,31 +394,7 @@ export class KrnResizablePanels {
     '[attr.role]': 'resolvedAriaLabel() ? "region" : null',
     '[attr.aria-label]': 'resolvedAriaLabel()',
   },
-  styles: `
-    :host {
-      display: block;
-      box-sizing: border-box;
-      max-inline-size: 100%;
-      min-inline-size: 0;
-      min-block-size: 0;
-      flex: 0 0 var(--krn-panel-size);
-    }
-
-    :host([hidden]) {
-      display: none;
-    }
-
-    :host([data-overflow='auto']) {
-      overflow: auto;
-      overscroll-behavior: contain;
-    }
-    :host([data-overflow='visible']) {
-      overflow: visible;
-    }
-    :host([data-overflow='clip']) {
-      overflow: clip;
-    }
-  `,
+  styleUrl: './resizable-panel.css',
 })
 export class KrnResizablePanel {
   private readonly managedSize = signal(50);
@@ -504,7 +443,7 @@ export class KrnResizablePanel {
   selector: 'krn-resize-handle',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<span class="krn-resize-handle__line" aria-hidden="true"></span>`,
+  templateUrl: './resize-handle.html',
   host: {
     role: 'separator',
     '[attr.tabindex]': 'managedDisabled() ? -1 : 0',
@@ -526,116 +465,7 @@ export class KrnResizablePanel {
     '(keydown)': 'onKeydown($event)',
     '(dblclick)': 'onDoubleClick()',
   },
-  styles: `
-    :host {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      box-sizing: border-box;
-      flex: 0 0 auto;
-      place-items: center;
-      color: var(--krn-color-border-strong);
-      outline: none;
-      touch-action: none;
-    }
-
-    :host([hidden]) {
-      display: none;
-    }
-
-    :host([data-orientation='horizontal']) {
-      inline-size: 1px;
-      block-size: 100%;
-    }
-
-    :host([data-orientation='vertical']) {
-      inline-size: 100%;
-      block-size: 1px;
-    }
-
-    :host([data-resize-axis='x']) {
-      cursor: col-resize;
-    }
-
-    :host([data-resize-axis='y']) {
-      cursor: row-resize;
-    }
-
-    :host::before {
-      position: absolute;
-      content: '';
-      background: transparent;
-    }
-
-    :host([data-orientation='horizontal'])::before {
-      inset-block: 0;
-      inline-size: 0.75rem;
-    }
-
-    :host([data-orientation='vertical'])::before {
-      inset-inline: 0;
-      block-size: 0.75rem;
-    }
-
-    .krn-resize-handle__line {
-      display: block;
-      background: var(--krn-color-border);
-      transition:
-        background-color var(--krn-motion-duration-interaction) var(--krn-motion-ease-standard),
-        transform var(--krn-motion-duration-interaction) var(--krn-motion-ease-standard);
-    }
-
-    :host([data-orientation='horizontal']) .krn-resize-handle__line {
-      inline-size: 1px;
-      block-size: 100%;
-    }
-
-    :host([data-orientation='vertical']) .krn-resize-handle__line {
-      inline-size: 100%;
-      block-size: 1px;
-    }
-
-    :host(:is(:hover, :focus-visible)) .krn-resize-handle__line {
-      background: var(--krn-color-focus);
-    }
-
-    :host([data-orientation='horizontal']:focus-visible) .krn-resize-handle__line {
-      inline-size: 3px;
-    }
-
-    :host([data-orientation='vertical']:focus-visible) .krn-resize-handle__line {
-      block-size: 3px;
-    }
-
-    :host(:focus-visible) {
-      box-shadow: none;
-    }
-
-    :host(.krn-resize-handle--disabled) {
-      cursor: default;
-      opacity: var(--krn-opacity-disabled);
-      touch-action: auto;
-    }
-
-    @media (pointer: coarse) {
-      :host([data-orientation='horizontal'])::before {
-        inline-size: var(--krn-touch-target-min);
-      }
-
-      :host([data-orientation='vertical'])::before {
-        block-size: var(--krn-touch-target-min);
-      }
-    }
-
-    @media (forced-colors: active) {
-      .krn-resize-handle__line {
-        background: CanvasText;
-      }
-      :host(:focus-visible) .krn-resize-handle__line {
-        background: Highlight;
-      }
-    }
-  `,
+  styleUrl: './resize-handle.css',
 })
 export class KrnResizeHandle {
   private readonly translations = inject(KRN_TRANSLATIONS);

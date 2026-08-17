@@ -1,0 +1,45 @@
+<section [attr.aria-label]="resolvedAriaLabel()">
+  <header>
+    <span>
+      <h2>{{ resolvedHeading() }}</h2>
+      <krn-badge
+        aria-live="polite"
+        aria-atomic="true"
+        [tone]="unreadCount() ? 'brand' : 'neutral'"
+        >{{ resolvedUnreadLabel() }}</krn-badge
+      >
+    </span>
+    @if (unreadCount()) {
+      <button type="button" [attr.aria-controls]="notificationsId" (click)="markAllRead.emit()">
+        {{ resolvedMarkAllReadLabel() }}
+      </button>
+    }
+  </header>
+  @if (validatedNotifications().length) {
+    <ol [id]="notificationsId">
+      @for (notification of validatedNotifications(); track notification.id) {
+        <li [attr.data-unread]="!notification.read ? '' : null">
+          <button type="button" (click)="notificationSelected.emit(notification)">
+            <span
+              class="marker"
+              [attr.data-tone]="notification.tone ?? 'neutral'"
+              aria-hidden="true"
+            ></span>
+            <span>
+              <strong>{{ notification.title }}</strong>
+              <span>{{ notification.detail }}</span>
+              <time [attr.datetime]="notification.dateTime?.trim() || null">{{
+                notification.timestamp
+              }}</time>
+            </span>
+            @if (!notification.read) {
+              <span class="sr-only">{{ resolvedUnreadStateLabel() }}</span>
+            }
+          </button>
+        </li>
+      }
+    </ol>
+  } @else {
+    <div class="empty" role="status">{{ resolvedEmptyLabel() }}</div>
+  }
+</section>

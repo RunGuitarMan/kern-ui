@@ -1,0 +1,51 @@
+<nav class="pagination" [attr.aria-label]="resolvedAriaLabel()">
+  <button
+    type="button"
+    class="direction"
+    [disabled]="currentPage() <= 1"
+    (click)="goTo(currentPage() - 1)"
+  >
+    <span aria-hidden="true">←</span
+    ><span class="direction-label">{{ resolvedPreviousLabel() }}</span>
+  </button>
+  <ng-template #pageItems let-tokens>
+    @for (token of tokens; track $index) {
+      <li [attr.data-current]="token !== 'ellipsis' && currentPage() === token ? '' : null">
+        @if (token === 'ellipsis') {
+          <span class="ellipsis" aria-hidden="true">…</span>
+        } @else {
+          <button
+            type="button"
+            [attr.aria-label]="pageAriaLabel(token)"
+            [attr.aria-current]="currentPage() === token ? 'page' : null"
+            (click)="goTo(token)"
+          >
+            {{ token }}
+          </button>
+        }
+      </li>
+    }
+  </ng-template>
+  <ol class="desktop-pages">
+    <ng-container
+      [ngTemplateOutlet]="pageItems"
+      [ngTemplateOutletContext]="{ $implicit: pageTokens() }"
+    />
+  </ol>
+  <ol class="mobile-pages">
+    <ng-container
+      [ngTemplateOutlet]="pageItems"
+      [ngTemplateOutletContext]="{ $implicit: mobilePageTokens() }"
+    />
+  </ol>
+  <button
+    type="button"
+    class="direction"
+    [disabled]="currentPage() >= pageCount()"
+    (click)="goTo(currentPage() + 1)"
+  >
+    <span class="direction-label">{{ resolvedNextLabel() }}</span
+    ><span aria-hidden="true">→</span>
+  </button>
+  <p class="summary" aria-live="polite">{{ summary() }}</p>
+</nav>

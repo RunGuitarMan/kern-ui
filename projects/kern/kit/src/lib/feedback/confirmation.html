@@ -1,0 +1,13 @@
+@if (!confirming()) {
+  <button type="button" class="request" (click)="confirming.set(true)">
+    {{ resolvedRequestLabel() }}
+  </button>
+} @else {
+  <div class="confirmation" role="group" [attr.aria-label]="resolvedPrompt()">
+    <span>{{ resolvedPrompt() }}</span>
+    <button type="button" class="confirm" (click)="confirm()">
+      {{ resolvedConfirmLabel() }}
+    </button>
+    <button type="button" class="cancel" (click)="cancel()">{{ resolvedCancelLabel() }}</button>
+  </div>
+}

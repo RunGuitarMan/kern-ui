@@ -1,0 +1,39 @@
+<button
+  #origin="cdkOverlayOrigin"
+  cdkOverlayOrigin
+  type="button"
+  class="origin"
+  [attr.aria-describedby]="open() ? panelId : null"
+  (pointerenter)="scheduleOpen()"
+  (pointerleave)="scheduleClose()"
+  (focusin)="scheduleOpen()"
+  (focusout)="scheduleClose()"
+  (keydown.escape)="
+    $event.defaultPrevented || !open()
+      ? undefined
+      : [$event.preventDefault(), $event.stopPropagation(), closeImmediately()]
+  "
+>
+  <ng-content select="[krnHoverCardTrigger]" />
+</button>
+<ng-template
+  #connectedOverlay="cdkConnectedOverlay"
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayOpen]="open()"
+  [cdkConnectedOverlayPositions]="positions"
+  cdkConnectedOverlayPanelClass="krn-overlay-pane"
+  (attach)="registerOverlay(connectedOverlay, origin.elementRef.nativeElement)"
+  (detach)="closeImmediately()"
+>
+  <section
+    [id]="panelId"
+    class="hover-card"
+    role="tooltip"
+    (pointerenter)="cancelClose()"
+    (pointerleave)="scheduleClose()"
+  >
+    <span class="visually-hidden">{{ resolvedAriaLabel() }}</span>
+    <ng-content />
+  </section>
+</ng-template>

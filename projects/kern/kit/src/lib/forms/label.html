@@ -1,0 +1,6 @@
+<label class="krn-label" [attr.for]="forId()" [attr.id]="labelId()" (click)="focusControl()">
+  <ng-content />
+  @if (effectiveRequired()) {
+    <span class="krn-required" aria-hidden="true">*</span>
+  }
+</label>

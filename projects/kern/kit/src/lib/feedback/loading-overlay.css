@@ -1,0 +1,52 @@
+:host {
+  position: relative;
+  display: block;
+  overflow: clip;
+  border-radius: inherit;
+}
+.loading-content {
+  min-inline-size: 0;
+}
+:host([data-active='true'][data-blocking='true']) .loading-content {
+  user-select: none;
+}
+.loading-surface {
+  position: absolute;
+  z-index: var(--krn-z-overlay);
+  inset: 0;
+  display: grid;
+  min-block-size: var(--krn-control-height-lg);
+  padding: var(--krn-space-4);
+  place-items: center;
+  background: color-mix(in oklch, var(--krn-color-surface) 78%, transparent);
+  color: var(--krn-color-text);
+  backdrop-filter: blur(3px);
+}
+.loading-panel {
+  display: inline-flex;
+  max-inline-size: min(100%, 28rem);
+  align-items: center;
+  justify-content: center;
+  gap: var(--krn-space-3);
+  padding: var(--krn-space-2) var(--krn-space-3);
+  border: var(--krn-border-width-1) solid var(--krn-color-border);
+  border-radius: var(--krn-radius-full);
+  box-shadow: var(--krn-shadow-md);
+  background: color-mix(in oklch, var(--krn-color-surface-raised) 94%, transparent);
+  font-size: var(--krn-font-size-sm);
+  font-weight: var(--krn-font-weight-medium);
+  text-align: center;
+}
+:host([data-blocking='false']) .loading-surface {
+  pointer-events: none;
+}
+@media (forced-colors: active) {
+  .loading-surface,
+  .loading-panel {
+    background: Canvas;
+    backdrop-filter: none;
+  }
+  .loading-panel {
+    border-color: CanvasText;
+  }
+}

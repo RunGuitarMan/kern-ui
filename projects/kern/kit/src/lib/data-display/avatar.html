@@ -1,0 +1,10 @@
+@if (src()) {
+  <img [src]="src()" [alt]="alt()" (error)="imageFailed.set(true)" [hidden]="imageFailed()" />
+}
+@if (!src() || imageFailed()) {
+  <span aria-hidden="true">{{ initials() }}</span>
+  <span class="sr-only">{{ alt() || name() }}</span>
+}
+@if (status()) {
+  <span class="status" [attr.data-status]="status()" aria-hidden="true"></span>
+}

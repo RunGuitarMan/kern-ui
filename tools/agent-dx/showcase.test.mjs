@@ -17,26 +17,31 @@ describe('KERN Docs and preview example integration', () => {
   });
 
   it('uses the compile-verified registry instead of handwritten fallback snippets', async () => {
-    const [pageSource, playgroundSource] = await Promise.all([
+    const [pageSource, playgroundSource, playgroundTemplate] = await Promise.all([
       readFile(resolve(workspaceRoot, 'projects/docs/src/app/pages/component-page.ts'), 'utf8'),
       readFile(
         resolve(workspaceRoot, 'projects/docs/src/app/playground/component-playground.ts'),
         'utf8',
       ),
+      readFile(
+        resolve(workspaceRoot, 'projects/docs/src/app/playground/component-playground.html'),
+        'utf8',
+      ),
     ]);
+    const playgroundComponent = `${playgroundSource}\n${playgroundTemplate}`;
     assert.match(pageSource, /findKernAgentExample/);
     assert.doesNotMatch(
-      playgroundSource,
+      playgroundComponent,
       /Strict AOT verified against the packed npm artifact/,
       'The Code tab derives runtime configuration from a compiled base example and must not label that snapshot as AOT verified.',
     );
     assert.match(
-      playgroundSource,
-      /base scaffold is\s+strict-AOT verified/i,
+      playgroundComponent,
+      /base scaffold is\s+strict-AOT\s+verified/i,
       'The Code tab must distinguish the compiled base example from its runtime preview snapshot.',
     );
     assert.doesNotMatch(
-      `${pageSource}\n${playgroundSource}`,
+      `${pageSource}\n${playgroundComponent}`,
       /EXAMPLE_MARKUP|COMPANION_EXAMPLE_SYMBOLS/,
     );
   });

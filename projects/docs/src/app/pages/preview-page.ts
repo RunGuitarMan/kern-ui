@@ -11,29 +11,7 @@ import { ComponentPlayground } from '../playground/component-playground';
   selector: 'kdocs-preview-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, ComponentPlayground],
-  template: `
-    <main class="preview-page" data-testid="docs-preview-root">
-      @if (item(); as current) {
-        <header class="preview-header">
-          <a [routerLink]="['/components', current.id]" aria-label="Return to component docs"
-            >KERN</a
-          >
-          <div>
-            <span>Docs / deterministic preview</span>
-            <strong>{{ current.name }}</strong>
-          </div>
-          <code>&lt;{{ current.selector }}&gt;</code>
-        </header>
-        <kdocs-component-playground [item]="current" [code]="codeExample()" [isolated]="true" />
-      } @else {
-        <section class="preview-not-found">
-          <span>404 / PREVIEW</span>
-          <h1>Unknown component fixture.</h1>
-          <a routerLink="/">Return to documentation</a>
-        </section>
-      }
-    </main>
-  `,
+  templateUrl: './preview-page.html',
   styleUrl: './preview-page.css',
 })
 export class PreviewPage {

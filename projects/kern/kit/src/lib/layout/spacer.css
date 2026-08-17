@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  box-sizing: border-box;
+  min-inline-size: 0;
+  min-block-size: 0;
+  flex: 0 0 auto;
+  pointer-events: none;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([data-axis='horizontal']) {
+  inline-size: var(--krn-spacer-size);
+  block-size: 0;
+}
+
+:host([data-axis='vertical']) {
+  inline-size: 0;
+  block-size: var(--krn-spacer-size);
+}

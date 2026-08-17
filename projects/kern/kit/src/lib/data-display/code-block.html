@@ -1,0 +1,16 @@
+<div class="bar">
+  <span>{{ displayLanguage() }}</span>
+  <button
+    type="button"
+    (click)="copy()"
+    [attr.aria-label]="translations.dataDisplay.copyCode(displayLanguage())"
+  >
+    {{ copied() ? translations.dataDisplay.copied : translations.dataDisplay.copy }}
+  </button>
+</div>
+<pre
+  tabindex="0"
+><code>@for (token of highlightedTokens(); track $index) {<span [class]="'token token-' + token.kind">{{ token.value }}</span>}</code></pre>
+<span class="sr-only" aria-live="polite">{{
+  copied() ? translations.dataDisplay.codeCopied : ''
+}}</span>

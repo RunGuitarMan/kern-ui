@@ -1,0 +1,33 @@
+<div class="root" (focusout)="onFocusOut($event)">
+  <button
+    type="button"
+    class="trigger"
+    [attr.aria-expanded]="open()"
+    [attr.aria-controls]="open() ? menuId : null"
+    aria-haspopup="menu"
+    (click)="toggleMenu()"
+    (keydown)="onTriggerKeydown($event)"
+  >
+    <ng-content select="[krnUserAvatar]" />
+    <span class="identity">
+      <strong>{{ resolvedName() }}</strong>
+      @if (resolvedDetail()) {
+        <small>{{ resolvedDetail() }}</small>
+      }
+    </span>
+    <span class="chevron" aria-hidden="true"></span>
+  </button>
+  @if (open()) {
+    <div
+      #menu
+      class="menu krn-user-menu__menu"
+      [id]="menuId"
+      role="menu"
+      [attr.aria-label]="resolvedMenuAriaLabel()"
+      (click)="onMenuClick($event)"
+      (keydown)="onMenuKeydown($event)"
+    >
+      <ng-content />
+    </div>
+  }
+</div>

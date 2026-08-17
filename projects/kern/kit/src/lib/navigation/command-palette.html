@@ -1,0 +1,76 @@
+@if (open()) {
+  <div class="backdrop" (pointerdown)="close('outside')">
+    <section
+      #panel
+      class="palette"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="headingId"
+      [attr.aria-describedby]="resolvedDescription() ? descriptionId : null"
+      cdkTrapFocus
+      [cdkTrapFocusAutoCapture]="true"
+      (pointerdown)="$event.stopPropagation()"
+      (keydown)="onKeydown($event)"
+    >
+      <h2 [id]="headingId">{{ resolvedTitle() }}</h2>
+      @if (resolvedDescription(); as dialogDescription) {
+        <p class="visually-hidden" [id]="descriptionId">{{ dialogDescription }}</p>
+      }
+      <label class="search">
+        <span class="visually-hidden">{{ resolvedLabels().search }}</span>
+        <span class="search-icon" aria-hidden="true"></span>
+        <input
+          type="search"
+          autocomplete="off"
+          role="combobox"
+          aria-autocomplete="list"
+          [attr.aria-expanded]="open()"
+          [placeholder]="resolvedPlaceholder()"
+          [value]="query()"
+          [attr.aria-controls]="resultsId"
+          [attr.aria-activedescendant]="activeItemId()"
+          (input)="setQuery($event)"
+        />
+        <kbd>{{ resolvedCloseShortcut() }}</kbd>
+      </label>
+      <div
+        class="results"
+        [id]="resultsId"
+        role="listbox"
+        [attr.aria-label]="resolvedResultsLabel()"
+      >
+        @for (item of filteredItems(); track item.id; let index = $index) {
+          <button
+            #option
+            type="button"
+            role="option"
+            [id]="optionId(item)"
+            [attr.aria-selected]="index === activeIndex()"
+            tabindex="-1"
+            (click)="choose(item)"
+            (pointerenter)="activeIndex.set(index)"
+          >
+            <span class="command-copy">
+              <strong>{{ item.label }}</strong>
+              @if (item.description) {
+                <span>{{ item.description }}</span>
+              }
+            </span>
+            @if (item.shortcut) {
+              <kbd>{{ item.shortcut }}</kbd>
+            }
+          </button>
+        } @empty {
+          <div class="empty">
+            <span aria-hidden="true">∅</span>
+            <p>{{ noResultsMessage() }}</p>
+          </div>
+        }
+      </div>
+      <footer>
+        <span><kbd>↑</kbd><kbd>↓</kbd> {{ resolvedLabels().navigate }}</span
+        ><span><kbd>↵</kbd> {{ resolvedLabels().select }}</span>
+      </footer>
+    </section>
+  </div>
+}

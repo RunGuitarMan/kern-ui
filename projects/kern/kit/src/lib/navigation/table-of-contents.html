@@ -1,0 +1,15 @@
+<nav class="toc" [attr.aria-label]="resolvedAriaLabel()">
+  <p class="title">{{ resolvedTitle() }}</p>
+  <ol>
+    @for (item of items(); track item.id) {
+      <li [style.--toc-level]="item.level ?? 2">
+        <a
+          [href]="anchorHref(item.id)"
+          [attr.aria-current]="activeId() === item.id ? 'location' : null"
+          (click)="activate($event, item)"
+          >{{ item.label }}</a
+        >
+      </li>
+    }
+  </ol>
+</nav>

@@ -1,0 +1,50 @@
+<span
+  class="krn-control-shell"
+  [attr.data-disabled]="isDisabled()"
+  [attr.data-invalid]="a11y.invalid()"
+  [attr.data-readonly]="a11y.readOnly()"
+  (pointerdown)="focusFromShell($event)"
+>
+  <span class="krn-control-affix" aria-hidden="true">⌕</span>
+  <input
+    #inputElement
+    class="krn-input"
+    type="search"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-invalid]="a11y.invalid()"
+    [attr.aria-label]="labelledBy() ? null : resolvedAriaLabel() || null"
+    [attr.aria-labelledby]="labelledBy()"
+    [attr.autocomplete]="autocomplete() || null"
+    [attr.enterkeyhint]="enterKeyHint() || null"
+    [attr.maxlength]="maxLength() ?? null"
+    [attr.minlength]="minLength() ?? null"
+    [attr.name]="name() || null"
+    [attr.spellcheck]="spellcheck()"
+    [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
+    [disabled]="isDisabled()"
+    [id]="a11y.id()"
+    [placeholder]="resolvedPlaceholder()"
+    [readOnly]="a11y.readOnly()"
+    [required]="a11y.required()"
+    [value]="controlValue()"
+    (blur)="touch()"
+    (compositionend)="endComposition($event)"
+    (compositionstart)="startComposition()"
+    (input)="updateSearch($event)"
+    (keydown.enter)="submitSearch($event)"
+  />
+  @if (controlValue() && !a11y.readOnly()) {
+    <button
+      class="krn-inline-action"
+      type="button"
+      tabindex="-1"
+      [attr.aria-controls]="a11y.id()"
+      [attr.aria-label]="resolvedClearLabel()"
+      [disabled]="isDisabled()"
+      (click)="clear()"
+      (pointerdown)="retainInputFocus($event)"
+    >
+      ×
+    </button>
+  }
+</span>

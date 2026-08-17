@@ -1,0 +1,39 @@
+<div
+  class="krn-segmented"
+  role="radiogroup"
+  [attr.aria-describedby]="effectiveDescribedBy()"
+  [attr.aria-invalid]="a11y.invalid()"
+  [attr.aria-label]="effectiveLabelledBy() ? null : resolvedAriaLabel()"
+  [attr.aria-labelledby]="effectiveLabelledBy()"
+  [attr.aria-disabled]="isDisabled()"
+  [attr.aria-orientation]="orientation()"
+  [attr.aria-readonly]="a11y.readOnly()"
+  [attr.aria-required]="a11y.required()"
+  [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
+  [attr.data-orientation]="orientation()"
+  [id]="a11y.id()"
+  (focusout)="handleFocusOut($event)"
+  (keydown)="navigate($event)"
+>
+  @for (option of options(); track trackBy()(option, $index); let index = $index) {
+    <button
+      #segment
+      type="button"
+      role="radio"
+      [attr.aria-checked]="isSelected(option.value)"
+      [attr.aria-label]="option.label"
+      [attr.tabindex]="tabIndexFor(option.value, index)"
+      [disabled]="isDisabled() || disabledHandler()(option)"
+      (click)="select(option.value)"
+    >
+      @if (optionTemplate(); as template) {
+        <ng-container
+          [ngTemplateOutlet]="template"
+          [ngTemplateOutletContext]="optionContext(option)"
+        />
+      } @else {
+        {{ option.label }}
+      }
+    </button>
+  }
+</div>

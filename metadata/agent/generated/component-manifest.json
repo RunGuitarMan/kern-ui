@@ -73,7 +73,7 @@
       "@kern-ui/angular/patterns",
       "@kern-ui/angular/testing"
     ],
-    "sourceDigest": "sha256-496ed03559d746f861935dd4168569ec453ce2ab13e11512e4794fd55d717392"
+    "sourceDigest": "sha256-8f2f19de85bc431edc8a64d172accce86d638b5a4e7df26f0ce70f4fe0bce7f7"
   },
   "components": [
     {
@@ -38366,7 +38366,20 @@
           "descriptionSource": "inferred"
         }
       ],
-      "slots": [],
+      "slots": [
+        {
+          "name": "default",
+          "selector": "*",
+          "required": false,
+          "description": "Projects default component content."
+        },
+        {
+          "name": "krnAlertAction",
+          "selector": "[krnAlertAction]",
+          "required": false,
+          "description": "Projects content matching [krnAlertAction]."
+        }
+      ],
       "forms": {
         "controlValueAccessor": false,
         "validator": false,
@@ -38737,7 +38750,20 @@
           "descriptionSource": "inferred"
         }
       ],
-      "slots": [],
+      "slots": [
+        {
+          "name": "default",
+          "selector": "*",
+          "required": false,
+          "description": "Projects default component content."
+        },
+        {
+          "name": "krnAlertAction",
+          "selector": "[krnAlertAction]",
+          "required": false,
+          "description": "Projects content matching [krnAlertAction]."
+        }
+      ],
       "forms": {
         "controlValueAccessor": false,
         "validator": false,
@@ -40734,7 +40760,20 @@
           "descriptionSource": "source"
         }
       ],
-      "slots": [],
+      "slots": [
+        {
+          "name": "default",
+          "selector": "*",
+          "required": false,
+          "description": "Projects default component content."
+        },
+        {
+          "name": "krnDialogAction",
+          "selector": "[krnDialogAction]",
+          "required": false,
+          "description": "Projects content matching [krnDialogAction]."
+        }
+      ],
       "forms": {
         "controlValueAccessor": false,
         "validator": false,
@@ -41357,7 +41396,20 @@
           "descriptionSource": "source"
         }
       ],
-      "slots": [],
+      "slots": [
+        {
+          "name": "default",
+          "selector": "*",
+          "required": false,
+          "description": "Projects default component content."
+        },
+        {
+          "name": "krnDialogAction",
+          "selector": "[krnDialogAction]",
+          "required": false,
+          "description": "Projects content matching [krnDialogAction]."
+        }
+      ],
       "forms": {
         "controlValueAccessor": false,
         "validator": false,
@@ -41977,7 +42029,20 @@
           "descriptionSource": "source"
         }
       ],
-      "slots": [],
+      "slots": [
+        {
+          "name": "default",
+          "selector": "*",
+          "required": false,
+          "description": "Projects default component content."
+        },
+        {
+          "name": "krnDialogAction",
+          "selector": "[krnDialogAction]",
+          "required": false,
+          "description": "Projects content matching [krnDialogAction]."
+        }
+      ],
       "forms": {
         "controlValueAccessor": false,
         "validator": false,
@@ -42609,7 +42674,20 @@
           "descriptionSource": "source"
         }
       ],
-      "slots": [],
+      "slots": [
+        {
+          "name": "default",
+          "selector": "*",
+          "required": false,
+          "description": "Projects default component content."
+        },
+        {
+          "name": "krnDialogAction",
+          "selector": "[krnDialogAction]",
+          "required": false,
+          "description": "Projects content matching [krnDialogAction]."
+        }
+      ],
       "forms": {
         "controlValueAccessor": false,
         "validator": false,
@@ -44727,7 +44805,26 @@
           "descriptionSource": "inferred"
         }
       ],
-      "slots": [],
+      "slots": [
+        {
+          "name": "krnStateVisual",
+          "selector": "[krnStateVisual]",
+          "required": false,
+          "description": "Projects content matching [krnStateVisual]."
+        },
+        {
+          "name": "default-2",
+          "selector": "*",
+          "required": false,
+          "description": "Projects default component content."
+        },
+        {
+          "name": "krnStateAction",
+          "selector": "[krnStateAction]",
+          "required": false,
+          "description": "Projects content matching [krnStateAction]."
+        }
+      ],
       "forms": {
         "controlValueAccessor": false,
         "validator": false,
@@ -45058,7 +45155,26 @@
           "descriptionSource": "inferred"
         }
       ],
-      "slots": [],
+      "slots": [
+        {
+          "name": "krnStateVisual",
+          "selector": "[krnStateVisual]",
+          "required": false,
+          "description": "Projects content matching [krnStateVisual]."
+        },
+        {
+          "name": "default-2",
+          "selector": "*",
+          "required": false,
+          "description": "Projects default component content."
+        },
+        {
+          "name": "krnStateAction",
+          "selector": "[krnStateAction]",
+          "required": false,
+          "description": "Projects content matching [krnStateAction]."
+        }
+      ],
       "forms": {
         "controlValueAccessor": false,
         "validator": false,
@@ -45400,7 +45516,26 @@
           "descriptionSource": "inferred"
         }
       ],
-      "slots": [],
+      "slots": [
+        {
+          "name": "krnStateVisual",
+          "selector": "[krnStateVisual]",
+          "required": false,
+          "description": "Projects content matching [krnStateVisual]."
+        },
+        {
+          "name": "default-2",
+          "selector": "*",
+          "required": false,
+          "description": "Projects default component content."
+        },
+        {
+          "name": "krnStateAction",
+          "selector": "[krnStateAction]",
+          "required": false,
+          "description": "Projects content matching [krnStateAction]."
+        }
+      ],
       "forms": {
         "controlValueAccessor": false,
         "validator": false,

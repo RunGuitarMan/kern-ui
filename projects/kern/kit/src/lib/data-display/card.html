@@ -1,0 +1,11 @@
+@if (eyebrow()) {
+  <p class="eyebrow">{{ eyebrow() }}</p>
+}
+@if (heading()) {
+  <div class="heading-row">
+    <h3>{{ heading() }}</h3>
+    <ng-content select="[krnCardAction]" />
+  </div>
+}
+<div class="body"><ng-content /></div>
+<ng-content select="[krnCardFooter]" />

@@ -1,0 +1,20 @@
+@for (item of items(); track item) {
+  <button
+    #ratingItem
+    type="button"
+    role="radio"
+    [attr.aria-checked]="item === value()"
+    [attr.aria-label]="translations.dataDisplay.ratingValue(item, max())"
+    [attr.data-rating-item]="item"
+    [attr.tabindex]="item === value() || (!value() && item === 1) ? 0 : -1"
+    [disabled]="disabled()"
+    (click)="setValue(item)"
+    (keydown)="onKeydown($event)"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true" [attr.data-filled]="item <= value() ? '' : null">
+      <path
+        d="m12 3.75 2.45 4.96 5.47.8-3.96 3.85.94 5.45L12 16.23 7.1 18.8l.94-5.45-3.96-3.85 5.47-.8L12 3.75Z"
+      />
+    </svg>
+  </button>
+}

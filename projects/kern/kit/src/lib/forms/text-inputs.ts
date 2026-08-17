@@ -70,48 +70,7 @@ const isElementTarget = (target: EventTarget | null): target is Element =>
     '[attr.id]': 'null',
     '[attr.data-size]': 'size()',
   },
-  template: `
-    <span
-      class="krn-control-shell"
-      [attr.data-disabled]="isDisabled()"
-      [attr.data-invalid]="a11y.invalid()"
-      [attr.data-readonly]="a11y.readOnly()"
-      (pointerdown)="focusFromShell($event)"
-    >
-      <span class="krn-control-affix">
-        <ng-content select="[krnPrefix]" />
-      </span>
-      <input
-        #inputElement
-        class="krn-input"
-        type="text"
-        [attr.aria-describedby]="describedBy()"
-        [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="labelledBy() ? null : ariaLabel() || null"
-        [attr.aria-labelledby]="labelledBy()"
-        [attr.autocomplete]="autocomplete() || null"
-        [attr.inputmode]="inputMode()"
-        [attr.maxlength]="maxLength() ?? null"
-        [attr.minlength]="minLength() ?? null"
-        [attr.name]="name() || null"
-        [attr.spellcheck]="spellcheck()"
-        [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
-        [disabled]="isDisabled()"
-        [id]="a11y.id()"
-        [placeholder]="placeholder()"
-        [readOnly]="a11y.readOnly()"
-        [required]="a11y.required()"
-        [value]="controlValue()"
-        (blur)="touch()"
-        (compositionend)="endComposition($event)"
-        (compositionstart)="startComposition()"
-        (input)="updateText($event)"
-      />
-      <span class="krn-control-affix">
-        <ng-content select="[krnSuffix]" />
-      </span>
-    </span>
-  `,
+  templateUrl: './text-input.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnTextInput {
@@ -253,47 +212,7 @@ export class KrnTextInput {
     '[attr.id]': 'null',
     '[attr.data-size]': 'size()',
   },
-  template: `
-    <span
-      class="krn-control-shell krn-control-shell--textarea"
-      [attr.data-auto-resize]="autoResize()"
-      [attr.data-disabled]="isDisabled()"
-      [attr.data-invalid]="a11y.invalid()"
-      [attr.data-readonly]="a11y.readOnly()"
-      (pointerdown)="focusFromShell($event)"
-    >
-      <textarea
-        #textareaElement
-        class="krn-textarea"
-        [attr.aria-describedby]="describedBy()"
-        [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="labelledBy() ? null : ariaLabel() || null"
-        [attr.aria-labelledby]="labelledBy()"
-        [attr.autocomplete]="autocomplete() || null"
-        [attr.maxlength]="maxLength() ?? null"
-        [attr.minlength]="minLength() ?? null"
-        [attr.name]="name() || null"
-        [attr.spellcheck]="spellcheck()"
-        [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
-        [disabled]="isDisabled()"
-        [id]="a11y.id()"
-        [placeholder]="placeholder()"
-        [readOnly]="a11y.readOnly()"
-        [required]="a11y.required()"
-        [rows]="rows()"
-        [value]="controlValue()"
-        (blur)="touch()"
-        (compositionend)="endComposition($event)"
-        (compositionstart)="startComposition()"
-        (input)="updateText($event)"
-      ></textarea>
-      @if (showCount() && maxLength() !== undefined) {
-        <span class="krn-textarea-footer">
-          <span class="krn-textarea-count"> {{ controlValue().length }} / {{ maxLength() }} </span>
-        </span>
-      }
-    </span>
-  `,
+  templateUrl: './textarea.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnTextarea {
@@ -486,53 +405,7 @@ export class KrnTextarea {
     '[attr.id]': 'null',
   },
   providers: [...provideKrnFormControl()],
-  template: `
-    <span
-      class="krn-control-shell"
-      [attr.data-disabled]="isDisabled()"
-      [attr.data-invalid]="a11y.invalid()"
-      [attr.data-readonly]="a11y.readOnly()"
-      (pointerdown)="focusFromShell($event)"
-    >
-      <input
-        #inputElement
-        class="krn-input"
-        [type]="revealed() ? 'text' : 'password'"
-        autocapitalize="none"
-        spellcheck="false"
-        [attr.aria-describedby]="describedBy()"
-        [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="labelledBy() ? null : ariaLabel() || null"
-        [attr.aria-labelledby]="labelledBy()"
-        [attr.autocomplete]="autocomplete() || null"
-        [attr.maxlength]="maxLength() ?? null"
-        [attr.minlength]="minLength() ?? null"
-        [attr.name]="name() || null"
-        [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
-        [disabled]="isDisabled()"
-        [id]="a11y.id()"
-        [placeholder]="placeholder()"
-        [readOnly]="a11y.readOnly()"
-        [required]="a11y.required()"
-        [value]="controlValue()"
-        (blur)="touch()"
-        (compositionend)="endComposition($event)"
-        (compositionstart)="startComposition()"
-        (input)="updatePassword($event)"
-      />
-      <button
-        class="krn-inline-action"
-        type="button"
-        [attr.aria-controls]="a11y.id()"
-        [attr.aria-label]="revealed() ? resolvedHideLabel() : resolvedShowLabel()"
-        [disabled]="isDisabled()"
-        (click)="revealed.update(toggle)"
-        (pointerdown)="retainInputFocus($event)"
-      >
-        {{ revealed() ? resolvedHideText() : resolvedShowText() }}
-      </button>
-    </span>
-  `,
+  templateUrl: './password-input.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnPasswordInput {
@@ -709,58 +582,7 @@ export class KrnPasswordInput {
     '[attr.id]': 'null',
   },
   providers: [...provideKrnFormControl()],
-  template: `
-    <span
-      class="krn-control-shell"
-      [attr.data-disabled]="isDisabled()"
-      [attr.data-invalid]="a11y.invalid()"
-      [attr.data-readonly]="a11y.readOnly()"
-      (pointerdown)="focusFromShell($event)"
-    >
-      <span class="krn-control-affix" aria-hidden="true">⌕</span>
-      <input
-        #inputElement
-        class="krn-input"
-        type="search"
-        [attr.aria-describedby]="describedBy()"
-        [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="labelledBy() ? null : resolvedAriaLabel() || null"
-        [attr.aria-labelledby]="labelledBy()"
-        [attr.autocomplete]="autocomplete() || null"
-        [attr.enterkeyhint]="enterKeyHint() || null"
-        [attr.maxlength]="maxLength() ?? null"
-        [attr.minlength]="minLength() ?? null"
-        [attr.name]="name() || null"
-        [attr.spellcheck]="spellcheck()"
-        [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
-        [disabled]="isDisabled()"
-        [id]="a11y.id()"
-        [placeholder]="resolvedPlaceholder()"
-        [readOnly]="a11y.readOnly()"
-        [required]="a11y.required()"
-        [value]="controlValue()"
-        (blur)="touch()"
-        (compositionend)="endComposition($event)"
-        (compositionstart)="startComposition()"
-        (input)="updateSearch($event)"
-        (keydown.enter)="submitSearch($event)"
-      />
-      @if (controlValue() && !a11y.readOnly()) {
-        <button
-          class="krn-inline-action"
-          type="button"
-          tabindex="-1"
-          [attr.aria-controls]="a11y.id()"
-          [attr.aria-label]="resolvedClearLabel()"
-          [disabled]="isDisabled()"
-          (click)="clear()"
-          (pointerdown)="retainInputFocus($event)"
-        >
-          ×
-        </button>
-      }
-    </span>
-  `,
+  templateUrl: './search-input.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnSearchInput {
@@ -945,66 +767,7 @@ export class KrnSearchInput {
     '[attr.id]': 'null',
   },
   providers: [...provideKrnFormControl()],
-  template: `
-    <span
-      class="krn-control-shell krn-number-control"
-      [attr.data-disabled]="isDisabled()"
-      [attr.data-invalid]="a11y.invalid()"
-      [attr.data-readonly]="a11y.readOnly()"
-      (pointerdown)="focusFromShell($event)"
-    >
-      <input
-        #inputElement
-        class="krn-input"
-        type="number"
-        [attr.aria-describedby]="describedBy()"
-        [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="labelledBy() ? null : ariaLabel() || null"
-        [attr.aria-labelledby]="labelledBy()"
-        [attr.autocomplete]="autocomplete() || null"
-        [attr.inputmode]="inputMode()"
-        [attr.max]="max() ?? null"
-        [attr.min]="min() ?? null"
-        [attr.name]="name() || null"
-        [attr.step]="step()"
-        [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
-        [disabled]="isDisabled()"
-        [id]="a11y.id()"
-        [placeholder]="placeholder()"
-        [readOnly]="a11y.readOnly()"
-        [required]="a11y.required()"
-        [value]="controlValue() ?? ''"
-        (blur)="touch()"
-        (input)="updateNumber($event)"
-      />
-      @if (showSteppers() && !a11y.readOnly()) {
-        <span class="krn-stepper">
-          <button
-            type="button"
-            tabindex="-1"
-            [attr.aria-controls]="a11y.id()"
-            [attr.aria-label]="resolvedIncreaseLabel()"
-            [disabled]="!canIncrease()"
-            (click)="stepBy(1)"
-            (pointerdown)="retainInputFocus($event)"
-          >
-            +
-          </button>
-          <button
-            type="button"
-            tabindex="-1"
-            [attr.aria-controls]="a11y.id()"
-            [attr.aria-label]="resolvedDecreaseLabel()"
-            [disabled]="!canDecrease()"
-            (click)="stepBy(-1)"
-            (pointerdown)="retainInputFocus($event)"
-          >
-            −
-          </button>
-        </span>
-      }
-    </span>
-  `,
+  templateUrl: './number-input.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnNumberInput {

@@ -1,0 +1,108 @@
+:host {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  place-items: center;
+  color: var(--krn-color-border-strong);
+  outline: none;
+  touch-action: none;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([data-orientation='horizontal']) {
+  inline-size: 1px;
+  block-size: 100%;
+}
+
+:host([data-orientation='vertical']) {
+  inline-size: 100%;
+  block-size: 1px;
+}
+
+:host([data-resize-axis='x']) {
+  cursor: col-resize;
+}
+
+:host([data-resize-axis='y']) {
+  cursor: row-resize;
+}
+
+:host::before {
+  position: absolute;
+  content: '';
+  background: transparent;
+}
+
+:host([data-orientation='horizontal'])::before {
+  inset-block: 0;
+  inline-size: 0.75rem;
+}
+
+:host([data-orientation='vertical'])::before {
+  inset-inline: 0;
+  block-size: 0.75rem;
+}
+
+.krn-resize-handle__line {
+  display: block;
+  background: var(--krn-color-border);
+  transition:
+    background-color var(--krn-motion-duration-interaction) var(--krn-motion-ease-standard),
+    transform var(--krn-motion-duration-interaction) var(--krn-motion-ease-standard);
+}
+
+:host([data-orientation='horizontal']) .krn-resize-handle__line {
+  inline-size: 1px;
+  block-size: 100%;
+}
+
+:host([data-orientation='vertical']) .krn-resize-handle__line {
+  inline-size: 100%;
+  block-size: 1px;
+}
+
+:host(:is(:hover, :focus-visible)) .krn-resize-handle__line {
+  background: var(--krn-color-focus);
+}
+
+:host([data-orientation='horizontal']:focus-visible) .krn-resize-handle__line {
+  inline-size: 3px;
+}
+
+:host([data-orientation='vertical']:focus-visible) .krn-resize-handle__line {
+  block-size: 3px;
+}
+
+:host(:focus-visible) {
+  box-shadow: none;
+}
+
+:host(.krn-resize-handle--disabled) {
+  cursor: default;
+  opacity: var(--krn-opacity-disabled);
+  touch-action: auto;
+}
+
+@media (pointer: coarse) {
+  :host([data-orientation='horizontal'])::before {
+    inline-size: var(--krn-touch-target-min);
+  }
+
+  :host([data-orientation='vertical'])::before {
+    block-size: var(--krn-touch-target-min);
+  }
+}
+
+@media (forced-colors: active) {
+  .krn-resize-handle__line {
+    background: CanvasText;
+  }
+  :host(:focus-visible) .krn-resize-handle__line {
+    background: Highlight;
+  }
+}

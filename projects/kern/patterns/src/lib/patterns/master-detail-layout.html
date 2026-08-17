@@ -1,0 +1,8 @@
+<div class="layout">
+  <aside #masterPane class="master" tabindex="-1" [attr.aria-label]="resolvedMasterLabel()">
+    <ng-content select="[krnMaster]" />
+  </aside>
+  <section #detailPane class="detail" tabindex="-1" [attr.aria-label]="resolvedDetailLabel()">
+    <ng-content select="[krnDetail]" />
+  </section>
+</div>

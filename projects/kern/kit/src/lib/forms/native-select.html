@@ -1,0 +1,49 @@
+<span
+  class="krn-control-shell"
+  [attr.data-disabled]="isDisabled()"
+  [attr.data-invalid]="a11y.invalid()"
+  [attr.data-readonly]="a11y.readOnly()"
+>
+  <select
+    #select
+    class="krn-select-native"
+    [attr.aria-describedby]="effectiveDescribedBy()"
+    [attr.aria-invalid]="a11y.invalid()"
+    [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
+    [attr.aria-labelledby]="effectiveLabelledBy()"
+    [attr.aria-readonly]="isReadOnly()"
+    [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
+    [disabled]="isDisabled()"
+    [id]="a11y.id()"
+    [name]="name()"
+    [required]="a11y.required()"
+    [tabindex]="isDisabled() ? -1 : tabIndex()"
+    [value]="selectedNativeKey()"
+    (blur)="touch()"
+    (change)="selectNative($event)"
+    (click)="protectReadOnlyInteraction($event)"
+    (keydown)="protectReadOnlyInteraction($event)"
+    (pointerdown)="protectReadOnlyInteraction($event)"
+  >
+    <option
+      value="__krn-native-select-placeholder__"
+      [disabled]="a11y.required()"
+      [hidden]="!placeholder()"
+      [attr.selected]="selectedNativeKey() === '__krn-native-select-placeholder__' ? '' : null"
+    >
+      {{ placeholder() }}
+    </option>
+    @for (option of options(); track trackBy()(option, $index)) {
+      <option
+        [disabled]="disabledHandler()(option)"
+        [attr.selected]="selectedNativeKey() === optionKey(option, $index) ? '' : null"
+        [value]="optionKey(option, $index)"
+      >
+        {{ stringify()(option) }}
+      </option>
+    }
+  </select>
+  <span class="krn-control-affix" aria-hidden="true">
+    <span class="krn-select-chevron"></span>
+  </span>
+</span>

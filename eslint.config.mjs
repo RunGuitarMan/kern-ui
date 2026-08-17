@@ -96,6 +96,17 @@ export default [
     },
   },
   {
+    files: [
+      'projects/kern/{addon-charts,addon-grid,core,kit,patterns}/src/**/*.ts',
+      'projects/docs/src/**/*.ts',
+      'projects/showcase/specimen/src/**/*.ts',
+    ],
+    ignores: ['**/*.spec.ts'],
+    rules: {
+      '@angular-eslint/component-max-inline-declarations': ['error', { template: 0, styles: 0 }],
+    },
+  },
+  {
     files: ['projects/kern/agent/{examples,recipes}/**/*.ts'],
     rules: {
       '@angular-eslint/component-selector': [

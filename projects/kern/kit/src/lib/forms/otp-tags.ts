@@ -43,58 +43,7 @@ const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string
     '[attr.id]': 'null',
   },
   providers: [...provideKrnFormControl()],
-  template: `
-    <div class="krn-otp-control">
-      @if (!effectiveLabelledBy()) {
-        <span class="krn-label" [id]="internalLabelId()">{{ resolvedLabel() }}</span>
-      }
-      <div
-        class="krn-otp"
-        [attr.data-disabled]="isDisabled()"
-        [attr.data-invalid]="a11y.invalid()"
-        [attr.data-readonly]="a11y.readOnly()"
-        (pointerdown)="selectSlot($event)"
-      >
-        <input
-          #otpInput
-          class="krn-otp__input"
-          type="text"
-          autocapitalize="off"
-          autocorrect="off"
-          [attr.aria-describedby]="effectiveDescribedBy()"
-          [attr.aria-invalid]="a11y.invalid()"
-          [attr.aria-labelledby]="effectiveLabelledBy() || internalLabelId()"
-          [attr.autocomplete]="autocomplete()"
-          [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
-          [attr.inputmode]="numericOnly() ? 'numeric' : 'text'"
-          [attr.pattern]="numericOnly() ? '[0-9]*' : null"
-          [disabled]="isDisabled()"
-          [id]="a11y.id()"
-          [readOnly]="a11y.readOnly()"
-          [required]="a11y.required()"
-          [spellcheck]="false"
-          [tabIndex]="isDisabled() ? -1 : tabIndex()"
-          [value]="controlValue()"
-          (blur)="handleBlur()"
-          (focus)="handleFocus()"
-          (input)="inputCode($event)"
-          (select)="syncSelection()"
-        />
-        <span class="krn-otp__slots" aria-hidden="true">
-          @for (index of slots(); track index) {
-            <span
-              #otpSlot
-              class="krn-otp__slot"
-              [attr.data-active]="focused() && activeIndex() === index ? '' : null"
-              [attr.data-filled]="characterAt(index) ? '' : null"
-            >
-              {{ characterAt(index) }}
-            </span>
-          }
-        </span>
-      </div>
-    </div>
-  `,
+  templateUrl: './otp-input.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnOtpInput {
@@ -274,76 +223,7 @@ export class KrnOtpInput {
     '[attr.id]': 'null',
   },
   providers: [...provideKrnFormControl()],
-  template: `
-    <div
-      #tagsShell
-      class="krn-control-shell"
-      [attr.data-disabled]="isDisabled()"
-      [attr.data-invalid]="a11y.invalid()"
-      [attr.data-readonly]="a11y.readOnly()"
-      (click)="focusInput()"
-      (focusout)="handleFocusOut($event)"
-    >
-      <div
-        class="krn-tag-input"
-        role="group"
-        [attr.aria-label]="effectiveLabelledBy() ? null : resolvedAriaLabel()"
-        [attr.aria-labelledby]="effectiveLabelledBy()"
-      >
-        @for (tag of controlValue(); track $index; let index = $index) {
-          <span class="krn-token">
-            <span>{{ tag }}</span>
-            @if (!a11y.readOnly()) {
-              <button
-                class="krn-token__remove"
-                type="button"
-                [attr.aria-label]="translations.forms.removeTag(tag)"
-                [disabled]="isDisabled()"
-                (pointerdown)="$event.preventDefault()"
-                (click)="remove(index, $event)"
-              >
-                ×
-              </button>
-            }
-          </span>
-        }
-        <input
-          #tagInput
-          class="krn-input"
-          type="text"
-          [attr.aria-describedby]="effectiveDescribedBy()"
-          [attr.aria-invalid]="a11y.invalid()"
-          [attr.aria-label]="effectiveLabelledBy() ? null : resolvedInputLabel()"
-          [attr.aria-labelledby]="effectiveLabelledBy()"
-          [attr.aria-required]="a11y.required()"
-          [attr.autocomplete]="autocomplete()"
-          [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
-          [disabled]="isDisabled()"
-          [id]="a11y.id()"
-          [placeholder]="controlValue().length ? '' : resolvedPlaceholder()"
-          [readOnly]="a11y.readOnly()"
-          [required]="a11y.required() && controlValue().length === 0"
-          [tabIndex]="isDisabled() ? -1 : tabIndex()"
-          [value]="draft()"
-          (input)="updateDraft($event)"
-          (keydown)="handleKey($event)"
-        />
-        @if (visualFeedback(); as feedback) {
-          <span
-            class="krn-tag-feedback"
-            aria-hidden="true"
-            [attr.data-feedback-id]="feedback.id"
-            [attr.data-kind]="feedback.kind"
-          >
-            {{ feedback.text }}
-          </span>
-        }
-      </div>
-    </div>
-    <span class="krn-visually-hidden" role="status" aria-live="polite">
-      {{ announcement() }}
-    </span>
-  `,
+  templateUrl: './tags-input.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnTagsInput {

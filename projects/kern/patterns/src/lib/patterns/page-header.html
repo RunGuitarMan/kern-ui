@@ -1,0 +1,21 @@
+<header
+  class="frame"
+  [attr.data-index]="resolvedIndex() ? '' : null"
+  [attr.aria-labelledby]="headingId"
+  [attr.aria-describedby]="resolvedDescription() ? descriptionId : null"
+>
+  @if (resolvedIndex()) {
+    <div class="index" aria-hidden="true">{{ resolvedIndex() }}</div>
+  }
+  <div class="copy">
+    @if (resolvedEyebrow()) {
+      <span class="eyebrow">{{ resolvedEyebrow() }}</span>
+    }
+    <h1 [id]="headingId">{{ resolvedHeading() }}</h1>
+    @if (resolvedDescription()) {
+      <p [id]="descriptionId">{{ resolvedDescription() }}</p>
+    }
+    <ng-content select="[krnPageHeaderMeta]" />
+  </div>
+  <div class="actions"><ng-content /></div>
+</header>

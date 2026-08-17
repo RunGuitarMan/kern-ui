@@ -1,0 +1,75 @@
+<div
+  class="krn-upload"
+  [attr.aria-invalid]="a11y.invalid()"
+  [attr.data-disabled]="isDisabled()"
+  [attr.data-invalid]="a11y.invalid()"
+  [attr.data-readonly]="a11y.readOnly()"
+>
+  <input
+    #fileInput
+    class="krn-upload__input"
+    type="file"
+    [accept]="accept()"
+    aria-hidden="true"
+    [disabled]="isDisabled() || a11y.readOnly()"
+    [id]="nativeInputId()"
+    [multiple]="multiple()"
+    tabindex="-1"
+    (change)="selectFromInput($event)"
+  />
+  <button
+    #action
+    class="krn-upload__button"
+    type="button"
+    [attr.aria-describedby]="effectiveDescribedBy()"
+    [attr.aria-disabled]="a11y.readOnly() ? 'true' : null"
+    [attr.aria-invalid]="a11y.invalid()"
+    [attr.aria-labelledby]="effectiveLabelledBy()"
+    [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
+    [disabled]="isDisabled()"
+    [id]="a11y.id()"
+    [tabIndex]="isDisabled() ? -1 : tabIndex()"
+    (blur)="touch()"
+    (click)="openPicker()"
+  >
+    {{ resolvedLabel() }}
+  </button>
+  @if (description()) {
+    <span class="krn-message" [id]="descriptionId()">{{ description() }}</span>
+  }
+  @if (a11y.required()) {
+    <span class="krn-visually-hidden" [id]="requiredDescriptionId()">
+      {{ translations.forms.fileSelectionRequired }}
+    </span>
+  }
+  <ng-container [ngTemplateOutlet]="fileSummary" />
+</div>
+
+<ng-template #fileSummary>
+  @if (controlValue().length) {
+    <ul class="krn-file-list" [attr.aria-label]="translations.forms.selectedFiles">
+      @for (file of controlValue(); track fileKey(file); let index = $index) {
+        <li>
+          <span class="krn-file-name">{{ file.name }}</span>
+          <span>{{ formatBytes(file.size) }}</span>
+          <button
+            class="krn-inline-action"
+            type="button"
+            [attr.aria-label]="translations.forms.removeFile(file.name)"
+            [disabled]="isDisabled() || a11y.readOnly()"
+            (click)="removeFile(index)"
+          >
+            ×
+          </button>
+        </li>
+      }
+    </ul>
+  }
+  @if (rejections().length) {
+    <ul class="krn-rejection-list" aria-live="polite">
+      @for (rejection of rejections(); track rejection) {
+        <li>{{ rejection.message }}</li>
+      }
+    </ul>
+  }
+</ng-template>

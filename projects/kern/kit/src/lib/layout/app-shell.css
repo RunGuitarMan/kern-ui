@@ -1,0 +1,184 @@
+:host {
+  position: relative;
+  display: block;
+  min-block-size: 100dvb;
+  min-inline-size: 0;
+  overflow: clip;
+  border-radius: inherit;
+  background: var(--krn-color-canvas);
+  color: var(--krn-color-text);
+}
+
+.krn-shell__mobile-trigger,
+.krn-shell__mobile-close {
+  display: none;
+  inline-size: var(--krn-touch-target-min);
+  block-size: var(--krn-touch-target-min);
+  padding: 0;
+  border: var(--krn-border-width-1) solid var(--krn-color-border);
+  border-radius: var(--krn-radius-md);
+  place-items: center;
+  background: var(--krn-color-surface-raised);
+  color: var(--krn-color-text);
+  font: inherit;
+  font-size: var(--krn-font-size-lg);
+  cursor: pointer;
+}
+
+:is(.krn-shell__mobile-trigger, .krn-shell__mobile-close):focus-visible {
+  outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
+  outline-offset: var(--krn-focus-ring-offset);
+}
+
+.krn-shell {
+  display: grid;
+  min-block-size: inherit;
+  overflow: clip;
+  border-radius: inherit;
+  grid-template:
+    'header header header' auto
+    'rail sidebar main' minmax(0, 1fr) /
+    auto auto minmax(0, 1fr);
+}
+
+.krn-shell__header {
+  z-index: var(--krn-z-sticky);
+  grid-area: header;
+  min-inline-size: 0;
+  overflow: clip;
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
+}
+
+.krn-shell__header:has(> krn-header) {
+  display: contents;
+}
+
+.krn-shell__navigation,
+.krn-shell__navigation-surface {
+  display: contents;
+}
+
+.krn-shell__rail {
+  grid-area: rail;
+  inline-size: fit-content;
+  min-inline-size: 0;
+  justify-self: start;
+}
+
+.krn-shell__sidebar {
+  grid-area: sidebar;
+  inline-size: fit-content;
+  min-inline-size: 0;
+  justify-self: start;
+}
+
+:host([data-sidebar-position='end']) .krn-shell__sidebar {
+  --krn-sidebar-divider-start-width: 1px;
+  --krn-sidebar-divider-end-width: 0;
+}
+
+:host([data-sidebar-position='end']) .krn-shell__rail {
+  --krn-rail-divider-start-width: 1px;
+  --krn-rail-divider-end-width: 0;
+}
+
+.krn-shell__main {
+  grid-area: main;
+  inline-size: min(100%, var(--krn-shell-main-max));
+  min-inline-size: 0;
+  min-block-size: 0;
+  margin-inline: auto;
+  outline: none;
+}
+
+.krn-shell__header:empty,
+.krn-shell__rail:empty,
+.krn-shell__sidebar:empty {
+  display: none;
+}
+
+:host([data-sidebar-position='end']) .krn-shell {
+  grid-template:
+    'header header header' auto
+    'main sidebar rail' minmax(0, 1fr) /
+    minmax(0, 1fr) auto auto;
+}
+
+@media (max-width: 48rem) {
+  .krn-shell,
+  :host([data-sidebar-position='end']) .krn-shell {
+    grid-template:
+      'header' auto
+      'main' minmax(0, 1fr) / minmax(0, 1fr);
+  }
+
+  .krn-shell__mobile-trigger {
+    position: absolute;
+    z-index: calc(var(--krn-z-sticky) + 1);
+    inset-block-start: var(--krn-space-2);
+    inset-inline-start: var(--krn-space-2);
+    display: grid;
+  }
+
+  :host([data-mobile-navigation='hidden']) .krn-shell__mobile-trigger,
+  :host:not(:has(.krn-shell__rail:not(:empty), .krn-shell__sidebar:not(:empty)))
+    .krn-shell__mobile-trigger {
+    display: none;
+  }
+
+  .krn-shell__navigation {
+    display: none;
+  }
+
+  :host([data-mobile-navigation-open]) .krn-shell__navigation {
+    display: grid;
+    position: fixed;
+    z-index: var(--krn-z-modal);
+    inset: 0;
+    justify-items: start;
+    background: var(--krn-color-backdrop);
+  }
+
+  :host([data-sidebar-position='end'][data-mobile-navigation-open]) .krn-shell__navigation {
+    justify-items: end;
+  }
+
+  .krn-shell__navigation-surface {
+    position: relative;
+    display: flex;
+    min-inline-size: min(18rem, 88vi);
+    max-inline-size: min(88vi, calc(var(--krn-shell-sidebar-width) + var(--krn-shell-rail-width)));
+    block-size: 100dvb;
+    overflow: hidden;
+    box-shadow: var(--krn-shadow-overlay);
+    background: var(--krn-color-surface);
+  }
+
+  .krn-shell__mobile-close {
+    position: absolute;
+    z-index: 1;
+    inset-block-start: var(--krn-space-2);
+    inset-inline-end: var(--krn-space-2);
+    display: grid;
+  }
+
+  .krn-shell__rail,
+  .krn-shell__sidebar {
+    display: block;
+    min-block-size: 0;
+    block-size: 100%;
+  }
+
+  :host([data-mobile-navigation='sidebar']) .krn-shell__rail,
+  :host([data-mobile-navigation='rail']) .krn-shell__sidebar {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .krn-shell__rail,
+  .krn-shell__sidebar {
+    border-inline-end: 1px solid CanvasText;
+  }
+}

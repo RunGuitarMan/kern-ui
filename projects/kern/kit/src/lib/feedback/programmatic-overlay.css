@@ -1,0 +1,6 @@
+:host {
+  display: contents;
+}
+:host-context([inert]) {
+  visibility: hidden;
+}

@@ -1,0 +1,140 @@
+<div class="krn-picker" (focusout)="closeOnFocusOut($event)" (keydown.escape)="onEscape($event)">
+  <span
+    class="krn-control-shell"
+    [attr.data-disabled]="isDisabled()"
+    [attr.data-invalid]="a11y.invalid()"
+    [attr.data-readonly]="a11y.readOnly()"
+  >
+    <button
+      #trigger
+      class="krn-picker__trigger"
+      type="button"
+      [attr.aria-controls]="calendarId()"
+      [attr.aria-describedby]="effectiveDescribedBy()"
+      [attr.aria-expanded]="open()"
+      [attr.aria-haspopup]="'dialog'"
+      [attr.aria-invalid]="a11y.invalid()"
+      [attr.aria-label]="effectiveLabelledBy() ? null : pickerAriaLabel()"
+      [attr.aria-labelledby]="effectiveLabelledBy()"
+      [attr.aria-required]="a11y.required()"
+      [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
+      [disabled]="isDisabled()"
+      [id]="a11y.id()"
+      [tabIndex]="isDisabled() ? -1 : tabIndex()"
+      (click)="toggleOpen()"
+    >
+      @if (controlValue().start) {
+        <span class="krn-date-range__value">
+          <span>{{ formattedStart() }}</span>
+          <span class="krn-date-range__separator" aria-hidden="true">→</span>
+          <span [attr.data-placeholder]="!controlValue().end">
+            {{ formattedEnd() || copy().endDate }}
+          </span>
+        </span>
+      } @else {
+        <span class="krn-picker__placeholder">{{ copy().selectDateRange }}</span>
+      }
+      <span class="krn-picker__calendar-icon" aria-hidden="true"></span>
+    </button>
+  </span>
+
+  @if (open()) {
+    <div
+      #panel
+      class="krn-picker__panel krn-calendar-panel krn-calendar-panel--range"
+      popover="manual"
+      role="dialog"
+      [attr.aria-label]="pickerAriaLabel()"
+      [id]="calendarId()"
+    >
+      <div class="krn-calendar__header">
+        <span>
+          <strong aria-live="polite">{{ monthLabel() }}</strong>
+          <small>{{ selectionPrompt() }}</small>
+        </span>
+        <span class="krn-calendar__navigation">
+          <button
+            type="button"
+            [attr.aria-label]="copy().previousMonth"
+            [disabled]="!canMoveMonth(-1)"
+            (click)="moveMonth(-1)"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            [attr.aria-label]="copy().nextMonth"
+            [disabled]="!canMoveMonth(1)"
+            (click)="moveMonth(1)"
+          >
+            ›
+          </button>
+        </span>
+      </div>
+
+      <div class="krn-calendar" role="grid" [attr.aria-label]="monthLabel()">
+        <div class="krn-calendar__weekdays" role="row">
+          @for (weekday of weekdays(); track $index) {
+            <span class="krn-calendar__weekday" role="columnheader">{{ weekday }}</span>
+          }
+        </div>
+        <div class="krn-calendar__weeks" role="rowgroup">
+          @for (week of calendarRows(); track $index) {
+            <div class="krn-calendar__week" role="row">
+              @for (day of week; track day.iso) {
+                <button
+                  #dayButton
+                  class="krn-calendar__day"
+                  type="button"
+                  role="gridcell"
+                  [attr.aria-current]="day.today ? 'date' : null"
+                  [attr.aria-label]="dayLabel(day)"
+                  [attr.aria-selected]="isEndpoint(day.iso)"
+                  [attr.data-in-range]="isInRange(day.iso)"
+                  [attr.data-outside]="day.outside"
+                  [attr.data-range-end]="controlValue().end === day.iso"
+                  [attr.data-range-start]="controlValue().start === day.iso"
+                  [attr.data-selected]="isEndpoint(day.iso)"
+                  [attr.data-today]="day.today"
+                  [attr.data-date]="day.iso"
+                  [attr.tabindex]="focusedDate() === day.iso ? 0 : -1"
+                  [disabled]="day.disabled"
+                  (focus)="focusedDate.set(day.iso)"
+                  (keydown)="handleCalendarKeydown($event, day)"
+                  (click)="selectDate(day.iso)"
+                >
+                  {{ day.day }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="krn-range-summary" aria-live="polite">
+        <span>
+          <small>{{ resolvedStartLabel() }}</small>
+          <strong>{{ formattedStart() || copy().notSelected }}</strong>
+        </span>
+        <span aria-hidden="true">→</span>
+        <span>
+          <small>{{ resolvedEndLabel() }}</small>
+          <strong>{{ formattedEnd() || copy().notSelected }}</strong>
+        </span>
+      </div>
+
+      <div class="krn-picker__footer">
+        <button
+          type="button"
+          [disabled]="!controlValue().start && !controlValue().end"
+          (click)="clear()"
+        >
+          {{ copy().clear }}
+        </button>
+        <button type="button" [disabled]="!controlValue().end" (click)="close(true)">
+          {{ copy().done }}
+        </button>
+      </div>
+    </div>
+  }
+</div>

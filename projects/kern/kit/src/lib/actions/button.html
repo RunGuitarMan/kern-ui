@@ -1,0 +1,10 @@
+<span class="krn-action__icon" aria-hidden="true">
+  <ng-content select="[krnLeadingIcon]" />
+</span>
+<span class="krn-action__label"><ng-content /></span>
+<span class="krn-action__icon" aria-hidden="true">
+  <ng-content select="[krnTrailingIcon]" />
+</span>
+<span class="krn-action__status" role="status" aria-live="polite">
+  {{ loading() ? resolvedLoadingLabel() : '' }}
+</span>

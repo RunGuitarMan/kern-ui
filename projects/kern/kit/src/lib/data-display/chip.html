@@ -1,0 +1,25 @@
+<ng-template #projectedLabel><ng-content /></ng-template>
+@if (interactive()) {
+  <button
+    type="button"
+    class="label"
+    [disabled]="disabled()"
+    [attr.aria-pressed]="selected()"
+    (click)="toggle()"
+  >
+    <ng-container [ngTemplateOutlet]="projectedLabel" />
+  </button>
+} @else {
+  <span class="label"><ng-container [ngTemplateOutlet]="projectedLabel" /></span>
+}
+@if (removable()) {
+  <button
+    type="button"
+    class="remove"
+    [disabled]="disabled()"
+    [attr.aria-label]="translations.dataDisplay.removeItem(resolvedAccessibleLabel())"
+    (click)="remove.emit()"
+  >
+    <span aria-hidden="true">×</span>
+  </button>
+}

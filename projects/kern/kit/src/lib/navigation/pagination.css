@@ -1,0 +1,103 @@
+:host {
+  display: block;
+}
+:host([hidden]) {
+  display: none;
+}
+.pagination {
+  display: flex;
+  min-inline-size: 0;
+  align-items: center;
+  gap: var(--krn-space-2);
+}
+ol {
+  display: grid;
+  grid-auto-columns: var(--krn-control-height-sm);
+  grid-auto-flow: column;
+  align-items: center;
+  gap: var(--krn-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mobile-pages {
+  display: none;
+}
+button,
+.ellipsis {
+  display: inline-grid;
+  inline-size: var(--krn-control-height-sm);
+  min-block-size: var(--krn-control-height-sm);
+  padding: 0;
+  border: var(--krn-border-width-1) solid transparent;
+  border-radius: var(--krn-radius-sm);
+  place-items: center;
+  color: var(--krn-color-text-muted);
+  background: transparent;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+}
+button {
+  cursor: pointer;
+}
+button:hover:not(:disabled) {
+  border-color: var(--krn-color-border);
+  color: var(--krn-color-text);
+  background: var(--krn-color-surface-subtle);
+}
+button[aria-current='page'] {
+  border-color: var(--krn-color-primary);
+  color: var(--krn-color-text);
+  background: var(--krn-color-surface);
+  font-weight: var(--krn-font-weight-semibold);
+}
+button:focus-visible {
+  outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
+  outline-offset: var(--krn-focus-ring-offset);
+}
+button:disabled {
+  color: var(--krn-color-text-disabled);
+  cursor: not-allowed;
+}
+.direction {
+  display: inline-flex;
+  inline-size: auto;
+  gap: var(--krn-space-2);
+  padding-inline: var(--krn-space-2);
+}
+.summary {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+:host-context([dir='rtl']) .direction > span[aria-hidden='true'] {
+  transform: scaleX(-1);
+}
+@media (max-width: 35rem) {
+  .desktop-pages {
+    display: none;
+  }
+  .mobile-pages {
+    display: grid;
+  }
+  .direction-label {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+}
+@media (forced-colors: active) {
+  button[aria-current='page'] {
+    border-color: Highlight;
+  }
+  button:focus-visible {
+    outline-color: Highlight;
+  }
+}

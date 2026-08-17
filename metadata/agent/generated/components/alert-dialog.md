@@ -80,7 +80,8 @@ _No deprecated selectors._
 
 ## Content slots
 
-_No projected content slots._
+- `*` — Projects default component content.
+- `[krnDialogAction]` — Projects content matching [krnDialogAction].
 
 ## Angular Forms
 

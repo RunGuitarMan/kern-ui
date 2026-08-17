@@ -1,0 +1,26 @@
+<header><ng-content select="[krnAppHeader]" /></header>
+<div #navigationOverlay class="navigation-overlay" (pointerdown)="closeFromBackdrop($event)">
+  <aside
+    #navigationPane
+    [id]="navigationId"
+    [attr.role]="isMobileNavigationOpen() ? 'dialog' : null"
+    [attr.aria-modal]="isMobileNavigationOpen() ? 'true' : null"
+    [attr.aria-label]="resolvedNavigationLabel()"
+    [attr.tabindex]="isMobileNavigationOpen() ? -1 : null"
+    [cdkTrapFocus]="isMobileNavigationOpen()"
+    [cdkTrapFocusAutoCapture]="false"
+    (pointerdown)="$event.stopPropagation()"
+  >
+    <button
+      type="button"
+      class="navigation-close"
+      [attr.aria-label]="resolvedCloseNavigationLabel()"
+      (click)="closeNavigation()"
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+    <ng-content select="[krnAppNavigation]" />
+  </aside>
+</div>
+<main [id]="resolvedMainId()" tabindex="-1"><ng-content /></main>
+<footer><ng-content select="[krnAppMobileNavigation]" /></footer>

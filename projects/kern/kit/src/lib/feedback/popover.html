@@ -1,0 +1,44 @@
+<button
+  #trigger
+  #origin="cdkOverlayOrigin"
+  cdkOverlayOrigin
+  type="button"
+  class="origin"
+  [attr.aria-expanded]="open()"
+  [attr.aria-controls]="open() ? panelId : null"
+  (click)="toggle()"
+  (keydown.escape)="
+    $event.defaultPrevented || !open()
+      ? undefined
+      : [$event.preventDefault(), $event.stopPropagation(), close('escape')]
+  "
+>
+  <ng-content select="[krnPopoverTrigger]" />
+</button>
+<ng-template
+  #connectedOverlay="cdkConnectedOverlay"
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayOpen]="open()"
+  [cdkConnectedOverlayPositions]="positions"
+  cdkConnectedOverlayPanelClass="krn-overlay-pane"
+  (attach)="registerOverlay(connectedOverlay, origin.elementRef.nativeElement); focusPanel()"
+  (overlayOutsideClick)="close('outside')"
+  (detach)="close('api')"
+>
+  <section
+    #panel
+    [id]="panelId"
+    class="popover"
+    role="region"
+    [attr.aria-label]="resolvedAriaLabel()"
+    tabindex="-1"
+    (keydown.escape)="
+      $event.defaultPrevented || !open()
+        ? undefined
+        : [$event.preventDefault(), $event.stopPropagation(), close('escape')]
+    "
+  >
+    <ng-content />
+  </section>
+</ng-template>

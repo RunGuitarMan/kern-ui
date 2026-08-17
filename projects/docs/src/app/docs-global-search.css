@@ -1,0 +1,8 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+
+krn-global-search {
+  inline-size: 100%;
+}

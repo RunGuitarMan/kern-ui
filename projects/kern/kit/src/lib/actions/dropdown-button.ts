@@ -730,70 +730,7 @@ class KrnMenuButtonController {
     '[attr.data-tone]': 'tone()',
     '[attr.data-variant]': 'variant()',
   },
-  template: `
-    <span
-      #origin="cdkOverlayOrigin"
-      cdkOverlayOrigin
-      class="krn-dropdown"
-      (focusout)="menu.closeOnFocusOut($event)"
-    >
-      <button
-        #menuTrigger
-        krnButton
-        aria-haspopup="menu"
-        type="button"
-        [attr.aria-controls]="menu.menuId"
-        [attr.aria-expanded]="menu.effectiveOpen()"
-        [attr.id]="menu.triggerId"
-        [disabled]="disabled()"
-        [loading]="loading()"
-        [size]="size()"
-        [tone]="tone()"
-        [variant]="variant()"
-        (click)="menu.toggleMenu()"
-        (keydown)="menu.onTriggerKeydown($event)"
-      >
-        <ng-content select="[krnLabel]" />
-        <span krnTrailingIcon class="krn-chevron"></span>
-      </button>
-    </span>
-    <ng-template
-      #connectedOverlay="cdkConnectedOverlay"
-      cdkConnectedOverlay
-      [cdkConnectedOverlayOrigin]="origin"
-      [cdkConnectedOverlayOpen]="menu.effectiveOpen()"
-      [cdkConnectedOverlayPositions]="menu.menuPositions()"
-      [cdkConnectedOverlayPush]="true"
-      [cdkConnectedOverlayFlexibleDimensions]="true"
-      [cdkConnectedOverlayViewportMargin]="8"
-      [cdkConnectedOverlayUsePopover]="null"
-      [cdkConnectedOverlayMatchWidth]="matchTriggerWidth()"
-      [cdkConnectedOverlayDisposeOnNavigation]="true"
-      cdkConnectedOverlayTransformOriginOn=".krn-action-menu"
-      [cdkConnectedOverlayHasBackdrop]="false"
-      cdkConnectedOverlayPanelClass="krn-overlay-pane"
-      (attach)="menu.registerOverlay(connectedOverlay, origin.elementRef.nativeElement)"
-      (detach)="menu.onOverlayDetached()"
-      (overlayOutsideClick)="menu.onOverlayOutsideClick($event)"
-    >
-      @if (menu.effectiveOpen()) {
-        <div
-          #menuPanel
-          class="krn-action-menu"
-          role="menu"
-          tabindex="-1"
-          [attr.aria-labelledby]="menu.triggerId"
-          [attr.data-match-trigger-width]="matchTriggerWidth()"
-          [attr.id]="menu.menuId"
-          (click)="menu.closeFromMenu($event)"
-          (focusout)="menu.closeOnFocusOut($event)"
-          (keydown)="menu.onMenuKeydown($event)"
-        >
-          <ng-content select="[krnMenu]" />
-        </div>
-      }
-    </ng-template>
-  `,
+  templateUrl: './dropdown-button.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnDropdownButton {
@@ -833,83 +770,7 @@ export class KrnDropdownButton {
     '[attr.data-tone]': 'tone()',
     '[attr.data-variant]': 'variant()',
   },
-  template: `
-    <span
-      #origin="cdkOverlayOrigin"
-      cdkOverlayOrigin
-      class="krn-split-button"
-      (focusout)="menu.closeOnFocusOut($event)"
-    >
-      <button
-        krnButton
-        class="krn-split-button__primary"
-        type="button"
-        [disabled]="disabled()"
-        [loading]="loading()"
-        [size]="size()"
-        [tone]="tone()"
-        [variant]="variant()"
-        (click)="activatePrimary($event)"
-      >
-        <ng-content select="[krnLabel]" />
-      </button>
-      <button
-        #menuTrigger
-        krnButton
-        class="krn-split-button__menu-trigger"
-        type="button"
-        aria-haspopup="menu"
-        [attr.aria-controls]="menu.menuId"
-        [attr.aria-expanded]="menu.effectiveOpen()"
-        [attr.aria-label]="resolvedMenuLabel()"
-        [attr.id]="menu.triggerId"
-        [disabled]="menu.isDisabled()"
-        [size]="size()"
-        [tone]="tone()"
-        [variant]="variant()"
-        (click)="menu.toggleMenu()"
-        (keydown)="menu.onTriggerKeydown($event)"
-      >
-        <span krnTrailingIcon class="krn-chevron"></span>
-      </button>
-    </span>
-    <ng-template
-      #connectedOverlay="cdkConnectedOverlay"
-      cdkConnectedOverlay
-      [cdkConnectedOverlayOrigin]="origin"
-      [cdkConnectedOverlayOpen]="menu.effectiveOpen()"
-      [cdkConnectedOverlayPositions]="menu.menuPositions()"
-      [cdkConnectedOverlayPush]="true"
-      [cdkConnectedOverlayFlexibleDimensions]="true"
-      [cdkConnectedOverlayViewportMargin]="8"
-      [cdkConnectedOverlayUsePopover]="null"
-      [cdkConnectedOverlayMatchWidth]="matchTriggerWidth()"
-      [cdkConnectedOverlayDisposeOnNavigation]="true"
-      cdkConnectedOverlayTransformOriginOn=".krn-action-menu"
-      [cdkConnectedOverlayHasBackdrop]="false"
-      cdkConnectedOverlayPanelClass="krn-overlay-pane"
-      (attach)="menu.registerOverlay(connectedOverlay, origin.elementRef.nativeElement)"
-      (detach)="menu.onOverlayDetached()"
-      (overlayOutsideClick)="menu.onOverlayOutsideClick($event)"
-    >
-      @if (menu.effectiveOpen()) {
-        <div
-          #menuPanel
-          class="krn-action-menu"
-          role="menu"
-          tabindex="-1"
-          [attr.aria-labelledby]="menu.triggerId"
-          [attr.data-match-trigger-width]="matchTriggerWidth()"
-          [attr.id]="menu.menuId"
-          (click)="menu.closeFromMenu($event)"
-          (focusout)="menu.closeOnFocusOut($event)"
-          (keydown)="menu.onMenuKeydown($event)"
-        >
-          <ng-content select="[krnMenu]" />
-        </div>
-      }
-    </ng-template>
-  `,
+  templateUrl: './split-button.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnSplitButton {

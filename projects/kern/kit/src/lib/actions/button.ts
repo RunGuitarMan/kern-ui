@@ -17,18 +17,7 @@ import { registerKrnLoadingActivationGuard } from './loading-action';
 
 @Component({
   selector: 'button[krnButton]',
-  template: `
-    <span class="krn-action__icon" aria-hidden="true">
-      <ng-content select="[krnLeadingIcon]" />
-    </span>
-    <span class="krn-action__label"><ng-content /></span>
-    <span class="krn-action__icon" aria-hidden="true">
-      <ng-content select="[krnTrailingIcon]" />
-    </span>
-    <span class="krn-action__status" role="status" aria-live="polite">
-      {{ loading() ? resolvedLoadingLabel() : '' }}
-    </span>
-  `,
+  templateUrl: './button.html',
   host: {
     class: 'krn-action',
     type: 'button',
@@ -80,15 +69,7 @@ export class KrnButton {
 
 @Component({
   selector: 'button[krnFab]',
-  template: `
-    <span class="krn-action__icon" aria-hidden="true">
-      <ng-content select="[krnFabIcon]" />
-    </span>
-    <span class="krn-action__label"><ng-content /></span>
-    <span class="krn-action__status" role="status" aria-live="polite">
-      {{ loading() ? resolvedLoadingLabel() : '' }}
-    </span>
-  `,
+  templateUrl: './floating-action-button.html',
   host: {
     class: 'krn-action krn-fab',
     type: 'button',

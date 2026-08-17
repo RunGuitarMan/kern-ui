@@ -1,0 +1,27 @@
+<nav class="breadcrumbs" [attr.aria-label]="resolvedAriaLabel()">
+  <ol>
+    @for (item of visibleItems(); track item.index; let last = $last) {
+      <li>
+        @if (item.ellipsis) {
+          <button
+            type="button"
+            class="ellipsis"
+            (click)="expanded.set(true)"
+            [attr.aria-label]="resolvedShowAllLabel()"
+          >
+            <span aria-hidden="true">•••</span>
+          </button>
+        } @else if (item.index === currentIndex()) {
+          <span class="current" aria-current="page">{{ item.label }}</span>
+        } @else if (item.href && !item.disabled) {
+          <a [href]="item.href" (click)="itemActivated.emit(item.source)">{{ item.label }}</a>
+        } @else {
+          <span [attr.aria-disabled]="item.disabled || null">{{ item.label }}</span>
+        }
+        @if (!last) {
+          <span class="separator" aria-hidden="true">{{ separator() }}</span>
+        }
+      </li>
+    }
+  </ol>
+</nav>

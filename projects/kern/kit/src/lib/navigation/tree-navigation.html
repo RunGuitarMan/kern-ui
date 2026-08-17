@@ -1,0 +1,113 @@
+<nav [attr.aria-label]="resolvedAriaLabel()">
+  <ng-container
+    [ngTemplateOutlet]="branch"
+    [ngTemplateOutletContext]="{ $implicit: treeItems(), root: true, level: 0, groupId: null }"
+  />
+</nav>
+<ng-template #branch let-nodes let-root="root" let-level="level" let-groupId="groupId">
+  <ul
+    [attr.id]="groupId"
+    [attr.role]="root ? 'tree' : 'group'"
+    [attr.aria-label]="root ? resolvedAriaLabel() : null"
+    [attr.data-level]="level"
+    [class.branch]="!root"
+    [class.with-guides]="showGuides()"
+  >
+    @for (node of nodes; track node.id; let nodeIndex = $index; let nodeCount = $count) {
+      <li role="none">
+        <div class="node-row" role="none" [class.selected]="selectedId() === node.id">
+          @if (isExpandable(node)) {
+            <span
+              class="toggle"
+              aria-hidden="true"
+              [attr.title]="
+                isExpanded(node.id)
+                  ? translations.navigation.collapseNode(node.label)
+                  : translations.navigation.expandNode(node.label)
+              "
+              (click)="toggleFromPointer(node.id)"
+            >
+              <span class="caret" [class.expanded]="isExpanded(node.id)" aria-hidden="true"></span>
+            </span>
+          } @else {
+            <span class="spacer" aria-hidden="true"></span>
+          }
+          @if (node.href && !node.disabled) {
+            <a
+              #treeItem
+              class="node"
+              role="treeitem"
+              [href]="node.href"
+              [attr.data-tree-item]="node.id"
+              [attr.aria-level]="level + 1"
+              [attr.aria-posinset]="nodeIndex + 1"
+              [attr.aria-setsize]="nodeCount"
+              [attr.aria-expanded]="isExpandable(node) ? isExpanded(node.id) : null"
+              [attr.aria-selected]="selectedId() === node.id"
+              [attr.aria-busy]="node.childrenState === 'loading' ? 'true' : null"
+              [attr.aria-invalid]="node.childrenState === 'error' ? 'true' : null"
+              [attr.aria-label]="nodeStateLabel(node)"
+              [attr.aria-owns]="
+                node.children?.length && isExpanded(node.id) ? treeGroupId(node.id) : null
+              "
+              [attr.aria-controls]="node.children?.length ? treeGroupId(node.id) : null"
+              [attr.tabindex]="isTabStop(node) ? 0 : -1"
+              (click)="activate(node)"
+              (keydown)="onKeydown($event, node)"
+            >
+              <span>{{ node.label }}</span>
+              @if (node.childrenState === 'loading') {
+                <span class="node-state" aria-hidden="true">…</span>
+              } @else if (node.childrenState === 'error') {
+                <span class="node-state node-state--error" aria-hidden="true">!</span>
+              }
+            </a>
+          } @else {
+            <button
+              #treeItem
+              type="button"
+              class="node"
+              role="treeitem"
+              [disabled]="node.disabled"
+              [attr.data-tree-item]="node.id"
+              [attr.aria-level]="level + 1"
+              [attr.aria-posinset]="nodeIndex + 1"
+              [attr.aria-setsize]="nodeCount"
+              [attr.aria-expanded]="isExpandable(node) ? isExpanded(node.id) : null"
+              [attr.aria-selected]="selectedId() === node.id"
+              [attr.aria-disabled]="node.disabled || null"
+              [attr.aria-busy]="node.childrenState === 'loading' ? 'true' : null"
+              [attr.aria-invalid]="node.childrenState === 'error' ? 'true' : null"
+              [attr.aria-label]="nodeStateLabel(node)"
+              [attr.aria-owns]="
+                node.children?.length && isExpanded(node.id) ? treeGroupId(node.id) : null
+              "
+              [attr.aria-controls]="node.children?.length ? treeGroupId(node.id) : null"
+              [attr.tabindex]="isTabStop(node) ? 0 : -1"
+              (click)="activate(node)"
+              (keydown)="onKeydown($event, node)"
+            >
+              <span>{{ node.label }}</span>
+              @if (node.childrenState === 'loading') {
+                <span class="node-state" aria-hidden="true">…</span>
+              } @else if (node.childrenState === 'error') {
+                <span class="node-state node-state--error" aria-hidden="true">!</span>
+              }
+            </button>
+          }
+        </div>
+        @if (node.children?.length && isExpanded(node.id)) {
+          <ng-container
+            [ngTemplateOutlet]="branch"
+            [ngTemplateOutletContext]="{
+              $implicit: node.children,
+              root: false,
+              level: level + 1,
+              groupId: treeGroupId(node.id),
+            }"
+          />
+        }
+      </li>
+    }
+  </ul>
+</ng-template>

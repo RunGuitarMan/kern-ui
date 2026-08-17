@@ -1,0 +1,119 @@
+:host {
+  --_code-surface: var(--krn-color-surface-sunken, #f5f5f6);
+  --_code-header: var(--krn-color-surface-subtle, #fafafa);
+  --_code-border: var(--krn-color-border, #dedee2);
+  --_code-text: var(--krn-color-text, #1d1d1f);
+  --_code-muted: var(--krn-color-text-muted, #66666d);
+  --_code-action: var(--krn-color-link, #3154c8);
+  --_code-action-hover: var(--krn-color-surface-raised, #fff);
+  --_syntax-comment: var(--krn-color-text-muted, #66666d);
+  --_syntax-string: var(--krn-color-success, #207a4b);
+  --_syntax-keyword: var(--krn-color-primary, #3154c8);
+  --_syntax-literal: var(--krn-color-warning, #7b5511);
+  --_syntax-number: var(--krn-color-warning, #7b5511);
+  --_syntax-decorator: var(--krn-color-danger, #a42f46);
+  --_syntax-tag: var(--krn-color-danger, #a42f46);
+  --_syntax-attribute: var(--krn-color-primary, #3154c8);
+  --_syntax-type: var(--krn-color-info, #275ca8);
+  --_syntax-operator: var(--krn-color-text-muted, #66666d);
+  display: block;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow: clip;
+  border: var(--krn-border-width-1, 1px) solid var(--_code-border);
+  border-radius: var(--krn-radius-surface, 0.75rem);
+  color: var(--_code-text);
+  background: var(--_code-surface);
+  box-shadow: var(--krn-shadow-sm, 0 1px 3px rgb(0 0 0 / 10%));
+}
+.bar {
+  display: flex;
+  min-block-size: 2.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 0.875rem;
+  border-block-end: var(--krn-border-width-1, 1px) solid var(--_code-border);
+  color: var(--_code-muted);
+  background: var(--_code-header);
+  font:
+    550 0.75rem/1 var(--krn-font-family-mono, ui-monospace),
+    monospace;
+}
+button {
+  min-block-size: 1.75rem;
+  padding-inline: 0.5rem;
+  border: 0;
+  border-radius: 0.3125rem;
+  color: var(--_code-action);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+button:hover {
+  color: var(--krn-color-primary-hover, var(--_code-action));
+  background: var(--_code-action-hover);
+}
+button:focus-visible,
+pre:focus-visible {
+  outline: var(--krn-focus-ring-width, 2px) solid var(--krn-color-focus, #3154c8);
+  outline-offset: -3px;
+}
+pre {
+  max-block-size: var(--krn-code-max-height, 28rem);
+  margin: 0;
+  padding: 1.125rem;
+  overflow: auto;
+  font:
+    0.8125rem/1.65 var(--krn-font-family-mono, ui-monospace),
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  font-variant-ligatures: none;
+  tab-size: 2;
+}
+code {
+  white-space: pre;
+}
+.token-comment {
+  color: var(--_syntax-comment);
+  font-style: italic;
+}
+.token-string {
+  color: var(--_syntax-string);
+}
+.token-keyword {
+  color: var(--_syntax-keyword);
+}
+.token-literal {
+  color: var(--_syntax-literal);
+}
+.token-number {
+  color: var(--_syntax-number);
+}
+.token-decorator {
+  color: var(--_syntax-decorator);
+}
+.token-tag {
+  color: var(--_syntax-tag);
+}
+.token-attribute {
+  color: var(--_syntax-attribute);
+}
+.token-type {
+  color: var(--_syntax-type);
+}
+.token-operator,
+.token-punctuation {
+  color: var(--_syntax-operator);
+}
+::selection {
+  color: var(--_code-text);
+  background: var(--krn-color-selection, rgb(49 84 200 / 24%));
+}
+.sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}

@@ -1,0 +1,67 @@
+@if (surface.rendered()) {
+  <div
+    class="backdrop"
+    [attr.data-position]="surface.surfacePosition()"
+    [attr.data-state]="surface.closing() ? 'closing' : open() ? 'open' : 'closed'"
+    [attr.hidden]="!open() && !surface.closing() ? '' : null"
+    [attr.aria-hidden]="!open() ? 'true' : null"
+    [attr.inert]="!open() ? '' : null"
+    (pointerdown)="surface.onBackdropPointerdown($event)"
+    (animationend)="surface.onBackdropAnimationEnd($event)"
+    (transitionend)="surface.onBackdropTransitionEnd($event)"
+  >
+    <section
+      #panel
+      class="surface"
+      [attr.role]="surface.surfaceRole()"
+      [attr.aria-modal]="open() ? 'true' : null"
+      [attr.aria-labelledby]="title() ? surface.titleId : null"
+      [attr.aria-describedby]="description() ? surface.descriptionId : null"
+      [attr.aria-label]="title() ? null : resolvedAriaLabel()"
+      tabindex="-1"
+      [cdkTrapFocus]="open() && !surface.closing()"
+      [cdkTrapFocusAutoCapture]="false"
+      (pointerdown)="$event.stopPropagation()"
+    >
+      @if (eyebrow() || title() || description() || showClose()) {
+        <header>
+          <div>
+            @if (eyebrow()) {
+              <p class="eyebrow">{{ eyebrow() }}</p>
+            }
+            @if (title()) {
+              <h2 [id]="surface.titleId">{{ title() }}</h2>
+            }
+            @if (description()) {
+              <p class="description" [id]="surface.descriptionId">{{ description() }}</p>
+            }
+          </div>
+          @if (showClose()) {
+            <button
+              type="button"
+              class="close"
+              [attr.aria-label]="resolvedCloseLabel()"
+              (click)="surface.close('action')"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          }
+        </header>
+      }
+      <div class="body">
+        @if (contentTemplate(); as content) {
+          <ng-container [ngTemplateOutlet]="content" />
+        } @else {
+          <ng-content />
+        }
+      </div>
+      <footer>
+        @if (actionsTemplate(); as actions) {
+          <ng-container [ngTemplateOutlet]="actions" />
+        } @else {
+          <ng-content select="[krnDialogAction]" />
+        }
+      </footer>
+    </section>
+  </div>
+}

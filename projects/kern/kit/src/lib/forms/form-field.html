@@ -1,0 +1,33 @@
+<div class="krn-field-heading">
+  @if (label() && !projectedLabel()) {
+    <label
+      class="krn-label"
+      [attr.for]="nativeLabelFor()"
+      [id]="labelId()"
+      (click)="focusControl()"
+    >
+      {{ label() }}
+      @if (required()) {
+        <span class="krn-required" aria-hidden="true">*</span>
+      }
+    </label>
+  }
+  <ng-content select="krn-label" />
+  @if (!required() && optionalText()) {
+    <span class="krn-optional">{{ optionalText() }}</span>
+  }
+</div>
+
+<div class="krn-field-control">
+  <ng-content />
+</div>
+
+@if (error()) {
+  <p class="krn-message krn-message--error" aria-live="polite" [id]="errorId()">
+    <span class="krn-message__mark" aria-hidden="true">!</span>
+    {{ error() }}
+  </p>
+} @else if (hint()) {
+  <p class="krn-message" [id]="hintId()">{{ hint() }}</p>
+}
+<ng-content select="krn-hint, krn-validation-message" />

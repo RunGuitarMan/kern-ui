@@ -1,0 +1,10 @@
+<span class="label">{{ label() }}</span>
+<strong>{{ value() }}</strong>
+@if (detail()) {
+  <span class="detail">
+    @if (trend() !== 'flat') {
+      <span aria-hidden="true">{{ trend() === 'up' ? '↗' : '↘' }}</span>
+    }
+    {{ detail() }}
+  </span>
+}

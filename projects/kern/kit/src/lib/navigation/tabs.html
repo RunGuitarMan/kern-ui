@@ -1,0 +1,45 @@
+<div
+  #tabList
+  class="tab-list"
+  role="tablist"
+  [class.vertical]="resolvedOrientation() === 'vertical'"
+  [attr.aria-label]="resolvedAriaLabel()"
+  [attr.aria-orientation]="resolvedOrientation()"
+>
+  @for (item of items(); track item.id; let index = $index) {
+    <button
+      #tab
+      type="button"
+      role="tab"
+      [id]="tabId(item)"
+      [disabled]="item.disabled"
+      [attr.aria-selected]="selectedId() === item.id"
+      [attr.aria-controls]="panelId(item)"
+      [attr.tabindex]="selectedId() === item.id ? 0 : -1"
+      (click)="select(item)"
+      (keydown)="onKeydown($event, index)"
+    >
+      <span>{{ item.label }}</span>
+      @if (item.badge !== undefined) {
+        <span class="badge" [attr.aria-label]="translations.navigation.tabItemCount(item.badge)">
+          {{ item.badge }}
+        </span>
+      }
+    </button>
+  }
+</div>
+@if (selectedItem(); as item) {
+  <section
+    class="tab-panel"
+    role="tabpanel"
+    tabindex="0"
+    [id]="panelId(item)"
+    [attr.aria-labelledby]="tabId(item)"
+  >
+    @if (item.content) {
+      <ng-container [ngTemplateOutlet]="asTemplate(item.content)" />
+    } @else {
+      <ng-content />
+    }
+  </section>
+}

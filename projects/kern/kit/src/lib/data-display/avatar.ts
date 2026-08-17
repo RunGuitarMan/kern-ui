@@ -9,73 +9,8 @@ import { krnResolvedLocale } from '../reactive-locale';
   host: {
     '[attr.data-size]': 'size()',
   },
-  template: `
-    @if (src()) {
-      <img [src]="src()" [alt]="alt()" (error)="imageFailed.set(true)" [hidden]="imageFailed()" />
-    }
-    @if (!src() || imageFailed()) {
-      <span aria-hidden="true">{{ initials() }}</span>
-      <span class="sr-only">{{ alt() || name() }}</span>
-    }
-    @if (status()) {
-      <span class="status" [attr.data-status]="status()" aria-hidden="true"></span>
-    }
-  `,
-  styles: `
-    :host {
-      position: relative;
-      display: inline-grid;
-      inline-size: 2.5rem;
-      block-size: 2.5rem;
-      flex: 0 0 auto;
-      place-items: center;
-      overflow: visible;
-      border: 1px solid var(--krn-color-border, #cdd1d7);
-      border-radius: 50%;
-      color: var(--krn-color-text, #252932);
-      background: var(--krn-color-surface-raised, #f2f3f5);
-      font: 650 0.75rem/1 var(--krn-font-family-ui, sans-serif);
-    }
-    :host([data-size='sm']) {
-      inline-size: 2rem;
-      block-size: 2rem;
-      font-size: 0.6875rem;
-    }
-    :host([data-size='lg']) {
-      inline-size: 3.25rem;
-      block-size: 3.25rem;
-      font-size: 0.875rem;
-    }
-    img {
-      inline-size: 100%;
-      block-size: 100%;
-      border-radius: inherit;
-      object-fit: cover;
-    }
-    .status {
-      position: absolute;
-      inset-inline-end: -1px;
-      inset-block-end: -1px;
-      inline-size: 0.625rem;
-      block-size: 0.625rem;
-      border: 2px solid var(--krn-color-surface, #fff);
-      border-radius: 50%;
-      background: var(--krn-color-text-muted, #626a76);
-    }
-    .status[data-status='online'] {
-      background: var(--krn-color-success-solid, #1c8d62);
-    }
-    .status[data-status='busy'] {
-      background: var(--krn-color-danger-solid, #c73a35);
-    }
-    .sr-only {
-      position: absolute;
-      inline-size: 1px;
-      block-size: 1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-    }
-  `,
+  templateUrl: './avatar.html',
+  styleUrl: './avatar.css',
 })
 export class KrnAvatar {
   readonly locale = input<string | undefined>();
@@ -104,13 +39,8 @@ export class KrnAvatar {
     '[attr.aria-label]': 'resolvedAriaLabel()',
     role: 'group',
   },
-  template: `<ng-content />`,
-  styles: `
-    :host {
-      display: inline-flex;
-      align-items: center;
-    }
-  `,
+  templateUrl: './avatar-group.html',
+  styleUrl: './avatar-group.css',
 })
 export class KrnAvatarGroup {
   private readonly translations = inject(KRN_TRANSLATIONS);

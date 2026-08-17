@@ -1,0 +1,39 @@
+<span
+  class="krn-control-shell krn-control-shell--textarea"
+  [attr.data-auto-resize]="autoResize()"
+  [attr.data-disabled]="isDisabled()"
+  [attr.data-invalid]="a11y.invalid()"
+  [attr.data-readonly]="a11y.readOnly()"
+  (pointerdown)="focusFromShell($event)"
+>
+  <textarea
+    #textareaElement
+    class="krn-textarea"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-invalid]="a11y.invalid()"
+    [attr.aria-label]="labelledBy() ? null : ariaLabel() || null"
+    [attr.aria-labelledby]="labelledBy()"
+    [attr.autocomplete]="autocomplete() || null"
+    [attr.maxlength]="maxLength() ?? null"
+    [attr.minlength]="minLength() ?? null"
+    [attr.name]="name() || null"
+    [attr.spellcheck]="spellcheck()"
+    [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
+    [disabled]="isDisabled()"
+    [id]="a11y.id()"
+    [placeholder]="placeholder()"
+    [readOnly]="a11y.readOnly()"
+    [required]="a11y.required()"
+    [rows]="rows()"
+    [value]="controlValue()"
+    (blur)="touch()"
+    (compositionend)="endComposition($event)"
+    (compositionstart)="startComposition()"
+    (input)="updateText($event)"
+  ></textarea>
+  @if (showCount() && maxLength() !== undefined) {
+    <span class="krn-textarea-footer">
+      <span class="krn-textarea-count"> {{ controlValue().length }} / {{ maxLength() }} </span>
+    </span>
+  }
+</span>

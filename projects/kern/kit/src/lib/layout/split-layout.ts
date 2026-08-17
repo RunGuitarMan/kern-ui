@@ -9,73 +9,14 @@ export type KrnSplitRatio = '1:1' | '1:2' | '2:1' | 'golden' | (string & {});
   selector: 'krn-split-layout',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <div class="krn-split">
-      <div class="krn-split__primary">
-        <ng-content select="[krnSplitPrimary]" />
-      </div>
-      <div class="krn-split__secondary">
-        <ng-content select="[krnSplitSecondary]" />
-      </div>
-    </div>
-  `,
+  templateUrl: './split-layout.html',
   host: {
     '[style.--krn-split-columns]': 'resolvedColumns()',
     '[style.--krn-split-gap]': 'resolvedGap()',
     '[style.--krn-split-align]': 'align()',
     '[attr.data-collapse-at]': 'collapseAt()',
   },
-  styles: `
-    :host {
-      display: block;
-      box-sizing: border-box;
-      max-inline-size: 100%;
-      min-inline-size: 0;
-      min-block-size: 0;
-      container: krn-split / inline-size;
-    }
-
-    :host([hidden]) {
-      display: none;
-    }
-
-    .krn-split {
-      display: grid;
-      box-sizing: border-box;
-      max-inline-size: 100%;
-      min-inline-size: 0;
-      min-block-size: 0;
-      grid-template-columns: var(--krn-split-columns);
-      gap: var(--krn-split-gap);
-      align-items: var(--krn-split-align, start);
-    }
-
-    .krn-split__primary,
-    .krn-split__secondary {
-      box-sizing: border-box;
-      max-inline-size: 100%;
-      min-inline-size: 0;
-      min-block-size: 0;
-    }
-
-    @container krn-split (max-inline-size: 36rem) {
-      :host([data-collapse-at='sm']) .krn-split {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    @container krn-split (max-inline-size: 48rem) {
-      :host([data-collapse-at='md']) .krn-split {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    @container krn-split (max-inline-size: 64rem) {
-      :host([data-collapse-at='lg']) .krn-split {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-  `,
+  styleUrl: './split-layout.css',
 })
 export class KrnSplitLayout {
   /** Sets the relative primary-to-secondary track sizes. Accepts presets, `3:2`, or `3fr 2fr`. */

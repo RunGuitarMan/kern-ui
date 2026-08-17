@@ -1,0 +1,8 @@
+<div
+  class="krn-scroll-area__viewport"
+  [attr.tabindex]="keyboardAccessible() ? 0 : null"
+  [attr.role]="resolvedAriaLabel() ? 'region' : null"
+  [attr.aria-label]="resolvedAriaLabel()"
+>
+  <div class="krn-scroll-area__content"><ng-content /></div>
+</div>

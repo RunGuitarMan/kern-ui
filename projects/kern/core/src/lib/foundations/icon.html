@@ -1,0 +1,13 @@
+<svg
+  [attr.viewBox]="definition()?.viewBox ?? '0 0 24 24'"
+  [attr.fill]="definition()?.fill ?? 'none'"
+  [attr.stroke]="definition()?.fill === 'currentColor' ? null : 'currentColor'"
+  [attr.role]="label() ? 'img' : null"
+  [attr.aria-label]="label() || null"
+  [attr.aria-hidden]="label() ? null : 'true'"
+  focusable="false"
+>
+  @for (path of definition()?.paths ?? []; track path) {
+    <path [attr.d]="path" />
+  }
+</svg>

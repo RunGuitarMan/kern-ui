@@ -62,7 +62,9 @@ _No deprecated selectors._
 
 ## Content slots
 
-_No projected content slots._
+- `[krnStateVisual]` — Projects content matching [krnStateVisual].
+- `*` — Projects default component content.
+- `[krnStateAction]` — Projects content matching [krnStateAction].
 
 ## Angular Forms
 

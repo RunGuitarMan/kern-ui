@@ -18,63 +18,13 @@ import { krnCssLength } from './layout.types';
   selector: 'krn-stack',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<ng-content />`,
+  templateUrl: './stack.html',
   host: {
     '[style.--krn-stack-gap]': 'resolvedGap()',
     '[attr.data-align]': 'align()',
     '[attr.data-justify]': 'justify()',
   },
-  styles: `
-    :host {
-      display: flex;
-      box-sizing: border-box;
-      max-inline-size: 100%;
-      min-inline-size: 0;
-      min-block-size: 0;
-      flex-direction: column;
-      gap: var(--krn-stack-gap);
-      align-items: var(--krn-stack-align, stretch);
-      justify-content: var(--krn-stack-justify, flex-start);
-    }
-
-    :host([hidden]) {
-      display: none;
-    }
-
-    :host([data-align='start']) {
-      --krn-stack-align: flex-start;
-    }
-    :host([data-align='center']) {
-      --krn-stack-align: center;
-    }
-    :host([data-align='end']) {
-      --krn-stack-align: flex-end;
-    }
-    :host([data-align='baseline']) {
-      --krn-stack-align: baseline;
-    }
-    :host([data-align='stretch']) {
-      --krn-stack-align: stretch;
-    }
-    :host([data-justify='start']) {
-      --krn-stack-justify: flex-start;
-    }
-    :host([data-justify='center']) {
-      --krn-stack-justify: center;
-    }
-    :host([data-justify='end']) {
-      --krn-stack-justify: flex-end;
-    }
-    :host([data-justify='space-between']) {
-      --krn-stack-justify: space-between;
-    }
-    :host([data-justify='space-around']) {
-      --krn-stack-justify: space-around;
-    }
-    :host([data-justify='space-evenly']) {
-      --krn-stack-justify: space-evenly;
-    }
-  `,
+  styleUrl: './stack.css',
 })
 export class KrnStack {
   /** Logical spacing between adjacent projected children. */
@@ -91,68 +41,14 @@ export class KrnStack {
   selector: 'krn-inline',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<ng-content />`,
+  templateUrl: './inline.html',
   host: {
     '[style.--krn-inline-gap]': 'resolvedGap()',
     '[attr.data-align]': 'align()',
     '[attr.data-justify]': 'justify()',
     '[attr.data-wrap]': 'wrap() ? "" : null',
   },
-  styles: `
-    :host {
-      display: flex;
-      box-sizing: border-box;
-      max-inline-size: 100%;
-      min-inline-size: 0;
-      min-block-size: 0;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      gap: var(--krn-inline-gap);
-      align-items: var(--krn-inline-align, center);
-      justify-content: var(--krn-inline-justify, flex-start);
-    }
-
-    :host([hidden]) {
-      display: none;
-    }
-
-    :host([data-wrap]) {
-      flex-wrap: wrap;
-    }
-    :host([data-align='start']) {
-      --krn-inline-align: flex-start;
-    }
-    :host([data-align='center']) {
-      --krn-inline-align: center;
-    }
-    :host([data-align='end']) {
-      --krn-inline-align: flex-end;
-    }
-    :host([data-align='stretch']) {
-      --krn-inline-align: stretch;
-    }
-    :host([data-align='baseline']) {
-      --krn-inline-align: baseline;
-    }
-    :host([data-justify='start']) {
-      --krn-inline-justify: flex-start;
-    }
-    :host([data-justify='center']) {
-      --krn-inline-justify: center;
-    }
-    :host([data-justify='end']) {
-      --krn-inline-justify: flex-end;
-    }
-    :host([data-justify='space-between']) {
-      --krn-inline-justify: space-between;
-    }
-    :host([data-justify='space-around']) {
-      --krn-inline-justify: space-around;
-    }
-    :host([data-justify='space-evenly']) {
-      --krn-inline-justify: space-evenly;
-    }
-  `,
+  styleUrl: './inline.css',
 })
 export class KrnInline {
   /** Logical spacing between adjacent projected children and wrapped flex lines. */
@@ -171,65 +67,14 @@ export class KrnInline {
   selector: 'krn-cluster',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<ng-content />`,
+  templateUrl: './cluster.html',
   host: {
     '[style.--krn-cluster-row-gap]': 'resolvedRowGap()',
     '[style.--krn-cluster-column-gap]': 'resolvedColumnGap()',
     '[attr.data-align]': 'align()',
     '[attr.data-justify]': 'justify()',
   },
-  styles: `
-    :host {
-      display: flex;
-      box-sizing: border-box;
-      max-inline-size: 100%;
-      min-inline-size: 0;
-      min-block-size: 0;
-      flex-wrap: wrap;
-      row-gap: var(--krn-cluster-row-gap);
-      column-gap: var(--krn-cluster-column-gap);
-      align-items: var(--krn-cluster-align, center);
-      justify-content: var(--krn-cluster-justify, flex-start);
-    }
-
-    :host([hidden]) {
-      display: none;
-    }
-
-    :host([data-align='start']) {
-      --krn-cluster-align: flex-start;
-    }
-    :host([data-align='center']) {
-      --krn-cluster-align: center;
-    }
-    :host([data-align='end']) {
-      --krn-cluster-align: flex-end;
-    }
-    :host([data-align='stretch']) {
-      --krn-cluster-align: stretch;
-    }
-    :host([data-align='baseline']) {
-      --krn-cluster-align: baseline;
-    }
-    :host([data-justify='start']) {
-      --krn-cluster-justify: flex-start;
-    }
-    :host([data-justify='center']) {
-      --krn-cluster-justify: center;
-    }
-    :host([data-justify='end']) {
-      --krn-cluster-justify: flex-end;
-    }
-    :host([data-justify='space-between']) {
-      --krn-cluster-justify: space-between;
-    }
-    :host([data-justify='space-around']) {
-      --krn-cluster-justify: space-around;
-    }
-    :host([data-justify='space-evenly']) {
-      --krn-cluster-justify: space-evenly;
-    }
-  `,
+  styleUrl: './cluster.css',
 })
 export class KrnCluster {
   /** Default logical spacing between projected children and wrapped flex lines. */
@@ -256,36 +101,13 @@ export class KrnCluster {
   selector: 'krn-spacer',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: ``,
+  templateUrl: './spacer.html',
   host: {
     'aria-hidden': 'true',
     '[style.--krn-spacer-size]': 'resolvedSize()',
     '[attr.data-axis]': 'axis()',
   },
-  styles: `
-    :host {
-      display: block;
-      box-sizing: border-box;
-      min-inline-size: 0;
-      min-block-size: 0;
-      flex: 0 0 auto;
-      pointer-events: none;
-    }
-
-    :host([hidden]) {
-      display: none;
-    }
-
-    :host([data-axis='horizontal']) {
-      inline-size: var(--krn-spacer-size);
-      block-size: 0;
-    }
-
-    :host([data-axis='vertical']) {
-      inline-size: 0;
-      block-size: var(--krn-spacer-size);
-    }
-  `,
+  styleUrl: './spacer.css',
 })
 export class KrnSpacer {
   /** Fixed logical length reserved by the spacer. */

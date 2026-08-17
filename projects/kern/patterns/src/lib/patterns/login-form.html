@@ -1,0 +1,62 @@
+<form [formGroup]="form" [attr.aria-busy]="loading()" (ngSubmit)="submit()" novalidate>
+  <div class="field">
+    <label [for]="emailId">{{ resolvedEmailLabel() }} <span aria-hidden="true">*</span></label>
+    <input
+      [id]="emailId"
+      type="email"
+      inputmode="email"
+      autocomplete="email"
+      autocapitalize="none"
+      required
+      [spellcheck]="false"
+      formControlName="email"
+      [attr.aria-invalid]="showError('email')"
+      [attr.aria-describedby]="showError('email') ? emailErrorId : null"
+    />
+    @if (showError('email')) {
+      <p class="error" [id]="emailErrorId" role="alert">{{ resolvedEmailErrorLabel() }}</p>
+    }
+  </div>
+  <div class="field">
+    <label [for]="passwordId"
+      >{{ resolvedPasswordLabel() }} <span aria-hidden="true">*</span></label
+    >
+    <input
+      [id]="passwordId"
+      type="password"
+      autocomplete="current-password"
+      required
+      formControlName="password"
+      [attr.aria-invalid]="showError('password')"
+      [attr.aria-describedby]="showError('password') ? passwordErrorId : null"
+    />
+    @if (showError('password')) {
+      <p class="error" [id]="passwordErrorId" role="alert">
+        {{ resolvedPasswordErrorLabel() }}
+      </p>
+    }
+  </div>
+  <div class="row">
+    <label class="check">
+      <input type="checkbox" formControlName="remember" />
+      {{ resolvedRememberLabel() }}
+    </label>
+    @if (resolvedRecoveryHref(); as href) {
+      <a [href]="href">{{ resolvedRecoveryLabel() }}</a>
+    }
+  </div>
+  @if (resolvedErrorMessage(); as message) {
+    <p class="error" role="alert">{{ message }}</p>
+  }
+  <button class="submit" type="submit" [attr.aria-disabled]="loading()">
+    @if (loading()) {
+      <span aria-hidden="true">◌</span>
+      {{ resolvedLoadingLabel() }}
+    } @else {
+      {{ resolvedSubmitLabel() }}
+    }
+  </button>
+  <span class="sr-only" aria-live="polite">
+    {{ loading() ? resolvedLoadingLabel() : '' }}
+  </span>
+</form>

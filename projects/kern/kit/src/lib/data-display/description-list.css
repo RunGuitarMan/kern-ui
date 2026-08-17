@@ -1,0 +1,5 @@
+:host {
+  display: block;
+  margin: 0;
+  border-block-start: 1px solid var(--krn-color-border-subtle, #e0e3e7);
+}

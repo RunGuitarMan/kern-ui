@@ -1,0 +1,29 @@
+<label class="krn-choice" [attr.data-disabled]="isDisabled()" [attr.data-readonly]="isReadOnly()">
+  <input
+    #input
+    class="krn-choice__native"
+    type="radio"
+    [attr.aria-describedby]="effectiveDescribedBy()"
+    [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
+    [attr.aria-labelledby]="effectiveLabelledBy()"
+    [attr.aria-disabled]="isReadOnly() || null"
+    [checked]="renderedChecked()"
+    [disabled]="isDisabled()"
+    [id]="nativeId()"
+    [name]="effectiveName()"
+    [tabIndex]="tabIndex()"
+    [value]="value()"
+    (blur)="blurred()"
+    (click)="preventReadonly($event)"
+    (change)="select($event)"
+  />
+  <span class="krn-choice__mark" aria-hidden="true"></span>
+  <span class="krn-choice__text">
+    <span [id]="labelId()"><ng-content /></span>
+    @if (description()) {
+      <span class="krn-choice__description" [id]="descriptionId()">
+        {{ description() }}
+      </span>
+    }
+  </span>
+</label>

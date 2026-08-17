@@ -1,0 +1,32 @@
+<div
+  class="menubar"
+  role="menubar"
+  [attr.aria-label]="resolvedAriaLabel()"
+  (keydown)="onKeydown($event)"
+>
+  @for (item of items(); track $index; let index = $index) {
+    @if (item.href && !item.disabled) {
+      <a
+        #barItem
+        role="menuitem"
+        [href]="item.href"
+        [attr.tabindex]="index === activeIndex() ? 0 : -1"
+        (focus)="activeIndex.set(index)"
+        (click)="itemSelected.emit(item)"
+        >{{ item.label }}</a
+      >
+    } @else {
+      <button
+        #barItem
+        type="button"
+        role="menuitem"
+        [disabled]="item.disabled"
+        [attr.tabindex]="index === activeIndex() ? 0 : -1"
+        (focus)="activeIndex.set(index)"
+        (click)="!item.disabled && itemSelected.emit(item)"
+      >
+        {{ item.label }}
+      </button>
+    }
+  }
+</div>

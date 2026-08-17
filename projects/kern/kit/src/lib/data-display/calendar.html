@@ -1,0 +1,62 @@
+<div class="header">
+  <button
+    type="button"
+    [attr.aria-label]="copy().previousMonth"
+    [disabled]="!canMoveMonth(-1)"
+    (click)="moveMonth(-1)"
+  >
+    <span aria-hidden="true">←</span>
+  </button>
+  <strong aria-live="polite">{{ monthLabel() }}</strong>
+  <button
+    type="button"
+    [attr.aria-label]="copy().nextMonth"
+    [disabled]="!canMoveMonth(1)"
+    (click)="moveMonth(1)"
+  >
+    <span aria-hidden="true">→</span>
+  </button>
+</div>
+<div class="calendar" role="grid" [attr.aria-label]="monthLabel()">
+  <div class="weekdays" role="row">
+    @for (weekday of weekdays(); track weekday) {
+      <span role="columnheader" [attr.aria-label]="weekday.long">{{ weekday.short }}</span>
+    }
+  </div>
+  <div class="days" role="rowgroup">
+    @for (week of weeks(); track $index) {
+      <div class="week" role="row">
+        @for (day of week; track day.iso) {
+          <button
+            type="button"
+            role="gridcell"
+            [attr.data-date]="day.iso"
+            [attr.data-outside]="!day.inMonth ? '' : null"
+            [attr.data-today]="day.today ? '' : null"
+            [attr.aria-current]="day.today ? 'date' : null"
+            [attr.aria-disabled]="day.disabled ? 'true' : null"
+            [attr.aria-selected]="day.iso === value()"
+            [attr.tabindex]="day.iso === focusableDate() ? 0 : -1"
+            [disabled]="day.disabled && day.iso !== focusableDate()"
+            [attr.aria-label]="dayLabel(day.iso)"
+            (click)="select(day)"
+            (focus)="focusedDate.set(day.iso)"
+            (keydown)="onDayKeydown($event, day.iso)"
+          >
+            {{ day.day }}
+          </button>
+        }
+      </div>
+    }
+  </div>
+</div>
+@if (showTodayAction()) {
+  <button
+    type="button"
+    class="today-action"
+    [disabled]="todayActionDisabled()"
+    (click)="selectToday()"
+  >
+    {{ copy().today }}
+  </button>
+}

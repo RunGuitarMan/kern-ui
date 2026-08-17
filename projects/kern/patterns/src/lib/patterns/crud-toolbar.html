@@ -1,0 +1,11 @@
+<div class="primary">
+  <span class="selection-status" role="status" aria-live="polite" aria-atomic="true">{{
+    resolvedSelectedLabel()
+  }}</span>
+  @if (validatedSelectedCount()) {
+    <strong aria-hidden="true">{{ resolvedSelectedLabel() }}</strong>
+  } @else {
+    <ng-content select="[krnToolbarTitle]" />
+  }
+</div>
+<div class="actions"><ng-content /></div>

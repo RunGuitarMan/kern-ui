@@ -1,0 +1,7 @@
+:host {
+  display: grid;
+  overflow: clip;
+  border: 1px solid var(--krn-color-border-subtle, #e0e3e7);
+  border-radius: var(--krn-radius-surface, 0.75rem);
+  background: var(--krn-color-surface, #fff);
+}

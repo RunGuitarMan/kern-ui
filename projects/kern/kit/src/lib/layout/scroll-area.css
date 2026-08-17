@@ -1,0 +1,142 @@
+:host {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  min-inline-size: 0;
+  min-block-size: 0;
+  max-inline-size: var(--krn-scroll-max-inline);
+  max-block-size: var(--krn-scroll-max-block);
+  overflow: clip;
+  border-radius: inherit;
+  isolation: isolate;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.krn-scroll-area__viewport {
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: inherit;
+  max-block-size: inherit;
+  min-inline-size: 0;
+  min-block-size: 0;
+  border-radius: inherit;
+  scrollbar-color: var(--krn-color-border-strong) transparent;
+  scrollbar-width: thin;
+  background-color: var(--krn-color-surface);
+  background:
+    linear-gradient(var(--krn-color-surface) 30%, transparent) center top,
+    linear-gradient(transparent, var(--krn-color-surface) 70%) center bottom,
+    radial-gradient(
+        farthest-side at 50% 0,
+        color-mix(in oklch, var(--krn-color-text) 16%, transparent),
+        transparent
+      )
+      center top,
+    radial-gradient(
+        farthest-side at 50% 100%,
+        color-mix(in oklch, var(--krn-color-text) 16%, transparent),
+        transparent
+      )
+      center bottom;
+  background-repeat: no-repeat;
+  background-size:
+    100% 2rem,
+    100% 2rem,
+    100% 0.5rem,
+    100% 0.5rem;
+  background-attachment: local, local, scroll, scroll;
+}
+
+.krn-scroll-area__viewport::-webkit-scrollbar {
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
+}
+
+.krn-scroll-area__viewport::-webkit-scrollbar-track {
+  margin-block: var(--krn-space-1);
+  background: transparent;
+}
+
+.krn-scroll-area__viewport::-webkit-scrollbar-thumb {
+  border: 0.1875rem solid transparent;
+  border-radius: var(--krn-radius-full);
+  background: var(--krn-color-border-strong);
+  background-clip: padding-box;
+}
+
+.krn-scroll-area__viewport:focus-visible {
+  outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
+  outline-offset: calc(var(--krn-focus-ring-width) * -1);
+}
+
+:host([data-axis='vertical']) .krn-scroll-area__viewport {
+  overflow-y: auto;
+  overflow-x: clip;
+  overscroll-behavior-y: contain;
+}
+
+:host([data-axis='horizontal']) .krn-scroll-area__viewport {
+  overflow-x: auto;
+  overflow-y: clip;
+  overscroll-behavior-x: contain;
+  background:
+    linear-gradient(90deg, var(--krn-color-surface) 30%, transparent) left center,
+    linear-gradient(270deg, var(--krn-color-surface) 30%, transparent) right center,
+    radial-gradient(
+        farthest-side at 0 50%,
+        color-mix(in oklch, var(--krn-color-text) 16%, transparent),
+        transparent
+      )
+      left center,
+    radial-gradient(
+        farthest-side at 100% 50%,
+        color-mix(in oklch, var(--krn-color-text) 16%, transparent),
+        transparent
+      )
+      right center;
+  background-repeat: no-repeat;
+  background-size:
+    2rem 100%,
+    2rem 100%,
+    0.5rem 100%,
+    0.5rem 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+:host([data-axis='both']) .krn-scroll-area__viewport {
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+:host([data-scrollbar='hidden']) .krn-scroll-area__viewport {
+  scrollbar-width: none;
+}
+:host([data-scrollbar='hidden']) .krn-scroll-area__viewport::-webkit-scrollbar {
+  display: none;
+}
+
+:host([data-scrollbar='stable']) .krn-scroll-area__viewport {
+  scrollbar-gutter: stable both-edges;
+}
+
+.krn-scroll-area__content {
+  min-width: min-content;
+}
+
+:host([data-axis='vertical']) .krn-scroll-area__content {
+  max-width: 100%;
+  min-width: 0;
+}
+
+@media (forced-colors: active) {
+  .krn-scroll-area__viewport {
+    background: Canvas;
+  }
+
+  .krn-scroll-area__viewport:focus-visible {
+    outline-color: Highlight;
+  }
+}

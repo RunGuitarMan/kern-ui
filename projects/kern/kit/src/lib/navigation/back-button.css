@@ -1,0 +1,53 @@
+:host {
+  display: inline-block;
+  max-inline-size: 100%;
+}
+:host([hidden]) {
+  display: none;
+}
+:is(a, button) {
+  display: inline-flex;
+  max-inline-size: 100%;
+  align-items: center;
+  gap: var(--krn-space-2);
+  min-block-size: var(--krn-touch-target-min);
+  padding-inline: var(--krn-space-2);
+  border: 0;
+  border-radius: var(--krn-radius-sm);
+  background: transparent;
+  color: var(--krn-color-text-muted);
+  font: inherit;
+  font-weight: var(--krn-font-weight-medium);
+  text-decoration: none;
+  cursor: pointer;
+}
+.back-icon {
+  flex: 0 0 auto;
+  font-size: var(--krn-icon-size-md);
+  line-height: 1;
+}
+:host-context([dir='rtl']) .back-icon {
+  scale: -1 1;
+}
+.back-label {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:is(a, button):hover {
+  background: var(--krn-color-surface-subtle);
+  color: var(--krn-color-text);
+}
+:is(a, button):focus-visible {
+  outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
+  outline-offset: var(--krn-focus-ring-offset);
+}
+:is(a, button):active {
+  background: var(--krn-color-surface-sunken);
+}
+@media (forced-colors: active) {
+  :is(a, button):focus-visible {
+    outline-color: Highlight;
+  }
+}

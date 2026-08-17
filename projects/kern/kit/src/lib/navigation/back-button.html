@@ -1,0 +1,11 @@
+@if (resolvedHref(); as destination) {
+  <a [href]="destination" (click)="activateLink($event)"
+    ><span class="back-icon" aria-hidden="true">←</span
+    ><span class="back-label">{{ resolvedLabel() }}</span></a
+  >
+} @else {
+  <button type="button" (click)="goBack()">
+    <span class="back-icon" aria-hidden="true">←</span
+    ><span class="back-label">{{ resolvedLabel() }}</span>
+  </button>
+}

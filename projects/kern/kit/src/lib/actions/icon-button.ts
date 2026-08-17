@@ -16,12 +16,7 @@ import { registerKrnLoadingActivationGuard } from './loading-action';
 
 @Component({
   selector: 'button[krnIconButton]',
-  template: `
-    <span class="krn-action__icon" aria-hidden="true"><ng-content /></span>
-    <span class="krn-action__status" role="status" aria-live="polite">
-      {{ loading() ? resolvedLoadingLabel() : '' }}
-    </span>
-  `,
+  templateUrl: './icon-button.html',
   host: {
     class: 'krn-action krn-icon-action',
     type: 'button',

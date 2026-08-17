@@ -1,0 +1,82 @@
+<button
+  #trigger
+  #origin="cdkOverlayOrigin"
+  cdkOverlayOrigin
+  type="button"
+  class="trigger"
+  [attr.aria-label]="resolvedTriggerAriaLabel()"
+  aria-haspopup="menu"
+  [attr.aria-expanded]="open()"
+  [attr.aria-controls]="open() ? panelId() : null"
+  (click)="toggle()"
+  (keydown)="onTriggerKeydown($event)"
+>
+  <ng-content select="[krnMenuTrigger]" />
+  @if (showDefaultTrigger()) {
+    <span>{{ resolvedTriggerLabel() }}</span>
+    <span class="trigger-chevron" aria-hidden="true"></span>
+  }
+</button>
+<ng-template
+  #connectedOverlay="cdkConnectedOverlay"
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayOpen]="open()"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  [cdkConnectedOverlayBackdropClass]="['cdk-overlay-transparent-backdrop', 'krn-overlay-backdrop']"
+  cdkConnectedOverlayPanelClass="krn-overlay-pane"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayPush]="true"
+  [cdkConnectedOverlayFlexibleDimensions]="true"
+  [cdkConnectedOverlayViewportMargin]="8"
+  cdkConnectedOverlayUsePopover="inline"
+  cdkConnectedOverlayTransformOriginOn=".menu-panel"
+  (attach)="onAttach(connectedOverlay, origin.elementRef.nativeElement)"
+  (backdropClick)="close('outside')"
+  (detach)="onDetach()"
+>
+  <div
+    #menuPanel
+    class="menu-panel"
+    role="menu"
+    [id]="panelId()"
+    [attr.tabindex]="hasEnabledItems() ? null : -1"
+    [attr.aria-label]="resolvedMenuAriaLabel()"
+    (keydown)="onMenuKeydown($event)"
+  >
+    @for (item of items(); track $index; let index = $index) {
+      @if (item.href && !item.disabled) {
+        <a
+          #menuItem
+          role="menuitem"
+          [href]="item.href"
+          [attr.tabindex]="index === activeIndex() ? 0 : -1"
+          (click)="activate(item)"
+          (pointerenter)="focusIndex(index)"
+        >
+          <span>{{ item.label }}</span>
+          @if (item.shortcut) {
+            <kbd>{{ item.shortcut }}</kbd>
+          }
+        </a>
+      } @else {
+        <button
+          #menuItem
+          type="button"
+          role="menuitem"
+          [disabled]="item.disabled"
+          [attr.tabindex]="index === activeIndex() ? 0 : -1"
+          (click)="activate(item)"
+          (pointerenter)="focusIndex(index)"
+        >
+          <span>{{ item.label }}</span>
+          @if (item.shortcut) {
+            <kbd>{{ item.shortcut }}</kbd>
+          }
+        </button>
+      }
+    } @empty {
+      <p class="empty" role="menuitem" aria-disabled="true">{{ resolvedEmptyLabel() }}</p>
+    }
+  </div>
+</ng-template>

@@ -36,7 +36,7 @@ const TOGGLE_GROUP_PROVIDER: Provider = {
     '[attr.data-orientation]': 'orientation()',
     '(keydown)': 'navigate($event)',
   },
-  template: `<ng-content />`,
+  templateUrl: './toggle-group.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnToggleGroup {

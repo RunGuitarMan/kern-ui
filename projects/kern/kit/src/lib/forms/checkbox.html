@@ -1,0 +1,45 @@
+<label
+  class="krn-choice"
+  [attr.data-disabled]="isDisabled()"
+  [attr.data-invalid]="a11y.invalid()"
+  [attr.data-readonly]="isReadOnly()"
+>
+  <input
+    #input
+    class="krn-choice__native"
+    type="checkbox"
+    [attr.aria-describedby]="effectiveDescribedBy()"
+    [attr.aria-invalid]="a11y.invalid()"
+    [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
+    [attr.aria-labelledby]="effectiveLabelledBy()"
+    [attr.aria-checked]="isIndeterminate() ? 'mixed' : null"
+    [attr.aria-disabled]="isReadOnly() || null"
+    [attr.data-indeterminate]="isIndeterminate()"
+    [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
+    [checked]="renderedChecked()"
+    [disabled]="isDisabled()"
+    [id]="a11y.id()"
+    [indeterminate]="isIndeterminate()"
+    [name]="name()"
+    [required]="a11y.required()"
+    [tabIndex]="tabIndex()"
+    [value]="value()"
+    (blur)="blurred()"
+    (change)="changeChecked($event)"
+  />
+  <span class="krn-choice__mark" aria-hidden="true">
+    @if (isIndeterminate()) {
+      −
+    } @else if (renderedChecked()) {
+      ✓
+    }
+  </span>
+  <span class="krn-choice__text">
+    <span [id]="labelId()"><ng-content /></span>
+    @if (description()) {
+      <span class="krn-choice__description" [id]="descriptionId()">
+        {{ description() }}
+      </span>
+    }
+  </span>
+</label>

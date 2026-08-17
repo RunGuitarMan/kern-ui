@@ -1,0 +1,153 @@
+<div class="krn-picker" (focusout)="closeOnFocusOut($event)" (keydown.escape)="onEscape($event)">
+  <span
+    class="krn-control-shell"
+    [attr.data-disabled]="isDisabled()"
+    [attr.data-invalid]="a11y.invalid() || !validColor()"
+    [attr.data-readonly]="a11y.readOnly()"
+  >
+    <button
+      #trigger
+      class="krn-picker__trigger krn-color-trigger"
+      type="button"
+      [attr.aria-controls]="panelId()"
+      [attr.aria-describedby]="effectiveDescribedBy()"
+      [attr.aria-disabled]="a11y.readOnly() ? 'true' : null"
+      [attr.aria-expanded]="open()"
+      [attr.aria-haspopup]="'dialog'"
+      [attr.aria-invalid]="a11y.invalid() || !validColor()"
+      [attr.aria-label]="effectiveLabelledBy() ? null : copy().chooseColor"
+      [attr.aria-labelledby]="effectiveLabelledBy()"
+      [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
+      [disabled]="isDisabled()"
+      [id]="a11y.id()"
+      [tabIndex]="isDisabled() ? -1 : tabIndex()"
+      (click)="toggleOpen()"
+    >
+      <span
+        class="krn-color-trigger__swatch"
+        aria-hidden="true"
+        [style.background]="normalizedColor()"
+      ></span>
+      <span class="krn-color-trigger__value">{{ controlValue().toUpperCase() }}</span>
+      <span class="krn-select-chevron" aria-hidden="true"></span>
+    </button>
+  </span>
+
+  @if (open()) {
+    <div
+      #panel
+      class="krn-picker__panel krn-color-panel"
+      popover="manual"
+      role="dialog"
+      [attr.aria-label]="copy().chooseColor"
+      [id]="panelId()"
+    >
+      <div
+        class="krn-color-preview"
+        [style.background]="normalizedColor()"
+        [style.color]="previewTextColor()"
+      >
+        <span>{{ copy().preview }}</span>
+        <strong>{{ normalizedColor().toUpperCase() }}</strong>
+      </div>
+
+      <div class="krn-color-swatches" [attr.aria-label]="copy().suggestedColors">
+        @for (color of presets; track color) {
+          <button
+            type="button"
+            [attr.aria-label]="copy().useColor(color)"
+            [attr.aria-pressed]="normalizedColor() === color"
+            [attr.data-selected]="normalizedColor() === color"
+            [style.--krn-swatch]="color"
+            [disabled]="isDisabled() || a11y.readOnly()"
+            (click)="selectColor(color)"
+          ></button>
+        }
+      </div>
+
+      <label class="krn-color-field">
+        <span
+          >{{ copy().hue }} <output>{{ hue() }}°</output></span
+        >
+        <input
+          class="krn-color-range krn-color-range--hue"
+          type="range"
+          min="0"
+          max="359"
+          step="1"
+          [attr.aria-label]="copy().hue"
+          [disabled]="isDisabled() || a11y.readOnly()"
+          [value]="hue()"
+          (input)="updateHue($event)"
+        />
+      </label>
+
+      <label class="krn-color-field">
+        <span
+          >{{ copy().saturation }} <output>{{ saturation() }}%</output></span
+        >
+        <input
+          class="krn-color-range"
+          type="range"
+          min="0"
+          max="100"
+          step="1"
+          [attr.aria-label]="copy().saturation"
+          [disabled]="isDisabled() || a11y.readOnly()"
+          [style.background]="saturationBackground()"
+          [value]="saturation()"
+          (input)="updateSaturation($event)"
+        />
+      </label>
+
+      <label class="krn-color-field">
+        <span
+          >{{ copy().lightness }} <output>{{ lightness() }}%</output></span
+        >
+        <input
+          class="krn-color-range krn-color-range--lightness"
+          type="range"
+          min="0"
+          max="100"
+          step="1"
+          [attr.aria-label]="copy().lightness"
+          [disabled]="isDisabled() || a11y.readOnly()"
+          [style.background]="lightnessBackground()"
+          [value]="lightness()"
+          (input)="updateLightness($event)"
+        />
+      </label>
+
+      <label class="krn-color-field">
+        <span>{{ copy().colorValue }}</span>
+        <input
+          #colorText
+          class="krn-color-text"
+          type="text"
+          autocapitalize="off"
+          autocomplete="off"
+          spellcheck="false"
+          [attr.aria-invalid]="!validColor()"
+          [attr.data-invalid]="!validColor()"
+          [disabled]="isDisabled()"
+          [readOnly]="a11y.readOnly()"
+          [value]="controlValue()"
+          (input)="updateText($event)"
+        />
+      </label>
+
+      <div class="krn-picker__footer">
+        <span class="krn-color-status" aria-live="polite">
+          {{ validColor() ? copy().validColor : copy().invalidColor }}
+        </span>
+        <button
+          type="button"
+          [disabled]="isDisabled() || a11y.readOnly() || !validColor()"
+          (click)="close()"
+        >
+          {{ copy().done }}
+        </button>
+      </div>
+    </div>
+  }
+</div>

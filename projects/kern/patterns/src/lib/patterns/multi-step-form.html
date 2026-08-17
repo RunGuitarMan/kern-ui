@@ -1,0 +1,65 @@
+<nav [attr.aria-label]="resolvedAriaLabel()">
+  <ol>
+    @for (step of validatedSteps(); track step.id; let index = $index) {
+      <li
+        [attr.data-current]="index === current() ? '' : null"
+        [attr.data-complete]="isStepComplete(step, index) ? '' : null"
+      >
+        <button
+          type="button"
+          [attr.aria-disabled]="!canNavigateTo(index)"
+          [attr.tabindex]="canNavigateTo(index) ? null : -1"
+          [attr.aria-current]="index === current() ? 'step' : null"
+          (click)="goTo(index)"
+        >
+          <span aria-hidden="true">{{ isStepComplete(step, index) ? '✓' : index + 1 }}</span>
+          <span>
+            <strong>{{ step.label }}</strong>
+            @if (step.description) {
+              <small>{{ step.description }}</small>
+            }
+          </span>
+          @if (step.optional) {
+            <em>{{ resolvedOptionalLabel() }}</em>
+          }
+        </button>
+      </li>
+    }
+  </ol>
+</nav>
+<section role="group" [attr.aria-labelledby]="currentStepLabelId()">
+  <h2 #stepHeading [id]="currentStepLabelId()" class="sr-only" tabindex="-1">
+    {{ currentStep().label }}
+  </h2>
+  <ng-content />
+</section>
+<footer>
+  <button
+    type="button"
+    class="secondary"
+    [attr.aria-disabled]="current() === 0"
+    (click)="previous()"
+  >
+    {{ resolvedBackLabel() }}
+  </button>
+  <span aria-live="polite">{{ resolvedStepCounterLabel() }}</span>
+  @if (current() < validatedSteps().length - 1) {
+    <button
+      type="button"
+      class="primary"
+      [attr.aria-disabled]="currentStep().valid === false"
+      (click)="next()"
+    >
+      {{ resolvedContinueLabel() }}
+    </button>
+  } @else {
+    <button
+      type="button"
+      class="primary"
+      [attr.aria-disabled]="currentStep().valid === false"
+      (click)="complete()"
+    >
+      {{ resolvedCompleteLabel() }}
+    </button>
+  }
+</footer>

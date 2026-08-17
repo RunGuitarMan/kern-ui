@@ -1,0 +1,23 @@
+:host {
+  display: grid;
+  gap: 0.25rem;
+  min-inline-size: 0;
+  font-variant-numeric: tabular-nums;
+}
+.label,
+.detail {
+  color: var(--krn-color-text-muted, #626a76);
+  font: var(--krn-font-body-sm, 500 0.8125rem/1.125rem sans-serif);
+}
+strong {
+  overflow-wrap: anywhere;
+  color: var(--krn-color-text, #252932);
+  font: var(--krn-font-heading-lg, 620 1.75rem/2rem sans-serif);
+  letter-spacing: -0.025em;
+}
+:host([data-trend='up']) .detail {
+  color: var(--krn-color-success-text, #176b49);
+}
+:host([data-trend='down']) .detail {
+  color: var(--krn-color-danger-text, #a02d2d);
+}

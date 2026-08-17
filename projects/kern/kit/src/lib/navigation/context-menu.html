@@ -1,0 +1,85 @@
+<ng-content />
+<ng-template
+  #connectedOverlay="cdkConnectedOverlay"
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="origin()"
+  [cdkConnectedOverlayOpen]="open()"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  [cdkConnectedOverlayBackdropClass]="['cdk-overlay-transparent-backdrop', 'krn-overlay-backdrop']"
+  cdkConnectedOverlayPanelClass="krn-overlay-pane"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayPush]="true"
+  [cdkConnectedOverlayFlexibleDimensions]="true"
+  [cdkConnectedOverlayViewportMargin]="8"
+  cdkConnectedOverlayUsePopover="inline"
+  cdkConnectedOverlayTransformOriginOn=".context-panel--root"
+  (attach)="onAttach(connectedOverlay)"
+  (backdropClick)="dismiss(false)"
+  (detach)="onOverlayDetach()"
+>
+  <ng-container
+    [ngTemplateOutlet]="menuBranch"
+    [ngTemplateOutletContext]="{
+      $implicit: items(),
+      root: true,
+      label: resolvedAriaLabel(),
+      owner: '',
+    }"
+  />
+</ng-template>
+<ng-template #menuBranch let-menuItems let-root="root" let-label="label" let-owner="owner">
+  <div
+    #contextPanel
+    class="context-panel"
+    [class.context-panel--root]="root"
+    [class.submenu]="!root"
+    [class.rtl]="rightToLeft()"
+    [class.submenu-towards-start]="!root && submenuOpensTowardsStart(owner)"
+    role="menu"
+    [attr.tabindex]="root && !branchHasEnabledItem(menuItems) ? -1 : null"
+    [attr.aria-label]="label"
+    (click)="$event.stopPropagation()"
+    (keydown)="onKeydown($event)"
+  >
+    @for (item of menuItems; track $index) {
+      <div class="context-entry" (pointerenter)="onPointerEnter(item)">
+        <button
+          #contextItem
+          type="button"
+          role="menuitem"
+          [disabled]="item.disabled"
+          [attr.data-context-item]="item.id"
+          [attr.aria-haspopup]="item.children?.length ? 'menu' : null"
+          [attr.aria-expanded]="item.children?.length ? submenuOpen(item.id) : null"
+          [attr.tabindex]="activeId() === item.id ? 0 : -1"
+          (focus)="activeId.set(item.id)"
+          (click)="onItemClick($event, item)"
+        >
+          <span class="item-icon" aria-hidden="true">{{ item.icon || '' }}</span>
+          <span class="item-label">{{ item.label }}</span>
+          @if (item.shortcut) {
+            <kbd>{{ item.shortcut }}</kbd>
+          }
+          @if (item.children?.length) {
+            <span class="submenu-chevron" aria-hidden="true"></span>
+          }
+        </button>
+        @if (item.children?.length && submenuOpen(item.id)) {
+          <ng-container
+            [ngTemplateOutlet]="menuBranch"
+            [ngTemplateOutletContext]="{
+              $implicit: item.children,
+              root: false,
+              label: item.label,
+              owner: item.id,
+            }"
+          />
+        }
+      </div>
+    } @empty {
+      <p class="empty" role="menuitem" aria-disabled="true">
+        {{ resolvedEmptyLabel() }}
+      </p>
+    }
+  </div>
+</ng-template>

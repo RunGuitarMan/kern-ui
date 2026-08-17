@@ -1,0 +1,25 @@
+<div class="filters" [attr.aria-label]="resolvedAriaLabel()" role="group">
+  @for (filter of validatedFilters(); track filter.id) {
+    <label>
+      <span>{{ filter.label }}</span>
+      <select #filterSelect (change)="setFilter(filter.id, $event)">
+        <option value="" [selected]="!validatedValues()[filter.id]">
+          {{ resolvedAllLabel() }}
+        </option>
+        @for (option of filter.options; track option.value) {
+          <option [value]="option.value" [selected]="validatedValues()[filter.id] === option.value">
+            {{ option.label }}{{ option.count === undefined ? '' : ' · ' + option.count }}
+          </option>
+        }
+      </select>
+    </label>
+  }
+  <span class="filter-status" role="status" aria-live="polite" aria-atomic="true">{{
+    activeCount() ? resolvedActiveLabel() : ''
+  }}</span>
+  @if (activeCount()) {
+    <krn-badge tone="brand" aria-hidden="true">{{ resolvedActiveLabel() }}</krn-badge>
+    <button type="button" (click)="clear()">{{ resolvedClearAllLabel() }}</button>
+  }
+  <ng-content />
+</div>

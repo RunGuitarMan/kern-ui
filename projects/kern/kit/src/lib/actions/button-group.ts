@@ -10,7 +10,7 @@ import { KRN_BUTTON_GROUP_OPTIONS } from './button-group-options';
     '[attr.data-connected]': 'connected() ? "true" : null',
     '[attr.data-orientation]': 'orientation()',
   },
-  template: `<ng-content />`,
+  templateUrl: './button-group.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnButtonGroup {

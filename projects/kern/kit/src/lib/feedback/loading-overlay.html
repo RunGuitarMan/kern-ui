@@ -1,0 +1,19 @@
+<div
+  class="loading-content"
+  [attr.aria-hidden]="active() && blocking() ? 'true' : null"
+  [attr.inert]="active() && blocking() ? '' : null"
+>
+  <ng-content />
+</div>
+@if (active()) {
+  <div
+    class="loading-surface"
+    [attr.role]="blocking() ? 'alert' : 'status'"
+    [attr.aria-live]="'polite'"
+  >
+    <span class="loading-panel">
+      <krn-spinner [label]="resolvedLabel()" />
+      <span>{{ resolvedLabel() }}</span>
+    </span>
+  </div>
+}

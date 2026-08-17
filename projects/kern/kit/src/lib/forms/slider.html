@@ -1,0 +1,34 @@
+<div class="krn-slider" [style.--krn-slider-progress]="valuePercent() + '%'">
+  @if (label() || showValue()) {
+    <div class="krn-slider__header">
+      <span [id]="labelId()">{{ label() }}</span>
+      @if (showValue()) {
+        <output [for]="a11y.id()">{{ formattedValue() }}</output>
+      }
+    </div>
+  }
+  <input
+    #input
+    class="krn-range"
+    type="range"
+    [attr.aria-describedby]="a11y.describedBy()"
+    [attr.aria-invalid]="a11y.invalid()"
+    [attr.aria-label]="effectiveLabelledBy() ? null : resolvedAriaLabel()"
+    [attr.aria-labelledby]="effectiveLabelledBy()"
+    [attr.aria-readonly]="a11y.readOnly()"
+    [attr.aria-valuetext]="formattedValue()"
+    [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
+    [attr.name]="name() || null"
+    [disabled]="isDisabled()"
+    [id]="a11y.id()"
+    [max]="effectiveMax()"
+    [min]="effectiveMin()"
+    [step]="effectiveStep()"
+    [tabIndex]="isDisabled() ? -1 : tabIndex()"
+    [value]="controlValue()"
+    (blur)="touch()"
+    (input)="updateValue($event)"
+    (keydown)="protectReadOnlyKeyboard($event)"
+    (pointerdown)="protectReadOnlyPointer($event)"
+  />
+</div>

@@ -1,0 +1,140 @@
+<div class="krn-picker" (focusout)="closeOnFocusOut($event)" (keydown.escape)="onEscape($event)">
+  <span
+    class="krn-control-shell"
+    [attr.data-disabled]="isDisabled()"
+    [attr.data-invalid]="a11y.invalid()"
+    [attr.data-readonly]="a11y.readOnly()"
+  >
+    <button
+      #trigger
+      class="krn-picker__trigger"
+      type="button"
+      [attr.aria-controls]="panelId()"
+      [attr.aria-describedby]="effectiveDescribedBy()"
+      [attr.aria-disabled]="a11y.readOnly() ? 'true' : null"
+      [attr.aria-expanded]="open()"
+      [attr.aria-haspopup]="'dialog'"
+      [attr.aria-invalid]="a11y.invalid()"
+      [attr.aria-label]="effectiveLabelledBy() ? null : pickerAriaLabel()"
+      [attr.aria-labelledby]="effectiveLabelledBy()"
+      [attr.aria-required]="a11y.required()"
+      [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
+      [disabled]="isDisabled()"
+      [id]="a11y.id()"
+      [tabIndex]="isDisabled() ? -1 : tabIndex()"
+      (click)="toggleOpen()"
+    >
+      @if (controlValue()) {
+        <span class="krn-picker__value krn-picker__value--numeric">
+          {{ displayTime() }}
+        </span>
+      } @else {
+        <span class="krn-picker__placeholder">{{ copy().selectTime }}</span>
+      }
+      <span class="krn-picker__clock-icon" aria-hidden="true"></span>
+    </button>
+  </span>
+
+  @if (open()) {
+    <div
+      #panel
+      class="krn-picker__panel krn-time-panel"
+      popover="manual"
+      role="dialog"
+      [attr.aria-describedby]="panelId() + '-help'"
+      [attr.aria-label]="pickerAriaLabel()"
+      [id]="panelId()"
+    >
+      <div class="krn-time-panel__header">
+        <span>
+          <small>{{ copy().twentyFourHourTime }}</small>
+          <strong aria-live="polite">{{ draftTime() || displayTime() || '—:—' }}</strong>
+        </span>
+        <span class="krn-time-panel__zone">{{ copy().twentyFourHour }}</span>
+      </div>
+      <div class="krn-time-entry" role="group" [attr.aria-label]="copy().time">
+        <label class="krn-time-part">
+          <span>{{ copy().hour }}</span>
+          <input
+            #hourInput
+            type="text"
+            role="spinbutton"
+            autocomplete="off"
+            inputmode="numeric"
+            maxlength="2"
+            pattern="[0-9]*"
+            [attr.aria-label]="copy().hour"
+            aria-valuemax="23"
+            aria-valuemin="0"
+            [attr.aria-valuenow]="draftHourNumber()"
+            [attr.aria-valuetext]="hourDraft() || copy().notSet"
+            [disabled]="isDisabled() || a11y.readOnly()"
+            [value]="hourDraft()"
+            (blur)="normalizeDraftPart('hour')"
+            (focus)="selectPart($event)"
+            (input)="updateDraftPart('hour', $event)"
+            (keydown)="handlePartKeydown('hour', $event)"
+          />
+        </label>
+        <span class="krn-time-entry__separator" aria-hidden="true">:</span>
+        <label class="krn-time-part">
+          <span>{{ copy().minute }}</span>
+          <input
+            type="text"
+            role="spinbutton"
+            autocomplete="off"
+            inputmode="numeric"
+            maxlength="2"
+            pattern="[0-9]*"
+            [attr.aria-label]="copy().minute"
+            aria-valuemax="59"
+            aria-valuemin="0"
+            [attr.aria-valuenow]="draftMinuteNumber()"
+            [attr.aria-valuetext]="minuteDraft() || copy().notSet"
+            [disabled]="isDisabled() || a11y.readOnly()"
+            [value]="minuteDraft()"
+            (blur)="normalizeDraftPart('minute')"
+            (focus)="selectPart($event)"
+            (input)="updateDraftPart('minute', $event)"
+            (keydown)="handlePartKeydown('minute', $event)"
+          />
+        </label>
+      </div>
+      <p class="krn-time-panel__help" [id]="panelId() + '-help'">
+        {{ copy().keyboardHelp }}
+      </p>
+      <div class="krn-time-presets" [attr.aria-label]="copy().commonTimes">
+        <span>{{ copy().commonTimes }}</span>
+        <div>
+          @for (preset of timePresets(); track preset) {
+            <button
+              type="button"
+              [attr.aria-pressed]="draftTime() === preset"
+              [attr.data-selected]="draftTime() === preset"
+              [disabled]="isDisabled() || a11y.readOnly()"
+              (click)="selectPreset(preset)"
+            >
+              {{ preset }}
+            </button>
+          }
+        </div>
+      </div>
+      <div class="krn-picker__footer">
+        <button
+          type="button"
+          [disabled]="isDisabled() || a11y.readOnly() || !controlValue()"
+          (click)="clear()"
+        >
+          {{ copy().clear }}
+        </button>
+        <button
+          type="button"
+          [disabled]="isDisabled() || a11y.readOnly() || !draftTime()"
+          (click)="applyDraft()"
+        >
+          {{ copy().apply }}
+        </button>
+      </div>
+    </div>
+  }
+</div>

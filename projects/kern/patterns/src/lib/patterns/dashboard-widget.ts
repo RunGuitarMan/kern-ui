@@ -9,40 +9,8 @@ import { KrnCard } from '@kern-ui/angular/kit';
     role: 'region',
     '[attr.aria-label]': 'resolvedHeading()',
   },
-  template: `
-    <krn-card [eyebrow]="resolvedEyebrow()" [heading]="resolvedHeading()">
-      <ng-content />
-      <div class="footer" krnCardFooter><ng-content select="[krnWidgetFooter]" /></div>
-    </krn-card>
-  `,
-  styles: `
-    :host,
-    krn-card {
-      display: block;
-      block-size: 100%;
-      min-inline-size: 0;
-    }
-    :host([hidden]) {
-      display: none;
-    }
-    krn-card {
-      display: flex;
-      flex-direction: column;
-      overflow-wrap: anywhere;
-    }
-    .footer {
-      margin-block-start: auto;
-      padding-block-start: var(--krn-space-4, 1rem);
-    }
-    .footer:empty {
-      display: none;
-    }
-    @media (forced-colors: active) {
-      krn-card {
-        border-color: CanvasText;
-      }
-    }
-  `,
+  templateUrl: './dashboard-widget.html',
+  styleUrl: './dashboard-widget.css',
 })
 export class KrnDashboardWidget {
   readonly eyebrow = input('');

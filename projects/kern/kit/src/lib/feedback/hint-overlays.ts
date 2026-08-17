@@ -40,43 +40,8 @@ import { krnInputFallback } from '../reactive-input';
     role: 'tooltip',
     '[id]': 'id()',
   },
-  template: `{{ text() }}`,
-  styles: `
-    :host {
-      display: block;
-      max-inline-size: 18rem;
-      padding: var(--krn-space-1) var(--krn-space-2);
-      border: var(--krn-border-width-1) solid var(--krn-color-border-strong);
-      border-radius: var(--krn-radius-sm);
-      box-shadow: var(--krn-shadow-sm);
-      background: var(--krn-color-surface-inverse);
-      color: var(--krn-color-text-inverse);
-      font-size: var(--krn-font-size-xs);
-      line-height: var(--krn-line-height-body);
-      overflow-wrap: anywhere;
-      pointer-events: none;
-    }
-    @media (prefers-reduced-motion: no-preference) {
-      :host {
-        animation: krn-tooltip-enter var(--krn-motion-duration-interaction)
-          var(--krn-motion-ease-enter);
-      }
-    }
-    :host-context(html[data-krn-motion='full']) {
-      animation: krn-tooltip-enter var(--krn-motion-duration-interaction)
-        var(--krn-motion-ease-enter);
-    }
-    @keyframes krn-tooltip-enter {
-      from {
-        opacity: 0;
-        transform: translateY(var(--krn-space-1));
-      }
-      to {
-        opacity: 1;
-        transform: none;
-      }
-    }
-  `,
+  templateUrl: './tooltip-surface.html',
+  styleUrl: './tooltip-surface.css',
 })
 class KrnTooltipSurface {
   readonly id = input.required<string>();
@@ -291,104 +256,8 @@ export class KrnTooltip {
   standalone: true,
   imports: [OverlayModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <button
-      #trigger
-      #origin="cdkOverlayOrigin"
-      cdkOverlayOrigin
-      type="button"
-      class="origin"
-      [attr.aria-expanded]="open()"
-      [attr.aria-controls]="open() ? panelId : null"
-      (click)="toggle()"
-      (keydown.escape)="
-        $event.defaultPrevented || !open()
-          ? undefined
-          : [$event.preventDefault(), $event.stopPropagation(), close('escape')]
-      "
-    >
-      <ng-content select="[krnPopoverTrigger]" />
-    </button>
-    <ng-template
-      #connectedOverlay="cdkConnectedOverlay"
-      cdkConnectedOverlay
-      [cdkConnectedOverlayOrigin]="origin"
-      [cdkConnectedOverlayOpen]="open()"
-      [cdkConnectedOverlayPositions]="positions"
-      cdkConnectedOverlayPanelClass="krn-overlay-pane"
-      (attach)="registerOverlay(connectedOverlay, origin.elementRef.nativeElement); focusPanel()"
-      (overlayOutsideClick)="close('outside')"
-      (detach)="close('api')"
-    >
-      <section
-        #panel
-        [id]="panelId"
-        class="popover"
-        role="region"
-        [attr.aria-label]="resolvedAriaLabel()"
-        tabindex="-1"
-        (keydown.escape)="
-          $event.defaultPrevented || !open()
-            ? undefined
-            : [$event.preventDefault(), $event.stopPropagation(), close('escape')]
-        "
-      >
-        <ng-content />
-      </section>
-    </ng-template>
-  `,
-  styles: `
-    :host {
-      display: inline-block;
-    }
-    .origin {
-      display: inline-flex;
-      padding: 0;
-      border: 0;
-      background: transparent;
-      color: inherit;
-      font: inherit;
-      cursor: pointer;
-    }
-    .origin:focus-visible {
-      outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
-      outline-offset: var(--krn-focus-ring-offset);
-      border-radius: var(--krn-radius-sm);
-    }
-    .popover {
-      max-inline-size: min(24rem, calc(100vw - var(--krn-space-8)));
-      max-block-size: min(30rem, calc(100dvh - var(--krn-space-8)));
-      overflow: auto;
-      padding: var(--krn-space-4);
-      border: var(--krn-border-width-1) solid var(--krn-color-border);
-      border-radius: var(--krn-radius-md);
-      box-shadow: var(--krn-shadow-overlay);
-      background: var(--krn-color-surface-raised);
-      color: var(--krn-color-text);
-      outline: none;
-    }
-    .popover:focus-visible {
-      box-shadow: var(--krn-focus-ring-shadow), var(--krn-shadow-overlay);
-    }
-    @media (prefers-reduced-motion: no-preference) {
-      .popover {
-        animation: krn-popover-enter var(--krn-motion-duration-enter) var(--krn-motion-ease-enter);
-      }
-    }
-    :host-context(html[data-krn-motion='full']) .popover {
-      animation: krn-popover-enter var(--krn-motion-duration-enter) var(--krn-motion-ease-enter);
-    }
-    @keyframes krn-popover-enter {
-      from {
-        opacity: 0;
-        transform: translateY(calc(var(--krn-space-1) * -1));
-      }
-      to {
-        opacity: 1;
-        transform: none;
-      }
-    }
-  `,
+  templateUrl: './popover.html',
+  styleUrl: './popover.css',
 })
 export class KrnPopover {
   private readonly ids = inject(KrnIdService);
@@ -459,102 +328,8 @@ export class KrnPopover {
   standalone: true,
   imports: [OverlayModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <button
-      #origin="cdkOverlayOrigin"
-      cdkOverlayOrigin
-      type="button"
-      class="origin"
-      [attr.aria-describedby]="open() ? panelId : null"
-      (pointerenter)="scheduleOpen()"
-      (pointerleave)="scheduleClose()"
-      (focusin)="scheduleOpen()"
-      (focusout)="scheduleClose()"
-      (keydown.escape)="
-        $event.defaultPrevented || !open()
-          ? undefined
-          : [$event.preventDefault(), $event.stopPropagation(), closeImmediately()]
-      "
-    >
-      <ng-content select="[krnHoverCardTrigger]" />
-    </button>
-    <ng-template
-      #connectedOverlay="cdkConnectedOverlay"
-      cdkConnectedOverlay
-      [cdkConnectedOverlayOrigin]="origin"
-      [cdkConnectedOverlayOpen]="open()"
-      [cdkConnectedOverlayPositions]="positions"
-      cdkConnectedOverlayPanelClass="krn-overlay-pane"
-      (attach)="registerOverlay(connectedOverlay, origin.elementRef.nativeElement)"
-      (detach)="closeImmediately()"
-    >
-      <section
-        [id]="panelId"
-        class="hover-card"
-        role="tooltip"
-        (pointerenter)="cancelClose()"
-        (pointerleave)="scheduleClose()"
-      >
-        <span class="visually-hidden">{{ resolvedAriaLabel() }}</span>
-        <ng-content />
-      </section>
-    </ng-template>
-  `,
-  styles: `
-    :host {
-      display: inline-block;
-    }
-    .origin {
-      display: inline-flex;
-      padding: 0;
-      border: 0;
-      background: transparent;
-      color: inherit;
-      font: inherit;
-      cursor: pointer;
-    }
-    .origin:focus-visible {
-      outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
-      outline-offset: var(--krn-focus-ring-offset);
-      border-radius: var(--krn-radius-sm);
-    }
-    .hover-card {
-      max-inline-size: min(22rem, calc(100vw - var(--krn-space-8)));
-      padding: var(--krn-space-4);
-      border: var(--krn-border-width-1) solid var(--krn-color-border);
-      border-radius: var(--krn-radius-md);
-      box-shadow: var(--krn-shadow-lg);
-      background: var(--krn-color-surface-raised);
-      color: var(--krn-color-text);
-    }
-    .visually-hidden {
-      position: absolute;
-      inline-size: 1px;
-      block-size: 1px;
-      margin: -1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
-    }
-    @media (prefers-reduced-motion: no-preference) {
-      .hover-card {
-        animation: krn-hover-enter var(--krn-motion-duration-enter) var(--krn-motion-ease-enter);
-      }
-    }
-    :host-context(html[data-krn-motion='full']) .hover-card {
-      animation: krn-hover-enter var(--krn-motion-duration-enter) var(--krn-motion-ease-enter);
-    }
-    @keyframes krn-hover-enter {
-      from {
-        opacity: 0;
-        transform: translateY(var(--krn-space-1));
-      }
-      to {
-        opacity: 1;
-        transform: none;
-      }
-    }
-  `,
+  templateUrl: './hover-card.html',
+  styleUrl: './hover-card.css',
 })
 export class KrnHoverCard {
   private readonly destroyRef = inject(DestroyRef);

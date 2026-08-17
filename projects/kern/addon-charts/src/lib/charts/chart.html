@@ -1,0 +1,228 @@
+<figure>
+  <figcaption>
+    <span>
+      @if (eyebrow()) {
+        <small>{{ eyebrow() }}</small>
+      }
+      <strong>{{ resolvedTitle() }}</strong>
+      @if (description()) {
+        <span>{{ description() }}</span>
+      }
+    </span>
+    <button
+      type="button"
+      class="data-toggle"
+      [attr.aria-expanded]="tableVisible()"
+      [attr.aria-controls]="tableVisible() ? tableId : null"
+      (click)="tableVisible.update(toggle)"
+    >
+      {{ tableVisible() ? resolvedLabels().hideData : resolvedLabels().viewData }}
+    </button>
+  </figcaption>
+
+  <div class="plot" [class.has-active]="activeIndex() !== null">
+    @if (!validatedData().length) {
+      <p class="empty-chart" role="status">{{ resolvedLabels().empty }}</p>
+    } @else if (resolvedType() === 'line') {
+      <svg viewBox="0 0 640 280" role="group" [attr.aria-label]="accessibleSummary()">
+        <g class="grid" aria-hidden="true">
+          @for (line of gridLines; track line) {
+            <line x1="28" [attr.y1]="line" x2="620" [attr.y2]="line"></line>
+          }
+        </g>
+        <path class="area" [attr.d]="areaPath()" aria-hidden="true"></path>
+        <path class="line" [attr.d]="linePath()" aria-hidden="true"></path>
+        @for (point of linePoints(); track point.key; let index = $index) {
+          <g
+            class="point"
+            [attr.tabindex]="markTabIndex(index)"
+            role="button"
+            [attr.data-chart-index]="index"
+            [attr.data-active]="activeIndex() === index ? '' : null"
+            [attr.aria-label]="accessibleDatumLabel(point)"
+            (mouseenter)="setHovered(point.key)"
+            (mouseleave)="clearHovered(point.key)"
+            (focus)="setFocused(point.key)"
+            (blur)="clearFocused(point.key)"
+            (click)="setActive(index)"
+            (keydown)="onMarkKeydown($event, index)"
+          >
+            <rect
+              class="mark-hit-area"
+              [attr.x]="point.x - 42"
+              y="24"
+              width="84"
+              height="242"
+              rx="12"
+              aria-hidden="true"
+            ></rect>
+            <circle class="hit-area" [attr.cx]="point.x" [attr.cy]="point.y" r="16"></circle>
+            <circle class="dot" [attr.cx]="point.x" [attr.cy]="point.y" r="4"></circle>
+            <text [attr.x]="point.x" y="270" text-anchor="middle">
+              {{ abbreviated(point.label) }}
+            </text>
+            <title>{{ accessibleDatumLabel(point) }}</title>
+          </g>
+        }
+      </svg>
+    } @else if (resolvedType() === 'bar') {
+      <svg viewBox="0 0 640 280" role="group" [attr.aria-label]="accessibleSummary()">
+        <g class="grid" aria-hidden="true">
+          @for (line of gridLines; track line) {
+            <line x1="28" [attr.y1]="line" x2="620" [attr.y2]="line"></line>
+          }
+        </g>
+        @for (bar of bars(); track bar.key; let index = $index) {
+          <g
+            class="bar"
+            [attr.tabindex]="markTabIndex(index)"
+            role="button"
+            [attr.data-chart-index]="index"
+            [attr.data-active]="activeIndex() === index ? '' : null"
+            [attr.aria-label]="accessibleDatumLabel(bar)"
+            [style.--_bar-opacity]="barOpacity(index)"
+            (mouseenter)="setHovered(bar.key)"
+            (mouseleave)="clearHovered(bar.key)"
+            (focus)="setFocused(bar.key)"
+            (blur)="clearFocused(bar.key)"
+            (click)="setActive(index)"
+            (keydown)="onMarkKeydown($event, index)"
+          >
+            <rect
+              [attr.x]="bar.x"
+              [attr.y]="bar.y"
+              [attr.width]="bar.width"
+              [attr.height]="bar.height"
+              rx="7"
+            ></rect>
+            <text [attr.x]="bar.x + bar.width / 2" y="270" text-anchor="middle">
+              {{ abbreviated(bar.label) }}
+            </text>
+            <title>{{ accessibleDatumLabel(bar) }}</title>
+          </g>
+        }
+      </svg>
+    } @else {
+      <div class="donut-layout">
+        <svg viewBox="0 0 240 240" role="group" [attr.aria-label]="accessibleSummary()">
+          <circle class="donut-track" cx="120" cy="120" r="82" aria-hidden="true"></circle>
+          @for (segment of donutSegments(); track segment.key; let index = $index) {
+            <circle
+              class="donut-segment"
+              cx="120"
+              cy="120"
+              r="82"
+              pathLength="100"
+              [attr.stroke-dasharray]="segment.dashPercent + ' ' + (100 - segment.dashPercent)"
+              [attr.stroke-dashoffset]="segment.offset * -1"
+              [attr.data-active]="activeIndex() === index ? '' : null"
+              [style.--_series-color]="color(index)"
+              aria-hidden="true"
+              (mouseenter)="setHovered(segment.key)"
+              (mouseleave)="clearHovered(segment.key)"
+              (click)="setActive(index)"
+            ></circle>
+            <circle
+              class="donut-hit-area"
+              [attr.cx]="segment.targetX"
+              [attr.cy]="segment.targetY"
+              r="16"
+              [attr.data-active]="activeIndex() === index ? '' : null"
+              aria-hidden="true"
+              (mouseenter)="setHovered(segment.key)"
+              (mouseleave)="clearHovered(segment.key)"
+              (click)="setActive(index)"
+            >
+              <title>
+                {{ accessibleDatumShareLabel(segment) }}
+              </title>
+            </circle>
+          }
+          @if (activeDatum(); as active) {
+            <text x="120" y="111" text-anchor="middle" class="donut-total-label">
+              {{ uppercase(abbreviated(active.label)) }}
+            </text>
+            <text x="120" y="140" text-anchor="middle" class="donut-total">
+              {{ formattedValue(active.value) }}
+            </text>
+          } @else {
+            <text x="120" y="111" text-anchor="middle" class="donut-total-label">
+              {{ uppercase(resolvedLabels().total) }}
+            </text>
+            <text x="120" y="140" text-anchor="middle" class="donut-total">
+              {{ formattedValue(total()) }}
+            </text>
+          }
+        </svg>
+        <ul class="legend" [attr.aria-label]="resolvedLabels().legend">
+          @for (segment of donutSegments(); track segment.key; let index = $index) {
+            <li [attr.data-active]="activeIndex() === index ? '' : null">
+              <button
+                type="button"
+                [attr.data-active]="activeIndex() === index ? '' : null"
+                (mouseenter)="setHovered(segment.key)"
+                (mouseleave)="clearHovered(segment.key)"
+                (focus)="setFocused(segment.key)"
+                (blur)="clearFocused(segment.key)"
+                (click)="setActive(index)"
+              >
+                <i [style.--_series-color]="color(index)" aria-hidden="true"></i>
+                <span>{{ segment.label }}</span>
+                <strong>{{ formattedPercent(segment.percent) }}</strong>
+              </button>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+
+    @if (activeDatum(); as active) {
+      <div
+        class="chart-tooltip"
+        role="status"
+        aria-live="polite"
+        [style.--_tooltip-x]="tooltipPosition().x + '%'"
+        [style.--_tooltip-y]="tooltipPosition().y + '%'"
+      >
+        <span>{{ active.label }}</span>
+        <strong>{{ formattedValue(active.value) }}</strong>
+        <small>
+          {{
+            active.description ||
+              percentOfTotal(total() ? (Math.max(0, active.value) / total()) * 100 : 0)
+          }}
+        </small>
+      </div>
+    }
+  </div>
+
+  @if (tableVisible()) {
+    <div class="table-scroll" [id]="tableId">
+      <table>
+        <caption>
+          {{
+            resolvedLabels().sourceDataCaption(resolvedTitle(), resolvedLabels().sourceData)
+          }}
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">{{ resolvedLabels().labelColumn }}</th>
+            <th scope="col">{{ resolvedLabels().valueColumn }}</th>
+            <th scope="col">{{ resolvedLabels().shareColumn }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (datum of validatedData(); track datum.key) {
+            <tr>
+              <th scope="row">{{ datum.label }}</th>
+              <td>{{ formattedValue(datum.value) }}</td>
+              <td>
+                {{ formattedPercent(total() ? (Math.max(0, datum.value) / total()) * 100 : 0) }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</figure>

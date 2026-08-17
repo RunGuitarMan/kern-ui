@@ -1,0 +1,559 @@
+<section class="grid-shell" [attr.aria-label]="copy().ariaLabel">
+  @if (filterable() || columnChooser()) {
+    <div class="toolbar">
+      @if (filterable()) {
+        <label>
+          <span class="sr-only">{{ copy().filterLabel(copy().ariaLabel) }}</span>
+          <span aria-hidden="true">⌕</span>
+          <input
+            type="search"
+            [value]="filter()"
+            [placeholder]="copy().filterPlaceholder"
+            (input)="setFilter($event)"
+          />
+        </label>
+      }
+      <span class="result-count" aria-live="polite">{{ copy().rowCount(totalRowCount()) }}</span>
+      @if (columnChooser() && columns().length > 1) {
+        <details class="column-chooser">
+          <summary>{{ copy().columns }}</summary>
+          <div>
+            @for (column of columns(); track column.key) {
+              <label>
+                <input
+                  type="checkbox"
+                  [checked]="isColumnVisible(column.key)"
+                  [disabled]="isColumnVisible(column.key) && visibleColumns().length === 1"
+                  (change)="setColumnVisible(column.key, $event)"
+                />
+                <span>{{ columnLabel(column) }}</span>
+              </label>
+            }
+          </div>
+        </details>
+      }
+    </div>
+  }
+
+  @if (error()) {
+    <div class="state error" role="alert">
+      <strong>{{ copy().errorTitle }}</strong>
+      <span>{{ error() }}</span>
+    </div>
+  } @else if (loading()) {
+    <div class="loading" role="status" [attr.aria-label]="copy().loading">
+      @for (row of loadingRows; track row) {
+        <span></span>
+      }
+    </div>
+  } @else if (!processed().length) {
+    <div class="state" role="status">
+      <strong>{{ copy().empty }}</strong>
+      @if (filter()) {
+        <button type="button" (click)="clearFilter()">{{ copy().clearFilter }}</button>
+      }
+    </div>
+  } @else if (isVirtual()) {
+    <div
+      class="virtual-grid"
+      role="grid"
+      [attr.aria-label]="copy().ariaLabel"
+      [attr.aria-rowcount]="processed().length + 1"
+      [attr.aria-colcount]="gridColumnCount()"
+      [attr.aria-multiselectable]="selectable() ? 'true' : null"
+      (focusout)="onGridFocusOut($event)"
+    >
+      <div #virtualRowMeasure class="virtual-row-measure" aria-hidden="true"></div>
+      <div class="virtual-header" role="row" aria-rowindex="1">
+        @if (selectable()) {
+          <div
+            role="columnheader"
+            class="selection-cell"
+            aria-colindex="1"
+            [attr.data-pinned]="hasPinnedStartColumns() ? 'start' : null"
+            [style.inset-inline-start]="hasPinnedStartColumns() ? utilityColumnOffset(0) : null"
+            [attr.tabindex]="
+              focusCellPosition().row === -1 && focusCellPosition().column === 0 ? 0 : -1
+            "
+            data-cell="-1-0"
+            [attr.data-action-mode]="isActionCell(-1, 0) ? '' : null"
+            (focusin)="onCellFocusIn($event, -1, 0)"
+            (pointerdown)="onCellPointerDown($event, -1, 0)"
+            (keydown)="onCellKeydown($event, -1, 0, processed().length)"
+          >
+            <input
+              type="checkbox"
+              data-grid-action
+              [attr.tabindex]="isActionCell(-1, 0) ? 0 : -1"
+              [attr.aria-label]="copy().selectAllVisible"
+              [checked]="allVisibleSelected()"
+              [indeterminate]="someVisibleSelected()"
+              (change)="toggleAllVisible()"
+            />
+          </div>
+        }
+        @for (column of visibleColumns(); track column.key; let columnIndex = $index) {
+          <div
+            role="columnheader"
+            [attr.aria-colindex]="dataColumnOffset() + columnIndex + 1"
+            [attr.aria-sort]="ariaSort(column)"
+            [attr.data-column-key]="column.key"
+            [style.inline-size.px]="columnWidth(column)"
+            [attr.data-pinned]="column.pinned ?? null"
+            [attr.data-pin-boundary]="columnPinBoundary(column)"
+            [style.inset-inline-start]="columnPinnedStart(column)"
+            [style.inset-inline-end]="columnPinnedEnd(column)"
+            [attr.data-align]="column.align ?? 'start'"
+            [attr.data-priority]="column.priority ?? 'secondary'"
+            [attr.tabindex]="
+              focusCellPosition().row === -1 &&
+              focusCellPosition().column === dataColumnOffset() + columnIndex
+                ? 0
+                : -1
+            "
+            [attr.data-cell]="'-1-' + (dataColumnOffset() + columnIndex)"
+            [attr.data-action-mode]="isActionCell(-1, dataColumnOffset() + columnIndex) ? '' : null"
+            (focusin)="onCellFocusIn($event, -1, dataColumnOffset() + columnIndex)"
+            (pointerdown)="onCellPointerDown($event, -1, dataColumnOffset() + columnIndex)"
+            (keydown)="
+              onCellKeydown($event, -1, dataColumnOffset() + columnIndex, processed().length)
+            "
+          >
+            @if (column.sortable) {
+              <button
+                type="button"
+                data-grid-action
+                [attr.tabindex]="isActionCell(-1, dataColumnOffset() + columnIndex) ? 0 : -1"
+                (click)="sort(column)"
+              >
+                @if (resolveHeaderTemplate(column); as headerTemplate) {
+                  <ng-container
+                    [ngTemplateOutlet]="headerTemplate"
+                    [ngTemplateOutletContext]="headerContext(column, columnIndex)"
+                  />
+                } @else {
+                  {{ columnLabel(column) }}
+                }
+                <span aria-hidden="true">{{ sortMark(column) }}</span>
+              </button>
+            } @else {
+              @if (resolveHeaderTemplate(column); as headerTemplate) {
+                <ng-container
+                  [ngTemplateOutlet]="headerTemplate"
+                  [ngTemplateOutletContext]="headerContext(column, columnIndex)"
+                />
+              } @else {
+                {{ columnLabel(column) }}
+              }
+            }
+            @if (resizable()) {
+              <span
+                class="resize-handle"
+                role="separator"
+                data-grid-action
+                aria-orientation="vertical"
+                [attr.aria-label]="copy().resizeColumn(columnLabel(column))"
+                [attr.aria-valuemin]="columnMinWidth(column)"
+                [attr.aria-valuemax]="columnMaxWidth(column)"
+                [attr.aria-valuenow]="columnWidth(column)"
+                [attr.aria-valuetext]="copy().widthInPixels(columnWidth(column))"
+                [attr.tabindex]="isActionCell(-1, dataColumnOffset() + columnIndex) ? 0 : -1"
+                (pointerdown)="startResize($event, column)"
+                (pointermove)="resize($event, column)"
+                (pointerup)="endResize($event)"
+                (keydown)="resizeWithKeyboard($event, column)"
+              ></span>
+            }
+          </div>
+        }
+      </div>
+      <cdk-virtual-scroll-viewport
+        #viewport
+        tabindex="-1"
+        [itemSize]="rowHeight()"
+        [attr.data-item-size]="rowHeight()"
+        [style.block-size.px]="normalizedViewportHeight()"
+        [minBufferPx]="rowHeight() * 5"
+        [maxBufferPx]="rowHeight() * 10"
+      >
+        <div
+          *cdkVirtualFor="let occurrence of processed(); let rowIndex = index; trackBy: trackRow"
+          class="virtual-row"
+          role="row"
+          [attr.aria-rowindex]="rowIndex + 2"
+          [attr.aria-selected]="selectable() ? isSelected(occurrence) : null"
+        >
+          @if (selectable()) {
+            <div
+              role="gridcell"
+              class="selection-cell"
+              aria-colindex="1"
+              [attr.data-pinned]="hasPinnedStartColumns() ? 'start' : null"
+              [attr.tabindex]="
+                focusCellPosition().row === rowIndex && focusCellPosition().column === 0 ? 0 : -1
+              "
+              [attr.data-cell]="rowIndex + '-0'"
+              [attr.data-action-mode]="isActionCell(rowIndex, 0) ? '' : null"
+              (focusin)="onCellFocusIn($event, rowIndex, 0)"
+              (pointerdown)="onCellPointerDown($event, rowIndex, 0)"
+              (keydown)="onCellKeydown($event, rowIndex, 0, processed().length)"
+            >
+              <input
+                type="checkbox"
+                data-grid-action
+                [attr.tabindex]="isActionCell(rowIndex, 0) ? 0 : -1"
+                [checked]="isSelected(occurrence)"
+                [attr.aria-label]="copy().selectRow(rowIndex + 1)"
+                (change)="toggleRow(occurrence)"
+              />
+            </div>
+          }
+          @for (column of visibleColumns(); track column.key; let columnIndex = $index) {
+            <div
+              role="gridcell"
+              [attr.aria-colindex]="dataColumnOffset() + columnIndex + 1"
+              [style.inline-size.px]="columnWidth(column)"
+              [attr.data-pinned]="column.pinned ?? null"
+              [attr.data-pin-boundary]="columnPinBoundary(column)"
+              [attr.data-align]="column.align ?? 'start'"
+              [attr.data-priority]="column.priority ?? 'secondary'"
+              [attr.tabindex]="
+                focusCellPosition().row === rowIndex &&
+                focusCellPosition().column === dataColumnOffset() + columnIndex
+                  ? 0
+                  : -1
+              "
+              [attr.data-cell]="rowIndex + '-' + (dataColumnOffset() + columnIndex)"
+              [attr.data-action-mode]="
+                isActionCell(rowIndex, dataColumnOffset() + columnIndex) ? '' : null
+              "
+              (focusin)="onCellFocusIn($event, rowIndex, dataColumnOffset() + columnIndex)"
+              (pointerdown)="onCellPointerDown($event, rowIndex, dataColumnOffset() + columnIndex)"
+              (keydown)="
+                onCellKeydown(
+                  $event,
+                  rowIndex,
+                  dataColumnOffset() + columnIndex,
+                  processed().length
+                )
+              "
+            >
+              @if (resolveCellTemplate(column); as cellTemplate) {
+                <ng-container
+                  [ngTemplateOutlet]="cellTemplate"
+                  [ngTemplateOutletContext]="cellContext(occurrence.row, column, rowIndex)"
+                />
+              } @else {
+                {{ cellText(occurrence.row, column) }}
+              }
+            </div>
+          }
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </div>
+  } @else {
+    <div class="table-scroll">
+      <table
+        role="grid"
+        [attr.aria-label]="copy().ariaLabel"
+        [attr.aria-rowcount]="totalRowCount() + 1"
+        [attr.aria-colcount]="gridColumnCount()"
+        [attr.aria-multiselectable]="selectable() ? 'true' : null"
+        (focusout)="onGridFocusOut($event)"
+      >
+        <thead>
+          <tr role="row" aria-rowindex="1">
+            @if (selectable()) {
+              <th
+                role="columnheader"
+                class="selection-cell"
+                aria-colindex="1"
+                [attr.data-pinned]="hasPinnedStartColumns() ? 'start' : null"
+                [style.inset-inline-start]="hasPinnedStartColumns() ? utilityColumnOffset(0) : null"
+                [attr.tabindex]="
+                  focusCellPosition().row === -1 && focusCellPosition().column === 0 ? 0 : -1
+                "
+                data-cell="-1-0"
+                [attr.data-action-mode]="isActionCell(-1, 0) ? '' : null"
+                (focusin)="onCellFocusIn($event, -1, 0)"
+                (pointerdown)="onCellPointerDown($event, -1, 0)"
+                (keydown)="onCellKeydown($event, -1, 0, pageRows().length)"
+              >
+                <input
+                  type="checkbox"
+                  data-grid-action
+                  [attr.tabindex]="isActionCell(-1, 0) ? 0 : -1"
+                  [attr.aria-label]="copy().selectAllPage"
+                  [checked]="allVisibleSelected()"
+                  [indeterminate]="someVisibleSelected()"
+                  (change)="toggleAllVisible()"
+                />
+              </th>
+            }
+            @if (expandable()) {
+              <th
+                role="columnheader"
+                class="expand-cell"
+                [attr.aria-colindex]="(selectable() ? 1 : 0) + 1"
+                [attr.data-pinned]="hasPinnedStartColumns() ? 'start' : null"
+                [style.inset-inline-start]="
+                  hasPinnedStartColumns() ? utilityColumnOffset(selectable() ? 1 : 0) : null
+                "
+                [attr.tabindex]="
+                  focusCellPosition().row === -1 &&
+                  focusCellPosition().column === (selectable() ? 1 : 0)
+                    ? 0
+                    : -1
+                "
+                [attr.data-cell]="'-1-' + (selectable() ? 1 : 0)"
+                [attr.data-action-mode]="isActionCell(-1, selectable() ? 1 : 0) ? '' : null"
+                (focusin)="onCellFocusIn($event, -1, selectable() ? 1 : 0)"
+                (pointerdown)="onCellPointerDown($event, -1, selectable() ? 1 : 0)"
+                (keydown)="onCellKeydown($event, -1, selectable() ? 1 : 0, pageRows().length)"
+              >
+                <span class="sr-only">{{ copy().expand }}</span>
+              </th>
+            }
+            @for (column of visibleColumns(); track column.key; let columnIndex = $index) {
+              <th
+                scope="col"
+                role="columnheader"
+                [attr.aria-colindex]="dataColumnOffset() + columnIndex + 1"
+                [attr.aria-sort]="ariaSort(column)"
+                [attr.data-column-key]="column.key"
+                [style.inline-size.px]="columnWidth(column)"
+                [attr.data-pinned]="column.pinned ?? null"
+                [attr.data-pin-boundary]="columnPinBoundary(column)"
+                [style.inset-inline-start]="columnPinnedStart(column)"
+                [style.inset-inline-end]="columnPinnedEnd(column)"
+                [attr.data-align]="column.align ?? 'start'"
+                [attr.data-priority]="column.priority ?? 'secondary'"
+                [attr.tabindex]="
+                  focusCellPosition().row === -1 &&
+                  focusCellPosition().column === dataColumnOffset() + columnIndex
+                    ? 0
+                    : -1
+                "
+                [attr.data-cell]="'-1-' + (dataColumnOffset() + columnIndex)"
+                [attr.data-action-mode]="
+                  isActionCell(-1, dataColumnOffset() + columnIndex) ? '' : null
+                "
+                (focusin)="onCellFocusIn($event, -1, dataColumnOffset() + columnIndex)"
+                (pointerdown)="onCellPointerDown($event, -1, dataColumnOffset() + columnIndex)"
+                (keydown)="
+                  onCellKeydown($event, -1, dataColumnOffset() + columnIndex, pageRows().length)
+                "
+              >
+                @if (column.sortable) {
+                  <button
+                    type="button"
+                    data-grid-action
+                    [attr.tabindex]="isActionCell(-1, dataColumnOffset() + columnIndex) ? 0 : -1"
+                    (click)="sort(column)"
+                  >
+                    @if (resolveHeaderTemplate(column); as headerTemplate) {
+                      <ng-container
+                        [ngTemplateOutlet]="headerTemplate"
+                        [ngTemplateOutletContext]="headerContext(column, columnIndex)"
+                      />
+                    } @else {
+                      {{ columnLabel(column) }}
+                    }
+                    <span aria-hidden="true">{{ sortMark(column) }}</span>
+                  </button>
+                } @else {
+                  @if (resolveHeaderTemplate(column); as headerTemplate) {
+                    <ng-container
+                      [ngTemplateOutlet]="headerTemplate"
+                      [ngTemplateOutletContext]="headerContext(column, columnIndex)"
+                    />
+                  } @else {
+                    {{ columnLabel(column) }}
+                  }
+                }
+                @if (resizable()) {
+                  <span
+                    class="resize-handle"
+                    role="separator"
+                    data-grid-action
+                    aria-orientation="vertical"
+                    [attr.aria-label]="copy().resizeColumn(columnLabel(column))"
+                    [attr.aria-valuemin]="columnMinWidth(column)"
+                    [attr.aria-valuemax]="columnMaxWidth(column)"
+                    [attr.aria-valuenow]="columnWidth(column)"
+                    [attr.aria-valuetext]="copy().widthInPixels(columnWidth(column))"
+                    [attr.tabindex]="isActionCell(-1, dataColumnOffset() + columnIndex) ? 0 : -1"
+                    (pointerdown)="startResize($event, column)"
+                    (pointermove)="resize($event, column)"
+                    (pointerup)="endResize($event)"
+                    (keydown)="resizeWithKeyboard($event, column)"
+                  ></span>
+                }
+              </th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (occurrence of pageRows(); track occurrence.key; let rowIndex = $index) {
+            <tr
+              role="row"
+              [attr.aria-rowindex]="rowOffset() + rowIndex + 2"
+              [attr.aria-selected]="selectable() ? isSelected(occurrence) : null"
+              [attr.data-selected]="isSelected(occurrence) ? '' : null"
+            >
+              @if (selectable()) {
+                <td
+                  role="gridcell"
+                  class="selection-cell"
+                  aria-colindex="1"
+                  [attr.data-pinned]="hasPinnedStartColumns() ? 'start' : null"
+                  [style.inset-inline-start]="
+                    hasPinnedStartColumns() ? utilityColumnOffset(0) : null
+                  "
+                  [attr.tabindex]="
+                    focusCellPosition().row === rowIndex && focusCellPosition().column === 0
+                      ? 0
+                      : -1
+                  "
+                  [attr.data-cell]="rowIndex + '-0'"
+                  [attr.data-action-mode]="isActionCell(rowIndex, 0) ? '' : null"
+                  (focusin)="onCellFocusIn($event, rowIndex, 0)"
+                  (pointerdown)="onCellPointerDown($event, rowIndex, 0)"
+                  (keydown)="onCellKeydown($event, rowIndex, 0, pageRows().length)"
+                >
+                  <input
+                    type="checkbox"
+                    data-grid-action
+                    [attr.tabindex]="isActionCell(rowIndex, 0) ? 0 : -1"
+                    [checked]="isSelected(occurrence)"
+                    [attr.aria-label]="copy().selectRow(rowOffset() + rowIndex + 1)"
+                    (change)="toggleRow(occurrence)"
+                  />
+                </td>
+              }
+              @if (expandable()) {
+                <td
+                  role="gridcell"
+                  class="expand-cell"
+                  [attr.aria-colindex]="(selectable() ? 1 : 0) + 1"
+                  [attr.data-pinned]="hasPinnedStartColumns() ? 'start' : null"
+                  [style.inset-inline-start]="
+                    hasPinnedStartColumns() ? utilityColumnOffset(selectable() ? 1 : 0) : null
+                  "
+                  [attr.tabindex]="
+                    focusCellPosition().row === rowIndex &&
+                    focusCellPosition().column === (selectable() ? 1 : 0)
+                      ? 0
+                      : -1
+                  "
+                  [attr.data-cell]="rowIndex + '-' + (selectable() ? 1 : 0)"
+                  [attr.data-action-mode]="isActionCell(rowIndex, selectable() ? 1 : 0) ? '' : null"
+                  (focusin)="onCellFocusIn($event, rowIndex, selectable() ? 1 : 0)"
+                  (pointerdown)="onCellPointerDown($event, rowIndex, selectable() ? 1 : 0)"
+                  (keydown)="
+                    onCellKeydown($event, rowIndex, selectable() ? 1 : 0, pageRows().length)
+                  "
+                >
+                  <button
+                    type="button"
+                    data-grid-action
+                    [attr.tabindex]="isActionCell(rowIndex, selectable() ? 1 : 0) ? 0 : -1"
+                    [attr.aria-label]="
+                      isExpanded(occurrence) ? copy().collapseRow : copy().expandRow
+                    "
+                    [attr.aria-expanded]="isExpanded(occurrence)"
+                    (click)="toggleExpanded(occurrence)"
+                  >
+                    <span aria-hidden="true">{{ isExpanded(occurrence) ? '−' : '+' }}</span>
+                  </button>
+                </td>
+              }
+              @for (column of visibleColumns(); track column.key; let columnIndex = $index) {
+                <td
+                  role="gridcell"
+                  [attr.aria-colindex]="dataColumnOffset() + columnIndex + 1"
+                  [style.inline-size.px]="columnWidth(column)"
+                  [attr.data-pinned]="column.pinned ?? null"
+                  [attr.data-pin-boundary]="columnPinBoundary(column)"
+                  [style.inset-inline-start]="columnPinnedStart(column)"
+                  [style.inset-inline-end]="columnPinnedEnd(column)"
+                  [attr.data-align]="column.align ?? 'start'"
+                  [attr.data-priority]="column.priority ?? 'secondary'"
+                  [attr.tabindex]="
+                    focusCellPosition().row === rowIndex &&
+                    focusCellPosition().column === dataColumnOffset() + columnIndex
+                      ? 0
+                      : -1
+                  "
+                  [attr.data-cell]="rowIndex + '-' + (dataColumnOffset() + columnIndex)"
+                  [attr.data-action-mode]="
+                    isActionCell(rowIndex, dataColumnOffset() + columnIndex) ? '' : null
+                  "
+                  (focusin)="onCellFocusIn($event, rowIndex, dataColumnOffset() + columnIndex)"
+                  (pointerdown)="
+                    onCellPointerDown($event, rowIndex, dataColumnOffset() + columnIndex)
+                  "
+                  (keydown)="
+                    onCellKeydown(
+                      $event,
+                      rowIndex,
+                      dataColumnOffset() + columnIndex,
+                      pageRows().length
+                    )
+                  "
+                >
+                  @if (resolveCellTemplate(column); as cellTemplate) {
+                    <ng-container
+                      [ngTemplateOutlet]="cellTemplate"
+                      [ngTemplateOutletContext]="
+                        cellContext(occurrence.row, column, rowOffset() + rowIndex)
+                      "
+                    />
+                  } @else {
+                    {{ cellText(occurrence.row, column) }}
+                  }
+                </td>
+              }
+            </tr>
+            @if (expandable() && isExpanded(occurrence)) {
+              <tr class="detail-row" role="presentation">
+                <td role="presentation" [attr.colspan]="gridColumnCount()">
+                  @if (expandedTemplate(); as detailTemplate) {
+                    <ng-container
+                      [ngTemplateOutlet]="detailTemplate"
+                      [ngTemplateOutletContext]="rowContext(occurrence.row, rowOffset() + rowIndex)"
+                    />
+                  } @else {
+                    {{ expandedContent()(occurrence.row) }}
+                  }
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @if (!isVirtual() && usesPagination() && totalRowCount()) {
+    <div class="pagination" [attr.aria-label]="copy().pagination">
+      <span>{{ copy().pageRange(pageStart(), pageEnd(), totalRowCount()) }}</span>
+      <div>
+        <button
+          type="button"
+          [disabled]="currentPage() === 1"
+          (click)="goToPage(currentPage() - 1)"
+        >
+          {{ copy().previousPage }}
+        </button>
+        <button
+          type="button"
+          [disabled]="currentPage() >= pageCount()"
+          (click)="goToPage(currentPage() + 1)"
+        >
+          {{ copy().nextPage }}
+        </button>
+      </div>
+    </div>
+  }
+</section>

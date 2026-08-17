@@ -1,0 +1,58 @@
+<span
+  class="krn-control-shell krn-number-control"
+  [attr.data-disabled]="isDisabled()"
+  [attr.data-invalid]="a11y.invalid()"
+  [attr.data-readonly]="a11y.readOnly()"
+  (pointerdown)="focusFromShell($event)"
+>
+  <input
+    #inputElement
+    class="krn-input"
+    type="number"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-invalid]="a11y.invalid()"
+    [attr.aria-label]="labelledBy() ? null : ariaLabel() || null"
+    [attr.aria-labelledby]="labelledBy()"
+    [attr.autocomplete]="autocomplete() || null"
+    [attr.inputmode]="inputMode()"
+    [attr.max]="max() ?? null"
+    [attr.min]="min() ?? null"
+    [attr.name]="name() || null"
+    [attr.step]="step()"
+    [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
+    [disabled]="isDisabled()"
+    [id]="a11y.id()"
+    [placeholder]="placeholder()"
+    [readOnly]="a11y.readOnly()"
+    [required]="a11y.required()"
+    [value]="controlValue() ?? ''"
+    (blur)="touch()"
+    (input)="updateNumber($event)"
+  />
+  @if (showSteppers() && !a11y.readOnly()) {
+    <span class="krn-stepper">
+      <button
+        type="button"
+        tabindex="-1"
+        [attr.aria-controls]="a11y.id()"
+        [attr.aria-label]="resolvedIncreaseLabel()"
+        [disabled]="!canIncrease()"
+        (click)="stepBy(1)"
+        (pointerdown)="retainInputFocus($event)"
+      >
+        +
+      </button>
+      <button
+        type="button"
+        tabindex="-1"
+        [attr.aria-controls]="a11y.id()"
+        [attr.aria-label]="resolvedDecreaseLabel()"
+        [disabled]="!canDecrease()"
+        (click)="stepBy(-1)"
+        (pointerdown)="retainInputFocus($event)"
+      >
+        −
+      </button>
+    </span>
+  }
+</span>

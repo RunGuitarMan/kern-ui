@@ -1,0 +1,75 @@
+@if (totalToasts() > 1) {
+  <div class="stack-controls">
+    <span>
+      <strong>{{ totalToasts() }}</strong>
+      {{ copy().countLabel(totalToasts()) }}
+    </span>
+    <span class="stack-actions">
+      @if (hasOverflow()) {
+        <button
+          type="button"
+          class="review"
+          [attr.aria-expanded]="expanded()"
+          (click)="expanded.update(toggle)"
+        >
+          {{ expanded() ? copy().showRecent : copy().reviewEarlier(hiddenToastCount()) }}
+        </button>
+      }
+      <button type="button" class="clear" (click)="service.dismissAll()">
+        {{ copy().clearAll }}
+      </button>
+    </span>
+  </div>
+}
+
+@if (visibleToasts().length) {
+  <div
+    class="toast-stack"
+    [style.--_stack-count]="visibleToasts().length"
+    [attr.aria-label]="visibleToasts().length > 1 ? copy().stackLabel : null"
+  >
+    @for (toast of visibleToasts(); track toast.id; let index = $index) {
+      <article
+        class="toast"
+        [attr.data-tone]="toast.tone"
+        [attr.data-leaving]="service.isLeaving(toast.id) ? '' : null"
+        [style.--_stack-index]="index"
+        [attr.role]="toast.tone === 'danger' ? 'alert' : 'status'"
+        [attr.aria-atomic]="true"
+        (mouseenter)="service.pause(toast.id, 'pointer')"
+        (mouseleave)="service.resume(toast.id, 'pointer')"
+        (focusin)="service.pause(toast.id, 'focus')"
+        (focusout)="onToastFocusout($event, toast.id)"
+      >
+        <span class="indicator" aria-hidden="true">{{ toneIcon(toast) }}</span>
+        <div class="copy">
+          @if (toast.title) {
+            <strong>{{ toast.title }}</strong>
+          }
+          <p>{{ toast.message }}</p>
+        </div>
+        @if (toast.actionLabel) {
+          <button type="button" class="action" (click)="service.act(toast)">
+            {{ toast.actionLabel }}
+          </button>
+        }
+        @if (toast.dismissible) {
+          <button
+            type="button"
+            class="dismiss"
+            [attr.aria-label]="copy().dismiss"
+            (click)="service.dismiss(toast.id)"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        }
+      </article>
+    }
+  </div>
+}
+
+@if (hiddenToastCount() > 0 && expanded()) {
+  <p class="limit-note" role="status">
+    {{ copy().limit(visibleToastCount(), totalToasts()) }}
+  </p>
+}

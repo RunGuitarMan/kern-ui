@@ -201,7 +201,20 @@
       "descriptionSource": "source"
     }
   ],
-  "slots": [],
+  "slots": [
+    {
+      "name": "default",
+      "selector": "*",
+      "required": false,
+      "description": "Projects default component content."
+    },
+    {
+      "name": "krnDialogAction",
+      "selector": "[krnDialogAction]",
+      "required": false,
+      "description": "Projects content matching [krnDialogAction]."
+    }
+  ],
   "forms": {
     "controlValueAccessor": false,
     "validator": false,

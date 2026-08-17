@@ -1,0 +1,97 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+:host([hidden]) {
+  display: none;
+}
+.bottom-nav {
+  display: grid;
+  grid-template-columns: repeat(var(--krn-bottom-nav-count, 1), minmax(min(4.5rem, 100%), 1fr));
+  overflow-x: auto;
+  padding: var(--krn-space-1);
+  border-block-start: var(--krn-border-width-1) solid var(--krn-color-border);
+  background: var(--krn-color-surface);
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+}
+.bottom-nav :is(a, button) {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: var(--krn-space-1);
+  min-inline-size: 0;
+  min-block-size: var(--krn-touch-target-min);
+  padding: var(--krn-space-2);
+  border: 0;
+  border-radius: var(--krn-radius-sm);
+  background: transparent;
+  color: var(--krn-color-text-muted);
+  font: inherit;
+  font-size: var(--krn-font-size-xs);
+  font-weight: var(--krn-font-weight-medium);
+  line-height: var(--krn-line-height-tight);
+  text-decoration: none;
+  cursor: pointer;
+  scroll-snap-align: center;
+}
+.bottom-nav :is(a, button) > span:not(.icon, .badge) {
+  inline-size: 100%;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bottom-nav :is(a, button):hover {
+  background: var(--krn-color-surface-subtle);
+  color: var(--krn-color-text);
+}
+.bottom-nav [aria-current='page'] {
+  color: var(--krn-color-primary);
+}
+.bottom-nav [aria-current='page']::before {
+  position: absolute;
+  inset-block-start: 0;
+  inline-size: var(--krn-space-4);
+  block-size: calc(var(--krn-border-width-1) * 2);
+  background: var(--krn-color-primary);
+  content: '';
+}
+.bottom-nav :is(a, button):focus-visible {
+  outline: var(--krn-focus-ring-width) solid var(--krn-color-focus);
+  outline-offset: calc(var(--krn-focus-ring-offset) * -1);
+}
+.bottom-nav button:disabled {
+  color: var(--krn-color-text-disabled);
+  cursor: not-allowed;
+}
+.icon {
+  font-size: var(--krn-icon-size-md);
+}
+.badge {
+  position: absolute;
+  inset-block-start: var(--krn-space-1);
+  inset-inline-start: calc(50% + var(--krn-space-2));
+  min-inline-size: var(--krn-space-4);
+  padding-inline: var(--krn-space-1);
+  border-radius: var(--krn-radius-full);
+  background: var(--krn-color-danger);
+  color: var(--krn-color-on-danger);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--krn-line-height-tight);
+  white-space: nowrap;
+}
+@media (forced-colors: active) {
+  .bottom-nav {
+    border-block-start-color: CanvasText;
+  }
+  .bottom-nav [aria-current='page']::before {
+    background: Highlight;
+  }
+  .bottom-nav :is(a, button):focus-visible {
+    outline-color: Highlight;
+  }
+  .badge {
+    border: 1px solid CanvasText;
+  }
+}

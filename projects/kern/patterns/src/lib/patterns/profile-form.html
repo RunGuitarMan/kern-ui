@@ -1,0 +1,67 @@
+<form [formGroup]="form" [attr.aria-busy]="saving()" (ngSubmit)="submit()" novalidate>
+  <div class="field">
+    <label [for]="nameId">{{ resolvedNameLabel() }} <span aria-hidden="true">*</span></label>
+    <input
+      [id]="nameId"
+      autocomplete="name"
+      required
+      formControlName="name"
+      [attr.aria-invalid]="showNameError()"
+      [attr.aria-describedby]="showNameError() ? nameErrorId : null"
+    />
+    @if (showNameError()) {
+      <p class="error" [id]="nameErrorId" role="alert">{{ resolvedNameErrorLabel() }}</p>
+    }
+  </div>
+  <div class="field">
+    <label [for]="roleId">{{ resolvedRoleLabel() }}</label>
+    <input [id]="roleId" autocomplete="organization-title" formControlName="role" />
+  </div>
+  <div class="field">
+    <label [for]="bioId">{{ resolvedBioLabel() }}</label>
+    <textarea
+      [id]="bioId"
+      formControlName="bio"
+      [attr.aria-invalid]="showBioError()"
+      [attr.aria-describedby]="showBioError() ? bioCountId + ' ' + bioErrorId : bioCountId"
+      [attr.maxlength]="resolvedBioMaxLength()"
+    ></textarea>
+    <p class="hint" [id]="bioCountId">
+      {{ form.controls.bio.value.length }} / {{ resolvedBioMaxLength() }}
+    </p>
+    @if (showBioError()) {
+      <p class="error" [id]="bioErrorId" role="alert">{{ resolvedBioErrorLabel() }}</p>
+    }
+  </div>
+  <div class="field">
+    <label [for]="timezoneId">{{ resolvedTimezoneLabel() }}</label>
+    <select
+      [id]="timezoneId"
+      required
+      formControlName="timezone"
+      [attr.aria-invalid]="showTimezoneError()"
+      [attr.aria-describedby]="showTimezoneError() ? timezoneErrorId : null"
+    >
+      @for (timezone of resolvedTimezones(); track timezone.value) {
+        <option [value]="timezone.value">{{ timezone.label }}</option>
+      }
+    </select>
+    @if (showTimezoneError()) {
+      <p class="error" [id]="timezoneErrorId" role="alert">
+        {{ resolvedTimezoneErrorLabel() }}
+      </p>
+    }
+  </div>
+  <div class="row">
+    <p class="hint status" role="status">
+      {{ saving() ? resolvedSavingLabel() : form.dirty ? resolvedDirtyMessage() : '' }}
+    </p>
+    <button
+      class="submit"
+      type="submit"
+      [attr.aria-disabled]="saving() || (!form.dirty && form.valid)"
+    >
+      {{ saving() ? resolvedSavingLabel() : resolvedSaveLabel() }}
+    </button>
+  </div>
+</form>

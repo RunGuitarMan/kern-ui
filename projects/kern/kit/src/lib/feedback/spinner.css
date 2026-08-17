@@ -1,0 +1,25 @@
+:host {
+  display: inline-grid;
+  place-items: center;
+}
+.spinner {
+  inline-size: var(--krn-icon-size-md);
+  block-size: var(--krn-icon-size-md);
+  border: calc(var(--krn-border-width-1) * 2) solid
+    color-mix(in oklch, var(--krn-color-primary) 18%, var(--krn-color-border));
+  border-block-start-color: var(--krn-color-primary);
+  border-radius: var(--krn-radius-full);
+  animation: krn-spinner var(--krn-motion-duration-spinner) linear
+    var(--krn-motion-iteration-continuous);
+}
+@keyframes krn-spinner {
+  to {
+    transform: rotate(1turn);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :host-context(html:not([data-krn-motion='full'])) .spinner {
+    border-color: var(--krn-color-primary);
+    animation: none;
+  }
+}

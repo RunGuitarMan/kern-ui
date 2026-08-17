@@ -20,63 +20,8 @@ import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
   host: {
     '[attr.data-detail-open]': 'detailOpen() ? "" : null',
   },
-  template: `
-    <div class="layout">
-      <aside #masterPane class="master" tabindex="-1" [attr.aria-label]="resolvedMasterLabel()">
-        <ng-content select="[krnMaster]" />
-      </aside>
-      <section #detailPane class="detail" tabindex="-1" [attr.aria-label]="resolvedDetailLabel()">
-        <ng-content select="[krnDetail]" />
-      </section>
-    </div>
-  `,
-  styles: `
-    :host {
-      display: block;
-      container-type: inline-size;
-    }
-    :host([hidden]) {
-      display: none;
-    }
-    .layout {
-      display: grid;
-      min-block-size: 20rem;
-      grid-template-columns: minmax(15rem, 0.38fr) minmax(0, 1fr);
-      overflow: clip;
-      border: 1px solid var(--krn-color-border-subtle, #e0e3e7);
-      border-radius: var(--krn-radius-surface, 0.75rem);
-      background: var(--krn-color-surface, #fff);
-    }
-    .master {
-      min-inline-size: 0;
-      overflow: auto;
-      border-inline-end: 1px solid var(--krn-color-border-subtle, #e0e3e7);
-    }
-    .detail {
-      min-inline-size: 0;
-      overflow: auto;
-    }
-    @container (max-width: 42rem) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-      :host([data-detail-open]) .master {
-        display: none;
-      }
-      :host(:not([data-detail-open])) .detail {
-        display: none;
-      }
-      .master {
-        border-inline-end: 0;
-      }
-    }
-    @media (forced-colors: active) {
-      .layout,
-      .master {
-        border-color: CanvasText;
-      }
-    }
-  `,
+  templateUrl: './master-detail-layout.html',
+  styleUrl: './master-detail-layout.css',
 })
 export class KrnMasterDetailLayout {
   private readonly injector = inject(Injector);

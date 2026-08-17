@@ -1,0 +1,49 @@
+:host {
+  display: var(--krn-responsive-display);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+@media (width >= 36rem) {
+  :host([data-from='sm']) {
+    display: none;
+  }
+}
+@media (width >= 48rem) {
+  :host([data-from='md']) {
+    display: none;
+  }
+}
+@media (width >= 64rem) {
+  :host([data-from='lg']) {
+    display: none;
+  }
+}
+@media (width >= 80rem) {
+  :host([data-from='xl']) {
+    display: none;
+  }
+}
+
+@media (width < 36rem) {
+  :host([data-until='sm']) {
+    display: none;
+  }
+}
+@media (width < 48rem) {
+  :host([data-until='md']) {
+    display: none;
+  }
+}
+@media (width < 64rem) {
+  :host([data-until='lg']) {
+    display: none;
+  }
+}
+@media (width < 80rem) {
+  :host([data-until='xl']) {
+    display: none;
+  }
+}

@@ -63,29 +63,7 @@ const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string
     '[attr.id]': 'null',
   },
   providers: [CHECKBOX_GROUP_PROVIDER, ...provideKrnFormControl()],
-  template: `
-    <fieldset
-      #fieldset
-      class="krn-choice-group"
-      [attr.aria-describedby]="effectiveDescribedBy()"
-      [attr.aria-invalid]="a11y.invalid()"
-      [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
-      [attr.aria-labelledby]="effectiveLabelledBy()"
-      [attr.aria-required]="a11y.required()"
-      [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
-      [attr.data-orientation]="orientation()"
-      [attr.data-readonly]="isReadOnly()"
-      [disabled]="isDisabled()"
-      [id]="a11y.id()"
-    >
-      @if (label() && !formFieldLabelledBy()) {
-        <legend class="krn-label">{{ label() }}</legend>
-      }
-      <div class="krn-choice-group__options">
-        <ng-content />
-      </div>
-    </fieldset>
-  `,
+  templateUrl: './checkbox-group.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnCheckboxGroup implements KrnCheckboxGroupController {
@@ -203,53 +181,7 @@ export class KrnCheckboxGroup implements KrnCheckboxGroupController {
     '[attr.tabindex]': 'null',
   },
   providers: [...provideKrnFormControl()],
-  template: `
-    <label
-      class="krn-choice"
-      [attr.data-disabled]="isDisabled()"
-      [attr.data-invalid]="a11y.invalid()"
-      [attr.data-readonly]="isReadOnly()"
-    >
-      <input
-        #input
-        class="krn-choice__native"
-        type="checkbox"
-        [attr.aria-describedby]="effectiveDescribedBy()"
-        [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
-        [attr.aria-labelledby]="effectiveLabelledBy()"
-        [attr.aria-checked]="isIndeterminate() ? 'mixed' : null"
-        [attr.aria-disabled]="isReadOnly() || null"
-        [attr.data-indeterminate]="isIndeterminate()"
-        [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
-        [checked]="renderedChecked()"
-        [disabled]="isDisabled()"
-        [id]="a11y.id()"
-        [indeterminate]="isIndeterminate()"
-        [name]="name()"
-        [required]="a11y.required()"
-        [tabIndex]="tabIndex()"
-        [value]="value()"
-        (blur)="blurred()"
-        (change)="changeChecked($event)"
-      />
-      <span class="krn-choice__mark" aria-hidden="true">
-        @if (isIndeterminate()) {
-          −
-        } @else if (renderedChecked()) {
-          ✓
-        }
-      </span>
-      <span class="krn-choice__text">
-        <span [id]="labelId()"><ng-content /></span>
-        @if (description()) {
-          <span class="krn-choice__description" [id]="descriptionId()">
-            {{ description() }}
-          </span>
-        }
-      </span>
-    </label>
-  `,
+  templateUrl: './checkbox.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnCheckbox {
@@ -427,30 +359,7 @@ const RADIO_GROUP_PROVIDER: Provider = {
     '[attr.id]': 'null',
   },
   providers: [RADIO_GROUP_PROVIDER, ...provideKrnFormControl()],
-  template: `
-    <fieldset
-      #fieldset
-      class="krn-choice-group"
-      role="radiogroup"
-      [attr.aria-describedby]="effectiveDescribedBy()"
-      [attr.aria-invalid]="a11y.invalid()"
-      [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
-      [attr.aria-labelledby]="effectiveLabelledBy()"
-      [attr.aria-readonly]="isReadOnly()"
-      [attr.aria-required]="a11y.required()"
-      [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
-      [attr.data-orientation]="orientation()"
-      [disabled]="isDisabled()"
-      [id]="a11y.id()"
-    >
-      @if (label() && !formFieldLabelledBy()) {
-        <legend class="krn-label" [id]="legendId()">{{ label() }}</legend>
-      }
-      <div class="krn-choice-group__options">
-        <ng-content />
-      </div>
-    </fieldset>
-  `,
+  templateUrl: './radio-group.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnRadioGroup implements KrnRadioGroupController {
@@ -569,41 +478,7 @@ export class KrnRadioGroup implements KrnRadioGroupController {
     '[attr.id]': 'null',
     '[attr.tabindex]': 'null',
   },
-  template: `
-    <label
-      class="krn-choice"
-      [attr.data-disabled]="isDisabled()"
-      [attr.data-readonly]="isReadOnly()"
-    >
-      <input
-        #input
-        class="krn-choice__native"
-        type="radio"
-        [attr.aria-describedby]="effectiveDescribedBy()"
-        [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
-        [attr.aria-labelledby]="effectiveLabelledBy()"
-        [attr.aria-disabled]="isReadOnly() || null"
-        [checked]="renderedChecked()"
-        [disabled]="isDisabled()"
-        [id]="nativeId()"
-        [name]="effectiveName()"
-        [tabIndex]="tabIndex()"
-        [value]="value()"
-        (blur)="blurred()"
-        (click)="preventReadonly($event)"
-        (change)="select($event)"
-      />
-      <span class="krn-choice__mark" aria-hidden="true"></span>
-      <span class="krn-choice__text">
-        <span [id]="labelId()"><ng-content /></span>
-        @if (description()) {
-          <span class="krn-choice__description" [id]="descriptionId()">
-            {{ description() }}
-          </span>
-        }
-      </span>
-    </label>
-  `,
+  templateUrl: './radio.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnRadio {
@@ -709,45 +584,7 @@ export class KrnRadio {
     '[attr.tabindex]': 'null',
   },
   providers: [...provideKrnFormControl()],
-  template: `
-    <label
-      class="krn-choice krn-switch"
-      [attr.data-disabled]="isDisabled()"
-      [attr.data-invalid]="a11y.invalid()"
-      [attr.data-readonly]="isReadOnly()"
-    >
-      <input
-        #input
-        class="krn-choice__native"
-        type="checkbox"
-        role="switch"
-        [attr.aria-describedby]="effectiveDescribedBy()"
-        [attr.aria-invalid]="a11y.invalid()"
-        [attr.aria-label]="effectiveLabelledBy() ? null : ariaLabel() || null"
-        [attr.aria-labelledby]="effectiveLabelledBy()"
-        [attr.aria-disabled]="isReadOnly() || null"
-        [attr.data-krn-form-field-control]="isFormFieldControl() ? '' : null"
-        [checked]="renderedChecked()"
-        [disabled]="isDisabled()"
-        [id]="a11y.id()"
-        [name]="name()"
-        [required]="a11y.required()"
-        [tabIndex]="tabIndex()"
-        (blur)="touch()"
-        (click)="preventReadonly($event)"
-        (change)="changeValue($event)"
-      />
-      <span class="krn-choice__mark" aria-hidden="true"></span>
-      <span class="krn-choice__text">
-        <span [id]="labelId()"><ng-content /></span>
-        @if (description()) {
-          <span class="krn-choice__description" [id]="descriptionId()">
-            {{ description() }}
-          </span>
-        }
-      </span>
-    </label>
-  `,
+  templateUrl: './switch.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnSwitch {
@@ -874,47 +711,7 @@ export class KrnSwitch {
   },
   imports: [NgTemplateOutlet],
   providers: [...provideKrnFormControl()],
-  template: `
-    <div
-      class="krn-segmented"
-      role="radiogroup"
-      [attr.aria-describedby]="effectiveDescribedBy()"
-      [attr.aria-invalid]="a11y.invalid()"
-      [attr.aria-label]="effectiveLabelledBy() ? null : resolvedAriaLabel()"
-      [attr.aria-labelledby]="effectiveLabelledBy()"
-      [attr.aria-disabled]="isDisabled()"
-      [attr.aria-orientation]="orientation()"
-      [attr.aria-readonly]="a11y.readOnly()"
-      [attr.aria-required]="a11y.required()"
-      [attr.data-krn-form-field-control]="a11y.isFormFieldControl() ? '' : null"
-      [attr.data-orientation]="orientation()"
-      [id]="a11y.id()"
-      (focusout)="handleFocusOut($event)"
-      (keydown)="navigate($event)"
-    >
-      @for (option of options(); track trackBy()(option, $index); let index = $index) {
-        <button
-          #segment
-          type="button"
-          role="radio"
-          [attr.aria-checked]="isSelected(option.value)"
-          [attr.aria-label]="option.label"
-          [attr.tabindex]="tabIndexFor(option.value, index)"
-          [disabled]="isDisabled() || disabledHandler()(option)"
-          (click)="select(option.value)"
-        >
-          @if (optionTemplate(); as template) {
-            <ng-container
-              [ngTemplateOutlet]="template"
-              [ngTemplateOutletContext]="optionContext(option)"
-            />
-          } @else {
-            {{ option.label }}
-          }
-        </button>
-      }
-    </div>
-  `,
+  templateUrl: './segmented-control.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnSegmentedControl<T = string> {
