@@ -582,9 +582,8 @@ export class KrnDataGrid<T> implements AfterViewChecked {
     return this.sortDirection() === 'asc' ? 'ascending' : 'descending';
   }
 
-  protected sortMark(column: KrnDataColumn<T>): string {
-    if (this.sortKey() !== column.key) return '↕';
-    return this.sortDirection() === 'asc' ? '↑' : '↓';
+  protected sortState(column: KrnDataColumn<T>): 'none' | KrnDataSortDirection {
+    return this.sortKey() === column.key ? this.sortDirection() : 'none';
   }
 
   protected isSelected(occurrence: KrnDataRowOccurrence<T>): boolean {

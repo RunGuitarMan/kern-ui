@@ -149,6 +149,11 @@ describe('KrnDataGrid', () => {
 
     (fixture.nativeElement.querySelector('th button') as HTMLButtonElement).click();
     await fixture.whenStable();
+    expect(
+      (fixture.nativeElement as HTMLElement)
+        .querySelector('.sort-indicator')
+        ?.getAttribute('data-direction'),
+    ).toBe('asc');
     const renderedRows = (): HTMLElement[] => [
       ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLElement>(
         'tbody tr:not(.detail-row)',
@@ -179,6 +184,15 @@ describe('KrnDataGrid', () => {
 
     expect(fixture.nativeElement.getAttribute('aria-busy')).toBe('true');
     expect((fixture.nativeElement as HTMLElement).querySelector('[role="status"]')).toBeTruthy();
+    expect(
+      (fixture.nativeElement as HTMLElement).querySelector('.loading-grid__header'),
+    ).toBeTruthy();
+    expect(
+      (fixture.nativeElement as HTMLElement).querySelectorAll('.loading-grid__row'),
+    ).toHaveLength(5);
+    expect(
+      (fixture.nativeElement as HTMLElement).querySelector('.loading-grid__row i'),
+    ).toBeTruthy();
   });
 
   it('supports complete local copy overrides without replacing the global dictionary', async () => {

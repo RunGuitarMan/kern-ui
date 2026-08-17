@@ -2,9 +2,12 @@
   @if (filterable() || columnChooser()) {
     <div class="toolbar">
       @if (filterable()) {
-        <label>
+        <label class="grid-search">
           <span class="sr-only">{{ copy().filterLabel(copy().ariaLabel) }}</span>
-          <span aria-hidden="true">⌕</span>
+          <svg viewBox="0 0 20 20" aria-hidden="true">
+            <circle cx="8.5" cy="8.5" r="4.75"></circle>
+            <path d="m12 12 3.75 3.75"></path>
+          </svg>
           <input
             type="search"
             [value]="filter()"
@@ -16,7 +19,16 @@
       <span class="result-count" aria-live="polite">{{ copy().rowCount(totalRowCount()) }}</span>
       @if (columnChooser() && columns().length > 1) {
         <details class="column-chooser">
-          <summary>{{ copy().columns }}</summary>
+          <summary>
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <rect x="3" y="4" width="14" height="12" rx="2"></rect>
+              <path d="M8 4v12M12 4v12"></path>
+            </svg>
+            <span>{{ copy().columns }}</span>
+            <svg class="chooser-chevron" viewBox="0 0 20 20" aria-hidden="true">
+              <path d="m6.5 8 3.5 3.5L13.5 8"></path>
+            </svg>
+          </summary>
           <div>
             @for (column of columns(); track column.key) {
               <label>
@@ -37,17 +49,50 @@
 
   @if (error()) {
     <div class="state error" role="alert">
+      <svg class="state-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="8.25"></circle>
+        <path d="M12 7.75v5.5M12 16.75h.01"></path>
+      </svg>
       <strong>{{ copy().errorTitle }}</strong>
       <span>{{ error() }}</span>
     </div>
   } @else if (loading()) {
-    <div class="loading" role="status" [attr.aria-label]="copy().loading">
+    <div class="loading-grid" role="status" [attr.aria-label]="copy().loading">
+      <div class="loading-grid__header" aria-hidden="true">
+        @if (selectable()) {
+          <span class="loading-grid__utility"></span>
+        }
+        @if (expandable()) {
+          <span class="loading-grid__utility"></span>
+        }
+        @for (column of visibleColumns(); track column.key) {
+          <span [style.inline-size.px]="columnWidth(column)"></span>
+        }
+      </div>
       @for (row of loadingRows; track row) {
-        <span></span>
+        <div class="loading-grid__row" aria-hidden="true">
+          @if (selectable()) {
+            <span class="loading-grid__utility"></span>
+          }
+          @if (expandable()) {
+            <span class="loading-grid__utility"></span>
+          }
+          @for (column of visibleColumns(); track column.key; let columnIndex = $index) {
+            <span [style.inline-size.px]="columnWidth(column)">
+              <i
+                [style.inline-size.%]="columnIndex === 0 ? 54 : 34 + ((row + columnIndex) % 3) * 16"
+              ></i>
+            </span>
+          }
+        </div>
       }
     </div>
   } @else if (!processed().length) {
     <div class="state" role="status">
+      <svg class="state-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4.75 9.5h14.5v8.25a1.5 1.5 0 0 1-1.5 1.5H6.25a1.5 1.5 0 0 1-1.5-1.5V9.5Z"></path>
+        <path d="m7.25 9.5 1.6-4.25h6.3l1.6 4.25M4.75 14h4l1.2 1.75h4.1L15.25 14h4"></path>
+      </svg>
       <strong>{{ copy().empty }}</strong>
       @if (filter()) {
         <button type="button" (click)="clearFilter()">{{ copy().clearFilter }}</button>
@@ -134,7 +179,21 @@
                 } @else {
                   {{ columnLabel(column) }}
                 }
-                <span aria-hidden="true">{{ sortMark(column) }}</span>
+                <span
+                  class="sort-indicator"
+                  [attr.data-direction]="sortState(column)"
+                  aria-hidden="true"
+                >
+                  <svg viewBox="0 0 16 16">
+                    @if (sortState(column) === 'asc') {
+                      <path d="m4.5 9.5 3.5-3.5 3.5 3.5"></path>
+                    } @else if (sortState(column) === 'desc') {
+                      <path d="m4.5 6.5 3.5 3.5 3.5-3.5"></path>
+                    } @else {
+                      <path d="m5 6.5 3-3 3 3M11 9.5l-3 3-3-3"></path>
+                    }
+                  </svg>
+                </span>
               </button>
             } @else {
               @if (resolveHeaderTemplate(column); as headerTemplate) {
@@ -359,7 +418,21 @@
                     } @else {
                       {{ columnLabel(column) }}
                     }
-                    <span aria-hidden="true">{{ sortMark(column) }}</span>
+                    <span
+                      class="sort-indicator"
+                      [attr.data-direction]="sortState(column)"
+                      aria-hidden="true"
+                    >
+                      <svg viewBox="0 0 16 16">
+                        @if (sortState(column) === 'asc') {
+                          <path d="m4.5 9.5 3.5-3.5 3.5 3.5"></path>
+                        } @else if (sortState(column) === 'desc') {
+                          <path d="m4.5 6.5 3.5 3.5 3.5-3.5"></path>
+                        } @else {
+                          <path d="m5 6.5 3-3 3 3M11 9.5l-3 3-3-3"></path>
+                        }
+                      </svg>
+                    </span>
                   </button>
                 } @else {
                   @if (resolveHeaderTemplate(column); as headerTemplate) {
@@ -456,7 +529,9 @@
                 >
                   <button
                     type="button"
+                    class="expand-action"
                     data-grid-action
+                    [attr.data-expanded]="isExpanded(occurrence) ? '' : null"
                     [attr.tabindex]="isActionCell(rowIndex, selectable() ? 1 : 0) ? 0 : -1"
                     [attr.aria-label]="
                       isExpanded(occurrence) ? copy().collapseRow : copy().expandRow
@@ -464,7 +539,9 @@
                     [attr.aria-expanded]="isExpanded(occurrence)"
                     (click)="toggleExpanded(occurrence)"
                   >
-                    <span aria-hidden="true">{{ isExpanded(occurrence) ? '−' : '+' }}</span>
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="m5.5 3.5 4.5 4.5-4.5 4.5"></path>
+                    </svg>
                   </button>
                 </td>
               }
@@ -541,17 +618,25 @@
       <div>
         <button
           type="button"
+          class="page-action"
           [disabled]="currentPage() === 1"
           (click)="goToPage(currentPage() - 1)"
         >
-          {{ copy().previousPage }}
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="m10 3.5-4.5 4.5 4.5 4.5"></path>
+          </svg>
+          <span>{{ copy().previousPage }}</span>
         </button>
         <button
           type="button"
+          class="page-action"
           [disabled]="currentPage() >= pageCount()"
           (click)="goToPage(currentPage() + 1)"
         >
-          {{ copy().nextPage }}
+          <span>{{ copy().nextPage }}</span>
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="m6 3.5 4.5 4.5L6 12.5"></path>
+          </svg>
         </button>
       </div>
     </div>

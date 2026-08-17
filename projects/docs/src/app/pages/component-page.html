@@ -33,12 +33,21 @@
 
     <nav class="page-nav" aria-label="On this page">
       <a [routerLink]="['/components', current.id]" fragment="specimen-overview">Example</a>
+      @if (current.id === 'data-grid') {
+        <a [routerLink]="['/components', current.id]" fragment="specimen-examples">Compositions</a>
+      }
       <a [routerLink]="['/components', current.id]" fragment="specimen-api">API</a>
       <a [routerLink]="['/components', current.id]" fragment="specimen-a11y"> Accessibility </a>
       <a [routerLink]="['/components', current.id]" fragment="specimen-guidance">Guidance</a>
     </nav>
 
     <kdocs-component-playground id="specimen-overview" [item]="current" [code]="codeExample()" />
+
+    @if (current.id === 'data-grid') {
+      @defer (on idle) {
+        <kdocs-data-grid-examples />
+      }
+    }
 
     <section class="reference" aria-labelledby="reference-heading">
       <header class="reference-heading">

@@ -11,7 +11,7 @@
     --krn-density-cell-padding-block: var(--krn-space-1-5);
     --krn-density-cell-padding-inline: var(--krn-space-3);
     --krn-table-row-height: 2.75rem;
-    --krn-data-row-size: var(--krn-table-row-height);
+    --krn-data-row-size: 2.75rem;
   }
 
   [data-krn-density='compact'] {
@@ -25,7 +25,7 @@
     --krn-density-cell-padding-block: var(--krn-space-1);
     --krn-density-cell-padding-inline: var(--krn-space-2);
     --krn-table-row-height: 2.25rem;
-    --krn-data-row-size: var(--krn-table-row-height);
+    --krn-data-row-size: 2.25rem;
   }
 
   [data-krn-density='spacious'] {
@@ -39,7 +39,7 @@
     --krn-density-cell-padding-block: var(--krn-space-2);
     --krn-density-cell-padding-inline: var(--krn-space-4);
     --krn-table-row-height: 3.25rem;
-    --krn-data-row-size: var(--krn-table-row-height);
+    --krn-data-row-size: 3.25rem;
   }
 
   @media (pointer: coarse) {

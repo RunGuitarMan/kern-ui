@@ -192,6 +192,12 @@
   font-size: 0.8125rem;
 }
 
+.code-intro small {
+  color: var(--krn-color-text-muted);
+  font-size: 0.6875rem;
+  line-height: 1.35;
+}
+
 .code-panel krn-code-block {
   display: block;
   max-block-size: 32rem;

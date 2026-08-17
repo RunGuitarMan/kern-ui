@@ -145,6 +145,20 @@ describe('KrnBadge', () => {
     expect((fixture.nativeElement as HTMLElement).getAttribute('data-tone')).toBe('success');
     expect((fixture.nativeElement as HTMLElement).querySelector('.marker')).not.toBeNull();
   });
+
+  it('normalizes every status badge to the shared subtle appearance', async () => {
+    await TestBed.configureTestingModule({ imports: [KrnBadge] }).compileComponents();
+    const fixture = TestBed.createComponent(KrnBadge);
+    fixture.componentRef.setInput('tone', 'danger');
+    fixture.componentRef.setInput('status', true);
+    fixture.componentRef.setInput('variant', 'solid');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.getAttribute('data-tone')).toBe('danger');
+    expect(element.getAttribute('data-variant')).toBe('subtle');
+  });
 });
 
 describe('KrnMeter', () => {

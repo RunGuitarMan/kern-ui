@@ -1,0 +1,220 @@
+<section id="specimen-examples" class="examples" aria-labelledby="data-grid-examples-heading">
+  <header class="examples-heading">
+    <div>
+      <p>Compositions</p>
+      <h2 id="data-grid-examples-heading">Data Grid in real product UI</h2>
+    </div>
+    <p>
+      Typed columns become product UI when they are composed with identity, status, and form
+      controls. Every example uses the real Data Grid API and includes independent copy-ready code.
+    </p>
+  </header>
+
+  <div class="example-list">
+    <article class="example-card example-card-wide" data-testid="data-grid-example-orders">
+      <div class="example-preview orders-preview">
+        <div class="grid-overflow">
+          <ng-template #orderCell let-value let-row="row" let-column="column">
+            @switch (column.key) {
+              @case ('customer') {
+                <span class="customer-cell">
+                  <krn-avatar
+                    class="customer-avatar"
+                    size="sm"
+                    [name]="row.customer"
+                    [attr.data-accent]="row.accent"
+                  />
+                  <span>
+                    <strong>{{ row.customer }}</strong>
+                    <small>{{ row.date }}</small>
+                  </span>
+                </span>
+              }
+              @case ('status') {
+                <krn-badge status size="sm" [tone]="orderTone(row.status)">
+                  {{ row.status }}
+                </krn-badge>
+              }
+              @case ('amount') {
+                <span class="money">{{ money(row.amount) }}</span>
+              }
+              @case ('id') {
+                <span class="order-id">{{ value }}</span>
+              }
+            }
+          </ng-template>
+
+          <krn-data-grid
+            ariaLabel="Recent customer orders"
+            filterPlaceholder="Find an order or customer"
+            [data]="orders"
+            [columns]="orderColumns"
+            [rowIdentity]="orderIdentity"
+            [mode]="staticMode"
+            [defaultCellTemplate]="orderCell"
+            [columnChooser]="true"
+          />
+        </div>
+      </div>
+
+      <header class="example-card-heading">
+        <div class="example-title">
+          <div>
+            <h3>Recent orders</h3>
+            <p>Searchable and sortable rows with identity, payment state, and aligned money.</p>
+          </div>
+        </div>
+        <krn-copy-button
+          ariaLabel="Copy Recent orders example code"
+          size="sm"
+          variant="outline"
+          [value]="ordersCode"
+        >
+          Copy code
+        </krn-copy-button>
+      </header>
+
+      <details class="example-code">
+        <summary>
+          <span>View Angular code</span>
+          <small>Data Grid + Avatar + Badge</small>
+        </summary>
+        <div class="code-surface">
+          <krn-copy-button [value]="ordersCode">Copy code</krn-copy-button>
+          <krn-code-block language="typescript" [code]="ordersCode" />
+        </div>
+      </details>
+    </article>
+
+    <div class="example-grid">
+      <article class="example-card" data-testid="data-grid-example-quantity">
+        <div class="example-preview framed-preview quantity-preview">
+          <div class="grid-frame">
+            <ng-template #quantityCell let-value let-row="row" let-column="column">
+              @switch (column.key) {
+                @case ('quantity') {
+                  <krn-number-input
+                    class="quantity-input"
+                    [ariaLabel]="'Quantity for ' + row.item"
+                    [value]="row.quantity"
+                    [min]="0"
+                    [max]="99"
+                    [showSteppers]="false"
+                    (valueChange)="updateQuantity(row.id, $event)"
+                  />
+                }
+                @case ('total') {
+                  <span class="money">{{ money(row.price * row.quantity) }}</span>
+                }
+                @default {
+                  <strong class="item-name">{{ value }}</strong>
+                }
+              }
+            </ng-template>
+
+            <krn-data-grid
+              ariaLabel="Editable order quantities"
+              [data]="cartLines()"
+              [columns]="cartColumns"
+              [rowIdentity]="cartIdentity"
+              [mode]="staticMode"
+              [defaultCellTemplate]="quantityCell"
+              [filterable]="false"
+              [resizable]="false"
+            />
+            <p class="grid-total">
+              <span>Total</span>
+              <strong aria-live="polite" data-testid="quantity-total">
+                {{ money(cartTotal()) }}
+              </strong>
+            </p>
+          </div>
+        </div>
+
+        <header class="example-card-heading">
+          <div class="example-title">
+            <div>
+              <h3>Editable order</h3>
+              <p>A custom grid cell updates typed signal data and recalculates the total.</p>
+            </div>
+          </div>
+          <krn-copy-button
+            ariaLabel="Copy Editable order example code"
+            size="sm"
+            variant="outline"
+            [value]="quantityCode"
+          >
+            Copy code
+          </krn-copy-button>
+        </header>
+
+        <details class="example-code">
+          <summary>
+            <span>View Angular code</span>
+            <small>Data Grid + Number Input + signal state</small>
+          </summary>
+          <div class="code-surface">
+            <krn-copy-button [value]="quantityCode">Copy code</krn-copy-button>
+            <krn-code-block language="typescript" [code]="quantityCode" />
+          </div>
+        </details>
+      </article>
+
+      <article class="example-card" data-testid="data-grid-example-tasks">
+        <div class="example-preview framed-preview tasks-preview">
+          <div class="grid-frame">
+            <ng-template #taskCell let-value let-row="row" let-column="column">
+              @if (column.key === 'status') {
+                <krn-badge status [tone]="taskTone(row.status)">
+                  {{ row.status }}
+                </krn-badge>
+              } @else {
+                <strong class="task-name">{{ value }}</strong>
+              }
+            </ng-template>
+
+            <krn-data-grid
+              ariaLabel="Delivery task status"
+              [data]="tasks"
+              [columns]="taskColumns"
+              [rowIdentity]="taskIdentity"
+              [mode]="staticMode"
+              [defaultCellTemplate]="taskCell"
+              [filterable]="false"
+              [resizable]="false"
+              [compact]="true"
+            />
+          </div>
+        </div>
+
+        <header class="example-card-heading">
+          <div class="example-title">
+            <div>
+              <h3>Delivery status</h3>
+              <p>A compact grid mode with calm, meaningful status surfaces.</p>
+            </div>
+          </div>
+          <krn-copy-button
+            ariaLabel="Copy Delivery status example code"
+            size="sm"
+            variant="outline"
+            [value]="tasksCode"
+          >
+            Copy code
+          </krn-copy-button>
+        </header>
+
+        <details class="example-code">
+          <summary>
+            <span>View Angular code</span>
+            <small>Compact Data Grid + semantic status badges</small>
+          </summary>
+          <div class="code-surface">
+            <krn-copy-button [value]="tasksCode">Copy code</krn-copy-button>
+            <krn-code-block language="typescript" [code]="tasksCode" />
+          </div>
+        </details>
+      </article>
+    </div>
+  </div>
+</section>

@@ -382,6 +382,7 @@ declare class KrnGlobalSearch {
   private readonly platform;
   private readonly translations;
   private readonly searchInput;
+  private interactionScrollPosition;
   readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
   readonly placeholder: _angular_core.InputSignal<string | undefined>;
   readonly clearLabel: _angular_core.InputSignal<string | undefined>;
@@ -408,6 +409,7 @@ declare class KrnGlobalSearch {
   private readonly activeIndexGuard;
   protected resultOptionId(id: string): string;
   protected onInput(event: Event): void;
+  protected focusWithoutScroll(event: PointerEvent): void;
   protected onKeydown(event: KeyboardEvent): void;
   protected onFocusOut(event: FocusEvent): void;
   protected choose(result: KrnSearchResult): void;

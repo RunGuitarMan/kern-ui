@@ -21,7 +21,7 @@ export type KrnBadgeSize = 'sm' | 'md' | 'lg';
   host: {
     '[attr.data-tone]': 'tone()',
     '[attr.data-status]': 'status() ? "" : null',
-    '[attr.data-variant]': 'variant()',
+    '[attr.data-variant]': 'status() ? "subtle" : variant()',
     '[attr.data-size]': 'size()',
   },
   templateUrl: './badge.html',
@@ -29,8 +29,9 @@ export type KrnBadgeSize = 'sm' | 'md' | 'lg';
 })
 export class KrnBadge {
   readonly tone = input<KrnDisplayTone>('neutral');
+  /** Uses the shared, subtle status recipe and renders a semantic color marker. */
   readonly status = input(false, { transform: booleanAttribute });
-  /** Controls whether the badge uses a filled, tinted, or outlined surface. */
+  /** Controls non-status badges. Status badges always use the shared subtle appearance. */
   readonly variant = input<KrnBadgeVariant>('subtle');
   /** Controls the badge height, horizontal padding, and text density. */
   readonly size = input<KrnBadgeSize>('md');

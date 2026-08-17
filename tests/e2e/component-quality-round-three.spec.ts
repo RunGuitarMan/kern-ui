@@ -402,6 +402,96 @@ test.describe('Round three: navigation behavior', () => {
 });
 
 test.describe('Round three: feedback and data display', () => {
+  test('data grid compositions expose copy-ready product patterns and live inline editing', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    await page.setViewportSize({ width: 1900, height: 1000 });
+    await openSpecimen(page, 'data-grid');
+    const examples = page.getByRole('region', { name: 'Data Grid in real product UI' });
+    const orders = examples.getByTestId('data-grid-example-orders');
+    const quantity = examples.getByTestId('data-grid-example-quantity');
+
+    await expect(examples.locator('krn-data-grid')).toHaveCount(3);
+    await expect(orders.getByRole('columnheader')).toHaveCount(4);
+    await expect(orders.getByRole('row')).toHaveCount(6);
+    const quantityInput = quantity.getByRole('spinbutton', { name: 'Quantity for Item Alpha' });
+    await quantityInput.fill('3');
+    await expect(quantity.getByTestId('quantity-total')).toHaveText('$100.00');
+
+    const editorFocus = await quantityInput.evaluate((input) => {
+      const cell = input.closest<HTMLElement>('[data-cell]');
+      const control = input.closest<HTMLElement>('.krn-control-shell');
+      return {
+        active: input.ownerDocument.activeElement === input,
+        cellBoxShadow: cell ? getComputedStyle(cell).boxShadow : null,
+        controlBoxShadow: control ? getComputedStyle(control).boxShadow : null,
+      };
+    });
+    expect(editorFocus.active).toBe(true);
+    expect(editorFocus.cellBoxShadow).toBe('none');
+    expect(editorFocus.controlBoxShadow).not.toBe('none');
+
+    const compositionLayout = await quantity.evaluate((card) => {
+      const preview = card.querySelector<HTMLElement>('.example-preview');
+      const frame = card.querySelector<HTMLElement>('.grid-frame');
+      const tableScroll = card.querySelector<HTMLElement>('.table-scroll');
+      const total = card.querySelector<HTMLElement>('.grid-total');
+      const price = [...card.querySelectorAll<HTMLElement>('[role="columnheader"]')].find(
+        (header) => header.textContent?.includes('Price'),
+      );
+      const bounds = (element: HTMLElement | null | undefined) => {
+        if (!element) return null;
+        const rect = element.getBoundingClientRect();
+        return { left: rect.left, right: rect.right, width: rect.width };
+      };
+      return {
+        cardBackground: getComputedStyle(card).backgroundColor,
+        columns: card.parentElement
+          ? getComputedStyle(card.parentElement).gridTemplateColumns.split(' ').filter(Boolean)
+              .length
+          : 0,
+        previewBackground: preview ? getComputedStyle(preview).backgroundColor : null,
+        frame: bounds(frame),
+        price: bounds(price),
+        total: bounds(total),
+        overflow: tableScroll ? tableScroll.scrollWidth - tableScroll.clientWidth : null,
+      };
+    });
+    expect(compositionLayout.columns).toBe(2);
+    expect(compositionLayout.previewBackground).toBe(compositionLayout.cardBackground);
+    expect(compositionLayout.overflow).toBe(0);
+    expect(compositionLayout.frame).not.toBeNull();
+    expect(compositionLayout.price).not.toBeNull();
+    expect(compositionLayout.total).not.toBeNull();
+    if (compositionLayout.frame && compositionLayout.price && compositionLayout.total) {
+      expect(compositionLayout.price.right).toBeLessThanOrEqual(compositionLayout.frame.right + 1);
+      expect(compositionLayout.price.left).toBeGreaterThanOrEqual(compositionLayout.frame.left - 1);
+      expect(
+        Math.abs(compositionLayout.total.width - compositionLayout.frame.width),
+      ).toBeLessThanOrEqual(1);
+    }
+
+    await quantity.locator('summary').click();
+    await expect(quantity.locator('.code-surface')).toBeVisible();
+    await expect(quantity.locator('krn-code-block')).toContainText('export class OrderEditorGrid');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(orders).toBeVisible();
+    const overflow = await page.evaluate(() => ({
+      document: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      grid: (() => {
+        const container = document.querySelector<HTMLElement>(
+          '[data-testid="data-grid-example-orders"] .grid-overflow',
+        );
+        return container ? container.scrollWidth - container.clientWidth : 0;
+      })(),
+    }));
+    expect(overflow.document).toBeLessThanOrEqual(1);
+    expect(overflow.grid).toBeGreaterThan(0);
+    assertNoRuntimeErrors();
+  });
+
   test('toasts close individually and expand from a bounded stack', async ({ page }) => {
     const assertNoRuntimeErrors = watchRuntimeErrors(page);
     const specimen = await openSpecimen(page, 'toast');

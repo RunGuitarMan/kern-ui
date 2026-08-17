@@ -117,7 +117,7 @@
     "api-addon-grid": {
       "path": "projects/kern/api/addon-grid.api.d.ts",
       "anchor": "",
-      "sha256": "sha256-73c1ad8164712635a1bd75e6543e834881b3f38e00531e06fa6f3bb24576bf87"
+      "sha256": "sha256-25a7830627598ed9b20d83aac12539ec27973e7b19cdd3a5d47d486ff333cbed"
     },
     "api-kit": {
       "path": "projects/kern/api/kit.api.d.ts",
@@ -127,7 +127,7 @@
     "api-patterns": {
       "path": "projects/kern/api/patterns.api.d.ts",
       "anchor": "",
-      "sha256": "sha256-a9f37f5de7430c68ee19f1096baf45bd38c1fc88fda60fc6e052327d5383d5c0"
+      "sha256": "sha256-608a2a03061aa83746df077a1b24ae135d2594ff8e480fefc6f3c006a3cac217"
     },
     "catalog-a11y": {
       "path": "tests/a11y/accessibility.spec.ts",
@@ -287,7 +287,7 @@
     "responsive-suite": {
       "path": "tests/responsive/responsive.spec.ts",
       "anchor": "Responsive, RTL, and text zoom contracts",
-      "sha256": "sha256-bf1fa02ace335f35d12b271e4aba662aaacc46307410f1de8fec2bba471a3734"
+      "sha256": "sha256-59b035e1b3abea2294827505f647e8a7e3aeb56abaa986d2a97fe2309b384ace"
     },
     "ssr-server": {
       "path": "tests/support/serve-workspace.mjs",
@@ -477,12 +477,12 @@
     "unit-data-grid": {
       "path": "projects/kern/addon-grid/src/lib/data-grid.spec.ts",
       "anchor": "KrnDataGrid",
-      "sha256": "sha256-02fbecaa4d06cf8a5066631f9f0062908b4b141f2316828e7c0c36e8c339a3eb"
+      "sha256": "sha256-45074e57ce659ec33e688f425f50b60929c424a28c9080486e4bff01dfe27a3a"
     },
     "unit-data-table": {
       "path": "projects/kern/addon-grid/src/lib/data-grid.spec.ts",
       "anchor": "KrnDataGrid",
-      "sha256": "sha256-02fbecaa4d06cf8a5066631f9f0062908b4b141f2316828e7c0c36e8c339a3eb"
+      "sha256": "sha256-45074e57ce659ec33e688f425f50b60929c424a28c9080486e4bff01dfe27a3a"
     },
     "unit-date-picker": {
       "path": "projects/kern/kit/src/lib/forms/date-picker.spec.ts",
@@ -602,7 +602,7 @@
     "unit-json-view": {
       "path": "projects/kern/kit/src/lib/data-display/json-view.spec.ts",
       "anchor": "KrnJsonView",
-      "sha256": "sha256-10f45b882b37c438a8151cc4c7545cb701dc964c0e5da6c2ca9576601e7451a8"
+      "sha256": "sha256-66ed814c30080d3085e34f791988300aa7593299ab088d780a682aa0220e75a2"
     },
     "unit-keyboard-shortcut": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
@@ -1834,7 +1834,7 @@
       "evidenceProfile": "beta-promotion",
       "owner": "kern/data-display",
       "source": "projects/kern/addon-grid/src/lib/data-grid.ts",
-      "sourceSha256": "sha256-6d45698d3249545ac1e9a28b765ee4caf8b364051eac039937a8b7048490fa85",
+      "sourceSha256": "sha256-d8b0af51d95938b63d1edb9097b3448b942ad39352d4669069bf650d2d4ea931",
       "symbol": "KrnDataGrid",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-addon-grid"] },
@@ -1879,7 +1879,7 @@
       "evidenceProfile": "beta-promotion",
       "owner": "kern/data-display",
       "source": "projects/kern/addon-grid/src/lib/data-grid.ts",
-      "sourceSha256": "sha256-6d45698d3249545ac1e9a28b765ee4caf8b364051eac039937a8b7048490fa85",
+      "sourceSha256": "sha256-d8b0af51d95938b63d1edb9097b3448b942ad39352d4669069bf650d2d4ea931",
       "symbol": "KrnDataGrid",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-addon-grid"] },
@@ -2353,7 +2353,7 @@
       "evidenceProfile": "recipe-validation",
       "owner": "kern/patterns",
       "source": "projects/kern/patterns/src/lib/patterns/global-search.ts",
-      "sourceSha256": "sha256-51e958f5a8737b2cae911ac3c71c3a482e2ced8a68e6868594bc79f78febdb43",
+      "sourceSha256": "sha256-0a76ebd19798309e82d8ca05ca4c62911a89170cc31babf921c0c74b5345e67c",
       "symbol": "KrnGlobalSearch",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-patterns"] },

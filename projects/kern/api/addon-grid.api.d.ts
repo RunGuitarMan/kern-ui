@@ -248,7 +248,7 @@ declare class KrnDataGrid<T> implements AfterViewChecked {
   protected sort(column: KrnDataColumn<T>): void;
   protected goToPage(page: number): void;
   protected ariaSort(column: KrnDataColumn<T>): 'ascending' | 'descending' | 'none' | null;
-  protected sortMark(column: KrnDataColumn<T>): string;
+  protected sortState(column: KrnDataColumn<T>): 'none' | KrnDataSortDirection;
   protected isSelected(occurrence: KrnDataRowOccurrence<T>): boolean;
   protected toggleRow(occurrence: KrnDataRowOccurrence<T>): void;
   protected toggleAllVisible(): void;

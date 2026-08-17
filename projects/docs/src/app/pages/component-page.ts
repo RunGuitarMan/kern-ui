@@ -12,6 +12,7 @@ import { findKernAgentExample, type KernAgentExample } from '@kern-ui/showcase/e
 import { KrnBreadcrumbs, KrnCopyButton, type KrnBreadcrumbItem } from '@kern-ui/angular/kit';
 
 import { ComponentPlayground } from '../playground/component-playground';
+import { DataGridExamples } from './data-grid-examples';
 
 const STATUS_DESCRIPTIONS: Readonly<Record<KernComponentStatus, string>> = {
   stable: 'Supported contract; the documented compatibility policy applies.',
@@ -24,7 +25,7 @@ const STATUS_DESCRIPTIONS: Readonly<Record<KernComponentStatus, string>> = {
 @Component({
   selector: 'kdocs-component-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, ComponentPlayground, KrnBreadcrumbs, KrnCopyButton],
+  imports: [RouterLink, ComponentPlayground, DataGridExamples, KrnBreadcrumbs, KrnCopyButton],
   templateUrl: './component-page.html',
   styleUrl: './component-page.css',
 })
