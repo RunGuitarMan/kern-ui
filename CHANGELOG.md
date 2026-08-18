@@ -9,6 +9,8 @@ contract or upgrade decision.
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-08-18
+
 ### Added
 
 - Open-source contribution, support, security, conduct, versioning, and browser-support policies.
@@ -363,3 +365,6 @@ contract or upgrade decision.
   weakening the default reduced-motion behavior.
 
 ### Security
+
+[Unreleased]: https://github.com/RunGuitarMan/kern-ui/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/RunGuitarMan/kern-ui/releases/tag/v0.1.0
