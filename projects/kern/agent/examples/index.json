@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "package": "@kern-ui/angular",
-  "packageVersion": "0.1.0",
+  "packageVersion": "0.1.1",
   "generatedFrom": "tools/agent-dx/example-recipes.mjs",
   "requiredStyles": "@kern-ui/angular/styles/kern.css",
   "verificationCommand": "node tools/verify-kern-agent-dx.mjs",

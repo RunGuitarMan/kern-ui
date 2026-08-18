@@ -3,7 +3,7 @@
   "schemaVersion": "1.1.0",
   "library": {
     "name": "@kern-ui/angular",
-    "version": "0.1.0"
+    "version": "0.1.1"
   },
   "generatedBy": "scripts/generate-component-contract.mjs",
   "generatedFrom": [

@@ -9,6 +9,14 @@ contract or upgrade decision.
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-08-18
+
+### Fixed
+
+- Aligned the versioned-documentation release smoke with the compact showcase: configure public
+  API controls before opening the isolated canvas, verify copied Angular code, and preserve the
+  configured preview through a hard reload.
+
 ## [0.1.0] - 2026-08-18
 
 ### Added
@@ -366,5 +374,6 @@ contract or upgrade decision.
 
 ### Security
 
-[Unreleased]: https://github.com/RunGuitarMan/kern-ui/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/RunGuitarMan/kern-ui/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/RunGuitarMan/kern-ui/releases/tag/v0.1.1
 [0.1.0]: https://github.com/RunGuitarMan/kern-ui/releases/tag/v0.1.0

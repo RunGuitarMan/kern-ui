@@ -130,14 +130,6 @@ async function selectQueryOption(page, control, value, queryKey) {
   );
 }
 
-async function requireControlValue(control, expected, label) {
-  await control.waitFor({ state: 'visible' });
-  const actual = await control.inputValue();
-  if (actual !== expected) {
-    throw new Error(`${label} did not preserve "${expected}"; received "${actual}".`);
-  }
-}
-
 async function requireAttribute(locator, name, expected, label) {
   await locator.waitFor({ state: 'visible' });
   const actual = await locator.getAttribute(name);
@@ -510,6 +502,24 @@ async function verifyBrowserHydration(origin, basePath, playwrightVersion) {
       throw new Error(`Client navigation escaped the versioned base path: ${page.url()}`);
     }
 
+    await selectQueryOption(page, page.getByTestId('theme-control'), 'dark', 'theme');
+    await selectQueryOption(page, page.getByTestId('density-control'), 'spacious', 'density');
+    await selectQueryOption(page, page.getByTestId('direction-control'), 'rtl', 'direction');
+    await selectQueryOption(page, page.getByTestId('motion-control'), 'reduce', 'motion');
+    await selectQueryOption(page, page.getByTestId('viewport-control'), 'phone', 'viewport');
+    await selectQueryOption(
+      page,
+      page.getByRole('combobox', { name: 'orientation', exact: true }),
+      'vertical',
+      'arg.orientation',
+    );
+    await selectQueryOption(
+      page,
+      page.getByRole('combobox', { name: 'selected', exact: true }),
+      'settings',
+      'arg.selected',
+    );
+
     const openCanvasLink = page.getByTestId('open-isolated-preview');
     await openCanvasLink.waitFor({ state: 'visible' });
     const canvasHref = await openCanvasLink.getAttribute('href');
@@ -538,24 +548,6 @@ async function verifyBrowserHydration(origin, basePath, playwrightVersion) {
     const previewStage = page.getByTestId('specimen-stage');
     await previewSpecimen.waitFor({ state: 'visible' });
 
-    await selectQueryOption(page, page.getByTestId('theme-control'), 'dark', 'theme');
-    await selectQueryOption(page, page.getByTestId('density-control'), 'spacious', 'density');
-    await selectQueryOption(page, page.getByTestId('direction-control'), 'rtl', 'direction');
-    await selectQueryOption(page, page.getByTestId('motion-control'), 'reduce', 'motion');
-    await selectQueryOption(page, page.getByTestId('viewport-control'), 'phone', 'viewport');
-    await selectQueryOption(
-      page,
-      page.getByRole('combobox', { name: 'Orientation', exact: true }),
-      'vertical',
-      'arg.orientation',
-    );
-    await selectQueryOption(
-      page,
-      page.getByRole('combobox', { name: 'Selected tab', exact: true }),
-      'settings',
-      'arg.selected',
-    );
-
     assertWithinBase(new URL(page.url()), baseUrl, 'Configured preview');
     await requireAttribute(previewStage, 'data-krn-theme-mode', 'dark', 'Preview stage');
     await requireAttribute(previewStage, 'data-krn-density', 'spacious', 'Preview stage');
@@ -575,19 +567,20 @@ async function verifyBrowserHydration(origin, basePath, playwrightVersion) {
     );
 
     const configuredPreviewUrl = page.url();
-    const copyLink = page.locator('.workbench-toolbar krn-copy-button').getByRole('button');
-    await copyLink.click();
+    const copyCode = page.locator('.workbench-toolbar krn-copy-button').getByRole('button');
+    await copyCode.click();
     await page
       .locator('.workbench-toolbar .krn-copy-status')
       .getByText('Copied', { exact: true })
       .waitFor({ state: 'visible' });
-    const copiedPreviewUrl = await page.evaluate(() => navigator.clipboard.readText());
-    if (copiedPreviewUrl !== configuredPreviewUrl) {
-      throw new Error(
-        `Copy link did not serialize the configured preview URL: ${copiedPreviewUrl}`,
-      );
+    const copiedCode = await page.evaluate(() => navigator.clipboard.readText());
+    if (
+      !copiedCode.includes('KernTabsAgentExample') ||
+      !copiedCode.includes("'vertical'") ||
+      !copiedCode.includes("'settings'")
+    ) {
+      throw new Error('Copy code did not serialize the configured Tabs example.');
     }
-    assertWithinBase(new URL(copiedPreviewUrl), baseUrl, 'Copied preview link');
 
     await page.reload({ waitUntil: 'networkidle' });
     await page.waitForFunction(() => Boolean(document.querySelector('[ng-version]')));
@@ -596,22 +589,6 @@ async function verifyBrowserHydration(origin, basePath, playwrightVersion) {
       throw new Error(`Hard reload did not preserve the configured preview URL: ${page.url()}`);
     }
     assertWithinBase(new URL(page.url()), baseUrl, 'Reloaded preview');
-
-    await requireControlValue(page.getByTestId('theme-control'), 'dark', 'Theme control');
-    await requireControlValue(page.getByTestId('density-control'), 'spacious', 'Density control');
-    await requireControlValue(page.getByTestId('direction-control'), 'rtl', 'Direction control');
-    await requireControlValue(page.getByTestId('motion-control'), 'reduce', 'Motion control');
-    await requireControlValue(page.getByTestId('viewport-control'), 'phone', 'Viewport control');
-    await requireControlValue(
-      page.getByRole('combobox', { name: 'Orientation', exact: true }),
-      'vertical',
-      'Orientation control',
-    );
-    await requireControlValue(
-      page.getByRole('combobox', { name: 'Selected tab', exact: true }),
-      'settings',
-      'Selected-tab control',
-    );
     const reloadedStage = page.getByTestId('specimen-stage');
     const reloadedSpecimen = page.getByTestId('component-specimen-tabs');
     await requireAttribute(reloadedStage, 'data-krn-theme-mode', 'dark', 'Reloaded preview stage');

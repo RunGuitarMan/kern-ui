@@ -1,12 +1,12 @@
 {
   "name": "@kern-ui/showcase",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "peerDependencies": {
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
     "@angular/router": "^22.0.0",
-    "@kern-ui/angular": "0.1.0"
+    "@kern-ui/angular": "0.1.1"
   },
   "dependencies": {
     "tslib": "^2.3.0"
