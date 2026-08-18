@@ -20,7 +20,7 @@ Data display, and Patterns. Each entry has an explicit lifecycle status; the inv
 policy, and distinction between catalog requirements and test evidence are documented in
 [`docs/COMPONENTS.md`](docs/COMPONENTS.md).
 
-The `0.1.1` source line is the first public Kern release. The install commands below describe its
+The `0.1.2` source line is the first public Kern release. The install commands below describe its
 supported consumer contract.
 
 ## Requirements
