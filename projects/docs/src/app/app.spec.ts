@@ -30,6 +30,7 @@ describe('App', () => {
     expect(compiled.querySelector('.docs-version')?.textContent).toContain(
       KERN_DOCS_RELEASE_STATE_LABEL,
     );
+    expect(compiled.querySelector('.brand-mark')?.getAttribute('src')).toBe('favicon.svg');
     expect(compiled.querySelector('#docs-main')).toBeTruthy();
   });
 
