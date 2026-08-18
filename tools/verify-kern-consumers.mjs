@@ -368,7 +368,7 @@ async function main() {
 
   try {
     await copyFixtureTemplate(consumerRoot);
-    run(npmCommand, ['ci', '--offline', '--no-audit', '--no-fund'], { cwd: consumerRoot });
+    run(npmCommand, ['ci', '--no-audit', '--no-fund'], { cwd: consumerRoot });
 
     const packOutput = run(npmCommand, [
       'pack',
@@ -391,7 +391,6 @@ async function main() {
         archivePath,
         '--ignore-scripts',
         '--save-exact',
-        '--offline',
         '--no-audit',
         '--no-fund',
       ],
