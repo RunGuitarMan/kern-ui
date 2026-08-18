@@ -3,7 +3,7 @@
   "schemaVersion": "1.3.0",
   "library": {
     "package": "@kern-ui/angular",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "framework": {
       "name": "Angular",
       "peerRange": "^22.0.0"

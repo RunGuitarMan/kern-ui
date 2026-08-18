@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "packageName": "@kern-ui/angular",
   "registry": "https://registry.npmjs.org/",
-  "bootstrapVersion": "0.1.0",
+  "bootstrapVersion": "0.1.1",
   "license": "MIT",
   "repository": "https://github.com/RunGuitarMan/kern-ui.git",
   "auditLevel": "high",
@@ -48,7 +48,7 @@
       "typescript": ">=6.0.0 <6.1.0"
     },
     "peerDependencies": {
-      "@kern-ui/angular": "0.1.0"
+      "@kern-ui/angular": "0.1.1"
     },
     "peerDependenciesMeta": {
       "@kern-ui/angular": {
