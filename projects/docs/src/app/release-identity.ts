@@ -1,4 +1,4 @@
-export const KERN_DOCS_VERSION = '0.1.1' as const;
+export const KERN_DOCS_VERSION = '0.1.2' as const;
 export const KERN_DOCS_VERSION_LABEL = `v${KERN_DOCS_VERSION}`;
 
 export type KernDocsReleaseState = 'source-candidate' | 'released';

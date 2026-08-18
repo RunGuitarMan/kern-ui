@@ -1,6 +1,6 @@
 {
   "name": "@kern-ui/mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Read-only MCP server and AI-facing component contracts for Kern UI.",
   "type": "module",
   "types": "./lib.d.mts",
@@ -35,7 +35,7 @@
     "typescript": ">=6.0.0 <6.1.0"
   },
   "peerDependencies": {
-    "@kern-ui/angular": "0.1.1"
+    "@kern-ui/angular": "0.1.2"
   },
   "peerDependenciesMeta": {
     "@kern-ui/angular": {

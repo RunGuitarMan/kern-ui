@@ -9,6 +9,13 @@ contract or upgrade decision.
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-08-18
+
+### Security
+
+- Updated the pinned Angular release dependency graph to `fast-uri` 3.1.5, which fixes
+  GHSA-7p8r-x3mc-p8w7 and allows the high-severity release audit gate to pass.
+
 ## [0.1.1] - 2026-08-18
 
 ### Fixed
@@ -374,6 +381,7 @@ contract or upgrade decision.
 
 ### Security
 
-[Unreleased]: https://github.com/RunGuitarMan/kern-ui/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/RunGuitarMan/kern-ui/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/RunGuitarMan/kern-ui/releases/tag/v0.1.2
 [0.1.1]: https://github.com/RunGuitarMan/kern-ui/releases/tag/v0.1.1
 [0.1.0]: https://github.com/RunGuitarMan/kern-ui/releases/tag/v0.1.0
