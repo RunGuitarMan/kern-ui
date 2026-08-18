@@ -121,11 +121,11 @@ jobs:
           node tools/verify-kern-package-policy.mjs
           node --test tools/tests/kern-governance.test.mjs
 
-      - name: Run release quality gate
-        run: npm run verify
-
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Run release quality gate
+        run: npm run verify
 
       - name: Run the complete Playwright suite
         run: npm run test:e2e

@@ -1218,6 +1218,39 @@ test('CI exposes independent required checks for every release-quality layer', a
   assert.match(workspaceManifest.scripts.verify, /verify:workspace/);
 });
 
+test('CI provisions browser runtimes before browser-backed gates and retains diagnostics', async () => {
+  const [workflow, releaseWorkflow, playwrightConfig] = await Promise.all([
+    readFile(ciWorkflowPath, 'utf8'),
+    readFile(resolve(workspaceRoot, '.github/workflows/release-candidate.yml'), 'utf8'),
+    readFile(resolve(workspaceRoot, 'playwright.config.ts'), 'utf8'),
+  ]);
+
+  const workspaceInstall = workflow.indexOf(
+    'npx playwright install --with-deps chromium',
+    workflow.indexOf('name: Workspace build and dev smoke'),
+  );
+  const workspaceVerification = workflow.indexOf('npm run verify:workspace', workspaceInstall);
+  assert.ok(workspaceInstall !== -1 && workspaceInstall < workspaceVerification);
+  assert.match(workflow, /tests\/visual-baselines\/linux\//);
+  assert.match(workflow, /include-hidden-files: true/);
+
+  const releaseInstall = releaseWorkflow.indexOf(
+    'npx playwright install --with-deps chromium firefox webkit',
+  );
+  const releaseVerification = releaseWorkflow.indexOf('npm run verify', releaseInstall);
+  assert.ok(releaseInstall !== -1 && releaseInstall < releaseVerification);
+
+  assert.match(playwrightConfig, /visualBaselineRoot/);
+  assert.match(playwrightConfig, /name: 'visual',[\s\S]*?retries: 0/);
+});
+
+test('showcase typecheck materializes its same-project secondary entrypoint first', async () => {
+  const project = JSON.parse(
+    await readFile(resolve(workspaceRoot, 'projects/showcase/project.json'), 'utf8'),
+  );
+  assert.deepEqual(project.targets.typecheck.dependsOn, ['build', '^build']);
+});
+
 test('package policy rejects publication without provenance', async () => {
   const manifest = JSON.parse(
     await readFile(resolve(workspaceRoot, 'projects/kern/package.json'), 'utf8'),

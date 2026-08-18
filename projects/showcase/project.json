@@ -44,6 +44,7 @@
     },
     "typecheck": {
       "executor": "nx:run-commands",
+      "dependsOn": ["build", "^build"],
       "options": {
         "command": "tsc -b projects/showcase/tsconfig.lib.json projects/showcase/tsconfig.spec.json --pretty false"
       }
