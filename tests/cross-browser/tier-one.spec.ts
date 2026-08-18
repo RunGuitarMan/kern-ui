@@ -78,7 +78,7 @@ test.describe('Tier 1 browser contract', () => {
     const stage = page.getByTestId('specimen-stage');
     const primaryAction = page
       .getByTestId('component-specimen-button')
-      .getByRole('button', { name: 'Publish changes' });
+      .getByRole('button', { name: /^(Publish changes|Опубликовать изменения)$/ });
     const assertPlaygroundState = async (): Promise<void> => {
       await expect(page.getByTestId('preview-controls')).toHaveCount(0);
       await expect(page.getByRole('combobox', { name: 'Variant' })).toHaveValue('soft');

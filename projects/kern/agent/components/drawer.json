@@ -78,7 +78,7 @@
       "kind": "input",
       "type": "boolean",
       "required": false,
-      "defaultValue": "false",
+      "defaultValue": "true",
       "description": "Blocks background interaction and traps focus while the drawer is open.",
       "descriptionSource": "source"
     },
@@ -430,8 +430,8 @@
         "key": "modal",
         "label": "Modal",
         "kind": "boolean",
-        "defaultValue": false,
-        "testValue": true,
+        "defaultValue": true,
+        "testValue": false,
         "description": "Controls focus trapping and backdrop behavior.",
         "binding": {
           "kind": "input",

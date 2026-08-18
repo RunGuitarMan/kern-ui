@@ -5977,8 +5977,9 @@ type KrnBadgeVariant = 'solid' | 'subtle' | 'outline';
 type KrnBadgeSize = 'sm' | 'md' | 'lg';
 declare class KrnBadge {
   readonly tone: _angular_core.InputSignal<KrnDisplayTone>;
+  /** Uses the shared, subtle status recipe and renders a semantic color marker. */
   readonly status: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  /** Controls whether the badge uses a filled, tinted, or outlined surface. */
+  /** Controls non-status badges. Status badges always use the shared subtle appearance. */
   readonly variant: _angular_core.InputSignal<KrnBadgeVariant>;
   /** Controls the badge height, horizontal padding, and text density. */
   readonly size: _angular_core.InputSignal<KrnBadgeSize>;

@@ -58,7 +58,7 @@ void bootstrapApplication(KernDrawerAgentExample);
 | Name              | Kind   | Type                           | Required | Default            | Description                                                                 |
 | ----------------- | ------ | ------------------------------ | -------- | ------------------ | --------------------------------------------------------------------------- |
 | `open`            | model  | `boolean`                      | no       | `false`            | Controls whether the disclosure or overlay surface is visible.              |
-| `modal`           | input  | `boolean`                      | no       | `false`            | Blocks background interaction and traps focus while the drawer is open.     |
+| `modal`           | input  | `boolean`                      | no       | `true`             | Blocks background interaction and traps focus while the drawer is open.     |
 | `size`            | input  | `KrnOverlaySize`               | no       | `'md'`             | Selects the drawer thickness along its entry edge.                          |
 | `side`            | input  | `KrnOverlaySide`               | no       | `'right'`          | Chooses the physical or logical viewport edge from which the drawer enters. |
 | `title`           | input  | `string`                       | no       | `''`               | Visible title that also names the component surface or data view.           |
@@ -140,7 +140,7 @@ component inputs or models.
 | `open`           | boolean | `false`             | `true`                          | model `open`                      | Opens the edge-aligned drawer.                                                                   |
 | `side`           | select  | `"right"`           | `"top"`                         | input `side` (property)           | Chooses the viewport edge.                                                                       |
 | `size`           | select  | `"md"`              | `"sm"`                          | input `size` (property)           | Sets the sheet width or height.                                                                  |
-| `modal`          | boolean | `false`             | `true`                          | input `modal` (property)          | Controls focus trapping and backdrop behavior.                                                   |
+| `modal`          | boolean | `true`              | `false`                         | input `modal` (property)          | Controls focus trapping and backdrop behavior.                                                   |
 | `closeOnOutside` | select  | `null`              | `true`                          | input `closeOnOutside` (property) | Inherits the surface policy by default, or explicitly enables or disables outside-click closing. |
 | `closeOnEscape`  | boolean | `true`              | `false`                         | input `closeOnEscape` (property)  | Configures the component closeOnEscape contract.                                                 |
 | `description`    | text    | `""`                | `"Alternate value"`             | input `description` (property)    | Configures the component description contract.                                                   |

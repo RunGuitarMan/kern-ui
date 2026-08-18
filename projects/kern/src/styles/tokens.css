@@ -17,18 +17,18 @@
     --krn-color-neutral-950: oklch(9% 0 0);
     --krn-color-neutral-1000: oklch(0% 0 0);
 
-    /* Primitive electric blue; may be replaced at runtime by KrnThemeService. */
-    --krn-color-brand-50: oklch(97% 0.018 259);
-    --krn-color-brand-100: oklch(93.5% 0.04 259);
-    --krn-color-brand-200: oklch(86% 0.082 259);
-    --krn-color-brand-300: oklch(76% 0.125 259);
-    --krn-color-brand-400: oklch(66% 0.17 259);
-    --krn-color-brand-500: oklch(58% 0.21 260);
-    --krn-color-brand-600: oklch(51% 0.205 260);
-    --krn-color-brand-700: oklch(44% 0.18 260);
-    --krn-color-brand-800: oklch(36% 0.14 260);
-    --krn-color-brand-900: oklch(28% 0.1 260);
-    --krn-color-brand-950: oklch(20% 0.065 260);
+    /* Default brand ramp generated from #5818ff; may be replaced at runtime. */
+    --krn-color-brand-50: oklch(97% 0.1562 280.43);
+    --krn-color-brand-100: oklch(93% 0.1699 280.43);
+    --krn-color-brand-200: oklch(86% 0.1938 280.43);
+    --krn-color-brand-300: oklch(77% 0.2245 280.43);
+    --krn-color-brand-400: oklch(67% 0.2586 280.43);
+    --krn-color-brand-500: oklch(58% 0.27 280.43);
+    --krn-color-brand-600: oklch(50% 0.262 280.43);
+    --krn-color-brand-700: oklch(42% 0.2347 280.43);
+    --krn-color-brand-800: oklch(34% 0.2074 280.43);
+    --krn-color-brand-900: oklch(27% 0.1835 280.43);
+    --krn-color-brand-950: oklch(20% 0.1596 280.43);
 
     --krn-color-green-100: oklch(93% 0.072 150);
     --krn-color-green-500: oklch(59% 0.15 151);

@@ -981,6 +981,59 @@ test('manual evidence remains non-blocking locally but blocks a release while re
   assert.match(release.stderr, /current status is pending/);
 });
 
+test('pre-1 release mode preserves pending evidence without claiming certification', () => {
+  const result = run(accessibilityScript, '--mode=pre-1-release');
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /certification status is not-certified/);
+  assert.match(result.stdout, /mode=pre-1-release/);
+});
+
+test('pre-1 release mode rejects failed or blocked required evidence', async () => {
+  const evidence = JSON.parse(
+    await readFile(resolve(workspaceRoot, 'docs/accessibility/manual-evidence.json'), 'utf8'),
+  );
+  const record = evidence.records.find(({ id }) => id === 'nvda-firefox-windows');
+  assert.ok(record, 'fixture requires the mandatory NVDA record');
+  record.status = 'blocked';
+  record.notes = 'Blocked by an unavailable required Windows test environment.';
+  const temporary = await temporaryJson('manual-evidence.json', evidence);
+  try {
+    const result = run(accessibilityScript, `--evidence=${temporary.path}`, '--mode=pre-1-release');
+    assert.notEqual(result.status, 0);
+    assert.match(
+      result.stderr,
+      /Pre-1 release gate rejects "nvda-firefox-windows" with status blocked/,
+    );
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('pre-1 release mode cannot be used for a stable major version', async () => {
+  const evidence = JSON.parse(
+    await readFile(resolve(workspaceRoot, 'docs/accessibility/manual-evidence.json'), 'utf8'),
+  );
+  evidence.libraryVersion = '1.0.0';
+  const temporaryEvidence = await temporaryJson('manual-evidence.json', evidence);
+  const temporaryManifest = await temporaryJson('package.json', {
+    name: '@kern-ui/angular',
+    version: '1.0.0',
+  });
+  try {
+    const result = run(
+      accessibilityScript,
+      `--evidence=${temporaryEvidence.path}`,
+      `--package-manifest=${temporaryManifest.path}`,
+      '--mode=pre-1-release',
+    );
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /Pre-1 release mode requires a 0\.x package version/);
+  } finally {
+    await rm(temporaryEvidence.directory, { recursive: true, force: true });
+    await rm(temporaryManifest.directory, { recursive: true, force: true });
+  }
+});
+
 test('manual evidence blocks stable promotion without component-scoped passing AT records', () => {
   const result = run(accessibilityScript, '--mode=promotion', '--components=select');
   assert.notEqual(result.status, 0);
@@ -1142,6 +1195,62 @@ test('CI compares lifecycle promotions with the exact pull request or push base 
   assert.match(workflow, /verify-kern-lifecycle\.mjs "--base-ref=\$\{KERN_LIFECYCLE_BASE_REF\}"/);
 });
 
+test('CI exposes independent required checks for every release-quality layer', async () => {
+  const [workflow, workspaceManifest] = await Promise.all([
+    readFile(ciWorkflowPath, 'utf8'),
+    readFile(resolve(workspaceRoot, 'package.json'), 'utf8').then(JSON.parse),
+  ]);
+  for (const [name, script] of [
+    ['Contracts and release policy', 'verify:contracts'],
+    ['Lint, types, and unit tests', 'verify:code'],
+    ['Build and packed consumers', 'verify:package'],
+    ['Workspace build and dev smoke', 'verify:workspace'],
+  ]) {
+    assert.match(workflow, new RegExp(`name: ${name.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&')}`));
+    assert.match(workflow, new RegExp(`npm run ${script}`));
+    assert.equal(typeof workspaceManifest.scripts[script], 'string');
+  }
+  assert.match(workflow, /name: Browser behavior and accessibility/);
+  assert.match(workflow, /npm run test:e2e/);
+  assert.match(workspaceManifest.scripts.verify, /verify:contracts/);
+  assert.match(workspaceManifest.scripts.verify, /verify:code/);
+  assert.match(workspaceManifest.scripts.verify, /verify:package/);
+  assert.match(workspaceManifest.scripts.verify, /verify:workspace/);
+});
+
+test('CI provisions browser runtimes before browser-backed gates and retains diagnostics', async () => {
+  const [workflow, releaseWorkflow, playwrightConfig] = await Promise.all([
+    readFile(ciWorkflowPath, 'utf8'),
+    readFile(resolve(workspaceRoot, '.github/workflows/release-candidate.yml'), 'utf8'),
+    readFile(resolve(workspaceRoot, 'playwright.config.ts'), 'utf8'),
+  ]);
+
+  const workspaceInstall = workflow.indexOf(
+    'npx playwright install --with-deps chromium',
+    workflow.indexOf('name: Workspace build and dev smoke'),
+  );
+  const workspaceVerification = workflow.indexOf('npm run verify:workspace', workspaceInstall);
+  assert.ok(workspaceInstall !== -1 && workspaceInstall < workspaceVerification);
+  assert.match(workflow, /tests\/visual-baselines\/linux\//);
+  assert.match(workflow, /include-hidden-files: true/);
+
+  const releaseInstall = releaseWorkflow.indexOf(
+    'npx playwright install --with-deps chromium firefox webkit',
+  );
+  const releaseVerification = releaseWorkflow.indexOf('npm run verify', releaseInstall);
+  assert.ok(releaseInstall !== -1 && releaseInstall < releaseVerification);
+
+  assert.match(playwrightConfig, /visualBaselineRoot/);
+  assert.match(playwrightConfig, /name: 'visual',[\s\S]*?retries: 0/);
+});
+
+test('showcase typecheck materializes its same-project secondary entrypoint first', async () => {
+  const project = JSON.parse(
+    await readFile(resolve(workspaceRoot, 'projects/showcase/project.json'), 'utf8'),
+  );
+  assert.deepEqual(project.targets.typecheck.dependsOn, ['build', '^build']);
+});
+
 test('package policy rejects publication without provenance', async () => {
   const manifest = JSON.parse(
     await readFile(resolve(workspaceRoot, 'projects/kern/package.json'), 'utf8'),
@@ -1154,6 +1263,69 @@ test('package policy rejects publication without provenance', async () => {
     assert.match(result.stderr, /provenance publication/);
   } finally {
     await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('package policy keeps Angular framework packages out of runtime dependencies', async () => {
+  const [manifest, policy] = await Promise.all([
+    readFile(resolve(workspaceRoot, 'projects/kern/package.json'), 'utf8').then(JSON.parse),
+    readFile(resolve(workspaceRoot, 'projects/kern/api/release-policy.json'), 'utf8').then(
+      JSON.parse,
+    ),
+  ]);
+  const angularCoreRange = manifest.peerDependencies['@angular/core'];
+  delete manifest.peerDependencies['@angular/core'];
+  manifest.dependencies['@angular/core'] = angularCoreRange;
+  delete policy.peerDependencies['@angular/core'];
+  policy.dependencies['@angular/core'] = angularCoreRange;
+  const [temporaryManifest, temporaryPolicy] = await Promise.all([
+    temporaryJson('package.json', manifest),
+    temporaryJson('release-policy.json', policy),
+  ]);
+  try {
+    const result = run(
+      packagePolicyScript,
+      `--manifest=${temporaryManifest.path}`,
+      `--policy=${temporaryPolicy.path}`,
+    );
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /Framework package @angular\/core must be a peerDependency/);
+  } finally {
+    await Promise.all(
+      [temporaryManifest, temporaryPolicy].map(({ directory }) =>
+        rm(directory, { recursive: true, force: true }),
+      ),
+    );
+  }
+});
+
+test('package policy requires published schematics tooling as optional peers', async () => {
+  const [manifest, policy] = await Promise.all([
+    readFile(resolve(workspaceRoot, 'projects/kern/package.json'), 'utf8').then(JSON.parse),
+    readFile(resolve(workspaceRoot, 'projects/kern/api/release-policy.json'), 'utf8').then(
+      JSON.parse,
+    ),
+  ]);
+  delete manifest.peerDependenciesMeta['@angular-devkit/schematics'];
+  delete policy.peerDependenciesMeta['@angular-devkit/schematics'];
+  const [temporaryManifest, temporaryPolicy] = await Promise.all([
+    temporaryJson('package.json', manifest),
+    temporaryJson('release-policy.json', policy),
+  ]);
+  try {
+    const result = run(
+      packagePolicyScript,
+      `--manifest=${temporaryManifest.path}`,
+      `--policy=${temporaryPolicy.path}`,
+    );
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /Tooling peer @angular-devkit\/schematics must be optional/);
+  } finally {
+    await Promise.all(
+      [temporaryManifest, temporaryPolicy].map(({ directory }) =>
+        rm(directory, { recursive: true, force: true }),
+      ),
+    );
   }
 });
 

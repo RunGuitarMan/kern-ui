@@ -3,7 +3,7 @@ export const KERN_DOCS_VERSION_LABEL = `v${KERN_DOCS_VERSION}`;
 
 export type KernDocsReleaseState = 'source-candidate' | 'released';
 
-export const KERN_DOCS_RELEASE_STATE: KernDocsReleaseState = 'source-candidate';
+export const KERN_DOCS_RELEASE_STATE: KernDocsReleaseState = 'released';
 
 const RELEASE_STATE_COPY: Readonly<
   Record<

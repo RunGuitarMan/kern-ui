@@ -72,7 +72,7 @@ export class FoundationsPage {
     return Object.entries(palette).map(([name, value]) => ({
       name,
       value,
-      onColor: Number(name) >= 600 ? 'white' : '#000',
+      onColor: Number(name) >= 500 ? 'white' : '#000',
     }));
   }
 

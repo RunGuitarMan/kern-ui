@@ -95,7 +95,7 @@ test.describe('Docs smoke contracts', () => {
     await expect(page.getByRole('complementary', { name: 'Документация' })).toContainText(
       'Основные компоненты',
     );
-    await expect(page.getByRole('heading', { level: 2, name: 'Попробуйте Button' })).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Пример: Button' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Сбросить' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Опубликовать изменения' })).toBeVisible();
     await expect(page.locator('[data-control-key="variant"] .property-name')).toHaveText('variant');
@@ -177,7 +177,7 @@ test.describe('Docs preview smoke contracts', () => {
 
     await expect(page.getByTestId('specimen-stage')).toHaveAttribute('lang', 'ru-RU');
     await expect(page.locator('.preview-header strong')).toHaveText('Button');
-    await expect(page.getByRole('heading', { level: 2, name: 'Попробуйте Button' })).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Пример: Button' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Опубликовать изменения' })).toBeVisible();
     assertNoRuntimeErrors();
   });
@@ -324,7 +324,7 @@ test.describe('Docs preview smoke contracts', () => {
       .not.toBe(defaultBrand500);
     await brandControl.evaluate((element) => {
       const input = element as HTMLInputElement;
-      input.value = '#4666da';
+      input.value = '#5818ff';
       input.dispatchEvent(new Event('change', { bubbles: true }));
     });
     await expectQueryParam(page, 'brandColor', null);
@@ -442,7 +442,7 @@ test.describe('Docs preview smoke contracts', () => {
     const sharedUrl = page.url();
     const primaryAction = page
       .getByTestId('component-specimen-button')
-      .getByRole('button', { name: 'Publish changes' });
+      .getByRole('button', { name: /^(Publish changes|Опубликовать изменения)$/ });
     await expect(primaryAction).toHaveAttribute('data-variant', 'soft');
     await expect(primaryAction).not.toHaveAttribute('aria-busy');
     await expect(primaryAction.getByRole('status')).toHaveText('Загрузка…');

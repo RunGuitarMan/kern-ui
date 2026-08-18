@@ -92,9 +92,6 @@ export const RU_TEXT: Readonly<Record<string, string>> = Object.freeze({
   'component.accessibility': 'Доступность',
   'component.guidance': 'Рекомендации',
   'component.reference': 'Справочник',
-  'component.ship': 'Всё необходимое для выпуска.',
-  'component.referenceDescription':
-    'Названия API, виды, типы, обязательность и значения по умолчанию генерируются из исходного кода. Статус, поведение и рекомендации поддерживаются как курируемые контракты.',
   'component.generatedContract': 'Сгенерированный публичный контракт',
   'component.entries': 'полей',
   'component.name': 'Название',
@@ -120,7 +117,6 @@ export const RU_TEXT: Readonly<Record<string, string>> = Object.freeze({
   'component.returnOverview': 'Вернуться к обзору',
 
   'playground.example': 'Пример',
-  'playground.try': 'Попробуйте',
   'playground.view': 'Вид примера',
   'playground.preview': 'Предпросмотр',
   'playground.code': 'Код',
@@ -132,7 +128,6 @@ export const RU_TEXT: Readonly<Record<string, string>> = Object.freeze({
   'playground.tabletCanvas': 'Планшет · 768 px',
   'playground.highContrast': 'высокая контрастность',
   'playground.codeAria': 'Пример Angular-кода',
-  'playground.copyConfigured': 'Скопируйте настроенный пример в своё приложение.',
   'playground.codeNote':
     'Базовый шаблон проверен строгой AOT-компиляцией; текущие настройки формируют снимок предпросмотра.',
   'playground.properties': 'Свойства',

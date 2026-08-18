@@ -2,17 +2,21 @@
 
 import { defineConfig, devices } from '@playwright/test';
 
-const docsUrl = 'http://localhost:4200';
+const docsUrl = 'http://127.0.0.1:4200';
 const reuseExistingServer = process.env['KERN_E2E_REUSE_SERVER'] === 'true';
 const chromiumExecutablePath = process.env['PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH']?.trim();
 const chromiumLaunchOptions = chromiumExecutablePath
   ? { launchOptions: { executablePath: chromiumExecutablePath } }
   : {};
+const visualBaselineRoot =
+  process.platform === 'darwin'
+    ? '{testDir}/visual-baselines'
+    : '{testDir}/visual-baselines/{platform}';
 
 export default defineConfig({
   testDir: './tests',
   outputDir: './tests/.artifacts/results',
-  snapshotPathTemplate: '{testDir}/visual-baselines/{projectName}/{testFilePath}/{arg}{ext}',
+  snapshotPathTemplate: `${visualBaselineRoot}/{projectName}/{testFilePath}/{arg}{ext}`,
   fullyParallel: true,
   forbidOnly: Boolean(process.env['CI']),
   retries: process.env['CI'] ? 2 : 0,
@@ -69,6 +73,7 @@ export default defineConfig({
     {
       name: 'visual',
       testMatch: /visual\/.*\.spec\.ts/,
+      retries: 0,
       use: {
         baseURL: docsUrl,
         viewport: { width: 1440, height: 1000 },

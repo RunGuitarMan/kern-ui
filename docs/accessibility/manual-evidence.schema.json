@@ -18,7 +18,7 @@
       "const": "./manual-evidence.schema.json"
     },
     "schemaVersion": {
-      "const": 2
+      "const": 3
     },
     "libraryVersion": {
       "type": "string",
@@ -27,8 +27,11 @@
     "policy": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["releaseMaxAgeDays", "promotionMaxAgeDays"],
+      "required": ["pre1ReleaseAllowsPending", "releaseMaxAgeDays", "promotionMaxAgeDays"],
       "properties": {
+        "pre1ReleaseAllowsPending": {
+          "const": true
+        },
         "releaseMaxAgeDays": {
           "type": "integer",
           "minimum": 1

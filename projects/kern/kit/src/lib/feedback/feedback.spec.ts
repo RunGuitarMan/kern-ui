@@ -735,6 +735,20 @@ describe('Kern feedback', () => {
     background.remove();
   });
 
+  it('uses modal dialog semantics and focus containment by default', async () => {
+    const fixture = await create(KrnDrawer, {
+      open: true,
+      title: 'Recent activity',
+    });
+    const surface = fixture.nativeElement.querySelector('[role="dialog"]') as HTMLElement;
+
+    expect(surface.getAttribute('aria-modal')).toBe('true');
+    expect(fixture.componentInstance.modal()).toBe(true);
+
+    fixture.destroy();
+    fixture.nativeElement.remove();
+  });
+
   it('keeps a closing drawer present only for its exit animation', async () => {
     vi.stubGlobal(
       'matchMedia',

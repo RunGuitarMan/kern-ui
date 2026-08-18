@@ -2,13 +2,28 @@
   class="workbench"
   [class.workbench-isolated]="isolated()"
   [attr.data-playground-component]="item().id"
-  aria-labelledby="playground-heading"
+  [attr.aria-label]="tr('playground.example', 'Example') + ': ' + item().name"
 >
   <header class="workbench-toolbar">
-    <div class="workbench-title">
-      <p>{{ tr('playground.example', 'Example') }}</p>
-      <h2 id="playground-heading">{{ tr('playground.try', 'Try') }} {{ item().name }}</h2>
-    </div>
+    @if (!isolated()) {
+      <nav class="page-nav" [attr.aria-label]="tr('component.onThisPage', 'On this page')">
+        <a [routerLink]="['/components', item().id]" fragment="specimen-overview">{{
+          tr('component.example', 'Example')
+        }}</a>
+        @if (item().id === 'data-grid') {
+          <a [routerLink]="['/components', item().id]" fragment="specimen-examples">{{
+            tr('component.compositions', 'Compositions')
+          }}</a>
+        }
+        <a [routerLink]="['/components', item().id]" fragment="specimen-api">API</a>
+        <a [routerLink]="['/components', item().id]" fragment="specimen-a11y">{{
+          tr('component.accessibility', 'Accessibility')
+        }}</a>
+        <a [routerLink]="['/components', item().id]" fragment="specimen-guidance">{{
+          tr('component.guidance', 'Guidance')
+        }}</a>
+      </nav>
+    }
 
     <div class="toolbar-actions">
       <div class="view-tabs" role="group" [attr.aria-label]="tr('playground.view', 'Example view')">
@@ -42,7 +57,7 @@
       <button class="reset-button" type="button" (click)="reset()">
         {{ tr('playground.reset', 'Reset') }}
       </button>
-      <krn-copy-button [value]="configuredCode()">{{
+      <krn-copy-button class="copy-code-button" size="sm" [value]="configuredCode()">{{
         tr('playground.copyCode', 'Copy code')
       }}</krn-copy-button>
     </div>
@@ -97,6 +112,12 @@
     id="code-panel"
     class="code-panel"
     [attr.aria-label]="tr('playground.codeAria', 'Angular code example')"
+    [attr.aria-description]="
+      tr(
+        'playground.codeNote',
+        'Base scaffold is strict-AOT verified; current controls form a preview snapshot.'
+      )
+    "
     [hidden]="activeTab() !== 'code'"
     [krnTheme]="theme()"
     [krnDensity]="density()"
@@ -107,23 +128,6 @@
     [attr.data-krn-contrast-scheme]="contrast() ? baseTheme() : null"
     [style.color-scheme]="contrast() ? contrastScheme() : null"
   >
-    <div class="code-intro">
-      <div>
-        <span>Angular</span>
-        <strong>{{
-          tr('playground.copyConfigured', 'Copy this configured example into your application.')
-        }}</strong>
-        <small>{{
-          tr(
-            'playground.codeNote',
-            'Base scaffold is strict-AOT verified; current controls form a preview snapshot.'
-          )
-        }}</small>
-      </div>
-      <krn-copy-button [value]="configuredCode()">{{
-        tr('playground.copyCode', 'Copy code')
-      }}</krn-copy-button>
-    </div>
     <krn-code-block language="typescript" [code]="configuredCode()" />
   </div>
 

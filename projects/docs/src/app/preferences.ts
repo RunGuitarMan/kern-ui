@@ -9,6 +9,8 @@ export type DocsLocale = 'en-US' | 'ru-RU';
 export type DocsMotion = 'system' | 'reduce' | 'full';
 export type DocsViewport = 'responsive' | 'phone' | 'tablet';
 
+export const DOCS_DEFAULT_BRAND_COLOR = '#5818ff';
+
 @Injectable({ providedIn: 'root' })
 export class DocsPreferences {
   private readonly document = inject(DOCUMENT);
@@ -22,7 +24,7 @@ export class DocsPreferences {
   readonly direction = signal<'ltr' | 'rtl'>('ltr');
   readonly locale = signal<DocsLocale>('en-US');
   readonly motion = signal<DocsMotion>('system');
-  readonly brand = signal('#4666da');
+  readonly brand = signal(DOCS_DEFAULT_BRAND_COLOR);
   readonly viewport = signal<DocsViewport>('responsive');
   readonly mobilePreview = signal(false);
   readonly navigationOpen = signal(false);

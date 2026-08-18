@@ -318,7 +318,6 @@ async function main() {
         '--ignore-scripts',
         '--save-exact',
         '--omit=dev',
-        '--offline',
         '--no-audit',
         '--no-fund',
       ],

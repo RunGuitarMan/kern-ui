@@ -2004,7 +2004,7 @@ const CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> =
       'left',
     ]),
     select('size', 'Size', 'md', 'Sets the sheet width or height.', ['sm', 'md', 'lg']),
-    boolean('modal', 'Modal', false, 'Controls focus trapping and backdrop behavior.'),
+    boolean('modal', 'Modal', true, 'Controls focus trapping and backdrop behavior.'),
     closeOnOutside,
   ],
   'bottom-sheet': [

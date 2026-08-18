@@ -6,6 +6,7 @@ import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideKrn } from '@kern-ui/angular/core';
 
 import { routes } from './app.routes';
+import { DOCS_DEFAULT_BRAND_COLOR } from './preferences';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -39,6 +40,7 @@ export const appConfig: ApplicationConfig = {
       theme: 'system',
       density: 'comfortable',
       motion: 'system',
+      brandColor: DOCS_DEFAULT_BRAND_COLOR,
       overlayHost: '[data-krn-preview-overlay-host]',
       persistPreferences: true,
       preferenceStorageKey: 'kern.docs.preferences.v2',

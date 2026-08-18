@@ -7,6 +7,7 @@ import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import { assertDistTagVersion, publicationDecision } from '../publish-kern-release-package.mjs';
+import { bootstrapRegistryIssues } from '../verify-kern-npm-bootstrap.mjs';
 import { buildReleaseLock } from '../prepare-kern-release-lock.mjs';
 import {
   assertPromotionAdvance,
@@ -303,8 +304,8 @@ test('release workflow verifies source identity in both candidate and approved p
   }
   assert.equal(
     workflow.match(/node tools\/publish-kern-release-package\.mjs/g)?.length,
-    2,
-    'both npm packages must use the resumable publisher',
+    4,
+    'both auth modes must publish both packages through the resumable publisher',
   );
   const publisher = await readFile(
     resolve(workspaceRoot, 'tools/publish-kern-release-package.mjs'),
@@ -313,8 +314,13 @@ test('release workflow verifies source identity in both candidate and approved p
   assert.match(publisher, /'--provenance'/);
   assert.match(publisher, /dist\.integrity/);
   assert.match(workflow, /NPM_STAGING_TAG: kern-staging/);
+  assert.match(workflow, /publication_auth:/);
+  assert.match(workflow, /verify-kern-npm-bootstrap\.mjs/);
+  assert.match(workflow, /secrets\.NPM_BOOTSTRAP_TOKEN/);
+  assert.match(workflow, /verify-kern-published-release\.mjs/);
   assert.match(workflow, /node tools\/verify-kern-lifecycle\.mjs/);
   assert.match(workflow, /--mode=release/);
+  assert.match(workflow, /verify-kern-accessibility-evidence\.mjs --mode=pre-1-release/);
   assert.match(workflow, /node tools\/attest-kern-lifecycle-release\.mjs/);
   assert.match(workflow, /--release-attestation=release\/lifecycle-attestation\.json/);
   assert.doesNotMatch(workflow, /--release-base-version=/);
@@ -330,13 +336,13 @@ test('release workflow verifies source identity in both candidate and approved p
     'public tags must be promoted only after both packages are staged',
   );
   const tokenBinding = workflow.indexOf(
-    'NODE_AUTH_TOKEN: ${{ secrets.NPM_DIST_TAG_TOKEN }}',
+    "NODE_AUTH_TOKEN: ${{ inputs.publication_auth == 'bootstrap-token' && secrets.NPM_BOOTSTRAP_TOKEN || secrets.NPM_DIST_TAG_TOKEN }}",
     npmPublication,
   );
   assert.equal(
     workflow.match(/NODE_AUTH_TOKEN:/g)?.length,
-    1,
-    'the granular npm token must be exposed to exactly one workflow step',
+    2,
+    'credentials may be exposed only to one-time bootstrap and dist-tag promotion steps',
   );
   assert.ok(
     tokenBinding > workflow.lastIndexOf('node tools/publish-kern-release-package.mjs') &&
@@ -357,6 +363,29 @@ test('release workflow verifies source identity in both candidate and approved p
     'the public GitHub release must follow both npm publications',
   );
   assert.match(workflow, /concurrency:\n  group: kern-release\n/);
+});
+
+test('npm bootstrap refuses an existing release line and permits an exact partial retry', () => {
+  assert.deepEqual(
+    bootstrapRegistryIssues(
+      {
+        '@kern-ui/angular': [],
+        '@kern-ui/mcp': ['0.1.0'],
+      },
+      '0.1.0',
+    ),
+    [],
+  );
+  assert.match(
+    bootstrapRegistryIssues(
+      {
+        '@kern-ui/angular': ['0.1.0', '0.1.1'],
+        '@kern-ui/mcp': [],
+      },
+      '0.1.0',
+    )[0],
+    /already has non-bootstrap version\(s\): 0\.1\.1/,
+  );
 });
 
 test('lifecycle release attestation freezes all verifier inputs to the checked-out candidate', async () => {

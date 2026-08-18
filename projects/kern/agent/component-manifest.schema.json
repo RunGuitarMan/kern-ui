@@ -193,7 +193,7 @@
               "const": "brandColor"
             },
             "defaultValue": {
-              "const": "#4666da"
+              "const": "#5818ff"
             },
             "pattern": {
               "const": "^#[0-9a-fA-F]{6}$"

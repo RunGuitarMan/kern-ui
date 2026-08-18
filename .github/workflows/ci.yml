@@ -19,10 +19,10 @@ env:
   CI: true
 
 jobs:
-  quality:
-    name: Static, unit, build, and package
+  contracts:
+    name: Contracts and release policy
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 20
 
     steps:
       - name: Check out source
@@ -40,7 +40,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Verify lifecycle, deprecations, and accessibility evidence
+      - name: Verify lifecycle changes against the exact base
         env:
           KERN_LIFECYCLE_BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
@@ -50,12 +50,91 @@ jobs:
           else
             node tools/verify-kern-lifecycle.mjs
           fi
-          node tools/verify-kern-accessibility-evidence.mjs
-          node tools/verify-kern-package-policy.mjs
-          node --test tools/tests/kern-governance.test.mjs
 
-      - name: Run release quality gate
-        run: npm run verify
+      - name: Verify generated contracts, governance, formatting, and package policy
+        run: npm run verify:contracts
+
+  code:
+    name: Lint, types, and unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify lint, types, and unit behavior
+        run: npm run verify:code
+
+  package:
+    name: Build and packed consumers
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and verify packed consumers
+        run: npm run verify:package
+
+      - name: Upload packed-consumer diagnostics
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: packed-consumer-diagnostics
+          path: tests/.artifacts/
+          if-no-files-found: ignore
+          include-hidden-files: true
+          retention-days: 14
+
+  workspace:
+    name: Workspace build and dev smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium for the Vite development smoke test
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify production builds and the Vite development consumer
+        run: npm run verify:workspace
 
   browser:
     name: Browser behavior and accessibility
@@ -88,6 +167,9 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: playwright-diagnostics
-          path: tests/.artifacts/
+          path: |
+            tests/.artifacts/
+            tests/visual-baselines/linux/
           if-no-files-found: ignore
+          include-hidden-files: true
           retention-days: 14

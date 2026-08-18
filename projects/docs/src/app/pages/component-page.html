@@ -35,24 +35,6 @@
       </div>
     </header>
 
-    <nav class="page-nav" [attr.aria-label]="i18n.t('component.onThisPage', 'On this page')">
-      <a [routerLink]="['/components', current.id]" fragment="specimen-overview">{{
-        i18n.t('component.example', 'Example')
-      }}</a>
-      @if (current.id === 'data-grid') {
-        <a [routerLink]="['/components', current.id]" fragment="specimen-examples">{{
-          i18n.t('component.compositions', 'Compositions')
-        }}</a>
-      }
-      <a [routerLink]="['/components', current.id]" fragment="specimen-api">API</a>
-      <a [routerLink]="['/components', current.id]" fragment="specimen-a11y">{{
-        i18n.t('component.accessibility', 'Accessibility')
-      }}</a>
-      <a [routerLink]="['/components', current.id]" fragment="specimen-guidance">{{
-        i18n.t('component.guidance', 'Guidance')
-      }}</a>
-    </nav>
-
     <kdocs-component-playground id="specimen-overview" [item]="current" [code]="codeExample()" />
 
     @if (current.id === 'data-grid') {
@@ -62,22 +44,9 @@
     }
 
     <section class="reference" aria-labelledby="reference-heading">
-      <header class="reference-heading">
-        <div>
-          <p>{{ i18n.t('component.reference', 'Reference') }}</p>
-          <h2 id="reference-heading">
-            {{ i18n.t('component.ship', 'Everything needed to ship.') }}
-          </h2>
-        </div>
-        <p>
-          {{
-            i18n.t(
-              'component.referenceDescription',
-              'API names, kinds, types, required flags, and defaults are generated from runtime source. Lifecycle status, behavior, and usage guidance remain curated contracts.'
-            )
-          }}
-        </p>
-      </header>
+      <h2 id="reference-heading" class="reference-heading">
+        {{ i18n.t('component.reference', 'Reference') }}
+      </h2>
 
       <div class="reference-list">
         <details id="specimen-api" open>

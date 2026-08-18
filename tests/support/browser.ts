@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 
 import { expect, type Page } from '@playwright/test';
 
-export const DOCS_URL = 'http://localhost:4200';
+export const DOCS_URL = 'http://127.0.0.1:4200';
 export const PREVIEW_URL = DOCS_URL;
 
 export type PreviewScenario = 'default' | 'states' | 'stress' | 'virtual';
@@ -84,9 +84,17 @@ export function previewUrl(state: PreviewUrlState = {}): string {
 
 export async function settlePage(page: Page): Promise<void> {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
   await page.evaluate(async () => {
-    await document.fonts.ready;
+    if (document.fonts.status !== 'loaded') {
+      await Promise.race([
+        document.fonts.ready,
+        new Promise<void>((resolve) => setTimeout(resolve, 2_000)),
+      ]);
+    }
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    });
   });
 }
 

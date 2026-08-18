@@ -416,7 +416,7 @@ export class KrnDrawer {
   private readonly translations = inject(KRN_TRANSLATIONS);
   readonly open = model(false);
   /** Blocks background interaction and traps focus while the drawer is open. */
-  readonly modal = input(false, { transform: booleanAttribute });
+  readonly modal = input(true, { transform: booleanAttribute });
   /** Selects the drawer thickness along its entry edge. */
   readonly size = input<KrnOverlaySize>('md');
   /** Chooses the physical or logical viewport edge from which the drawer enters. */
