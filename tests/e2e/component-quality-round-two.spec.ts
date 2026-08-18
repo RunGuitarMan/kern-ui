@@ -1,6 +1,6 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
-import { DOCS_URL, settlePage, watchRuntimeErrors } from '../support/browser';
+import { DOCS_URL, expectNoPageOverflow, settlePage, watchRuntimeErrors } from '../support/browser';
 
 interface Rect {
   readonly height: number;
@@ -74,6 +74,90 @@ test.describe('Round two: documentation and preview contracts', () => {
     await skipLink.click();
     await expect(page).toHaveURL(`${DOCS_URL}/components/header#docs-main`);
     await expect(page.locator('#docs-main')).toBeFocused();
+    assertNoRuntimeErrors();
+  });
+
+  test('component example starts with one compact navigation and action toolbar', async ({
+    page,
+  }) => {
+    const assertNoRuntimeErrors = watchRuntimeErrors(page);
+    await openSpecimen(page, 'global-search');
+
+    const toolbar = page.locator('.workbench-toolbar');
+    const navigation = toolbar.locator('.page-nav');
+    const actions = toolbar.locator('.toolbar-actions');
+    const preview = page.locator('.preview-panel');
+
+    await expect(page.locator('.workbench-title')).toHaveCount(0);
+    await expect(navigation.getByRole('link', { name: 'Example' })).toBeVisible();
+    const previewButton = actions.getByRole('button', { name: 'Preview', exact: true });
+    await expect(previewButton).toBeVisible();
+    await expect(actions.getByRole('button', { name: 'Code', exact: true })).toBeVisible();
+    await expect(actions.getByRole('link', { name: 'Open canvas' })).toBeVisible();
+    await expect(actions.getByRole('button', { name: 'Reset' })).toBeVisible();
+    await expect(actions.getByRole('button', { name: 'Copy code' })).toBeVisible();
+
+    const controlGeometry = await actions
+      .locator('.view-tabs, .canvas-link, .reset-button, .copy-code-button button')
+      .evaluateAll((elements) =>
+        elements.map((element) => {
+          const styles = getComputedStyle(element);
+          return {
+            borderRadius: styles.borderRadius,
+            height: element.getBoundingClientRect().height,
+          };
+        }),
+      );
+    expect(new Set(controlGeometry.map(({ height }) => height)).size).toBe(1);
+    expect(new Set(controlGeometry.map(({ borderRadius }) => borderRadius)).size).toBe(1);
+
+    const controlTypography = await actions
+      .locator('.view-tabs button, .canvas-link, .reset-button, .copy-code-button button')
+      .evaluateAll((elements) =>
+        elements.map((element) => {
+          const styles = getComputedStyle(element);
+          return `${styles.fontFamily}|${styles.fontSize}|${styles.fontWeight}`;
+        }),
+      );
+    expect(new Set(controlTypography).size).toBe(1);
+
+    await previewButton.focus();
+    const segmentedFocus = await actions.locator('.view-tabs').evaluate((element) => {
+      const groupStyles = getComputedStyle(element);
+      const activeButton = element.querySelector<HTMLButtonElement>("button[aria-pressed='true']");
+      if (!activeButton) throw new Error('Missing active example view button.');
+      const buttonStyles = getComputedStyle(activeButton);
+      return {
+        activeBoxShadow: buttonStyles.boxShadow,
+        activeStartRadius: buttonStyles.borderStartStartRadius,
+        buttonOutline: buttonStyles.outlineStyle,
+        groupOutline: groupStyles.outlineStyle,
+      };
+    });
+    expect(segmentedFocus.activeBoxShadow).toBe('none');
+    expect(segmentedFocus.activeStartRadius).not.toBe('0px');
+    expect(segmentedFocus.buttonOutline).toBe('none');
+    expect(segmentedFocus.groupOutline).not.toBe('none');
+
+    const [toolbarBounds, navigationBounds, actionsBounds, previewBounds] = await Promise.all([
+      toolbar.boundingBox(),
+      navigation.boundingBox(),
+      actions.boundingBox(),
+      preview.boundingBox(),
+    ]);
+    expect(toolbarBounds).not.toBeNull();
+    expect(navigationBounds).not.toBeNull();
+    expect(actionsBounds).not.toBeNull();
+    expect(previewBounds).not.toBeNull();
+    if (!toolbarBounds || !navigationBounds || !actionsBounds || !previewBounds) return;
+
+    const navigationCenter = navigationBounds.y + navigationBounds.height / 2;
+    const actionsCenter = actionsBounds.y + actionsBounds.height / 2;
+    expect(Math.abs(navigationCenter - actionsCenter)).toBeLessThanOrEqual(1);
+    expect(previewBounds.y - (toolbarBounds.y + toolbarBounds.height)).toBeLessThanOrEqual(16);
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expectNoPageOverflow(page);
     assertNoRuntimeErrors();
   });
 

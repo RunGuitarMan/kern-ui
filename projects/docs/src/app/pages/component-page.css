@@ -127,36 +127,6 @@ h1 {
   font: 500 0.75rem/1 var(--krn-font-family-mono);
 }
 
-.page-nav {
-  position: sticky;
-  z-index: 20;
-  inset-block-start: var(--docs-header-height);
-  display: flex;
-  gap: 1.25rem;
-  overflow-x: auto;
-  border-block: 1px solid var(--krn-color-border-subtle);
-  background: color-mix(in srgb, var(--krn-color-surface) 93%, transparent);
-  backdrop-filter: blur(12px);
-}
-
-.page-nav a {
-  display: inline-flex;
-  min-block-size: 2.75rem;
-  align-items: center;
-  border-block-end: 2px solid transparent;
-  color: var(--krn-color-text-muted);
-  font-size: 0.75rem;
-  font-weight: 550;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.page-nav a:hover {
-  border-block-end-color: var(--krn-color-primary);
-  color: var(--krn-color-text);
-}
-
-.page-nav a:focus-visible,
 .variant-link:focus-visible,
 .component-pager a:focus-visible,
 details summary:focus-visible {
@@ -166,42 +136,14 @@ details summary:focus-visible {
 
 .reference {
   scroll-margin-block-start: calc(var(--docs-header-height) + 3.25rem);
-  padding-block: clamp(2.25rem, 5vw, 4rem);
+  padding-block: clamp(1.5rem, 3vw, 2.5rem);
   border-block-end: 1px solid var(--krn-color-border-subtle);
 }
 
-.reference-heading > div {
-  display: grid;
-  gap: 0.4rem;
-}
-
-.reference-heading p {
-  margin: 0;
-  color: var(--krn-color-text-subtle);
-  font-size: 0.6875rem;
-  font-weight: 550;
-}
-
-.reference-heading h2 {
-  margin: 0;
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
-  font-weight: 610;
-  letter-spacing: -0.035em;
-}
-
 .reference-heading {
-  display: grid;
-  grid-template-columns: minmax(16rem, 0.75fr) minmax(20rem, 1.25fr);
-  align-items: end;
-  gap: clamp(2rem, 7vw, 6rem);
-  margin-block-end: 1.5rem;
-}
-
-.reference-heading > p {
-  max-inline-size: 58ch;
-  color: var(--krn-color-text-muted);
+  margin: 0 0 0.75rem;
   font-size: 0.875rem;
-  line-height: 1.6;
+  font-weight: 600;
 }
 
 .reference-list {
@@ -449,11 +391,6 @@ code {
 
   .component-actions {
     justify-items: start;
-  }
-
-  .reference-heading {
-    grid-template-columns: 1fr;
-    gap: 1rem;
   }
 }
 

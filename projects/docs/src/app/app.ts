@@ -21,6 +21,7 @@ import { filter, map, startWith } from 'rxjs';
 import { DocsGlobalSearch } from './docs-global-search';
 import { DocsI18n } from './docs-i18n';
 import {
+  DOCS_DEFAULT_BRAND_COLOR,
   DocsPreferences,
   type DocsBaseTheme,
   type DocsDensity,
@@ -181,7 +182,7 @@ export class App {
   protected setBrandColor(event: Event): void {
     const value = (event.currentTarget as HTMLInputElement).value.toLowerCase();
     this.prefs.brand.set(value);
-    void this.updateEnvironmentQuery('brandColor', value, '#4666da');
+    void this.updateEnvironmentQuery('brandColor', value, DOCS_DEFAULT_BRAND_COLOR);
   }
 
   private updateEnvironmentQuery(

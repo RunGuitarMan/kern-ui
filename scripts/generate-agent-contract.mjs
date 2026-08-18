@@ -1063,7 +1063,7 @@ function playgroundQueryContract() {
     ],
     brandColor: {
       parameter: 'brandColor',
-      defaultValue: '#4666da',
+      defaultValue: '#5818ff',
       pattern: '^#[0-9a-fA-F]{6}$',
     },
   };

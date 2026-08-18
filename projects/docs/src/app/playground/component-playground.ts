@@ -31,6 +31,7 @@ import {
 import { KrnCodeBlock, KrnCopyButton } from '@kern-ui/angular/kit';
 
 import {
+  DOCS_DEFAULT_BRAND_COLOR,
   DocsPreferences,
   type DocsBaseTheme,
   type DocsDensity,
@@ -52,14 +53,13 @@ const DIRECTIONS: readonly PreviewDirection[] = ['ltr', 'rtl'];
 const LOCALES: readonly PreviewLocale[] = ['en-US', 'ru-RU'];
 const MOTIONS: readonly PreviewMotion[] = ['system', 'reduce', 'full'];
 const VIEWPORTS: readonly PreviewViewport[] = ['responsive', 'phone', 'tablet'];
-const DEFAULT_BRAND_COLOR = '#4666da';
 const ENVIRONMENT_DEFAULTS = {
   theme: 'system',
   density: 'comfortable',
   direction: 'ltr',
   locale: 'en-US',
   motion: 'system',
-  brandColor: DEFAULT_BRAND_COLOR,
+  brandColor: DOCS_DEFAULT_BRAND_COLOR,
   viewport: 'responsive',
   scenario: 'default',
 } as const;
@@ -82,7 +82,7 @@ function serializePlaygroundValue(value: KernPlaygroundValue): string {
 }
 
 function normalizeBrandColor(value: string | null): string {
-  return value && /^#[\da-f]{6}$/i.test(value) ? value.toLowerCase() : DEFAULT_BRAND_COLOR;
+  return value && /^#[\da-f]{6}$/i.test(value) ? value.toLowerCase() : DOCS_DEFAULT_BRAND_COLOR;
 }
 
 function sameQuery(

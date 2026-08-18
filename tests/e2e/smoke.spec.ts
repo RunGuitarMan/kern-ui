@@ -324,7 +324,7 @@ test.describe('Docs preview smoke contracts', () => {
       .not.toBe(defaultBrand500);
     await brandControl.evaluate((element) => {
       const input = element as HTMLInputElement;
-      input.value = '#4666da';
+      input.value = '#5818ff';
       input.dispatchEvent(new Event('change', { bubbles: true }));
     });
     await expectQueryParam(page, 'brandColor', null);

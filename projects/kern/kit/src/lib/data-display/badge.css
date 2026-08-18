@@ -37,7 +37,7 @@
   font-size: 0.8125rem;
 }
 :host([data-tone='brand']) {
-  --_badge-solid: var(--krn-color-brand-solid, var(--krn-color-primary, #4666da));
+  --_badge-solid: var(--krn-color-brand-solid, var(--krn-color-primary, #5818ff));
   --_badge-surface: var(--krn-color-brand-surface, var(--krn-color-primary-subtle, #e8edff));
   --_badge-text: var(--krn-color-brand-text, #1d4ed8);
   --_badge-border: var(--krn-color-brand-border, #7790e9);
