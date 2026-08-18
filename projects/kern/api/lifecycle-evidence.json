@@ -122,7 +122,7 @@
     "api-kit": {
       "path": "projects/kern/api/kit.api.d.ts",
       "anchor": "",
-      "sha256": "sha256-712e739d7d16adf6a029ddcbf0b5306834889cb762f7057b7a2e9f2d30b1360d"
+      "sha256": "sha256-cbefe617858d7d1d487b0b5621e2a2ae4d38ea2958ae598a6a09a22cb09dc5da"
     },
     "api-patterns": {
       "path": "projects/kern/api/patterns.api.d.ts",
@@ -152,7 +152,7 @@
     "catalog-visual": {
       "path": "tests/visual/visual.spec.ts",
       "anchor": "default specimen matches its visual baseline",
-      "sha256": "sha256-bc72067092945fde5493940dca1e19d0ece06cc2a48574ae2d65803c20aa6b8e"
+      "sha256": "sha256-68c3dc54b121a80d1ed11d920a4e2338c5c26bbd6518ab683428f56293358958"
     },
     "guidance-bulk-actions": {
       "path": "projects/kern/agent/components/bulk-actions.md",
@@ -287,27 +287,27 @@
     "responsive-suite": {
       "path": "tests/responsive/responsive.spec.ts",
       "anchor": "Responsive, RTL, and text zoom contracts",
-      "sha256": "sha256-59b035e1b3abea2294827505f647e8a7e3aeb56abaa986d2a97fe2309b384ace"
+      "sha256": "sha256-db7d3658f6daabbfc33a5befa8d72e4cf801e3dee4516ff986cfb570b9173fcc"
     },
     "ssr-server": {
       "path": "tests/support/serve-workspace.mjs",
       "anchor": "browser tests exercise server rendering",
-      "sha256": "sha256-043361fcb387cf398b59156583611bc5f1ba712a9816c0d8025012ab05499319"
+      "sha256": "sha256-2f4c87b5acaab65efa30094e52d0e1d9766deded9f4d767412a01fb5523c308c"
     },
     "unit-accordion": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnAccordion",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-alert": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnAlert",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-alert-dialog": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnAlertDialog",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-app-shell": {
       "path": "projects/kern/kit/src/lib/layout/app-shell.spec.ts",
@@ -327,12 +327,12 @@
     "unit-avatar": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnAvatar",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-avatar-group": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnAvatarGroup",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-back-button": {
       "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
@@ -342,12 +342,12 @@
     "unit-badge": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnBadge",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-banner": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnBanner",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-bar-chart": {
       "path": "projects/kern/addon-charts/src/lib/charts/charts.spec.ts",
@@ -362,7 +362,7 @@
     "unit-bottom-sheet": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnBottomSheet",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-breadcrumbs": {
       "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
@@ -392,7 +392,7 @@
     "unit-card": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnCard",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-center": {
       "path": "projects/kern/kit/src/lib/layout/container.spec.ts",
@@ -412,12 +412,12 @@
     "unit-chip": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnChip",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-circular-progress": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnCircularProgress",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-cluster": {
       "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
@@ -427,7 +427,7 @@
     "unit-code-block": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnCodeBlock",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-color-picker": {
       "path": "projects/kern/kit/src/lib/forms/color-picker.spec.ts",
@@ -447,7 +447,7 @@
     "unit-confirmation-pattern": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnConfirmation",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-container": {
       "path": "projects/kern/kit/src/lib/layout/container.spec.ts",
@@ -497,17 +497,17 @@
     "unit-description-list": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnDescriptionList",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-dialog": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnDialog",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-disclosure": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnDisclosure",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-divider": {
       "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
@@ -527,7 +527,7 @@
     "unit-drawer": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnDrawer",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-dropdown-button": {
       "path": "projects/kern/kit/src/lib/actions/dropdown-button.spec.ts",
@@ -537,12 +537,12 @@
     "unit-empty-state": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnEmptyState",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-error-state": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnErrorState",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-file-upload": {
       "path": "projects/kern/kit/src/lib/forms/file-upload.spec.ts",
@@ -587,7 +587,7 @@
     "unit-hover-card": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnHoverCard",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-icon-button": {
       "path": "projects/kern/kit/src/lib/actions/icon-button.spec.ts",
@@ -607,7 +607,7 @@
     "unit-keyboard-shortcut": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnKeyboardShortcut",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-label": {
       "path": "projects/kern/kit/src/lib/forms/form-field.spec.ts",
@@ -632,12 +632,12 @@
     "unit-list-item": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnListItem",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-loading-overlay": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnLoadingOverlay",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-login-form": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
@@ -662,7 +662,7 @@
     "unit-meter": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnMeter",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-mobile-navigation": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
@@ -717,7 +717,7 @@
     "unit-popover": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnPopover",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-profile-form": {
       "path": "projects/kern/patterns/src/lib/patterns/patterns.spec.ts",
@@ -727,7 +727,7 @@
     "unit-progress-bar": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnProgressBar",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-radio": {
       "path": "projects/kern/kit/src/lib/forms/radio.spec.ts",
@@ -747,7 +747,7 @@
     "unit-rating": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnRating",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-resizable-panels": {
       "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
@@ -762,7 +762,7 @@
     "unit-responsive-media": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnResponsiveMedia",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-responsive-show-hide": {
       "path": "projects/kern/kit/src/lib/layout/layout.spec.ts",
@@ -802,7 +802,7 @@
     "unit-skeleton": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnSkeleton",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-skip-link": {
       "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
@@ -822,7 +822,7 @@
     "unit-spinner": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnSpinner",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-split-button": {
       "path": "projects/kern/kit/src/lib/actions/split-button.spec.ts",
@@ -842,12 +842,12 @@
     "unit-stat": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnStat",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-status-badge": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnBadge",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-stepper": {
       "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
@@ -857,7 +857,7 @@
     "unit-success-state": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnSuccessState",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-switch": {
       "path": "projects/kern/kit/src/lib/forms/switch.spec.ts",
@@ -877,7 +877,7 @@
     "unit-tag": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnChip",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-tags-input": {
       "path": "projects/kern/kit/src/lib/forms/tags-input.spec.ts",
@@ -902,12 +902,12 @@
     "unit-timeline": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnTimeline",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-toast": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnToastViewport",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-toggle-button": {
       "path": "projects/kern/kit/src/lib/actions/toggle-button.spec.ts",
@@ -922,12 +922,12 @@
     "unit-tooltip": {
       "path": "projects/kern/kit/src/lib/feedback/feedback.spec.ts",
       "anchor": "KrnTooltip",
-      "sha256": "sha256-b30694bb9ea729c722fb35edf3548086c2c43d97d2e75801c2aedd4bd66c78f0"
+      "sha256": "sha256-eda41c5513955e9218abc42acfadad16432df68204e3ab2ecd69495fdd995642"
     },
     "unit-tree": {
       "path": "projects/kern/kit/src/lib/data-display/display.spec.ts",
       "anchor": "KrnTree",
-      "sha256": "sha256-a8419867c046c84cc4404901a9a83674da0b123ef587a0e47477d0cb5f9970b3"
+      "sha256": "sha256-ae88be116d656e1d687fe5822ddcc35202f6451d202dd008826cf3d19111e444"
     },
     "unit-tree-navigation": {
       "path": "projects/kern/kit/src/lib/navigation/navigation.spec.ts",
@@ -1004,7 +1004,7 @@
       "evidenceProfile": "stable-release",
       "owner": "kern/feedback",
       "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
-      "sourceSha256": "sha256-8c56af6909a79abce878a85e2e125d94a1f81bb88cd5182b78b9f0d6f48b6254",
+      "sourceSha256": "sha256-9cce7efc11bdaf85184145f3e04396feca662847aaca7f21c3a326f2e9b90679",
       "symbol": "KrnAlertDialog",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -1168,7 +1168,7 @@
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
       "source": "projects/kern/kit/src/lib/data-display/badge.ts",
-      "sourceSha256": "sha256-28b1f556e959a3db2616cab9950fdc819531bb04ede352163c4967d15e391bb0",
+      "sourceSha256": "sha256-1492b8bd82d6995412a125e89cdbabd96abf615086f0504e547e214c7a192b04",
       "symbol": "KrnBadge",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -1269,7 +1269,7 @@
       "evidenceProfile": "beta-promotion",
       "owner": "kern/feedback",
       "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
-      "sourceSha256": "sha256-8c56af6909a79abce878a85e2e125d94a1f81bb88cd5182b78b9f0d6f48b6254",
+      "sourceSha256": "sha256-9cce7efc11bdaf85184145f3e04396feca662847aaca7f21c3a326f2e9b90679",
       "symbol": "KrnBottomSheet",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -1496,7 +1496,7 @@
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
       "source": "projects/kern/kit/src/lib/data-display/badge.ts",
-      "sourceSha256": "sha256-28b1f556e959a3db2616cab9950fdc819531bb04ede352163c4967d15e391bb0",
+      "sourceSha256": "sha256-1492b8bd82d6995412a125e89cdbabd96abf615086f0504e547e214c7a192b04",
       "symbol": "KrnChip",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -2020,7 +2020,7 @@
       "evidenceProfile": "beta-promotion",
       "owner": "kern/feedback",
       "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
-      "sourceSha256": "sha256-8c56af6909a79abce878a85e2e125d94a1f81bb88cd5182b78b9f0d6f48b6254",
+      "sourceSha256": "sha256-9cce7efc11bdaf85184145f3e04396feca662847aaca7f21c3a326f2e9b90679",
       "symbol": "KrnDialog",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -2169,7 +2169,7 @@
       "evidenceProfile": "beta-promotion",
       "owner": "kern/feedback",
       "source": "projects/kern/kit/src/lib/feedback/modal-overlays.ts",
-      "sourceSha256": "sha256-8c56af6909a79abce878a85e2e125d94a1f81bb88cd5182b78b9f0d6f48b6254",
+      "sourceSha256": "sha256-9cce7efc11bdaf85184145f3e04396feca662847aaca7f21c3a326f2e9b90679",
       "symbol": "KrnDrawer",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -3601,7 +3601,7 @@
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
       "source": "projects/kern/kit/src/lib/data-display/badge.ts",
-      "sourceSha256": "sha256-28b1f556e959a3db2616cab9950fdc819531bb04ede352163c4967d15e391bb0",
+      "sourceSha256": "sha256-1492b8bd82d6995412a125e89cdbabd96abf615086f0504e547e214c7a192b04",
       "symbol": "KrnBadge",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },
@@ -3727,7 +3727,7 @@
       "evidenceProfile": "stable-release",
       "owner": "kern/data-display",
       "source": "projects/kern/kit/src/lib/data-display/badge.ts",
-      "sourceSha256": "sha256-28b1f556e959a3db2616cab9950fdc819531bb04ede352163c4967d15e391bb0",
+      "sourceSha256": "sha256-1492b8bd82d6995412a125e89cdbabd96abf615086f0504e547e214c7a192b04",
       "symbol": "KrnChip",
       "evidence": [
         { "kind": "api-baseline", "status": "linked", "artifactIds": ["api-kit"] },

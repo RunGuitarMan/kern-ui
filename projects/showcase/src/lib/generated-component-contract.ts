@@ -4550,7 +4550,7 @@ export const KERN_RUNTIME_COMPONENTS = {
         kind: 'input',
         type: 'boolean',
         required: false,
-        defaultValue: 'false',
+        defaultValue: 'true',
       },
       {
         name: 'restoreFocus',

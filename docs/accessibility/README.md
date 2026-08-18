@@ -4,10 +4,12 @@ Kern's automated axe, semantics, keyboard, reflow, forced-color, and reduced-mot
 release evidence. They do not emulate a person using a branded browser and assistive technology.
 
 `manual-evidence.json` is the machine-readable execution matrix. All initial records are
-intentionally `pending`, the six required desktop records are release-blocking, and the top-level certification state is
-`not-certified`. Therefore this directory does **not** claim AT certification, WCAG conformance,
-or a VPAT/ACR. Structural verification remains usable during local development, while release and
-stable-promotion modes reject pending, failed, blocked, or stale required evidence.
+intentionally `pending`, the six required desktop records are release-blocking under the strict
+certification policy, and the top-level certification state is `not-certified`. Therefore this
+directory does **not** claim AT certification, WCAG conformance, or a VPAT/ACR. Structural
+verification remains usable during local development. Pre-1.0 release candidates may carry
+honest pending evidence, but reject failed, blocked, malformed, or stale completed records. Strict
+release and stable-promotion modes reject pending, failed, blocked, or stale required evidence.
 
 ## Recording a run
 
@@ -28,7 +30,13 @@ Run:
 node tools/verify-kern-accessibility-evidence.mjs
 ```
 
-Release candidates use the strict mode:
+Pre-1.0 release candidates use the explicitly non-certified mode:
+
+```bash
+node tools/verify-kern-accessibility-evidence.mjs --mode=pre-1-release
+```
+
+Certified releases use the strict mode:
 
 ```bash
 node tools/verify-kern-accessibility-evidence.mjs --mode=release
@@ -41,5 +49,7 @@ node tools/verify-kern-accessibility-evidence.mjs --mode=promotion --components=
 ```
 
 Strict modes use the declared maximum ages and never infer manual results from Playwright. They
-also require a separately recorded certification attestation. Local mode validates the honest
-ledger structure without treating expected pre-execution `pending` states as a development error.
+also require a separately recorded certification attestation. Pre-1 release mode never promotes
+pending records to passing evidence and remains visibly `not-certified`. Local mode validates the
+honest ledger structure without treating expected pre-execution `pending` states as a development
+error.

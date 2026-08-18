@@ -8,6 +8,12 @@ publication uses short-lived npm trusted-publishing OIDC credentials. npm's
 extend OIDC authentication to `npm dist-tag`, so public-tag promotion uses a separately scoped and
 rotated granular token only in the promotion step.
 
+The npm registry does not allow trusted-publisher configuration until a package already exists.
+Only the declared first version (`0.1.0`) may therefore use the workflow's `bootstrap-token` mode.
+That mode is registry-aware and resumable, refuses any package with a different published version,
+and still requires GitHub provenance. After the first release, revoke the bootstrap token and use
+`trusted-publishing` exclusively.
+
 ## One-time repository configuration
 
 Maintainers must configure these controls before enabling publication:
@@ -27,6 +33,12 @@ Maintainers must configure these controls before enabling publication:
 5. Keep default-branch protection and required CI checks enabled. CI compares lifecycle status
    changes with the exact pull-request base or preceding push commit and rejects an unproven
    beta/experimental-to-stable promotion.
+
+For the one-time first publication only, create `NPM_BOOTSTRAP_TOKEN` in `npm-production`. Because
+the two package records do not exist yet, this token must be able to create public packages under
+the `@kern-ui` scope, write dist-tags, and bypass publish 2FA. Select `bootstrap-token` for `0.1.0`,
+then immediately revoke the secret/token, configure both trusted publishers, and retain only the
+narrow `NPM_DIST_TAG_TOKEN` described above. The bootstrap guard rejects later versions.
 
 The workflow requests `id-token: write` only in the approved publish job. Candidate assembly has
 read-only repository access. `NPM_DIST_TAG_TOKEN` is not job-wide: only the promotion/rollback step
@@ -49,7 +61,8 @@ receives it, so the two preceding `npm publish` operations continue to authentic
 3. Create the exact `vMAJOR.MINOR.PATCH` or prerelease tag on that default-branch commit. Tags are
    immutable release inputs; do not move an existing tag.
 4. Run **Prepare and publish release** from that tag and enter the same version. Use `next` for a
-   prerelease; a prerelease is rejected under `latest`.
+   prerelease; a prerelease is rejected under `latest`. Select `bootstrap-token` only for the first
+   `0.1.0` publication and `trusted-publishing` for every subsequent release.
 5. Inspect the candidate job, immutable artifact digest, npm and versioned-documentation tarballs,
    manifests, SBOM, checksums, and pending GitHub environment deployment.
 6. Approve `npm-production` only when the evidence matches the intended release.
@@ -100,6 +113,10 @@ tags. An occupied version with different bytes is always rejected. The GitHub re
 updated only after both public tags converge. `latest` and `next` may be restored by automatic
 failure rollback, but a new promotion is monotonic under full SemVer ordering and cannot move either
 tag to an older stable or prerelease version.
+
+Before the GitHub release is created, the workflow rereads both public npm manifests, requires the
+SLSA provenance attestation, downloads both packages back from the canonical registry, and proves
+that their SHA-512 integrity and public dist-tags match the approved tarballs.
 
 The workflow attaches the versioned documentation evidence to the GitHub release but does not
 deploy it to an unspecified provider. The immutable artifact and hosting contract are documented

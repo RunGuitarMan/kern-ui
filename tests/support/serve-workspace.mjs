@@ -4,7 +4,7 @@ import { join } from 'node:path';
 
 const workspace = process.cwd();
 const host = '127.0.0.1';
-const docsUrl = 'http://localhost:4200/';
+const docsUrl = 'http://127.0.0.1:4200/';
 const reuseExistingServer = process.env['KERN_E2E_REUSE_SERVER'] === 'true';
 /** @type {import('node:child_process').ChildProcess[]} */
 const applicationProcesses = [];

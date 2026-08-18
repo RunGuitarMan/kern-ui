@@ -73,7 +73,7 @@
       "@kern-ui/angular/patterns",
       "@kern-ui/angular/testing"
     ],
-    "sourceDigest": "sha256-46aa61b6bb7c1fd643a3ae0551b17b076a70e5099ca83be1038c731a54a01104"
+    "sourceDigest": "sha256-628f73c7842362b3a3fc65ef568ce667712fbdf47925bec596648a7469b6ef52"
   },
   "components": [
     {
@@ -42240,7 +42240,7 @@
           "kind": "input",
           "type": "boolean",
           "required": false,
-          "defaultValue": "false",
+          "defaultValue": "true",
           "description": "Blocks background interaction and traps focus while the drawer is open.",
           "descriptionSource": "source"
         },
@@ -42600,8 +42600,8 @@
             "key": "modal",
             "label": "Modal",
             "kind": "boolean",
-            "defaultValue": false,
-            "testValue": true,
+            "defaultValue": true,
+            "testValue": false,
             "description": "Controls focus trapping and backdrop behavior.",
             "binding": {
               "kind": "input",
@@ -46711,8 +46711,8 @@
           "type": "boolean",
           "required": false,
           "defaultValue": "false",
-          "description": "Current domain status rendered as visible text and a non-color-only treatment.",
-          "descriptionSource": "inferred"
+          "description": "Uses the shared, subtle status recipe and renders a semantic color marker.",
+          "descriptionSource": "source"
         },
         {
           "name": "variant",
@@ -46721,7 +46721,7 @@
           "type": "KrnBadgeVariant",
           "required": false,
           "defaultValue": "'subtle'",
-          "description": "Controls whether the badge uses a filled, tinted, or outlined surface.",
+          "description": "Controls non-status badges. Status badges always use the shared subtle appearance.",
           "descriptionSource": "source"
         },
         {
@@ -47093,8 +47093,8 @@
           "type": "boolean",
           "required": false,
           "defaultValue": "false",
-          "description": "Current domain status rendered as visible text and a non-color-only treatment.",
-          "descriptionSource": "inferred"
+          "description": "Uses the shared, subtle status recipe and renders a semantic color marker.",
+          "descriptionSource": "source"
         },
         {
           "name": "variant",
@@ -47103,7 +47103,7 @@
           "type": "KrnBadgeVariant",
           "required": false,
           "defaultValue": "'subtle'",
-          "description": "Controls whether the badge uses a filled, tinted, or outlined surface.",
+          "description": "Controls non-status badges. Status badges always use the shared subtle appearance.",
           "descriptionSource": "source"
         },
         {

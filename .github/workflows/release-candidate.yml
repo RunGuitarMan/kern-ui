@@ -15,6 +15,14 @@ on:
         options:
           - next
           - latest
+      publication_auth:
+        description: Use bootstrap-token only for the first registry publication
+        required: true
+        default: trusted-publishing
+        type: choice
+        options:
+          - trusted-publishing
+          - bootstrap-token
 
 permissions: {}
 
@@ -94,6 +102,10 @@ jobs:
             "--version=${RELEASE_VERSION}" \
             "--tag=${RELEASE_TAG}"
 
+      - name: Validate one-time npm bootstrap eligibility
+        if: inputs.publication_auth == 'bootstrap-token'
+        run: node tools/verify-kern-npm-bootstrap.mjs "--version=${RELEASE_VERSION}"
+
       - name: Verify lifecycle and evidence governance
         run: |
           mkdir -p release
@@ -105,7 +117,7 @@ jobs:
           node tools/verify-kern-lifecycle.mjs \
             --mode=release \
             --release-attestation=release/lifecycle-attestation.json
-          node tools/verify-kern-accessibility-evidence.mjs --mode=release
+          node tools/verify-kern-accessibility-evidence.mjs --mode=pre-1-release
           node tools/verify-kern-package-policy.mjs
           node --test tools/tests/kern-governance.test.mjs
 
@@ -263,7 +275,25 @@ jobs:
             "--artifact-dir=release"
 
       - name: Stage exact tarballs with npm OIDC provenance
+        if: inputs.publication_auth == 'trusted-publishing'
         run: |
+          node tools/publish-kern-release-package.mjs \
+            --package=@kern-ui/angular \
+            "--version=${RELEASE_VERSION}" \
+            "--tarball=release/kern-ui-angular-${RELEASE_VERSION}.tgz" \
+            "--staging-tag=${NPM_STAGING_TAG}"
+          node tools/publish-kern-release-package.mjs \
+            --package=@kern-ui/mcp \
+            "--version=${RELEASE_VERSION}" \
+            "--tarball=release/kern-ui-mcp-${RELEASE_VERSION}.tgz" \
+            "--staging-tag=${NPM_STAGING_TAG}"
+
+      - name: Bootstrap exact first-release tarballs with npm provenance
+        if: inputs.publication_auth == 'bootstrap-token'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_BOOTSTRAP_TOKEN }}
+        run: |
+          node tools/verify-kern-npm-bootstrap.mjs "--version=${RELEASE_VERSION}"
           node tools/publish-kern-release-package.mjs \
             --package=@kern-ui/angular \
             "--version=${RELEASE_VERSION}" \
@@ -277,7 +307,7 @@ jobs:
 
       - name: Verify both staged integrities and promote public tags with rollback
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_DIST_TAG_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ inputs.publication_auth == 'bootstrap-token' && secrets.NPM_BOOTSTRAP_TOKEN || secrets.NPM_DIST_TAG_TOKEN }}
         run: |
           node tools/promote-kern-release.mjs \
             "--version=${RELEASE_VERSION}" \
@@ -291,6 +321,14 @@ jobs:
           node tools/verify-kern-release-dist-tags.mjs \
             "--version=${RELEASE_VERSION}" \
             "--tag=${NPM_DIST_TAG}"
+
+      - name: Verify registry manifests, provenance, tarballs, and public tags
+        run: |
+          node tools/verify-kern-published-release.mjs \
+            "--version=${RELEASE_VERSION}" \
+            "--tag=${NPM_DIST_TAG}" \
+            "--angular-tarball=release/kern-ui-angular-${RELEASE_VERSION}.tgz" \
+            "--mcp-tarball=release/kern-ui-mcp-${RELEASE_VERSION}.tgz"
 
       - name: Publish GitHub release with evidence
         env:

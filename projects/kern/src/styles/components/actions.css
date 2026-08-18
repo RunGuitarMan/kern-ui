@@ -363,6 +363,17 @@
   color: var(--krn-color-text, #17201c);
 }
 
+.krn-toggle-group[data-connected='true'] > .krn-toggle-action:focus-visible {
+  box-shadow: var(--_action-ring);
+}
+
+.krn-toggle-group[data-connected='true'] > .krn-toggle-action[data-pressed='true']:focus-visible {
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 12%),
+    0 0 0 1px color-mix(in oklab, var(--krn-color-border) 68%, transparent),
+    var(--_action-ring);
+}
+
 .krn-toggle-group[data-connected='true'][data-orientation='vertical'] {
   align-items: stretch;
 }

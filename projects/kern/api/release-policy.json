@@ -1,7 +1,8 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "packageName": "@kern-ui/angular",
   "registry": "https://registry.npmjs.org/",
+  "bootstrapVersion": "0.1.0",
   "license": "MIT",
   "repository": "https://github.com/RunGuitarMan/kern-ui.git",
   "auditLevel": "high",
@@ -9,19 +10,36 @@
     "tslib": "^2.3.0"
   },
   "peerDependencies": {
+    "@angular-devkit/schematics": "^22.0.0",
     "@angular/aria": "^22.0.0",
     "@angular/cdk": "^22.0.0",
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
+    "@schematics/angular": "^22.0.0",
     "rxjs": "^7.4.0",
     "typescript": ">=6.0.0 <6.1.0"
   },
   "peerDependenciesMeta": {
+    "@angular-devkit/schematics": {
+      "optional": true
+    },
+    "@schematics/angular": {
+      "optional": true
+    },
     "typescript": {
       "optional": true
     }
   },
+  "frameworkPeerPackages": [
+    "@angular/aria",
+    "@angular/cdk",
+    "@angular/common",
+    "@angular/core",
+    "@angular/forms",
+    "rxjs"
+  ],
+  "toolingPeerPackages": ["@angular-devkit/schematics", "@schematics/angular", "typescript"],
   "companionPackage": {
     "packageName": "@kern-ui/mcp",
     "directory": "projects/kern-mcp",

@@ -1,3 +1,4 @@
+import { DOCUMENT, ViewportScroller } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -31,14 +32,16 @@ import { KERN_DOCS_RELEASE_STATE_LABEL, KERN_DOCS_VERSION_LABEL } from './releas
 
 @Component({
   selector: 'kdocs-root',
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, DocsGlobalSearch],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
   private readonly application = inject(ApplicationRef);
+  private readonly document = inject(DOCUMENT);
   private readonly router = inject(Router);
+  private readonly viewportScroller = inject(ViewportScroller);
   protected readonly i18n = inject(DocsI18n);
   protected readonly prefs = inject(DocsPreferences);
   protected readonly categories = KERN_CATEGORIES;
@@ -89,6 +92,26 @@ export class App {
         return next;
       });
     });
+    effect((onCleanup) => {
+      const fragment = this.router.parseUrl(this.currentUrl()).fragment;
+      const browserWindow = this.document.defaultView;
+      if (!fragment || !browserWindow) return;
+
+      let remainingFrames = 3;
+      let animationFrame = 0;
+      const restoreAnchor = (): void => {
+        if (this.document.getElementById(fragment)) {
+          this.viewportScroller.scrollToAnchor(fragment);
+        }
+        remainingFrames -= 1;
+        if (remainingFrames > 0) {
+          animationFrame = browserWindow.requestAnimationFrame(restoreAnchor);
+        }
+      };
+
+      animationFrame = browserWindow.requestAnimationFrame(restoreAnchor);
+      onCleanup(() => browserWindow.cancelAnimationFrame(animationFrame));
+    });
   }
 
   protected itemsFor(category: KernCategory) {
@@ -111,7 +134,7 @@ export class App {
     const value = (event.currentTarget as HTMLSelectElement).value as DocsBaseTheme;
     if (this.prefs.theme() === 'contrast') this.prefs.highContrast.set(true);
     this.prefs.theme.set(value);
-    this.updateEnvironmentQuery('theme', value, 'system');
+    void this.updateEnvironmentQuery('theme', value, 'system');
   }
 
   protected toggleContrast(): void {
@@ -120,19 +143,19 @@ export class App {
       this.prefs.highContrast.set(true);
     }
     this.prefs.highContrast.update((value) => !value);
-    this.updateEnvironmentQuery('contrast', this.prefs.contrastMode() ? 'true' : null, null);
+    void this.updateEnvironmentQuery('contrast', this.prefs.contrastMode() ? 'true' : null, null);
   }
 
   protected setDensity(event: Event): void {
     const value = (event.currentTarget as HTMLSelectElement).value as DocsDensity;
     this.prefs.density.set(value);
-    this.updateEnvironmentQuery('density', value, 'comfortable');
+    void this.updateEnvironmentQuery('density', value, 'comfortable');
   }
 
   protected setDirection(event: Event): void {
     const value = (event.currentTarget as HTMLSelectElement).value as 'ltr' | 'rtl';
     this.prefs.direction.set(value);
-    this.updateEnvironmentQuery('direction', value, 'ltr');
+    void this.updateEnvironmentQuery('direction', value, 'ltr');
   }
 
   protected setLocale(event: Event): void {
@@ -146,19 +169,19 @@ export class App {
   protected setMotion(event: Event): void {
     const value = (event.currentTarget as HTMLSelectElement).value as DocsMotion;
     this.prefs.motion.set(value);
-    this.updateEnvironmentQuery('motion', value, 'system');
+    void this.updateEnvironmentQuery('motion', value, 'system');
   }
 
   protected setViewport(event: Event): void {
     const value = (event.currentTarget as HTMLSelectElement).value as DocsViewport;
     this.prefs.viewport.set(value);
-    this.updateEnvironmentQuery('viewport', value, 'responsive');
+    void this.updateEnvironmentQuery('viewport', value, 'responsive');
   }
 
   protected setBrandColor(event: Event): void {
     const value = (event.currentTarget as HTMLInputElement).value.toLowerCase();
     this.prefs.brand.set(value);
-    this.updateEnvironmentQuery('brandColor', value, '#4666da');
+    void this.updateEnvironmentQuery('brandColor', value, '#4666da');
   }
 
   private updateEnvironmentQuery(

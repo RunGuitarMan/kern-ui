@@ -1,8 +1,10 @@
 import { existsSync } from 'node:fs';
-import { readFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { readFile, readdir } from 'node:fs/promises';
+import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isDeepStrictEqual } from 'node:util';
+
+import ts from 'typescript';
 
 const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const defaultManifestPath = resolve(workspaceRoot, 'projects/kern/package.json');
@@ -14,7 +16,11 @@ const licensePath = resolve(workspaceRoot, 'projects/kern/LICENSE');
 const companionManifestPath = resolve(workspaceRoot, 'projects/kern-mcp/package.json');
 const companionReadmePath = resolve(workspaceRoot, 'projects/kern-mcp/README.md');
 const companionTypesPath = resolve(workspaceRoot, 'projects/kern-mcp/lib.d.mts');
+const packageSourceRoot = resolve(workspaceRoot, 'projects/kern');
 const issues = [];
+
+const ignoredSourceDirectories = new Set(['agent', 'api', 'mcp']);
+const sourceExtensions = new Set(['.js', '.mjs', '.ts']);
 
 function option(name, fallback) {
   const prefix = `--${name}=`;
@@ -28,6 +34,98 @@ async function readJson(path) {
 
 function report(message) {
   issues.push(message);
+}
+
+function sourceExtension(path) {
+  const match = path.match(/\.[^.]+$/);
+  return match?.[0] ?? '';
+}
+
+function isProductionSource(path) {
+  const relativePath = relative(packageSourceRoot, path).split(sep).join('/');
+  const [root] = relativePath.split('/');
+  return (
+    !ignoredSourceDirectories.has(root) &&
+    sourceExtensions.has(sourceExtension(path)) &&
+    !/(?:^|\/)[^/]+\.(?:spec|test)\.[cm]?[jt]s$/.test(relativePath)
+  );
+}
+
+async function productionSourceFiles(directory = packageSourceRoot) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = await Promise.all(
+    entries.map(async (entry) => {
+      if (directory === packageSourceRoot && ignoredSourceDirectories.has(entry.name)) return [];
+      const path = join(directory, entry.name);
+      if (entry.isDirectory()) return productionSourceFiles(path);
+      return entry.isFile() && isProductionSource(path) ? [path] : [];
+    }),
+  );
+  return files.flat().sort();
+}
+
+function externalPackageName(specifier) {
+  if (
+    !specifier ||
+    specifier.startsWith('.') ||
+    specifier.startsWith('/') ||
+    specifier.startsWith('node:') ||
+    specifier === '@kern-ui/angular' ||
+    specifier.startsWith('@kern-ui/angular/')
+  ) {
+    return null;
+  }
+  const segments = specifier.split('/');
+  return specifier.startsWith('@') ? segments.slice(0, 2).join('/') : segments[0];
+}
+
+function staticModuleSpecifiers(path, source) {
+  const kind = path.endsWith('.js') || path.endsWith('.mjs') ? ts.ScriptKind.JS : ts.ScriptKind.TS;
+  const sourceFile = ts.createSourceFile(path, source, ts.ScriptTarget.Latest, true, kind);
+  const specifiers = new Set();
+  const add = (node) => {
+    if (node && ts.isStringLiteralLike(node)) specifiers.add(node.text);
+  };
+  const visit = (node) => {
+    if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) {
+      add(node.moduleSpecifier);
+    } else if (
+      ts.isImportEqualsDeclaration(node) &&
+      ts.isExternalModuleReference(node.moduleReference)
+    ) {
+      add(node.moduleReference.expression);
+    } else if (ts.isCallExpression(node)) {
+      const callee = node.expression;
+      if (
+        callee.kind === ts.SyntaxKind.ImportKeyword ||
+        (ts.isIdentifier(callee) && callee.text === 'require') ||
+        (ts.isPropertyAccessExpression(callee) &&
+          ts.isIdentifier(callee.expression) &&
+          callee.expression.text === 'require' &&
+          callee.name.text === 'resolve')
+      ) {
+        add(node.arguments[0]);
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+  return specifiers;
+}
+
+async function sourceExternalImports() {
+  const imports = new Map();
+  for (const path of await productionSourceFiles()) {
+    const source = await readFile(path, 'utf8');
+    for (const specifier of staticModuleSpecifiers(path, source)) {
+      const packageName = externalPackageName(specifier);
+      if (!packageName) continue;
+      const locations = imports.get(packageName) ?? new Set();
+      locations.add(relative(workspaceRoot, path).split(sep).join('/'));
+      imports.set(packageName, locations);
+    }
+  }
+  return imports;
 }
 
 function parseVersion(value) {
@@ -78,15 +176,15 @@ function rangeWithin(candidateRange, supportedRange) {
 async function main() {
   const manifestPath = option('manifest', defaultManifestPath);
   const policyPath = option('policy', defaultPolicyPath);
-  const [manifest, companionManifest, policy, workspaceManifest, workspaceLock] = await Promise.all(
-    [
+  const [manifest, companionManifest, policy, workspaceManifest, workspaceLock, externalImports] =
+    await Promise.all([
       readJson(manifestPath),
       readJson(companionManifestPath),
       readJson(policyPath),
       readJson(workspaceManifestPath),
       readJson(workspaceLockPath),
-    ],
-  );
+      sourceExternalImports(),
+    ]);
   const angularBuildTypeScriptRange =
     workspaceLock.packages?.['node_modules/@angular/build']?.peerDependencies?.typescript;
   const expectedRepository = {
@@ -100,7 +198,7 @@ async function main() {
     provenance: true,
   };
 
-  if (policy.schemaVersion !== 1) report('release-policy.json schemaVersion must be 1.');
+  if (policy.schemaVersion !== 2) report('release-policy.json schemaVersion must be 2.');
   if (manifest.name !== policy.packageName) report(`Package name must be ${policy.packageName}.`);
   if (manifest.license !== policy.license) report(`Package license must be ${policy.license}.`);
   if (!isDeepStrictEqual(manifest.repository, expectedRepository)) {
@@ -123,6 +221,43 @@ async function main() {
   }
   if (!isDeepStrictEqual(manifest.peerDependenciesMeta, policy.peerDependenciesMeta)) {
     report('Package optional peer metadata differs from release policy.');
+  }
+  const declaredRuntimePackages = new Set([
+    ...Object.keys(manifest.dependencies ?? {}),
+    ...Object.keys(manifest.peerDependencies ?? {}),
+  ]);
+  for (const [packageName, locations] of externalImports) {
+    if (!declaredRuntimePackages.has(packageName)) {
+      report(
+        `Production source imports undeclared package ${packageName} ` +
+          `(${[...locations].sort().join(', ')}).`,
+      );
+    }
+  }
+  for (const packageName of policy.frameworkPeerPackages ?? []) {
+    if (manifest.dependencies?.[packageName]) {
+      report(`Framework package ${packageName} must be a peerDependency, not a dependency.`);
+    }
+    if (!manifest.peerDependencies?.[packageName]) {
+      report(`Framework package ${packageName} must be declared as a peerDependency.`);
+    }
+    if (!externalImports.has(packageName)) {
+      report(`Framework peer ${packageName} is not used by production package source.`);
+    }
+  }
+  for (const packageName of policy.toolingPeerPackages ?? []) {
+    if (manifest.dependencies?.[packageName]) {
+      report(`Tooling package ${packageName} must be an optional peerDependency.`);
+    }
+    if (!manifest.peerDependencies?.[packageName]) {
+      report(`Tooling package ${packageName} must be declared as a peerDependency.`);
+    }
+    if (manifest.peerDependenciesMeta?.[packageName]?.optional !== true) {
+      report(`Tooling peer ${packageName} must be optional for runtime-only consumers.`);
+    }
+    if (!externalImports.has(packageName)) {
+      report(`Tooling peer ${packageName} is not used by published schematics source.`);
+    }
   }
   if (
     !supportsVersion(

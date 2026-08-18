@@ -26,15 +26,23 @@
     "provenance": true
   },
   "peerDependencies": {
+    "@angular-devkit/schematics": "^22.0.0",
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
     "@angular/cdk": "^22.0.0",
     "@angular/aria": "^22.0.0",
+    "@schematics/angular": "^22.0.0",
     "rxjs": "^7.4.0",
     "typescript": ">=6.0.0 <6.1.0"
   },
   "peerDependenciesMeta": {
+    "@angular-devkit/schematics": {
+      "optional": true
+    },
+    "@schematics/angular": {
+      "optional": true
+    },
     "typescript": {
       "optional": true
     }

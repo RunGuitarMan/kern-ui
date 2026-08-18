@@ -43,12 +43,12 @@ void bootstrapApplication(KernStatusBadgeAgentExample);
 
 ## API
 
-| Name      | Kind  | Type              | Required | Default     | Description                                                                      |
-| --------- | ----- | ----------------- | -------- | ----------- | -------------------------------------------------------------------------------- |
-| `tone`    | input | `KrnDisplayTone`  | no       | `'neutral'` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
-| `status`  | input | `boolean`         | no       | `false`     | Current domain status rendered as visible text and a non-color-only treatment.   |
-| `variant` | input | `KrnBadgeVariant` | no       | `'subtle'`  | Controls whether the badge uses a filled, tinted, or outlined surface.           |
-| `size`    | input | `KrnBadgeSize`    | no       | `'md'`      | Controls the badge height, horizontal padding, and text density.                 |
+| Name      | Kind  | Type              | Required | Default     | Description                                                                        |
+| --------- | ----- | ----------------- | -------- | ----------- | ---------------------------------------------------------------------------------- |
+| `tone`    | input | `KrnDisplayTone`  | no       | `'neutral'` | Semantic intent that selects coordinated text, icon, border, and surface tokens.   |
+| `status`  | input | `boolean`         | no       | `false`     | Uses the shared, subtle status recipe and renders a semantic color marker.         |
+| `variant` | input | `KrnBadgeVariant` | no       | `'subtle'`  | Controls non-status badges. Status badges always use the shared subtle appearance. |
+| `size`    | input | `KrnBadgeSize`    | no       | `'md'`      | Controls the badge height, horizontal padding, and text density.                   |
 
 ## Deprecated selectors
 

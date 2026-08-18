@@ -3,6 +3,7 @@ import { existsSync } from 'node:fs';
 import { cp, mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import { gzipSync } from 'node:zlib';
 import { basename, join, relative, resolve, sep } from 'node:path';
+import { isDeepStrictEqual } from 'node:util';
 
 const workspaceRoot = resolve(import.meta.dirname, '..');
 const packageRoot = join(workspaceRoot, 'dist/kern');
@@ -13,6 +14,7 @@ const runtimeEntrypointsConfigPath = join(
   'projects/kern/api/runtime-entrypoints.json',
 );
 const testingEntrypointsConfigPath = join(workspaceRoot, 'projects/kern/testing/entrypoints.json');
+const releasePolicyPath = join(workspaceRoot, 'projects/kern/api/release-policy.json');
 const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const failures = [];
 
@@ -96,7 +98,7 @@ function exportTargetExists(files, target) {
   return [...files].some((path) => matcher.test(path));
 }
 
-async function verifyInstalledPackage(consumerRoot, requiredSubpaths) {
+async function verifyInstalledPackage(consumerRoot, requiredSubpaths, releasePolicy) {
   const installedRoot = join(consumerRoot, 'node_modules/@kern-ui/angular');
   const manifestPath = join(installedRoot, 'package.json');
   if (!existsSync(manifestPath)) {
@@ -107,6 +109,25 @@ async function verifyInstalledPackage(consumerRoot, requiredSubpaths) {
   const installedFiles = new Set(await packageFiles(installedRoot));
   if (manifest.name !== '@kern-ui/angular') {
     fail(`Packed manifest has unexpected name "${manifest.name ?? '<missing>'}".`);
+  }
+  if (!isDeepStrictEqual(manifest.dependencies ?? {}, releasePolicy.dependencies)) {
+    fail('Packed dependencies differ from the reviewed release policy.');
+  }
+  if (!isDeepStrictEqual(manifest.peerDependencies ?? {}, releasePolicy.peerDependencies)) {
+    fail('Packed peerDependencies differ from the reviewed release policy.');
+  }
+  if (
+    !isDeepStrictEqual(
+      manifest.peerDependenciesMeta ?? {},
+      releasePolicy.peerDependenciesMeta ?? {},
+    )
+  ) {
+    fail('Packed peerDependenciesMeta differ from the reviewed release policy.');
+  }
+  for (const packageName of releasePolicy.frameworkPeerPackages ?? []) {
+    if (manifest.dependencies?.[packageName] || !manifest.peerDependencies?.[packageName]) {
+      fail(`Packed framework package ${packageName} must be a peerDependency only.`);
+    }
   }
 
   for (const requiredSubpath of requiredSubpaths) {
@@ -304,6 +325,7 @@ async function main() {
     fixtureTemplateRoot,
     runtimeEntrypointsConfigPath,
     testingEntrypointsConfigPath,
+    releasePolicyPath,
   ]) {
     if (!existsSync(requiredPath)) {
       throw new Error(
@@ -318,6 +340,7 @@ async function main() {
   );
   const runtimeEntrypointsConfig = JSON.parse(await readFile(runtimeEntrypointsConfigPath, 'utf8'));
   const testingEntrypointsConfig = JSON.parse(await readFile(testingEntrypointsConfigPath, 'utf8'));
+  const releasePolicy = JSON.parse(await readFile(releasePolicyPath, 'utf8'));
   if (
     !runtimeEntrypointsConfig ||
     !Array.isArray(runtimeEntrypointsConfig.entrypoints) ||
@@ -375,7 +398,7 @@ async function main() {
       { cwd: consumerRoot },
     );
 
-    await verifyInstalledPackage(consumerRoot, requiredSubpaths);
+    await verifyInstalledPackage(consumerRoot, requiredSubpaths, releasePolicy);
 
     const ngCliPath = join(consumerRoot, 'node_modules/@angular/cli/bin/ng.js');
     const tscCliPath = join(consumerRoot, 'node_modules/typescript/bin/tsc');

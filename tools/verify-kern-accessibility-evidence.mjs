@@ -9,7 +9,7 @@ const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const defaultEvidencePath = resolve(workspaceRoot, 'docs/accessibility/manual-evidence.json');
 const defaultSchemaPath = resolve(workspaceRoot, 'docs/accessibility/manual-evidence.schema.json');
 const defaultLifecyclePath = resolve(workspaceRoot, 'projects/kern/api/lifecycle.json');
-const packageManifestPath = resolve(workspaceRoot, 'projects/kern/package.json');
+const defaultPackageManifestPath = resolve(workspaceRoot, 'projects/kern/package.json');
 const requiredRecordIds = new Set([
   'jaws-edge-windows',
   'keyboard-only-windows',
@@ -24,7 +24,7 @@ const screenReaderRecords = new Set([
   'voiceover-safari-macos',
 ]);
 const validStatuses = new Set(['pending', 'pass', 'fail', 'blocked']);
-const validModes = new Set(['local', 'release', 'promotion']);
+const validModes = new Set(['local', 'pre-1-release', 'release', 'promotion']);
 const issues = [];
 
 function option(name, fallback) {
@@ -253,6 +253,7 @@ async function main() {
   const evidencePath = option('evidence', defaultEvidencePath);
   const schemaPath = option('schema', defaultSchemaPath);
   const lifecyclePath = option('lifecycle', defaultLifecyclePath);
+  const packageManifestPath = option('package-manifest', defaultPackageManifestPath);
   const [evidence, evidenceSchema, lifecycle, packageManifest] = await Promise.all([
     readJson(evidencePath, 'Manual accessibility evidence'),
     readJson(schemaPath, 'Manual accessibility evidence schema'),
@@ -286,7 +287,7 @@ async function main() {
   if (evidence.$schema !== './manual-evidence.schema.json') {
     report('Manual evidence must reference ./manual-evidence.schema.json.');
   }
-  if (evidence.schemaVersion !== 2) report('Manual evidence schemaVersion must be 2.');
+  if (evidence.schemaVersion !== 3) report('Manual evidence schemaVersion must be 3.');
   if (evidence.libraryVersion !== packageManifest.version) {
     report(
       `Manual evidence version ${evidence.libraryVersion} does not match package ${packageManifest.version}.`,
@@ -340,6 +341,14 @@ async function main() {
     evidence.policy.promotionMaxAgeDays < 1
   ) {
     report('Manual evidence policy.promotionMaxAgeDays must be a positive integer.');
+  }
+  if (evidence.policy?.pre1ReleaseAllowsPending !== true) {
+    report('Manual evidence policy.pre1ReleaseAllowsPending must be true.');
+  }
+  if (mode === 'pre-1-release' && !/^0\./.test(packageManifest.version)) {
+    report(
+      `Pre-1 release mode requires a 0.x package version; received ${packageManifest.version}.`,
+    );
   }
 
   if (!Array.isArray(evidence.targetComponentIds) || evidence.targetComponentIds.length === 0) {
@@ -411,6 +420,39 @@ async function main() {
         evidence.policy.releaseMaxAgeDays,
         now,
       );
+    }
+
+    if (mode === 'pre-1-release' && Number.isInteger(evidence.policy?.releaseMaxAgeDays)) {
+      const releaseRecords = evidence.records.filter((record) => record.releaseBlocking);
+      for (const record of releaseRecords) {
+        if (record.status === 'fail' || record.status === 'blocked') {
+          report(
+            `Pre-1 release gate rejects "${record.id}" with status ${record.status}; ` +
+              'only pending or passing evidence is allowed.',
+          );
+        }
+        if (record.status === 'pass' && !isFresh(record, evidence.policy.releaseMaxAgeDays, now)) {
+          report(
+            `Pre-1 release gate requires fresh "${record.id}" passing evidence no older than ` +
+              `${evidence.policy.releaseMaxAgeDays} days.`,
+          );
+        }
+      }
+      if (evidence.certification?.status === 'certified') {
+        enforcePassingRecords(
+          releaseRecords,
+          'Certified pre-1 release gate',
+          evidence.policy.releaseMaxAgeDays,
+          now,
+        );
+        enforceCertificationTiming(
+          evidence.certification,
+          releaseRecords,
+          'Certified pre-1 release gate',
+          evidence.policy.releaseMaxAgeDays,
+          now,
+        );
+      }
     }
 
     if (mode === 'promotion' && Number.isInteger(evidence.policy?.promotionMaxAgeDays)) {

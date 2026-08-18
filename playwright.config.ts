@@ -2,7 +2,7 @@
 
 import { defineConfig, devices } from '@playwright/test';
 
-const docsUrl = 'http://localhost:4200';
+const docsUrl = 'http://127.0.0.1:4200';
 const reuseExistingServer = process.env['KERN_E2E_REUSE_SERVER'] === 'true';
 const chromiumExecutablePath = process.env['PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH']?.trim();
 const chromiumLaunchOptions = chromiumExecutablePath

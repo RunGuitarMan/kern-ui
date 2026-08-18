@@ -792,7 +792,7 @@ async function main() {
     readJson(workspaceLockPath, 'Workspace dependency lock'),
     sha256(workspaceLockPath),
   ]);
-  if (policy.schemaVersion !== 1) report('Release policy schemaVersion must be 1.');
+  if (policy.schemaVersion !== 2) report('Release policy schemaVersion must be 2.');
   if (
     typeof policy.companionPackage?.packageName !== 'string' ||
     typeof policy.companionPackage?.directory !== 'string' ||

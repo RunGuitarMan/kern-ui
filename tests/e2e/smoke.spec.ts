@@ -442,7 +442,7 @@ test.describe('Docs preview smoke contracts', () => {
     const sharedUrl = page.url();
     const primaryAction = page
       .getByTestId('component-specimen-button')
-      .getByRole('button', { name: 'Publish changes' });
+      .getByRole('button', { name: /^(Publish changes|Опубликовать изменения)$/ });
     await expect(primaryAction).toHaveAttribute('data-variant', 'soft');
     await expect(primaryAction).not.toHaveAttribute('aria-busy');
     await expect(primaryAction.getByRole('status')).toHaveText('Загрузка…');

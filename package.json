@@ -66,7 +66,11 @@
     "affected:test": "nx affected -t test,test-hydration,test-specimens",
     "affected:lint": "nx affected -t lint",
     "package:dry-run": "npm pack ./dist/kern --dry-run && npm pack ./dist/kern-mcp --dry-run",
-    "verify": "npm run verify:tokens && npm run contracts:check && npm run verify:component-inventory && npm run agent:examples:check && npm run agent:contract:check && npm run agent:showcase:check && npm run verify:specimens && npm run verify:playground && npm run format:check && npm run lint && npm run verify:entrypoint-boundaries && npm run build:kern && npm run verify:source-pollution && npm run typecheck && npm run typecheck:browser-tests && npm run test && npm run build && npm run verify:vite-dev && npm run verify:styles && npm run verify:entrypoint-identity && npm run verify:api && npm run verify:api-baseline && npm run verify:lifecycle && npm run verify:accessibility-evidence && npm run verify:package-policy && npm run verify:testing-entrypoint && npm run verify:consumers && npm run verify:agent-dx && npm run package:dry-run",
+    "verify:contracts": "npm run verify:tokens && npm run contracts:check && npm run verify:component-inventory && npm run agent:examples:check && npm run agent:contract:check && npm run agent:showcase:check && npm run verify:specimens && npm run verify:playground && npm run format:check && npm run verify:entrypoint-boundaries && npm run verify:lifecycle && npm run verify:accessibility-evidence && npm run verify:package-policy",
+    "verify:code": "npm run lint && npm run typecheck && npm run typecheck:browser-tests && npm run test",
+    "verify:package": "npm run build:kern && npm run verify:source-pollution && npm run verify:styles && npm run verify:entrypoint-identity && npm run verify:api && npm run verify:api-baseline && npm run verify:package-policy && npm run verify:testing-entrypoint && npm run verify:consumers && npm run verify:agent-dx && npm run package:dry-run",
+    "verify:workspace": "npm run build && npm run verify:vite-dev",
+    "verify": "npm run verify:contracts && npm run verify:code && npm run verify:package && npm run verify:workspace",
     "serve:ssr:docs": "node dist/docs/server/server.mjs"
   },
   "private": true,

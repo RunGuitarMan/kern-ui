@@ -1,8 +1,9 @@
 {
   "$schema": "./manual-evidence.schema.json",
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "libraryVersion": "0.1.0",
   "policy": {
+    "pre1ReleaseAllowsPending": true,
     "releaseMaxAgeDays": 365,
     "promotionMaxAgeDays": 180
   },

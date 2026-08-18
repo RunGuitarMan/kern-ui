@@ -64,7 +64,8 @@ browser, operating system, screen-reader, input, and enterprise policy matrix.
 Kern tracks its own manual target matrix in
 [accessibility/manual-evidence.json](accessibility/manual-evidence.json). Every initial record is
 `pending` and the certification status is explicitly `not-certified`; Playwright results cannot
-change a manual record to passing evidence.
+change a manual record to passing evidence. Pre-1.0 package releases may ship with this explicit
+non-certification status, while failed or blocked required records still prevent publication.
 
 ## Adding a supported browser
 
