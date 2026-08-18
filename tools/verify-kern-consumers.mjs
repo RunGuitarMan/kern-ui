@@ -386,14 +386,7 @@ async function main() {
 
     run(
       npmCommand,
-      [
-        'install',
-        archivePath,
-        '--ignore-scripts',
-        '--save-exact',
-        '--no-audit',
-        '--no-fund',
-      ],
+      ['install', archivePath, '--ignore-scripts', '--save-exact', '--no-audit', '--no-fund'],
       { cwd: consumerRoot },
     );
 
