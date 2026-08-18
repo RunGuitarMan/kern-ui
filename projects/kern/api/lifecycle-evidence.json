@@ -142,7 +142,7 @@
     "catalog-keyboard": {
       "path": "tests/e2e/quality-regressions.spec.ts",
       "anchor": "visible enabled controls are keyboard reachable without focus geometry shifts",
-      "sha256": "sha256-13bfe9287fcba8d6aad4eeae89ed7b9e8a1bba050dd91722cdfaa84d8373e62b"
+      "sha256": "sha256-09cbdea080f97495224bff8391f74ba9f34a771cc814264bfa27dcb69ca54611"
     },
     "catalog-ssr": {
       "path": "tests/e2e/component-specimens.spec.ts",

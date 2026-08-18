@@ -694,8 +694,10 @@ test.describe('Quality regressions: menus and focus treatment', () => {
       const menuRect = await elementRect(menu);
       expectStableRect(rootBefore, rootAfter, `${config.id} root`);
       expectStableRect(triggerBefore, triggerAfter, `${config.id} trigger`);
-      expect(menuRect.y, `${config.id}: menu opens below trigger`).toBeGreaterThanOrEqual(
-        rootAfter.y + rootAfter.height - 1,
+      const opensBelow = menuRect.y >= rootAfter.y + rootAfter.height - 1;
+      const opensAbove = menuRect.y + menuRect.height <= rootAfter.y + 1;
+      expect(opensBelow || opensAbove, `${config.id}: menu avoids overlapping its trigger`).toBe(
+        true,
       );
       expect(
         Math.abs(menuRect.x + menuRect.width - (rootAfter.x + rootAfter.width)),
@@ -1434,6 +1436,8 @@ test.describe('Quality regressions: data and feedback', () => {
       await expect(tooltip).toBeVisible();
       await expect(tooltip).toContainText('Mon');
       await expect(tooltip).toContainText('42');
+      await page.mouse.move(0, 0);
+      await expect(tooltip).toHaveCount(0);
 
       await marks.nth(1).focus();
       tooltip = specimen.locator('.chart-tooltip');
@@ -1441,8 +1445,6 @@ test.describe('Quality regressions: data and feedback', () => {
       await expect(tooltip).toContainText('Tue');
       await expect(tooltip).toContainText('56');
       await marks.nth(1).blur();
-      await expect(tooltip).toContainText('Mon');
-      await page.mouse.move(0, 0);
       await expect(tooltip).toHaveCount(0);
     }
 

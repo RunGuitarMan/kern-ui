@@ -95,7 +95,7 @@ test.describe('Docs smoke contracts', () => {
     await expect(page.getByRole('complementary', { name: 'Документация' })).toContainText(
       'Основные компоненты',
     );
-    await expect(page.getByRole('heading', { level: 2, name: 'Попробуйте Button' })).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Пример: Button' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Сбросить' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Опубликовать изменения' })).toBeVisible();
     await expect(page.locator('[data-control-key="variant"] .property-name')).toHaveText('variant');
@@ -177,7 +177,7 @@ test.describe('Docs preview smoke contracts', () => {
 
     await expect(page.getByTestId('specimen-stage')).toHaveAttribute('lang', 'ru-RU');
     await expect(page.locator('.preview-header strong')).toHaveText('Button');
-    await expect(page.getByRole('heading', { level: 2, name: 'Попробуйте Button' })).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Пример: Button' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Опубликовать изменения' })).toBeVisible();
     assertNoRuntimeErrors();
   });

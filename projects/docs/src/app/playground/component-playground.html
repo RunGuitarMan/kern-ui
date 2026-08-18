@@ -112,6 +112,12 @@
     id="code-panel"
     class="code-panel"
     [attr.aria-label]="tr('playground.codeAria', 'Angular code example')"
+    [attr.aria-description]="
+      tr(
+        'playground.codeNote',
+        'Base scaffold is strict-AOT verified; current controls form a preview snapshot.'
+      )
+    "
     [hidden]="activeTab() !== 'code'"
     [krnTheme]="theme()"
     [krnDensity]="density()"

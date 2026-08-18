@@ -128,6 +128,8 @@ export const RU_TEXT: Readonly<Record<string, string>> = Object.freeze({
   'playground.tabletCanvas': 'Планшет · 768 px',
   'playground.highContrast': 'высокая контрастность',
   'playground.codeAria': 'Пример Angular-кода',
+  'playground.codeNote':
+    'Базовый шаблон проверен строгой AOT-компиляцией; текущие настройки формируют снимок предпросмотра.',
   'playground.properties': 'Свойства',
   'playground.configure': 'Настройте пример',
   'playground.propertiesCount': 'свойств',
