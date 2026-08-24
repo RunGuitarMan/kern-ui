@@ -112,7 +112,7 @@
     "@playwright/test": "1.62.0",
     "@schematics/angular": "22.0.8",
     "@types/express": "^5.0.1",
-    "@types/node": "26.1.2",
+    "@types/node": "26.2.0",
     "axe-core": "4.12.1",
     "eslint": "10.8.0",
     "jsdom": "^30.0.0",
