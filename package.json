@@ -110,7 +110,7 @@
     "@nx/eslint-plugin": "23.1.0",
     "@nx/workspace": "23.1.0",
     "@playwright/test": "1.62.0",
-    "@schematics/angular": "22.0.8",
+    "@schematics/angular": "22.1.5",
     "@types/express": "^5.0.1",
     "@types/node": "26.1.2",
     "axe-core": "4.12.1",
