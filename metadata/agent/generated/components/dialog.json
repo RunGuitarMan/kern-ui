@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Dialog. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "summary": "Dialog. Opens a modal or non-modal task surface with title, description, actions, and focus restoration.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -199,7 +199,7 @@
       "type": "TemplateRef<unknown> | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Template used to render the component body with its typed context.",
+      "description": "Template or projected content used to render content.",
       "descriptionSource": "inferred"
     },
     {
@@ -209,7 +209,7 @@
       "type": "TemplateRef<unknown> | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Template used to render product-owned actions in the designated slot.",
+      "description": "Template or projected content used to render actions.",
       "descriptionSource": "inferred"
     },
     {
@@ -492,7 +492,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component eyebrow contract.",
+        "description": "Human-readable copy for the eyebrow state or control.",
         "binding": {
           "kind": "input",
           "publicName": "eyebrow",

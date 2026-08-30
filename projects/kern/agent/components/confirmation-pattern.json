@@ -16,7 +16,7 @@
     "selectors": ["krn-confirmation"],
     "componentIds": []
   },
-  "summary": "Confirmation Pattern. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "summary": "Confirmation Pattern. Adds an explicit confirmation step before a consequential product action.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -129,11 +129,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Escape closes modal layers", "Focus returns to the trigger"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible copy and semantic role communicate feedback independently of color or motion.",
+      "Announcements use only the urgency required by the message."
     ],
     "manualValidationRequired": true
   },
@@ -174,8 +173,8 @@
     "cancelled"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Confirmation Pattern for this specific contract: Adds an explicit confirmation step before a consequential product action.",
+    "avoidWhen": "Do not choose Confirmation Pattern for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -217,7 +216,7 @@
         "kind": "text",
         "defaultValue": "Archive Northstar and pause all automations?",
         "testValue": "Archive Northstar and pause all automations? · alternate",
-        "description": "Configures the component prompt contract.",
+        "description": "Human-readable copy for the prompt state or control.",
         "binding": {
           "kind": "input",
           "publicName": "prompt",

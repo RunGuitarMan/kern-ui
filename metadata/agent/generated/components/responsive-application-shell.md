@@ -7,13 +7,13 @@
 - Lifecycle: **recipe**
 - Category: Patterns
 
-Responsive Application Shell. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.
+Responsive Application Shell. Switches application navigation and content structure across wide and narrow viewports.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Responsive Application Shell for this specific contract: Switches application navigation and content structure across wide and narrow viewports.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Responsive Application Shell for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -62,7 +62,7 @@ void bootstrapApplication(KernResponsiveApplicationShellAgentExample);
 | Name                   | Kind  | Type                  | Required | Default                         | Description                                                                   |
 | ---------------------- | ----- | --------------------- | -------- | ------------------------------- | ----------------------------------------------------------------------------- |
 | `navigationOpen`       | model | `boolean`             | no       | `false`                         | Controlled navigation open state with a matching Angular model-change output. |
-| `mainId`               | input | `string`              | no       | `this.ids.next('main-content')` | Stable identifier value used by the main contract.                            |
+| `mainId`               | input | `string`              | no       | `this.ids.next('main-content')` | Stable identifier used by the main contract.                                  |
 | `navigationLabel`      | input | `string \| undefined` | no       | `undefined`                     | Human-readable copy for the navigation state or control.                      |
 | `closeNavigationLabel` | input | `string \| undefined` | no       | `undefined`                     | Human-readable copy for the close navigation state or control.                |
 
@@ -83,10 +83,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Keyboard behavior is provided by the native elements and Kern primitives in the recipe
+- The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.
+- Loading, empty, error, and success states remain visible and programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 

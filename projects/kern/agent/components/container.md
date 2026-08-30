@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Layout
 
-Container. A composable spatial primitive that keeps product layouts predictable across containers.
+Container. Constrains content width, adds inline gutters, and aligns the content block within its parent.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Container for this specific contract: Constrains content width, adds inline gutters, and aligns the content block within its parent.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Container for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -48,12 +48,13 @@ void bootstrapApplication(KernContainerAgentExample);
 
 ## API
 
-| Name       | Kind  | Type                           | Required | Default    | Description                                                          |
-| ---------- | ----- | ------------------------------ | -------- | ---------- | -------------------------------------------------------------------- |
-| `size`     | input | `KrnContainerSize`             | no       | `'lg'`     | Named semantic size resolved through KERN density and sizing tokens. |
-| `maxWidth` | input | `KrnLayoutSpace \| null`       | no       | `null`     | Upper or lower bound applied to the width value.                     |
-| `gutter`   | input | `KrnLayoutSpace`               | no       | `'4'`      | Outer or inter-column spacing applied by the layout.                 |
-| `align`    | input | `"center" \| "end" \| "start"` | no       | `'center'` | Logical cross-axis alignment applied to children by the layout.      |
+| Name        | Kind  | Type                           | Required | Default    | Description                                                                           |
+| ----------- | ----- | ------------------------------ | -------- | ---------- | ------------------------------------------------------------------------------------- |
+| `size`      | input | `KrnContainerSize`             | no       | `'lg'`     | Named semantic size resolved through Kern density and sizing tokens.                  |
+| `maxWidth`  | input | `KrnLayoutSpace \| null`       | no       | `null`     | Upper or lower bound applied to the width value.                                      |
+| `gutter`    | input | `KrnLayoutSpace`               | no       | `'4'`      | Defines the component's gutter behavior or presentation.                              |
+| `align`     | input | `"center" \| "end" \| "start"` | no       | `'center'` | Logical cross-axis alignment applied to children by the layout.                       |
+| `intrinsic` | input | `boolean`                      | no       | `false`    | Centers projected children on the inline axis while preserving the container measure. |
 
 ## Deprecated selectors
 
@@ -69,10 +70,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Projected content retains its document order and native semantics as layout changes.
+- Logical sizing and placement work in both LTR and RTL without duplicating content.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -100,19 +100,20 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/container`
 
 Scenarios: `default`.
-Public API coverage: 4/4
+Public API coverage: 5/5
 directly controlled; 0 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument   | Control | Default    | Test value | Binding                     | Description                                 |
-| ---------- | ------- | ---------- | ---------- | --------------------------- | ------------------------------------------- |
-| `size`     | select  | `"sm"`     | `"md"`     | input `size` (property)     | Changes the maximum container width.        |
-| `align`    | select  | `"center"` | `"end"`    | input `align` (property)    | Configures the component align contract.    |
-| `gutter`   | text    | `"4"`      | `"20rem"`  | input `gutter` (property)   | Configures the component gutter contract.   |
-| `maxWidth` | text    | `""`       | `"20rem"`  | input `maxWidth` (property) | Configures the component maxWidth contract. |
+| Argument    | Control | Default    | Test value | Binding                      | Description                                                                           |
+| ----------- | ------- | ---------- | ---------- | ---------------------------- | ------------------------------------------------------------------------------------- |
+| `size`      | select  | `"sm"`     | `"md"`     | input `size` (property)      | Changes the maximum container width.                                                  |
+| `align`     | select  | `"center"` | `"end"`    | input `align` (property)     | Logical cross-axis alignment applied to children by the layout.                       |
+| `gutter`    | text    | `"4"`      | `"20rem"`  | input `gutter` (property)    | Defines the component's gutter behavior or presentation.                              |
+| `intrinsic` | boolean | `false`    | `true`     | input `intrinsic` (property) | Centers projected children on the inline axis while preserving the container measure. |
+| `maxWidth`  | text    | `""`       | `"20rem"`  | input `maxWidth` (property)  | Upper or lower bound applied to the width value.                                      |
 
 Exact API exclusions:
 

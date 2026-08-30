@@ -8,6 +8,7 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import type { KernCatalogItem } from '@kern-ui/showcase';
@@ -15,6 +16,7 @@ import {
   KernComponentSpecimen,
   findKernPlaygroundDefinition,
   type KernPlaygroundControl,
+  type KernPlaygroundStatePreset,
   type KernPlaygroundValue,
   type KernPlaygroundValues,
   type KernSpecimenScenario,
@@ -262,7 +264,14 @@ export class PreviewFixture {
 @Component({
   selector: 'kdocs-component-playground',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PreviewFixture, RouterLink, KrnThemeDirective, KrnCodeBlock, KrnCopyButton],
+  imports: [
+    PreviewFixture,
+    RouterLink,
+    NgTemplateOutlet,
+    KrnThemeDirective,
+    KrnCodeBlock,
+    KrnCopyButton,
+  ],
   templateUrl: './component-playground.html',
   styleUrl: './component-playground.css',
 })
@@ -289,15 +298,27 @@ export class ComponentPlayground {
     return definition;
   });
   protected readonly controls = computed(() => this.definition().controls);
+  protected readonly essentialControls = computed(() => {
+    const keys = new Set(this.definition().essentialControlKeys);
+    return this.controls().filter(({ key }) => keys.has(key));
+  });
   protected readonly presets = computed(() => this.definition().presets);
+  protected readonly featuredPresets = computed(() =>
+    this.definition().featuredPresetIds.flatMap((id) => {
+      const preset = this.presets().find((candidate) => candidate.id === id);
+      return preset ? [preset] : [];
+    }),
+  );
   protected readonly scenarios = computed<readonly KernSpecimenScenario[]>(
     () => this.definition().scenarios,
   );
   protected readonly state = computed(() => {
     const requested = this.queryParams().get('state');
-    return requested && this.definition().states.includes(requested) ? requested : 'default';
+    return requested && this.definition().states.includes(requested)
+      ? requested
+      : this.definition().defaultStoryId;
   });
-  private readonly selectedPreset = computed(
+  protected readonly selectedPreset = computed(
     () =>
       this.presets().find(({ id }) => id === this.state()) ??
       this.presets().find(({ id }) => id === 'default') ??
@@ -411,6 +432,23 @@ export class ComponentPlayground {
   );
   protected readonly scenario = computed<KernSpecimenScenario>(() => this.resolvedState().scenario);
   protected readonly args = computed<KernPlaygroundValues>(() => this.resolvedState().args);
+  protected readonly storyDescription = computed(() => {
+    const preset = this.selectedPreset();
+    if (!preset) return '';
+    if (preset.fixtureEffect) return preset.fixtureEffect.description;
+    if (preset.visualPseudoState) {
+      return `Shows the ${preset.label.toLocaleLowerCase()} state on the actual target control.`;
+    }
+    const changed = this.changedPresetControls(preset);
+    if (changed.length > 0) {
+      return `Applies ${changed.map(({ label }) => label.toLocaleLowerCase()).join(', ')} to the target component.`;
+    }
+    const environment = Object.keys(preset.environment ?? {});
+    if (environment.length > 0) {
+      return `Checks the same component in the ${preset.label.toLocaleLowerCase()} environment.`;
+    }
+    return `Shows the baseline ${this.item().name} composition before a state is applied.`;
+  });
   protected readonly configuredCode = computed(() => {
     return materializePublicBindings(
       this.code(),
@@ -544,6 +582,15 @@ export class ComponentPlayground {
     this.setArg(control, Number(readInput(event)), event.type === 'input');
   }
 
+  protected selectPreset(presetId: string): void {
+    const query: Record<string, string | null> = {
+      state: presetId === this.definition().defaultStoryId ? null : presetId,
+      scenario: null,
+    };
+    for (const control of this.controls()) query[`arg.${control.key}`] = null;
+    this.updateQuery(query);
+  }
+
   protected reset(): void {
     this.resetRevision.update((revision) => revision + 1);
     void this.router.navigate([], {
@@ -566,9 +613,19 @@ export class ComponentPlayground {
       query['arg.virtualize'] = null;
     }
     if (owns(this.selectedPreset()?.args ?? {}, control.key)) {
-      query['state'] = null;
+      query['state'] = this.definition().defaultStoryId === 'default' ? null : 'default';
     }
     this.updateQuery(query, replaceUrl);
+  }
+
+  private changedPresetControls(
+    preset: KernPlaygroundStatePreset,
+  ): readonly KernPlaygroundControl[] {
+    return this.controls().filter(
+      (control) =>
+        owns(preset.args, control.key) &&
+        !Object.is(preset.args[control.key], control.defaultValue),
+    );
   }
 
   private updateQuery(values: Record<string, string | null>, replaceUrl = false): void {
@@ -615,7 +672,7 @@ export class ComponentPlayground {
     const state =
       source['state'] && this.definition().states.includes(source['state'])
         ? source['state']
-        : 'default';
+        : this.definition().defaultStoryId;
     const preset =
       this.presets().find(({ id }) => id === state) ??
       this.presets().find(({ id }) => id === 'default') ??
@@ -641,7 +698,7 @@ export class ComponentPlayground {
     if (preset?.scenario === 'default' && scenario !== ENVIRONMENT_DEFAULTS.scenario) {
       query['scenario'] = scenario;
     }
-    if (state !== 'default') query['state'] = state;
+    if (state !== this.definition().defaultStoryId) query['state'] = state;
 
     const normalizedArgs = enforceComponentConstraints(
       this.item().id,

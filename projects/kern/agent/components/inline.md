@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Layout
 
-Inline. A composable spatial primitive that keeps product layouts predictable across containers.
+Inline. Arranges children horizontally with optional wrapping, gap, alignment, and inline-axis distribution.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Inline for this specific contract: Arranges children horizontally with optional wrapping, gap, alignment, and inline-axis distribution.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Inline for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -69,10 +69,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Projected content retains its document order and native semantics as layout changes.
+- Logical sizing and placement work in both LTR and RTL without duplicating content.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -107,12 +106,12 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument  | Control | Default    | Test value | Binding                    | Description                                         |
-| --------- | ------- | ---------- | ---------- | -------------------------- | --------------------------------------------------- |
-| `wrap`    | boolean | `true`     | `false`    | input `wrap` (property)    | Allows inline items to wrap onto another flex line. |
-| `align`   | select  | `"center"` | `"start"`  | input `align` (property)   | Configures the component align contract.            |
-| `gap`     | text    | `"3"`      | `"20rem"`  | input `gap` (property)     | Configures the component gap contract.              |
-| `justify` | select  | `"start"`  | `"center"` | input `justify` (property) | Configures the component justify contract.          |
+| Argument  | Control | Default    | Test value | Binding                    | Description                                                                 |
+| --------- | ------- | ---------- | ---------- | -------------------------- | --------------------------------------------------------------------------- |
+| `wrap`    | boolean | `true`     | `false`    | input `wrap` (property)    | Allows inline items to wrap onto another flex line.                         |
+| `align`   | select  | `"center"` | `"start"`  | input `align` (property)   | Cross-axis alignment of projected children within each flex line.           |
+| `gap`     | text    | `"3"`      | `"20rem"`  | input `gap` (property)     | Logical spacing between adjacent projected children and wrapped flex lines. |
+| `justify` | select  | `"start"`  | `"center"` | input `justify` (property) | Distribution of projected children along the inline axis.                   |
 
 Exact API exclusions:
 

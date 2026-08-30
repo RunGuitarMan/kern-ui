@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Forms
 
-Search Input. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Search Input. Captures a query, provides a clear action, and emits explicit search submission.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Search Input for this specific contract: Captures a query, provides a clear action, and emits explicit search submission.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Search Input for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -55,19 +55,19 @@ void bootstrapApplication(KernSearchInputAgentExample);
 
 | Name              | Kind   | Type                  | Required | Default     | Description                                                                                      |
 | ----------------- | ------ | --------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`              | no       | `''`        | Stable identifier value used by the id contract.                                                 |
-| `name`            | input  | `string`              | no       | `''`        | Required human-readable name for the represented person, item, or action.                        |
+| `id`              | input  | `string`              | no       | `''`        | Stable identifier used by the id contract.                                                       |
+| `name`            | input  | `string`              | no       | `''`        | Native form-control name forwarded to the owned interactive element.                             |
 | `placeholder`     | input  | `string \| undefined` | no       | `undefined` | Short input hint shown only while no value is present.                                           |
 | `ariaLabel`       | input  | `string \| undefined` | no       | `undefined` | Accessible name used when visible content is not sufficient.                                     |
 | `ariaLabelledBy`  | input  | `string`              | no       | `''`        | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input  | `string`              | no       | `''`        | Space-separated element ids composed with Form Field hints and validation descriptions.          |
 | `clearLabel`      | input  | `string \| undefined` | no       | `undefined` | Human-readable copy for the clear state or control.                                              |
 | `autocomplete`    | input  | `string`              | no       | `'off'`     | Native autocomplete purpose forwarded to the editable control.                                   |
-| `enterKeyHint`    | input  | `string`              | no       | `'search'`  | Native virtual-keyboard action hint forwarded to the editable control.                           |
+| `enterKeyHint`    | input  | `string`              | no       | `'search'`  | Defines the component's enter key hint behavior or presentation.                                 |
 | `value`           | input  | `string \| undefined` | no       | `undefined` | Controlled component value.                                                                      |
 | `minLength`       | input  | `number \| undefined` | no       | `undefined` | Upper or lower bound applied to the length value.                                                |
 | `maxLength`       | input  | `number \| undefined` | no       | `undefined` | Upper or lower bound applied to the length value.                                                |
-| `spellcheck`      | input  | `boolean`             | no       | `true`      | Native spell-checking preference forwarded to the editable control.                              |
+| `spellcheck`      | input  | `boolean`             | no       | `true`      | Defines the component's spellcheck behavior or presentation.                                     |
 | `disabled`        | input  | `boolean`             | no       | `false`     | Prevents user interaction and participates in the disabled-state contract.                       |
 | `readonly`        | input  | `boolean`             | no       | `false`     | Keeps the value perceivable while preventing user edits.                                         |
 | `required`        | input  | `boolean`             | no       | `false`     | Marks the value as required and participates in Angular Forms validation.                        |
@@ -89,12 +89,10 @@ Angular Forms control with value type `string`.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab focuses the search field and its clear action
+- Enter submits the current query; Escape dismisses transient suggestions when present
+- The real form control retains its visible name, described-by relationships, and Angular state.
+- Required, readonly, disabled, and invalid states remain programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -144,13 +142,13 @@ component inputs or models.
 | `disabled`     | boolean | `false`                    | `true`                                 | input `disabled` (property)     | Prevents user interaction.                                                |
 | `readOnly`     | boolean | `false`                    | `true`                                 | input `readonly` (property)     | Keeps the value focusable while preventing edits.                         |
 | `invalid`      | boolean | `false`                    | `true`                                 | input `invalid` (property)      | Exposes the invalid visual and ARIA state.                                |
-| `autocomplete` | text    | `"off"`                    | `"off · alternate"`                    | input `autocomplete` (property) | Configures the component autocomplete contract.                           |
-| `enterKeyHint` | text    | `"search"`                 | `"search · alternate"`                 | input `enterKeyHint` (property) | Configures the component enterKeyHint contract.                           |
-| `id`           | text    | `""`                       | `"Alternate value"`                    | input `id` (property)           | Configures the component id contract.                                     |
-| `maxLength`    | number  | `100`                      | `101`                                  | input `maxLength` (property)    | Configures the component maxLength contract.                              |
-| `minLength`    | number  | `0`                        | `1`                                    | input `minLength` (property)    | Configures the component minLength contract.                              |
+| `autocomplete` | text    | `"off"`                    | `"off · alternate"`                    | input `autocomplete` (property) | Native autocomplete purpose forwarded to the editable control.            |
+| `enterKeyHint` | text    | `"search"`                 | `"search · alternate"`                 | input `enterKeyHint` (property) | Defines the component's enter key hint behavior or presentation.          |
+| `id`           | text    | `""`                       | `"Alternate value"`                    | input `id` (property)           | Stable identifier used by the id contract.                                |
+| `maxLength`    | number  | `100`                      | `101`                                  | input `maxLength` (property)    | Upper or lower bound applied to the length value.                         |
+| `minLength`    | number  | `0`                        | `1`                                    | input `minLength` (property)    | Upper or lower bound applied to the length value.                         |
 | `required`     | boolean | `false`                    | `true`                                 | input `required` (property)     | Marks the value as required and participates in Angular Forms validation. |
-| `spellcheck`   | boolean | `true`                     | `false`                                | input `spellcheck` (property)   | Configures the component spellcheck contract.                             |
+| `spellcheck`   | boolean | `true`                     | `false`                                | input `spellcheck` (property)   | Defines the component's spellcheck behavior or presentation.              |
 | `value`        | text    | `""`                       | `"Alternate value"`                    | input `value` (property)        | Controlled component value.                                               |
 
 Exact API exclusions:
@@ -177,7 +175,7 @@ Presets:
 - `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
 - `active` — Active; scenario `default`; visual state `active`.
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
-- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `filled` — filled; scenario `default`; `value="Northstar"`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
 - `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
 - `readonly` — Readonly; scenario `default`; `readOnly=true`.
 - `required` — Required; scenario `default`; `required=true`.

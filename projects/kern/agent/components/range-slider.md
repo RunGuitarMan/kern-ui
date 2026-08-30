@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Forms
 
-Range Slider. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Range Slider. Selects a bounded numeric interval with independently labelled start and end thumbs.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Range Slider for this specific contract: Selects a bounded numeric interval with independently labelled start and end thumbs.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Range Slider for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -57,7 +57,7 @@ void bootstrapApplication(KernRangeSliderAgentExample);
 
 | Name             | Kind   | Type                                       | Required | Default     | Description                                                                |
 | ---------------- | ------ | ------------------------------------------ | -------- | ----------- | -------------------------------------------------------------------------- |
-| `id`             | input  | `string`                                   | no       | `''`        | Stable identifier value used by the id contract.                           |
+| `id`             | input  | `string`                                   | no       | `''`        | Stable identifier used by the id contract.                                 |
 | `label`          | input  | `string \| undefined`                      | no       | `undefined` | Visible text that names the control or data value.                         |
 | `startLabel`     | input  | `string \| undefined`                      | no       | `undefined` | Human-readable copy for the start state or control.                        |
 | `endLabel`       | input  | `string \| undefined`                      | no       | `undefined` | Human-readable copy for the end state or control.                          |
@@ -86,12 +86,10 @@ Angular Forms control with value type `KrnRangeValue`.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab moves between the start and end thumbs
+- Arrow keys adjust the focused thumb without crossing the other value
+- The real form control retains its visible name, described-by relationships, and Angular state.
+- Required, readonly, disabled, and invalid states remain programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -136,17 +134,17 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument   | Control | Default         | Test value                  | Binding                     | Description                                       |
-| ---------- | ------- | --------------- | --------------------------- | --------------------------- | ------------------------------------------------- |
-| `min`      | number  | `0`             | `1`                         | input `min` (property)      | Sets the start of the range.                      |
-| `max`      | number  | `100`           | `101`                       | input `max` (property)      | Sets the end of the range.                        |
-| `step`     | number  | `5`             | `6`                         | input `step` (property)     | Sets the keyboard increment.                      |
-| `disabled` | boolean | `false`         | `true`                      | input `disabled` (property) | Prevents user interaction.                        |
-| `readOnly` | boolean | `false`         | `true`                      | input `readonly` (property) | Keeps the value focusable while preventing edits. |
-| `invalid`  | boolean | `false`         | `true`                      | input `invalid` (property)  | Exposes the invalid visual and ARIA state.        |
-| `id`       | text    | `""`            | `"Alternate value"`         | input `id` (property)       | Configures the component id contract.             |
-| `label`    | text    | `"Usage range"` | `"Usage range · alternate"` | input `label` (property)    | Configures the component label contract.          |
-| `tabindex` | number  | `0`             | `1`                         | input `tabindex` (property) | Configures the component tabindex contract.       |
+| Argument   | Control | Default         | Test value                  | Binding                     | Description                                                               |
+| ---------- | ------- | --------------- | --------------------------- | --------------------------- | ------------------------------------------------------------------------- |
+| `min`      | number  | `0`             | `1`                         | input `min` (property)      | Sets the start of the range.                                              |
+| `max`      | number  | `100`           | `101`                       | input `max` (property)      | Sets the end of the range.                                                |
+| `step`     | number  | `5`             | `6`                         | input `step` (property)     | Sets the keyboard increment.                                              |
+| `disabled` | boolean | `false`         | `true`                      | input `disabled` (property) | Prevents user interaction.                                                |
+| `readOnly` | boolean | `false`         | `true`                      | input `readonly` (property) | Keeps the value focusable while preventing edits.                         |
+| `invalid`  | boolean | `false`         | `true`                      | input `invalid` (property)  | Exposes the invalid visual and ARIA state.                                |
+| `id`       | text    | `""`            | `"Alternate value"`         | input `id` (property)       | Stable identifier used by the id contract.                                |
+| `label`    | text    | `"Usage range"` | `"Usage range · alternate"` | input `label` (property)    | Visible text that names the control or data value.                        |
+| `tabindex` | number  | `0`             | `1`                         | input `tabindex` (property) | Native sequential-focus order forwarded to the owned interactive element. |
 
 Exact API exclusions:
 

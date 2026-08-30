@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Forms
 
-Verification Code. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Verification Code. Captures a fixed-length verification code across coordinated editable positions.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Verification Code for this specific contract: Captures a fixed-length verification code across coordinated editable positions.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Verification Code for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -50,10 +50,10 @@ void bootstrapApplication(KernVerificationCodeAgentExample);
 
 | Name              | Kind   | Type                  | Required | Default           | Description                                                                                      |
 | ----------------- | ------ | --------------------- | -------- | ----------------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`              | no       | `''`              | Stable identifier value used by the id contract.                                                 |
+| `id`              | input  | `string`              | no       | `''`              | Stable identifier used by the id contract.                                                       |
 | `label`           | input  | `string \| undefined` | no       | `undefined`       | Visible text that names the control or data value.                                               |
-| `length`          | input  | `number`              | no       | `6`               | Required number of editable positions in the verification-code control.                          |
-| `numericOnly`     | input  | `boolean`             | no       | `true`            | Restricts verification-code entry to decimal digits.                                             |
+| `length`          | input  | `number`              | no       | `6`               | Defines the component's length behavior or presentation.                                         |
+| `numericOnly`     | input  | `boolean`             | no       | `true`            | Defines the component's numeric only behavior or presentation.                                   |
 | `autocomplete`    | input  | `string`              | no       | `'one-time-code'` | Native autocomplete purpose forwarded to the editable control.                                   |
 | `ariaLabelledBy`  | input  | `string`              | no       | `''`              | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input  | `string`              | no       | `''`              | Space-separated element ids composed with Form Field hints and validation descriptions.          |
@@ -80,12 +80,10 @@ Angular Forms control with value type `string`.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Typing fills the focused position and advances when possible
+- Backspace clears and moves backward; arrow keys move between positions
+- The real form control retains its visible name, described-by relationships, and Angular state.
+- Required, readonly, disabled, and invalid states remain programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -129,19 +127,19 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument       | Control | Default                                 | Test value                                          | Binding                         | Description                                                               |
-| -------------- | ------- | --------------------------------------- | --------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------- |
-| `length`       | number  | `6`                                     | `7`                                                 | input `length` (property)       | Changes the number of verification cells.                                 |
-| `autocomplete` | text    | `"one-time-code"`                       | `"one-time-code · alternate"`                       | input `autocomplete` (property) | Configures the component autocomplete contract.                           |
-| `disabled`     | boolean | `false`                                 | `true`                                              | input `disabled` (property)     | Prevents interaction and participates in the component disabled contract. |
-| `id`           | text    | `""`                                    | `"Alternate value"`                                 | input `id` (property)           | Configures the component id contract.                                     |
-| `invalid`      | boolean | `false`                                 | `true`                                              | input `invalid` (property)      | Exposes an externally controlled invalid presentation state.              |
-| `label`        | text    | `"Enter the 6-digit verification code"` | `"Enter the 6-digit verification code · alternate"` | input `label` (property)        | Configures the component label contract.                                  |
-| `numericOnly`  | boolean | `true`                                  | `false`                                             | input `numericOnly` (property)  | Configures the component numericOnly contract.                            |
-| `readonly`     | boolean | `false`                                 | `true`                                              | input `readonly` (property)     | Configures the component readonly contract.                               |
-| `required`     | boolean | `false`                                 | `true`                                              | input `required` (property)     | Marks the value as required and participates in Angular Forms validation. |
-| `tabindex`     | number  | `0`                                     | `1`                                                 | input `tabindex` (property)     | Configures the component tabindex contract.                               |
-| `value`        | text    | `""`                                    | `"Alternate value"`                                 | input `value` (property)        | Controlled component value.                                               |
+| Argument       | Control | Default                                 | Test value                                          | Binding                         | Description                                                                |
+| -------------- | ------- | --------------------------------------- | --------------------------------------------------- | ------------------------------- | -------------------------------------------------------------------------- |
+| `length`       | number  | `6`                                     | `7`                                                 | input `length` (property)       | Changes the number of verification cells.                                  |
+| `autocomplete` | text    | `"one-time-code"`                       | `"one-time-code · alternate"`                       | input `autocomplete` (property) | Native autocomplete purpose forwarded to the editable control.             |
+| `disabled`     | boolean | `false`                                 | `true`                                              | input `disabled` (property)     | Prevents user interaction and participates in the disabled-state contract. |
+| `id`           | text    | `""`                                    | `"Alternate value"`                                 | input `id` (property)           | Stable identifier used by the id contract.                                 |
+| `invalid`      | boolean | `false`                                 | `true`                                              | input `invalid` (property)      | Exposes an externally controlled invalid presentation state.               |
+| `label`        | text    | `"Enter the 6-digit verification code"` | `"Enter the 6-digit verification code · alternate"` | input `label` (property)        | Visible text that names the control or data value.                         |
+| `numericOnly`  | boolean | `true`                                  | `false`                                             | input `numericOnly` (property)  | Defines the component's numeric only behavior or presentation.             |
+| `readonly`     | boolean | `false`                                 | `true`                                              | input `readonly` (property)     | Keeps the value perceivable while preventing user edits.                   |
+| `required`     | boolean | `false`                                 | `true`                                              | input `required` (property)     | Marks the value as required and participates in Angular Forms validation.  |
+| `tabindex`     | number  | `0`                                     | `1`                                                 | input `tabindex` (property)     | Native sequential-focus order forwarded to the owned interactive element.  |
+| `value`        | text    | `""`                                    | `"Alternate value"`                                 | input `value` (property)        | Controlled component value.                                                |
 
 Exact API exclusions:
 
@@ -164,7 +162,7 @@ Presets:
 - `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
 - `active` — Active; scenario `default`; visual state `active`.
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
-- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `filled` — filled; scenario `default`; `value="482731"`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
 - `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
 - `readonly` — readonly; scenario `default`; fixture effect `status/neutral` — readonly: The fixture exposes the readonly status without claiming a public component input..
 - `required` — Required; scenario `default`; `required=true`.

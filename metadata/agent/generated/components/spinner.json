@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Spinner. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "summary": "Spinner. Indicates ongoing work when no meaningful completion percentage is available.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -70,12 +70,8 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Escape closes modal layers", "Focus returns to the trigger"],
-    "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
-    ],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
+    "notes": ["Provides an accessible busy label without exposing meaningless numeric progress."],
     "manualValidationRequired": true
   },
   "ssr": {
@@ -101,8 +97,8 @@
   "related": ["alert", "banner", "toast", "tooltip"],
   "keywords": ["spinner", "Spinner", "Feedback", "krn-spinner", "KrnSpinner", "label"],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Spinner for this specific contract: Indicates ongoing work when no meaningful completion percentage is available.",
+    "avoidWhen": "Do not choose Spinner for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

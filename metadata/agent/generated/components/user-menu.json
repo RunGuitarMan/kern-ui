@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "User Menu. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.",
+  "summary": "User Menu. Combines user identity with account and session actions in a transient menu.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -58,7 +58,7 @@
       "type": "string",
       "required": true,
       "defaultValue": "required",
-      "description": "Required human-readable name for the represented person, item, or action.",
+      "description": "Native form-control name forwarded to the owned interactive element.",
       "descriptionSource": "inferred"
     },
     {
@@ -68,7 +68,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Supporting detail text displayed with the primary content.",
+      "description": "Defines the component's detail behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -117,11 +117,12 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": [
+      "Keyboard behavior is provided by the native elements and Kern primitives in the recipe"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.",
+      "Loading, empty, error, and success states remain visible and programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -159,8 +160,8 @@
     "open"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use User Menu for this specific contract: Combines user identity with account and session actions in a transient menu.",
+    "avoidWhen": "Do not choose User Menu for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Do not omit required inputs: `name`.",
@@ -203,7 +204,7 @@
         "kind": "text",
         "defaultValue": "avery@north.ops",
         "testValue": "avery@north.ops · alternate",
-        "description": "Configures the component detail contract.",
+        "description": "Defines the component's detail behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "detail",
@@ -216,7 +217,7 @@
         "kind": "text",
         "defaultValue": "Avery Cole",
         "testValue": "Avery Cole · alternate",
-        "description": "Configures the component name contract.",
+        "description": "Native form-control name forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "name",

@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Forms
 
-Textarea. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Textarea. Captures multiline text with optional automatic resizing and character count.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Textarea for this specific contract: Captures multiline text with optional automatic resizing and character count.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Textarea for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -52,19 +52,19 @@ void bootstrapApplication(KernTextareaAgentExample);
 
 | Name              | Kind   | Type                  | Required | Default     | Description                                                                                      |
 | ----------------- | ------ | --------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`              | no       | `''`        | Stable identifier value used by the id contract.                                                 |
-| `name`            | input  | `string`              | no       | `''`        | Required human-readable name for the represented person, item, or action.                        |
+| `id`              | input  | `string`              | no       | `''`        | Stable identifier used by the id contract.                                                       |
+| `name`            | input  | `string`              | no       | `''`        | Native form-control name forwarded to the owned interactive element.                             |
 | `placeholder`     | input  | `string`              | no       | `''`        | Short input hint shown only while no value is present.                                           |
 | `ariaLabel`       | input  | `string`              | no       | `''`        | Accessible name used when visible content is not sufficient.                                     |
 | `ariaLabelledBy`  | input  | `string`              | no       | `''`        | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input  | `string`              | no       | `''`        | Space-separated element ids composed with Form Field hints and validation descriptions.          |
 | `autocomplete`    | input  | `string`              | no       | `''`        | Native autocomplete purpose forwarded to the editable control.                                   |
-| `size`            | input  | `KrnSize`             | no       | `'md'`      | Named semantic size resolved through KERN density and sizing tokens.                             |
+| `size`            | input  | `KrnSize`             | no       | `'md'`      | Named semantic size resolved through Kern density and sizing tokens.                             |
 | `rows`            | input  | `number`              | no       | `4`         | Ordered row collection rendered by the tabular view.                                             |
 | `value`           | input  | `string \| undefined` | no       | `undefined` | Controlled component value.                                                                      |
 | `minLength`       | input  | `number \| undefined` | no       | `undefined` | Upper or lower bound applied to the length value.                                                |
 | `maxLength`       | input  | `number \| undefined` | no       | `undefined` | Upper or lower bound applied to the length value.                                                |
-| `spellcheck`      | input  | `boolean`             | no       | `true`      | Native spell-checking preference forwarded to the editable control.                              |
+| `spellcheck`      | input  | `boolean`             | no       | `true`      | Defines the component's spellcheck behavior or presentation.                                     |
 | `showCount`       | input  | `boolean`             | no       | `false`     | Controls whether the component applies the show count behavior.                                  |
 | `autoResize`      | input  | `boolean`             | no       | `false`     | Controls whether the component applies the auto resize behavior.                                 |
 | `disabled`        | input  | `boolean`             | no       | `false`     | Prevents user interaction and participates in the disabled-state contract.                       |
@@ -87,12 +87,9 @@ Angular Forms control with value type `string`.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab focuses the textarea; native multiline editing and selection keys remain available
+- The real form control retains its visible name, described-by relationships, and Angular state.
+- Required, readonly, disabled, and invalid states remain programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -136,23 +133,23 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument       | Control | Default                           | Test value                                    | Binding                         | Description                                       |
-| -------------- | ------- | --------------------------------- | --------------------------------------------- | ------------------------------- | ------------------------------------------------- |
-| `placeholder`  | text    | `"Explain what changed and why…"` | `"Explain what changed and why… · alternate"` | input `placeholder` (property)  | Sets the empty-value prompt.                      |
-| `size`         | select  | `"md"`                            | `"sm"`                                        | input `size` (property)         | Changes the control height and inline padding.    |
-| `rows`         | number  | `5`                               | `6`                                           | input `rows` (property)         | Sets the initial number of text rows.             |
-| `maxLength`    | number  | `280`                             | `290`                                         | input `maxLength` (property)    | Limits accepted characters.                       |
-| `showCount`    | boolean | `true`                            | `false`                                       | input `showCount` (property)    | Shows the current character count.                |
-| `autoResize`   | boolean | `true`                            | `false`                                       | input `autoResize` (property)   | Grows the field as content is entered.            |
-| `disabled`     | boolean | `false`                           | `true`                                        | input `disabled` (property)     | Prevents user interaction.                        |
-| `readOnly`     | boolean | `false`                           | `true`                                        | input `readonly` (property)     | Keeps the value focusable while preventing edits. |
-| `required`     | boolean | `false`                           | `true`                                        | input `required` (property)     | Marks the control as required.                    |
-| `invalid`      | boolean | `false`                           | `true`                                        | input `invalid` (property)      | Exposes the invalid visual and ARIA state.        |
-| `autocomplete` | text    | `""`                              | `"Alternate value"`                           | input `autocomplete` (property) | Configures the component autocomplete contract.   |
-| `id`           | text    | `""`                              | `"Alternate value"`                           | input `id` (property)           | Configures the component id contract.             |
-| `minLength`    | number  | `0`                               | `1`                                           | input `minLength` (property)    | Configures the component minLength contract.      |
-| `spellcheck`   | boolean | `true`                            | `false`                                       | input `spellcheck` (property)   | Configures the component spellcheck contract.     |
-| `value`        | text    | `""`                              | `"Alternate value"`                           | input `value` (property)        | Controlled component value.                       |
+| Argument       | Control | Default                           | Test value                                    | Binding                         | Description                                                    |
+| -------------- | ------- | --------------------------------- | --------------------------------------------- | ------------------------------- | -------------------------------------------------------------- |
+| `placeholder`  | text    | `"Explain what changed and why…"` | `"Explain what changed and why… · alternate"` | input `placeholder` (property)  | Sets the empty-value prompt.                                   |
+| `size`         | select  | `"md"`                            | `"sm"`                                        | input `size` (property)         | Changes the control height and inline padding.                 |
+| `rows`         | number  | `5`                               | `6`                                           | input `rows` (property)         | Sets the initial number of text rows.                          |
+| `maxLength`    | number  | `280`                             | `290`                                         | input `maxLength` (property)    | Limits accepted characters.                                    |
+| `showCount`    | boolean | `true`                            | `false`                                       | input `showCount` (property)    | Shows the current character count.                             |
+| `autoResize`   | boolean | `true`                            | `false`                                       | input `autoResize` (property)   | Grows the field as content is entered.                         |
+| `disabled`     | boolean | `false`                           | `true`                                        | input `disabled` (property)     | Prevents user interaction.                                     |
+| `readOnly`     | boolean | `false`                           | `true`                                        | input `readonly` (property)     | Keeps the value focusable while preventing edits.              |
+| `required`     | boolean | `false`                           | `true`                                        | input `required` (property)     | Marks the control as required.                                 |
+| `invalid`      | boolean | `false`                           | `true`                                        | input `invalid` (property)      | Exposes the invalid visual and ARIA state.                     |
+| `autocomplete` | text    | `""`                              | `"Alternate value"`                           | input `autocomplete` (property) | Native autocomplete purpose forwarded to the editable control. |
+| `id`           | text    | `""`                              | `"Alternate value"`                           | input `id` (property)           | Stable identifier used by the id contract.                     |
+| `minLength`    | number  | `0`                               | `1`                                           | input `minLength` (property)    | Upper or lower bound applied to the length value.              |
+| `spellcheck`   | boolean | `true`                            | `false`                                       | input `spellcheck` (property)   | Defines the component's spellcheck behavior or presentation.   |
+| `value`        | text    | `""`                              | `"Alternate value"`                           | input `value` (property)        | Controlled component value.                                    |
 
 Exact API exclusions:
 
@@ -177,7 +174,7 @@ Presets:
 - `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
 - `active` — Active; scenario `default`; visual state `active`.
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
-- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `filled` — filled; scenario `default`; `value="Renewal approved pending legal review."`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
 - `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
 - `readonly` — Readonly; scenario `default`; `readOnly=true`.
 - `required` — Required; scenario `default`; `required=true`.

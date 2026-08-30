@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Layout
 
-Scroll Area. A composable spatial primitive that keeps product layouts predictable across containers.
+Scroll Area. Constrains overflowing content to one or both axes with explicit scrollbar and keyboard policies.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Scroll Area for this specific contract: Constrains overflowing content to one or both axes with explicit scrollbar and keyboard policies.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Scroll Area for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -79,10 +79,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Projected content retains its document order and native semantics as layout changes.
+- Logical sizing and placement work in both LTR and RTL without duplicating content.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -117,13 +116,13 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument             | Control | Default      | Test value     | Binding                               | Description                                           |
-| -------------------- | ------- | ------------ | -------------- | ------------------------------------- | ----------------------------------------------------- |
-| `axis`               | select  | `"vertical"` | `"horizontal"` | input `axis` (property)               | Chooses the axes that can scroll.                     |
-| `maxBlockSize`       | text    | `"16rem"`    | `"20rem"`      | input `maxBlockSize` (property)       | Constrains the scrolling viewport.                    |
-| `keyboardAccessible` | boolean | `true`       | `false`        | input `keyboardAccessible` (property) | Configures the component keyboardAccessible contract. |
-| `maxInlineSize`      | text    | `"100%"`     | `"20rem"`      | input `maxInlineSize` (property)      | Configures the component maxInlineSize contract.      |
-| `scrollbar`          | select  | `"auto"`     | `"hidden"`     | input `scrollbar` (property)          | Configures the component scrollbar contract.          |
+| Argument             | Control | Default      | Test value     | Binding                               | Description                                                 |
+| -------------------- | ------- | ------------ | -------------- | ------------------------------------- | ----------------------------------------------------------- |
+| `axis`               | select  | `"vertical"` | `"horizontal"` | input `axis` (property)               | Chooses the axes that can scroll.                           |
+| `maxBlockSize`       | text    | `"16rem"`    | `"20rem"`      | input `maxBlockSize` (property)       | Constrains the scrolling viewport.                          |
+| `keyboardAccessible` | boolean | `true`       | `false`        | input `keyboardAccessible` (property) | Keeps the native viewport keyboard-scrollable when enabled. |
+| `maxInlineSize`      | text    | `"100%"`     | `"20rem"`      | input `maxInlineSize` (property)      | Upper or lower bound applied to the inline size value.      |
+| `scrollbar`          | select  | `"auto"`     | `"hidden"`     | input `scrollbar` (property)          | Controls native scrollbar visibility and gutter allocation. |
 
 Exact API exclusions:
 

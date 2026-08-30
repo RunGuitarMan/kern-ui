@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Avatar Group. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Avatar Group. Overlaps several avatars and summarizes identities that do not fit the visible limit.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -63,7 +63,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "'0.625rem'",
-      "description": "Allows the floating action surface to overlap its adjacent container edge.",
+      "description": "Defines the component's overlap behavior or presentation.",
       "descriptionSource": "inferred"
     }
   ],
@@ -86,11 +86,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -125,8 +124,8 @@
     "overlap"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Avatar Group for this specific contract: Overlaps several avatars and summarizes identities that do not fit the visible limit.",
+    "avoidWhen": "Do not choose Avatar Group for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

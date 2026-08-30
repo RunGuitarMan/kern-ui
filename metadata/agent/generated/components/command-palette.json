@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Command Palette. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "summary": "Command Palette. Searches a command collection and activates the focused result from a modal palette.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -337,7 +337,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component description contract.",
+        "description": "Visible supporting description for the component content.",
         "binding": {
           "kind": "input",
           "publicName": "description",
@@ -350,7 +350,7 @@
         "kind": "text",
         "defaultValue": "Jump to…",
         "testValue": "Jump to… · alternate",
-        "description": "Configures the component title contract.",
+        "description": "Visible title that also names the component surface or data view.",
         "binding": {
           "kind": "input",
           "publicName": "title",

@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Resizable Panels. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Resizable Panels. Lets users resize adjacent panels by pointer or keyboard while enforcing normalized size limits.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -230,7 +230,7 @@
         "kind": "select",
         "defaultValue": "horizontal",
         "testValue": "vertical",
-        "description": "Logical axis exposed by the component; behavior follows its documented keyboard contract.",
+        "description": "Sets the panel flow axis: horizontal follows inline, vertical follows block.",
         "binding": {
           "kind": "input",
           "publicName": "orientation",

@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Center. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Center. Centers child content inside a width-constrained surface. For new work, use Container with intrinsic centering.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -96,11 +96,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Projected content retains its document order and native semantics as layout changes.",
+      "Logical sizing and placement work in both LTR and RTL without duplicating content."
     ],
     "manualValidationRequired": true
   },
@@ -136,8 +135,8 @@
     "intrinsic"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Center for this specific contract: Centers child content inside a width-constrained surface. For new work, use Container with intrinsic centering.",
+    "avoidWhen": "Do not choose Center for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -193,7 +192,7 @@
         "kind": "text",
         "defaultValue": "4",
         "testValue": "20rem",
-        "description": "Configures the component gutters contract.",
+        "description": "Logical inline padding kept inside the maximum width.",
         "binding": {
           "kind": "input",
           "publicName": "gutters",

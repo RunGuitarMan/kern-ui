@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Data display
 
-Avatar. A dense, readable data primitive with semantic structure and resilient overflow.
+Avatar. Represents a person or entity with an image, fallback initials, and optional presence status.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Avatar for this specific contract: Represents a person or entity with an image, fallback initials, and optional presence status.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Avatar for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -45,15 +45,15 @@ void bootstrapApplication(KernAvatarAgentExample);
 
 ## API
 
-| Name          | Kind  | Type                                        | Required | Default     | Description                                                                    |
-| ------------- | ----- | ------------------------------------------- | -------- | ----------- | ------------------------------------------------------------------------------ |
-| `locale`      | input | `string \| undefined`                       | no       | `undefined` | Locale identifier used for collation, formatting, and component-owned copy.    |
-| `src`         | input | `string \| undefined`                       | no       | `undefined` | Required media source URL loaded by the component.                             |
-| `alt`         | input | `string`                                    | no       | `''`        | Text alternative that communicates the meaning of visual media.                |
-| `name`        | input | `string`                                    | no       | `''`        | Required human-readable name for the represented person, item, or action.      |
-| `size`        | input | `"lg" \| "md" \| "sm"`                      | no       | `'md'`      | Named semantic size resolved through KERN density and sizing tokens.           |
-| `status`      | input | `"away" \| "busy" \| "online" \| undefined` | no       | `undefined` | Current domain status rendered as visible text and a non-color-only treatment. |
-| `imageFailed` | model | `boolean`                                   | no       | `false`     | Controlled image failed state with a matching Angular model-change output.     |
+| Name          | Kind  | Type                                        | Required | Default     | Description                                                                 |
+| ------------- | ----- | ------------------------------------------- | -------- | ----------- | --------------------------------------------------------------------------- |
+| `locale`      | input | `string \| undefined`                       | no       | `undefined` | Locale identifier used for collation, formatting, and component-owned copy. |
+| `src`         | input | `string \| undefined`                       | no       | `undefined` | Defines the component's src behavior or presentation.                       |
+| `alt`         | input | `string`                                    | no       | `''`        | Defines the component's alt behavior or presentation.                       |
+| `name`        | input | `string`                                    | no       | `''`        | Native form-control name forwarded to the owned interactive element.        |
+| `size`        | input | `"lg" \| "md" \| "sm"`                      | no       | `'md'`      | Named semantic size resolved through Kern density and sizing tokens.        |
+| `status`      | input | `"away" \| "busy" \| "online" \| undefined` | no       | `undefined` | Defines the component's status behavior or presentation.                    |
+| `imageFailed` | model | `boolean`                                   | no       | `false`     | Controlled image failed state with a matching Angular model-change output.  |
 
 ## Deprecated selectors
 
@@ -69,11 +69,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys navigate interactive data
-- Enter expands or selects
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Visible labels and semantic structure preserve the meaning and relationships in the data.
+- Interactive descendants retain native names and a predictable focus order.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -108,14 +106,14 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default        | Test value                 | Binding                   | Description                                |
-| ------------- | ------- | -------------- | -------------------------- | ------------------------- | ------------------------------------------ |
-| `imageFailed` | boolean | `false`        | `true`                     | model `imageFailed`       | Shows the deterministic initials fallback. |
-| `alt`         | text    | `""`           | `"Alternate value"`        | input `alt` (property)    | Configures the component alt contract.     |
-| `name`        | text    | `"Avery Cole"` | `"Avery Cole · alternate"` | input `name` (property)   | Configures the component name contract.    |
-| `size`        | select  | `"lg"`         | `"md"`                     | input `size` (property)   | Semantic component size.                   |
-| `src`         | text    | `""`           | `"/favicon.ico"`           | input `src` (property)    | Configures the component src contract.     |
-| `status`      | select  | `"online"`     | `"away"`                   | input `status` (property) | Configures the component status contract.  |
+| Argument      | Control | Default        | Test value                 | Binding                   | Description                                                          |
+| ------------- | ------- | -------------- | -------------------------- | ------------------------- | -------------------------------------------------------------------- |
+| `imageFailed` | boolean | `false`        | `true`                     | model `imageFailed`       | Shows the deterministic initials fallback.                           |
+| `alt`         | text    | `""`           | `"Alternate value"`        | input `alt` (property)    | Defines the component's alt behavior or presentation.                |
+| `name`        | text    | `"Avery Cole"` | `"Avery Cole · alternate"` | input `name` (property)   | Native form-control name forwarded to the owned interactive element. |
+| `size`        | select  | `"lg"`         | `"md"`                     | input `size` (property)   | Named semantic size resolved through Kern density and sizing tokens. |
+| `src`         | text    | `""`           | `"/favicon.ico"`           | input `src` (property)    | Defines the component's src behavior or presentation.                |
+| `status`      | select  | `"online"`     | `"away"`                   | input `status` (property) | Defines the component's status behavior or presentation.             |
 
 Exact API exclusions:
 

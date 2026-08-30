@@ -79,6 +79,7 @@ const SPECIMEN_CONTROL_DEFAULTS: Readonly<
     description: 'CSV, up to 10 MB.',
     label: 'Choose a CSV file',
     maxSize: 10_485_760,
+    presentation: 'dropzone',
   },
   'drag-drop-upload': {
     accept: '.svg,.png,.jpg,.jpeg',
@@ -182,6 +183,161 @@ const PSEUDO_STATE_DATA_IDS = new Set<string>([
 
 const FORM_FOUNDATION_IDS = new Set<string>(['form-field', 'hint', 'label', 'validation-message']);
 
+const STATIC_SPECIMEN_IDS = new Set<string>([
+  'header',
+  'container',
+  'stack',
+  'inline',
+  'cluster',
+  'grid',
+  'split-layout',
+  'center',
+  'spacer',
+  'divider',
+  'aspect-ratio',
+  'responsive-show-hide',
+  'button-group',
+  'form-field',
+  'label',
+  'hint',
+  'validation-message',
+  'loading-overlay',
+  'progress-bar',
+  'circular-progress',
+  'spinner',
+  'skeleton',
+  'badge',
+  'status-badge',
+  'avatar',
+  'avatar-group',
+  'stat',
+  'description-list',
+  'list',
+  'timeline',
+  'keyboard-shortcut',
+  'meter',
+  'responsive-media',
+]);
+
+const SUPPORTING_COMPONENT_IDS: Readonly<Record<string, readonly string[]>> = Object.freeze({
+  'app-shell': ['header', 'sidebar'],
+  'button-group': ['button'],
+  'split-button': ['button', 'menu'],
+  'dropdown-button': ['button', 'menu'],
+  'toggle-group': ['toggle-button'],
+  'form-field': ['label', 'hint', 'validation-message', 'text-input'],
+  label: ['form-field', 'text-input'],
+  hint: ['form-field', 'text-input'],
+  'validation-message': ['form-field', 'text-input'],
+  'text-input': ['form-field'],
+  textarea: ['form-field'],
+  'password-input': ['form-field'],
+  'number-input': ['form-field'],
+  select: ['form-field'],
+  'native-select': ['form-field'],
+  'multi-select': ['form-field'],
+  combobox: ['form-field'],
+  autocomplete: ['form-field'],
+  'date-picker': ['form-field', 'calendar'],
+  'date-range-picker': ['form-field', 'calendar'],
+  'time-picker': ['form-field'],
+  'color-picker': ['form-field'],
+  'checkbox-group': ['checkbox'],
+  radio: ['radio-group'],
+  'radio-group': ['radio'],
+});
+
+const FEATURED_PRESET_PREFERENCES: Readonly<Record<string, readonly string[]>> = Object.freeze({
+  'form-field': ['default', 'invalid', 'disabled', 'readonly', 'long-text'],
+  'text-input': ['default', 'filled', 'focus-visible', 'invalid', 'disabled'],
+  textarea: ['default', 'filled', 'focus-visible', 'invalid', 'disabled'],
+  'password-input': ['default', 'filled', 'focus-visible', 'invalid', 'disabled'],
+  'search-input': ['default', 'filled', 'focus-visible', 'disabled', 'readonly'],
+  'number-input': ['default', 'filled', 'minimum', 'maximum', 'invalid'],
+  checkbox: ['default', 'selected', 'indeterminate', 'focus-visible', 'disabled'],
+  'checkbox-group': ['default', 'required', 'invalid', 'disabled', 'readonly'],
+  radio: ['default', 'selected', 'focus-visible', 'disabled', 'readonly'],
+  'radio-group': ['default', 'required', 'invalid', 'disabled', 'readonly'],
+  switch: ['default', 'selected', 'focus-visible', 'invalid', 'disabled'],
+  select: ['default', 'filled', 'open', 'async-loading', 'invalid'],
+  'native-select': ['default', 'filled', 'focus-visible', 'invalid', 'disabled'],
+  'multi-select': ['default', 'open', 'async-loading', 'error', 'invalid'],
+  combobox: ['default', 'filled', 'open', 'async-loading', 'invalid'],
+  autocomplete: ['default', 'filled', 'open', 'async-loading', 'invalid'],
+  'date-picker': ['default', 'filled', 'open', 'invalid', 'disabled'],
+  'date-range-picker': ['default', 'open', 'focus-visible', 'invalid', 'disabled'],
+  'time-picker': ['default', 'filled', 'open', 'invalid', 'disabled'],
+  'color-picker': ['default', 'filled', 'open', 'invalid', 'disabled'],
+  'file-upload': ['default', 'focus-visible', 'required', 'invalid', 'disabled'],
+  'drag-drop-upload': ['default', 'focus-visible', 'required', 'invalid', 'disabled'],
+  'verification-code': ['default', 'filled', 'focus-visible', 'invalid', 'disabled'],
+  'tags-input': ['default', 'filled', 'focus-visible', 'invalid', 'disabled'],
+});
+
+const DEFAULT_STORY_IDS: Readonly<Record<string, string>> = Object.freeze({
+  'text-input': 'filled',
+  textarea: 'filled',
+  'password-input': 'filled',
+  'search-input': 'filled',
+  'number-input': 'filled',
+  checkbox: 'selected',
+  radio: 'selected',
+  switch: 'selected',
+  select: 'filled',
+  'native-select': 'filled',
+  'multi-select': 'open',
+  combobox: 'filled',
+  autocomplete: 'filled',
+  'date-picker': 'open',
+  'date-range-picker': 'open',
+  'time-picker': 'open',
+  'color-picker': 'open',
+  'verification-code': 'filled',
+});
+
+const ESSENTIAL_CONTROL_PREFERENCES: Readonly<Record<string, readonly string[]>> = Object.freeze({
+  'text-input': ['value', 'placeholder', 'size', 'invalid', 'disabled', 'readOnly'],
+  textarea: ['value', 'placeholder', 'rows', 'showCount', 'autoResize', 'invalid'],
+  'password-input': ['value', 'placeholder', 'required', 'invalid', 'disabled', 'readOnly'],
+  'search-input': ['value', 'placeholder', 'invalid', 'disabled', 'readOnly', 'required'],
+  'number-input': ['value', 'min', 'max', 'step', 'showSteppers', 'invalid'],
+  checkbox: ['selected', 'indeterminate', 'description', 'disabled', 'readOnly', 'invalid'],
+  'checkbox-group': ['label', 'orientation', 'disabled', 'required', 'invalid', 'readonly'],
+  radio: ['selected', 'value', 'description', 'disabled', 'readOnly', 'checked'],
+  'radio-group': ['value', 'label', 'orientation', 'disabled', 'required', 'invalid'],
+  switch: ['selected', 'description', 'disabled', 'readOnly', 'required', 'invalid'],
+  select: ['value', 'placeholder', 'open', 'optionsState', 'invalid', 'disabled'],
+  'native-select': ['value', 'placeholder', 'size', 'invalid', 'disabled', 'required'],
+  'multi-select': ['open', 'placeholder', 'maxVisible', 'optionsState', 'invalid', 'disabled'],
+  combobox: ['value', 'placeholder', 'open', 'allowCustomValue', 'invalid', 'disabled'],
+  autocomplete: ['value', 'placeholder', 'open', 'allowCustomValue', 'invalid', 'disabled'],
+  'date-picker': ['value', 'open', 'min', 'max', 'invalid', 'disabled'],
+  'date-range-picker': ['open', 'min', 'max', 'invalid', 'disabled', 'required'],
+  'time-picker': ['value', 'open', 'min', 'max', 'invalid', 'disabled'],
+  'color-picker': ['value', 'open', 'invalid', 'disabled', 'readonly', 'tabindex'],
+  'file-upload': ['presentation', 'multiple', 'accept', 'label', 'invalid', 'disabled'],
+  'drag-drop-upload': ['multiple', 'accept', 'label', 'description', 'invalid', 'disabled'],
+});
+
+const SIGNATURE_FILLED_ARGS: Readonly<Record<string, KernPlaygroundValues>> = Object.freeze({
+  'text-input': Object.freeze({ value: 'Acme Europe' }),
+  textarea: Object.freeze({ value: 'Renewal approved pending legal review.' }),
+  'password-input': Object.freeze({ value: 'northstar-secure' }),
+  'search-input': Object.freeze({ value: 'Northstar' }),
+  'number-input': Object.freeze({ value: 250 }),
+  checkbox: Object.freeze({ selected: true }),
+  radio: Object.freeze({ selected: true }),
+  switch: Object.freeze({ selected: true }),
+  select: Object.freeze({ value: 'team' }),
+  'native-select': Object.freeze({ value: 'team' }),
+  combobox: Object.freeze({ value: 'team' }),
+  autocomplete: Object.freeze({ value: 'Northstar' }),
+  'date-picker': Object.freeze({ value: '2026-10-15' }),
+  'time-picker': Object.freeze({ value: '18:30' }),
+  'color-picker': Object.freeze({ value: '#4666da' }),
+  'verification-code': Object.freeze({ value: '482731' }),
+});
+
 const createPreset = (
   preset: Omit<KernPlaygroundStatePreset, 'args'> & {
     readonly args?: KernPlaygroundValues;
@@ -270,9 +426,33 @@ export function normalizeKernPlaygroundStateId(value: string): string {
 }
 
 function acceptanceArgsFor(
+  componentId: string,
   stateId: string,
   controls: readonly KernPlaygroundControl[],
 ): KernPlaygroundValues {
+  if (stateId === 'filled') {
+    const signature = SIGNATURE_FILLED_ARGS[componentId];
+    if (signature) {
+      const controlKeys = new Set(controls.map(({ key }) => key));
+      return Object.freeze(
+        Object.fromEntries(Object.entries(signature).filter(([key]) => controlKeys.has(key))),
+      );
+    }
+  }
+
+  if (stateId === 'minimum' || stateId === 'maximum') {
+    const valueControl = controls.find(
+      (candidate) => candidate.key === 'value' && candidate.kind === 'number',
+    );
+    const boundaryControl = controls.find(
+      (candidate) =>
+        candidate.key === (stateId === 'minimum' ? 'min' : 'max') && candidate.kind === 'number',
+    );
+    if (valueControl && boundaryControl && typeof boundaryControl.defaultValue === 'number') {
+      return Object.freeze({ value: boundaryControl.defaultValue });
+    }
+  }
+
   const booleanState: Readonly<Record<string, readonly [string, boolean]>> = {
     disabled: ['disabled', true],
     enabled: ['disabled', false],
@@ -655,7 +835,7 @@ function acceptancePresetFor(
     id,
     label: stateLabel,
     scenario: useStressScenario ? 'stress' : 'default',
-    args: acceptanceArgsFor(id, controls),
+    args: acceptanceArgsFor(item.id, id, controls),
     fixtureEffect: fixtureEffectFor(item, stateLabel),
   });
 }
@@ -687,6 +867,92 @@ function presetsFor(
     ...acceptancePresets,
     ...[...unique.values()].filter(({ id }) => !acceptanceIds.has(id)),
   ]);
+}
+
+const FEATURED_PRESET_FALLBACK = [
+  'default',
+  'filled',
+  'selected',
+  'open',
+  'invalid',
+  'loading',
+  'disabled',
+  'focus-visible',
+  'hover',
+  'empty',
+  'long-text',
+  'stress',
+] as const;
+
+function featuredPresetIdsFor(
+  item: KernCatalogItem,
+  presets: readonly KernPlaygroundStatePreset[],
+  defaultStoryId: string,
+): readonly string[] {
+  const available = new Set(presets.map(({ id }) => id));
+  const featured: string[] = [];
+  const add = (id: string): void => {
+    if (featured.length < 5 && available.has(id) && !featured.includes(id)) featured.push(id);
+  };
+
+  add(defaultStoryId);
+  for (const id of FEATURED_PRESET_PREFERENCES[item.id] ?? FEATURED_PRESET_FALLBACK) add(id);
+  for (const id of FEATURED_PRESET_FALLBACK) add(id);
+
+  const minimum = Math.min(3, presets.length);
+  for (const preset of presets) {
+    if (featured.length >= minimum) break;
+    if (!preset.environment) add(preset.id);
+  }
+  for (const preset of presets) {
+    if (featured.length >= minimum) break;
+    add(preset.id);
+  }
+
+  return Object.freeze(featured);
+}
+
+function defaultStoryIdFor(
+  item: KernCatalogItem,
+  presets: readonly KernPlaygroundStatePreset[],
+): string {
+  const preferred = DEFAULT_STORY_IDS[item.id] ?? 'default';
+  return presets.some(({ id }) => id === preferred) ? preferred : 'default';
+}
+
+const ESSENTIAL_CONTROL_FALLBACK = [
+  'value',
+  'label',
+  'variant',
+  'tone',
+  'size',
+  'open',
+  'selected',
+  'orientation',
+  'loading',
+  'invalid',
+  'disabled',
+  'readOnly',
+  'required',
+] as const;
+
+function essentialControlKeysFor(
+  item: KernCatalogItem,
+  controls: readonly KernPlaygroundControl[],
+): readonly string[] {
+  const available = new Set(controls.map(({ key }) => key));
+  const essential: string[] = [];
+  const add = (key: string): void => {
+    if (essential.length < 6 && available.has(key) && !essential.includes(key)) {
+      essential.push(key);
+    }
+  };
+
+  for (const key of ESSENTIAL_CONTROL_PREFERENCES[item.id] ?? []) add(key);
+  for (const key of ESSENTIAL_CONTROL_FALLBACK) add(key);
+  for (const { key } of controls) add(key);
+
+  return Object.freeze(essential);
 }
 
 function scenariosFor(
@@ -791,8 +1057,14 @@ export const KERN_PLAYGROUND_DEFINITIONS: readonly KernPlaygroundDefinition[] = 
   KERN_CATALOG.map((item) => {
     const controls = controlsFor(item);
     const presets = presetsFor(item, controls);
+    const defaultStoryId = defaultStoryIdFor(item, presets);
     return Object.freeze({
       id: item.id,
+      defaultStoryId,
+      featuredPresetIds: featuredPresetIdsFor(item, presets, defaultStoryId),
+      essentialControlKeys: essentialControlKeysFor(item, controls),
+      interactive: !STATIC_SPECIMEN_IDS.has(item.id),
+      supportingComponentIds: Object.freeze([...(SUPPORTING_COMPONENT_IDS[item.id] ?? [])]),
       scenarios: scenariosFor(presets),
       states: Object.freeze(presets.map(({ id }) => id)),
       presets,

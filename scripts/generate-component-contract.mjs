@@ -299,6 +299,108 @@ function defaultValue(call, required, sourceFile) {
   return value ? value.getText(sourceFile) : 'undefined';
 }
 
+function inferredApiDescription(name, kind) {
+  const explicit = {
+    ariaLabel: 'Accessible name used when visible content is not sufficient.',
+    ariaLabelledBy:
+      'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+    ariaDescribedBy:
+      'Space-separated element ids composed with Form Field hints and validation descriptions.',
+    autocomplete: 'Native autocomplete purpose forwarded to the editable control.',
+    disabled: 'Prevents user interaction and participates in the disabled-state contract.',
+    readOnly: 'Keeps the value perceivable while preventing user edits.',
+    readonly: 'Keeps the value perceivable while preventing user edits.',
+    required: 'Marks the value as required and participates in Angular Forms validation.',
+    invalid: 'Exposes an externally controlled invalid presentation state.',
+    loading: 'Prevents duplicate actions and exposes an accessible busy state.',
+    checked: 'Controlled checked state rendered by the native choice control.',
+    indeterminate: 'Controlled mixed state rendered independently from the checked value.',
+    name: 'Native form-control name forwarded to the owned interactive element.',
+    tabindex: 'Native sequential-focus order forwarded to the owned interactive element.',
+    tabIndex: 'Native sequential-focus order forwarded to the owned interactive element.',
+    value: 'Controlled component value.',
+    open: 'Controls whether the disclosure or overlay surface is visible.',
+    data: 'Immutable data supplied by the consumer.',
+    columns: 'Typed column definitions with stable keys.',
+    nodes: 'Hierarchical nodes whose ids must be stable and unique across the complete tree.',
+    options: 'Authoritative option collection presented by the selection control.',
+    items: 'Ordered item collection rendered by the composite widget.',
+    rows: 'Ordered row collection rendered by the tabular view.',
+    results: 'Search result collection rendered in response to the current query.',
+    title: 'Visible title that also names the component surface or data view.',
+    label: 'Visible text that names the control or data value.',
+    labels: 'Localized copy overrides for the component-owned interface text.',
+    description: 'Visible supporting description for the component content.',
+    placeholder: 'Short input hint shown only while no value is present.',
+    locale: 'Locale identifier used for collation, formatting, and component-owned copy.',
+    identityMatcher: 'Compares option values when object identity is not stable across refreshes.',
+    trackBy: 'Returns the stable identity used to retain rendered items across updates.',
+    stringify: 'Converts a domain value into the human-readable label shown to users.',
+    valueFormatter: 'Formats a domain value for visible and accessible presentation.',
+    initialFocus: 'Identifies the element that receives focus when the modal surface opens.',
+    orientation: 'Defines the logical axis used by layout and keyboard navigation.',
+    min: 'Smallest accepted numeric or temporal value.',
+    max: 'Largest accepted numeric or temporal value.',
+    step: 'Increment applied by keyboard and pointer value adjustments.',
+    page: 'One-based controlled page index.',
+    pageSize: 'Maximum number of records requested or displayed on one page.',
+    totalItems: 'Total result count used to calculate the available page range.',
+    viewportHeight: 'Measured virtual viewport height used to determine visible rows.',
+    virtualize: 'Enables fixed-height row virtualization for large data collections.',
+    weekStartsOn: 'Zero-based weekday used as the first calendar column.',
+    today: 'Deterministic plain date treated as today on both server and client.',
+    query: 'Current controlled search text used to derive visible results.',
+    selected: 'Controlled selected state, distinct from keyboard focus.',
+    expanded: 'Controlled expanded state for a disclosure or hierarchical item.',
+    closeOnEscape: 'Allows Escape to dismiss the topmost owned overlay.',
+    closeOnOutside: 'Allows an interaction outside the owned overlay to dismiss it.',
+    accept: 'Comma-separated file types accepted by the upload control.',
+    align: 'Logical cross-axis alignment applied to children by the layout.',
+    gap: 'Logical spacing inserted between adjacent layout children.',
+    height: 'Explicit block size of the rendered surface or virtual viewport.',
+    justify: 'Logical main-axis distribution applied to layout children.',
+    size: 'Named semantic size resolved through Kern density and sizing tokens.',
+    tone: 'Semantic intent that selects coordinated text, icon, border, and surface tokens.',
+    variant: 'Named visual hierarchy treatment that preserves the component semantics.',
+    width: 'Explicit inline size of the rendered surface.',
+    wrap: 'Controls whether layout children wrap onto additional lines when space is constrained.',
+  };
+  if (explicit[name]) return explicit[name];
+
+  const words = name
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replaceAll(/[_-]+/g, ' ')
+    .toLowerCase();
+  if (kind === 'model') {
+    return `Controlled ${words} state with a matching Angular model-change output.`;
+  }
+  if (kind === 'output') {
+    return `Notifies the consumer after the ${words} interaction completes.`;
+  }
+  if (/(template|content)$/i.test(name)) {
+    return `Template or projected content used to render ${words.replace(/ (template|content)$/, '')}.`;
+  }
+  if (/(label|text|message|prompt|heading|eyebrow)$/i.test(name)) {
+    return `Human-readable copy for the ${words.replace(/ (label|text|message)$/, '')} state or control.`;
+  }
+  if (/(id|ids|keys)$/i.test(name)) {
+    return `Stable identifier used by the ${words.replace(/ (id|ids|keys)$/, '')} contract.`;
+  }
+  if (/^(min|max|minimum|maximum)/i.test(name)) {
+    return `Upper or lower bound applied to the ${words.replace(/^(min|max|minimum|maximum) /, '')} value.`;
+  }
+  if (/^(show|hide|allow|auto|close|collapse|expand|enable|disable)/i.test(name)) {
+    return `Controls whether the component applies the ${words} behavior.`;
+  }
+  if (/(formatter|stringify|predicate|matcher|handler|track by)$/.test(words)) {
+    return `Consumer function used by the component to resolve ${words}.`;
+  }
+  if (/(items|values|steps|sizes|filters|notifications|timezones)$/i.test(name)) {
+    return `Ordered domain values supplied to the ${words.replace(/s$/, '')} collection.`;
+  }
+  return `Defines the component's ${words} behavior or presentation.`;
+}
+
 function signalContract(checker, member, sourceFile) {
   if (!ts.isPropertyDeclaration(member) || !member.initializer || !member.name) return undefined;
   const modifiers = ts.canHaveModifiers(member) ? (ts.getModifiers(member) ?? []) : [];
@@ -317,6 +419,10 @@ function signalContract(checker, member, sourceFile) {
   const call = member.initializer;
   const options = match.required ? call.arguments[0] : call.arguments[1];
   const memberName = propertyName(member.name, sourceFile);
+  const memberSymbol = checker.getSymbolAtLocation(member.name);
+  const sourceDescription = memberSymbol
+    ? ts.displayPartsToString(memberSymbol.getDocumentationComment(checker)).trim()
+    : '';
 
   return {
     name: publicAlias(options, sourceFile) ?? memberName,
@@ -325,6 +431,8 @@ function signalContract(checker, member, sourceFile) {
     type: signalValueType(checker, call, member),
     required: match.required,
     defaultValue: defaultValue(call, match.required, sourceFile),
+    description: sourceDescription || inferredApiDescription(memberName, match.kind),
+    descriptionSource: sourceDescription ? 'source' : 'inferred',
   };
 }
 
@@ -464,7 +572,21 @@ async function extractContracts(runtimeConfig) {
     const nextStack = new Set(stack).add(definition.name);
     const base = definition.baseName ? byName.get(definition.baseName) : undefined;
     const rows = [...(base ? resolveApi(base, nextStack) : []), ...definition.ownApi];
-    const unique = new Map(rows.map((row) => [`${row.kind}:${row.name}`, row]));
+    const unique = new Map();
+    for (const row of rows) {
+      const key = `${row.kind}:${row.name}`;
+      const inherited = unique.get(key);
+      unique.set(
+        key,
+        inherited?.descriptionSource === 'source' && row.descriptionSource === 'inferred'
+          ? {
+              ...row,
+              description: inherited.description,
+              descriptionSource: inherited.descriptionSource,
+            }
+          : row,
+      );
+    }
     const api = [...unique.values()].sort((left, right) =>
       `${left.kind}:${left.name}`.localeCompare(`${right.kind}:${right.name}`),
     );
@@ -511,6 +633,8 @@ function render(contracts) {
         type: ${quote(row.type)},
         required: ${row.required},
         defaultValue: ${quote(row.defaultValue)},
+        description: ${quote(row.description)},
+        descriptionSource: ${quote(row.descriptionSource)},
       },`,
         )
         .join('\n');
@@ -540,6 +664,8 @@ export interface KernRuntimeApiRow {
   readonly type: string;
   readonly required: boolean;
   readonly defaultValue: string;
+  readonly description: string;
+  readonly descriptionSource: 'source' | 'inferred';
 }
 
 export interface KernRuntimeComponentContract {

@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Menu. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "summary": "Menu. Opens a transient list of commands and closes after selection or dismissal.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -112,7 +112,7 @@
       "type": "string | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Accessible copy that explains the empty state.",
+      "description": "Human-readable copy for the empty state or control.",
       "descriptionSource": "inferred"
     },
     {
@@ -155,11 +155,13 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys move within composites", "Home / End jump", "Enter activates"],
+    "keyboard": [
+      "Arrow keys move through menu items; Home and End move to the boundaries",
+      "Enter or Space activates an item; Escape closes and restores trigger focus"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Destinations retain native link semantics and expose current location where applicable.",
+      "Composite navigation uses one documented focus model without changing reading order."
     ],
     "manualValidationRequired": true
   },
@@ -203,8 +205,8 @@
     "closed"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Menu for this specific contract: Opens a transient list of commands and closes after selection or dismissal.",
+    "avoidWhen": "Do not choose Menu for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

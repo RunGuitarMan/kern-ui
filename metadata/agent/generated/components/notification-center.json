@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Notification Center. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.",
+  "summary": "Notification Center. Collects recent notifications and exposes unread, empty, loading, and error states.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -106,7 +106,7 @@
       "type": "string | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Accessible copy that explains the empty state.",
+      "description": "Human-readable copy for the empty state or control.",
       "descriptionSource": "inferred"
     },
     {
@@ -152,11 +152,12 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": [
+      "Keyboard behavior is provided by the native elements and Kern primitives in the recipe"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.",
+      "Loading, empty, error, and success states remain visible and programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -199,8 +200,8 @@
     "notificationSelected"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Notification Center for this specific contract: Collects recent notifications and exposes unread, empty, loading, and error states.",
+    "avoidWhen": "Do not choose Notification Center for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -257,7 +258,7 @@
         "kind": "text",
         "defaultValue": "Recent events",
         "testValue": "Recent events · alternate",
-        "description": "Configures the component heading contract.",
+        "description": "Human-readable copy for the heading state or control.",
         "binding": {
           "kind": "input",
           "publicName": "heading",

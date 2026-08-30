@@ -16,7 +16,7 @@
     "selectors": ["krn-drop-upload"],
     "componentIds": []
   },
-  "summary": "Drag Drop Upload. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Drag Drop Upload. Presents File Upload as a drop zone. For new work, use File Upload with its drop-zone presentation.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -56,13 +56,23 @@
   },
   "api": [
     {
+      "name": "presentation",
+      "property": "presentation",
+      "kind": "input",
+      "type": "KrnUploadPresentation",
+      "required": false,
+      "defaultValue": "'dropzone'",
+      "description": "Selects a compact picker button or a drag-and-drop surface.",
+      "descriptionSource": "source"
+    },
+    {
       "name": "id",
       "property": "id",
       "kind": "input",
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -112,7 +122,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Allows more than one value or file to be selected in one interaction.",
+      "description": "Defines the component's multiple behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -202,8 +212,8 @@
       "type": "string | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Human-readable copy for the drop state or control.",
-      "descriptionSource": "inferred"
+      "description": "Localized instruction shown inside the drag-and-drop upload surface.",
+      "descriptionSource": "source"
     },
     {
       "name": "ariaLabelledBy",
@@ -259,14 +269,12 @@
   "a11y": {
     "target": "WCAG 2.2 AA",
     "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
+      "Enter or Space on the browse action opens the native file picker",
+      "Drag and drop is an additional pointer path, not the only way to add files"
     ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The real form control retains its visible name, described-by relationships, and Angular state.",
+      "Required, readonly, disabled, and invalid states remain programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -276,8 +284,7 @@
     "evidenceScope": "library-docs-route-smoke",
     "notes": [
       "KERN avoids ambient browser globals in reusable runtime infrastructure.",
-      "Validate the consuming SSR/hydration route, locale, ids and overlay host.",
-      "Browser capabilities are nullable or become available only after hydration."
+      "Validate the consuming SSR/hydration route, locale, ids and overlay host."
     ]
   },
   "examples": [
@@ -299,6 +306,7 @@
     "krn-drag-drop-upload",
     "KrnDragDropUpload",
     "KrnDropUpload",
+    "presentation",
     "id",
     "label",
     "locale",
@@ -320,8 +328,8 @@
     "value"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Drag Drop Upload for this specific contract: Presents File Upload as a drop zone. For new work, use File Upload with its drop-zone presentation.",
+    "avoidWhen": "Do not choose Drag Drop Upload for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -364,7 +372,7 @@
         "kind": "text",
         "defaultValue": ".svg,.png,.jpg,.jpeg",
         "testValue": ".png,.jpg",
-        "description": "Configures the component accept contract.",
+        "description": "Comma-separated file types accepted by the upload control.",
         "binding": {
           "kind": "input",
           "publicName": "accept",
@@ -377,7 +385,7 @@
         "kind": "text",
         "defaultValue": "SVG, PNG, or JPG · 5 MB each",
         "testValue": "SVG, PNG, or JPG · 5 MB each · alternate",
-        "description": "Configures the component description contract.",
+        "description": "Visible supporting description for the component content.",
         "binding": {
           "kind": "input",
           "publicName": "description",
@@ -390,7 +398,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Prevents interaction and participates in the component disabled contract.",
+        "description": "Prevents user interaction and participates in the disabled-state contract.",
         "binding": {
           "kind": "input",
           "publicName": "disabled",
@@ -403,7 +411,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -429,7 +437,7 @@
         "kind": "text",
         "defaultValue": "Browse files",
         "testValue": "Browse files · alternate",
-        "description": "Configures the component label contract.",
+        "description": "Visible text that names the control or data value.",
         "binding": {
           "kind": "input",
           "publicName": "label",
@@ -442,7 +450,7 @@
         "kind": "number",
         "defaultValue": 5,
         "testValue": 6,
-        "description": "Configures the component maxFiles contract.",
+        "description": "Upper or lower bound applied to the files value.",
         "binding": {
           "kind": "input",
           "publicName": "maxFiles",
@@ -458,7 +466,7 @@
         "kind": "number",
         "defaultValue": 5000000,
         "testValue": 5000001,
-        "description": "Configures the component maxSize contract.",
+        "description": "Upper or lower bound applied to the size value.",
         "binding": {
           "kind": "input",
           "publicName": "maxSize",
@@ -474,7 +482,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component readonly contract.",
+        "description": "Keeps the value perceivable while preventing user edits.",
         "binding": {
           "kind": "input",
           "publicName": "readonly",
@@ -500,7 +508,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component tabindex contract.",
+        "description": "Native sequential-focus order forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "tabindex",
@@ -670,9 +678,9 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 17,
+      "publicInputsAndModels": 18,
       "controlled": 12,
-      "excluded": 5,
+      "excluded": 6,
       "unclassified": 0
     },
     "exclusions": [
@@ -722,6 +730,18 @@
         "evidence": {
           "category": "locale-preview",
           "pointer": "preview/drag-drop-upload?locale=ru-RU"
+        }
+      },
+      {
+        "componentId": "drag-drop-upload",
+        "publicName": "presentation",
+        "kind": "input",
+        "type": "KrnUploadPresentation",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/drag-drop-upload?state=default"
         }
       },
       {

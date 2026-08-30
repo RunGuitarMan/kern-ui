@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Layout
 
-Header. A composable spatial primitive that keeps product layouts predictable across containers.
+Header. Provides a sticky or static header landmark with configurable height, offset, and elevation.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Header for this specific contract: Provides a sticky or static header landmark with configurable height, offset, and elevation.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Header for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -49,14 +49,14 @@ void bootstrapApplication(KernHeaderAgentExample);
 
 ## API
 
-| Name             | Kind  | Type             | Required | Default  | Description                                                                   |
-| ---------------- | ----- | ---------------- | -------- | -------- | ----------------------------------------------------------------------------- |
-| `height`         | input | `KrnLayoutSpace` | no       | `'4rem'` | Explicit block size of the rendered surface or virtual viewport.              |
-| `stickyOffset`   | input | `KrnLayoutSpace` | no       | `0`      | Logical inset between a sticky header and its scrolling boundary.             |
-| `sticky`         | input | `boolean`        | no       | `true`   | Keeps the surface attached to its scrolling boundary while content moves.     |
-| `elevated`       | input | `boolean`        | no       | `false`  | Adds semantic surface elevation for content that sits above its surroundings. |
-| `ariaLabel`      | input | `string`         | no       | `''`     | Accessible name used when visible content is not sufficient.                  |
-| `ariaLabelledBy` | input | `string`         | no       | `''`     | Space-separated element ids that name the native header landmark.             |
+| Name             | Kind  | Type             | Required | Default  | Description                                                       |
+| ---------------- | ----- | ---------------- | -------- | -------- | ----------------------------------------------------------------- |
+| `height`         | input | `KrnLayoutSpace` | no       | `'4rem'` | Explicit block size of the rendered surface or virtual viewport.  |
+| `stickyOffset`   | input | `KrnLayoutSpace` | no       | `0`      | Logical inset between a sticky header and its scrolling boundary. |
+| `sticky`         | input | `boolean`        | no       | `true`   | Defines the component's sticky behavior or presentation.          |
+| `elevated`       | input | `boolean`        | no       | `false`  | Defines the component's elevated behavior or presentation.        |
+| `ariaLabel`      | input | `string`         | no       | `''`     | Accessible name used when visible content is not sufficient.      |
+| `ariaLabelledBy` | input | `string`         | no       | `''`     | Space-separated element ids that name the native header landmark. |
 
 ## Deprecated selectors
 
@@ -74,10 +74,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Renders a native header landmark and accepts aria-label or aria-labelledby when more than one header exists.
+- Sticky positioning does not change reading or focus order.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -112,12 +111,12 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument       | Control | Default  | Test value | Binding                         | Description                                     |
-| -------------- | ------- | -------- | ---------- | ------------------------------- | ----------------------------------------------- |
-| `elevated`     | boolean | `true`   | `false`    | input `elevated` (property)     | Adds the elevated header treatment.             |
-| `height`       | text    | `"4rem"` | `"20rem"`  | input `height` (property)       | Configures the component height contract.       |
-| `sticky`       | boolean | `true`   | `false`    | input `sticky` (property)       | Configures the component sticky contract.       |
-| `stickyOffset` | text    | `"0"`    | `"1rem"`   | input `stickyOffset` (property) | Configures the component stickyOffset contract. |
+| Argument       | Control | Default  | Test value | Binding                         | Description                                                       |
+| -------------- | ------- | -------- | ---------- | ------------------------------- | ----------------------------------------------------------------- |
+| `elevated`     | boolean | `true`   | `false`    | input `elevated` (property)     | Adds the elevated header treatment.                               |
+| `height`       | text    | `"4rem"` | `"20rem"`  | input `height` (property)       | Explicit block size of the rendered surface or virtual viewport.  |
+| `sticky`       | boolean | `true`   | `false`    | input `sticky` (property)       | Defines the component's sticky behavior or presentation.          |
+| `stickyOffset` | text    | `"0"`    | `"1rem"`   | input `stickyOffset` (property) | Logical inset between a sticky header and its scrolling boundary. |
 
 Exact API exclusions:
 

@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Navigation
 
-Menu. A keyboard-first wayfinding primitive that preserves orientation and current location.
+Menu. Opens a transient list of commands and closes after selection or dismissal.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Menu for this specific contract: Opens a transient list of commands and closes after selection or dismissal.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Menu for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -57,7 +57,7 @@ void bootstrapApplication(KernMenuAgentExample);
 | `triggerLabel`     | input  | `string \| undefined`                                                | no       | `undefined` | Human-readable copy for the trigger state or control.                |
 | `triggerAriaLabel` | input  | `string \| undefined`                                                | no       | `undefined` | Human-readable copy for the trigger aria state or control.           |
 | `menuAriaLabel`    | input  | `string \| undefined`                                                | no       | `undefined` | Human-readable copy for the menu aria state or control.              |
-| `emptyLabel`       | input  | `string \| undefined`                                                | no       | `undefined` | Accessible copy that explains the empty state.                       |
+| `emptyLabel`       | input  | `string \| undefined`                                                | no       | `undefined` | Human-readable copy for the empty state or control.                  |
 | `itemSelected`     | output | `KrnNavigationItem`                                                  | no       | `undefined` | Notifies the consumer after the item selected interaction completes. |
 | `closed`           | output | `"detach" \| "escape" \| "outside" \| "selection"`                   | no       | `undefined` | Notifies the consumer after the closed interaction completes.        |
 
@@ -75,12 +75,10 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys move within composites
-- Home / End jump
-- Enter activates
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Arrow keys move through menu items; Home and End move to the boundaries
+- Enter or Space activates an item; Escape closes and restores trigger focus
+- Destinations retain native link semantics and expose current location where applicable.
+- Composite navigation uses one documented focus model without changing reading order.
 
 Manual assistive-technology validation remains required in the consuming application.
 

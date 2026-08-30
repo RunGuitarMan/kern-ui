@@ -7,13 +7,13 @@
 - Lifecycle: **recipe**
 - Category: Patterns
 
-Profile Form. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.
+Profile Form. Edits core profile fields with validation and explicit save progress.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Profile Form for this specific contract: Edits core profile fields with validation and explicit save progress.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Profile Form for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -69,23 +69,23 @@ void bootstrapApplication(KernProfileFormAgentExample);
 
 ## API
 
-| Name                 | Kind   | Type                                                                              | Required | Default                                            | Description                                                          |
-| -------------------- | ------ | --------------------------------------------------------------------------------- | -------- | -------------------------------------------------- | -------------------------------------------------------------------- |
-| `value`              | input  | `KrnProfileValue`                                                                 | no       | `{ name: '', role: '', bio: '', timezone: 'UTC' }` | Controlled component value.                                          |
-| `timezones`          | input  | `ReadonlyArray<{ readonly value: string; readonly label: string; }> \| undefined` | no       | `undefined`                                        | Ordered domain values supplied to the timezone collection.           |
-| `saving`             | input  | `boolean`                                                                         | no       | `false`                                            | Exposes an in-progress save state and prevents duplicate submission. |
-| `dirtyMessage`       | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the dirty state or control.                  |
-| `nameLabel`          | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the name state or control.                   |
-| `nameErrorLabel`     | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the name error state or control.             |
-| `roleLabel`          | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the role state or control.                   |
-| `bioLabel`           | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the bio state or control.                    |
-| `bioErrorLabel`      | input  | `((maximumLength: number) => string) \| undefined`                                | no       | `undefined`                                        | Human-readable copy for the bio error state or control.              |
-| `bioMaxLength`       | input  | `number`                                                                          | no       | `280`                                              | Maximum biography length enforced by the profile form pattern.       |
-| `timezoneLabel`      | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the timezone state or control.               |
-| `timezoneErrorLabel` | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the timezone error state or control.         |
-| `savingLabel`        | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the saving state or control.                 |
-| `saveLabel`          | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the save state or control.                   |
-| `saved`              | output | `KrnProfileValue`                                                                 | no       | `undefined`                                        | Notifies the consumer after the saved interaction completes.         |
+| Name                 | Kind   | Type                                                                              | Required | Default                                            | Description                                                      |
+| -------------------- | ------ | --------------------------------------------------------------------------------- | -------- | -------------------------------------------------- | ---------------------------------------------------------------- |
+| `value`              | input  | `KrnProfileValue`                                                                 | no       | `{ name: '', role: '', bio: '', timezone: 'UTC' }` | Controlled component value.                                      |
+| `timezones`          | input  | `ReadonlyArray<{ readonly value: string; readonly label: string; }> \| undefined` | no       | `undefined`                                        | Ordered domain values supplied to the timezone collection.       |
+| `saving`             | input  | `boolean`                                                                         | no       | `false`                                            | Defines the component's saving behavior or presentation.         |
+| `dirtyMessage`       | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the dirty state or control.              |
+| `nameLabel`          | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the name state or control.               |
+| `nameErrorLabel`     | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the name error state or control.         |
+| `roleLabel`          | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the role state or control.               |
+| `bioLabel`           | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the bio state or control.                |
+| `bioErrorLabel`      | input  | `((maximumLength: number) => string) \| undefined`                                | no       | `undefined`                                        | Human-readable copy for the bio error state or control.          |
+| `bioMaxLength`       | input  | `number`                                                                          | no       | `280`                                              | Defines the component's bio max length behavior or presentation. |
+| `timezoneLabel`      | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the timezone state or control.           |
+| `timezoneErrorLabel` | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the timezone error state or control.     |
+| `savingLabel`        | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the saving state or control.             |
+| `saveLabel`          | input  | `string \| undefined`                                                             | no       | `undefined`                                        | Human-readable copy for the save state or control.               |
+| `saved`              | output | `KrnProfileValue`                                                                 | no       | `undefined`                                        | Notifies the consumer after the saved interaction completes.     |
 
 ## Deprecated selectors
 
@@ -101,10 +101,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Keyboard behavior is provided by the native elements and Kern primitives in the recipe
+- The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.
+- Loading, empty, error, and success states remain visible and programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -148,7 +147,7 @@ component inputs or models.
 | -------------- | ------- | ------------------- | ------------------------------- | ------------------------------- | ---------------------------------------------------------------- |
 | `saving`       | boolean | `false`             | `true`                          | input `saving` (property)       | Shows the saving state.                                          |
 | `dirtyMessage` | text    | `"Unsaved changes"` | `"Unsaved changes · alternate"` | input `dirtyMessage` (property) | Uses locale-aware unsaved-changes copy until explicitly changed. |
-| `bioMaxLength` | number  | `280`               | `281`                           | input `bioMaxLength` (property) | Configures the component bioMaxLength contract.                  |
+| `bioMaxLength` | number  | `280`               | `281`                           | input `bioMaxLength` (property) | Defines the component's bio max length behavior or presentation. |
 
 Exact API exclusions:
 

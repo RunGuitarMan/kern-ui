@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Context Menu. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "summary": "Context Menu. Opens commands for a specific target at the pointer or keyboard invocation point.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -105,11 +105,13 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys move within composites", "Home / End jump", "Enter activates"],
+    "keyboard": [
+      "Shift+F10 or the Context Menu key opens commands for the focused target",
+      "Arrow keys move through commands; Escape closes and restores target focus"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Destinations retain native link semantics and expose current location where applicable.",
+      "Composite navigation uses one documented focus model without changing reading order."
     ],
     "manualValidationRequired": true
   },
@@ -145,8 +147,8 @@
     "itemSelected"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Context Menu for this specific contract: Opens commands for a specific target at the pointer or keyboard invocation point.",
+    "avoidWhen": "Do not choose Context Menu for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

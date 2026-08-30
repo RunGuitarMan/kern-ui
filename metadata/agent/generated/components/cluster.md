@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Layout
 
-Cluster. A composable spatial primitive that keeps product layouts predictable across containers.
+Cluster. Wraps related items into rows with independent row and column spacing.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Cluster for this specific contract: Wraps related items into rows with independent row and column spacing.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Cluster for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -71,10 +71,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Projected content retains its document order and native semantics as layout changes.
+- Logical sizing and placement work in both LTR and RTL without duplicating content.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -109,13 +108,13 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument    | Control | Default           | Test value | Binding                      | Description                                    |
-| ----------- | ------- | ----------------- | ---------- | ---------------------------- | ---------------------------------------------- |
-| `gap`       | select  | `"2"`             | `"1"`      | input `gap` (property)       | Changes the spacing between clustered items.   |
-| `justify`   | select  | `"space-between"` | `"start"`  | input `justify` (property)   | Distributes the cluster along its inline axis. |
-| `align`     | select  | `"center"`        | `"start"`  | input `align` (property)     | Configures the component align contract.       |
-| `columnGap` | text    | `""`              | `"20rem"`  | input `columnGap` (property) | Configures the component columnGap contract.   |
-| `rowGap`    | text    | `""`              | `"20rem"`  | input `rowGap` (property)    | Configures the component rowGap contract.      |
+| Argument    | Control | Default           | Test value | Binding                      | Description                                                                |
+| ----------- | ------- | ----------------- | ---------- | ---------------------------- | -------------------------------------------------------------------------- |
+| `gap`       | select  | `"2"`             | `"1"`      | input `gap` (property)       | Changes the spacing between clustered items.                               |
+| `justify`   | select  | `"space-between"` | `"start"`  | input `justify` (property)   | Distributes the cluster along its inline axis.                             |
+| `align`     | select  | `"center"`        | `"start"`  | input `align` (property)     | Cross-axis alignment of projected children within each flex line.          |
+| `columnGap` | text    | `""`              | `"20rem"`  | input `columnGap` (property) | Optional spacing override between adjacent children within each flex line. |
+| `rowGap`    | text    | `""`              | `"20rem"`  | input `rowGap` (property)    | Optional spacing override between wrapped flex lines.                      |
 
 Exact API exclusions:
 

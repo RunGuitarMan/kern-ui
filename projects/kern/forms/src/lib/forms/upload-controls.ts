@@ -27,6 +27,8 @@ import {
   useKrnFormControl,
 } from './value-accessor';
 
+export type KrnUploadPresentation = 'button' | 'dropzone';
+
 const mergeAriaIds = (...values: readonly (string | null | undefined)[]): string | null => {
   const ids = values.flatMap((value) => value?.split(/\s+/).filter(Boolean) ?? []);
   return ids.length > 0 ? [...new Set(ids)].join(' ') : null;
@@ -268,6 +270,7 @@ class KrnUploadController {
   selector: 'krn-file-upload',
   host: {
     '[attr.id]': 'null',
+    '[attr.data-presentation]': 'presentation()',
   },
   imports: [NgTemplateOutlet],
   providers: [...provideKrnFormControl()],
@@ -275,102 +278,10 @@ class KrnUploadController {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrnFileUpload {
-  protected readonly translations = inject(KRN_TRANSLATIONS);
-  readonly id = input('');
-  readonly label = input<string | undefined>();
-  protected readonly resolvedLabel = krnInputFallback(
-    this.label,
-    () => this.translations.forms.chooseFiles,
-  );
-  readonly locale = input<string | undefined>();
-  private readonly resolvedLocale = krnResolvedLocale(this.locale);
-  readonly description = input('');
-  readonly accept = input('');
-  readonly multiple = input(false, { transform: booleanAttribute });
-  readonly maxSize = input(Number.POSITIVE_INFINITY, { transform: numberAttribute });
-  readonly maxFiles = input(Number.POSITIVE_INFINITY, { transform: numberAttribute });
-  readonly disabled = input(false, { transform: booleanAttribute });
-  readonly readOnly = input(false, { alias: 'readonly', transform: booleanAttribute });
-  readonly required = input(false, { transform: booleanAttribute });
-  readonly invalid = input(false, { transform: booleanAttribute });
-  readonly filesChange = output<readonly File[]>();
-  readonly rejected = output<readonly KrnUploadRejection[]>();
-  readonly ariaLabelledBy = input('');
-  readonly ariaDescribedBy = input('');
-  readonly tabIndex = input(0, { alias: 'tabindex', transform: numberAttribute });
-  readonly value = input<readonly File[] | undefined>(undefined);
-
-  private readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
-  readonly #controller = new KrnUploadController(this, this.fileInput, this.resolvedLocale);
-  protected readonly rejections = this.#controller.rejections;
-  protected readonly controlValue = this.#controller.controlValue;
-  protected readonly formDisabled = this.#controller.formDisabled;
-  protected readonly touch = this.#controller.touch;
-  readonly writeValue = this.#controller.writeValue;
-  readonly registerOnChange = this.#controller.registerOnChange;
-  readonly registerOnTouched = this.#controller.registerOnTouched;
-  readonly setDisabledState = this.#controller.setDisabledState;
-  readonly validate = this.#controller.validate;
-  readonly registerOnValidatorChange = this.#controller.registerOnValidatorChange;
-  protected readonly a11y = this.#controller.a11y;
-  protected readonly isDisabled = this.#controller.isDisabled;
-  protected readonly nativeInputId = computed(() => `${this.a11y.id()}-native`);
-  protected readonly descriptionId = computed(() => `${this.a11y.id()}-description`);
-  protected readonly requiredDescriptionId = computed(() => `${this.a11y.id()}-required`);
-  protected readonly effectiveLabelledBy = computed(() =>
-    mergeAriaIds(this.ariaLabelledBy(), this.a11y.labelledBy()),
-  );
-  protected readonly effectiveDescribedBy = computed(() =>
-    mergeAriaIds(
-      this.ariaDescribedBy(),
-      this.a11y.describedBy(),
-      this.description() ? this.descriptionId() : null,
-      this.a11y.required() ? this.requiredDescriptionId() : null,
-    ),
-  );
-  private readonly action = viewChild<ElementRef<HTMLButtonElement>>('action');
-
-  protected openPicker(): void {
-    this.#controller.openPicker();
-  }
-
-  protected selectFromInput(event: Event): void {
-    this.#controller.selectFromInput(event);
-  }
-
-  protected removeFile(index: number): void {
-    this.#controller.removeFile(index);
-  }
-
-  protected formatBytes(bytes: number): string {
-    return this.#controller.formatBytes(bytes);
-  }
-
-  protected fileKey(file: File): string {
-    return this.#controller.fileKey(file);
-  }
-
-  focus(options?: FocusOptions): void {
-    this.action()?.nativeElement.focus(options);
-  }
-
-  blur(): void {
-    this.action()?.nativeElement.blur();
-  }
-}
-
-@Component({
-  selector: 'krn-drop-upload, krn-drag-drop-upload',
-  host: {
-    '[attr.id]': 'null',
-  },
-  providers: [...provideKrnFormControl()],
-  templateUrl: './drop-upload.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class KrnDropUpload {
   protected readonly platform = inject(KRN_PLATFORM);
   protected readonly translations = inject(KRN_TRANSLATIONS);
+  /** Selects a compact picker button or a drag-and-drop surface. */
+  readonly presentation = input<KrnUploadPresentation>('button');
   readonly id = input('');
   readonly label = input<string | undefined>();
   protected readonly resolvedLabel = krnInputFallback(
@@ -390,6 +301,7 @@ export class KrnDropUpload {
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly filesChange = output<readonly File[]>();
   readonly rejected = output<readonly KrnUploadRejection[]>();
+  /** Localized instruction shown inside the drag-and-drop upload surface. */
   readonly dropLabel = input<string | undefined>();
   protected readonly resolvedDropLabel = krnInputFallback(
     this.dropLabel,
@@ -414,7 +326,6 @@ export class KrnDropUpload {
   readonly registerOnValidatorChange = this.#controller.registerOnValidatorChange;
   protected readonly a11y = this.#controller.a11y;
   protected readonly isDisabled = this.#controller.isDisabled;
-  protected readonly dragging = signal(false);
   protected readonly nativeInputId = computed(() => `${this.a11y.id()}-native`);
   protected readonly dropLabelId = computed(() => `${this.a11y.id()}-drop-label`);
   protected readonly descriptionId = computed(() => `${this.a11y.id()}-description`);
@@ -426,14 +337,15 @@ export class KrnDropUpload {
     mergeAriaIds(
       this.ariaDescribedBy(),
       this.a11y.describedBy(),
-      this.dropLabelId(),
+      this.presentation() === 'dropzone' ? this.dropLabelId() : null,
       this.description() ? this.descriptionId() : null,
       this.a11y.required() ? this.requiredDescriptionId() : null,
     ),
   );
   private readonly action = viewChild<ElementRef<HTMLButtonElement>>('action');
+  protected readonly dragging = signal(false);
   private readonly resetDraggingWhenBlocked = effect(() => {
-    if (this.isDisabled() || this.a11y.readOnly()) {
+    if (this.presentation() !== 'dropzone' || this.isDisabled() || this.a11y.readOnly()) {
       this.dragging.set(false);
     }
   });
@@ -463,21 +375,19 @@ export class KrnDropUpload {
   }
 
   protected enterDrag(event: DragEvent): void {
+    if (this.presentation() !== 'dropzone') return;
     event.preventDefault();
     if (this.isDisabled() || this.a11y.readOnly()) {
       this.dragging.set(false);
-      if (event.dataTransfer) {
-        event.dataTransfer.dropEffect = 'none';
-      }
+      if (event.dataTransfer) event.dataTransfer.dropEffect = 'none';
       return;
     }
     this.dragging.set(true);
-    if (event.dataTransfer) {
-      event.dataTransfer.dropEffect = 'copy';
-    }
+    if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy';
   }
 
   protected leaveDrag(event: DragEvent): void {
+    if (this.presentation() !== 'dropzone') return;
     const current = event.currentTarget;
     const next = event.relatedTarget;
     if (
@@ -491,6 +401,7 @@ export class KrnDropUpload {
   }
 
   protected dropFiles(event: DragEvent): void {
+    if (this.presentation() !== 'dropzone') return;
     event.preventDefault();
     this.dragging.set(false);
     this.acceptFiles(Array.from(event.dataTransfer?.files ?? []));
@@ -503,6 +414,22 @@ export class KrnDropUpload {
   blur(): void {
     this.action()?.nativeElement.blur();
   }
+}
+
+/** @deprecated Use `KrnFileUpload` with `presentation="dropzone"`. */
+@Component({
+  selector: 'krn-drop-upload, krn-drag-drop-upload',
+  host: {
+    '[attr.id]': 'null',
+    '[attr.data-presentation]': 'presentation()',
+  },
+  imports: [NgTemplateOutlet],
+  providers: [...provideKrnFormControl()],
+  templateUrl: './file-upload.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class KrnDropUpload extends KrnFileUpload {
+  override readonly presentation = input<KrnUploadPresentation>('dropzone');
 }
 
 export { KrnDropUpload as KrnDragDropUpload };

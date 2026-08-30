@@ -12,6 +12,8 @@ export interface KernRuntimeApiRow {
   readonly type: string;
   readonly required: boolean;
   readonly defaultValue: string;
+  readonly description: string;
+  readonly descriptionSource: 'source' | 'inferred';
 }
 
 export interface KernRuntimeComponentContract {
@@ -40,6 +42,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | null | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: "Defines the component's brand color behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'krnDensity',
@@ -48,6 +52,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnDensity | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: "Defines the component's density behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'krnTheme',
@@ -56,6 +62,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnTheme | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: "Defines the component's theme behavior or presentation.",
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -71,6 +79,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the text state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'krnTooltipHideDelay',
@@ -79,6 +89,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '80',
+        description: 'Controls whether the component applies the hide delay behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'krnTooltipPosition',
@@ -87,6 +99,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"above" | "after" | "before" | "below"',
         required: false,
         defaultValue: "'above'",
+        description: "Defines the component's position behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'krnTooltipShowDelay',
@@ -95,6 +109,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '400',
+        description: 'Controls whether the component applies the show delay behavior.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -116,6 +132,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description:
+          'Suppresses duplicate activation, owns `aria-disabled`, and updates the\npersistent polite status. Use native `disabled` for ordinary unavailability.',
+        descriptionSource: 'source',
       },
       {
         name: 'loadingLabel',
@@ -124,6 +143,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description:
+          'Accessible loading copy; defaults to the application or closest scoped option.',
+        descriptionSource: 'source',
       },
       {
         name: 'size',
@@ -132,6 +154,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSize',
         required: false,
         defaultValue: 'this.options.size',
+        description: 'Named semantic size resolved through Kern density and sizing tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tone',
@@ -140,6 +164,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnTone',
         required: false,
         defaultValue: 'this.options.tone',
+        description:
+          'Semantic intent that selects coordinated text, icon, border, and surface tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'variant',
@@ -148,6 +175,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnActionVariant',
         required: false,
         defaultValue: 'this.options.variant',
+        description: 'Named visual hierarchy treatment that preserves the component semantics.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -163,6 +192,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'this.options.extended',
+        description: "Defines the component's extended behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'loading',
@@ -171,6 +202,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description:
+          'Suppresses duplicate activation and owns `aria-disabled` while retaining\nfocus. Use native `disabled` for ordinary unavailability.',
+        descriptionSource: 'source',
       },
       {
         name: 'loadingLabel',
@@ -179,6 +213,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description:
+          'Accessible loading copy; defaults to the application or closest scoped option.',
+        descriptionSource: 'source',
       },
       {
         name: 'size',
@@ -187,6 +224,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSize',
         required: false,
         defaultValue: 'this.options.size',
+        description: 'Named semantic size resolved through Kern density and sizing tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tone',
@@ -195,6 +234,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnTone',
         required: false,
         defaultValue: 'this.options.tone',
+        description:
+          'Semantic intent that selects coordinated text, icon, border, and surface tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'variant',
@@ -203,6 +245,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnActionVariant',
         required: false,
         defaultValue: 'this.options.variant',
+        description: 'Named visual hierarchy treatment that preserves the component semantics.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -218,6 +262,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description:
+          'Suppresses duplicate activation and owns `aria-disabled` while retaining\nfocus. Use native `disabled` for ordinary unavailability.',
+        descriptionSource: 'source',
       },
       {
         name: 'loadingLabel',
@@ -226,6 +273,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description:
+          'Accessible loading copy; defaults to the application or closest scoped option.',
+        descriptionSource: 'source',
       },
       {
         name: 'size',
@@ -234,6 +284,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSize',
         required: false,
         defaultValue: 'this.options.size',
+        description: 'Named semantic size resolved through Kern density and sizing tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tone',
@@ -242,6 +294,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnTone',
         required: false,
         defaultValue: 'this.options.tone',
+        description:
+          'Semantic intent that selects coordinated text, icon, border, and surface tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'variant',
@@ -250,6 +305,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnActionVariant',
         required: false,
         defaultValue: 'this.options.variant',
+        description: 'Named visual hierarchy treatment that preserves the component semantics.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -265,6 +322,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'pressedTone',
@@ -273,6 +332,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnTone',
         required: false,
         defaultValue: 'this.options.pressedTone',
+        description: "Defines the component's pressed tone behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'pressedVariant',
@@ -281,6 +342,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnActionVariant',
         required: false,
         defaultValue: 'this.options.pressedVariant',
+        description: "Defines the component's pressed variant behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'size',
@@ -289,6 +352,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSize',
         required: false,
         defaultValue: 'this.options.size',
+        description: 'Named semantic size resolved through Kern density and sizing tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'unpressedTone',
@@ -297,6 +362,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnTone',
         required: false,
         defaultValue: 'this.options.unpressedTone',
+        description: "Defines the component's unpressed tone behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'unpressedVariant',
@@ -305,6 +372,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnActionVariant',
         required: false,
         defaultValue: 'this.options.unpressedVariant',
+        description: "Defines the component's unpressed variant behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -313,6 +382,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description:
+          'Stable native value used by `KrnToggleGroup` as the selection identity.\n\nIt remains required because group selection is represented by serializable\nstring values rather than child indices or component identities.',
+        descriptionSource: 'source',
       },
       {
         name: 'pressed',
@@ -321,6 +393,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description:
+          'Standalone state model. Inside a Toggle Group, the group values are authoritative.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -336,6 +411,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'this.options.connected',
+        description:
+          'Joins adjacent action borders and radii without coordinating child state or activation.',
+        descriptionSource: 'source',
       },
       {
         name: 'orientation',
@@ -344,6 +422,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOrientation',
         required: false,
         defaultValue: 'this.options.orientation',
+        description:
+          'Changes the visual layout axis without altering native document-order keyboard behavior.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -359,6 +440,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Joins direct toggles into a single segmented control surface.',
+        descriptionSource: 'source',
       },
       {
         name: 'disabled',
@@ -367,6 +450,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description:
+          'Disables every registered native toggle and all group-owned value transitions.',
+        descriptionSource: 'source',
       },
       {
         name: 'multiple',
@@ -375,6 +461,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'this.options.multiple',
+        description:
+          'Allows multiple pressed values; false exposes at most one effective pressed value.',
+        descriptionSource: 'source',
       },
       {
         name: 'orientation',
@@ -383,6 +472,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOrientation',
         required: false,
         defaultValue: 'this.options.orientation',
+        description: 'Defines both the visual layout axis and the toolbar Arrow-key axis.',
+        descriptionSource: 'source',
       },
       {
         name: 'size',
@@ -391,6 +482,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSize',
         required: false,
         defaultValue: "'sm'",
+        description:
+          'Controls the density of every direct toggle without repeating size on each item.',
+        descriptionSource: 'source',
       },
       {
         name: 'values',
@@ -399,6 +493,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<string>',
         required: false,
         defaultValue: '[]',
+        description:
+          'Controlled stable string values; user transitions always emit a fresh frozen array.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -414,6 +511,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: true,
         defaultValue: 'required',
+        description: 'Controlled expanded state for a disclosure or hierarchical item.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'krnEditableComboboxSemantics',
@@ -422,6 +521,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnAutocompleteMode',
         required: true,
         defaultValue: 'required',
+        description: "Defines the component's mode behavior or presentation.",
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -437,6 +538,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -452,6 +555,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnAlertAppearance',
         required: false,
         defaultValue: "'subtle'",
+        description: 'Selects the alert surface treatment without changing its semantic tone.',
+        descriptionSource: 'source',
       },
       {
         name: 'dismissible',
@@ -460,6 +565,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's dismissible behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'dismissLabel',
@@ -468,6 +575,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the dismiss state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'icon',
@@ -476,6 +585,19 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: "Defines the component's icon behavior or presentation.",
+        descriptionSource: 'inferred',
+      },
+      {
+        name: 'placement',
+        property: 'placement',
+        kind: 'input',
+        type: 'KrnAlertPlacement',
+        required: false,
+        defaultValue: "'inline'",
+        description:
+          'Places the message inline or stretches it into a page-level banner treatment.',
+        descriptionSource: 'source',
       },
       {
         name: 'title',
@@ -484,6 +606,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible title that also names the component surface or data view.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tone',
@@ -492,6 +616,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnFeedbackTone',
         required: false,
         defaultValue: "'info'",
+        description:
+          'Semantic intent that selects coordinated text, icon, border, and surface tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closed',
@@ -500,6 +627,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the closed interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -515,6 +644,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<unknown> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render actions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -523,6 +654,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closeLabel',
@@ -531,6 +664,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the close state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closeOnEscape',
@@ -539,6 +674,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Allows Escape to dismiss the topmost owned overlay.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closeOnOutside',
@@ -547,6 +684,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean | null',
         required: false,
         defaultValue: 'null',
+        description: 'Allows an interaction outside the owned overlay to dismiss it.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'contentTemplate',
@@ -555,6 +694,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<unknown> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'description',
@@ -563,6 +704,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'eyebrow',
@@ -571,6 +714,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the eyebrow state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'initialFocus',
@@ -579,6 +724,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'first-tabbable'",
+        description: 'Identifies the element that receives focus when the modal surface opens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'modal',
@@ -587,6 +734,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description:
+          'Blocks background interaction and traps focus while the alert dialog is open.',
+        descriptionSource: 'source',
       },
       {
         name: 'restoreFocus',
@@ -595,6 +745,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'HTMLElement | false | null',
         required: false,
         defaultValue: 'null',
+        description: 'Explicit focus return target, or `false` to disable focus restoration.',
+        descriptionSource: 'source',
       },
       {
         name: 'showClose',
@@ -603,6 +755,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Controls whether the component applies the show close behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'size',
@@ -611,6 +765,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOverlaySize',
         required: false,
         defaultValue: "'md'",
+        description: "Selects the alert dialog's maximum inline size.",
+        descriptionSource: 'source',
       },
       {
         name: 'title',
@@ -619,6 +775,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible title that also names the component surface or data view.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -627,6 +785,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'afterExited',
@@ -635,6 +795,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Emits after exit motion and global modal cleanup have completed.',
+        descriptionSource: 'source',
       },
       {
         name: 'closed',
@@ -643,6 +805,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOverlayCloseReason',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the closed interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -658,6 +822,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the close navigation state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'mainId',
@@ -666,6 +832,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'main-content'",
+        description: 'Stable identifier used by the main contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'mainMaxWidth',
@@ -674,6 +842,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'100%'",
+        description: "Defines the component's main max width behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'mobileNavigation',
@@ -682,6 +852,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"auto" | "hidden" | "rail" | "sidebar"',
         required: false,
         defaultValue: "'auto'",
+        description: "Defines the component's mobile navigation behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'mobileNavigationDescribedBy',
@@ -690,6 +862,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Space-separated element ids that describe the mobile navigation dialog.',
+        descriptionSource: 'source',
       },
       {
         name: 'mobileNavigationId',
@@ -698,6 +872,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "this.ids.next('mobile-navigation')",
+        description: 'Stable identifier used by the mobile navigation contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'mobileNavigationInitialFocus',
@@ -706,6 +882,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'first-tabbable'",
+        description: 'Focus target applied after the mobile navigation dialog opens.',
+        descriptionSource: 'source',
       },
       {
         name: 'mobileNavigationLabel',
@@ -714,6 +892,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the mobile navigation state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'mobileNavigationLabelledBy',
@@ -722,6 +902,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Space-separated element ids that name the mobile navigation dialog.',
+        descriptionSource: 'source',
       },
       {
         name: 'openNavigationLabel',
@@ -730,6 +912,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the open navigation state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'railWidth',
@@ -738,6 +922,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'3.5rem'",
+        description: "Defines the component's rail width behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'sidebarPosition',
@@ -746,6 +932,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"end" | "start"',
         required: false,
         defaultValue: "'start'",
+        description: "Defines the component's sidebar position behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'sidebarWidth',
@@ -754,6 +942,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'17rem'",
+        description: "Defines the component's sidebar width behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'mobileNavigationOpen',
@@ -762,6 +952,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description:
+          'Controlled mobile navigation open state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -777,6 +970,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"contain" | "cover" | "fill" | "none"',
         required: false,
         defaultValue: "'cover'",
+        description:
+          'Controls how direct projected media fills the ratio box. Invalid runtime values use cover.',
+        descriptionSource: 'source',
       },
       {
         name: 'ratio',
@@ -785,6 +981,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | string',
         required: false,
         defaultValue: '16 / 9',
+        description: 'Sets a positive width-to-height ratio as a number, `16 / 9`, or `16:9`.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -800,6 +998,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean | undefined',
         required: false,
         defaultValue: 'undefined',
+        description:
+          'Controls whether the component applies the allow custom value input behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaDescribedBy',
@@ -808,6 +1009,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -816,6 +1020,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -824,6 +1030,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'autocompleteMode',
@@ -832,6 +1041,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnAutocompleteMode | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controls whether the component applies the autocomplete mode input behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -840,6 +1051,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'emptyText',
@@ -848,6 +1061,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the empty state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'errorText',
@@ -856,6 +1071,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the error state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'filterLocally',
@@ -864,6 +1081,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description:
+          'Set to false when the consumer filters options remotely in response to queryChange.',
+        descriptionSource: 'source',
       },
       {
         name: 'id',
@@ -872,6 +1092,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -880,6 +1102,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'loadingText',
@@ -888,6 +1112,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the loading state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'name',
@@ -896,6 +1122,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Native form-control name forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'optionFilter',
@@ -904,6 +1132,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOptionFilter<string> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Overrides the default case-insensitive local option filter.',
+        descriptionSource: 'source',
       },
       {
         name: 'options',
@@ -912,6 +1142,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnSelectOption<string>>',
         required: true,
         defaultValue: 'required',
+        description: 'Authoritative option collection presented by the selection control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'optionsState',
@@ -920,6 +1152,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOptionsState',
         required: false,
         defaultValue: "'ready'",
+        description:
+          'Controls whether options are interactive or replaced by an announced loading/error state.',
+        descriptionSource: 'source',
       },
       {
         name: 'placeholder',
@@ -928,6 +1163,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Short input hint shown only while no value is present.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -936,6 +1173,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -944,6 +1183,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -952,6 +1193,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'toggleLabel',
@@ -960,6 +1203,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the toggle state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -968,6 +1213,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -976,6 +1223,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'optionSelected',
@@ -984,6 +1233,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSelectOption<string>',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the option selected interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'queryChange',
@@ -992,6 +1243,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description:
+          'Emits every user query so remote option sources can load and replace options.',
+        descriptionSource: 'source',
       },
       {
         name: 'valueChange',
@@ -1000,6 +1254,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -1015,6 +1271,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: "Defines the component's alt behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'locale',
@@ -1023,6 +1281,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Locale identifier used for collation, formatting, and component-owned copy.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'name',
@@ -1031,6 +1291,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Native form-control name forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'size',
@@ -1039,6 +1301,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"lg" | "md" | "sm"',
         required: false,
         defaultValue: "'md'",
+        description: 'Named semantic size resolved through Kern density and sizing tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'src',
@@ -1047,6 +1311,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: "Defines the component's src behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'status',
@@ -1055,6 +1321,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"away" | "busy" | "online" | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: "Defines the component's status behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'imageFailed',
@@ -1063,6 +1331,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled image failed state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -1078,6 +1348,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'overlap',
@@ -1086,6 +1358,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'0.625rem'",
+        description: "Defines the component's overlap behavior or presentation.",
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -1101,6 +1375,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | null',
         required: false,
         defaultValue: 'null',
+        description: "Defines the component's href behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'label',
@@ -1109,6 +1385,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'activated',
@@ -1117,6 +1395,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the activated interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -1132,6 +1412,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnBadgeSize',
         required: false,
         defaultValue: "'md'",
+        description: 'Controls the badge height, horizontal padding, and text density.',
+        descriptionSource: 'source',
       },
       {
         name: 'status',
@@ -1140,6 +1422,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Uses the shared, subtle status recipe and renders a semantic color marker.',
+        descriptionSource: 'source',
       },
       {
         name: 'tone',
@@ -1148,6 +1432,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnDisplayTone',
         required: false,
         defaultValue: "'neutral'",
+        description:
+          'Semantic intent that selects coordinated text, icon, border, and surface tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'variant',
@@ -1156,6 +1443,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnBadgeVariant',
         required: false,
         defaultValue: "'subtle'",
+        description:
+          'Controls non-status badges. Status badges always use the shared subtle appearance.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -1171,6 +1461,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnAlertAppearance',
         required: false,
         defaultValue: "'subtle'",
+        description: 'Selects the alert surface treatment without changing its semantic tone.',
+        descriptionSource: 'source',
       },
       {
         name: 'dismissible',
@@ -1179,6 +1471,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's dismissible behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'dismissLabel',
@@ -1187,6 +1481,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the dismiss state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'icon',
@@ -1195,6 +1491,19 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: "Defines the component's icon behavior or presentation.",
+        descriptionSource: 'inferred',
+      },
+      {
+        name: 'placement',
+        property: 'placement',
+        kind: 'input',
+        type: 'KrnAlertPlacement',
+        required: false,
+        defaultValue: "'banner'",
+        description:
+          'Places the message inline or stretches it into a page-level banner treatment.',
+        descriptionSource: 'source',
       },
       {
         name: 'title',
@@ -1203,6 +1512,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible title that also names the component surface or data view.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tone',
@@ -1211,6 +1522,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnFeedbackTone',
         required: false,
         defaultValue: "'info'",
+        description:
+          'Semantic intent that selects coordinated text, icon, border, and surface tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closed',
@@ -1219,6 +1533,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the closed interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -1234,6 +1550,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnChartDatum>',
         required: true,
         defaultValue: 'required',
+        description: 'Immutable data supplied by the consumer.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'datumIdentity',
@@ -1242,6 +1560,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartDatumIdentity',
         required: false,
         defaultValue: '(datum, index) => datum.id ?? (datum.label || index)',
+        description:
+          'Returns a stable unique key used to preserve DOM and active state across data reordering.',
+        descriptionSource: 'source',
       },
       {
         name: 'description',
@@ -1250,6 +1571,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'eyebrow',
@@ -1258,6 +1581,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the eyebrow state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'labels',
@@ -1266,6 +1591,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Partial<KrnChartLabels>',
         required: false,
         defaultValue: '{}',
+        description: 'Localized copy overrides for the component-owned interface text.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'locale',
@@ -1274,6 +1601,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Array<string> | string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Locale identifier used for collation, formatting, and component-owned copy.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'negativeValuePolicy',
@@ -1282,6 +1611,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartNegativeValuePolicy',
         required: false,
         defaultValue: "'clamp'",
+        description:
+          'Clamps negative values to zero by default or rejects them with a validation error.',
+        descriptionSource: 'source',
       },
       {
         name: 'palette',
@@ -1290,6 +1622,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<string>',
         required: false,
         defaultValue: "['var(--krn-chart-1, #4f6feb)']",
+        description: "Defines the component's palette behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'percentFormatter',
@@ -1298,6 +1632,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartValueFormatter | null',
         required: false,
         defaultValue: 'null',
+        description: 'Consumer function used by the component to resolve percent formatter.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'summaryItemLimit',
@@ -1306,6 +1642,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '12',
+        description:
+          'Limits the accessible text summary while the full data table remains available.',
+        descriptionSource: 'source',
       },
       {
         name: 'title',
@@ -1314,6 +1653,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: 'Visible title that also names the component surface or data view.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueFormatter',
@@ -1322,6 +1663,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartValueFormatter | null',
         required: false,
         defaultValue: 'null',
+        description: 'Formats a domain value for visible and accessible presentation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'activeIndex',
@@ -1330,6 +1673,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | null',
         required: false,
         defaultValue: 'null',
+        description: 'Controls the disclosed datum and reflects pointer or keyboard interaction.',
+        descriptionSource: 'source',
       },
       {
         name: 'tableVisible',
@@ -1338,6 +1683,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls source-data disclosure and reflects user toggles.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -1353,6 +1700,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'items',
@@ -1361,6 +1710,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnNavigationItem>',
         required: false,
         defaultValue: '[]',
+        description: 'Ordered item collection rendered by the composite widget.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -1369,6 +1720,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | null',
         required: false,
         defaultValue: 'null',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'itemSelected',
@@ -1377,6 +1730,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnNavigationItem',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the item selected interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -1392,6 +1747,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<unknown> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render actions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -1400,6 +1757,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closeLabel',
@@ -1408,6 +1767,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the close state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closeOnEscape',
@@ -1416,6 +1777,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Allows Escape to dismiss the topmost owned overlay.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closeOnOutside',
@@ -1424,6 +1787,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean | null',
         required: false,
         defaultValue: 'null',
+        description: 'Allows an interaction outside the owned overlay to dismiss it.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'contentTemplate',
@@ -1432,6 +1797,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<unknown> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'description',
@@ -1440,6 +1807,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'eyebrow',
@@ -1448,6 +1817,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the eyebrow state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'initialFocus',
@@ -1456,6 +1827,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'first-tabbable'",
+        description: 'Identifies the element that receives focus when the modal surface opens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'modal',
@@ -1464,6 +1837,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Blocks background interaction and traps focus while the sheet is open.',
+        descriptionSource: 'source',
       },
       {
         name: 'restoreFocus',
@@ -1472,6 +1847,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'HTMLElement | false | null',
         required: false,
         defaultValue: 'null',
+        description: 'Explicit focus return target, or `false` to disable focus restoration.',
+        descriptionSource: 'source',
       },
       {
         name: 'showClose',
@@ -1480,6 +1857,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Controls whether the component applies the show close behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'size',
@@ -1488,6 +1867,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOverlaySize',
         required: false,
         defaultValue: "'md'",
+        description: "Selects the sheet's maximum block size.",
+        descriptionSource: 'source',
       },
       {
         name: 'title',
@@ -1496,6 +1877,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible title that also names the component surface or data view.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -1504,6 +1887,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'afterExited',
@@ -1512,6 +1897,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Emits after exit motion and global modal cleanup have completed.',
+        descriptionSource: 'source',
       },
       {
         name: 'closed',
@@ -1520,6 +1907,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOverlayCloseReason',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the closed interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -1535,6 +1924,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'items',
@@ -1543,6 +1934,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnBreadcrumbItem>',
         required: false,
         defaultValue: '[]',
+        description: 'Ordered item collection rendered by the composite widget.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxItems',
@@ -1551,6 +1944,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '5',
+        description: 'Upper or lower bound applied to the items value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'moreLabel',
@@ -1559,6 +1954,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the more state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'separator',
@@ -1567,6 +1964,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'›'",
+        description: "Defines the component's separator behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'showAllLabel',
@@ -1575,6 +1974,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the show all state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'itemActivated',
@@ -1583,6 +1984,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnBreadcrumbItem',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the item activated interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -1598,6 +2001,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'selectedCount',
@@ -1606,6 +2011,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: "Defines the component's selected count behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'selectedLabel',
@@ -1614,6 +2021,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '((count: number) => string) | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the selected state or control.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -1629,6 +2038,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlySet<string>',
         required: false,
         defaultValue: 'new Set<string>()',
+        description: 'Controls whether the component applies the disabled dates behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'labels',
@@ -1637,6 +2048,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Partial<KrnCalendarTranslations>',
         required: false,
         defaultValue: '{}',
+        description: 'Localized copy overrides for the component-owned interface text.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'locale',
@@ -1645,6 +2058,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Locale identifier used for collation, formatting, and component-owned copy.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'max',
@@ -1653,6 +2068,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Largest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'min',
@@ -1661,6 +2078,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Smallest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'showTodayAction',
@@ -1669,6 +2088,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Controls whether the component applies the show today action behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'today',
@@ -1677,6 +2098,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Deterministic plain date treated as today on both server and client.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'weekStartsOn',
@@ -1685,6 +2108,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '0 | 1',
         required: false,
         defaultValue: '1',
+        description: 'Zero-based weekday used as the first calendar column.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'activeMonth',
@@ -1693,6 +2118,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Controlled active month state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'focusedDate',
@@ -1701,6 +2128,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Controlled focused date state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -1709,6 +2138,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'dateSelected',
@@ -1717,6 +2148,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the date selected interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -1732,6 +2165,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the eyebrow state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'heading',
@@ -1740,6 +2175,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the heading state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'interactive',
@@ -1748,6 +2185,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's interactive behavior or presentation.",
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -1763,6 +2202,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'4'",
+        description: 'Logical inline padding kept inside the maximum width.',
+        descriptionSource: 'source',
       },
       {
         name: 'intrinsic',
@@ -1771,6 +2212,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description:
+          'Centers projected children on the inline axis without changing text alignment.',
+        descriptionSource: 'source',
       },
       {
         name: 'maxWidth',
@@ -1779,6 +2223,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'md'",
+        description: 'Maximum outer inline size as a container token, CSS length, or `full`.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -1794,6 +2240,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnChartDatum>',
         required: true,
         defaultValue: 'required',
+        description: 'Immutable data supplied by the consumer.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'datumIdentity',
@@ -1802,6 +2250,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartDatumIdentity',
         required: false,
         defaultValue: '(datum, index) => datum.id ?? (datum.label || index)',
+        description:
+          'Returns a stable unique key used to preserve DOM and active state across data reordering.',
+        descriptionSource: 'source',
       },
       {
         name: 'description',
@@ -1810,6 +2261,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'eyebrow',
@@ -1818,6 +2271,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the eyebrow state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'labels',
@@ -1826,6 +2281,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Partial<KrnChartLabels>',
         required: false,
         defaultValue: '{}',
+        description: 'Localized copy overrides for the component-owned interface text.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'locale',
@@ -1834,6 +2291,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Array<string> | string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Locale identifier used for collation, formatting, and component-owned copy.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'negativeValuePolicy',
@@ -1842,6 +2301,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartNegativeValuePolicy',
         required: false,
         defaultValue: "'clamp'",
+        description:
+          'Clamps negative values to zero by default or rejects them with a validation error.',
+        descriptionSource: 'source',
       },
       {
         name: 'palette',
@@ -1851,6 +2313,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         required: false,
         defaultValue:
           "[\n    'var(--krn-chart-1, #4f6feb)',\n    'var(--krn-chart-3, #5087c8)',\n    'var(--krn-chart-2, #3d8a77)',\n    'var(--krn-chart-5, #8a63a8)',\n    'var(--krn-chart-4, #b58633)',\n  ]",
+        description: "Defines the component's palette behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'percentFormatter',
@@ -1859,6 +2323,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartValueFormatter | null',
         required: false,
         defaultValue: 'null',
+        description: 'Consumer function used by the component to resolve percent formatter.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'summaryItemLimit',
@@ -1867,6 +2333,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '12',
+        description:
+          'Limits the accessible text summary while the full data table remains available.',
+        descriptionSource: 'source',
       },
       {
         name: 'title',
@@ -1875,6 +2344,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: 'Visible title that also names the component surface or data view.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'type',
@@ -1883,6 +2354,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartType',
         required: false,
         defaultValue: "'line'",
+        description: "Defines the component's type behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueFormatter',
@@ -1891,6 +2364,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartValueFormatter | null',
         required: false,
         defaultValue: 'null',
+        description: 'Formats a domain value for visible and accessible presentation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'activeIndex',
@@ -1899,6 +2374,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | null',
         required: false,
         defaultValue: 'null',
+        description: 'Controlled active index state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tableVisible',
@@ -1907,6 +2384,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled table visible state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -1922,6 +2401,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -1930,6 +2412,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -1938,6 +2422,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'checked',
@@ -1946,6 +2433,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled checked state rendered by the native choice control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'description',
@@ -1954,6 +2443,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -1962,6 +2453,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -1970,6 +2463,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'indeterminate',
@@ -1978,6 +2473,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled mixed state rendered independently from the checked value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -1986,6 +2483,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'name',
@@ -1994,6 +2493,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Native form-control name forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -2002,6 +2503,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -2010,6 +2513,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -2018,6 +2523,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -2026,6 +2533,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "createKrnId('checkbox-option')",
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'checkedChange',
@@ -2034,6 +2543,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the checked change interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'indeterminateChange',
@@ -2042,6 +2553,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the indeterminate change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -2057,6 +2570,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -2065,6 +2581,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -2073,6 +2591,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'describedBy',
@@ -2081,6 +2602,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: "Defines the component's described by behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -2089,6 +2612,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -2097,6 +2622,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -2105,6 +2632,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'label',
@@ -2113,6 +2642,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'orientation',
@@ -2121,6 +2652,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOrientation',
         required: false,
         defaultValue: "'vertical'",
+        description: 'Defines the logical axis used by layout and keyboard navigation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -2129,6 +2662,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -2137,6 +2672,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -2145,6 +2682,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<string> | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -2153,6 +2692,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<string>',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -2168,6 +2709,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the accessible state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -2176,6 +2719,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'interactive',
@@ -2184,6 +2729,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's interactive behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'removable',
@@ -2192,6 +2739,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's removable behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'selected',
@@ -2200,6 +2749,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled selected state, distinct from keyboard focus.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'remove',
@@ -2208,6 +2759,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the remove interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -2223,6 +2776,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'indeterminate',
@@ -2231,6 +2786,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled mixed state rendered independently from the checked value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'locale',
@@ -2239,6 +2796,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Array<string> | string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Locale identifier used for collation, formatting, and component-owned copy.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'max',
@@ -2247,6 +2806,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '100',
+        description: 'Largest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'showValue',
@@ -2255,6 +2816,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the component applies the show value behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -2263,6 +2826,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -2278,6 +2843,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutAlignment',
         required: false,
         defaultValue: "'center'",
+        description: 'Cross-axis alignment of projected children within each flex line.',
+        descriptionSource: 'source',
       },
       {
         name: 'columnGap',
@@ -2286,6 +2853,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace | null',
         required: false,
         defaultValue: 'null',
+        description: 'Optional spacing override between adjacent children within each flex line.',
+        descriptionSource: 'source',
       },
       {
         name: 'gap',
@@ -2294,6 +2863,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'2'",
+        description: 'Default logical spacing between projected children and wrapped flex lines.',
+        descriptionSource: 'source',
       },
       {
         name: 'justify',
@@ -2302,6 +2873,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutJustification',
         required: false,
         defaultValue: "'start'",
+        description: 'Distribution of projected children along the inline axis.',
+        descriptionSource: 'source',
       },
       {
         name: 'rowGap',
@@ -2310,6 +2883,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace | null',
         required: false,
         defaultValue: 'null',
+        description: 'Optional spacing override between wrapped flex lines.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -2325,6 +2900,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: "Defines the component's code behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'language',
@@ -2333,6 +2910,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'text'",
+        description: "Defines the component's language behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'languageLabel',
@@ -2341,6 +2920,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the language state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'copied',
@@ -2349,6 +2930,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled copied state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -2364,6 +2947,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -2372,6 +2958,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -2380,6 +2969,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -2388,6 +2979,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -2396,6 +2989,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'labels',
@@ -2404,6 +2999,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Partial<KrnColorPickerTranslations>',
         required: false,
         defaultValue: '{}',
+        description: 'Localized copy overrides for the component-owned interface text.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'pickerLabel',
@@ -2412,6 +3009,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the picker state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -2420,6 +3019,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -2428,6 +3029,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'textLabel',
@@ -2436,6 +3039,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the text state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -2444,6 +3049,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -2452,6 +3059,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -2460,6 +3069,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -2475,6 +3086,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean | undefined',
         required: false,
         defaultValue: 'undefined',
+        description:
+          'Controls whether the component applies the allow custom value input behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaDescribedBy',
@@ -2483,6 +3097,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -2491,6 +3108,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -2499,6 +3118,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'autocompleteMode',
@@ -2507,6 +3129,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnAutocompleteMode | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controls whether the component applies the autocomplete mode input behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -2515,6 +3139,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'emptyText',
@@ -2523,6 +3149,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the empty state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'errorText',
@@ -2531,6 +3159,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the error state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'filterLocally',
@@ -2539,6 +3169,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description:
+          'Set to false when the consumer filters options remotely in response to queryChange.',
+        descriptionSource: 'source',
       },
       {
         name: 'id',
@@ -2547,6 +3180,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -2555,6 +3190,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'loadingText',
@@ -2563,6 +3200,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the loading state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'name',
@@ -2571,6 +3210,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Native form-control name forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'optionFilter',
@@ -2579,6 +3220,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOptionFilter<string> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Overrides the default case-insensitive local option filter.',
+        descriptionSource: 'source',
       },
       {
         name: 'options',
@@ -2587,6 +3230,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnSelectOption<string>>',
         required: true,
         defaultValue: 'required',
+        description: 'Authoritative option collection presented by the selection control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'optionsState',
@@ -2595,6 +3240,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOptionsState',
         required: false,
         defaultValue: "'ready'",
+        description:
+          'Controls whether options are interactive or replaced by an announced loading/error state.',
+        descriptionSource: 'source',
       },
       {
         name: 'placeholder',
@@ -2603,6 +3251,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Short input hint shown only while no value is present.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -2611,6 +3261,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -2619,6 +3271,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -2627,6 +3281,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'toggleLabel',
@@ -2635,6 +3291,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the toggle state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -2643,6 +3301,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -2651,6 +3311,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'optionSelected',
@@ -2659,6 +3321,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSelectOption<string>',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the option selected interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'queryChange',
@@ -2667,6 +3331,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description:
+          'Emits every user query so remote option sources can load and replace options.',
+        descriptionSource: 'source',
       },
       {
         name: 'valueChange',
@@ -2675,6 +3342,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -2690,6 +3359,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controls whether the component applies the close shortcut behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'description',
@@ -2698,6 +3369,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'items',
@@ -2706,6 +3379,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnCommandItem>',
         required: false,
         defaultValue: '[]',
+        description: 'Ordered item collection rendered by the composite widget.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'labels',
@@ -2714,6 +3389,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Partial<KrnCommandPaletteLabels>',
         required: false,
         defaultValue: '{}',
+        description: 'Localized copy overrides for the component-owned interface text.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'locale',
@@ -2722,6 +3399,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Array<string> | string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Locale identifier used for collation, formatting, and component-owned copy.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'placeholder',
@@ -2730,6 +3409,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Short input hint shown only while no value is present.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'resultsLabel',
@@ -2738,6 +3419,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the results state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'title',
@@ -2746,6 +3429,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Visible title that also names the component surface or data view.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -2754,6 +3439,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'query',
@@ -2762,6 +3449,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Current controlled search text used to derive visible results.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closed',
@@ -2770,6 +3459,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"escape" | "outside" | "selection"',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the closed interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'selected',
@@ -2778,6 +3469,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnCommandItem',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled selected state, distinct from keyboard focus.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -2793,6 +3486,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the cancel state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'confirmLabel',
@@ -2801,6 +3496,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the confirm state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'prompt',
@@ -2809,6 +3506,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the prompt state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'requestLabel',
@@ -2817,6 +3516,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the request state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'confirming',
@@ -2825,6 +3526,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled confirming state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'cancelled',
@@ -2833,6 +3536,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the cancelled interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'confirmed',
@@ -2841,6 +3546,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the confirmed interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -2856,6 +3563,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the cancel state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'confirmLabel',
@@ -2864,6 +3573,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the confirm state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'prompt',
@@ -2872,6 +3583,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the prompt state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'requestLabel',
@@ -2880,6 +3593,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the request state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'confirming',
@@ -2888,6 +3603,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled confirming state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'cancelled',
@@ -2896,6 +3613,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the cancelled interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'confirmed',
@@ -2904,6 +3623,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the confirmed interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -2919,6 +3640,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"center" | "end" | "start"',
         required: false,
         defaultValue: "'center'",
+        description: 'Logical cross-axis alignment applied to children by the layout.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'gutter',
@@ -2927,6 +3650,19 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'4'",
+        description: "Defines the component's gutter behavior or presentation.",
+        descriptionSource: 'inferred',
+      },
+      {
+        name: 'intrinsic',
+        property: 'intrinsic',
+        kind: 'input',
+        type: 'boolean',
+        required: false,
+        defaultValue: 'false',
+        description:
+          'Centers projected children on the inline axis while preserving the container measure.',
+        descriptionSource: 'source',
       },
       {
         name: 'maxWidth',
@@ -2935,6 +3671,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace | null',
         required: false,
         defaultValue: 'null',
+        description: 'Upper or lower bound applied to the width value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'size',
@@ -2943,6 +3681,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnContainerSize',
         required: false,
         defaultValue: "'lg'",
+        description: 'Named semantic size resolved through Kern density and sizing tokens.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -2958,6 +3698,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'items',
@@ -2966,6 +3708,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnContextMenuItem>',
         required: false,
         defaultValue: '[]',
+        description: 'Ordered item collection rendered by the composite widget.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'itemSelected',
@@ -2974,6 +3718,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnContextMenuItem',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the item selected interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -2989,6 +3735,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Optional accessible-name override for the inner native button.\n\nLeave empty to derive the name from the visible action label. When set,\ninclude that visible label in the override.',
+        descriptionSource: 'source',
       },
       {
         name: 'copiedLabel',
@@ -2997,6 +3746,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Success announcement paired with the visible success indicator.',
+        descriptionSource: 'source',
       },
       {
         name: 'copyingLabel',
@@ -3005,6 +3756,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Loading announcement while the asynchronous write is in flight.',
+        descriptionSource: 'source',
       },
       {
         name: 'copyLabel',
@@ -3013,6 +3766,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Localized visible fallback used only when no action label is projected.',
+        descriptionSource: 'source',
       },
       {
         name: 'disabled',
@@ -3021,6 +3776,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'errorLabel',
@@ -3029,6 +3786,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Failure announcement paired with the visible error indicator.',
+        descriptionSource: 'source',
       },
       {
         name: 'feedbackDuration',
@@ -3037,6 +3796,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: 'this.options.feedbackDuration',
+        description:
+          'Milliseconds before settled feedback returns to idle.\n\nInvalid or negative values fall back to the library default.',
+        descriptionSource: 'source',
       },
       {
         name: 'size',
@@ -3045,6 +3807,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSize',
         required: false,
         defaultValue: 'this.options.size',
+        description: 'Named semantic size resolved through Kern density and sizing tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tone',
@@ -3053,6 +3817,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnTone',
         required: false,
         defaultValue: 'this.options.tone',
+        description:
+          'Semantic intent that selects coordinated text, icon, border, and surface tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -3061,6 +3828,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: 'Exact text captured once at activation and written to the clipboard.',
+        descriptionSource: 'source',
       },
       {
         name: 'variant',
@@ -3069,6 +3838,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnActionVariant',
         required: false,
         defaultValue: 'this.options.variant',
+        description: 'Named visual hierarchy treatment that preserves the component semantics.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'copied',
@@ -3077,6 +3848,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description:
+          'Emits the exact captured value only after the clipboard writer confirms success.',
+        descriptionSource: 'source',
       },
       {
         name: 'copyError',
@@ -3085,6 +3859,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'unknown',
         required: false,
         defaultValue: 'undefined',
+        description: 'Emits the original writer failure without masking or replacing its identity.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -3100,6 +3876,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'selectedCount',
@@ -3108,6 +3886,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: "Defines the component's selected count behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'selectedLabel',
@@ -3116,6 +3896,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '((count: number) => string) | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the selected state or control.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -3131,6 +3913,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the eyebrow state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'heading',
@@ -3139,6 +3923,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: 'Human-readable copy for the heading state or control.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -3154,6 +3940,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'columnChooser',
@@ -3162,6 +3950,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's column chooser behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'columns',
@@ -3170,6 +3960,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnDataColumn<T>>',
         required: true,
         defaultValue: 'required',
+        description: 'Typed column definitions with stable keys.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'compact',
@@ -3178,6 +3970,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's compact behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'data',
@@ -3186,6 +3980,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<T>',
         required: true,
         defaultValue: 'required',
+        description: 'Immutable data supplied by the consumer.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'defaultCellTemplate',
@@ -3194,6 +3990,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<KrnDataCellContext<T>> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render default cell.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'defaultHeaderTemplate',
@@ -3202,6 +4000,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<KrnDataHeaderContext<T>> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render default header.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'emptyLabel',
@@ -3210,6 +4010,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the empty state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'error',
@@ -3218,6 +4020,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: "Defines the component's error behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'expandable',
@@ -3226,6 +4030,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the component applies the expandable behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'expandedContent',
@@ -3234,6 +4040,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '(row: T) => string',
         required: false,
         defaultValue: "() => ''",
+        description: 'Template or projected content used to render expanded.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'expandedTemplate',
@@ -3242,6 +4050,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<KrnDataRowContext<T>> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render expanded.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'filterable',
@@ -3250,6 +4060,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: "Defines the component's filterable behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'filterPlaceholder',
@@ -3258,6 +4070,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: "Defines the component's filter placeholder behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'filterPredicate',
@@ -3266,6 +4080,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnDataFilterPredicate<T> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Consumer function used by the component to resolve filter predicate.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'labels',
@@ -3274,6 +4090,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Partial<KrnDataGridTranslations>',
         required: false,
         defaultValue: '{}',
+        description: 'Localized copy overrides for the component-owned interface text.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'loading',
@@ -3282,6 +4100,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents duplicate actions and exposes an accessible busy state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'mode',
@@ -3290,6 +4110,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnDataGridMode',
         required: false,
         defaultValue: "{ kind: 'client', pagination: true }",
+        description: "Defines the component's mode behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'pageSize',
@@ -3298,6 +4120,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '10',
+        description: 'Maximum number of records requested or displayed on one page.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'resizable',
@@ -3306,6 +4130,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: "Defines the component's resizable behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'rowIdentity',
@@ -3314,6 +4140,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '(row: T, index: number) => KrnDataRowKey',
         required: true,
         defaultValue: 'required',
+        description: "Defines the component's row identity behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'selectable',
@@ -3322,6 +4150,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's selectable behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'viewportHeight',
@@ -3330,6 +4160,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '360',
+        description: 'Measured virtual viewport height used to determine visible rows.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'expanded',
@@ -3338,6 +4170,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlySet<KrnDataRowKey>',
         required: false,
         defaultValue: 'new Set<KrnDataRowKey>()',
+        description: 'Controlled expanded state for a disclosure or hierarchical item.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'filter',
@@ -3346,6 +4180,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Controlled filter state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'hiddenColumnKeys',
@@ -3354,6 +4190,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlySet<string>',
         required: false,
         defaultValue: 'new Set<string>()',
+        description:
+          'Controlled hidden column keys state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'page',
@@ -3362,6 +4201,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '1',
+        description: 'One-based controlled page index.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'selected',
@@ -3370,6 +4211,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlySet<KrnDataRowKey>',
         required: false,
         defaultValue: 'new Set<KrnDataRowKey>()',
+        description: 'Controlled selected state, distinct from keyboard focus.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'sortDirection',
@@ -3378,6 +4221,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnDataSortDirection',
         required: false,
         defaultValue: "'asc'",
+        description: 'Controlled sort direction state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'sortKey',
@@ -3386,6 +4231,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Controlled sort key state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'queryChange',
@@ -3394,6 +4241,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnDataGridQuery',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the query change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -3409,6 +4258,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'columnChooser',
@@ -3417,6 +4268,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's column chooser behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'columns',
@@ -3425,6 +4278,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnDataColumn<T>>',
         required: true,
         defaultValue: 'required',
+        description: 'Typed column definitions with stable keys.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'compact',
@@ -3433,6 +4288,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's compact behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'data',
@@ -3441,6 +4298,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<T>',
         required: true,
         defaultValue: 'required',
+        description: 'Immutable data supplied by the consumer.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'defaultCellTemplate',
@@ -3449,6 +4308,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<KrnDataCellContext<T>> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render default cell.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'defaultHeaderTemplate',
@@ -3457,6 +4318,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<KrnDataHeaderContext<T>> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render default header.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'emptyLabel',
@@ -3465,6 +4328,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the empty state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'error',
@@ -3473,6 +4338,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: "Defines the component's error behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'expandable',
@@ -3481,6 +4348,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the component applies the expandable behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'expandedContent',
@@ -3489,6 +4358,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '(row: T) => string',
         required: false,
         defaultValue: "() => ''",
+        description: 'Template or projected content used to render expanded.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'expandedTemplate',
@@ -3497,6 +4368,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<KrnDataRowContext<T>> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render expanded.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'filterable',
@@ -3505,6 +4378,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: "Defines the component's filterable behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'filterPlaceholder',
@@ -3513,6 +4388,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: "Defines the component's filter placeholder behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'filterPredicate',
@@ -3521,6 +4398,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnDataFilterPredicate<T> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Consumer function used by the component to resolve filter predicate.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'labels',
@@ -3529,6 +4408,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Partial<KrnDataGridTranslations>',
         required: false,
         defaultValue: '{}',
+        description: 'Localized copy overrides for the component-owned interface text.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'loading',
@@ -3537,6 +4418,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents duplicate actions and exposes an accessible busy state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'mode',
@@ -3545,6 +4428,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnDataGridMode',
         required: false,
         defaultValue: "{ kind: 'client', pagination: true }",
+        description: "Defines the component's mode behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'pageSize',
@@ -3553,6 +4438,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '10',
+        description: 'Maximum number of records requested or displayed on one page.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'resizable',
@@ -3561,6 +4448,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: "Defines the component's resizable behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'rowIdentity',
@@ -3569,6 +4458,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '(row: T, index: number) => KrnDataRowKey',
         required: true,
         defaultValue: 'required',
+        description: "Defines the component's row identity behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'selectable',
@@ -3577,6 +4468,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's selectable behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'viewportHeight',
@@ -3585,6 +4478,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '360',
+        description: 'Measured virtual viewport height used to determine visible rows.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'expanded',
@@ -3593,6 +4488,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlySet<KrnDataRowKey>',
         required: false,
         defaultValue: 'new Set<KrnDataRowKey>()',
+        description: 'Controlled expanded state for a disclosure or hierarchical item.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'filter',
@@ -3601,6 +4498,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Controlled filter state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'hiddenColumnKeys',
@@ -3609,6 +4508,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlySet<string>',
         required: false,
         defaultValue: 'new Set<string>()',
+        description:
+          'Controlled hidden column keys state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'page',
@@ -3617,6 +4519,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '1',
+        description: 'One-based controlled page index.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'selected',
@@ -3625,6 +4529,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlySet<KrnDataRowKey>',
         required: false,
         defaultValue: 'new Set<KrnDataRowKey>()',
+        description: 'Controlled selected state, distinct from keyboard focus.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'sortDirection',
@@ -3633,6 +4539,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnDataSortDirection',
         required: false,
         defaultValue: "'asc'",
+        description: 'Controlled sort direction state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'sortKey',
@@ -3641,6 +4549,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Controlled sort key state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'queryChange',
@@ -3649,6 +4559,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnDataGridQuery',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the query change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -3664,6 +4576,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -3672,6 +4587,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -3680,6 +4597,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -3688,6 +4608,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -3696,6 +4618,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -3704,6 +4628,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'labels',
@@ -3712,6 +4638,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Partial<KrnDatePickerLabels>',
         required: false,
         defaultValue: '{}',
+        description: 'Localized copy overrides for the component-owned interface text.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'locale',
@@ -3720,6 +4648,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Locale identifier used for collation, formatting, and component-owned copy.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'max',
@@ -3728,6 +4658,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Largest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'min',
@@ -3736,6 +4668,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Smallest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -3744,6 +4678,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -3752,6 +4688,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -3760,6 +4698,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'today',
@@ -3768,6 +4708,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Deterministic plain date treated as today on both server and client.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -3776,6 +4718,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'weekStartsOn',
@@ -3784,6 +4728,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Zero-based weekday used as the first calendar column.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -3792,6 +4738,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -3800,6 +4748,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -3815,6 +4765,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -3823,6 +4776,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -3831,6 +4786,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -3839,6 +4797,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'endLabel',
@@ -3847,6 +4807,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the end state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -3855,6 +4817,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -3863,6 +4827,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'labels',
@@ -3871,6 +4837,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Partial<KrnDatePickerLabels>',
         required: false,
         defaultValue: '{}',
+        description: 'Localized copy overrides for the component-owned interface text.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'locale',
@@ -3879,6 +4847,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Locale identifier used for collation, formatting, and component-owned copy.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'max',
@@ -3887,6 +4857,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Largest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'min',
@@ -3895,6 +4867,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Smallest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -3903,6 +4877,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -3911,6 +4887,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'startLabel',
@@ -3919,6 +4897,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the start state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -3927,6 +4907,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'today',
@@ -3935,6 +4917,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Deterministic plain date treated as today on both server and client.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -3943,6 +4927,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnDateRangeValue | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'weekStartsOn',
@@ -3951,6 +4937,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Zero-based weekday used as the first calendar column.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -3959,6 +4947,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -3967,6 +4957,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnDateRangeValue',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -3982,6 +4974,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: "Defines the component's term behavior or presentation.",
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -4003,6 +4997,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<unknown> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render actions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -4011,6 +5007,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closeLabel',
@@ -4019,6 +5017,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the close state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closeOnEscape',
@@ -4027,6 +5027,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Allows Escape to dismiss the topmost owned overlay.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closeOnOutside',
@@ -4035,6 +5037,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean | null',
         required: false,
         defaultValue: 'null',
+        description: 'Allows an interaction outside the owned overlay to dismiss it.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'contentTemplate',
@@ -4043,6 +5047,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<unknown> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'description',
@@ -4051,6 +5057,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'eyebrow',
@@ -4059,6 +5067,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the eyebrow state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'initialFocus',
@@ -4067,6 +5077,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'first-tabbable'",
+        description: 'Identifies the element that receives focus when the modal surface opens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'modal',
@@ -4075,6 +5087,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Blocks background interaction and traps focus while the dialog is open.',
+        descriptionSource: 'source',
       },
       {
         name: 'restoreFocus',
@@ -4083,6 +5097,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'HTMLElement | false | null',
         required: false,
         defaultValue: 'null',
+        description: 'Explicit focus return target, or `false` to disable focus restoration.',
+        descriptionSource: 'source',
       },
       {
         name: 'showClose',
@@ -4091,6 +5107,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Controls whether the component applies the show close behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'size',
@@ -4099,6 +5117,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOverlaySize',
         required: false,
         defaultValue: "'md'",
+        description: "Selects the dialog's maximum inline size.",
+        descriptionSource: 'source',
       },
       {
         name: 'title',
@@ -4107,6 +5127,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible title that also names the component surface or data view.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -4115,6 +5137,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'afterExited',
@@ -4123,6 +5147,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Emits after exit motion and global modal cleanup have completed.',
+        descriptionSource: 'source',
       },
       {
         name: 'closed',
@@ -4131,6 +5157,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOverlayCloseReason',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the closed interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -4146,6 +5174,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: 'Human-readable copy for the heading state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -4154,6 +5184,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -4169,6 +5201,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'0'",
+        description:
+          'Insets both ends of the divider along its length using a spacing token, pixels, or CSS length.',
+        descriptionSource: 'source',
       },
       {
         name: 'label',
@@ -4177,6 +5212,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | null',
         required: false,
         defaultValue: 'null',
+        description:
+          "Adds a visible label and uses its trimmed text as the separator's accessible name.",
+        descriptionSource: 'source',
       },
       {
         name: 'orientation',
@@ -4185,6 +5223,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"horizontal" | "vertical"',
         required: false,
         defaultValue: "'horizontal'",
+        description:
+          'Sets the separator and visual line orientation. Invalid runtime values fall back to horizontal.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -4200,6 +5241,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnChartDatum>',
         required: true,
         defaultValue: 'required',
+        description: 'Immutable data supplied by the consumer.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'datumIdentity',
@@ -4208,6 +5251,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartDatumIdentity',
         required: false,
         defaultValue: '(datum, index) => datum.id ?? (datum.label || index)',
+        description:
+          'Returns a stable unique key used to preserve DOM and active state across data reordering.',
+        descriptionSource: 'source',
       },
       {
         name: 'description',
@@ -4216,6 +5262,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'eyebrow',
@@ -4224,6 +5272,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the eyebrow state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'labels',
@@ -4232,6 +5282,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Partial<KrnChartLabels>',
         required: false,
         defaultValue: '{}',
+        description: 'Localized copy overrides for the component-owned interface text.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'locale',
@@ -4240,6 +5292,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Array<string> | string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Locale identifier used for collation, formatting, and component-owned copy.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'negativeValuePolicy',
@@ -4248,6 +5302,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartNegativeValuePolicy',
         required: false,
         defaultValue: "'clamp'",
+        description:
+          'Clamps negative values to zero by default or rejects them with a validation error.',
+        descriptionSource: 'source',
       },
       {
         name: 'palette',
@@ -4257,6 +5314,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         required: false,
         defaultValue:
           "[\n    'var(--krn-chart-1, #4f6feb)',\n    'var(--krn-chart-3, #5087c8)',\n    'var(--krn-chart-2, #3d8a77)',\n    'var(--krn-chart-5, #8a63a8)',\n    'var(--krn-chart-4, #b58633)',\n  ]",
+        description: "Defines the component's palette behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'percentFormatter',
@@ -4265,6 +5324,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartValueFormatter | null',
         required: false,
         defaultValue: 'null',
+        description: 'Consumer function used by the component to resolve percent formatter.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'summaryItemLimit',
@@ -4273,6 +5334,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '12',
+        description:
+          'Limits the accessible text summary while the full data table remains available.',
+        descriptionSource: 'source',
       },
       {
         name: 'title',
@@ -4281,6 +5345,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: 'Visible title that also names the component surface or data view.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueFormatter',
@@ -4289,6 +5355,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartValueFormatter | null',
         required: false,
         defaultValue: 'null',
+        description: 'Formats a domain value for visible and accessible presentation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'activeIndex',
@@ -4297,6 +5365,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | null',
         required: false,
         defaultValue: 'null',
+        description: 'Controls the disclosed segment and reflects pointer or keyboard interaction.',
+        descriptionSource: 'source',
       },
       {
         name: 'tableVisible',
@@ -4305,6 +5375,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls source-data disclosure and reflects user toggles.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -4320,6 +5392,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Comma-separated file types accepted by the upload control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaDescribedBy',
@@ -4328,6 +5402,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -4336,6 +5413,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'description',
@@ -4344,6 +5424,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -4352,6 +5434,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'dropLabel',
@@ -4360,6 +5444,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Localized instruction shown inside the drag-and-drop upload surface.',
+        descriptionSource: 'source',
       },
       {
         name: 'id',
@@ -4368,6 +5454,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -4376,6 +5464,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'label',
@@ -4384,6 +5474,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'locale',
@@ -4392,6 +5484,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Locale identifier used for collation, formatting, and component-owned copy.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxFiles',
@@ -4400,6 +5494,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: 'Number.POSITIVE_INFINITY',
+        description: 'Upper or lower bound applied to the files value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxSize',
@@ -4408,6 +5504,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: 'Number.POSITIVE_INFINITY',
+        description: 'Upper or lower bound applied to the size value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'multiple',
@@ -4416,6 +5514,18 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's multiple behavior or presentation.",
+        descriptionSource: 'inferred',
+      },
+      {
+        name: 'presentation',
+        property: 'presentation',
+        kind: 'input',
+        type: 'KrnUploadPresentation',
+        required: false,
+        defaultValue: "'dropzone'",
+        description: 'Selects a compact picker button or a drag-and-drop surface.',
+        descriptionSource: 'source',
       },
       {
         name: 'readonly',
@@ -4424,6 +5534,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -4432,6 +5544,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -4440,6 +5554,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -4448,6 +5564,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<File> | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'filesChange',
@@ -4456,6 +5574,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<File>',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the files change interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'rejected',
@@ -4464,6 +5584,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnUploadRejection>',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the rejected interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -4479,6 +5601,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<unknown> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render actions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -4487,6 +5611,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closeLabel',
@@ -4495,6 +5621,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the close state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closeOnEscape',
@@ -4503,6 +5631,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Allows Escape to dismiss the topmost owned overlay.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closeOnOutside',
@@ -4511,6 +5641,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean | null',
         required: false,
         defaultValue: 'null',
+        description: 'Allows an interaction outside the owned overlay to dismiss it.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'contentTemplate',
@@ -4519,6 +5651,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<unknown> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'description',
@@ -4527,6 +5661,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'eyebrow',
@@ -4535,6 +5671,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the eyebrow state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'initialFocus',
@@ -4543,6 +5681,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'first-tabbable'",
+        description: 'Identifies the element that receives focus when the modal surface opens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'modal',
@@ -4551,6 +5691,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Blocks background interaction and traps focus while the drawer is open.',
+        descriptionSource: 'source',
       },
       {
         name: 'restoreFocus',
@@ -4559,6 +5701,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'HTMLElement | false | null',
         required: false,
         defaultValue: 'null',
+        description: 'Explicit focus return target, or `false` to disable focus restoration.',
+        descriptionSource: 'source',
       },
       {
         name: 'showClose',
@@ -4567,6 +5711,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Controls whether the component applies the show close behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'side',
@@ -4575,6 +5721,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOverlaySide',
         required: false,
         defaultValue: "'right'",
+        description: 'Chooses the physical or logical viewport edge from which the drawer enters.',
+        descriptionSource: 'source',
       },
       {
         name: 'size',
@@ -4583,6 +5731,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOverlaySize',
         required: false,
         defaultValue: "'md'",
+        description: 'Selects the drawer thickness along its entry edge.',
+        descriptionSource: 'source',
       },
       {
         name: 'title',
@@ -4591,6 +5741,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible title that also names the component surface or data view.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -4599,6 +5751,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'afterExited',
@@ -4607,6 +5761,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Emits after exit motion and global modal cleanup have completed.',
+        descriptionSource: 'source',
       },
       {
         name: 'closed',
@@ -4615,6 +5771,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOverlayCloseReason',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the closed interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -4630,6 +5788,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Comma-separated file types accepted by the upload control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaDescribedBy',
@@ -4638,6 +5798,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -4646,6 +5809,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'description',
@@ -4654,6 +5820,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -4662,6 +5830,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'dropLabel',
@@ -4670,6 +5840,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Localized instruction shown inside the drag-and-drop upload surface.',
+        descriptionSource: 'source',
       },
       {
         name: 'id',
@@ -4678,6 +5850,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -4686,6 +5860,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'label',
@@ -4694,6 +5870,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'locale',
@@ -4702,6 +5880,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Locale identifier used for collation, formatting, and component-owned copy.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxFiles',
@@ -4710,6 +5890,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: 'Number.POSITIVE_INFINITY',
+        description: 'Upper or lower bound applied to the files value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxSize',
@@ -4718,6 +5900,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: 'Number.POSITIVE_INFINITY',
+        description: 'Upper or lower bound applied to the size value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'multiple',
@@ -4726,6 +5910,18 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's multiple behavior or presentation.",
+        descriptionSource: 'inferred',
+      },
+      {
+        name: 'presentation',
+        property: 'presentation',
+        kind: 'input',
+        type: 'KrnUploadPresentation',
+        required: false,
+        defaultValue: "'dropzone'",
+        description: 'Selects a compact picker button or a drag-and-drop surface.',
+        descriptionSource: 'source',
       },
       {
         name: 'readonly',
@@ -4734,6 +5930,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -4742,6 +5940,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -4750,6 +5950,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -4758,6 +5960,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<File> | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'filesChange',
@@ -4766,6 +5970,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<File>',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the files change interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'rejected',
@@ -4774,6 +5980,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnUploadRejection>',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the rejected interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -4789,6 +5997,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description:
+          'Closes after an enabled menu item activates; use the keep-open marker for one item.',
+        descriptionSource: 'source',
       },
       {
         name: 'disabled',
@@ -4797,6 +6008,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'loading',
@@ -4805,6 +6018,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents duplicate actions and exposes an accessible busy state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'matchTriggerWidth',
@@ -4813,6 +6028,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'this.options.matchTriggerWidth',
+        description: 'Makes the connected overlay exactly as wide as the complete trigger origin.',
+        descriptionSource: 'source',
       },
       {
         name: 'menuAlign',
@@ -4821,6 +6038,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnMenuAlignment',
         required: false,
         defaultValue: 'this.options.menuAlign',
+        description: 'Logical horizontal alignment used before the CDK collision fallbacks.',
+        descriptionSource: 'source',
       },
       {
         name: 'menuOffset',
@@ -4829,6 +6048,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: 'this.options.menuOffset',
+        description: 'Non-negative logical gap in CSS pixels between the trigger and menu.',
+        descriptionSource: 'source',
       },
       {
         name: 'size',
@@ -4837,6 +6058,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSize',
         required: false,
         defaultValue: 'this.options.size',
+        description: 'Named semantic size resolved through Kern density and sizing tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tone',
@@ -4845,6 +6068,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnTone',
         required: false,
         defaultValue: 'this.options.tone',
+        description:
+          'Semantic intent that selects coordinated text, icon, border, and surface tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'variant',
@@ -4853,6 +6079,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnActionVariant',
         required: false,
         defaultValue: 'this.options.variant',
+        description: 'Named visual hierarchy treatment that preserves the component semantics.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -4861,6 +6089,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -4876,6 +6106,19 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
+      },
+      {
+        name: 'kind',
+        property: 'kind',
+        kind: 'input',
+        type: 'KrnStateKind',
+        required: false,
+        defaultValue: "'empty'",
+        description:
+          'Selects the state meaning, default visual, status role, title, and recommended tone.',
+        descriptionSource: 'source',
       },
       {
         name: 'title',
@@ -4884,14 +6127,19 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Visible title that also names the component surface or data view.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tone',
         property: 'tone',
         kind: 'input',
-        type: 'KrnFeedbackTone',
+        type: 'KrnFeedbackTone | undefined',
         required: false,
-        defaultValue: "'neutral'",
+        defaultValue: 'undefined',
+        description:
+          'Semantic intent that selects coordinated text, icon, border, and surface tokens.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -4907,6 +6155,19 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
+      },
+      {
+        name: 'kind',
+        property: 'kind',
+        kind: 'input',
+        type: 'KrnStateKind',
+        required: false,
+        defaultValue: "'error'",
+        description:
+          'Selects the state meaning, default visual, status role, title, and recommended tone.',
+        descriptionSource: 'source',
       },
       {
         name: 'title',
@@ -4915,14 +6176,19 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Visible title that also names the component surface or data view.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tone',
         property: 'tone',
         kind: 'input',
-        type: 'KrnFeedbackTone',
+        type: 'KrnFeedbackTone | undefined',
         required: false,
         defaultValue: "'danger'",
+        description:
+          'Semantic intent that selects coordinated text, icon, border, and surface tokens.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -4938,6 +6204,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Comma-separated file types accepted by the upload control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaDescribedBy',
@@ -4946,6 +6214,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -4954,6 +6225,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'description',
@@ -4962,6 +6236,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -4970,6 +6246,18 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
+      },
+      {
+        name: 'dropLabel',
+        property: 'dropLabel',
+        kind: 'input',
+        type: 'string | undefined',
+        required: false,
+        defaultValue: 'undefined',
+        description: 'Localized instruction shown inside the drag-and-drop upload surface.',
+        descriptionSource: 'source',
       },
       {
         name: 'id',
@@ -4978,6 +6266,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -4986,6 +6276,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'label',
@@ -4994,6 +6286,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'locale',
@@ -5002,6 +6296,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Locale identifier used for collation, formatting, and component-owned copy.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxFiles',
@@ -5010,6 +6306,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: 'Number.POSITIVE_INFINITY',
+        description: 'Upper or lower bound applied to the files value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxSize',
@@ -5018,6 +6316,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: 'Number.POSITIVE_INFINITY',
+        description: 'Upper or lower bound applied to the size value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'multiple',
@@ -5026,6 +6326,18 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's multiple behavior or presentation.",
+        descriptionSource: 'inferred',
+      },
+      {
+        name: 'presentation',
+        property: 'presentation',
+        kind: 'input',
+        type: 'KrnUploadPresentation',
+        required: false,
+        defaultValue: "'button'",
+        description: 'Selects a compact picker button or a drag-and-drop surface.',
+        descriptionSource: 'source',
       },
       {
         name: 'readonly',
@@ -5034,6 +6346,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -5042,6 +6356,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -5050,6 +6366,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -5058,6 +6376,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<File> | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'filesChange',
@@ -5066,6 +6386,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<File>',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the files change interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'rejected',
@@ -5074,6 +6396,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnUploadRejection>',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the rejected interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -5089,6 +6413,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '((count: number) => string) | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the active state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'allLabel',
@@ -5097,6 +6423,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the all state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -5105,6 +6433,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'clearAllLabel',
@@ -5113,6 +6443,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the clear all state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'filters',
@@ -5121,6 +6453,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnFilterDefinition>',
         required: false,
         defaultValue: '[]',
+        description: 'Ordered domain values supplied to the filter collection.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'values',
@@ -5129,6 +6463,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Readonly<Partial<Record<string, string>>>',
         required: false,
         defaultValue: '{}',
+        description: 'Controlled values state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -5144,6 +6480,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: "Defines the component's error behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'hint',
@@ -5152,6 +6490,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: "Defines the component's hint behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'label',
@@ -5160,6 +6500,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'optionalText',
@@ -5168,6 +6510,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the optional state or control.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -5183,6 +6527,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'clearLabel',
@@ -5191,6 +6537,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the clear state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'emptyResultsLabel',
@@ -5199,6 +6547,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '((query: string) => string) | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the empty results state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxResults',
@@ -5207,6 +6557,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '8',
+        description: 'Upper or lower bound applied to the results value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'placeholder',
@@ -5215,6 +6567,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Short input hint shown only while no value is present.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'results',
@@ -5223,6 +6577,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnSearchResult>',
         required: false,
         defaultValue: '[]',
+        description: 'Search result collection rendered in response to the current query.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'resultsId',
@@ -5231,6 +6587,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'this.generatedResultsId',
+        description: 'Stable identifier used by the results contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'resultsLabel',
@@ -5239,6 +6597,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '((label: string) => string) | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the results state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'activeIndex',
@@ -5247,6 +6607,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Controlled active index state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -5255,6 +6617,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'query',
@@ -5263,6 +6627,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Current controlled search text used to derive visible results.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'resultSelected',
@@ -5271,6 +6637,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSearchResult',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the result selected interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -5286,6 +6654,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutAlignment',
         required: false,
         defaultValue: "'stretch'",
+        description: 'Block-axis alignment of items within their grid areas.',
+        descriptionSource: 'source',
       },
       {
         name: 'columns',
@@ -5294,6 +6664,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"auto" | number',
         required: false,
         defaultValue: "'auto'",
+        description: 'Fixed column count clamped to 1–12, or `auto` for fluid auto-fit columns.',
+        descriptionSource: 'source',
       },
       {
         name: 'gap',
@@ -5302,6 +6674,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'4'",
+        description: 'Logical spacing between rows and columns.',
+        descriptionSource: 'source',
       },
       {
         name: 'minColumnWidth',
@@ -5310,6 +6684,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'16rem'",
+        description: 'Minimum fluid column width used when columns is `auto`.',
+        descriptionSource: 'source',
       },
       {
         name: 'responsive',
@@ -5318,6 +6694,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Collapses fixed columns below the component-owned 36rem container boundary.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -5333,6 +6711,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -5341,6 +6721,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Space-separated element ids that name the native header landmark.',
+        descriptionSource: 'source',
       },
       {
         name: 'elevated',
@@ -5349,6 +6731,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's elevated behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'height',
@@ -5357,6 +6741,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'4rem'",
+        description: 'Explicit block size of the rendered surface or virtual viewport.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'sticky',
@@ -5365,6 +6751,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: "Defines the component's sticky behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'stickyOffset',
@@ -5373,6 +6761,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: '0',
+        description: 'Logical inset between a sticky header and its scrolling boundary.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -5388,6 +6778,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnResponsiveDisplay',
         required: false,
         defaultValue: "'block'",
+        description: 'Restores this display mode while the component is visible.',
+        descriptionSource: 'source',
       },
       {
         name: 'from',
@@ -5396,6 +6788,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnResponsiveBreakpoint',
         required: false,
         defaultValue: "'none'",
+        description: 'Hides content at this viewport width and above.',
+        descriptionSource: 'source',
       },
       {
         name: 'until',
@@ -5404,6 +6798,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnResponsiveBreakpoint',
         required: false,
         defaultValue: "'none'",
+        description: 'Hides content below this viewport width.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -5419,6 +6815,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the custom contract.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -5434,6 +6832,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closeDelay',
@@ -5442,6 +6842,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '120',
+        description: 'Controls whether the component applies the close delay behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'openDelay',
@@ -5450,6 +6852,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '350',
+        description: "Defines the component's open delay behavior or presentation.",
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -5465,6 +6869,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | null',
         required: false,
         defaultValue: 'null',
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'name',
@@ -5473,6 +6879,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnIconName',
         required: true,
         defaultValue: 'required',
+        description: 'Native form-control name forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'size',
@@ -5481,6 +6889,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnIconSize',
         required: false,
         defaultValue: "'md'",
+        description: 'Named semantic size resolved through Kern density and sizing tokens.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -5496,6 +6906,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutAlignment',
         required: false,
         defaultValue: "'center'",
+        description: 'Cross-axis alignment of projected children within each flex line.',
+        descriptionSource: 'source',
       },
       {
         name: 'gap',
@@ -5504,6 +6916,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'3'",
+        description: 'Logical spacing between adjacent projected children and wrapped flex lines.',
+        descriptionSource: 'source',
       },
       {
         name: 'justify',
@@ -5512,6 +6926,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutJustification',
         required: false,
         defaultValue: "'start'",
+        description: 'Distribution of projected children along the inline axis.',
+        descriptionSource: 'source',
       },
       {
         name: 'wrap',
@@ -5520,6 +6936,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Allows projected children to continue on additional flex lines.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -5535,6 +6953,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'JSON'",
+        description: 'Accessible name announced for the JSON tree.',
+        descriptionSource: 'source',
       },
       {
         name: 'data',
@@ -5543,6 +6963,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnJsonValue',
         required: true,
         defaultValue: 'required',
+        description: 'JSON-compatible value rendered as an inspectable hierarchy.',
+        descriptionSource: 'source',
       },
       {
         name: 'defaultExpandDepth',
@@ -5551,6 +6973,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '2',
+        description: 'Number of hierarchy levels expanded when data first renders.',
+        descriptionSource: 'source',
       },
       {
         name: 'highlightPattern',
@@ -5559,6 +6983,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'RegExp | string | null',
         required: false,
         defaultValue: 'null',
+        description: 'Text or regular expression highlighted in visible keys and primitive values.',
+        descriptionSource: 'source',
       },
       {
         name: 'sortKeys',
@@ -5567,6 +6993,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Sorts object keys with locale-aware comparison while preserving array order.',
+        descriptionSource: 'source',
       },
       {
         name: 'wrap',
@@ -5575,6 +7003,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Allows long keys and values to wrap inside the viewport.',
+        descriptionSource: 'source',
       },
       {
         name: 'expandedPaths',
@@ -5583,6 +7013,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<string> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Controlled JSON-pointer paths, or null to keep expansion state internal.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -5598,6 +7030,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<string>',
         required: true,
         defaultValue: 'required',
+        description: 'Stable identifier used by the keys contract.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -5613,6 +7047,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: "Defines the component's for behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -5621,6 +7057,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -5636,6 +7074,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnChartDatum>',
         required: true,
         defaultValue: 'required',
+        description: 'Immutable data supplied by the consumer.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'datumIdentity',
@@ -5644,6 +7084,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartDatumIdentity',
         required: false,
         defaultValue: '(datum, index) => datum.id ?? (datum.label || index)',
+        description:
+          'Returns a stable unique key used to preserve DOM and active state across data reordering.',
+        descriptionSource: 'source',
       },
       {
         name: 'description',
@@ -5652,6 +7095,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'eyebrow',
@@ -5660,6 +7105,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the eyebrow state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'labels',
@@ -5668,6 +7115,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Partial<KrnChartLabels>',
         required: false,
         defaultValue: '{}',
+        description: 'Localized copy overrides for the component-owned interface text.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'locale',
@@ -5676,6 +7125,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Array<string> | string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Locale identifier used for collation, formatting, and component-owned copy.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'negativeValuePolicy',
@@ -5684,6 +7135,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartNegativeValuePolicy',
         required: false,
         defaultValue: "'clamp'",
+        description:
+          'Clamps negative values to zero by default or rejects them with a validation error.',
+        descriptionSource: 'source',
       },
       {
         name: 'palette',
@@ -5692,6 +7146,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<string>',
         required: false,
         defaultValue: "['var(--krn-chart-1, #4f6feb)']",
+        description: "Defines the component's palette behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'percentFormatter',
@@ -5700,6 +7156,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartValueFormatter | null',
         required: false,
         defaultValue: 'null',
+        description: 'Consumer function used by the component to resolve percent formatter.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'summaryItemLimit',
@@ -5708,6 +7166,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '12',
+        description:
+          'Limits the accessible text summary while the full data table remains available.',
+        descriptionSource: 'source',
       },
       {
         name: 'title',
@@ -5716,6 +7177,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: 'Visible title that also names the component surface or data view.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueFormatter',
@@ -5724,6 +7187,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnChartValueFormatter | null',
         required: false,
         defaultValue: 'null',
+        description: 'Formats a domain value for visible and accessible presentation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'activeIndex',
@@ -5732,6 +7197,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | null',
         required: false,
         defaultValue: 'null',
+        description: 'Controls the disclosed datum and reflects pointer or keyboard interaction.',
+        descriptionSource: 'source',
       },
       {
         name: 'tableVisible',
@@ -5740,6 +7207,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls source-data disclosure and reflects user toggles.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -5755,6 +7224,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'role',
@@ -5763,6 +7234,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"list" | "listbox"',
         required: false,
         defaultValue: "'list'",
+        description: "Defines the component's role behavior or presentation.",
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -5778,6 +7251,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the heading state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'selected',
@@ -5786,6 +7261,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled selected state, distinct from keyboard focus.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -5801,6 +7278,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's active behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'blocking',
@@ -5809,6 +7288,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: "Defines the component's blocking behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'label',
@@ -5817,6 +7298,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -5832,6 +7315,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the email error state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'emailLabel',
@@ -5840,6 +7325,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the email state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'errorMessage',
@@ -5848,6 +7335,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the error state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'loading',
@@ -5856,6 +7345,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents duplicate actions and exposes an accessible busy state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'loadingLabel',
@@ -5864,6 +7355,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the loading state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'minimumPasswordLength',
@@ -5872,6 +7365,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '8',
+        description: 'Upper or lower bound applied to the password length value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'passwordErrorLabel',
@@ -5880,6 +7375,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '((minimumLength: number) => string) | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the password error state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'passwordLabel',
@@ -5888,6 +7385,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the password state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'recoveryHref',
@@ -5896,6 +7395,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: "Defines the component's recovery href behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'recoveryLabel',
@@ -5904,6 +7405,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the recovery state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'rememberLabel',
@@ -5912,6 +7415,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the remember state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'submitLabel',
@@ -5920,6 +7425,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the submit state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'submitted',
@@ -5928,6 +7435,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLoginCredentials',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the submitted interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -5943,6 +7452,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the detail state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'masterLabel',
@@ -5951,6 +7462,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the master state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'detailOpen',
@@ -5959,6 +7472,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled detail open state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -5974,6 +7489,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the empty state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'items',
@@ -5982,6 +7499,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnNavigationItem & { readonly shortcut?: string; }>',
         required: false,
         defaultValue: '[]',
+        description: 'Ordered item collection rendered by the composite widget.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'menuAriaLabel',
@@ -5990,6 +7509,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the menu aria state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'triggerAriaLabel',
@@ -5998,6 +7519,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the trigger aria state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'triggerLabel',
@@ -6006,6 +7529,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the trigger state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -6014,6 +7539,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closed',
@@ -6022,6 +7549,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"detach" | "escape" | "outside" | "selection"',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the closed interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'itemSelected',
@@ -6030,6 +7559,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnNavigationItem',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the item selected interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -6045,6 +7576,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'items',
@@ -6053,6 +7586,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnNavigationItem>',
         required: false,
         defaultValue: '[]',
+        description: 'Ordered item collection rendered by the composite widget.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'itemSelected',
@@ -6061,6 +7596,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnNavigationItem',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the item selected interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -6076,6 +7613,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '75',
+        description: "Defines the component's high behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'label',
@@ -6084,6 +7623,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'locale',
@@ -6092,6 +7633,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Array<string> | string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Locale identifier used for collation, formatting, and component-owned copy.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'low',
@@ -6100,6 +7643,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '25',
+        description: "Defines the component's low behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'max',
@@ -6108,6 +7653,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '100',
+        description: 'Largest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'min',
@@ -6116,6 +7663,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Smallest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'optimum',
@@ -6124,6 +7673,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '100',
+        description: "Defines the component's optimum behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -6132,6 +7683,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: true,
         defaultValue: 'required',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -6147,6 +7700,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -6162,6 +7717,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -6170,6 +7728,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -6178,6 +7738,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -6186,6 +7749,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabledHandler',
@@ -6194,6 +7759,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOptionDisabledHandler<T>',
         required: false,
         defaultValue: '(option) => option.disabled ?? false',
+        description: 'Controls whether the component applies the disabled handler behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'emptyText',
@@ -6202,6 +7769,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the empty state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'errorText',
@@ -6210,6 +7779,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the error state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -6218,6 +7789,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'identityMatcher',
@@ -6226,6 +7799,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnIdentityMatcher<T>',
         required: false,
         defaultValue: 'Object.is',
+        description: 'Compares option values when object identity is not stable across refreshes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -6234,6 +7809,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'loadingText',
@@ -6242,6 +7819,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the loading state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxVisible',
@@ -6250,6 +7829,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '2',
+        description: 'Upper or lower bound applied to the visible value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'options',
@@ -6258,6 +7839,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnSelectOption<T>>',
         required: true,
         defaultValue: 'required',
+        description: 'Authoritative option collection presented by the selection control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'optionsState',
@@ -6266,6 +7849,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOptionsState',
         required: false,
         defaultValue: "'ready'",
+        description:
+          'Controls whether options are interactive or replaced by an announced loading/error state.',
+        descriptionSource: 'source',
       },
       {
         name: 'optionTemplate',
@@ -6274,6 +7860,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<KrnSelectOptionContext<T>> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render option.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'placeholder',
@@ -6282,6 +7870,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Short input hint shown only while no value is present.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -6290,6 +7880,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -6298,6 +7890,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'selectedTemplate',
@@ -6306,6 +7900,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<KrnSelectOptionContext<T>> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render selected.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'stringify',
@@ -6314,6 +7910,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOptionStringifier<T>',
         required: false,
         defaultValue: '(option) => option.label',
+        description: 'Converts a domain value into the human-readable label shown to users.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -6322,6 +7920,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'trackBy',
@@ -6330,6 +7930,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOptionTrackBy<T>',
         required: false,
         defaultValue: '(option) => option.value',
+        description: 'Returns the stable identity used to retain rendered items across updates.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -6338,6 +7940,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<T> | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -6346,6 +7950,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -6354,6 +7960,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<T>',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -6369,6 +7977,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Controls whether the component applies the allow step navigation behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -6377,6 +7987,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'backLabel',
@@ -6385,6 +7997,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the back state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'completeLabel',
@@ -6393,6 +8007,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the complete state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'continueLabel',
@@ -6401,6 +8017,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the continue state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'optionalLabel',
@@ -6409,6 +8027,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the optional state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'orientation',
@@ -6417,6 +8037,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"horizontal" | "vertical"',
         required: false,
         defaultValue: "'horizontal'",
+        description: 'Defines the logical axis used by layout and keyboard navigation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'stepCounterLabel',
@@ -6425,6 +8047,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '((current: number, total: number) => string) | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the step counter state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'steps',
@@ -6433,6 +8057,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnFormStep>',
         required: true,
         defaultValue: 'required',
+        description: 'Ordered domain values supplied to the step collection.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'current',
@@ -6441,6 +8067,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Controlled current state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'furthestStep',
@@ -6449,6 +8077,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Controlled furthest step state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'completed',
@@ -6457,6 +8087,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the completed interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -6472,6 +8104,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -6480,6 +8115,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -6488,6 +8125,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -6496,6 +8136,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabledHandler',
@@ -6504,6 +8146,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOptionDisabledHandler<T>',
         required: false,
         defaultValue: '(option) => option.disabled ?? false',
+        description: 'Controls whether the component applies the disabled handler behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -6512,6 +8156,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'identityMatcher',
@@ -6520,6 +8166,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnIdentityMatcher<T>',
         required: false,
         defaultValue: 'Object.is',
+        description: 'Compares option values when object identity is not stable across refreshes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -6528,6 +8176,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'name',
@@ -6536,6 +8186,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Native form-control name forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'options',
@@ -6544,6 +8196,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnSelectOption<T>>',
         required: true,
         defaultValue: 'required',
+        description: 'Authoritative option collection presented by the selection control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'placeholder',
@@ -6552,6 +8206,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Short input hint shown only while no value is present.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -6560,6 +8216,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -6568,6 +8226,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'size',
@@ -6576,6 +8236,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSize',
         required: false,
         defaultValue: "'md'",
+        description: 'Controls the native select trigger height and content density.',
+        descriptionSource: 'source',
       },
       {
         name: 'stringify',
@@ -6584,6 +8246,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOptionStringifier<T>',
         required: false,
         defaultValue: '(option) => option.label',
+        description: 'Converts a domain value into the human-readable label shown to users.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -6592,6 +8256,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'trackBy',
@@ -6600,6 +8266,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOptionTrackBy<T>',
         required: false,
         defaultValue: '(option) => option.value',
+        description: 'Returns the stable identity used to retain rendered items across updates.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -6608,6 +8276,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'T | null | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -6616,6 +8286,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'T | null',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -6631,6 +8303,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Space-separated element ids that describe the native navigation landmark.',
+        descriptionSource: 'source',
       },
       {
         name: 'ariaLabel',
@@ -6639,6 +8313,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -6647,6 +8323,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Space-separated element ids that name the native navigation landmark.',
+        descriptionSource: 'source',
       },
       {
         name: 'expandedWidth',
@@ -6655,6 +8333,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'14rem'",
+        description: 'Controls whether the component applies the expanded width behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'side',
@@ -6663,6 +8343,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"auto" | "end" | "start"',
         required: false,
         defaultValue: "'auto'",
+        description: "Defines the component's side behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'width',
@@ -6671,6 +8353,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'var(--krn-shell-rail-width, 3.5rem)'",
+        description: 'Explicit inline size of the rendered surface.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'expanded',
@@ -6679,6 +8363,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled expanded state for a disclosure or hierarchical item.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -6694,6 +8380,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'emptyLabel',
@@ -6702,6 +8390,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the empty state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'heading',
@@ -6710,6 +8400,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the heading state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'markAllReadLabel',
@@ -6718,6 +8410,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the mark all read state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'notifications',
@@ -6726,6 +8420,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnNotification>',
         required: false,
         defaultValue: '[]',
+        description: 'Ordered domain values supplied to the notification collection.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'unreadLabel',
@@ -6734,6 +8430,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '((count: number) => string) | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the unread state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'unreadStateLabel',
@@ -6742,6 +8440,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the unread state state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'markAllRead',
@@ -6750,6 +8450,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the mark all read interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'notificationSelected',
@@ -6758,6 +8460,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnNotification',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the notification selected interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -6773,6 +8477,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -6781,6 +8488,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -6789,6 +8498,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'autocomplete',
@@ -6797,6 +8509,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'off'",
+        description: 'Native autocomplete purpose forwarded to the editable control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'decreaseLabel',
@@ -6805,6 +8519,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the decrease state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -6813,6 +8529,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -6821,6 +8539,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'increaseLabel',
@@ -6829,6 +8549,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the increase state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'inputMode',
@@ -6837,6 +8559,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnInputMode',
         required: false,
         defaultValue: "'decimal'",
+        description: "Defines the component's input mode behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -6845,6 +8569,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'max',
@@ -6853,6 +8579,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Largest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'min',
@@ -6861,6 +8589,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Smallest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'name',
@@ -6869,6 +8599,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Native form-control name forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'placeholder',
@@ -6877,6 +8609,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Short input hint shown only while no value is present.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -6885,6 +8619,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -6893,6 +8629,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'showSteppers',
@@ -6901,6 +8639,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Controls whether the component applies the show steppers behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'step',
@@ -6909,6 +8649,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '1',
+        description: 'Increment applied by keyboard and pointer value adjustments.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -6917,6 +8659,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | null | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -6925,6 +8669,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | null',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -6940,6 +8686,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -6948,6 +8697,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'autocomplete',
@@ -6956,6 +8708,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'one-time-code'",
+        description: 'Native autocomplete purpose forwarded to the editable control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -6964,6 +8718,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -6972,6 +8728,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -6980,6 +8738,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'label',
@@ -6988,6 +8748,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'length',
@@ -6996,6 +8758,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '6',
+        description: "Defines the component's length behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'numericOnly',
@@ -7004,6 +8768,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: "Defines the component's numeric only behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -7012,6 +8778,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -7020,6 +8788,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -7028,6 +8798,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -7036,6 +8808,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'completed',
@@ -7044,6 +8818,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the completed interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -7052,6 +8828,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -7067,6 +8845,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'eyebrow',
@@ -7075,6 +8855,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the eyebrow state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'heading',
@@ -7083,6 +8865,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: 'Human-readable copy for the heading state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'index',
@@ -7091,6 +8875,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'01'",
+        description: "Defines the component's index behavior or presentation.",
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -7106,6 +8892,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'emptyLabel',
@@ -7114,6 +8902,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the empty state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'nextLabel',
@@ -7122,6 +8912,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the next state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'pageLabel',
@@ -7130,6 +8922,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Backward-compatible `{page}` template.',
+        descriptionSource: 'source',
       },
       {
         name: 'pageLabelFormatter',
@@ -7138,6 +8932,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '((page: number) => string) | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Typed alternative to `pageLabel` for locale-specific grammar.',
+        descriptionSource: 'source',
       },
       {
         name: 'pageSize',
@@ -7146,6 +8942,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '20',
+        description: 'Maximum number of records requested or displayed on one page.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'previousLabel',
@@ -7154,6 +8952,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the previous state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'rangeLabel',
@@ -7162,6 +8962,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Backward-compatible `{start}`, `{end}`, and `{total}` template.',
+        descriptionSource: 'source',
       },
       {
         name: 'rangeLabelFormatter',
@@ -7170,6 +8972,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '((start: number, end: number, total: number) => string) | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Typed alternative to `rangeLabel` for locale-specific grammar.',
+        descriptionSource: 'source',
       },
       {
         name: 'siblingCount',
@@ -7178,6 +8982,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '1',
+        description: "Defines the component's sibling count behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'totalItems',
@@ -7186,6 +8992,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Total result count used to calculate the available page range.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'page',
@@ -7194,6 +9002,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '1',
+        description: 'One-based controlled page index.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -7209,6 +9019,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -7217,6 +9030,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -7225,6 +9040,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'autocomplete',
@@ -7233,6 +9051,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'current-password'",
+        description: 'Native autocomplete purpose forwarded to the editable control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -7241,6 +9061,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'hideLabel',
@@ -7249,6 +9071,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the hide state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'hideText',
@@ -7257,6 +9081,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the hide state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -7265,6 +9091,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -7273,6 +9101,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxLength',
@@ -7281,6 +9111,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Upper or lower bound applied to the length value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'minLength',
@@ -7289,6 +9121,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Upper or lower bound applied to the length value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'name',
@@ -7297,6 +9131,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Native form-control name forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'placeholder',
@@ -7305,6 +9141,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Short input hint shown only while no value is present.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -7313,6 +9151,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -7321,6 +9161,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'showLabel',
@@ -7329,6 +9171,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the show state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'showText',
@@ -7337,6 +9181,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the show state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -7345,6 +9191,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -7353,6 +9201,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -7368,6 +9218,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'autoFocus',
@@ -7376,6 +9228,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Controls whether the component applies the auto focus behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -7384,6 +9238,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closed',
@@ -7392,6 +9248,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"api" | "escape" | "outside"',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the closed interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -7407,6 +9265,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '((maximumLength: number) => string) | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the bio error state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'bioLabel',
@@ -7415,6 +9275,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the bio state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'bioMaxLength',
@@ -7423,6 +9285,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '280',
+        description: "Defines the component's bio max length behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'dirtyMessage',
@@ -7431,6 +9295,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the dirty state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'nameErrorLabel',
@@ -7439,6 +9305,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the name error state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'nameLabel',
@@ -7447,6 +9315,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the name state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'roleLabel',
@@ -7455,6 +9325,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the role state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'saveLabel',
@@ -7463,6 +9335,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the save state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'saving',
@@ -7471,6 +9345,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's saving behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'savingLabel',
@@ -7479,6 +9355,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the saving state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'timezoneErrorLabel',
@@ -7487,6 +9365,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the timezone error state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'timezoneLabel',
@@ -7495,6 +9375,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the timezone state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'timezones',
@@ -7503,6 +9385,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<{ readonly value: string; readonly label: string; }> | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Ordered domain values supplied to the timezone collection.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -7511,6 +9395,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnProfileValue',
         required: false,
         defaultValue: "{ name: '', role: '', bio: '', timezone: 'UTC' }",
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'saved',
@@ -7519,6 +9405,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnProfileValue',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the saved interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -7534,6 +9422,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the after exited interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'dismissRequested',
@@ -7542,6 +9432,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOverlayCloseReason',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the dismiss requested interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -7557,6 +9449,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'indeterminate',
@@ -7565,6 +9459,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled mixed state rendered independently from the checked value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'max',
@@ -7573,6 +9469,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '100',
+        description: 'Largest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -7581,6 +9479,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueText',
@@ -7589,6 +9489,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Human-readable copy for the value state or control.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -7604,6 +9506,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -7612,6 +9517,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -7620,6 +9527,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'checked',
@@ -7628,6 +9538,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled checked state rendered by the native choice control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'description',
@@ -7636,6 +9548,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -7644,6 +9558,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -7652,6 +9568,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'name',
@@ -7660,6 +9578,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'this.generatedId',
+        description: 'Native form-control name forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -7668,6 +9588,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -7676,6 +9598,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -7684,6 +9608,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'selected',
@@ -7692,6 +9618,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled selected state, distinct from keyboard focus.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -7707,6 +9635,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -7715,6 +9646,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -7723,6 +9656,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'describedBy',
@@ -7731,6 +9667,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: "Defines the component's described by behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -7739,6 +9677,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -7747,6 +9687,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -7755,6 +9697,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'label',
@@ -7763,6 +9707,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'name',
@@ -7771,6 +9717,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: "Defines the component's custom name behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'orientation',
@@ -7779,6 +9727,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOrientation',
         required: false,
         defaultValue: "'vertical'",
+        description: 'Defines the logical axis used by layout and keyboard navigation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -7787,6 +9737,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -7795,6 +9747,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -7803,6 +9757,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | null | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -7811,6 +9767,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | null',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -7826,6 +9784,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'endLabel',
@@ -7834,6 +9794,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the end state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -7842,6 +9804,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -7850,6 +9814,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'label',
@@ -7858,6 +9824,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'max',
@@ -7866,6 +9834,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '100',
+        description: 'Largest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'min',
@@ -7874,6 +9844,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Smallest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -7882,6 +9854,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'startLabel',
@@ -7890,6 +9864,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the start state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'step',
@@ -7898,6 +9874,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '1',
+        description: 'Increment applied by keyboard and pointer value adjustments.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -7906,6 +9884,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -7914,6 +9894,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnRangeValue | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueFormatter',
@@ -7922,6 +9904,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '((value: number) => string) | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Formats a domain value for visible and accessible presentation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -7930,6 +9914,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnRangeValue',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -7945,6 +9931,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -7953,6 +9941,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'max',
@@ -7961,6 +9951,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '5',
+        description: 'Largest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -7969,6 +9961,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -7977,6 +9971,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -7992,6 +9988,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | null',
         required: false,
         defaultValue: 'null',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -8000,6 +9998,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | null',
         required: false,
         defaultValue: 'null',
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxSize',
@@ -8008,6 +10008,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '90',
+        description: 'Sets the maximum percentage size used while resizing.',
+        descriptionSource: 'source',
       },
       {
         name: 'minSize',
@@ -8016,6 +10018,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '10',
+        description: 'Sets the minimum percentage size used while resizing.',
+        descriptionSource: 'source',
       },
       {
         name: 'overflow',
@@ -8024,6 +10028,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"auto" | "clip" | "visible"',
         required: false,
         defaultValue: "'auto'",
+        description: "Defines the component's overflow behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'size',
@@ -8032,6 +10038,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | null',
         required: false,
         defaultValue: 'null',
+        description: 'Sets the initial percentage weight when every sibling panel provides a size.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -8047,6 +10055,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'orientation',
@@ -8055,6 +10065,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutAxis',
         required: false,
         defaultValue: "'horizontal'",
+        description: 'Sets the panel flow axis: horizontal follows inline, vertical follows block.',
+        descriptionSource: 'source',
       },
       {
         name: 'step',
@@ -8063,6 +10075,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '2',
+        description:
+          'Sets the keyboard resize increment in percentage points, with a 0.25 minimum.',
+        descriptionSource: 'source',
       },
       {
         name: 'sizes',
@@ -8071,6 +10086,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<number>',
         required: false,
         defaultValue: '[]',
+        description: 'Controlled sizes state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'resizeEnd',
@@ -8079,6 +10096,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<number>',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the resize end interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -8094,6 +10113,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaValueText',
@@ -8102,6 +10123,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | null',
         required: false,
         defaultValue: 'null',
+        description: 'Human-readable copy for the aria value state or control.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -8117,6 +10140,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the close navigation state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'mainId',
@@ -8125,6 +10150,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "this.ids.next('main-content')",
+        description: 'Stable identifier used by the main contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'navigationLabel',
@@ -8133,6 +10160,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the navigation state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'navigationOpen',
@@ -8141,6 +10170,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description:
+          'Controlled navigation open state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -8156,6 +10188,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'16 / 9'",
+        description: "Defines the component's aspect ratio behavior or presentation.",
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -8171,6 +10205,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnResponsiveDisplay',
         required: false,
         defaultValue: "'block'",
+        description: 'Restores this display mode while the component is visible.',
+        descriptionSource: 'source',
       },
       {
         name: 'from',
@@ -8179,6 +10215,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnResponsiveBreakpoint',
         required: false,
         defaultValue: "'none'",
+        description: 'Shows content at this viewport width and above.',
+        descriptionSource: 'source',
       },
       {
         name: 'until',
@@ -8187,6 +10225,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnResponsiveBreakpoint',
         required: false,
         defaultValue: "'none'",
+        description: 'Shows content below this viewport width.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -8202,6 +10242,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | null | undefined',
         required: false,
         defaultValue: 'undefined',
+        description:
+          'Names the scrollable region. Blank values omit the region role and accessible name.',
+        descriptionSource: 'source',
       },
       {
         name: 'axis',
@@ -8210,6 +10253,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"both" | "horizontal" | "vertical"',
         required: false,
         defaultValue: "'vertical'",
+        description: 'Selects the scrollable axis. Invalid runtime values fall back to vertical.',
+        descriptionSource: 'source',
       },
       {
         name: 'keyboardAccessible',
@@ -8218,6 +10263,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Keeps the native viewport keyboard-scrollable when enabled.',
+        descriptionSource: 'source',
       },
       {
         name: 'maxBlockSize',
@@ -8226,6 +10273,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'100%'",
+        description: 'Upper or lower bound applied to the block size value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxInlineSize',
@@ -8234,6 +10283,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'100%'",
+        description: 'Upper or lower bound applied to the inline size value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'scrollbar',
@@ -8242,6 +10293,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"auto" | "hidden" | "stable"',
         required: false,
         defaultValue: "'auto'",
+        description: 'Controls native scrollbar visibility and gutter allocation.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -8257,6 +10310,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -8265,6 +10321,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -8273,6 +10331,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'autocomplete',
@@ -8281,6 +10342,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'off'",
+        description: 'Native autocomplete purpose forwarded to the editable control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'clearLabel',
@@ -8289,6 +10352,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the clear state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -8297,6 +10362,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'enterKeyHint',
@@ -8305,6 +10372,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'search'",
+        description: "Defines the component's enter key hint behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -8313,6 +10382,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -8321,6 +10392,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxLength',
@@ -8329,6 +10402,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Upper or lower bound applied to the length value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'minLength',
@@ -8337,6 +10412,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Upper or lower bound applied to the length value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'name',
@@ -8345,6 +10422,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Native form-control name forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'placeholder',
@@ -8353,6 +10432,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Short input hint shown only while no value is present.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -8361,6 +10442,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -8369,6 +10452,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'spellcheck',
@@ -8377,6 +10462,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: "Defines the component's spellcheck behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -8385,6 +10472,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'searchSubmitted',
@@ -8393,6 +10482,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the search submitted interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -8401,6 +10492,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -8416,6 +10509,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -8424,6 +10520,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -8432,6 +10530,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -8440,6 +10541,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabledHandler',
@@ -8448,6 +10551,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSegmentDisabledHandler<T>',
         required: false,
         defaultValue: '(option) => option.disabled ?? false',
+        description: 'Controls whether the component applies the disabled handler behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -8456,6 +10561,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'identityMatcher',
@@ -8464,6 +10571,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnIdentityMatcher<T>',
         required: false,
         defaultValue: 'Object.is',
+        description: 'Compares option values when object identity is not stable across refreshes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -8472,6 +10581,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'options',
@@ -8480,6 +10591,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnSegmentOption<T>>',
         required: true,
         defaultValue: 'required',
+        description: 'Authoritative option collection presented by the selection control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'optionTemplate',
@@ -8488,6 +10601,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<KrnSegmentOptionContext<T>> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render option.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'orientation',
@@ -8496,6 +10611,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOrientation',
         required: false,
         defaultValue: "'horizontal'",
+        description: 'Defines the logical axis used by layout and keyboard navigation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -8504,6 +10621,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -8512,6 +10631,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -8520,6 +10641,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'trackBy',
@@ -8528,6 +10651,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSegmentTrackBy<T>',
         required: false,
         defaultValue: '(option) => option.value',
+        description: 'Returns the stable identity used to retain rendered items across updates.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -8536,6 +10661,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'T | null | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -8544,6 +10671,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'T | null',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -8559,6 +10688,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -8567,6 +10699,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -8575,6 +10709,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -8583,6 +10720,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabledHandler',
@@ -8591,6 +10730,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOptionDisabledHandler<T>',
         required: false,
         defaultValue: '(option) => option.disabled ?? false',
+        description: 'Controls whether the component applies the disabled handler behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'emptyText',
@@ -8599,6 +10740,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the empty state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'errorText',
@@ -8607,6 +10750,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the error state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -8615,6 +10760,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'identityMatcher',
@@ -8623,6 +10770,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnIdentityMatcher<T>',
         required: false,
         defaultValue: 'Object.is',
+        description: 'Compares option values when object identity is not stable across refreshes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -8631,6 +10780,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'loadingText',
@@ -8639,6 +10790,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the loading state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'options',
@@ -8647,6 +10800,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnSelectOption<T>>',
         required: true,
         defaultValue: 'required',
+        description: 'Authoritative option collection presented by the selection control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'optionsState',
@@ -8655,6 +10810,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOptionsState',
         required: false,
         defaultValue: "'ready'",
+        description:
+          'Controls whether options are interactive or replaced by an announced loading/error state.',
+        descriptionSource: 'source',
       },
       {
         name: 'optionTemplate',
@@ -8663,6 +10821,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<KrnSelectOptionContext<T>> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render option.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'placeholder',
@@ -8671,6 +10831,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Short input hint shown only while no value is present.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -8679,6 +10841,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -8687,6 +10851,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'selectedTemplate',
@@ -8695,6 +10861,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'TemplateRef<KrnSelectOptionContext<T>> | null',
         required: false,
         defaultValue: 'null',
+        description: 'Template or projected content used to render selected.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'size',
@@ -8703,6 +10871,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSize',
         required: false,
         defaultValue: "'md'",
+        description: 'Controls the custom select trigger height and content density.',
+        descriptionSource: 'source',
       },
       {
         name: 'stringify',
@@ -8711,6 +10881,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOptionStringifier<T>',
         required: false,
         defaultValue: '(option) => option.label',
+        description: 'Converts a domain value into the human-readable label shown to users.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -8719,6 +10891,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'trackBy',
@@ -8727,6 +10901,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOptionTrackBy<T>',
         required: false,
         defaultValue: '(option) => option.value',
+        description: 'Returns the stable identity used to retain rendered items across updates.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -8735,6 +10911,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'T | null | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -8743,6 +10921,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'selectionChange',
@@ -8751,6 +10931,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSelectOption<T> | null',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the selection change interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -8759,6 +10941,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'T | null',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -8774,6 +10958,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the close state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closeOnEscape',
@@ -8782,6 +10968,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Allows Escape to dismiss the topmost owned overlay.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closeOnOutside',
@@ -8790,6 +10978,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Allows an interaction outside the owned overlay to dismiss it.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'heading',
@@ -8798,6 +10988,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the heading state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'initialFocus',
@@ -8806,6 +10998,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'first-tabbable'",
+        description: 'Identifies the element that receives focus when the modal surface opens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -8814,6 +11008,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'closed',
@@ -8822,6 +11018,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnOverlayCloseReason',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the closed interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -8837,6 +11035,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnResponsiveDisplay',
         required: false,
         defaultValue: "'block'",
+        description: 'Restores this display mode while the component is visible.',
+        descriptionSource: 'source',
       },
       {
         name: 'from',
@@ -8845,6 +11045,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnResponsiveBreakpoint',
         required: false,
         defaultValue: "'none'",
+        description: 'Shows content at this viewport width and above.',
+        descriptionSource: 'source',
       },
       {
         name: 'until',
@@ -8853,6 +11055,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnResponsiveBreakpoint',
         required: false,
         defaultValue: "'none'",
+        description: 'Shows content below this viewport width.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -8868,6 +11072,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Space-separated element ids that describe the native complementary landmark.',
+        descriptionSource: 'source',
       },
       {
         name: 'ariaLabel',
@@ -8876,6 +11082,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -8884,6 +11092,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Space-separated element ids that name the native complementary landmark.',
+        descriptionSource: 'source',
       },
       {
         name: 'collapsedMode',
@@ -8892,6 +11102,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"hidden" | "icons"',
         required: false,
         defaultValue: "'icons'",
+        description: 'Controls whether the component applies the collapsed mode behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'collapsedWidth',
@@ -8900,6 +11112,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'4rem'",
+        description: 'Controls whether the component applies the collapsed width behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'side',
@@ -8908,6 +11122,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"auto" | "end" | "start"',
         required: false,
         defaultValue: "'auto'",
+        description: "Defines the component's side behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'width',
@@ -8916,6 +11132,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'var(--krn-shell-sidebar-width, 17rem)'",
+        description: 'Explicit inline size of the rendered surface.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'collapsed',
@@ -8924,6 +11142,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled collapsed state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -8939,6 +11159,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'var(--krn-space-4)'",
+        description: 'Explicit block size of the rendered surface or virtual viewport.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'shape',
@@ -8947,6 +11169,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"circle" | "rectangle" | "text"',
         required: false,
         defaultValue: "'text'",
+        description: "Defines the component's shape behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'width',
@@ -8955,6 +11179,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'100%'",
+        description: 'Explicit inline size of the rendered surface.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -8970,6 +11196,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'targetId',
@@ -8978,6 +11206,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'main-content'",
+        description: 'Stable identifier used by the target contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'activated',
@@ -8986,6 +11216,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the activated interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -9001,6 +11233,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -9009,6 +11243,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -9017,6 +11253,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -9025,6 +11263,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'label',
@@ -9033,6 +11273,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'max',
@@ -9041,6 +11283,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '100',
+        description: 'Largest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'min',
@@ -9049,6 +11293,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Smallest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'name',
@@ -9057,6 +11303,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Native form-control name forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -9065,6 +11313,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'showValue',
@@ -9073,6 +11323,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Controls whether the component applies the show value behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'step',
@@ -9081,6 +11333,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '1',
+        description: 'Increment applied by keyboard and pointer value adjustments.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -9089,6 +11343,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -9097,6 +11353,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueFormatter',
@@ -9105,6 +11363,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '((value: number) => string) | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Formats a domain value for visible and accessible presentation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -9113,6 +11373,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -9128,6 +11390,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'labels',
@@ -9136,6 +11400,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Partial<KrnToastTranslations>',
         required: false,
         defaultValue: '{}',
+        description: 'Localized copy overrides for the component-owned interface text.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxExpanded',
@@ -9144,6 +11410,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '8',
+        description: 'Upper or lower bound applied to the expanded value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxVisible',
@@ -9152,6 +11420,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '3',
+        description: 'Upper or lower bound applied to the visible value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'position',
@@ -9160,6 +11430,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnToastPosition',
         required: false,
         defaultValue: "'bottom-end'",
+        description: "Defines the component's position behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'expanded',
@@ -9168,6 +11440,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled expanded state for a disclosure or hierarchical item.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -9183,6 +11457,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutAxis',
         required: false,
         defaultValue: "'vertical'",
+        description: 'Axis receiving space: horizontal maps to inline and vertical maps to block.',
+        descriptionSource: 'source',
       },
       {
         name: 'size',
@@ -9191,6 +11467,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'4'",
+        description: 'Fixed logical length reserved by the spacer.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -9206,6 +11484,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -9221,6 +11501,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description:
+          'Closes after an enabled menu item activates; use the keep-open marker for one item.',
+        descriptionSource: 'source',
       },
       {
         name: 'disabled',
@@ -9229,6 +11512,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'loading',
@@ -9237,6 +11522,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents duplicate actions and exposes an accessible busy state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'matchTriggerWidth',
@@ -9245,6 +11532,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'this.options.matchTriggerWidth',
+        description: 'Makes the connected overlay exactly as wide as the complete trigger origin.',
+        descriptionSource: 'source',
       },
       {
         name: 'menuAlign',
@@ -9253,6 +11542,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnMenuAlignment',
         required: false,
         defaultValue: 'this.options.menuAlign',
+        description: 'Logical horizontal alignment used before the CDK collision fallbacks.',
+        descriptionSource: 'source',
       },
       {
         name: 'menuLabel',
@@ -9261,6 +11552,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the menu state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'menuOffset',
@@ -9269,6 +11562,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: 'this.options.menuOffset',
+        description: 'Non-negative logical gap in CSS pixels between the trigger and menu.',
+        descriptionSource: 'source',
       },
       {
         name: 'size',
@@ -9277,6 +11572,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSize',
         required: false,
         defaultValue: 'this.options.size',
+        description: 'Named semantic size resolved through Kern density and sizing tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tone',
@@ -9285,6 +11582,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnTone',
         required: false,
         defaultValue: 'this.options.tone',
+        description:
+          'Semantic intent that selects coordinated text, icon, border, and surface tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'variant',
@@ -9293,6 +11593,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnActionVariant',
         required: false,
         defaultValue: 'this.options.variant',
+        description: 'Named visual hierarchy treatment that preserves the component semantics.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -9301,6 +11603,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'primaryAction',
@@ -9309,6 +11613,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'MouseEvent',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the primary action interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -9324,6 +11630,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"center" | "end" | "start" | "stretch"',
         required: false,
         defaultValue: "'start'",
+        description: "Aligns the panels within the split layout's block axis.",
+        descriptionSource: 'source',
       },
       {
         name: 'collapseAt',
@@ -9332,6 +11640,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnResponsiveBreakpoint',
         required: false,
         defaultValue: "'md'",
+        description:
+          "Stacks the panels when the split layout's inline size reaches the selected breakpoint.",
+        descriptionSource: 'source',
       },
       {
         name: 'gap',
@@ -9340,6 +11651,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'6'",
+        description:
+          'Sets the space between the two panels using a spacing token, number of pixels, or CSS length.',
+        descriptionSource: 'source',
       },
       {
         name: 'ratio',
@@ -9348,6 +11662,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSplitRatio',
         required: false,
         defaultValue: "'1:1'",
+        description:
+          'Sets the relative primary-to-secondary track sizes. Accepts presets, `3:2`, or `3fr 2fr`.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -9363,6 +11680,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutAlignment',
         required: false,
         defaultValue: "'stretch'",
+        description: 'Cross-axis alignment of projected children.',
+        descriptionSource: 'source',
       },
       {
         name: 'gap',
@@ -9371,6 +11690,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutSpace',
         required: false,
         defaultValue: "'4'",
+        description: 'Logical spacing between adjacent projected children.',
+        descriptionSource: 'source',
       },
       {
         name: 'justify',
@@ -9379,6 +11700,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnLayoutJustification',
         required: false,
         defaultValue: "'start'",
+        description: 'Distribution of projected children along the block axis.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -9394,6 +11717,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: "Defines the component's detail behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'label',
@@ -9402,6 +11727,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'trend',
@@ -9410,6 +11737,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: '"down" | "flat" | "up"',
         required: false,
         defaultValue: "'flat'",
+        description: "Defines the component's trend behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -9418,6 +11747,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -9433,6 +11764,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnBadgeSize',
         required: false,
         defaultValue: "'md'",
+        description: 'Controls the badge height, horizontal padding, and text density.',
+        descriptionSource: 'source',
       },
       {
         name: 'status',
@@ -9441,6 +11774,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Uses the shared, subtle status recipe and renders a semantic color marker.',
+        descriptionSource: 'source',
       },
       {
         name: 'tone',
@@ -9449,6 +11784,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnDisplayTone',
         required: false,
         defaultValue: "'neutral'",
+        description:
+          'Semantic intent that selects coordinated text, icon, border, and surface tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'variant',
@@ -9457,6 +11795,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnBadgeVariant',
         required: false,
         defaultValue: "'subtle'",
+        description:
+          'Controls non-status badges. Status badges always use the shared subtle appearance.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -9472,6 +11813,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'completedSteps',
@@ -9480,6 +11823,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<number>',
         required: false,
         defaultValue: '[]',
+        description: 'Ordered domain values supplied to the completed step collection.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'linear',
@@ -9488,6 +11833,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's linear behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'optionalLabel',
@@ -9496,6 +11843,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the optional state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'orientation',
@@ -9504,6 +11853,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnNavigationOrientation',
         required: false,
         defaultValue: "'horizontal'",
+        description: 'Defines the logical axis used by layout and keyboard navigation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'steps',
@@ -9512,6 +11863,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnStepItem>',
         required: false,
         defaultValue: '[]',
+        description: 'Ordered domain values supplied to the step collection.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'activeStep',
@@ -9520,6 +11873,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Controlled active step state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -9535,6 +11890,19 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
+      },
+      {
+        name: 'kind',
+        property: 'kind',
+        kind: 'input',
+        type: 'KrnStateKind',
+        required: false,
+        defaultValue: "'success'",
+        description:
+          'Selects the state meaning, default visual, status role, title, and recommended tone.',
+        descriptionSource: 'source',
       },
       {
         name: 'title',
@@ -9543,14 +11911,19 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Visible title that also names the component surface or data view.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tone',
         property: 'tone',
         kind: 'input',
-        type: 'KrnFeedbackTone',
+        type: 'KrnFeedbackTone | undefined',
         required: false,
         defaultValue: "'success'",
+        description:
+          'Semantic intent that selects coordinated text, icon, border, and surface tokens.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -9566,6 +11939,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -9574,6 +11950,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -9582,6 +11960,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'checked',
@@ -9590,6 +11971,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled checked state rendered by the native choice control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'description',
@@ -9598,6 +11981,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Visible supporting description for the component content.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -9606,6 +11991,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -9614,6 +12001,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -9622,6 +12011,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'name',
@@ -9630,6 +12021,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Native form-control name forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -9638,6 +12031,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -9646,6 +12041,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -9654,6 +12051,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'checkedChange',
@@ -9662,6 +12061,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the checked change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -9677,6 +12078,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'items',
@@ -9685,6 +12088,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnTocItem>',
         required: false,
         defaultValue: '[]',
+        description: 'Ordered item collection rendered by the composite widget.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'observe',
@@ -9693,6 +12098,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: "Defines the component's observe behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'title',
@@ -9701,6 +12108,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Visible title that also names the component surface or data view.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'activeId',
@@ -9709,6 +12118,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | null',
         required: false,
         defaultValue: 'null',
+        description: 'Controlled active id state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'itemActivated',
@@ -9717,6 +12128,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnTocItem',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the item activated interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -9732,6 +12145,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'items',
@@ -9740,6 +12155,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnTabItem>',
         required: false,
         defaultValue: '[]',
+        description: 'Ordered item collection rendered by the composite widget.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'orientation',
@@ -9749,6 +12166,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         required: false,
         defaultValue:
           "this.host.nativeElement.localName === 'krn-vertical-tabs' ? 'vertical' : 'horizontal'",
+        description: 'Defines the logical axis used by layout and keyboard navigation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -9757,6 +12176,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | null',
         required: false,
         defaultValue: 'null',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -9772,6 +12193,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the accessible state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -9780,6 +12203,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'interactive',
@@ -9788,6 +12213,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's interactive behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'removable',
@@ -9796,6 +12223,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: "Defines the component's removable behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'selected',
@@ -9804,6 +12233,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled selected state, distinct from keyboard focus.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'remove',
@@ -9812,6 +12243,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'void',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the remove interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -9827,6 +12260,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: "Defines the component's add on blur behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'allowDuplicates',
@@ -9835,6 +12270,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the component applies the allow duplicates behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaDescribedBy',
@@ -9843,6 +12280,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -9851,6 +12291,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -9859,6 +12301,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'autocomplete',
@@ -9867,6 +12312,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'off'",
+        description: 'Native autocomplete purpose forwarded to the editable control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -9875,6 +12322,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -9883,6 +12332,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'inputLabel',
@@ -9891,6 +12342,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the input state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -9899,6 +12352,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxTags',
@@ -9907,6 +12362,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: 'Number.POSITIVE_INFINITY',
+        description: 'Upper or lower bound applied to the tags value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'placeholder',
@@ -9915,6 +12372,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Short input hint shown only while no value is present.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -9923,6 +12382,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -9931,6 +12392,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'separator',
@@ -9939,6 +12402,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'RegExp | string',
         required: false,
         defaultValue: '/[,\\n]+/',
+        description: 'Delimiter or pattern used to split committed draft text into tags.',
+        descriptionSource: 'source',
       },
       {
         name: 'separatorKeys',
@@ -9947,6 +12412,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<string>',
         required: false,
         defaultValue: "['Enter', ',']",
+        description: 'Stable identifier used by the separator contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -9955,6 +12422,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -9963,6 +12432,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<string> | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tagAdded',
@@ -9971,6 +12442,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the tag added interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tagRemoved',
@@ -9979,6 +12452,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the tag removed interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -9987,6 +12462,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<string>',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -10002,6 +12479,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -10010,6 +12490,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -10018,6 +12500,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'autocomplete',
@@ -10026,6 +12511,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Native autocomplete purpose forwarded to the editable control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -10034,6 +12521,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -10042,6 +12531,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'inputMode',
@@ -10050,6 +12541,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnInputMode',
         required: false,
         defaultValue: "'text'",
+        description: "Defines the component's input mode behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -10058,6 +12551,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxLength',
@@ -10066,6 +12561,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Upper or lower bound applied to the length value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'minLength',
@@ -10074,6 +12571,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Upper or lower bound applied to the length value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'name',
@@ -10082,6 +12581,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Native form-control name forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'placeholder',
@@ -10090,6 +12591,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Short input hint shown only while no value is present.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -10098,6 +12601,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -10106,6 +12611,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'size',
@@ -10114,6 +12621,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSize',
         required: false,
         defaultValue: "'md'",
+        description: 'Named semantic size resolved through Kern density and sizing tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'spellcheck',
@@ -10122,6 +12631,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: "Defines the component's spellcheck behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -10130,6 +12641,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -10138,6 +12651,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -10153,6 +12668,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -10161,6 +12679,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -10169,6 +12689,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'autocomplete',
@@ -10177,6 +12700,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Native autocomplete purpose forwarded to the editable control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'autoResize',
@@ -10185,6 +12710,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the component applies the auto resize behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -10193,6 +12720,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -10201,6 +12730,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -10209,6 +12740,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxLength',
@@ -10217,6 +12750,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Upper or lower bound applied to the length value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'minLength',
@@ -10225,6 +12760,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Upper or lower bound applied to the length value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'name',
@@ -10233,6 +12770,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Native form-control name forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'placeholder',
@@ -10241,6 +12780,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Short input hint shown only while no value is present.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -10249,6 +12790,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -10257,6 +12800,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'rows',
@@ -10265,6 +12810,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '4',
+        description: 'Ordered row collection rendered by the tabular view.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'showCount',
@@ -10273,6 +12820,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the component applies the show count behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'size',
@@ -10281,6 +12830,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnSize',
         required: false,
         defaultValue: "'md'",
+        description: 'Named semantic size resolved through Kern density and sizing tokens.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'spellcheck',
@@ -10289,6 +12840,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: "Defines the component's spellcheck behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -10297,6 +12850,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -10305,6 +12860,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -10320,6 +12877,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabel',
@@ -10328,6 +12888,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -10336,6 +12898,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -10344,6 +12909,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -10352,6 +12919,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -10360,6 +12929,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'labels',
@@ -10368,6 +12939,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Partial<KrnTimePickerTranslations>',
         required: false,
         defaultValue: '{}',
+        description: 'Localized copy overrides for the component-owned interface text.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'max',
@@ -10376,6 +12949,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Largest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'min',
@@ -10384,6 +12959,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Smallest accepted numeric or temporal value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -10392,6 +12969,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -10400,6 +12979,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'step',
@@ -10408,6 +12989,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '60',
+        description: 'Increment applied by keyboard and pointer value adjustments.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -10416,6 +12999,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -10424,6 +13009,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -10432,6 +13019,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -10440,6 +13029,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -10455,6 +13046,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -10470,6 +13063,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: 'Human-readable copy for the heading state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'time',
@@ -10478,6 +13073,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: "Defines the component's time behavior or presentation.",
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -10493,6 +13090,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'labels',
@@ -10501,6 +13100,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Partial<KrnToastTranslations>',
         required: false,
         defaultValue: '{}',
+        description: 'Localized copy overrides for the component-owned interface text.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxExpanded',
@@ -10509,6 +13110,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '8',
+        description: 'Upper or lower bound applied to the expanded value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxVisible',
@@ -10517,6 +13120,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '3',
+        description: 'Upper or lower bound applied to the visible value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'position',
@@ -10525,6 +13130,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnToastPosition',
         required: false,
         defaultValue: "'bottom-end'",
+        description: "Defines the component's position behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'expanded',
@@ -10533,6 +13140,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled expanded state for a disclosure or hierarchical item.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -10548,6 +13157,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'labels',
@@ -10556,6 +13167,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'Partial<KrnToastTranslations>',
         required: false,
         defaultValue: '{}',
+        description: 'Localized copy overrides for the component-owned interface text.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxExpanded',
@@ -10564,6 +13177,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '8',
+        description: 'Upper or lower bound applied to the expanded value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'maxVisible',
@@ -10572,6 +13187,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '3',
+        description: 'Upper or lower bound applied to the visible value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'position',
@@ -10580,6 +13197,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnToastPosition',
         required: false,
         defaultValue: "'bottom-end'",
+        description: "Defines the component's position behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'expanded',
@@ -10588,6 +13207,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controlled expanded state for a disclosure or hierarchical item.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -10603,6 +13224,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'text',
@@ -10611,6 +13234,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: 'Human-readable copy for the text state or control.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -10626,6 +13251,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'nodes',
@@ -10634,6 +13261,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnTreeNode>',
         required: false,
         defaultValue: '[]',
+        description:
+          'Hierarchical nodes whose ids must be stable and unique across the complete tree.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'expanded',
@@ -10642,6 +13272,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlySet<string>',
         required: false,
         defaultValue: 'new Set<string>()',
+        description: 'Controlled expanded state for a disclosure or hierarchical item.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'selected',
@@ -10650,6 +13282,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Controlled selected state, distinct from keyboard focus.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'loadChildren',
@@ -10658,6 +13292,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnTreeNode',
         required: false,
         defaultValue: 'undefined',
+        description:
+          'Requests children when an unloaded node is expanded or its failed request is retried.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -10673,6 +13310,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'indent',
@@ -10681,6 +13320,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'1rem'",
+        description: "Defines the component's indent behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'items',
@@ -10689,6 +13330,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnTreeNavigationItem>',
         required: false,
         defaultValue: '[]',
+        description: 'Ordered item collection rendered by the composite widget.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'showGuides',
@@ -10697,6 +13340,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: 'Controls whether the component applies the show guides behavior.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'expandedIds',
@@ -10705,6 +13350,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<string>',
         required: false,
         defaultValue: '[]',
+        description: 'Controlled expanded ids state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'selectedId',
@@ -10713,6 +13360,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | null',
         required: false,
         defaultValue: 'null',
+        description: 'Controlled selected id state with a matching Angular model-change output.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'itemSelected',
@@ -10721,6 +13370,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnTreeNavigationItem',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the item selected interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'loadChildren',
@@ -10729,6 +13380,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'KrnTreeNavigationItem',
         required: false,
         defaultValue: 'undefined',
+        description:
+          'Requests children when an unloaded item is expanded or its failed request is retried.',
+        descriptionSource: 'source',
       },
     ],
   },
@@ -10744,6 +13398,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: "Defines the component's detail behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'menuAriaLabel',
@@ -10752,6 +13408,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Human-readable copy for the menu aria state or control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'name',
@@ -10760,6 +13418,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: true,
         defaultValue: 'required',
+        description: 'Native form-control name forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'open',
@@ -10768,6 +13428,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Controls whether the disclosure or overlay surface is visible.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -10783,6 +13445,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the custom contract.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -10798,6 +13462,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids composed with Form Field hints and validation descriptions.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'ariaLabelledBy',
@@ -10806,6 +13473,9 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description:
+          'Space-separated element ids that provide the accessible name and take precedence over ariaLabel.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'autocomplete',
@@ -10814,6 +13484,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "'one-time-code'",
+        description: 'Native autocomplete purpose forwarded to the editable control.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'disabled',
@@ -10822,6 +13494,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Prevents user interaction and participates in the disabled-state contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'id',
@@ -10830,6 +13504,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: "''",
+        description: 'Stable identifier used by the id contract.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'invalid',
@@ -10838,6 +13514,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Exposes an externally controlled invalid presentation state.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'label',
@@ -10846,6 +13524,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Visible text that names the control or data value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'length',
@@ -10854,6 +13534,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '6',
+        description: "Defines the component's length behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'numericOnly',
@@ -10862,6 +13544,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'true',
+        description: "Defines the component's numeric only behavior or presentation.",
+        descriptionSource: 'inferred',
       },
       {
         name: 'readonly',
@@ -10870,6 +13554,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Keeps the value perceivable while preventing user edits.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'required',
@@ -10878,6 +13564,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'boolean',
         required: false,
         defaultValue: 'false',
+        description: 'Marks the value as required and participates in Angular Forms validation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'tabindex',
@@ -10886,6 +13574,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'number',
         required: false,
         defaultValue: '0',
+        description: 'Native sequential-focus order forwarded to the owned interactive element.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -10894,6 +13584,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'completed',
@@ -10902,6 +13594,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the completed interaction completes.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'valueChange',
@@ -10910,6 +13604,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string',
         required: false,
         defaultValue: 'undefined',
+        description: 'Notifies the consumer after the value change interaction completes.',
+        descriptionSource: 'inferred',
       },
     ],
   },
@@ -10925,6 +13621,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | undefined',
         required: false,
         defaultValue: 'undefined',
+        description: 'Accessible name used when visible content is not sufficient.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'items',
@@ -10933,6 +13631,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'ReadonlyArray<KrnTabItem>',
         required: false,
         defaultValue: '[]',
+        description: 'Ordered item collection rendered by the composite widget.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'orientation',
@@ -10942,6 +13642,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         required: false,
         defaultValue:
           "this.host.nativeElement.localName === 'krn-vertical-tabs' ? 'vertical' : 'horizontal'",
+        description: 'Defines the logical axis used by layout and keyboard navigation.',
+        descriptionSource: 'inferred',
       },
       {
         name: 'value',
@@ -10950,6 +13652,8 @@ export const KERN_RUNTIME_COMPONENTS = {
         type: 'string | null',
         required: false,
         defaultValue: 'null',
+        description: 'Controlled component value.',
+        descriptionSource: 'inferred',
       },
     ],
   },

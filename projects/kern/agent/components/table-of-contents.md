@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Navigation
 
-Table of Contents. A keyboard-first wayfinding primitive that preserves orientation and current location.
+Table of Contents. Lists page headings and tracks the section currently active in the reading viewport.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Table of Contents for this specific contract: Lists page headings and tracks the section currently active in the reading viewport.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Table of Contents for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -58,14 +58,14 @@ void bootstrapApplication(KernTableOfContentsAgentExample);
 
 ## API
 
-| Name            | Kind   | Type                        | Required | Default     | Description                                                              |
-| --------------- | ------ | --------------------------- | -------- | ----------- | ------------------------------------------------------------------------ |
-| `items`         | input  | `ReadonlyArray<KrnTocItem>` | no       | `[]`        | Ordered item collection rendered by the composite widget.                |
-| `activeId`      | model  | `string \| null`            | no       | `null`      | Stable id of the item currently participating in roving focus.           |
-| `observe`       | input  | `boolean`                   | no       | `true`      | Enables automatic observation of headings used by the table of contents. |
-| `title`         | input  | `string \| undefined`       | no       | `undefined` | Visible title that also names the component surface or data view.        |
-| `ariaLabel`     | input  | `string \| undefined`       | no       | `undefined` | Accessible name used when visible content is not sufficient.             |
-| `itemActivated` | output | `KrnTocItem`                | no       | `undefined` | Notifies the consumer after the item activated interaction completes.    |
+| Name            | Kind   | Type                        | Required | Default     | Description                                                             |
+| --------------- | ------ | --------------------------- | -------- | ----------- | ----------------------------------------------------------------------- |
+| `items`         | input  | `ReadonlyArray<KrnTocItem>` | no       | `[]`        | Ordered item collection rendered by the composite widget.               |
+| `activeId`      | model  | `string \| null`            | no       | `null`      | Controlled active id state with a matching Angular model-change output. |
+| `observe`       | input  | `boolean`                   | no       | `true`      | Defines the component's observe behavior or presentation.               |
+| `title`         | input  | `string \| undefined`       | no       | `undefined` | Visible title that also names the component surface or data view.       |
+| `ariaLabel`     | input  | `string \| undefined`       | no       | `undefined` | Accessible name used when visible content is not sufficient.            |
+| `itemActivated` | output | `KrnTocItem`                | no       | `undefined` | Notifies the consumer after the item activated interaction completes.   |
 
 ## Deprecated selectors
 
@@ -81,12 +81,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys move within composites
-- Home / End jump
-- Enter activates
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab visits heading links in document order; Enter follows the focused link
+- Destinations retain native link semantics and expose current location where applicable.
+- Composite navigation uses one documented focus model without changing reading order.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -126,11 +123,11 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument  | Control | Default               | Test value                   | Binding                    | Description                                 |
-| --------- | ------- | --------------------- | ---------------------------- | -------------------------- | ------------------------------------------- |
-| `active`  | select  | `"specimen-overview"` | `"specimen-api"`             | model `activeId`           | Changes the active table-of-contents entry. |
-| `observe` | boolean | `true`                | `false`                      | input `observe` (property) | Configures the component observe contract.  |
-| `title`   | text    | `"On this page"`      | `"On this page · alternate"` | input `title` (property)   | Configures the component title contract.    |
+| Argument  | Control | Default               | Test value                   | Binding                    | Description                                                       |
+| --------- | ------- | --------------------- | ---------------------------- | -------------------------- | ----------------------------------------------------------------- |
+| `active`  | select  | `"specimen-overview"` | `"specimen-api"`             | model `activeId`           | Changes the active table-of-contents entry.                       |
+| `observe` | boolean | `true`                | `false`                      | input `observe` (property) | Defines the component's observe behavior or presentation.         |
+| `title`   | text    | `"On this page"`      | `"On this page · alternate"` | input `title` (property)   | Visible title that also names the component surface or data view. |
 
 Exact API exclusions:
 

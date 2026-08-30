@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Navigation
 
-Back Button. A keyboard-first wayfinding primitive that preserves orientation and current location.
+Back Button. Provides an explicitly labelled native link to the previous product destination.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Back Button for this specific contract: Provides an explicitly labelled native link to the previous product destination.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Back Button for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -45,7 +45,7 @@ void bootstrapApplication(KernBackButtonAgentExample);
 
 | Name        | Kind   | Type                  | Required | Default     | Description                                                      |
 | ----------- | ------ | --------------------- | -------- | ----------- | ---------------------------------------------------------------- |
-| `href`      | input  | `string \| null`      | no       | `null`      | Required destination URL used by the semantic link element.      |
+| `href`      | input  | `string \| null`      | no       | `null`      | Defines the component's href behavior or presentation.           |
 | `label`     | input  | `string \| undefined` | no       | `undefined` | Visible text that names the control or data value.               |
 | `activated` | output | `void`                | no       | `undefined` | Notifies the consumer after the activated interaction completes. |
 
@@ -63,12 +63,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys move within composites
-- Home / End jump
-- Enter activates
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab focuses the native link; Enter follows its destination
+- Destinations retain native link semantics and expose current location where applicable.
+- Composite navigation uses one documented focus model without changing reading order.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -108,10 +105,10 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument | Control | Default             | Test value                      | Binding                  | Description                             |
-| -------- | ------- | ------------------- | ------------------------------- | ------------------------ | --------------------------------------- |
-| `label`  | text    | `"Back to catalog"` | `"Back to catalog · alternate"` | input `label` (property) | Changes the back-button label.          |
-| `href`   | text    | `"/"`               | `"#specimen-overview"`          | input `href` (property)  | Configures the component href contract. |
+| Argument | Control | Default             | Test value                      | Binding                  | Description                                            |
+| -------- | ------- | ------------------- | ------------------------------- | ------------------------ | ------------------------------------------------------ |
+| `label`  | text    | `"Back to catalog"` | `"Back to catalog · alternate"` | input `label` (property) | Changes the back-button label.                         |
+| `href`   | text    | `"/"`               | `"#specimen-overview"`          | input `href` (property)  | Defines the component's href behavior or presentation. |
 
 Exact API exclusions:
 

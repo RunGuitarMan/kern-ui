@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "List Item. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "List Item. Presents one structured list row with heading, supporting content, and optional actions.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -100,11 +100,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -139,8 +138,8 @@
     "selected"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use List Item for this specific contract: Presents one structured list row with heading, supporting content, and optional actions.",
+    "avoidWhen": "Do not choose List Item for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -183,7 +182,7 @@
         "kind": "text",
         "defaultValue": "Quarterly audit package",
         "testValue": "Quarterly audit package · alternate",
-        "description": "Configures the component heading contract.",
+        "description": "Human-readable copy for the heading state or control.",
         "binding": {
           "kind": "input",
           "publicName": "heading",

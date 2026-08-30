@@ -7,7 +7,7 @@
 - Lifecycle: **beta**
 - Category: Forms
 
-Date Range Picker. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Date Range Picker. Selects an ordered start and end date within localized calendar and boundary rules.
 
 ## Use
 
@@ -58,7 +58,7 @@ void bootstrapApplication(KernDateRangePickerAgentExample);
 
 | Name              | Kind   | Type                             | Required | Default     | Description                                                                                      |
 | ----------------- | ------ | -------------------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`                         | no       | `''`        | Stable identifier value used by the id contract.                                                 |
+| `id`              | input  | `string`                         | no       | `''`        | Stable identifier used by the id contract.                                                       |
 | `ariaLabel`       | input  | `string`                         | no       | `''`        | Accessible name used when visible content is not sufficient.                                     |
 | `ariaLabelledBy`  | input  | `string`                         | no       | `''`        | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input  | `string`                         | no       | `''`        | Space-separated element ids composed with Form Field hints and validation descriptions.          |
@@ -148,19 +148,19 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument       | Control | Default | Test value          | Binding                         | Description                                       |
-| -------------- | ------- | ------- | ------------------- | ------------------------------- | ------------------------------------------------- |
-| `disabled`     | boolean | `false` | `true`              | input `disabled` (property)     | Prevents user interaction.                        |
-| `readOnly`     | boolean | `false` | `true`              | input `readonly` (property)     | Keeps the value focusable while preventing edits. |
-| `required`     | boolean | `false` | `true`              | input `required` (property)     | Marks the control as required.                    |
-| `invalid`      | boolean | `false` | `true`              | input `invalid` (property)      | Exposes the invalid visual and ARIA state.        |
-| `id`           | text    | `""`    | `"Alternate value"` | input `id` (property)           | Configures the component id contract.             |
-| `max`          | text    | `""`    | `"2026-11-30"`      | input `max` (property)          | Configures the component max contract.            |
-| `min`          | text    | `""`    | `"2026-02-01"`      | input `min` (property)          | Configures the component min contract.            |
-| `open`         | boolean | `false` | `true`              | model `open`                    | Controlled disclosure or overlay state.           |
-| `tabindex`     | number  | `0`     | `1`                 | input `tabindex` (property)     | Configures the component tabindex contract.       |
-| `today`        | text    | `""`    | `"2026-08-15"`      | input `today` (property)        | Configures the component today contract.          |
-| `weekStartsOn` | number  | `0`     | `1`                 | input `weekStartsOn` (property) | Configures the component weekStartsOn contract.   |
+| Argument       | Control | Default | Test value          | Binding                         | Description                                                               |
+| -------------- | ------- | ------- | ------------------- | ------------------------------- | ------------------------------------------------------------------------- |
+| `disabled`     | boolean | `false` | `true`              | input `disabled` (property)     | Prevents user interaction.                                                |
+| `readOnly`     | boolean | `false` | `true`              | input `readonly` (property)     | Keeps the value focusable while preventing edits.                         |
+| `required`     | boolean | `false` | `true`              | input `required` (property)     | Marks the control as required.                                            |
+| `invalid`      | boolean | `false` | `true`              | input `invalid` (property)      | Exposes the invalid visual and ARIA state.                                |
+| `id`           | text    | `""`    | `"Alternate value"` | input `id` (property)           | Stable identifier used by the id contract.                                |
+| `max`          | text    | `""`    | `"2026-11-30"`      | input `max` (property)          | Largest accepted numeric or temporal value.                               |
+| `min`          | text    | `""`    | `"2026-02-01"`      | input `min` (property)          | Smallest accepted numeric or temporal value.                              |
+| `open`         | boolean | `false` | `true`              | model `open`                    | Controls whether the disclosure or overlay surface is visible.            |
+| `tabindex`     | number  | `0`     | `1`                 | input `tabindex` (property)     | Native sequential-focus order forwarded to the owned interactive element. |
+| `today`        | text    | `""`    | `"2026-08-15"`      | input `today` (property)        | Deterministic plain date treated as today on both server and client.      |
+| `weekStartsOn` | number  | `0`     | `1`                 | input `weekStartsOn` (property) | Zero-based weekday used as the first calendar column.                     |
 
 Exact API exclusions:
 

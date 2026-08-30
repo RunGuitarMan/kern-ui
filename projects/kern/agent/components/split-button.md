@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Actions
 
-Split Button. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.
+Split Button. Pairs one primary native action with a separate menu of closely related secondary actions.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Split Button for this specific contract: Pairs one primary native action with a separate menu of closely related secondary actions.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Split Button for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -55,11 +55,11 @@ void bootstrapApplication(KernSplitButtonAgentExample);
 
 | Name                | Kind   | Type                  | Required | Default                          | Description                                                                         |
 | ------------------- | ------ | --------------------- | -------- | -------------------------------- | ----------------------------------------------------------------------------------- |
-| `size`              | input  | `KrnSize`             | no       | `this.options.size`              | Named semantic size resolved through KERN density and sizing tokens.                |
+| `size`              | input  | `KrnSize`             | no       | `this.options.size`              | Named semantic size resolved through Kern density and sizing tokens.                |
 | `variant`           | input  | `KrnActionVariant`    | no       | `this.options.variant`           | Named visual hierarchy treatment that preserves the component semantics.            |
 | `tone`              | input  | `KrnTone`             | no       | `this.options.tone`              | Semantic intent that selects coordinated text, icon, border, and surface tokens.    |
 | `disabled`          | input  | `boolean`             | no       | `false`                          | Prevents user interaction and participates in the disabled-state contract.          |
-| `loading`           | input  | `boolean`             | no       | `false`                          | Prevents duplicate actions and exposes accessible busy state.                       |
+| `loading`           | input  | `boolean`             | no       | `false`                          | Prevents duplicate actions and exposes an accessible busy state.                    |
 | `open`              | model  | `boolean`             | no       | `false`                          | Controls whether the disclosure or overlay surface is visible.                      |
 | `menuAlign`         | input  | `KrnMenuAlignment`    | no       | `this.options.menuAlign`         | Logical horizontal alignment used before the CDK collision fallbacks.               |
 | `menuOffset`        | input  | `number`              | no       | `this.options.menuOffset`        | Non-negative logical gap in CSS pixels between the trigger and menu.                |
@@ -83,11 +83,11 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Enter / Space activates
-- Tab follows document order
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab visits the primary and menu actions in document order
+- Enter or Space activates the focused action
+- Arrow Down opens the secondary menu; Escape closes it and restores focus
+- Native buttons and links retain their accessible names, focus, activation, and form behavior.
+- Disabled, loading, pressed, and destructive states are not communicated by color alone.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -129,18 +129,18 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument            | Control | Default   | Test value  | Binding                              | Description                                                                |
-| ------------------- | ------- | --------- | ----------- | ------------------------------------ | -------------------------------------------------------------------------- |
-| `open`              | boolean | `false`   | `true`      | model `open`                         | Opens the secondary action menu.                                           |
-| `menuAlign`         | select  | `"end"`   | `"start"`   | input `menuAlign` (property)         | Aligns the connected menu to the logical start or end edge of the trigger. |
-| `closeOnSelection`  | boolean | `true`    | `false`     | input `closeOnSelection` (property)  | Configures the component closeOnSelection contract.                        |
-| `disabled`          | boolean | `false`   | `true`      | input `disabled` (property)          | Prevents interaction and participates in the component disabled contract.  |
-| `loading`           | boolean | `false`   | `true`      | input `loading` (property)           | Prevents duplicate actions and exposes an accessible busy state.           |
-| `matchTriggerWidth` | boolean | `false`   | `true`      | input `matchTriggerWidth` (property) | Configures the component matchTriggerWidth contract.                       |
-| `menuOffset`        | number  | `8`       | `9`         | input `menuOffset` (property)        | Configures the component menuOffset contract.                              |
-| `size`              | select  | `"md"`    | `"sm"`      | input `size` (property)              | Semantic component size.                                                   |
-| `tone`              | select  | `"brand"` | `"neutral"` | input `tone` (property)              | Semantic intent; color is never the only state indicator.                  |
-| `variant`           | select  | `"solid"` | `"soft"`    | input `variant` (property)           | Visual emphasis within the component hierarchy.                            |
+| Argument            | Control | Default   | Test value  | Binding                              | Description                                                                         |
+| ------------------- | ------- | --------- | ----------- | ------------------------------------ | ----------------------------------------------------------------------------------- |
+| `open`              | boolean | `false`   | `true`      | model `open`                         | Opens the secondary action menu.                                                    |
+| `menuAlign`         | select  | `"end"`   | `"start"`   | input `menuAlign` (property)         | Aligns the connected menu to the logical start or end edge of the trigger.          |
+| `closeOnSelection`  | boolean | `true`    | `false`     | input `closeOnSelection` (property)  | Closes after an enabled menu item activates; use the keep-open marker for one item. |
+| `disabled`          | boolean | `false`   | `true`      | input `disabled` (property)          | Prevents user interaction and participates in the disabled-state contract.          |
+| `loading`           | boolean | `false`   | `true`      | input `loading` (property)           | Prevents duplicate actions and exposes an accessible busy state.                    |
+| `matchTriggerWidth` | boolean | `false`   | `true`      | input `matchTriggerWidth` (property) | Makes the connected overlay exactly as wide as the complete trigger origin.         |
+| `menuOffset`        | number  | `8`       | `9`         | input `menuOffset` (property)        | Non-negative logical gap in CSS pixels between the trigger and menu.                |
+| `size`              | select  | `"md"`    | `"sm"`      | input `size` (property)              | Named semantic size resolved through Kern density and sizing tokens.                |
+| `tone`              | select  | `"brand"` | `"neutral"` | input `tone` (property)              | Semantic intent that selects coordinated text, icon, border, and surface tokens.    |
+| `variant`           | select  | `"solid"` | `"soft"`    | input `variant` (property)           | Named visual hierarchy treatment that preserves the component semantics.            |
 
 Exact API exclusions:
 

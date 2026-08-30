@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Navigation
 
-Stepper. A keyboard-first wayfinding primitive that preserves orientation and current location.
+Stepper. Shows progress through an ordered workflow and optionally prevents skipping incomplete steps.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Stepper for this specific contract: Shows progress through an ordered workflow and optionally prevents skipping incomplete steps.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Stepper for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -66,7 +66,7 @@ void bootstrapApplication(KernStepperAgentExample);
 | `steps`          | input | `ReadonlyArray<KrnStepItem>` | no       | `[]`           | Ordered domain values supplied to the step collection.                    |
 | `activeStep`     | model | `number`                     | no       | `0`            | Controlled active step state with a matching Angular model-change output. |
 | `completedSteps` | input | `ReadonlyArray<number>`      | no       | `[]`           | Ordered domain values supplied to the completed step collection.          |
-| `linear`         | input | `boolean`                    | no       | `false`        | Requires step completion in order and prevents skipping incomplete steps. |
+| `linear`         | input | `boolean`                    | no       | `false`        | Defines the component's linear behavior or presentation.                  |
 | `orientation`    | input | `KrnNavigationOrientation`   | no       | `'horizontal'` | Defines the logical axis used by layout and keyboard navigation.          |
 | `ariaLabel`      | input | `string \| undefined`        | no       | `undefined`    | Accessible name used when visible content is not sufficient.              |
 | `optionalLabel`  | input | `string \| undefined`        | no       | `undefined`    | Human-readable copy for the optional state or control.                    |
@@ -85,12 +85,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys move within composites
-- Home / End jump
-- Enter activates
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab visits available step actions; Enter activates an allowed step
+- Destinations retain native link semantics and expose current location where applicable.
+- Composite navigation uses one documented focus model without changing reading order.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -130,11 +127,11 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default        | Test value   | Binding                        | Description                                                                               |
-| ------------- | ------- | -------------- | ------------ | ------------------------------ | ----------------------------------------------------------------------------------------- |
-| `activeStep`  | number  | `1`            | `2`          | model `activeStep`             | Changes the currently active step.                                                        |
-| `linear`      | boolean | `false`        | `true`       | input `linear` (property)      | Configures the component linear contract.                                                 |
-| `orientation` | select  | `"horizontal"` | `"vertical"` | input `orientation` (property) | Logical axis exposed by the component; behavior follows its documented keyboard contract. |
+| Argument      | Control | Default        | Test value   | Binding                        | Description                                                      |
+| ------------- | ------- | -------------- | ------------ | ------------------------------ | ---------------------------------------------------------------- |
+| `activeStep`  | number  | `1`            | `2`          | model `activeStep`             | Changes the currently active step.                               |
+| `linear`      | boolean | `false`        | `true`       | input `linear` (property)      | Defines the component's linear behavior or presentation.         |
+| `orientation` | select  | `"horizontal"` | `"vertical"` | input `orientation` (property) | Defines the logical axis used by layout and keyboard navigation. |
 
 Exact API exclusions:
 

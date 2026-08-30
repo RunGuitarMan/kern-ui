@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Tags Input. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Tags Input. Creates and removes user-authored text values while enforcing count and duplicate rules.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -62,7 +62,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -142,7 +142,7 @@
       "type": "ReadonlyArray<string>",
       "required": false,
       "defaultValue": "['Enter', ',']",
-      "description": "Stable identifier value used by the separator contract.",
+      "description": "Stable identifier used by the separator contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -182,7 +182,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "true",
-      "description": "Commits a valid draft tag when the text input loses focus.",
+      "description": "Defines the component's add on blur behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -282,14 +282,12 @@
   "a11y": {
     "target": "WCAG 2.2 AA",
     "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
+      "Enter commits a valid draft tag",
+      "Backspace removes the previous tag from an empty input; arrow keys move through tags"
     ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The real form control retains its visible name, described-by relationships, and Angular state.",
+      "Required, readonly, disabled, and invalid states remain programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -343,8 +341,8 @@
     "tagRemoved"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Tags Input for this specific contract: Creates and removes user-authored text values while enforcing count and duplicate rules.",
+    "avoidWhen": "Do not choose Tags Input for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -428,7 +426,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component addOnBlur contract.",
+        "description": "Defines the component's add on blur behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "addOnBlur",
@@ -441,7 +439,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component allowDuplicates contract.",
+        "description": "Controls whether the component applies the allow duplicates behavior.",
         "binding": {
           "kind": "input",
           "publicName": "allowDuplicates",
@@ -454,7 +452,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -480,7 +478,7 @@
         "kind": "number",
         "defaultValue": 6,
         "testValue": 7,
-        "description": "Configures the component maxTags contract.",
+        "description": "Upper or lower bound applied to the tags value.",
         "binding": {
           "kind": "input",
           "publicName": "maxTags",
@@ -496,7 +494,7 @@
         "kind": "text",
         "defaultValue": "Add a tag",
         "testValue": "Add a tag · alternate",
-        "description": "Configures the component placeholder contract.",
+        "description": "Short input hint shown only while no value is present.",
         "binding": {
           "kind": "input",
           "publicName": "placeholder",
@@ -509,7 +507,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component readonly contract.",
+        "description": "Keeps the value perceivable while preventing user edits.",
         "binding": {
           "kind": "input",
           "publicName": "readonly",

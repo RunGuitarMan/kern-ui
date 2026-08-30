@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Date Range Picker. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Date Range Picker. Selects an ordered start and end date within localized calendar and boundary rules.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -80,7 +80,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -448,7 +448,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -461,7 +461,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "2026-11-30",
-        "description": "Configures the component max contract.",
+        "description": "Largest accepted numeric or temporal value.",
         "binding": {
           "kind": "input",
           "publicName": "max",
@@ -474,7 +474,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "2026-02-01",
-        "description": "Configures the component min contract.",
+        "description": "Smallest accepted numeric or temporal value.",
         "binding": {
           "kind": "input",
           "publicName": "min",
@@ -487,7 +487,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Controlled disclosure or overlay state.",
+        "description": "Controls whether the disclosure or overlay surface is visible.",
         "binding": {
           "kind": "model",
           "publicName": "open"
@@ -499,7 +499,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component tabindex contract.",
+        "description": "Native sequential-focus order forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "tabindex",
@@ -515,7 +515,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "2026-08-15",
-        "description": "Configures the component today contract.",
+        "description": "Deterministic plain date treated as today on both server and client.",
         "binding": {
           "kind": "input",
           "publicName": "today",
@@ -528,7 +528,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component weekStartsOn contract.",
+        "description": "Zero-based weekday used as the first calendar column.",
         "binding": {
           "kind": "input",
           "publicName": "weekStartsOn",

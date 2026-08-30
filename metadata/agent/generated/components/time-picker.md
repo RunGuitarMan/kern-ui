@@ -55,7 +55,7 @@ void bootstrapApplication(KernTimePickerAgentExample);
 
 | Name              | Kind   | Type                                 | Required | Default     | Description                                                                                      |
 | ----------------- | ------ | ------------------------------------ | -------- | ----------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`                             | no       | `''`        | Stable identifier value used by the id contract.                                                 |
+| `id`              | input  | `string`                             | no       | `''`        | Stable identifier used by the id contract.                                                       |
 | `labels`          | input  | `Partial<KrnTimePickerTranslations>` | no       | `{}`        | Localized copy overrides for the component-owned interface text.                                 |
 | `ariaLabel`       | input  | `string`                             | no       | `''`        | Accessible name used when visible content is not sufficient.                                     |
 | `ariaLabelledBy`  | input  | `string`                             | no       | `''`        | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
@@ -141,19 +141,19 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument   | Control | Default   | Test value          | Binding                     | Description                                       |
-| ---------- | ------- | --------- | ------------------- | --------------------------- | ------------------------------------------------- |
-| `min`      | text    | `"08:00"` | `"09:00"`           | input `min` (property)      | Sets the first selectable time.                   |
-| `max`      | text    | `"20:00"` | `"18:00"`           | input `max` (property)      | Sets the last selectable time.                    |
-| `step`     | number  | `900`     | `960`               | input `step` (property)     | Sets the list interval in seconds.                |
-| `disabled` | boolean | `false`   | `true`              | input `disabled` (property) | Prevents user interaction.                        |
-| `readOnly` | boolean | `false`   | `true`              | input `readonly` (property) | Keeps the value focusable while preventing edits. |
-| `required` | boolean | `false`   | `true`              | input `required` (property) | Marks the control as required.                    |
-| `invalid`  | boolean | `false`   | `true`              | input `invalid` (property)  | Exposes the invalid visual and ARIA state.        |
-| `id`       | text    | `""`      | `"Alternate value"` | input `id` (property)       | Configures the component id contract.             |
-| `open`     | boolean | `false`   | `true`              | model `open`                | Controlled disclosure or overlay state.           |
-| `tabindex` | number  | `0`       | `1`                 | input `tabindex` (property) | Configures the component tabindex contract.       |
-| `value`    | text    | `""`      | `"Alternate value"` | input `value` (property)    | Controlled component value.                       |
+| Argument   | Control | Default   | Test value          | Binding                     | Description                                                               |
+| ---------- | ------- | --------- | ------------------- | --------------------------- | ------------------------------------------------------------------------- |
+| `min`      | text    | `"08:00"` | `"09:00"`           | input `min` (property)      | Sets the first selectable time.                                           |
+| `max`      | text    | `"20:00"` | `"18:00"`           | input `max` (property)      | Sets the last selectable time.                                            |
+| `step`     | number  | `900`     | `960`               | input `step` (property)     | Sets the list interval in seconds.                                        |
+| `disabled` | boolean | `false`   | `true`              | input `disabled` (property) | Prevents user interaction.                                                |
+| `readOnly` | boolean | `false`   | `true`              | input `readonly` (property) | Keeps the value focusable while preventing edits.                         |
+| `required` | boolean | `false`   | `true`              | input `required` (property) | Marks the control as required.                                            |
+| `invalid`  | boolean | `false`   | `true`              | input `invalid` (property)  | Exposes the invalid visual and ARIA state.                                |
+| `id`       | text    | `""`      | `"Alternate value"` | input `id` (property)       | Stable identifier used by the id contract.                                |
+| `open`     | boolean | `false`   | `true`              | model `open`                | Controls whether the disclosure or overlay surface is visible.            |
+| `tabindex` | number  | `0`       | `1`                 | input `tabindex` (property) | Native sequential-focus order forwarded to the owned interactive element. |
+| `value`    | text    | `""`      | `"Alternate value"` | input `value` (property)    | Controlled component value.                                               |
 
 Exact API exclusions:
 
@@ -178,7 +178,7 @@ Presets:
 - `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
 - `active` — Active; scenario `default`; visual state `active`.
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
-- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `filled` — filled; scenario `default`; `value="18:30"`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
 - `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
 - `readonly` — Readonly; scenario `default`; `readOnly=true`.
 - `required` — Required; scenario `default`; `required=true`.

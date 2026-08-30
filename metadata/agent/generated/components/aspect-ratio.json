@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Aspect Ratio. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Aspect Ratio. Maintains a chosen width-to-height ratio while controlling how media fits its box.",
   "acceptanceStates": ["default", "dark", "high contrast", "compact", "RTL", "mobile"],
   "lifecycle": {
     "status": "stable",
@@ -77,11 +77,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Projected content retains its document order and native semantics as layout changes.",
+      "Logical sizing and placement work in both LTR and RTL without duplicating content."
     ],
     "manualValidationRequired": true
   },
@@ -116,8 +115,8 @@
     "fit"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Aspect Ratio for this specific contract: Maintains a chosen width-to-height ratio while controlling how media fits its box.",
+    "avoidWhen": "Do not choose Aspect Ratio for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

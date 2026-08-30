@@ -22,3 +22,9 @@
 :host([data-align='end']) {
   margin-inline-start: auto;
 }
+
+:host([data-intrinsic]) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

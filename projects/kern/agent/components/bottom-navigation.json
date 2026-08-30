@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Bottom Navigation. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "summary": "Bottom Navigation. Presents a small set of primary destinations in a touch-friendly bottom navigation bar.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -104,11 +104,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys move within composites", "Home / End jump", "Enter activates"],
+    "keyboard": ["Tab visits each destination; Enter follows the focused native link"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Destinations retain native link semantics and expose current location where applicable.",
+      "Composite navigation uses one documented focus model without changing reading order."
     ],
     "manualValidationRequired": true
   },
@@ -145,8 +144,8 @@
     "itemSelected"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Bottom Navigation for this specific contract: Presents a small set of primary destinations in a touch-friendly bottom navigation bar.",
+    "avoidWhen": "Do not choose Bottom Navigation for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

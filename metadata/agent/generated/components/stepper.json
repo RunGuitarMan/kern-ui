@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Stepper. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "summary": "Stepper. Shows progress through an ordered workflow and optionally prevents skipping incomplete steps.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -88,7 +88,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Requires step completion in order and prevents skipping incomplete steps.",
+      "description": "Defines the component's linear behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -141,11 +141,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys move within composites", "Home / End jump", "Enter activates"],
+    "keyboard": ["Tab visits available step actions; Enter activates an allowed step"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Destinations retain native link semantics and expose current location where applicable.",
+      "Composite navigation uses one documented focus model without changing reading order."
     ],
     "manualValidationRequired": true
   },
@@ -185,8 +184,8 @@
     "optionalLabel"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Stepper for this specific contract: Shows progress through an ordered workflow and optionally prevents skipping incomplete steps.",
+    "avoidWhen": "Do not choose Stepper for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -231,7 +230,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component linear contract.",
+        "description": "Defines the component's linear behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "linear",
@@ -244,7 +243,7 @@
         "kind": "select",
         "defaultValue": "horizontal",
         "testValue": "vertical",
-        "description": "Logical axis exposed by the component; behavior follows its documented keyboard contract.",
+        "description": "Defines the logical axis used by layout and keyboard navigation.",
         "binding": {
           "kind": "input",
           "publicName": "orientation",

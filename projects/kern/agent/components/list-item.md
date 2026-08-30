@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Data display
 
-List Item. A dense, readable data primitive with semantic structure and resilient overflow.
+List Item. Presents one structured list row with heading, supporting content, and optional actions.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use List Item for this specific contract: Presents one structured list row with heading, supporting content, and optional actions.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose List Item for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -70,11 +70,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys navigate interactive data
-- Enter expands or selects
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Visible labels and semantic structure preserve the meaning and relationships in the data.
+- Interactive descendants retain native names and a predictable focus order.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -111,10 +109,10 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument   | Control | Default                     | Test value                              | Binding                     | Description                                |
-| ---------- | ------- | --------------------------- | --------------------------------------- | --------------------------- | ------------------------------------------ |
-| `selected` | boolean | `false`                     | `true`                                  | input `selected` (property) | Shows the selected list-item state.        |
-| `heading`  | text    | `"Quarterly audit package"` | `"Quarterly audit package · alternate"` | input `heading` (property)  | Configures the component heading contract. |
+| Argument   | Control | Default                     | Test value                              | Binding                     | Description                                           |
+| ---------- | ------- | --------------------------- | --------------------------------------- | --------------------------- | ----------------------------------------------------- |
+| `selected` | boolean | `false`                     | `true`                                  | input `selected` (property) | Shows the selected list-item state.                   |
+| `heading`  | text    | `"Quarterly audit package"` | `"Quarterly audit package · alternate"` | input `heading` (property)  | Human-readable copy for the heading state or control. |
 
 Exact API exclusions:
 

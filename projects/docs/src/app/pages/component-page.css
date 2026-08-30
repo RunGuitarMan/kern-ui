@@ -99,17 +99,6 @@ h1 {
   gap: 0.625rem;
 }
 
-.variant-link {
-  color: var(--krn-color-link);
-  font-size: 0.75rem;
-  font-weight: 550;
-  text-decoration: none;
-}
-
-.variant-link:hover {
-  text-decoration: underline;
-}
-
 .selector {
   display: flex;
   min-block-size: 2.5rem;
@@ -127,11 +116,143 @@ h1 {
   font: 500 0.75rem/1 var(--krn-font-family-mono);
 }
 
-.variant-link:focus-visible,
+.taxonomy-card a:focus-visible,
 .component-pager a:focus-visible,
 details summary:focus-visible {
   outline: 2px solid var(--krn-color-focus);
   outline-offset: 2px;
+}
+
+.taxonomy {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+  gap: 0.75rem;
+  padding-block: 0 2rem;
+  border-block-end: 1px solid var(--krn-color-border-subtle);
+}
+
+.taxonomy-card {
+  display: grid;
+  align-content: start;
+  overflow: hidden;
+  border: 1px solid var(--krn-color-border-subtle);
+  border-radius: var(--krn-radius-md);
+  background: var(--krn-color-surface-subtle);
+}
+
+.taxonomy-card > header {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  border-block-end: 1px solid var(--krn-color-border-subtle);
+}
+
+.taxonomy-card > header > span {
+  color: var(--krn-color-brand-text);
+  font: 650 0.625rem/1 var(--krn-font-family-sans);
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.taxonomy-card h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 620;
+  letter-spacing: -0.015em;
+}
+
+.taxonomy-card > header p {
+  max-inline-size: 62ch;
+  margin: 0;
+  color: var(--krn-color-text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.taxonomy-card ul {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.taxonomy-card li {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.75fr) minmax(0, 1.25fr);
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-block-end: 1px solid var(--krn-color-border-subtle);
+  background: var(--krn-color-surface);
+}
+
+.taxonomy-card li:last-child {
+  border-block-end: 0;
+}
+
+.taxonomy-card li.current {
+  box-shadow: inset 2px 0 0 var(--krn-color-brand-solid);
+  background: var(--krn-color-brand-surface);
+}
+
+[dir='rtl'] .taxonomy-card li.current {
+  box-shadow: inset -2px 0 0 var(--krn-color-brand-solid);
+}
+
+.taxonomy-card li > div {
+  display: grid;
+  align-content: start;
+  gap: 0.2rem;
+}
+
+.taxonomy-card li a,
+.taxonomy-card li strong {
+  inline-size: fit-content;
+  color: var(--krn-color-text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.taxonomy-card li a:hover {
+  color: var(--krn-color-brand-text);
+  text-decoration: underline;
+}
+
+.taxonomy-card li small {
+  color: var(--krn-color-text-subtle);
+  font: 500 0.625rem/1.35 var(--krn-font-family-mono);
+}
+
+.taxonomy-card li p {
+  margin: 0;
+  color: var(--krn-color-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.taxonomy-card .member-guidance {
+  gap: 0.35rem;
+}
+
+.taxonomy-card .migration {
+  color: var(--krn-color-text-muted);
+  font: 500 0.6875rem/1.45 var(--krn-font-family-sans);
+}
+
+.taxonomy-card .migration span {
+  margin-inline-end: 0.25rem;
+  color: var(--krn-color-warning-text);
+  font-weight: 650;
+}
+
+.alias-card li {
+  align-items: center;
+}
+
+.alias-card li code {
+  justify-self: end;
+  overflow-wrap: anywhere;
+  color: var(--krn-color-text-muted);
 }
 
 .reference {
@@ -434,6 +555,14 @@ code {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .taxonomy-card li {
+    grid-template-columns: 1fr;
+  }
+
+  .alias-card li code {
+    justify-self: start;
   }
 
   summary {

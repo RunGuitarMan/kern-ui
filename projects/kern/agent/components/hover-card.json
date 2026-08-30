@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Hover Card. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "summary": "Hover Card. Reveals richer non-modal preview content while its trigger is hovered or focused.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -67,7 +67,7 @@
       "type": "number",
       "required": false,
       "defaultValue": "350",
-      "description": "Delay in milliseconds before the transient surface becomes visible.",
+      "description": "Defines the component's open delay behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -106,11 +106,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Escape closes modal layers", "Focus returns to the trigger"],
+    "keyboard": ["Focus reveals the card; Escape dismisses it without moving trigger focus"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Preview content supplements the trigger and does not replace its accessible name.",
+      "Hover and focus provide equivalent access to the same content."
     ],
     "manualValidationRequired": true
   },
@@ -150,8 +149,8 @@
     "closeDelay"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Hover Card for this specific contract: Reveals richer non-modal preview content while its trigger is hovered or focused.",
+    "avoidWhen": "Do not choose Hover Card for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

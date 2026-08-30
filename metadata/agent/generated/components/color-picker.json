@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Color Picker. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Color Picker. Selects one color through an accessible palette and controlled value.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -77,7 +77,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -316,7 +316,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Prevents interaction and participates in the component disabled contract.",
+        "description": "Prevents user interaction and participates in the disabled-state contract.",
         "binding": {
           "kind": "input",
           "publicName": "disabled",
@@ -329,7 +329,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -342,7 +342,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Controlled disclosure or overlay state.",
+        "description": "Controls whether the disclosure or overlay surface is visible.",
         "binding": {
           "kind": "model",
           "publicName": "open"
@@ -354,7 +354,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component readonly contract.",
+        "description": "Keeps the value perceivable while preventing user edits.",
         "binding": {
           "kind": "input",
           "publicName": "readonly",
@@ -367,7 +367,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component tabindex contract.",
+        "description": "Native sequential-focus order forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "tabindex",
@@ -500,7 +500,9 @@
         "id": "filled",
         "label": "filled",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "value": "#4666da"
+        },
         "fixtureEffect": {
           "kind": "content",
           "mode": "filled",

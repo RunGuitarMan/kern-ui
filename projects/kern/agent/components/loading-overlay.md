@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Feedback
 
-Loading Overlay. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Loading Overlay. Marks a region as busy and optionally blocks interaction while work is in progress.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Loading Overlay for this specific contract: Marks a region as busy and optionally blocks interaction while work is in progress.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Loading Overlay for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -52,11 +52,11 @@ void bootstrapApplication(KernLoadingOverlayAgentExample);
 
 ## API
 
-| Name       | Kind  | Type                  | Required | Default     | Description                                                                  |
-| ---------- | ----- | --------------------- | -------- | ----------- | ---------------------------------------------------------------------------- |
-| `active`   | input | `boolean`             | no       | `false`     | Marks the item as the current interaction target without implying selection. |
-| `blocking` | input | `boolean`             | no       | `true`      | Marks feedback as requiring attention before the workflow can continue.      |
-| `label`    | input | `string \| undefined` | no       | `undefined` | Visible text that names the control or data value.                           |
+| Name       | Kind  | Type                  | Required | Default     | Description                                                |
+| ---------- | ----- | --------------------- | -------- | ----------- | ---------------------------------------------------------- |
+| `active`   | input | `boolean`             | no       | `false`     | Defines the component's active behavior or presentation.   |
+| `blocking` | input | `boolean`             | no       | `true`      | Defines the component's blocking behavior or presentation. |
+| `label`    | input | `string \| undefined` | no       | `undefined` | Visible text that names the control or data value.         |
 
 ## Deprecated selectors
 
@@ -72,11 +72,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Escape closes modal layers
-- Focus returns to the trigger
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- The owned region exposes busy state while visible.
+- Blocking mode prevents interaction without removing the region or its status from perception.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -112,11 +110,11 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument   | Control | Default                         | Test value                                  | Binding                     | Description                                           |
-| ---------- | ------- | ------------------------------- | ------------------------------------------- | --------------------------- | ----------------------------------------------------- |
-| `active`   | boolean | `true`                          | `false`                                     | input `active` (property)   | Shows or hides the blocking loading layer.            |
-| `label`    | text    | `"Importing customer records…"` | `"Importing customer records… · alternate"` | input `label` (property)    | Names the loading operation for assistive technology. |
-| `blocking` | boolean | `true`                          | `false`                                     | input `blocking` (property) | Configures the component blocking contract.           |
+| Argument   | Control | Default                         | Test value                                  | Binding                     | Description                                                |
+| ---------- | ------- | ------------------------------- | ------------------------------------------- | --------------------------- | ---------------------------------------------------------- |
+| `active`   | boolean | `true`                          | `false`                                     | input `active` (property)   | Shows or hides the blocking loading layer.                 |
+| `label`    | text    | `"Importing customer records…"` | `"Importing customer records… · alternate"` | input `label` (property)    | Names the loading operation for assistive technology.      |
+| `blocking` | boolean | `true`                          | `false`                                     | input `blocking` (property) | Defines the component's blocking behavior or presentation. |
 
 Exact API exclusions:
 

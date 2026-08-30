@@ -62,7 +62,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -72,7 +72,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Required human-readable name for the represented person, item, or action.",
+      "description": "Native form-control name forwarded to the owned interactive element.",
       "descriptionSource": "inferred"
     },
     {
@@ -172,7 +172,7 @@
       "type": "KrnOptionDisabledHandler<T>",
       "required": false,
       "defaultValue": "(option) => option.disabled ?? false",
-      "description": "Determines whether an individual option or item is unavailable.",
+      "description": "Controls whether the component applies the disabled handler behavior.",
       "descriptionSource": "inferred"
     },
     {
@@ -274,15 +274,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
-    ],
+    "keyboard": ["Uses the browser and operating system keyboard behavior for a native select"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The real form control retains its visible name, described-by relationships, and Angular state.",
+      "Required, readonly, disabled, and invalid states remain programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -366,6 +361,37 @@
     "route": "preview/native-select",
     "scenarios": ["default", "stress"],
     "controls": [
+      {
+        "key": "value",
+        "label": "Selected plan",
+        "kind": "select",
+        "defaultValue": "",
+        "testValue": "starter",
+        "description": "Seeds the native selection with one committed option.",
+        "binding": {
+          "kind": "fixture",
+          "target": "interaction",
+          "description": "Writes the specimen value through the component Forms API rather than a public signal input."
+        },
+        "options": [
+          {
+            "label": "",
+            "value": ""
+          },
+          {
+            "label": "starter",
+            "value": "starter"
+          },
+          {
+            "label": "team",
+            "value": "team"
+          },
+          {
+            "label": "scale",
+            "value": "scale"
+          }
+        ]
+      },
       {
         "key": "placeholder",
         "label": "Placeholder",
@@ -464,7 +490,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -477,7 +503,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component tabindex contract.",
+        "description": "Native sequential-focus order forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "tabindex",
@@ -597,7 +623,9 @@
         "id": "filled",
         "label": "filled",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "value": "team"
+        },
         "fixtureEffect": {
           "kind": "content",
           "mode": "filled",

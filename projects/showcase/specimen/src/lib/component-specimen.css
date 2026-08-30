@@ -73,6 +73,7 @@
   min-block-size: clamp(18rem, 34vw, 26rem);
   align-content: center;
   padding: clamp(2rem, 5vw, 3.5rem);
+  padding-block-start: clamp(5rem, 7vw, 6rem);
   border: 1px solid var(--krn-color-border-subtle);
   border-radius: var(--krn-radius-md);
   background-color: var(--krn-color-surface);
@@ -87,6 +88,7 @@
 .specimen-canvas
   > :not(
     .live-indicator,
+    .component-map,
     .applied-arguments,
     .fixture-effect-probe,
     krn-command-palette,
@@ -105,6 +107,7 @@
   .specimen-canvas
   > :not(
     .live-indicator,
+    .component-map,
     .applied-arguments,
     .fixture-effect-probe,
     krn-command-palette,
@@ -122,6 +125,7 @@
   .specimen-canvas
   > :not(
     .live-indicator,
+    .component-map,
     .applied-arguments,
     .fixture-effect-probe,
     krn-command-palette,
@@ -143,11 +147,16 @@
 .specimen-frame[data-environment-viewport='phone'] .specimen-canvas {
   min-block-size: 34rem;
   padding: 2rem 1rem;
+  padding-block-start: 6rem;
 }
 
-.specimen-frame[data-visual-pseudo-state]
-  .specimen-canvas
-  > :not(.live-indicator, .applied-arguments, .fixture-effect-probe) {
+:host ::ng-deep [data-specimen-target] {
+  outline: 1px dashed color-mix(in srgb, var(--krn-color-brand) 58%, transparent);
+  outline-offset: 5px;
+}
+
+:host ::ng-deep .specimen-frame[data-visual-pseudo-state] [data-specimen-target],
+:host ::ng-deep .specimen-frame[data-visual-pseudo-state] [data-specimen-focus-target] {
   transition:
     outline-color 120ms ease,
     box-shadow 120ms ease,
@@ -155,23 +164,23 @@
     transform 120ms ease;
 }
 
-.specimen-frame[data-visual-pseudo-state='hover']
-  .specimen-canvas
-  > :not(.live-indicator, .applied-arguments, .fixture-effect-probe) {
+:host ::ng-deep .specimen-frame[data-visual-pseudo-state='hover'] [data-specimen-target] {
   filter: brightness(0.96);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--krn-color-brand) 22%, transparent);
 }
 
-.specimen-frame[data-visual-pseudo-state='focus-visible']
-  .specimen-canvas
-  > :not(.live-indicator, .applied-arguments, .fixture-effect-probe) {
+:host
+  ::ng-deep
+  .specimen-frame[data-visual-pseudo-state='focus-visible']
+  [data-specimen-focus-target] {
   outline: 2px solid var(--krn-color-focus);
   outline-offset: 3px;
 }
 
-.specimen-frame[data-visual-pseudo-state='active']
-  .specimen-canvas
-  > :not(.live-indicator, .applied-arguments, .fixture-effect-probe) {
+:host
+  ::ng-deep
+  .specimen-frame[data-visual-pseudo-state='active']
+  :is([data-specimen-focus-target], [data-specimen-target]) {
   filter: brightness(0.92);
   transform: translateY(1px);
 }
@@ -206,10 +215,65 @@
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--krn-color-success) 18%, transparent);
 }
 
+.live-indicator[data-interactive='false'] i {
+  background: var(--krn-color-text-subtle);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--krn-color-text-subtle) 14%, transparent);
+}
+
+.component-map {
+  position: absolute;
+  z-index: 3;
+  inset-block-start: 0.75rem;
+  inset-inline-start: 0.75rem;
+  display: flex;
+  max-inline-size: calc(100% - 12rem);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  color: var(--krn-color-text-muted);
+  font: 550 0.625rem/1.25 var(--krn-font-family-sans);
+  pointer-events: none;
+}
+
+.component-map > span {
+  display: inline-flex;
+  min-block-size: 1.75rem;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.45rem;
+  border: 1px solid var(--krn-color-border-subtle);
+  border-radius: var(--krn-radius-full);
+  background: color-mix(in srgb, var(--krn-color-surface) 94%, transparent);
+  box-shadow: var(--krn-shadow-xs);
+  backdrop-filter: blur(8px);
+}
+
+.component-map i {
+  color: var(--krn-color-text-subtle);
+  font-style: normal;
+  text-transform: uppercase;
+}
+
+.component-map strong {
+  color: var(--krn-color-brand-text, var(--krn-color-brand));
+  font-weight: 700;
+}
+
+.supporting-components code {
+  color: var(--krn-color-text-muted);
+  font: inherit;
+}
+
+.supporting-components code + code::before {
+  content: '+';
+  margin-inline-end: 0.35rem;
+  color: var(--krn-color-text-subtle);
+}
+
 .applied-arguments {
   position: absolute;
   z-index: 3;
-  inset-block-start: 0.875rem;
+  inset-block-start: 3.375rem;
   inset-inline-start: 0.875rem;
   display: flex;
   max-inline-size: min(72%, 46rem);
@@ -227,6 +291,10 @@
   font: 550 0.625rem/1.25 var(--krn-font-family-sans);
   pointer-events: none;
   backdrop-filter: blur(8px);
+}
+
+.specimen-canvas:has(.applied-arguments) {
+  padding-block-start: clamp(8rem, 11vw, 9.5rem);
 }
 
 .applied-arguments span {
@@ -304,6 +372,8 @@
   .specimen-canvas
   > :not(
     .live-indicator,
+    .component-map,
+    .applied-arguments,
     .fixture-effect-probe,
     krn-command-palette,
     krn-dialog,
@@ -318,7 +388,7 @@
 
 .specimen-frame[data-fixture-effect-kind='layout'][data-fixture-effect-mode='constrained']
   .specimen-canvas
-  > :not(.live-indicator, .fixture-effect-probe) {
+  > :not(.live-indicator, .component-map, .applied-arguments, .fixture-effect-probe) {
   inline-size: min(100%, 24rem);
 }
 
@@ -329,7 +399,7 @@
 
 .specimen-frame[data-fixture-effect-kind='layout'][data-fixture-effect-mode='expanded']
   .specimen-canvas
-  > :not(.live-indicator, .fixture-effect-probe) {
+  > :not(.live-indicator, .component-map, .applied-arguments, .fixture-effect-probe) {
   inline-size: 100%;
 }
 
@@ -1479,7 +1549,7 @@ krn-resizable-panels {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .specimen-canvas > :not(.live-indicator) {
+  .specimen-canvas > :not(.live-indicator, .component-map, .applied-arguments) {
     animation: specimen-enter 240ms var(--krn-motion-ease-enter) both;
   }
 }

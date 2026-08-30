@@ -7,7 +7,7 @@
 - Lifecycle: **beta**
 - Category: Navigation
 
-Tree Navigation. A keyboard-first wayfinding primitive that preserves orientation and current location.
+Tree Navigation. Navigates hierarchical destinations with expansion, selection, and one managed tab stop.
 
 ## Use
 
@@ -68,10 +68,10 @@ void bootstrapApplication(KernTreeNavigationAgentExample);
 | Name           | Kind   | Type                                   | Required | Default     | Description                                                                           |
 | -------------- | ------ | -------------------------------------- | -------- | ----------- | ------------------------------------------------------------------------------------- |
 | `items`        | input  | `ReadonlyArray<KrnTreeNavigationItem>` | no       | `[]`        | Ordered item collection rendered by the composite widget.                             |
-| `selectedId`   | model  | `string \| null`                       | no       | `null`      | Stable id of the currently selected item.                                             |
-| `expandedIds`  | model  | `ReadonlyArray<string>`                | no       | `[]`        | Stable ids of the currently expanded hierarchical items.                              |
+| `selectedId`   | model  | `string \| null`                       | no       | `null`      | Controlled selected id state with a matching Angular model-change output.             |
+| `expandedIds`  | model  | `ReadonlyArray<string>`                | no       | `[]`        | Controlled expanded ids state with a matching Angular model-change output.            |
 | `ariaLabel`    | input  | `string \| undefined`                  | no       | `undefined` | Accessible name used when visible content is not sufficient.                          |
-| `indent`       | input  | `string`                               | no       | `'1rem'`    | Logical inline indentation applied for each hierarchical depth level.                 |
+| `indent`       | input  | `string`                               | no       | `'1rem'`    | Defines the component's indent behavior or presentation.                              |
 | `showGuides`   | input  | `boolean`                              | no       | `true`      | Controls whether the component applies the show guides behavior.                      |
 | `itemSelected` | output | `KrnTreeNavigationItem`                | no       | `undefined` | Notifies the consumer after the item selected interaction completes.                  |
 | `loadChildren` | output | `KrnTreeNavigationItem`                | no       | `undefined` | Requests children when an unloaded item is expanded or its failed request is retried. |
@@ -141,11 +141,11 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument     | Control | Default         | Test value   | Binding                       | Description                                   |
-| ------------ | ------- | --------------- | ------------ | ----------------------------- | --------------------------------------------- |
-| `selected`   | select  | `"automations"` | `"overview"` | model `selectedId`            | Changes the selected navigation node.         |
-| `indent`     | text    | `"1rem"`        | `"20rem"`    | input `indent` (property)     | Configures the component indent contract.     |
-| `showGuides` | boolean | `true`          | `false`      | input `showGuides` (property) | Configures the component showGuides contract. |
+| Argument     | Control | Default         | Test value   | Binding                       | Description                                                      |
+| ------------ | ------- | --------------- | ------------ | ----------------------------- | ---------------------------------------------------------------- |
+| `selected`   | select  | `"automations"` | `"overview"` | model `selectedId`            | Changes the selected navigation node.                            |
+| `indent`     | text    | `"1rem"`        | `"20rem"`    | input `indent` (property)     | Defines the component's indent behavior or presentation.         |
+| `showGuides` | boolean | `true`          | `false`      | input `showGuides` (property) | Controls whether the component applies the show guides behavior. |
 
 Exact API exclusions:
 

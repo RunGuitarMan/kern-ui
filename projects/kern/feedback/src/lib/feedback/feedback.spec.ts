@@ -74,6 +74,18 @@ describe('Kern feedback', () => {
     });
     const host = fixture.nativeElement as HTMLElement;
     expect(host.hasAttribute('data-banner')).toBe(true);
+    expect(host.getAttribute('data-placement')).toBe('banner');
+    expect(host.querySelector('[role="status"]')?.textContent).toContain('Scheduled maintenance');
+  });
+
+  it('renders the banner treatment through the canonical alert placement API', async () => {
+    const fixture = await create(KrnAlert, {
+      placement: 'banner',
+      title: 'Scheduled maintenance',
+    });
+    const host = fixture.nativeElement as HTMLElement;
+
+    expect(host.getAttribute('data-placement')).toBe('banner');
     expect(host.querySelector('[role="status"]')?.textContent).toContain('Scheduled maintenance');
   });
 
@@ -268,6 +280,14 @@ describe('Kern feedback', () => {
     expect(empty.nativeElement.querySelector('.default-visual path')?.getAttribute('d')).not.toBe(
       error.nativeElement.querySelector('.default-visual path')?.getAttribute('d'),
     );
+
+    empty.componentRef.setInput('kind', 'error');
+    empty.detectChanges();
+    await empty.whenStable();
+    const canonicalError = empty.nativeElement.querySelector('.state') as HTMLElement;
+    expect(canonicalError.getAttribute('data-kind')).toBe('error');
+    expect(canonicalError.getAttribute('data-tone')).toBe('danger');
+    expect(canonicalError.getAttribute('role')).toBe('alert');
   });
 
   it('treats popover as a non-modal disclosure and restores focus on Escape', async () => {

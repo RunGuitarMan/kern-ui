@@ -57,7 +57,7 @@ void bootstrapApplication(KernButtonAgentExample);
 
 | Name           | Kind  | Type                  | Required | Default                | Description                                                                                                                                         |
 | -------------- | ----- | --------------------- | -------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `size`         | input | `KrnSize`             | no       | `this.options.size`    | Named semantic size resolved through KERN density and sizing tokens.                                                                                |
+| `size`         | input | `KrnSize`             | no       | `this.options.size`    | Named semantic size resolved through Kern density and sizing tokens.                                                                                |
 | `variant`      | input | `KrnActionVariant`    | no       | `this.options.variant` | Named visual hierarchy treatment that preserves the component semantics.                                                                            |
 | `tone`         | input | `KrnTone`             | no       | `this.options.tone`    | Semantic intent that selects coordinated text, icon, border, and surface tokens.                                                                    |
 | `loading`      | input | `boolean`             | no       | `false`                | Suppresses duplicate activation, owns `aria-disabled`, and updates the persistent polite status. Use native `disabled` for ordinary unavailability. |

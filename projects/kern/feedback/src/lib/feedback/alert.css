@@ -25,6 +25,31 @@
   --tone-surface: color-mix(in oklab, var(--tone) 31%, var(--krn-color-surface-raised));
   --tone-border: color-mix(in oklab, var(--tone) 72%, var(--krn-color-border));
 }
+:host([data-placement='banner']) .alert {
+  gap: var(--krn-space-3);
+  padding: var(--krn-space-4) clamp(var(--krn-space-4), 4vw, var(--krn-space-12));
+  border-radius: var(--krn-radius-none);
+  background: color-mix(in oklch, var(--krn-color-surface-raised) 88%, var(--tone-surface));
+  box-shadow: inset calc(var(--krn-border-width-1) * 2) 0 0 var(--tone);
+}
+:host([data-placement='banner']) .indicator {
+  inline-size: var(--krn-control-height-sm);
+  block-size: var(--krn-control-height-sm);
+  margin-block-start: 0;
+  border: var(--krn-border-width-1) solid color-mix(in oklch, var(--tone) 28%, transparent);
+  border-radius: var(--krn-radius-full);
+  background: color-mix(in oklch, var(--tone) 9%, transparent);
+}
+:host([data-placement='banner']) .content {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--krn-space-1) var(--krn-space-3);
+  padding-block: var(--krn-space-1);
+}
+:host([data-placement='banner']) .actions {
+  grid-column: 1;
+  grid-row: auto;
+  padding-block-start: var(--krn-space-2);
+}
 .alert[data-tone='neutral'] {
   --tone: var(--krn-color-text-muted);
   --tone-ink: var(--krn-color-text);

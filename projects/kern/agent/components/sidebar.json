@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Sidebar. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Sidebar. Provides a collapsible complementary panel that can shrink to icons or hide completely.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -123,7 +123,7 @@
       "type": "\"auto\" | \"end\" | \"start\"",
       "required": false,
       "defaultValue": "'auto'",
-      "description": "Logical side on which the anchored or modal surface is placed.",
+      "description": "Defines the component's side behavior or presentation.",
       "descriptionSource": "inferred"
     }
   ],
@@ -158,11 +158,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Renders a complementary landmark with a stable accessible name and description relationship.",
+      "Hidden collapse mode removes unavailable content from interaction as well as presentation."
     ],
     "manualValidationRequired": true
   },
@@ -203,8 +202,8 @@
     "side"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Sidebar for this specific contract: Provides a collapsible complementary panel that can shrink to icons or hide completely.",
+    "avoidWhen": "Do not choose Sidebar for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -259,7 +258,7 @@
         "kind": "select",
         "defaultValue": "icons",
         "testValue": "hidden",
-        "description": "Configures the component collapsedMode contract.",
+        "description": "Controls whether the component applies the collapsed mode behavior.",
         "binding": {
           "kind": "input",
           "publicName": "collapsedMode",
@@ -282,7 +281,7 @@
         "kind": "text",
         "defaultValue": "4rem",
         "testValue": "20rem",
-        "description": "Configures the component collapsedWidth contract.",
+        "description": "Controls whether the component applies the collapsed width behavior.",
         "binding": {
           "kind": "input",
           "publicName": "collapsedWidth",
@@ -295,7 +294,7 @@
         "kind": "select",
         "defaultValue": "auto",
         "testValue": "end",
-        "description": "Configures the component side contract.",
+        "description": "Defines the component's side behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "side",

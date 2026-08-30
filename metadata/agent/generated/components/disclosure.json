@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Disclosure. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Disclosure. Reveals or hides one section of supporting content from a labelled trigger.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -92,11 +92,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["Enter or Space toggles the disclosure trigger"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -131,8 +130,8 @@
     "open"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Disclosure for this specific contract: Reveals or hides one section of supporting content from a labelled trigger.",
+    "avoidWhen": "Do not choose Disclosure for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Do not omit required inputs: `heading`.",
@@ -175,7 +174,7 @@
         "kind": "text",
         "defaultValue": "Advanced automation settings",
         "testValue": "Advanced automation settings · alternate",
-        "description": "Configures the component heading contract.",
+        "description": "Human-readable copy for the heading state or control.",
         "binding": {
           "kind": "input",
           "publicName": "heading",

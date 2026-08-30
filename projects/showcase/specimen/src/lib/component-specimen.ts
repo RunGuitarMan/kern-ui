@@ -15,7 +15,7 @@ import {
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { KRN_CLIPBOARD_WRITER, type KrnClipboardWriter } from '@kern-ui/angular/cdk';
-import type { KernCatalogItem } from '@kern-ui/showcase';
+import { findKernComponent, type KernCatalogItem } from '@kern-ui/showcase';
 import {
   KERN_PLAYGROUND_DEFINITIONS,
   findKernPlaygroundDefinition,
@@ -440,9 +440,17 @@ export class KernComponentSpecimen {
     const value = this.effectiveState().args['composition'];
     return value === 'constrained' || value === 'expanded' ? value : 'default';
   });
+  protected readonly interactive = computed(() => this.playgroundDefinition().interactive);
+  protected readonly supportingComponentIds = computed(
+    () => this.playgroundDefinition().supportingComponentIds,
+  );
 
   protected localized(english: string, russian: string): string {
     return this.locale === 'ru-RU' ? russian : english;
+  }
+
+  protected supportingComponentName(id: string): string {
+    return findKernComponent(id)?.name ?? id;
   }
 
   private readonly locale = inject(LOCALE_ID);
@@ -1112,6 +1120,54 @@ export class Toolbar {}`;
 
   private contextMenuControlApplied = false;
   private lastCopyFixtureHost: HTMLElement | null = null;
+  private readonly synchronizeSpecimenTarget = afterRenderEffect((onCleanup) => {
+    const item = this.item();
+    this.effectiveState();
+    this.resetRevision();
+
+    const canvas = this.host.nativeElement.querySelector<HTMLElement>('.specimen-canvas');
+    if (!canvas) return;
+    const markTarget = () => {
+      for (const marked of canvas.querySelectorAll<HTMLElement>(
+        '[data-specimen-target], [data-specimen-focus-target]',
+      )) {
+        marked.removeAttribute('data-specimen-target');
+        marked.removeAttribute('data-specimen-focus-target');
+        marked.removeAttribute('data-specimen-target-name');
+      }
+
+      let target: HTMLElement | null = null;
+      try {
+        target = canvas.querySelector<HTMLElement>(item.selector);
+      } catch {
+        return;
+      }
+      if (!target) return;
+
+      target.setAttribute('data-specimen-target', '');
+      target.setAttribute('data-specimen-target-name', item.name);
+      const focusableSelector = [
+        'button:not([disabled])',
+        'input:not([disabled])',
+        'textarea:not([disabled])',
+        'select:not([disabled])',
+        'a[href]',
+        '[tabindex]:not([tabindex="-1"])',
+      ].join(',');
+      const focusTarget = target.matches(focusableSelector)
+        ? target
+        : target.querySelector<HTMLElement>(focusableSelector);
+      focusTarget?.setAttribute('data-specimen-focus-target', '');
+    };
+
+    const MutationObserverConstructor = canvas.ownerDocument.defaultView?.MutationObserver;
+    if (MutationObserverConstructor) {
+      const observer = new MutationObserverConstructor(markTarget);
+      observer.observe(canvas, { childList: true, subtree: true });
+      onCleanup(() => observer.disconnect());
+    }
+    markTarget();
+  });
   private readonly synchronizeCopyFixture = afterRenderEffect(() => {
     if (this.item().id !== 'copy-button') {
       this.lastCopyFixtureHost = null;

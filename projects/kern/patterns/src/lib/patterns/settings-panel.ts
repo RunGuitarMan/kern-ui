@@ -12,6 +12,7 @@ import { type KrnOverlayInitialFocus } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import { KrnDrawer, type KrnOverlayCloseReason } from '@kern-ui/angular/feedback';
 
+/** @deprecated Compose this recipe with `KrnDrawer` and product-specific settings content. */
 @Component({
   selector: 'krn-settings-panel',
   changeDetection: ChangeDetectionStrategy.OnPush,

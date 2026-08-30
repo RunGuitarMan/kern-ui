@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Data display
 
-Meter. A dense, readable data primitive with semantic structure and resilient overflow.
+Meter. Shows a scalar measurement within known bounds and interprets low, high, and optimum ranges.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Meter for this specific contract: Shows a scalar measurement within known bounds and interprets low, high, and optimum ranges.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Meter for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -52,9 +52,9 @@ void bootstrapApplication(KernMeterAgentExample);
 | `value`   | input | `number`                               | yes      | `required`  | Controlled component value.                                                 |
 | `min`     | input | `number`                               | no       | `0`         | Smallest accepted numeric or temporal value.                                |
 | `max`     | input | `number`                               | no       | `100`       | Largest accepted numeric or temporal value.                                 |
-| `low`     | input | `number`                               | no       | `25`        | Threshold below which a meter value is considered low.                      |
-| `high`    | input | `number`                               | no       | `75`        | Threshold above which a meter value is considered high.                     |
-| `optimum` | input | `number`                               | no       | `100`       | Meter value considered optimal for interpreting low and high ranges.        |
+| `low`     | input | `number`                               | no       | `25`        | Defines the component's low behavior or presentation.                       |
+| `high`    | input | `number`                               | no       | `75`        | Defines the component's high behavior or presentation.                      |
+| `optimum` | input | `number`                               | no       | `100`       | Defines the component's optimum behavior or presentation.                   |
 
 ## Deprecated selectors
 
@@ -70,11 +70,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys navigate interactive data
-- Enter expands or selects
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Visible labels and semantic structure preserve the meaning and relationships in the data.
+- Interactive descendants retain native names and a predictable focus order.
 
 Manual assistive-technology validation remains required in the consuming application.
 

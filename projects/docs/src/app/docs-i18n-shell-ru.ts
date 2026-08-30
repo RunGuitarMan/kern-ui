@@ -30,6 +30,7 @@ export const RU_SHELL_TEXT: Readonly<Record<string, string>> = Object.freeze({
   'shell.overview': 'Обзор',
   'shell.foundations': 'Основы',
   'shell.patterns': 'Паттерны',
+  'shell.recipes': 'Рецепты',
   'shell.accessibility': 'Доступность',
   'shell.changelog': 'История изменений',
   'shell.essentialComponents': 'Основные компоненты',

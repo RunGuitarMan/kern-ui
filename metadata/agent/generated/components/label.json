@@ -54,7 +54,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Id of the labelable control associated with this label.",
+      "description": "Defines the component's for behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {

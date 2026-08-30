@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "List. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "List. Provides semantic structure and spacing for a related sequence of items.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -53,7 +53,7 @@
       "type": "\"list\" | \"listbox\"",
       "required": false,
       "defaultValue": "'list'",
-      "description": "ARIA role used when the consumer must refine the component’s semantic purpose.",
+      "description": "Defines the component's role behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -86,11 +86,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -117,8 +116,8 @@
   "related": ["badge", "status-badge", "chip", "tag"],
   "keywords": ["list", "List", "Data display", "krn-list", "KrnList", "role", "ariaLabel"],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use List for this specific contract: Provides semantic structure and spacing for a related sequence of items.",
+    "avoidWhen": "Do not choose List for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

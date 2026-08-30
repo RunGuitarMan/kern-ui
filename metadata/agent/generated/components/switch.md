@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Forms
 
-Switch. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Switch. Controls an immediate on or off setting with switch semantics and supporting description.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Switch for this specific contract: Controls an immediate on or off setting with switch semantics and supporting description.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Switch for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -50,8 +50,8 @@ void bootstrapApplication(KernSwitchAgentExample);
 
 | Name              | Kind   | Type                   | Required | Default     | Description                                                                                      |
 | ----------------- | ------ | ---------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`               | no       | `''`        | Stable identifier value used by the id contract.                                                 |
-| `name`            | input  | `string`               | no       | `''`        | Required human-readable name for the represented person, item, or action.                        |
+| `id`              | input  | `string`               | no       | `''`        | Stable identifier used by the id contract.                                                       |
+| `name`            | input  | `string`               | no       | `''`        | Native form-control name forwarded to the owned interactive element.                             |
 | `checked`         | input  | `boolean \| undefined` | no       | `undefined` | Controlled checked state rendered by the native choice control.                                  |
 | `ariaLabel`       | input  | `string`               | no       | `''`        | Accessible name used when visible content is not sufficient.                                     |
 | `ariaLabelledBy`  | input  | `string`               | no       | `''`        | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
@@ -78,12 +78,9 @@ Angular Forms control with value type `boolean`.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab focuses the switch; Space toggles its checked state
+- The real form control retains its visible name, described-by relationships, and Angular state.
+- Required, readonly, disabled, and invalid states remain programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -129,17 +126,17 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default                                                       | Test value                                                                | Binding                        | Description                                       |
-| ------------- | ------- | ------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------- |
-| `selected`    | boolean | `false`                                                       | `true`                                                                    | fixture interaction            | Turns the setting on.                             |
-| `disabled`    | boolean | `false`                                                       | `true`                                                                    | input `disabled` (property)    | Prevents user interaction.                        |
-| `readOnly`    | boolean | `false`                                                       | `true`                                                                    | input `readonly` (property)    | Keeps the value focusable while preventing edits. |
-| `required`    | boolean | `false`                                                       | `true`                                                                    | input `required` (property)    | Marks the control as required.                    |
-| `invalid`     | boolean | `false`                                                       | `true`                                                                    | input `invalid` (property)     | Exposes the invalid visual and ARIA state.        |
-| `checked`     | boolean | `false`                                                       | `true`                                                                    | input `checked` (property)     | Configures the component checked contract.        |
-| `description` | text    | `"Members will authenticate through your identity provider."` | `"Members will authenticate through your identity provider. · alternate"` | input `description` (property) | Configures the component description contract.    |
-| `id`          | text    | `""`                                                          | `"Alternate value"`                                                       | input `id` (property)          | Configures the component id contract.             |
-| `tabindex`    | number  | `0`                                                           | `1`                                                                       | input `tabindex` (property)    | Configures the component tabindex contract.       |
+| Argument      | Control | Default                                                       | Test value                                                                | Binding                        | Description                                                               |
+| ------------- | ------- | ------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------- |
+| `selected`    | boolean | `false`                                                       | `true`                                                                    | fixture interaction            | Turns the setting on.                                                     |
+| `disabled`    | boolean | `false`                                                       | `true`                                                                    | input `disabled` (property)    | Prevents user interaction.                                                |
+| `readOnly`    | boolean | `false`                                                       | `true`                                                                    | input `readonly` (property)    | Keeps the value focusable while preventing edits.                         |
+| `required`    | boolean | `false`                                                       | `true`                                                                    | input `required` (property)    | Marks the control as required.                                            |
+| `invalid`     | boolean | `false`                                                       | `true`                                                                    | input `invalid` (property)     | Exposes the invalid visual and ARIA state.                                |
+| `checked`     | boolean | `false`                                                       | `true`                                                                    | input `checked` (property)     | Controlled checked state rendered by the native choice control.           |
+| `description` | text    | `"Members will authenticate through your identity provider."` | `"Members will authenticate through your identity provider. · alternate"` | input `description` (property) | Visible supporting description for the component content.                 |
+| `id`          | text    | `""`                                                          | `"Alternate value"`                                                       | input `id` (property)          | Stable identifier used by the id contract.                                |
+| `tabindex`    | number  | `0`                                                           | `1`                                                                       | input `tabindex` (property)    | Native sequential-focus order forwarded to the owned interactive element. |
 
 Exact API exclusions:
 
@@ -164,7 +161,7 @@ Presets:
 - `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
 - `active` — Active; scenario `default`; visual state `active`.
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
-- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `filled` — filled; scenario `default`; `selected=true`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
 - `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
 - `readonly` — Readonly; scenario `default`; `readOnly=true`.
 - `required` — Required; scenario `default`; `required=true`.

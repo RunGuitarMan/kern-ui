@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Dropdown Button. A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.",
+  "summary": "Dropdown Button. Opens a menu of actions from one labelled native button.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -62,7 +62,7 @@
       "type": "KrnSize",
       "required": false,
       "defaultValue": "this.options.size",
-      "description": "Named semantic size resolved through KERN density and sizing tokens.",
+      "description": "Named semantic size resolved through Kern density and sizing tokens.",
       "descriptionSource": "inferred"
     },
     {
@@ -102,7 +102,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Prevents duplicate actions and exposes accessible busy state.",
+      "description": "Prevents duplicate actions and exposes an accessible busy state.",
       "descriptionSource": "inferred"
     },
     {
@@ -181,11 +181,14 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Enter / Space activates", "Tab follows document order"],
+    "keyboard": [
+      "Tab focuses the native trigger button",
+      "Enter, Space, or Arrow Down opens the menu",
+      "Arrow keys move through menu items; Escape closes the menu and restores focus"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Native buttons and links retain their accessible names, focus, activation, and form behavior.",
+      "Disabled, loading, pressed, and destructive states are not communicated by color alone."
     ],
     "manualValidationRequired": true
   },
@@ -228,8 +231,8 @@
     "closeOnSelection"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Dropdown Button for this specific contract: Opens a menu of actions from one labelled native button.",
+    "avoidWhen": "Do not choose Dropdown Button for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -294,7 +297,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component closeOnSelection contract.",
+        "description": "Closes after an enabled menu item activates; use the keep-open marker for one item.",
         "binding": {
           "kind": "input",
           "publicName": "closeOnSelection",
@@ -307,7 +310,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Prevents interaction and participates in the component disabled contract.",
+        "description": "Prevents user interaction and participates in the disabled-state contract.",
         "binding": {
           "kind": "input",
           "publicName": "disabled",
@@ -333,7 +336,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component matchTriggerWidth contract.",
+        "description": "Makes the connected overlay exactly as wide as the complete trigger origin.",
         "binding": {
           "kind": "input",
           "publicName": "matchTriggerWidth",
@@ -346,7 +349,7 @@
         "kind": "number",
         "defaultValue": 8,
         "testValue": 9,
-        "description": "Configures the component menuOffset contract.",
+        "description": "Non-negative logical gap in CSS pixels between the trigger and menu.",
         "binding": {
           "kind": "input",
           "publicName": "menuOffset",
@@ -362,7 +365,7 @@
         "kind": "select",
         "defaultValue": "md",
         "testValue": "sm",
-        "description": "Semantic component size.",
+        "description": "Named semantic size resolved through Kern density and sizing tokens.",
         "binding": {
           "kind": "input",
           "publicName": "size",
@@ -389,7 +392,7 @@
         "kind": "select",
         "defaultValue": "brand",
         "testValue": "neutral",
-        "description": "Semantic intent; color is never the only state indicator.",
+        "description": "Semantic intent that selects coordinated text, icon, border, and surface tokens.",
         "binding": {
           "kind": "input",
           "publicName": "tone",
@@ -428,7 +431,7 @@
         "kind": "select",
         "defaultValue": "solid",
         "testValue": "soft",
-        "description": "Visual emphasis within the component hierarchy.",
+        "description": "Named visual hierarchy treatment that preserves the component semantics.",
         "binding": {
           "kind": "input",
           "publicName": "variant",

@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Tooltip. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "summary": "Tooltip. Shows short supplemental text on hover or keyboard focus without adding a tab stop.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -87,7 +87,7 @@
       "type": "\"above\" | \"after\" | \"before\" | \"below\"",
       "required": false,
       "defaultValue": "'above'",
-      "description": "Logical placement of the component relative to its owning surface.",
+      "description": "Defines the component's position behavior or presentation.",
       "descriptionSource": "inferred"
     }
   ],
@@ -103,11 +103,12 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Escape closes modal layers", "Focus returns to the trigger"],
+    "keyboard": [
+      "Focus shows the tooltip without adding a tab stop; Escape dismisses visible content"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The trigger retains its native role and accessible name.",
+      "Tooltip text is referenced as a description and is available on both hover and focus."
     ],
     "manualValidationRequired": true
   },
@@ -148,8 +149,8 @@
     "krnTooltipPosition"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Tooltip for this specific contract: Shows short supplemental text on hover or keyboard focus without adding a tab stop.",
+    "avoidWhen": "Do not choose Tooltip for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

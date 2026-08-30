@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Feedback
 
-Alert. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Alert. Displays an inline status message with semantic tone and an optional dismiss action.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Alert for this specific contract: Displays an inline status message with semantic tone and an optional dismiss action.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Alert for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -52,9 +52,10 @@ void bootstrapApplication(KernAlertAgentExample);
 | -------------- | ------ | --------------------- | -------- | ----------- | -------------------------------------------------------------------------------- |
 | `tone`         | input  | `KrnFeedbackTone`     | no       | `'info'`    | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
 | `appearance`   | input  | `KrnAlertAppearance`  | no       | `'subtle'`  | Selects the alert surface treatment without changing its semantic tone.          |
+| `placement`    | input  | `KrnAlertPlacement`   | no       | `'inline'`  | Places the message inline or stretches it into a page-level banner treatment.    |
 | `title`        | input  | `string`              | no       | `''`        | Visible title that also names the component surface or data view.                |
-| `icon`         | input  | `string`              | no       | `''`        | Semantic icon name rendered alongside the visible component content.             |
-| `dismissible`  | input  | `boolean`             | no       | `false`     | Controls whether the user can dismiss the surface before completing an action.   |
+| `icon`         | input  | `string`              | no       | `''`        | Defines the component's icon behavior or presentation.                           |
+| `dismissible`  | input  | `boolean`             | no       | `false`     | Defines the component's dismissible behavior or presentation.                    |
 | `dismissLabel` | input  | `string \| undefined` | no       | `undefined` | Human-readable copy for the dismiss state or control.                            |
 | `closed`       | output | `void`                | no       | `undefined` | Notifies the consumer after the closed interaction completes.                    |
 
@@ -74,11 +75,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Escape closes modal layers
-- Focus returns to the trigger
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Visible copy and semantic role communicate feedback independently of color or motion.
+- Announcements use only the urgency required by the message.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -106,26 +105,27 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/alert`
 
 Scenarios: `default`.
-Public API coverage: 5/6
-directly controlled; 1 exact exclusions; 0 unclassified.
+Public API coverage: 5/7
+directly controlled; 2 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default               | Test value                        | Binding                        | Description                                |
-| ------------- | ------- | --------------------- | --------------------------------- | ------------------------------ | ------------------------------------------ |
-| `tone`        | select  | `"success"`           | `"neutral"`                       | input `tone` (property)        | Changes urgency and announcement behavior. |
-| `appearance`  | select  | `"subtle"`            | `"outline"`                       | input `appearance` (property)  | Changes the alert surface contrast.        |
-| `title`       | text    | `"Changes published"` | `"Changes published · alternate"` | input `title` (property)       | Sets the alert heading.                    |
-| `dismissible` | boolean | `true`                | `false`                           | input `dismissible` (property) | Shows a close action.                      |
-| `icon`        | text    | `""`                  | `"Alternate value"`               | input `icon` (property)        | Configures the component icon contract.    |
+| Argument      | Control | Default               | Test value                        | Binding                        | Description                                            |
+| ------------- | ------- | --------------------- | --------------------------------- | ------------------------------ | ------------------------------------------------------ |
+| `tone`        | select  | `"success"`           | `"neutral"`                       | input `tone` (property)        | Changes urgency and announcement behavior.             |
+| `appearance`  | select  | `"subtle"`            | `"outline"`                       | input `appearance` (property)  | Changes the alert surface contrast.                    |
+| `title`       | text    | `"Changes published"` | `"Changes published · alternate"` | input `title` (property)       | Sets the alert heading.                                |
+| `dismissible` | boolean | `true`                | `false`                           | input `dismissible` (property) | Shows a close action.                                  |
+| `icon`        | text    | `""`                  | `"Alternate value"`               | input `icon` (property)        | Defines the component's icon behavior or presentation. |
 
 Exact API exclusions:
 
 | Public API     | Category           | Evidence                                           | Reason                                                                                                                                                               |
 | -------------- | ------------------ | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `dismissLabel` | accessibility-copy | `a11y-test:tests/a11y/accessibility.spec.ts#alert` | This localizable action label is stable accessibility copy; interaction/state controls exercise the same component behavior without duplicating every locale string. |
+| `placement`    | complex-data       | `specimen-fixture:preview/alert?state=default`     | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.                                                                     |
 
 Presets:
 

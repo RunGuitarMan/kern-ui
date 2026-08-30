@@ -3,17 +3,40 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
-  KERN_CATALOG,
   findKernComponent,
   type KernCatalogItem,
   type KernComponentStatus,
 } from '@kern-ui/showcase';
 import { findKernAgentExample, type KernAgentExample } from '@kern-ui/showcase/examples';
+import {
+  KERN_CANONICAL_CATALOG_INDEX,
+  canonicalCatalogId,
+  catalogAliasesFor,
+  catalogFamilyFor,
+} from '@kern-ui/showcase/catalog-index';
 import { KrnBreadcrumbs, KrnCopyButton, type KrnBreadcrumbItem } from '@kern-ui/angular/kit';
 
 import { ComponentPlayground } from '../playground/component-playground';
 import { DocsI18n } from '../docs-i18n';
 import { DataGridExamples } from './data-grid-examples';
+
+interface CatalogFamilyMemberView {
+  readonly id: string;
+  readonly role: string;
+  readonly migration?: string;
+  readonly item: KernCatalogItem;
+}
+
+interface CatalogFamilyView {
+  readonly id: string;
+  readonly name: string;
+  readonly description: string;
+  readonly members: readonly CatalogFamilyMemberView[];
+}
+
+const CANONICAL_CATALOG: readonly KernCatalogItem[] = KERN_CANONICAL_CATALOG_INDEX.map((item) =>
+  findKernComponent(item.id),
+).filter((item): item is KernCatalogItem => item !== undefined);
 
 @Component({
   selector: 'kdocs-component-page',
@@ -29,24 +52,56 @@ export class ComponentPage {
   private readonly params = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
   });
-  private readonly sourceItem = computed(() => findKernComponent(this.params().get('id') ?? ''));
+  private readonly sourceItem = computed(() =>
+    findKernComponent(canonicalCatalogId(this.params().get('id') ?? '')),
+  );
   protected readonly item = computed(() => {
     const item = this.sourceItem();
     return item ? this.i18n.catalogItem(item) : undefined;
   });
+  protected readonly aliases = computed<readonly KernCatalogItem[]>(() => {
+    const current = this.sourceItem();
+    if (!current) return [];
+    return catalogAliasesFor(current.id)
+      .map((alias) => findKernComponent(alias.id))
+      .filter((alias): alias is KernCatalogItem => alias !== undefined)
+      .map((alias) => this.i18n.catalogItem(alias));
+  });
+  protected readonly family = computed<CatalogFamilyView | null>(() => {
+    const current = this.sourceItem();
+    const family = current ? catalogFamilyFor(current.id) : undefined;
+    if (!family) return null;
+    return {
+      ...family,
+      members: family.members
+        .map((member) => {
+          const source = findKernComponent(member.id);
+          return source
+            ? {
+                ...member,
+                item: this.i18n.catalogItem(source),
+              }
+            : undefined;
+        })
+        .filter((member): member is CatalogFamilyMemberView => member !== undefined),
+    };
+  });
+  protected readonly hasTaxonomy = computed(
+    () => this.family() !== null || this.aliases().length > 0,
+  );
   protected readonly agentExample = computed<KernAgentExample | null>(() => {
     const current = this.item();
     return current ? (findKernAgentExample(current.id) ?? null) : null;
   });
   private readonly itemIndex = computed(() => {
     const current = this.item();
-    return current ? KERN_CATALOG.findIndex((item) => item.id === current.id) : -1;
+    return current ? CANONICAL_CATALOG.findIndex((item) => item.id === current.id) : -1;
   });
-  protected readonly previousItem = computed(() => KERN_CATALOG[this.itemIndex() - 1]);
-  protected readonly nextItem = computed(() => KERN_CATALOG[this.itemIndex() + 1]);
+  protected readonly previousItem = computed(() => CANONICAL_CATALOG[this.itemIndex() - 1]);
+  protected readonly nextItem = computed(() => CANONICAL_CATALOG[this.itemIndex() + 1]);
   protected readonly positionLabel = computed(() => {
     const index = this.itemIndex();
-    return index < 0 ? '' : `${index + 1} / ${KERN_CATALOG.length}`;
+    return index < 0 ? '' : `${index + 1} / ${CANONICAL_CATALOG.length}`;
   });
   constructor() {
     effect(() => {
@@ -64,11 +119,6 @@ export class ComponentPage {
       { label: this.i18n.t('shell.overview', 'Overview'), href: '/' },
       { label: name, current: true },
     ];
-  }
-
-  protected variantName(item: KernCatalogItem): string {
-    const variant = findKernComponent(item.variantOf ?? '');
-    return variant ? this.i18n.componentName(variant) : (item.variantOf ?? '');
   }
 
   protected statusDescription(status: KernComponentStatus): string {

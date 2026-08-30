@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
+/** @deprecated Use `KrnAspectRatio` from `@kern-ui/angular/layout`. */
 @Component({
   selector: 'krn-responsive-media',
   changeDetection: ChangeDetectionStrategy.OnPush,

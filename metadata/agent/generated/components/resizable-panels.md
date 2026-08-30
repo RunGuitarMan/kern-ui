@@ -7,7 +7,7 @@
 - Lifecycle: **experimental**
 - Category: Layout
 
-Resizable Panels. A composable spatial primitive that keeps product layouts predictable across containers.
+Resizable Panels. Lets users resize adjacent panels by pointer or keyboard while enforcing normalized size limits.
 
 ## Use
 
@@ -124,11 +124,11 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default        | Test value   | Binding                        | Description                                                                               |
-| ------------- | ------- | -------------- | ------------ | ------------------------------ | ----------------------------------------------------------------------------------------- |
-| `disabled`    | boolean | `false`        | `true`       | input `disabled` (property)    | Disables pointer and keyboard resizing.                                                   |
-| `step`        | number  | `5`            | `6`          | input `step` (property)        | Sets the keyboard resize increment.                                                       |
-| `orientation` | select  | `"horizontal"` | `"vertical"` | input `orientation` (property) | Logical axis exposed by the component; behavior follows its documented keyboard contract. |
+| Argument      | Control | Default        | Test value   | Binding                        | Description                                                                  |
+| ------------- | ------- | -------------- | ------------ | ------------------------------ | ---------------------------------------------------------------------------- |
+| `disabled`    | boolean | `false`        | `true`       | input `disabled` (property)    | Disables pointer and keyboard resizing.                                      |
+| `step`        | number  | `5`            | `6`          | input `step` (property)        | Sets the keyboard resize increment.                                          |
+| `orientation` | select  | `"horizontal"` | `"vertical"` | input `orientation` (property) | Sets the panel flow axis: horizontal follows inline, vertical follows block. |
 
 Exact API exclusions:
 

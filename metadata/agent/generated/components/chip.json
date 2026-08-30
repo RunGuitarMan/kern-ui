@@ -16,7 +16,7 @@
     "selectors": ["krn-tag"],
     "componentIds": ["tag"]
   },
-  "summary": "Chip. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Chip. Displays a compact value that can be selected without becoming a form-control option.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -66,7 +66,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Enables the documented user interaction for an otherwise presentational item.",
+      "description": "Defines the component's interactive behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -76,7 +76,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Displays a named action for removing the represented value.",
+      "description": "Defines the component's removable behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -96,7 +96,7 @@
       "type": "string | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Accessible name for the complete composite widget.",
+      "description": "Human-readable copy for the accessible state or control.",
       "descriptionSource": "inferred"
     },
     {
@@ -129,11 +129,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -173,8 +172,8 @@
     "remove"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Chip for this specific contract: Displays a compact value that can be selected without becoming a form-control option.",
+    "avoidWhen": "Do not choose Chip for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

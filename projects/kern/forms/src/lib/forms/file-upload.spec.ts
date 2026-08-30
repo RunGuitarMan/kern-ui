@@ -220,4 +220,22 @@ describe('KrnFileUpload', () => {
     fixture.componentInstance.blur();
     expect(touched).toHaveBeenCalledOnce();
   });
+
+  it('provides the drop-zone presentation through the canonical file upload', async () => {
+    const fixture = TestBed.createComponent(KrnFileUpload);
+    fixture.componentRef.setInput('id', 'canonical-upload');
+    fixture.componentRef.setInput('presentation', 'dropzone');
+    fixture.componentRef.setInput('dropLabel', 'Drop audit files here');
+    fixture.componentRef.setInput('description', 'PDF documents only.');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const root = fixture.nativeElement.querySelector('.krn-upload') as HTMLElement;
+    const action = uploadAction(fixture.nativeElement);
+    expect(root.getAttribute('data-presentation')).toBe('dropzone');
+    expect(root.querySelector('strong')?.textContent).toContain('Drop audit files here');
+    expect(action.getAttribute('aria-describedby')).toBe(
+      'canonical-upload-drop-label canonical-upload-description',
+    );
+  });
 });

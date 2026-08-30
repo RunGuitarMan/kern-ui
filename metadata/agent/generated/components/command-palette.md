@@ -7,7 +7,7 @@
 - Lifecycle: **beta**
 - Category: Navigation
 
-Command Palette. A keyboard-first wayfinding primitive that preserves orientation and current location.
+Command Palette. Searches a command collection and activates the focused result from a modal palette.
 
 ## Use
 
@@ -147,14 +147,14 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument        | Control | Default              | Test value                       | Binding                          | Description                                                     |
-| --------------- | ------- | -------------------- | -------------------------------- | -------------------------------- | --------------------------------------------------------------- |
-| `open`          | boolean | `false`              | `true`                           | model `open`                     | Opens the command palette.                                      |
-| `query`         | text    | `""`                 | `"Alternate value"`              | model `query`                    | Changes the active command query.                               |
-| `placeholder`   | text    | `"Search commands…"` | `"Search commands… · alternate"` | input `placeholder` (property)   | Uses locale-aware command search copy until explicitly changed. |
-| `closeShortcut` | text    | `"Esc"`              | `"Esc · alternate"`              | input `closeShortcut` (property) | Uses the locale-aware close shortcut until explicitly changed.  |
-| `description`   | text    | `""`                 | `"Alternate value"`              | input `description` (property)   | Configures the component description contract.                  |
-| `title`         | text    | `"Jump to…"`         | `"Jump to… · alternate"`         | input `title` (property)         | Configures the component title contract.                        |
+| Argument        | Control | Default              | Test value                       | Binding                          | Description                                                       |
+| --------------- | ------- | -------------------- | -------------------------------- | -------------------------------- | ----------------------------------------------------------------- |
+| `open`          | boolean | `false`              | `true`                           | model `open`                     | Opens the command palette.                                        |
+| `query`         | text    | `""`                 | `"Alternate value"`              | model `query`                    | Changes the active command query.                                 |
+| `placeholder`   | text    | `"Search commands…"` | `"Search commands… · alternate"` | input `placeholder` (property)   | Uses locale-aware command search copy until explicitly changed.   |
+| `closeShortcut` | text    | `"Esc"`              | `"Esc · alternate"`              | input `closeShortcut` (property) | Uses the locale-aware close shortcut until explicitly changed.    |
+| `description`   | text    | `""`                 | `"Alternate value"`              | input `description` (property)   | Visible supporting description for the component content.         |
+| `title`         | text    | `"Jump to…"`         | `"Jump to… · alternate"`         | input `title` (property)         | Visible title that also names the component surface or data view. |
 
 Exact API exclusions:
 

@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Feedback
 
-Empty State. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Empty State. Explains why no content is available and can offer one appropriate next action.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Empty State for this specific contract: Explains why no content is available and can offer one appropriate next action.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Empty State for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -50,11 +50,12 @@ void bootstrapApplication(KernEmptyStateAgentExample);
 
 ## API
 
-| Name          | Kind  | Type                  | Required | Default     | Description                                                                      |
-| ------------- | ----- | --------------------- | -------- | ----------- | -------------------------------------------------------------------------------- |
-| `title`       | input | `string \| undefined` | no       | `undefined` | Visible title that also names the component surface or data view.                |
-| `description` | input | `string`              | no       | `''`        | Visible supporting description for the component content.                        |
-| `tone`        | input | `KrnFeedbackTone`     | no       | `'neutral'` | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
+| Name          | Kind  | Type                           | Required | Default     | Description                                                                          |
+| ------------- | ----- | ------------------------------ | -------- | ----------- | ------------------------------------------------------------------------------------ |
+| `kind`        | input | `KrnStateKind`                 | no       | `'empty'`   | Selects the state meaning, default visual, status role, title, and recommended tone. |
+| `title`       | input | `string \| undefined`          | no       | `undefined` | Visible title that also names the component surface or data view.                    |
+| `description` | input | `string`                       | no       | `''`        | Visible supporting description for the component content.                            |
+| `tone`        | input | `KrnFeedbackTone \| undefined` | no       | `undefined` | Semantic intent that selects coordinated text, icon, border, and surface tokens.     |
 
 ## Deprecated selectors
 
@@ -72,11 +73,8 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Escape closes modal layers
-- Focus returns to the trigger
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Uses visible title and description; any next action retains native button or link semantics.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -106,22 +104,24 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/empty-state`
 
 Scenarios: `default`.
-Public API coverage: 3/3
-directly controlled; 0 exact exclusions; 0 unclassified.
+Public API coverage: 3/4
+directly controlled; 1 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default                                                             | Test value                                                                      | Binding                        | Description                                    |
-| ------------- | ------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------ | ---------------------------------------------- |
-| `tone`        | select  | `"neutral"`                                                         | `"info"`                                                                        | input `tone` (property)        | Changes the state illustration tone.           |
-| `description` | text    | `"Create an automation to connect events with repeatable actions."` | `"Create an automation to connect events with repeatable actions. · alternate"` | input `description` (property) | Configures the component description contract. |
-| `title`       | text    | `"No automations yet"`                                              | `"No automations yet · alternate"`                                              | input `title` (property)       | Configures the component title contract.       |
+| Argument      | Control | Default                                                             | Test value                                                                      | Binding                        | Description                                                       |
+| ------------- | ------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------ | ----------------------------------------------------------------- |
+| `tone`        | select  | `"neutral"`                                                         | `"info"`                                                                        | input `tone` (property)        | Changes the state illustration tone.                              |
+| `description` | text    | `"Create an automation to connect events with repeatable actions."` | `"Create an automation to connect events with repeatable actions. · alternate"` | input `description` (property) | Visible supporting description for the component content.         |
+| `title`       | text    | `"No automations yet"`                                              | `"No automations yet · alternate"`                                              | input `title` (property)       | Visible title that also names the component surface or data view. |
 
 Exact API exclusions:
 
-_No excluded public API members._
+| Public API | Category     | Evidence                                             | Reason                                                                                           |
+| ---------- | ------------ | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `kind`     | complex-data | `specimen-fixture:preview/empty-state?state=default` | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture. |
 
 Presets:
 

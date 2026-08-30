@@ -112,6 +112,16 @@ export interface KernPlaygroundStatePreset {
 
 export interface KernPlaygroundDefinition {
   readonly id: string;
+  /** Illustrative preset used by docs and Reset; `default` remains the exhaustive QA baseline. */
+  readonly defaultStoryId: string;
+  /** A short, teachable subset of the executable presets shown as story tabs. */
+  readonly featuredPresetIds: readonly string[];
+  /** The first controls a reader needs; the complete control list remains in `controls`. */
+  readonly essentialControlKeys: readonly string[];
+  /** Whether the target component itself owns user interaction in this specimen. */
+  readonly interactive: boolean;
+  /** Component ids that provide necessary composition context around the target. */
+  readonly supportingComponentIds: readonly string[];
   readonly scenarios: readonly KernSpecimenScenario[];
   /**
    * Stable query-string identifiers. Use `presets` when label, arguments, or

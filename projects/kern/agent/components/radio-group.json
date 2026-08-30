@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Radio Group. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Radio Group. Enforces one choice from a labelled set and manages orientation-aware arrow navigation.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -62,7 +62,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -112,7 +112,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Native form-control name shared by every radio option in the group.",
+      "description": "Defines the component's custom name behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -182,7 +182,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Space-separated element ids that provide the accessible description.",
+      "description": "Defines the component's described by behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -219,14 +219,12 @@
   "a11y": {
     "target": "WCAG 2.2 AA",
     "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
+      "Tab enters or leaves the group through its selected or first enabled radio",
+      "Arrow keys move and select within the configured orientation"
     ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The real form control retains its visible name, described-by relationships, and Angular state.",
+      "Required, readonly, disabled, and invalid states remain programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -273,8 +271,8 @@
     "valueChange"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Radio Group for this specific contract: Enforces one choice from a labelled set and manages orientation-aware arrow navigation.",
+    "avoidWhen": "Do not choose Radio Group for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -355,7 +353,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -381,7 +379,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component readonly contract.",
+        "description": "Keeps the value perceivable while preventing user edits.",
         "binding": {
           "kind": "input",
           "publicName": "readonly",

@@ -1276,6 +1276,12 @@
       "owner": "testing",
       "kind": "class"
     },
+    "KrnAlertPlacement": {
+      "canonicalSymbol": "KrnAlertPlacement",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
+      "kind": "type"
+    },
     "KrnAppShell": {
       "canonicalSymbol": "KrnAppShell",
       "importPath": "@kern-ui/angular/layout",
@@ -3442,6 +3448,12 @@
       "owner": "data-display",
       "kind": "class"
     },
+    "KrnStateKind": {
+      "canonicalSymbol": "KrnStateKind",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
+      "kind": "type"
+    },
     "KrnStatusBadge": {
       "canonicalSymbol": "KrnBadge",
       "importPath": "@kern-ui/angular/data-display",
@@ -3795,6 +3807,12 @@
       "importPath": "@kern-ui/angular/testing",
       "owner": "testing",
       "kind": "class"
+    },
+    "KrnUploadPresentation": {
+      "canonicalSymbol": "KrnUploadPresentation",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
+      "kind": "type"
     },
     "KrnUploadRejection": {
       "canonicalSymbol": "KrnUploadRejection",

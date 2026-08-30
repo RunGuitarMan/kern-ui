@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Stack. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Stack. Arranges children vertically with a consistent gap, alignment, and block-axis distribution.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -96,11 +96,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Projected content retains its document order and native semantics as layout changes.",
+      "Logical sizing and placement work in both LTR and RTL without duplicating content."
     ],
     "manualValidationRequired": true
   },
@@ -127,8 +126,8 @@
   "related": ["app-shell", "header", "sidebar", "navigation-rail"],
   "keywords": ["stack", "Stack", "Layout", "krn-stack", "KrnStack", "gap", "align", "justify"],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Stack for this specific contract: Arranges children vertically with a consistent gap, alignment, and block-axis distribution.",
+    "avoidWhen": "Do not choose Stack for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -189,7 +188,7 @@
         "kind": "select",
         "defaultValue": "stretch",
         "testValue": "start",
-        "description": "Configures the component align contract.",
+        "description": "Cross-axis alignment of projected children.",
         "binding": {
           "kind": "input",
           "publicName": "align",
@@ -224,7 +223,7 @@
         "kind": "select",
         "defaultValue": "start",
         "testValue": "center",
-        "description": "Configures the component justify contract.",
+        "description": "Distribution of projected children along the block axis.",
         "binding": {
           "kind": "input",
           "publicName": "justify",

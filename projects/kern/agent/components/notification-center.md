@@ -7,13 +7,13 @@
 - Lifecycle: **recipe**
 - Category: Patterns
 
-Notification Center. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.
+Notification Center. Collects recent notifications and exposes unread, empty, loading, and error states.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Notification Center for this specific contract: Collects recent notifications and exposes unread, empty, loading, and error states.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Notification Center for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -74,7 +74,7 @@ void bootstrapApplication(KernNotificationCenterAgentExample);
 | `unreadLabel`          | input  | `((count: number) => string) \| undefined` | no       | `undefined` | Human-readable copy for the unread state or control.                         |
 | `unreadStateLabel`     | input  | `string \| undefined`                      | no       | `undefined` | Human-readable copy for the unread state state or control.                   |
 | `markAllReadLabel`     | input  | `string \| undefined`                      | no       | `undefined` | Human-readable copy for the mark all read state or control.                  |
-| `emptyLabel`           | input  | `string \| undefined`                      | no       | `undefined` | Accessible copy that explains the empty state.                               |
+| `emptyLabel`           | input  | `string \| undefined`                      | no       | `undefined` | Human-readable copy for the empty state or control.                          |
 | `notifications`        | input  | `ReadonlyArray<KrnNotification>`           | no       | `[]`        | Ordered domain values supplied to the notification collection.               |
 | `markAllRead`          | output | `void`                                     | no       | `undefined` | Notifies the consumer after the mark all read interaction completes.         |
 | `notificationSelected` | output | `KrnNotification`                          | no       | `undefined` | Notifies the consumer after the notification selected interaction completes. |
@@ -93,10 +93,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Keyboard behavior is provided by the native elements and Kern primitives in the recipe
+- The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.
+- Loading, empty, error, and success states remain visible and programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -136,10 +135,10 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument    | Control | Default           | Test value                    | Binding                    | Description                                  |
-| ----------- | ------- | ----------------- | ----------------------------- | -------------------------- | -------------------------------------------- |
-| `dataState` | select  | `"ready"`         | `"empty"`                     | fixture data               | Changes the notification collection fixture. |
-| `heading`   | text    | `"Recent events"` | `"Recent events · alternate"` | input `heading` (property) | Configures the component heading contract.   |
+| Argument    | Control | Default           | Test value                    | Binding                    | Description                                           |
+| ----------- | ------- | ----------------- | ----------------------------- | -------------------------- | ----------------------------------------------------- |
+| `dataState` | select  | `"ready"`         | `"empty"`                     | fixture data               | Changes the notification collection fixture.          |
+| `heading`   | text    | `"Recent events"` | `"Recent events · alternate"` | input `heading` (property) | Human-readable copy for the heading state or control. |
 
 Exact API exclusions:
 

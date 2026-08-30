@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Responsive Media. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Responsive Media. Frames projected media in a fixed-ratio, clipped surface. For new work, use Aspect Ratio.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -53,7 +53,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "'16 / 9'",
-      "description": "Required width-to-height ratio maintained by the media surface.",
+      "description": "Defines the component's aspect ratio behavior or presentation.",
       "descriptionSource": "inferred"
     }
   ],
@@ -76,11 +76,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -114,8 +113,8 @@
     "aspectRatio"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Responsive Media for this specific contract: Frames projected media in a fixed-ratio, clipped surface. For new work, use Aspect Ratio.",
+    "avoidWhen": "Do not choose Responsive Media for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

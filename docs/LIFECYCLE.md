@@ -1,7 +1,7 @@
 # Lifecycle governance
 
 `projects/kern/api/lifecycle.json` is the machine-readable source of truth for component and public
-symbol maturity. It explicitly covers all 132 catalog entries and all 499 named exports from the
+symbol maturity. It explicitly covers all 132 catalog entries and all 502 named exports from the
 committed secondary-entrypoint API baselines. There is no implicit “new exports are stable”
 default.
 

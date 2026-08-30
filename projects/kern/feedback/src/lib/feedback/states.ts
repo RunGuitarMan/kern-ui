@@ -1,7 +1,17 @@
-import { ChangeDetectionStrategy, Component, inject, input, model, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  model,
+  output,
+} from '@angular/core';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 import { krnInputFallback } from '@kern-ui/angular/core';
 import type { KrnFeedbackTone } from './feedback.types';
+
+export type KrnStateKind = 'empty' | 'error' | 'success';
 
 @Component({
   selector: 'krn-empty-state',
@@ -12,56 +22,67 @@ import type { KrnFeedbackTone } from './feedback.types';
 })
 export class KrnEmptyState {
   protected readonly translations = inject(KRN_TRANSLATIONS);
+  /** Selects the state meaning, default visual, status role, title, and recommended tone. */
+  readonly kind = input<KrnStateKind>('empty');
   readonly title = input<string | undefined>();
   protected readonly resolvedTitle = krnInputFallback(this.title, () => this.defaultTitle());
   readonly description = input('');
-  readonly tone = input<KrnFeedbackTone>('neutral');
+  readonly tone = input<KrnFeedbackTone | undefined>();
+  protected readonly resolvedTone = computed<KrnFeedbackTone>(
+    () => this.tone() ?? this.defaultTone(),
+  );
 
-  protected stateKind(): 'empty' | 'error' | 'success' {
-    return 'empty';
+  protected stateKind(): KrnStateKind {
+    return this.kind();
   }
 
   protected defaultTitle(): string {
-    return this.translations.feedback.emptyStateTitle;
+    switch (this.kind()) {
+      case 'error':
+        return this.translations.feedback.errorStateTitle;
+      case 'success':
+        return this.translations.feedback.successStateTitle;
+      default:
+        return this.translations.feedback.emptyStateTitle;
+    }
+  }
+
+  private defaultTone(): KrnFeedbackTone {
+    switch (this.kind()) {
+      case 'error':
+        return 'danger';
+      case 'success':
+        return 'success';
+      default:
+        return 'neutral';
+    }
   }
 }
 
+/** @deprecated Use `KrnEmptyState` with `kind="error"`. */
 @Component({
   selector: 'krn-error-state',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './error-state.html',
-  styleUrl: './error-state.css',
+  templateUrl: './empty-state.html',
+  styleUrl: './empty-state.css',
 })
 export class KrnErrorState extends KrnEmptyState {
-  override readonly tone = input<KrnFeedbackTone>('danger');
-
-  protected override stateKind(): 'empty' | 'error' | 'success' {
-    return 'error';
-  }
-
-  protected override defaultTitle(): string {
-    return this.translations.feedback.errorStateTitle;
-  }
+  override readonly kind = input<KrnStateKind>('error');
+  override readonly tone = input<KrnFeedbackTone | undefined>('danger');
 }
 
+/** @deprecated Use `KrnEmptyState` with `kind="success"`. */
 @Component({
   selector: 'krn-success-state',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './success-state.html',
-  styleUrl: './success-state.css',
+  templateUrl: './empty-state.html',
+  styleUrl: './empty-state.css',
 })
 export class KrnSuccessState extends KrnEmptyState {
-  override readonly tone = input<KrnFeedbackTone>('success');
-
-  protected override stateKind(): 'empty' | 'error' | 'success' {
-    return 'success';
-  }
-
-  protected override defaultTitle(): string {
-    return this.translations.feedback.successStateTitle;
-  }
+  override readonly kind = input<KrnStateKind>('success');
+  override readonly tone = input<KrnFeedbackTone | undefined>('success');
 }
 
 @Component({

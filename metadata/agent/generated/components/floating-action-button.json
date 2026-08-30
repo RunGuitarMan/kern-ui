@@ -58,7 +58,7 @@
       "type": "KrnSize",
       "required": false,
       "defaultValue": "this.options.size",
-      "description": "Named semantic size resolved through KERN density and sizing tokens.",
+      "description": "Named semantic size resolved through Kern density and sizing tokens.",
       "descriptionSource": "inferred"
     },
     {
@@ -88,7 +88,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "this.options.extended",
-      "description": "Displays the floating action label in addition to its icon.",
+      "description": "Defines the component's extended behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {

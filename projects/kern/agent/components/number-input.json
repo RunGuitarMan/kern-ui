@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Number Input. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Number Input. Captures a bounded numeric value with optional increment and decrement controls.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -64,7 +64,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -74,7 +74,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Required human-readable name for the represented person, item, or action.",
+      "description": "Native form-control name forwarded to the owned interactive element.",
       "descriptionSource": "inferred"
     },
     {
@@ -134,7 +134,7 @@
       "type": "KrnInputMode",
       "required": false,
       "defaultValue": "'decimal'",
-      "description": "Virtual-keyboard hint forwarded to the editable control.",
+      "description": "Defines the component's input mode behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -274,14 +274,12 @@
   "a11y": {
     "target": "WCAG 2.2 AA",
     "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
+      "Tab focuses the numeric input and optional stepper actions",
+      "Arrow Up and Arrow Down adjust the value by the configured step"
     ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The real form control retains its visible name, described-by relationships, and Angular state.",
+      "Required, readonly, disabled, and invalid states remain programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -334,8 +332,8 @@
     "valueChange"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Number Input for this specific contract: Captures a bounded numeric value with optional increment and decrement controls.",
+    "avoidWhen": "Do not choose Number Input for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -361,6 +359,22 @@
     "route": "preview/number-input",
     "scenarios": ["default"],
     "controls": [
+      {
+        "key": "value",
+        "label": "Value",
+        "kind": "number",
+        "defaultValue": 250,
+        "testValue": 251,
+        "description": "Sets the controlled numeric value.",
+        "binding": {
+          "kind": "input",
+          "publicName": "value",
+          "syntax": "property"
+        },
+        "min": -10000,
+        "max": 10000,
+        "step": 1
+      },
       {
         "key": "min",
         "label": "Minimum",
@@ -480,7 +494,7 @@
         "kind": "text",
         "defaultValue": "off",
         "testValue": "off · alternate",
-        "description": "Configures the component autocomplete contract.",
+        "description": "Native autocomplete purpose forwarded to the editable control.",
         "binding": {
           "kind": "input",
           "publicName": "autocomplete",
@@ -493,7 +507,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -506,7 +520,7 @@
         "kind": "select",
         "defaultValue": "decimal",
         "testValue": "none",
-        "description": "Configures the component inputMode contract.",
+        "description": "Defines the component's input mode behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "inputMode",
@@ -553,7 +567,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component placeholder contract.",
+        "description": "Short input hint shown only while no value is present.",
         "binding": {
           "kind": "input",
           "publicName": "placeholder",
@@ -670,7 +684,9 @@
         "id": "filled",
         "label": "filled",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "value": 250
+        },
         "fixtureEffect": {
           "kind": "content",
           "mode": "filled",
@@ -718,7 +734,9 @@
         "id": "minimum",
         "label": "minimum",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "value": 1
+        },
         "fixtureEffect": {
           "kind": "status",
           "mode": "neutral",
@@ -730,7 +748,9 @@
         "id": "maximum",
         "label": "maximum",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "value": 500
+        },
         "fixtureEffect": {
           "kind": "status",
           "mode": "neutral",
@@ -741,8 +761,8 @@
     ],
     "apiCoverage": {
       "publicInputsAndModels": 19,
-      "controlled": 12,
-      "excluded": 7,
+      "controlled": 13,
+      "excluded": 6,
       "unclassified": 0
     },
     "exclusions": [
@@ -816,18 +836,6 @@
         "evidence": {
           "category": "forms-integration",
           "pointer": "tests/e2e/enterprise-acceptance.spec.ts#number-input"
-        }
-      },
-      {
-        "componentId": "number-input",
-        "publicName": "value",
-        "kind": "input",
-        "type": "number | null | undefined",
-        "code": "complex-data",
-        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
-        "evidence": {
-          "category": "specimen-fixture",
-          "pointer": "preview/number-input?state=default"
         }
       }
     ]

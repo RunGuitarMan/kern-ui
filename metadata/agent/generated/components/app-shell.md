@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Layout
 
-App Shell. A composable spatial primitive that keeps product layouts predictable across containers.
+App Shell. Coordinates header, navigation, sidebar, and main content across wide and narrow application layouts.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use App Shell for this specific contract: Coordinates header, navigation, sidebar, and main content across wide and narrow application layouts.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose App Shell for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -56,20 +56,20 @@ void bootstrapApplication(KernAppShellAgentExample);
 
 | Name                           | Kind  | Type                                        | Required | Default                              | Description                                                                          |
 | ------------------------------ | ----- | ------------------------------------------- | -------- | ------------------------------------ | ------------------------------------------------------------------------------------ |
-| `sidebarWidth`                 | input | `KrnLayoutSpace`                            | no       | `'17rem'`                            | Inline size reserved for the expanded application sidebar.                           |
-| `railWidth`                    | input | `KrnLayoutSpace`                            | no       | `'3.5rem'`                           | Inline size reserved for the application navigation rail.                            |
-| `mainMaxWidth`                 | input | `KrnLayoutSpace`                            | no       | `'100%'`                             | Maximum inline size allocated to the primary application content.                    |
-| `sidebarPosition`              | input | `"end" \| "start"`                          | no       | `'start'`                            | Logical start or end placement of the application sidebar.                           |
-| `mobileNavigation`             | input | `"auto" \| "hidden" \| "rail" \| "sidebar"` | no       | `'auto'`                             | Template rendered as the application’s narrow-viewport navigation.                   |
+| `sidebarWidth`                 | input | `KrnLayoutSpace`                            | no       | `'17rem'`                            | Defines the component's sidebar width behavior or presentation.                      |
+| `railWidth`                    | input | `KrnLayoutSpace`                            | no       | `'3.5rem'`                           | Defines the component's rail width behavior or presentation.                         |
+| `mainMaxWidth`                 | input | `KrnLayoutSpace`                            | no       | `'100%'`                             | Defines the component's main max width behavior or presentation.                     |
+| `sidebarPosition`              | input | `"end" \| "start"`                          | no       | `'start'`                            | Defines the component's sidebar position behavior or presentation.                   |
+| `mobileNavigation`             | input | `"auto" \| "hidden" \| "rail" \| "sidebar"` | no       | `'auto'`                             | Defines the component's mobile navigation behavior or presentation.                  |
 | `mobileNavigationOpen`         | model | `boolean`                                   | no       | `false`                              | Controlled mobile navigation open state with a matching Angular model-change output. |
-| `mobileNavigationId`           | input | `string`                                    | no       | `this.ids.next('mobile-navigation')` | Stable identifier value used by the mobile navigation contract.                      |
+| `mobileNavigationId`           | input | `string`                                    | no       | `this.ids.next('mobile-navigation')` | Stable identifier used by the mobile navigation contract.                            |
 | `mobileNavigationLabel`        | input | `string \| undefined`                       | no       | `undefined`                          | Human-readable copy for the mobile navigation state or control.                      |
 | `mobileNavigationLabelledBy`   | input | `string`                                    | no       | `''`                                 | Space-separated element ids that name the mobile navigation dialog.                  |
 | `mobileNavigationDescribedBy`  | input | `string`                                    | no       | `''`                                 | Space-separated element ids that describe the mobile navigation dialog.              |
 | `mobileNavigationInitialFocus` | input | `string`                                    | no       | `'first-tabbable'`                   | Focus target applied after the mobile navigation dialog opens.                       |
 | `openNavigationLabel`          | input | `string \| undefined`                       | no       | `undefined`                          | Human-readable copy for the open navigation state or control.                        |
 | `closeNavigationLabel`         | input | `string \| undefined`                       | no       | `undefined`                          | Human-readable copy for the close navigation state or control.                       |
-| `mainId`                       | input | `string`                                    | no       | `'main-content'`                     | Stable identifier value used by the main contract.                                   |
+| `mainId`                       | input | `string`                                    | no       | `'main-content'`                     | Stable identifier used by the main contract.                                         |
 
 ## Deprecated selectors
 
@@ -88,10 +88,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Keeps header, navigation, complementary, and main landmarks in a stable document order.
+- Mobile navigation owns its accessible name, focus entry, dismissal, and focus restoration.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -127,14 +126,14 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument               | Control | Default    | Test value | Binding                             | Description                                               |
-| ---------------------- | ------- | ---------- | ---------- | ----------------------------------- | --------------------------------------------------------- |
-| `mobileNavigationOpen` | boolean | `false`    | `true`     | model `mobileNavigationOpen`        | Opens the shell navigation surface at mobile breakpoints. |
-| `mainMaxWidth`         | text    | `"48rem"`  | `"20rem"`  | input `mainMaxWidth` (property)     | Constrains the primary content measure.                   |
-| `sidebarWidth`         | text    | `"10rem"`  | `"20rem"`  | input `sidebarWidth` (property)     | Sets the shell sidebar width.                             |
-| `mobileNavigation`     | select  | `"auto"`   | `"hidden"` | input `mobileNavigation` (property) | Configures the component mobileNavigation contract.       |
-| `railWidth`            | text    | `"3.5rem"` | `"20rem"`  | input `railWidth` (property)        | Configures the component railWidth contract.              |
-| `sidebarPosition`      | select  | `"start"`  | `"end"`    | input `sidebarPosition` (property)  | Configures the component sidebarPosition contract.        |
+| Argument               | Control | Default    | Test value | Binding                             | Description                                                         |
+| ---------------------- | ------- | ---------- | ---------- | ----------------------------------- | ------------------------------------------------------------------- |
+| `mobileNavigationOpen` | boolean | `false`    | `true`     | model `mobileNavigationOpen`        | Opens the shell navigation surface at mobile breakpoints.           |
+| `mainMaxWidth`         | text    | `"48rem"`  | `"20rem"`  | input `mainMaxWidth` (property)     | Constrains the primary content measure.                             |
+| `sidebarWidth`         | text    | `"10rem"`  | `"20rem"`  | input `sidebarWidth` (property)     | Sets the shell sidebar width.                                       |
+| `mobileNavigation`     | select  | `"auto"`   | `"hidden"` | input `mobileNavigation` (property) | Defines the component's mobile navigation behavior or presentation. |
+| `railWidth`            | text    | `"3.5rem"` | `"20rem"`  | input `railWidth` (property)        | Defines the component's rail width behavior or presentation.        |
+| `sidebarPosition`      | select  | `"start"`  | `"end"`    | input `sidebarPosition` (property)  | Defines the component's sidebar position behavior or presentation.  |
 
 Exact API exclusions:
 

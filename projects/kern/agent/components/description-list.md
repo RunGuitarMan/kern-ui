@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Data display
 
-Description List. A dense, readable data primitive with semantic structure and resilient overflow.
+Description List. Presents term-and-description pairs with responsive semantic grouping.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Description List for this specific contract: Presents term-and-description pairs with responsive semantic grouping.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Description List for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -64,11 +64,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys navigate interactive data
-- Enter expands or selects
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Visible labels and semantic structure preserve the meaning and relationships in the data.
+- Interactive descendants retain native names and a predictable focus order.
 
 Manual assistive-technology validation remains required in the consuming application.
 

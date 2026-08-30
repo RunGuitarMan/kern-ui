@@ -7,7 +7,7 @@
 - Lifecycle: **beta**
 - Category: Feedback
 
-Bottom Sheet. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Bottom Sheet. Opens a bottom-anchored task surface suited to compact and touch layouts.
 
 ## Use
 
@@ -70,8 +70,8 @@ void bootstrapApplication(KernBottomSheetAgentExample);
 | `closeOnOutside`  | input  | `boolean \| null`              | no       | `null`             | Allows an interaction outside the owned overlay to dismiss it.           |
 | `initialFocus`    | input  | `string`                       | no       | `'first-tabbable'` | Identifies the element that receives focus when the modal surface opens. |
 | `restoreFocus`    | input  | `HTMLElement \| false \| null` | no       | `null`             | Explicit focus return target, or `false` to disable focus restoration.   |
-| `contentTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template used to render the component body with its typed context.       |
-| `actionsTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template used to render product-owned actions in the designated slot.    |
+| `contentTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template or projected content used to render content.                    |
+| `actionsTemplate` | input  | `TemplateRef<unknown> \| null` | no       | `null`             | Template or projected content used to render actions.                    |
 | `closed`          | output | `KrnOverlayCloseReason`        | no       | `undefined`        | Notifies the consumer after the closed interaction completes.            |
 | `afterExited`     | output | `void`                         | no       | `undefined`        | Emits after exit motion and global modal cleanup have completed.         |
 
@@ -140,11 +140,11 @@ component inputs or models.
 | `size`           | select  | `"md"`                | `"sm"`                            | input `size` (property)           | Sets the sheet width.                                                                            |
 | `modal`          | boolean | `true`                | `false`                           | input `modal` (property)          | Controls focus trapping and backdrop behavior.                                                   |
 | `closeOnOutside` | select  | `null`                | `true`                            | input `closeOnOutside` (property) | Inherits the surface policy by default, or explicitly enables or disables outside-click closing. |
-| `closeOnEscape`  | boolean | `true`                | `false`                           | input `closeOnEscape` (property)  | Configures the component closeOnEscape contract.                                                 |
-| `description`    | text    | `""`                  | `"Alternate value"`               | input `description` (property)    | Configures the component description contract.                                                   |
-| `eyebrow`        | text    | `""`                  | `"Alternate value"`               | input `eyebrow` (property)        | Configures the component eyebrow contract.                                                       |
-| `showClose`      | boolean | `true`                | `false`                           | input `showClose` (property)      | Configures the component showClose contract.                                                     |
-| `title`          | text    | `"Workspace actions"` | `"Workspace actions · alternate"` | input `title` (property)          | Configures the component title contract.                                                         |
+| `closeOnEscape`  | boolean | `true`                | `false`                           | input `closeOnEscape` (property)  | Allows Escape to dismiss the topmost owned overlay.                                              |
+| `description`    | text    | `""`                  | `"Alternate value"`               | input `description` (property)    | Visible supporting description for the component content.                                        |
+| `eyebrow`        | text    | `""`                  | `"Alternate value"`               | input `eyebrow` (property)        | Human-readable copy for the eyebrow state or control.                                            |
+| `showClose`      | boolean | `true`                | `false`                           | input `showClose` (property)      | Controls whether the component applies the show close behavior.                                  |
+| `title`          | text    | `"Workspace actions"` | `"Workspace actions · alternate"` | input `title` (property)          | Visible title that also names the component surface or data view.                                |
 
 Exact API exclusions:
 

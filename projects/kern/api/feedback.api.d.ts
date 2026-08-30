@@ -58,11 +58,14 @@ type KrnOverlayPosition = 'center' | KrnOverlaySide;
 type KrnOverlaySize = 'sm' | 'md' | 'lg';
 
 type KrnAlertAppearance = 'subtle' | 'outline' | 'contrast';
+type KrnAlertPlacement = 'inline' | 'banner';
 declare class KrnAlert {
   private readonly translations;
   readonly tone: _angular_core.InputSignal<KrnFeedbackTone>;
   /** Selects the alert surface treatment without changing its semantic tone. */
   readonly appearance: _angular_core.InputSignal<KrnAlertAppearance>;
+  /** Places the message inline or stretches it into a page-level banner treatment. */
+  readonly placement: _angular_core.InputSignal<KrnAlertPlacement>;
   readonly title: _angular_core.InputSignal<string>;
   readonly icon: _angular_core.InputSignal<string>;
   readonly dismissible: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -80,6 +83,7 @@ declare class KrnAlert {
     {
       tone: { alias: 'tone'; required: false; isSignal: true };
       appearance: { alias: 'appearance'; required: false; isSignal: true };
+      placement: { alias: 'placement'; required: false; isSignal: true };
       title: { alias: 'title'; required: false; isSignal: true };
       icon: { alias: 'icon'; required: false; isSignal: true };
       dismissible: { alias: 'dismissible'; required: false; isSignal: true };
@@ -92,16 +96,18 @@ declare class KrnAlert {
     never
   >;
 }
+/** @deprecated Use `KrnAlert` with `placement="banner"`. */
 declare class KrnBanner extends KrnAlert {
+  readonly placement: _angular_core.InputSignal<KrnAlertPlacement>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnBanner, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnBanner,
     'krn-banner',
     never,
-    {},
+    { placement: { alias: 'placement'; required: false; isSignal: true } },
     {},
     never,
-    ['*', '[krnAlertAction]'],
+    ['[krnAlertIcon]', '*', '[krnAlertAction]'],
     true,
     never
   >;
@@ -329,20 +335,26 @@ declare class KrnLoadingOverlay {
   >;
 }
 
+type KrnStateKind = 'empty' | 'error' | 'success';
 declare class KrnEmptyState {
   protected readonly translations: Readonly<_kern_ui_angular_core.KrnTranslations>;
+  /** Selects the state meaning, default visual, status role, title, and recommended tone. */
+  readonly kind: _angular_core.InputSignal<KrnStateKind>;
   readonly title: _angular_core.InputSignal<string | undefined>;
   protected readonly resolvedTitle: _angular_core.Signal<string>;
   readonly description: _angular_core.InputSignal<string>;
-  readonly tone: _angular_core.InputSignal<KrnFeedbackTone>;
-  protected stateKind(): 'empty' | 'error' | 'success';
+  readonly tone: _angular_core.InputSignal<KrnFeedbackTone | undefined>;
+  protected readonly resolvedTone: _angular_core.Signal<KrnFeedbackTone>;
+  protected stateKind(): KrnStateKind;
   protected defaultTitle(): string;
+  private defaultTone;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnEmptyState, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnEmptyState,
     'krn-empty-state',
     never,
     {
+      kind: { alias: 'kind'; required: false; isSignal: true };
       title: { alias: 'title'; required: false; isSignal: true };
       description: { alias: 'description'; required: false; isSignal: true };
       tone: { alias: 'tone'; required: false; isSignal: true };
@@ -354,16 +366,19 @@ declare class KrnEmptyState {
     never
   >;
 }
+/** @deprecated Use `KrnEmptyState` with `kind="error"`. */
 declare class KrnErrorState extends KrnEmptyState {
-  readonly tone: _angular_core.InputSignal<KrnFeedbackTone>;
-  protected stateKind(): 'empty' | 'error' | 'success';
-  protected defaultTitle(): string;
+  readonly kind: _angular_core.InputSignal<KrnStateKind>;
+  readonly tone: _angular_core.InputSignal<KrnFeedbackTone | undefined>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnErrorState, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnErrorState,
     'krn-error-state',
     never,
-    { tone: { alias: 'tone'; required: false; isSignal: true } },
+    {
+      kind: { alias: 'kind'; required: false; isSignal: true };
+      tone: { alias: 'tone'; required: false; isSignal: true };
+    },
     {},
     never,
     ['[krnStateVisual]', '*', '[krnStateAction]'],
@@ -371,16 +386,19 @@ declare class KrnErrorState extends KrnEmptyState {
     never
   >;
 }
+/** @deprecated Use `KrnEmptyState` with `kind="success"`. */
 declare class KrnSuccessState extends KrnEmptyState {
-  readonly tone: _angular_core.InputSignal<KrnFeedbackTone>;
-  protected stateKind(): 'empty' | 'error' | 'success';
-  protected defaultTitle(): string;
+  readonly kind: _angular_core.InputSignal<KrnStateKind>;
+  readonly tone: _angular_core.InputSignal<KrnFeedbackTone | undefined>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnSuccessState, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
     KrnSuccessState,
     'krn-success-state',
     never,
-    { tone: { alias: 'tone'; required: false; isSignal: true } },
+    {
+      kind: { alias: 'kind'; required: false; isSignal: true };
+      tone: { alias: 'tone'; required: false; isSignal: true };
+    },
     {},
     never,
     ['[krnStateVisual]', '*', '[krnStateAction]'],
@@ -1041,6 +1059,7 @@ export {
 };
 export type {
   KrnAlertAppearance,
+  KrnAlertPlacement,
   KrnFeedbackTone,
   KrnOverlayCloseReason,
   KrnOverlayConfig,
@@ -1052,6 +1071,7 @@ export type {
   KrnOverlaySize,
   KrnOverlayTemplateContext,
   KrnOverlayVariant,
+  KrnStateKind,
   KrnToastOptions,
   KrnToastPauseReason,
   KrnToastPosition,

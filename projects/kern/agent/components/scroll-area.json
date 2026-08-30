@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Scroll Area. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Scroll Area. Constrains overflowing content to one or both axes with explicit scrollbar and keyboard policies.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -126,11 +126,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Projected content retains its document order and native semantics as layout changes.",
+      "Logical sizing and placement work in both LTR and RTL without duplicating content."
     ],
     "manualValidationRequired": true
   },
@@ -169,8 +168,8 @@
     "scrollbar"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Scroll Area for this specific contract: Constrains overflowing content to one or both axes with explicit scrollbar and keyboard policies.",
+    "avoidWhen": "Do not choose Scroll Area for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -240,7 +239,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component keyboardAccessible contract.",
+        "description": "Keeps the native viewport keyboard-scrollable when enabled.",
         "binding": {
           "kind": "input",
           "publicName": "keyboardAccessible",
@@ -253,7 +252,7 @@
         "kind": "text",
         "defaultValue": "100%",
         "testValue": "20rem",
-        "description": "Configures the component maxInlineSize contract.",
+        "description": "Upper or lower bound applied to the inline size value.",
         "binding": {
           "kind": "input",
           "publicName": "maxInlineSize",
@@ -266,7 +265,7 @@
         "kind": "select",
         "defaultValue": "auto",
         "testValue": "hidden",
-        "description": "Configures the component scrollbar contract.",
+        "description": "Controls native scrollbar visibility and gutter allocation.",
         "binding": {
           "kind": "input",
           "publicName": "scrollbar",

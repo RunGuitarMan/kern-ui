@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Feedback
 
-Error State. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Error State. Presents Empty State for a failed outcome. For new work, use Empty State with the error kind.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Error State for this specific contract: Presents Empty State for a failed outcome. For new work, use Empty State with the error kind.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Error State for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -50,11 +50,12 @@ void bootstrapApplication(KernErrorStateAgentExample);
 
 ## API
 
-| Name          | Kind  | Type                  | Required | Default     | Description                                                                      |
-| ------------- | ----- | --------------------- | -------- | ----------- | -------------------------------------------------------------------------------- |
-| `title`       | input | `string \| undefined` | no       | `undefined` | Visible title that also names the component surface or data view.                |
-| `description` | input | `string`              | no       | `''`        | Visible supporting description for the component content.                        |
-| `tone`        | input | `KrnFeedbackTone`     | no       | `'danger'`  | Semantic intent that selects coordinated text, icon, border, and surface tokens. |
+| Name          | Kind  | Type                           | Required | Default     | Description                                                                          |
+| ------------- | ----- | ------------------------------ | -------- | ----------- | ------------------------------------------------------------------------------------ |
+| `kind`        | input | `KrnStateKind`                 | no       | `'error'`   | Selects the state meaning, default visual, status role, title, and recommended tone. |
+| `title`       | input | `string \| undefined`          | no       | `undefined` | Visible title that also names the component surface or data view.                    |
+| `description` | input | `string`                       | no       | `''`        | Visible supporting description for the component content.                            |
+| `tone`        | input | `KrnFeedbackTone \| undefined` | no       | `'danger'`  | Semantic intent that selects coordinated text, icon, border, and surface tokens.     |
 
 ## Deprecated selectors
 
@@ -72,11 +73,8 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Escape closes modal layers
-- Focus returns to the trigger
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Keeps the failure message visible and associates recovery actions with clear labels.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -107,22 +105,24 @@ Hydration evidence scope: `library-docs-route-smoke`; status:
 Route: `preview/error-state`
 
 Scenarios: `default`.
-Public API coverage: 3/3
-directly controlled; 0 exact exclusions; 0 unclassified.
+Public API coverage: 3/4
+directly controlled; 1 exact exclusions; 0 unclassified.
 Use `arg.<key>` query parameters for controls. Controls tagged `fixture` or `composition`
 configure the deterministic documentation specimen and are not public component inputs.
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default                                                 | Test value                                                          | Binding                        | Description                                    |
-| ------------- | ------- | ------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------ | ---------------------------------------------- |
-| `tone`        | select  | `"danger"`                                              | `"neutral"`                                                         | input `tone` (property)        | Changes the state illustration tone.           |
-| `description` | text    | `"The service did not respond. Your changes are safe."` | `"The service did not respond. Your changes are safe. · alternate"` | input `description` (property) | Configures the component description contract. |
-| `title`       | text    | `"Could not load workspaces"`                           | `"Could not load workspaces · alternate"`                           | input `title` (property)       | Configures the component title contract.       |
+| Argument      | Control | Default                                                 | Test value                                                          | Binding                        | Description                                                       |
+| ------------- | ------- | ------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------ | ----------------------------------------------------------------- |
+| `tone`        | select  | `"danger"`                                              | `"neutral"`                                                         | input `tone` (property)        | Changes the state illustration tone.                              |
+| `description` | text    | `"The service did not respond. Your changes are safe."` | `"The service did not respond. Your changes are safe. · alternate"` | input `description` (property) | Visible supporting description for the component content.         |
+| `title`       | text    | `"Could not load workspaces"`                           | `"Could not load workspaces · alternate"`                           | input `title` (property)       | Visible title that also names the component surface or data view. |
 
 Exact API exclusions:
 
-_No excluded public API members._
+| Public API | Category     | Evidence                                             | Reason                                                                                           |
+| ---------- | ------------ | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `kind`     | complex-data | `specimen-fixture:preview/error-state?state=default` | The public type is not a lossless scalar/literal contract and requires a typed specimen fixture. |
 
 Presets:
 

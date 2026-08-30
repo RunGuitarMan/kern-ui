@@ -78,7 +78,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -98,7 +98,7 @@
       "type": "string | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Visible and announced copy when the data collection has no items.",
+      "description": "Human-readable copy for the empty state or control.",
       "descriptionSource": "inferred"
     },
     {
@@ -108,7 +108,7 @@
       "type": "string | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Visible and announced copy while asynchronous data is loading.",
+      "description": "Human-readable copy for the loading state or control.",
       "descriptionSource": "inferred"
     },
     {
@@ -118,7 +118,7 @@
       "type": "string | undefined",
       "required": false,
       "defaultValue": "undefined",
-      "description": "Visible and announced copy when loading the data collection fails.",
+      "description": "Human-readable copy for the error state or control.",
       "descriptionSource": "inferred"
     },
     {
@@ -208,7 +208,7 @@
       "type": "KrnOptionDisabledHandler<T>",
       "required": false,
       "defaultValue": "(option) => option.disabled ?? false",
-      "description": "Determines whether an individual option or item is unavailable.",
+      "description": "Controls whether the component applies the disabled handler behavior.",
       "descriptionSource": "inferred"
     },
     {
@@ -218,7 +218,7 @@
       "type": "TemplateRef<KrnSelectOptionContext<T>> | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Template used to render one option with its typed context.",
+      "description": "Template or projected content used to render option.",
       "descriptionSource": "inferred"
     },
     {
@@ -228,7 +228,7 @@
       "type": "TemplateRef<KrnSelectOptionContext<T>> | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Template used to render the committed selection.",
+      "description": "Template or projected content used to render selected.",
       "descriptionSource": "inferred"
     },
     {
@@ -594,7 +594,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -607,7 +607,7 @@
         "kind": "number",
         "defaultValue": 2,
         "testValue": 3,
-        "description": "Configures the component maxVisible contract.",
+        "description": "Upper or lower bound applied to the visible value.",
         "binding": {
           "kind": "input",
           "publicName": "maxVisible",
@@ -623,7 +623,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component tabindex contract.",
+        "description": "Native sequential-focus order forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "tabindex",

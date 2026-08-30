@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 
+/** @deprecated Compose mobile navigation with `KrnAppShell` and navigation primitives. */
 @Component({
   selector: 'krn-mobile-navigation',
   changeDetection: ChangeDetectionStrategy.OnPush,

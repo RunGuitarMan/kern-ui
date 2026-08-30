@@ -1,8 +1,8 @@
 <section
   class="state"
-  [attr.data-tone]="tone()"
+  [attr.data-tone]="resolvedTone()"
   [attr.data-kind]="stateKind()"
-  [attr.role]="tone() === 'danger' ? 'alert' : 'status'"
+  [attr.role]="stateKind() === 'error' ? 'alert' : 'status'"
 >
   <div class="visual" aria-hidden="true">
     <ng-content select="[krnStateVisual]" />

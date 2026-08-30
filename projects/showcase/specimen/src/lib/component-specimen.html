@@ -22,7 +22,28 @@
   </header>
 
   <div class="specimen-canvas" id="specimen">
-    <span class="live-indicator"><i></i> {{ localized('Interactive', 'Интерактивный') }}</span>
+    <aside class="component-map" aria-label="Specimen composition">
+      <span class="target-component">
+        <i>{{ localized('Target', 'Цель') }}</i>
+        <strong>{{ item().name }}</strong>
+      </span>
+      @if (supportingComponentIds().length) {
+        <span class="supporting-components">
+          <i>{{ localized('Context', 'Контекст') }}</i>
+          @for (componentId of supportingComponentIds(); track componentId) {
+            <code>{{ supportingComponentName(componentId) }}</code>
+          }
+        </span>
+      }
+    </aside>
+    <span class="live-indicator" [attr.data-interactive]="interactive()">
+      <i></i>
+      {{
+        interactive()
+          ? localized('Interactive example', 'Интерактивный пример')
+          : localized('Static example', 'Статический пример')
+      }}
+    </span>
     @if (appliedArguments().length) {
       <div class="applied-arguments" data-testid="applied-playground-arguments">
         <span>{{ localized('Applied parameters', 'Применённые параметры') }}</span>
@@ -190,6 +211,7 @@
                   [size]="stringArgument('size', 'sm')"
                   [align]="stringArgument('align', 'center')"
                   [gutter]="stringArgument('gutter', '4')"
+                  [intrinsic]="booleanArgument('intrinsic', false)"
                   [maxWidth]="stringArgument('maxWidth', '')"
                 >
                   <krn-card
@@ -740,6 +762,13 @@
             }
             @case ('text-input') {
               <div class="form-surface">
+                <div class="control-contract">
+                  <strong>Single-line free text</strong>
+                  <span
+                    >Use for short names and identifiers that do not need specialized
+                    semantics.</span
+                  >
+                </div>
                 <krn-form-field label="Workspace name" hint="Stable identifier for members."
                   ><krn-text-input
                     [placeholder]="stringArgument('placeholder', 'Northstar')"
@@ -760,6 +789,10 @@
             }
             @case ('textarea') {
               <div class="form-surface">
+                <div class="control-contract">
+                  <strong>Multiline free text</strong>
+                  <span>Shows wrapping, auto-resize, and the optional character counter.</span>
+                </div>
                 <krn-form-field label="Change summary" hint="Describe the change for reviewers."
                   ><krn-textarea
                     [placeholder]="stringArgument('placeholder', 'Explain what changed and why…')"
@@ -782,6 +815,10 @@
             }
             @case ('password-input') {
               <div class="form-surface">
+                <div class="control-contract">
+                  <strong>Masked text entry</strong>
+                  <span>The trailing action reveals or hides the same controlled value.</span>
+                </div>
                 <krn-form-field label="Password" hint="At least 12 characters."
                   ><krn-password-input
                     [placeholder]="stringArgument('placeholder', 'Enter password')"
@@ -801,6 +838,13 @@
             }
             @case ('search-input') {
               <div class="form-surface">
+                <div class="control-contract">
+                  <strong>Search query</strong>
+                  <span
+                    >Includes explicit submit and clear behavior, not only a search-shaped
+                    icon.</span
+                  >
+                </div>
                 <krn-search-input
                   ariaLabel="Search workspaces"
                   [placeholder]="stringArgument('placeholder', 'Search 248 workspaces…')"
@@ -820,6 +864,12 @@
             }
             @case ('number-input') {
               <div class="form-surface narrow-form">
+                <div class="control-contract">
+                  <strong>Bounded numeric value</strong>
+                  <span
+                    >Native editing is paired with optional increment and decrement actions.</span
+                  >
+                </div>
                 <krn-form-field label="Seat limit" hint="Between 1 and 500."
                   ><krn-number-input
                     ariaLabel="Seat limit"
@@ -831,6 +881,7 @@
                     [readonly]="booleanArgument('readOnly')"
                     [required]="booleanArgument('required')"
                     [invalid]="booleanArgument('invalid')"
+                    [value]="numberArgument('value', 0)"
                     [autocomplete]="stringArgument('autocomplete', 'off')"
                     [id]="stringArgument('id', '')"
                     [inputMode]="stringArgument('inputMode', 'decimal')"
@@ -840,6 +891,13 @@
             }
             @case ('checkbox') {
               <div class="form-surface">
+                <div class="control-contract">
+                  <strong>Independent boolean choice</strong>
+                  <span
+                    >Checked and indeterminate are separate states; neither implies a group
+                    choice.</span
+                  >
+                </div>
                 <krn-checkbox
                   [ngModel]="checkboxValue()"
                   (ngModelChange)="checkboxValue.set($event)"
@@ -861,6 +919,10 @@
             }
             @case ('checkbox-group') {
               <div class="form-surface">
+                <div class="control-contract">
+                  <strong>Several independent choices</strong>
+                  <span>Any number of the labelled checkbox values may be selected.</span>
+                </div>
                 <krn-checkbox-group
                   [disabled]="booleanArgument('disabled')"
                   [label]="stringArgument('label', 'Included events')"
@@ -877,6 +939,13 @@
             }
             @case ('radio') {
               <div class="form-surface">
+                <div class="control-contract">
+                  <strong>One option in a group</strong>
+                  <span
+                    >The Radio is the target; Radio Group supplies its shared selection
+                    context.</span
+                  >
+                </div>
                 <krn-radio-group
                   label="Billing cycle"
                   [ngModel]="radioValue()"
@@ -898,6 +967,13 @@
             }
             @case ('radio-group') {
               <div class="form-surface">
+                <div class="control-contract">
+                  <strong>Exactly one choice</strong>
+                  <span
+                    >Arrow navigation and one shared value distinguish this from Checkbox
+                    Group.</span
+                  >
+                </div>
                 <krn-radio-group
                   [disabled]="booleanArgument('disabled')"
                   [label]="stringArgument('label', 'Default visibility')"
@@ -915,6 +991,13 @@
             }
             @case ('switch') {
               <div class="form-surface">
+                <div class="control-contract">
+                  <strong>Immediate on/off setting</strong>
+                  <span
+                    >Use when changing the value takes effect immediately rather than on
+                    submit.</span
+                  >
+                </div>
                 <krn-switch
                   [ngModel]="switchValue()"
                   (ngModelChange)="switchValue.set($event)"
@@ -966,6 +1049,7 @@
                         translations.forms.loadingOptions ?? 'Loading options…'
                       )
                     "
+                    [value]="stringArgument('value', '')"
                     [id]="stringArgument('id', '')"
                     [tabindex]="numberArgument('tabindex', 0)"
                 /></krn-form-field>
@@ -987,6 +1071,7 @@
                     [readonly]="booleanArgument('readOnly')"
                     [required]="booleanArgument('required')"
                     [invalid]="booleanArgument('invalid')"
+                    [value]="stringArgument('value', '')"
                     [id]="stringArgument('id', '')"
                     [tabindex]="numberArgument('tabindex', 0)"
                 /></krn-form-field>
@@ -1161,6 +1246,10 @@
             }
             @case ('date-picker') {
               <div class="form-surface narrow-form">
+                <div class="control-contract">
+                  <strong>One calendar date</strong>
+                  <span>The popup commits a single bounded ISO date.</span>
+                </div>
                 <krn-form-field label="Launch date"
                   ><krn-date-picker
                     ariaLabel="Launch date"
@@ -1181,6 +1270,10 @@
             }
             @case ('date-range-picker') {
               <div class="form-surface">
+                <div class="control-contract">
+                  <strong>Ordered date range</strong>
+                  <span>Start and end are edited together and normalized as one value.</span>
+                </div>
                 <krn-form-field label="Reporting period"
                   ><krn-date-range-picker
                     ariaLabel="Reporting period"
@@ -1202,6 +1295,10 @@
             }
             @case ('time-picker') {
               <div class="form-surface narrow-form">
+                <div class="control-contract">
+                  <strong>Precise 24-hour time</strong>
+                  <span>Typing remains available alongside a list of common times.</span>
+                </div>
                 <krn-form-field label="Daily digest" hint="Type HH:mm or choose a common time."
                   ><krn-time-picker
                     ariaLabel="Digest time"
@@ -1221,6 +1318,10 @@
             }
             @case ('color-picker') {
               <div class="form-surface narrow-form">
+                <div class="control-contract">
+                  <strong>Palette and text value</strong>
+                  <span>The same controlled color can be chosen visually or entered directly.</span>
+                </div>
                 <krn-form-field label="Brand accent"
                   ><krn-color-picker
                     pickerLabel="Choose brand accent"
@@ -1237,7 +1338,14 @@
             }
             @case ('file-upload') {
               <div class="form-surface">
+                <div class="control-contract">
+                  <strong>Browse for files</strong>
+                  <span
+                    >A native file chooser enforces the declared type, size, and count policy.</span
+                  >
+                </div>
                 <krn-file-upload
+                  [presentation]="stringArgument('presentation', 'dropzone')"
                   [multiple]="booleanArgument('multiple')"
                   [accept]="stringArgument('accept', '.csv,text/csv')"
                   [description]="stringArgument('description', 'CSV, up to 10 MB.')"
@@ -1255,6 +1363,12 @@
             }
             @case ('drag-drop-upload') {
               <div class="form-surface">
+                <div class="control-contract">
+                  <strong>Drop zone with browse fallback</strong>
+                  <span
+                    >Pointer drag-and-drop supplements, but never replaces, the file chooser.</span
+                  >
+                </div>
                 <krn-drop-upload
                   dropLabel="Drop brand assets here"
                   [multiple]="booleanArgument('multiple')"

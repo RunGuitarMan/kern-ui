@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "App Shell. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "App Shell. Coordinates header, navigation, sidebar, and main content across wide and narrow application layouts.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -53,7 +53,7 @@
       "type": "KrnLayoutSpace",
       "required": false,
       "defaultValue": "'17rem'",
-      "description": "Inline size reserved for the expanded application sidebar.",
+      "description": "Defines the component's sidebar width behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -63,7 +63,7 @@
       "type": "KrnLayoutSpace",
       "required": false,
       "defaultValue": "'3.5rem'",
-      "description": "Inline size reserved for the application navigation rail.",
+      "description": "Defines the component's rail width behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -73,7 +73,7 @@
       "type": "KrnLayoutSpace",
       "required": false,
       "defaultValue": "'100%'",
-      "description": "Maximum inline size allocated to the primary application content.",
+      "description": "Defines the component's main max width behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -83,7 +83,7 @@
       "type": "\"end\" | \"start\"",
       "required": false,
       "defaultValue": "'start'",
-      "description": "Logical start or end placement of the application sidebar.",
+      "description": "Defines the component's sidebar position behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -93,7 +93,7 @@
       "type": "\"auto\" | \"hidden\" | \"rail\" | \"sidebar\"",
       "required": false,
       "defaultValue": "'auto'",
-      "description": "Template rendered as the application’s narrow-viewport navigation.",
+      "description": "Defines the component's mobile navigation behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -113,7 +113,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "this.ids.next('mobile-navigation')",
-      "description": "Stable identifier value used by the mobile navigation contract.",
+      "description": "Stable identifier used by the mobile navigation contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -183,7 +183,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "'main-content'",
-      "description": "Stable identifier value used by the main contract.",
+      "description": "Stable identifier used by the main contract.",
       "descriptionSource": "inferred"
     }
   ],
@@ -224,11 +224,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Keeps header, navigation, complementary, and main landmarks in a stable document order.",
+      "Mobile navigation owns its accessible name, focus entry, dismissal, and focus restoration."
     ],
     "manualValidationRequired": true
   },
@@ -276,8 +275,8 @@
     "mainId"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use App Shell for this specific contract: Coordinates header, navigation, sidebar, and main content across wide and narrow application layouts.",
+    "avoidWhen": "Do not choose App Shell for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -345,7 +344,7 @@
         "kind": "select",
         "defaultValue": "auto",
         "testValue": "hidden",
-        "description": "Configures the component mobileNavigation contract.",
+        "description": "Defines the component's mobile navigation behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "mobileNavigation",
@@ -376,7 +375,7 @@
         "kind": "text",
         "defaultValue": "3.5rem",
         "testValue": "20rem",
-        "description": "Configures the component railWidth contract.",
+        "description": "Defines the component's rail width behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "railWidth",
@@ -389,7 +388,7 @@
         "kind": "select",
         "defaultValue": "start",
         "testValue": "end",
-        "description": "Configures the component sidebarPosition contract.",
+        "description": "Defines the component's sidebar position behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "sidebarPosition",

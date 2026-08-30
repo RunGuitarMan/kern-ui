@@ -21,6 +21,7 @@ export type KrnContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
     '[style.--krn-container-gutter]': 'resolvedGutter()',
     '[attr.data-size]': 'size()',
     '[attr.data-align]': 'align()',
+    '[attr.data-intrinsic]': 'intrinsic() ? "" : null',
   },
   styleUrl: './container.css',
 })
@@ -29,6 +30,8 @@ export class KrnContainer {
   readonly maxWidth = input<KrnLayoutSpace | null>(null);
   readonly gutter = input<KrnLayoutSpace>('4');
   readonly align = input<'start' | 'center' | 'end'>('center');
+  /** Centers projected children on the inline axis while preserving the container measure. */
+  readonly intrinsic = input(false, { transform: booleanAttribute });
 
   protected readonly resolvedMaxWidth = computed(() => {
     const size = this.size();
@@ -41,6 +44,7 @@ export class KrnContainer {
   );
 }
 
+/** @deprecated Use `KrnContainer`, adding `intrinsic` when child centering is required. */
 @Component({
   selector: 'krn-center',
   standalone: true,

@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Split Layout. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Split Layout. Places two panels in a configurable ratio and stacks them below a container breakpoint.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -112,11 +112,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Projected content retains its document order and native semantics as layout changes.",
+      "Logical sizing and placement work in both LTR and RTL without duplicating content."
     ],
     "manualValidationRequired": true
   },
@@ -153,8 +152,8 @@
     "align"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Split Layout for this specific contract: Places two panels in a configurable ratio and stacks them below a container breakpoint.",
+    "avoidWhen": "Do not choose Split Layout for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -228,7 +227,7 @@
         "kind": "select",
         "defaultValue": "start",
         "testValue": "center",
-        "description": "Configures the component align contract.",
+        "description": "Aligns the panels within the split layout's block axis.",
         "binding": {
           "kind": "input",
           "publicName": "align",
@@ -259,7 +258,7 @@
         "kind": "select",
         "defaultValue": "md",
         "testValue": "none",
-        "description": "Configures the component collapseAt contract.",
+        "description": "Stacks the panels when the split layout's inline size reaches the selected breakpoint.",
         "binding": {
           "kind": "input",
           "publicName": "collapseAt",

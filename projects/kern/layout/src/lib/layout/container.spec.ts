@@ -12,6 +12,7 @@ describe('KrnContainer', () => {
     fixture.componentRef.setInput('maxWidth', 640);
     fixture.componentRef.setInput('gutter', 16);
     fixture.componentRef.setInput('align', 'end');
+    fixture.componentRef.setInput('intrinsic', true);
     await fixture.whenStable();
     const host = fixture.nativeElement as HTMLElement;
     const style = getComputedStyle(host);
@@ -23,6 +24,9 @@ describe('KrnContainer', () => {
     expect(style.maxInlineSize).toBe('var(--krn-container-max)');
     expect(style.paddingInline).toBe('var(--krn-container-gutter)');
     expect(host.getAttribute('data-align')).toBe('end');
+    expect(host.hasAttribute('data-intrinsic')).toBe(true);
+    expect(style.display).toBe('flex');
+    expect(style.alignItems).toBe('center');
   });
 
   it('falls back to the active size and preserves native hidden semantics', async () => {

@@ -589,6 +589,7 @@
         "KrnTagsInput",
         "KrnTextInput",
         "KrnTextarea",
+        "KrnUploadPresentation",
         "KrnUploadRejection",
         "KrnValidationMessage",
         "KrnVerificationCode"
@@ -665,6 +666,7 @@
       "symbols": [
         "KrnAlert",
         "KrnAlertAppearance",
+        "KrnAlertPlacement",
         "KrnAlertDialog",
         "KrnBanner",
         "KrnCircularProgress",
@@ -684,6 +686,7 @@
         "KrnSkeleton",
         "KrnSnackbar",
         "KrnSpinner",
+        "KrnStateKind",
         "KrnSuccessState",
         "KrnToast",
         "KrnToastOptions",

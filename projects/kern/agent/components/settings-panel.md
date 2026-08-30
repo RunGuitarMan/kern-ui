@@ -7,13 +7,13 @@
 - Lifecycle: **recipe**
 - Category: Patterns
 
-Settings Panel. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.
+Settings Panel. Edits a focused group of settings in a dismissible side panel.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Settings Panel for this specific contract: Edits a focused group of settings in a dismissible side panel.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Settings Panel for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -76,10 +76,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Keyboard behavior is provided by the native elements and Kern primitives in the recipe
+- The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.
+- Loading, empty, error, and success states remain visible and programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -120,12 +119,12 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument         | Control | Default                | Test value                         | Binding                           | Description                                       |
-| ---------------- | ------- | ---------------------- | ---------------------------------- | --------------------------------- | ------------------------------------------------- |
-| `open`           | boolean | `false`                | `true`                             | model `open`                      | Opens the settings panel.                         |
-| `closeOnEscape`  | boolean | `true`                 | `false`                            | input `closeOnEscape` (property)  | Configures the component closeOnEscape contract.  |
-| `closeOnOutside` | boolean | `true`                 | `false`                            | input `closeOnOutside` (property) | Configures the component closeOnOutside contract. |
-| `heading`        | text    | `"Workspace settings"` | `"Workspace settings · alternate"` | input `heading` (property)        | Configures the component heading contract.        |
+| Argument         | Control | Default                | Test value                         | Binding                           | Description                                                    |
+| ---------------- | ------- | ---------------------- | ---------------------------------- | --------------------------------- | -------------------------------------------------------------- |
+| `open`           | boolean | `false`                | `true`                             | model `open`                      | Opens the settings panel.                                      |
+| `closeOnEscape`  | boolean | `true`                 | `false`                            | input `closeOnEscape` (property)  | Allows Escape to dismiss the topmost owned overlay.            |
+| `closeOnOutside` | boolean | `true`                 | `false`                            | input `closeOnOutside` (property) | Allows an interaction outside the owned overlay to dismiss it. |
+| `heading`        | text    | `"Workspace settings"` | `"Workspace settings · alternate"` | input `heading` (property)        | Human-readable copy for the heading state or control.          |
 
 Exact API exclusions:
 

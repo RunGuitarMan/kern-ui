@@ -9,6 +9,8 @@ import {
   watchRuntimeErrors,
 } from '../support/browser';
 
+const CANONICAL_CATALOG = KERN_CATALOG.filter((item) => item.variantOf === undefined);
+
 interface ElementRect {
   readonly height: number;
   readonly width: number;
@@ -1540,7 +1542,7 @@ test.describe('Cross-catalog focus geometry audit', () => {
     });
 
     const failures: string[] = [];
-    for (const item of KERN_CATALOG) {
+    for (const item of CANONICAL_CATALOG) {
       activeRoute = item.id;
       const errorsBeforeRoute = runtimeErrors.length;
       await page.goto(`${DOCS_URL}/components/${item.id}`, { waitUntil: 'domcontentloaded' });

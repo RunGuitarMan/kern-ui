@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Data display
 
-Rating. A dense, readable data primitive with semantic structure and resilient overflow.
+Rating. Captures or displays a bounded ordinal rating with keyboard and pointer interaction.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Rating for this specific contract: Captures or displays a bounded ordinal rating with keyboard and pointer interaction.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Rating for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -67,11 +67,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys navigate interactive data
-- Enter expands or selects
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Arrow keys adjust the rating; Home and End select the minimum and maximum
+- Visible labels and semantic structure preserve the meaning and relationships in the data.
+- Interactive descendants retain native names and a predictable focus order.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -113,12 +111,12 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument   | Control | Default | Test value | Binding                     | Description                                                               |
-| ---------- | ------- | ------- | ---------- | --------------------------- | ------------------------------------------------------------------------- |
-| `value`    | number  | `4`     | `5`        | model `value`               | Changes the selected rating.                                              |
-| `disabled` | boolean | `false` | `true`     | input `disabled` (property) | Prevents interaction and participates in the component disabled contract. |
-| `max`      | number  | `5`     | `6`        | input `max` (property)      | Configures the component max contract.                                    |
-| `readonly` | boolean | `false` | `true`     | input `readonly` (property) | Configures the component readonly contract.                               |
+| Argument   | Control | Default | Test value | Binding                     | Description                                                                |
+| ---------- | ------- | ------- | ---------- | --------------------------- | -------------------------------------------------------------------------- |
+| `value`    | number  | `4`     | `5`        | model `value`               | Changes the selected rating.                                               |
+| `disabled` | boolean | `false` | `true`     | input `disabled` (property) | Prevents user interaction and participates in the disabled-state contract. |
+| `max`      | number  | `5`     | `6`        | input `max` (property)      | Largest accepted numeric or temporal value.                                |
+| `readonly` | boolean | `false` | `true`     | input `readonly` (property) | Keeps the value perceivable while preventing user edits.                   |
 
 Exact API exclusions:
 
@@ -142,7 +140,7 @@ Presets:
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
 - `readonly` — readonly; scenario `default`; fixture effect `status/neutral` — readonly: The fixture exposes the readonly status without claiming a public component input..
 - `minimum` — minimum; scenario `default`; fixture effect `status/neutral` — minimum: The fixture exposes the minimum status without claiming a public component input..
-- `maximum` — maximum; scenario `default`; fixture effect `status/neutral` — maximum: The fixture exposes the maximum status without claiming a public component input..
+- `maximum` — maximum; scenario `default`; `value=5`; fixture effect `status/neutral` — maximum: The fixture exposes the maximum status without claiming a public component input..
 
 ## Related
 

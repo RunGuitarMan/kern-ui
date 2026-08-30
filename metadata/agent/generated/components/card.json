@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Card. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Card. Groups related content and optional actions on one bounded surface.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -73,7 +73,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Enables the documented user interaction for an otherwise presentational item.",
+      "description": "Defines the component's interactive behavior or presentation.",
       "descriptionSource": "inferred"
     }
   ],
@@ -108,11 +108,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -148,8 +147,8 @@
     "interactive"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Card for this specific contract: Groups related content and optional actions on one bounded surface.",
+    "avoidWhen": "Do not choose Card for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

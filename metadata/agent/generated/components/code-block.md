@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Data display
 
-Code Block. A dense, readable data primitive with semantic structure and resilient overflow.
+Code Block. Renders selectable source code with language metadata and an optional copy action.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Code Block for this specific contract: Renders selectable source code with language metadata and an optional copy action.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Code Block for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -54,12 +54,12 @@ void bootstrapApplication(KernCodeBlockAgentExample);
 
 ## API
 
-| Name            | Kind  | Type      | Required | Default    | Description                                                                   |
-| --------------- | ----- | --------- | -------- | ---------- | ----------------------------------------------------------------------------- |
-| `code`          | input | `string`  | yes      | `required` | Required source text rendered by the syntax-aware code presentation.          |
-| `language`      | input | `string`  | no       | `'text'`   | Language identifier used by syntax highlighting and accessible code metadata. |
-| `languageLabel` | input | `string`  | no       | `''`       | Human-readable copy for the language state or control.                        |
-| `copied`        | model | `boolean` | no       | `false`    | Controlled copied state with a matching Angular model-change output.          |
+| Name            | Kind  | Type      | Required | Default    | Description                                                          |
+| --------------- | ----- | --------- | -------- | ---------- | -------------------------------------------------------------------- |
+| `code`          | input | `string`  | yes      | `required` | Defines the component's code behavior or presentation.               |
+| `language`      | input | `string`  | no       | `'text'`   | Defines the component's language behavior or presentation.           |
+| `languageLabel` | input | `string`  | no       | `''`       | Human-readable copy for the language state or control.               |
+| `copied`        | model | `boolean` | no       | `false`    | Controlled copied state with a matching Angular model-change output. |
 
 ## Deprecated selectors
 
@@ -75,11 +75,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys navigate interactive data
-- Enter expands or selects
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab reaches the optional copy action; code text remains natively selectable
+- Visible labels and semantic structure preserve the meaning and relationships in the data.
+- Interactive descendants retain native names and a predictable focus order.
 
 Manual assistive-technology validation remains required in the consuming application.
 

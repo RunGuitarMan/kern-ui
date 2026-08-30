@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Forms
 
-Segmented Control. A typed form control with visible state, reliable labeling, and Angular Forms semantics.
+Segmented Control. Presents a small set of mutually exclusive views or modes as adjacent labelled segments.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Segmented Control for this specific contract: Presents a small set of mutually exclusive views or modes as adjacent labelled segments.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Segmented Control for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -60,12 +60,12 @@ void bootstrapApplication(KernSegmentedControlAgentExample);
 
 | Name              | Kind   | Type                                              | Required | Default                                | Description                                                                                      |
 | ----------------- | ------ | ------------------------------------------------- | -------- | -------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `id`              | input  | `string`                                          | no       | `''`                                   | Stable identifier value used by the id contract.                                                 |
+| `id`              | input  | `string`                                          | no       | `''`                                   | Stable identifier used by the id contract.                                                       |
 | `options`         | input  | `ReadonlyArray<KrnSegmentOption<T>>`              | yes      | `required`                             | Authoritative option collection presented by the selection control.                              |
 | `identityMatcher` | input  | `KrnIdentityMatcher<T>`                           | no       | `Object.is`                            | Compares option values when object identity is not stable across refreshes.                      |
 | `trackBy`         | input  | `KrnSegmentTrackBy<T>`                            | no       | `(option) => option.value`             | Returns the stable identity used to retain rendered items across updates.                        |
-| `disabledHandler` | input  | `KrnSegmentDisabledHandler<T>`                    | no       | `(option) => option.disabled ?? false` | Determines whether an individual option or item is unavailable.                                  |
-| `optionTemplate`  | input  | `TemplateRef<KrnSegmentOptionContext<T>> \| null` | no       | `null`                                 | Template used to render one option with its typed context.                                       |
+| `disabledHandler` | input  | `KrnSegmentDisabledHandler<T>`                    | no       | `(option) => option.disabled ?? false` | Controls whether the component applies the disabled handler behavior.                            |
+| `optionTemplate`  | input  | `TemplateRef<KrnSegmentOptionContext<T>> \| null` | no       | `null`                                 | Template or projected content used to render option.                                             |
 | `ariaLabel`       | input  | `string \| undefined`                             | no       | `undefined`                            | Accessible name used when visible content is not sufficient.                                     |
 | `ariaLabelledBy`  | input  | `string`                                          | no       | `''`                                   | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy` | input  | `string`                                          | no       | `''`                                   | Space-separated element ids composed with Form Field hints and validation descriptions.          |
@@ -92,12 +92,10 @@ Angular Forms control with value type `T | null`.
 
 ## Accessibility
 
-- Tab focuses
-- Arrow keys operate grouped controls
-- Escape cancels transient UI
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Tab enters the selected segment
+- Arrow keys move and select a segment according to orientation and text direction
+- The real form control retains its visible name, described-by relationships, and Angular state.
+- Required, readonly, disabled, and invalid states remain programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -141,15 +139,15 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default        | Test value          | Binding                        | Description                                                                               |
-| ------------- | ------- | -------------- | ------------------- | ------------------------------ | ----------------------------------------------------------------------------------------- |
-| `disabled`    | boolean | `false`        | `true`              | input `disabled` (property)    | Prevents user interaction.                                                                |
-| `readOnly`    | boolean | `false`        | `true`              | input `readonly` (property)    | Keeps the value focusable while preventing edits.                                         |
-| `required`    | boolean | `false`        | `true`              | input `required` (property)    | Marks the control as required.                                                            |
-| `invalid`     | boolean | `false`        | `true`              | input `invalid` (property)     | Exposes the invalid visual and ARIA state.                                                |
-| `id`          | text    | `""`           | `"Alternate value"` | input `id` (property)          | Configures the component id contract.                                                     |
-| `orientation` | select  | `"horizontal"` | `"vertical"`        | input `orientation` (property) | Logical axis exposed by the component; behavior follows its documented keyboard contract. |
-| `tabindex`    | number  | `0`            | `1`                 | input `tabindex` (property)    | Configures the component tabindex contract.                                               |
+| Argument      | Control | Default        | Test value          | Binding                        | Description                                                               |
+| ------------- | ------- | -------------- | ------------------- | ------------------------------ | ------------------------------------------------------------------------- |
+| `disabled`    | boolean | `false`        | `true`              | input `disabled` (property)    | Prevents user interaction.                                                |
+| `readOnly`    | boolean | `false`        | `true`              | input `readonly` (property)    | Keeps the value focusable while preventing edits.                         |
+| `required`    | boolean | `false`        | `true`              | input `required` (property)    | Marks the control as required.                                            |
+| `invalid`     | boolean | `false`        | `true`              | input `invalid` (property)     | Exposes the invalid visual and ARIA state.                                |
+| `id`          | text    | `""`           | `"Alternate value"` | input `id` (property)          | Stable identifier used by the id contract.                                |
+| `orientation` | select  | `"horizontal"` | `"vertical"`        | input `orientation` (property) | Defines the logical axis used by layout and keyboard navigation.          |
+| `tabindex`    | number  | `0`            | `1`                 | input `tabindex` (property)    | Native sequential-focus order forwarded to the owned interactive element. |
 
 Exact API exclusions:
 

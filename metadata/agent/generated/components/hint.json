@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Hint. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Hint. Provides supporting guidance that a Form Field associates with its control.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -53,7 +53,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the custom contract.",
+      "description": "Stable identifier used by the custom contract.",
       "descriptionSource": "inferred"
     }
   ],
@@ -76,16 +76,8 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
-    ],
-    "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
-    ],
+    "keyboard": ["Hint is not focusable and adds no keyboard interaction"],
+    "notes": ["The hint id is composed into the associated control aria-describedby relationship."],
     "manualValidationRequired": true
   },
   "ssr": {
@@ -111,8 +103,8 @@
   "related": ["form-field", "label", "validation-message", "text-input"],
   "keywords": ["hint", "Hint", "Forms", "krn-hint", "KrnHint", "id"],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Hint for this specific contract: Provides supporting guidance that a Form Field associates with its control.",
+    "avoidWhen": "Do not choose Hint for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -155,7 +147,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the custom contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",

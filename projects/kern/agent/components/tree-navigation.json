@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Tree Navigation. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "summary": "Tree Navigation. Navigates hierarchical destinations with expansion, selection, and one managed tab stop.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -85,7 +85,7 @@
       "type": "string | null",
       "required": false,
       "defaultValue": "null",
-      "description": "Stable id of the currently selected item.",
+      "description": "Controlled selected id state with a matching Angular model-change output.",
       "descriptionSource": "inferred"
     },
     {
@@ -95,7 +95,7 @@
       "type": "ReadonlyArray<string>",
       "required": false,
       "defaultValue": "[]",
-      "description": "Stable ids of the currently expanded hierarchical items.",
+      "description": "Controlled expanded ids state with a matching Angular model-change output.",
       "descriptionSource": "inferred"
     },
     {
@@ -115,7 +115,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "'1rem'",
-      "description": "Logical inline indentation applied for each hierarchical depth level.",
+      "description": "Defines the component's indent behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -272,7 +272,7 @@
         "kind": "text",
         "defaultValue": "1rem",
         "testValue": "20rem",
-        "description": "Configures the component indent contract.",
+        "description": "Defines the component's indent behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "indent",
@@ -285,7 +285,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component showGuides contract.",
+        "description": "Controls whether the component applies the show guides behavior.",
         "binding": {
           "kind": "input",
           "publicName": "showGuides",

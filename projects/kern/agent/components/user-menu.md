@@ -7,13 +7,13 @@
 - Lifecycle: **recipe**
 - Category: Patterns
 
-User Menu. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.
+User Menu. Combines user identity with account and session actions in a transient menu.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use User Menu for this specific contract: Combines user identity with account and session actions in a transient menu.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose User Menu for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -51,12 +51,12 @@ void bootstrapApplication(KernUserMenuAgentExample);
 
 ## API
 
-| Name            | Kind  | Type                  | Required | Default     | Description                                                               |
-| --------------- | ----- | --------------------- | -------- | ----------- | ------------------------------------------------------------------------- |
-| `name`          | input | `string`              | yes      | `required`  | Required human-readable name for the represented person, item, or action. |
-| `detail`        | input | `string`              | no       | `''`        | Supporting detail text displayed with the primary content.                |
-| `menuAriaLabel` | input | `string \| undefined` | no       | `undefined` | Human-readable copy for the menu aria state or control.                   |
-| `open`          | model | `boolean`             | no       | `false`     | Controls whether the disclosure or overlay surface is visible.            |
+| Name            | Kind  | Type                  | Required | Default     | Description                                                          |
+| --------------- | ----- | --------------------- | -------- | ----------- | -------------------------------------------------------------------- |
+| `name`          | input | `string`              | yes      | `required`  | Native form-control name forwarded to the owned interactive element. |
+| `detail`        | input | `string`              | no       | `''`        | Defines the component's detail behavior or presentation.             |
+| `menuAriaLabel` | input | `string \| undefined` | no       | `undefined` | Human-readable copy for the menu aria state or control.              |
+| `open`          | model | `boolean`             | no       | `false`     | Controls whether the disclosure or overlay surface is visible.       |
 
 ## Deprecated selectors
 
@@ -73,10 +73,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Keyboard behavior is provided by the native elements and Kern primitives in the recipe
+- The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.
+- Loading, empty, error, and success states remain visible and programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -118,11 +117,11 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument | Control | Default             | Test value                      | Binding                   | Description                               |
-| -------- | ------- | ------------------- | ------------------------------- | ------------------------- | ----------------------------------------- |
-| `open`   | boolean | `false`             | `true`                          | model `open`              | Opens the user menu.                      |
-| `detail` | text    | `"avery@north.ops"` | `"avery@north.ops · alternate"` | input `detail` (property) | Configures the component detail contract. |
-| `name`   | text    | `"Avery Cole"`      | `"Avery Cole · alternate"`      | input `name` (property)   | Configures the component name contract.   |
+| Argument | Control | Default             | Test value                      | Binding                   | Description                                                          |
+| -------- | ------- | ------------------- | ------------------------------- | ------------------------- | -------------------------------------------------------------------- |
+| `open`   | boolean | `false`             | `true`                          | model `open`              | Opens the user menu.                                                 |
+| `detail` | text    | `"avery@north.ops"` | `"avery@north.ops · alternate"` | input `detail` (property) | Defines the component's detail behavior or presentation.             |
+| `name`   | text    | `"Avery Cole"`      | `"Avery Cole · alternate"`      | input `name` (property)   | Native form-control name forwarded to the owned interactive element. |
 
 Exact API exclusions:
 

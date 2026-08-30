@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Empty State. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "summary": "Empty State. Explains why no content is available and can offer one appropriate next action.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -49,6 +49,16 @@
   },
   "api": [
     {
+      "name": "kind",
+      "property": "kind",
+      "kind": "input",
+      "type": "KrnStateKind",
+      "required": false,
+      "defaultValue": "'empty'",
+      "description": "Selects the state meaning, default visual, status role, title, and recommended tone.",
+      "descriptionSource": "source"
+    },
+    {
       "name": "title",
       "property": "title",
       "kind": "input",
@@ -72,9 +82,9 @@
       "name": "tone",
       "property": "tone",
       "kind": "input",
-      "type": "KrnFeedbackTone",
+      "type": "KrnFeedbackTone | undefined",
       "required": false,
-      "defaultValue": "'neutral'",
+      "defaultValue": "undefined",
       "description": "Semantic intent that selects coordinated text, icon, border, and surface tokens.",
       "descriptionSource": "inferred"
     }
@@ -110,11 +120,9 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Escape closes modal layers", "Focus returns to the trigger"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Uses visible title and description; any next action retains native button or link semantics."
     ],
     "manualValidationRequired": true
   },
@@ -145,13 +153,14 @@
     "Feedback",
     "krn-empty-state",
     "KrnEmptyState",
+    "kind",
     "title",
     "description",
     "tone"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Empty State for this specific contract: Explains why no content is available and can offer one appropriate next action.",
+    "avoidWhen": "Do not choose Empty State for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -216,7 +225,7 @@
         "kind": "text",
         "defaultValue": "Create an automation to connect events with repeatable actions.",
         "testValue": "Create an automation to connect events with repeatable actions. · alternate",
-        "description": "Configures the component description contract.",
+        "description": "Visible supporting description for the component content.",
         "binding": {
           "kind": "input",
           "publicName": "description",
@@ -229,7 +238,7 @@
         "kind": "text",
         "defaultValue": "No automations yet",
         "testValue": "No automations yet · alternate",
-        "description": "Configures the component title contract.",
+        "description": "Visible title that also names the component surface or data view.",
         "binding": {
           "kind": "input",
           "publicName": "title",
@@ -339,11 +348,24 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 3,
+      "publicInputsAndModels": 4,
       "controlled": 3,
-      "excluded": 0,
+      "excluded": 1,
       "unclassified": 0
     },
-    "exclusions": []
+    "exclusions": [
+      {
+        "componentId": "empty-state",
+        "publicName": "kind",
+        "kind": "input",
+        "type": "KrnStateKind",
+        "code": "complex-data",
+        "reason": "The public type is not a lossless scalar/literal contract and requires a typed specimen fixture.",
+        "evidence": {
+          "category": "specimen-fixture",
+          "pointer": "preview/empty-state?state=default"
+        }
+      }
+    ]
   }
 }

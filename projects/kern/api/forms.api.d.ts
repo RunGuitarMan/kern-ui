@@ -2507,91 +2507,13 @@ declare class KrnNumberInput {
   >;
 }
 
+type KrnUploadPresentation = 'button' | 'dropzone';
 declare class KrnFileUpload {
-  #private;
-  protected readonly translations: Readonly<_kern_ui_angular_core.KrnTranslations>;
-  readonly id: _angular_core.InputSignal<string>;
-  readonly label: _angular_core.InputSignal<string | undefined>;
-  protected readonly resolvedLabel: Signal<string>;
-  readonly locale: _angular_core.InputSignal<string | undefined>;
-  private readonly resolvedLocale;
-  readonly description: _angular_core.InputSignal<string>;
-  readonly accept: _angular_core.InputSignal<string>;
-  readonly multiple: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly maxSize: _angular_core.InputSignalWithTransform<number, unknown>;
-  readonly maxFiles: _angular_core.InputSignalWithTransform<number, unknown>;
-  readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly readOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
-  readonly filesChange: OutputEmitterRef<readonly File[]>;
-  readonly rejected: OutputEmitterRef<readonly KrnUploadRejection[]>;
-  readonly ariaLabelledBy: _angular_core.InputSignal<string>;
-  readonly ariaDescribedBy: _angular_core.InputSignal<string>;
-  readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
-  readonly value: _angular_core.InputSignal<readonly File[] | undefined>;
-  private readonly fileInput;
-  protected readonly rejections: _angular_core.WritableSignal<readonly KrnUploadRejection[]>;
-  protected readonly controlValue: _angular_core.WritableSignal<readonly File[]>;
-  protected readonly formDisabled: _angular_core.WritableSignal<boolean>;
-  protected readonly touch: () => void;
-  readonly writeValue: (value: unknown) => void;
-  readonly registerOnChange: (fn: (value: readonly File[]) => void) => void;
-  readonly registerOnTouched: (fn: () => void) => void;
-  readonly setDisabledState: (disabled: boolean) => void;
-  readonly validate: (
-    control: _angular_forms.AbstractControl,
-  ) => _angular_forms.ValidationErrors | null;
-  readonly registerOnValidatorChange: (fn: () => void) => void;
-  protected readonly a11y: KrnControlA11y;
-  protected readonly isDisabled: Signal<boolean>;
-  protected readonly nativeInputId: Signal<string>;
-  protected readonly descriptionId: Signal<string>;
-  protected readonly requiredDescriptionId: Signal<string>;
-  protected readonly effectiveLabelledBy: Signal<string | null>;
-  protected readonly effectiveDescribedBy: Signal<string | null>;
-  private readonly action;
-  protected openPicker(): void;
-  protected selectFromInput(event: Event): void;
-  protected removeFile(index: number): void;
-  protected formatBytes(bytes: number): string;
-  protected fileKey(file: File): string;
-  focus(options?: FocusOptions): void;
-  blur(): void;
-  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnFileUpload, never>;
-  static ɵcmp: _angular_core.ɵɵComponentDeclaration<
-    KrnFileUpload,
-    'krn-file-upload',
-    never,
-    {
-      id: { alias: 'id'; required: false; isSignal: true };
-      label: { alias: 'label'; required: false; isSignal: true };
-      locale: { alias: 'locale'; required: false; isSignal: true };
-      description: { alias: 'description'; required: false; isSignal: true };
-      accept: { alias: 'accept'; required: false; isSignal: true };
-      multiple: { alias: 'multiple'; required: false; isSignal: true };
-      maxSize: { alias: 'maxSize'; required: false; isSignal: true };
-      maxFiles: { alias: 'maxFiles'; required: false; isSignal: true };
-      disabled: { alias: 'disabled'; required: false; isSignal: true };
-      readOnly: { alias: 'readonly'; required: false; isSignal: true };
-      required: { alias: 'required'; required: false; isSignal: true };
-      invalid: { alias: 'invalid'; required: false; isSignal: true };
-      ariaLabelledBy: { alias: 'ariaLabelledBy'; required: false; isSignal: true };
-      ariaDescribedBy: { alias: 'ariaDescribedBy'; required: false; isSignal: true };
-      tabIndex: { alias: 'tabindex'; required: false; isSignal: true };
-      value: { alias: 'value'; required: false; isSignal: true };
-    },
-    { filesChange: 'filesChange'; rejected: 'rejected' },
-    never,
-    never,
-    true,
-    never
-  >;
-}
-declare class KrnDropUpload {
   #private;
   protected readonly platform: _kern_ui_angular_cdk.KrnPlatformAdapter;
   protected readonly translations: Readonly<_kern_ui_angular_core.KrnTranslations>;
+  /** Selects a compact picker button or a drag-and-drop surface. */
+  readonly presentation: _angular_core.InputSignal<KrnUploadPresentation>;
   readonly id: _angular_core.InputSignal<string>;
   readonly label: _angular_core.InputSignal<string | undefined>;
   protected readonly resolvedLabel: Signal<string>;
@@ -2608,6 +2530,7 @@ declare class KrnDropUpload {
   readonly invalid: _angular_core.InputSignalWithTransform<boolean, unknown>;
   readonly filesChange: OutputEmitterRef<readonly File[]>;
   readonly rejected: OutputEmitterRef<readonly KrnUploadRejection[]>;
+  /** Localized instruction shown inside the drag-and-drop upload surface. */
   readonly dropLabel: _angular_core.InputSignal<string | undefined>;
   protected readonly resolvedDropLabel: Signal<string>;
   readonly ariaLabelledBy: _angular_core.InputSignal<string>;
@@ -2629,7 +2552,6 @@ declare class KrnDropUpload {
   readonly registerOnValidatorChange: (fn: () => void) => void;
   protected readonly a11y: KrnControlA11y;
   protected readonly isDisabled: Signal<boolean>;
-  protected readonly dragging: _angular_core.WritableSignal<boolean>;
   protected readonly nativeInputId: Signal<string>;
   protected readonly dropLabelId: Signal<string>;
   protected readonly descriptionId: Signal<string>;
@@ -2637,6 +2559,7 @@ declare class KrnDropUpload {
   protected readonly effectiveLabelledBy: Signal<string | null>;
   protected readonly effectiveDescribedBy: Signal<string | null>;
   private readonly action;
+  protected readonly dragging: _angular_core.WritableSignal<boolean>;
   private readonly resetDraggingWhenBlocked;
   protected openPicker(): void;
   protected selectFromInput(event: Event): void;
@@ -2649,12 +2572,13 @@ declare class KrnDropUpload {
   protected dropFiles(event: DragEvent): void;
   focus(options?: FocusOptions): void;
   blur(): void;
-  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDropUpload, never>;
+  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnFileUpload, never>;
   static ɵcmp: _angular_core.ɵɵComponentDeclaration<
-    KrnDropUpload,
-    'krn-drop-upload, krn-drag-drop-upload',
+    KrnFileUpload,
+    'krn-file-upload',
     never,
     {
+      presentation: { alias: 'presentation'; required: false; isSignal: true };
       id: { alias: 'id'; required: false; isSignal: true };
       label: { alias: 'label'; required: false; isSignal: true };
       locale: { alias: 'locale'; required: false; isSignal: true };
@@ -2674,6 +2598,22 @@ declare class KrnDropUpload {
       value: { alias: 'value'; required: false; isSignal: true };
     },
     { filesChange: 'filesChange'; rejected: 'rejected' },
+    never,
+    never,
+    true,
+    never
+  >;
+}
+/** @deprecated Use `KrnFileUpload` with `presentation="dropzone"`. */
+declare class KrnDropUpload extends KrnFileUpload {
+  readonly presentation: _angular_core.InputSignal<KrnUploadPresentation>;
+  static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnDropUpload, never>;
+  static ɵcmp: _angular_core.ɵɵComponentDeclaration<
+    KrnDropUpload,
+    'krn-drop-upload, krn-drag-drop-upload',
+    never,
+    { presentation: { alias: 'presentation'; required: false; isSignal: true } },
+    {},
     never,
     never,
     true,
@@ -2735,5 +2675,6 @@ export type {
   KrnSegmentTrackBy,
   KrnSelectOption,
   KrnSelectOptionContext,
+  KrnUploadPresentation,
   KrnUploadRejection,
 };

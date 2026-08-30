@@ -63,7 +63,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Supporting guidance displayed with a form control or product action.",
+      "description": "Defines the component's hint behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -73,7 +73,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Current failure message or error state exposed by asynchronous content.",
+      "description": "Defines the component's error behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -289,7 +289,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component error contract.",
+        "description": "Defines the component's error behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "error",
@@ -302,7 +302,7 @@
         "kind": "text",
         "defaultValue": "Required enterprise value.",
         "testValue": "Required enterprise value. · alternate",
-        "description": "Configures the component hint contract.",
+        "description": "Defines the component's hint behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "hint",
@@ -315,7 +315,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component optionalText contract.",
+        "description": "Human-readable copy for the optional state or control.",
         "binding": {
           "kind": "input",
           "publicName": "optionalText",

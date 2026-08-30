@@ -211,25 +211,221 @@ const SELECTOR_BY_ID: Readonly<Record<string, string>> = {
   tooltip: '[krnTooltip]',
 };
 
-function summaryFor(name: string, category: KernCategory): string {
-  const summaries: Readonly<Record<KernCategory, string>> = {
-    Layout:
-      'A composable spatial primitive that keeps product layouts predictable across containers.',
-    Actions:
-      'A deliberate action primitive with a consistent hierarchy, loading behavior, and keyboard contract.',
-    Forms:
-      'A typed form control with visible state, reliable labeling, and Angular Forms semantics.',
-    Navigation:
-      'A keyboard-first wayfinding primitive that preserves orientation and current location.',
-    Feedback:
-      'A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.',
-    'Data display':
-      'A dense, readable data primitive with semantic structure and resilient overflow.',
-    Patterns:
-      'A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.',
-  };
+const COMPONENT_SUMMARIES: Readonly<Record<string, string>> = {
+  'app-shell':
+    'Coordinates header, navigation, sidebar, and main content across wide and narrow application layouts.',
+  header:
+    'Provides a sticky or static header landmark with configurable height, offset, and elevation.',
+  sidebar:
+    'Provides a collapsible complementary panel that can shrink to icons or hide completely.',
+  'navigation-rail':
+    'Provides compact primary navigation that expands from a narrow rail to a labelled panel.',
+  container:
+    'Constrains content width, adds inline gutters, and aligns the content block within its parent.',
+  stack:
+    'Arranges children vertically with a consistent gap, alignment, and block-axis distribution.',
+  inline:
+    'Arranges children horizontally with optional wrapping, gap, alignment, and inline-axis distribution.',
+  cluster: 'Wraps related items into rows with independent row and column spacing.',
+  grid: 'Creates fixed or auto-fitting columns and collapses them responsively in narrow containers.',
+  'split-layout':
+    'Places two panels in a configurable ratio and stacks them below a container breakpoint.',
+  center:
+    'Centers child content inside a width-constrained surface. For new work, use Container with intrinsic centering.',
+  spacer:
+    'Reserves decorative horizontal or vertical space and stays hidden from assistive technology.',
+  divider:
+    'Separates adjacent content horizontally or vertically, with optional inset and visible label.',
+  'aspect-ratio':
+    'Maintains a chosen width-to-height ratio while controlling how media fits its box.',
+  'scroll-area':
+    'Constrains overflowing content to one or both axes with explicit scrollbar and keyboard policies.',
+  'responsive-show-hide':
+    'Shows or hides projected content between named responsive boundaries without duplicating it.',
+  'resizable-panels':
+    'Lets users resize adjacent panels by pointer or keyboard while enforcing normalized size limits.',
+  button:
+    'Enhances a native button with Kern hierarchy, visual defaults, and a focus-preserving loading state.',
+  'icon-button':
+    'Enhances a native button with a compact square target, required accessible name, and loading state.',
+  'button-group':
+    'Labels and arranges independent native actions without owning their focus or selection state.',
+  'split-button':
+    'Pairs one primary native action with a separate menu of closely related secondary actions.',
+  'floating-action-button':
+    'Exposes one high-priority contextual action with compact or extended floating geometry.',
+  'toggle-button':
+    'Adds controlled pressed state and deterministic aria-pressed semantics to one native button.',
+  'toggle-group':
+    'Coordinates pressed values and roving focus across a labelled toolbar of toggle buttons.',
+  'copy-button':
+    'Copies one explicit value and reports pending, copied, and failed states without moving focus.',
+  link: 'Styles a native anchor while the browser or Angular Router retains navigation semantics.',
+  'dropdown-button': 'Opens a menu of actions from one labelled native button.',
+  'form-field':
+    'Connects one projected control to its visible label, optional copy, hints, errors, and Angular state.',
+  label: 'Gives one labelable form control a visible accessible name and optional required marker.',
+  hint: 'Provides supporting guidance that a Form Field associates with its control.',
+  'validation-message':
+    'Displays validation feedback and exposes its message to the associated form control.',
+  'text-input': 'Captures one line of free text and participates in Angular Forms.',
+  textarea: 'Captures multiline text with optional automatic resizing and character count.',
+  'password-input':
+    'Captures a password and lets users reveal or hide the value with localized controls.',
+  'search-input':
+    'Captures a query, provides a clear action, and emits explicit search submission.',
+  'number-input':
+    'Captures a bounded numeric value with optional increment and decrement controls.',
+  checkbox: 'Represents an independent boolean choice and supports a separate indeterminate state.',
+  'checkbox-group':
+    'Labels a set of independent checkbox choices and coordinates their shared form state.',
+  radio: 'Represents one option inside a radio group while retaining native radio semantics.',
+  'radio-group':
+    'Enforces one choice from a labelled set and manages orientation-aware arrow navigation.',
+  switch:
+    'Controls an immediate on or off setting with switch semantics and supporting description.',
+  select: 'Opens a styled list and commits exactly one value from a predefined option set.',
+  'native-select':
+    'Delegates a single predefined choice to the browser and operating system selection surface.',
+  'multi-select':
+    'Commits several predefined values while keeping selected items visible in a compact trigger.',
+  combobox: 'Filters a defined option set and commits the value of one explicit selection.',
+  autocomplete: 'Suggests known values while preserving valid free text as the final value.',
+  slider: 'Selects one bounded numeric value through pointer, touch, or keyboard adjustment.',
+  'range-slider':
+    'Selects a bounded numeric interval with independently labelled start and end thumbs.',
+  'segmented-control':
+    'Presents a small set of mutually exclusive views or modes as adjacent labelled segments.',
+  'date-picker': 'Selects one bounded date from a localized calendar popup.',
+  'date-range-picker':
+    'Selects an ordered start and end date within localized calendar and boundary rules.',
+  'time-picker': 'Accepts a precise 24-hour time and offers a short list of common choices.',
+  'color-picker': 'Selects one color through an accessible palette and controlled value.',
+  'file-upload': 'Selects one or more files and reports type, size, and file-count rejections.',
+  'drag-drop-upload':
+    'Presents File Upload as a drop zone. For new work, use File Upload with its drop-zone presentation.',
+  'verification-code':
+    'Captures a fixed-length verification code across coordinated editable positions.',
+  'tags-input':
+    'Creates and removes user-authored text values while enforcing count and duplicate rules.',
+  breadcrumbs:
+    'Shows the current location hierarchy and collapses middle items when space is limited.',
+  tabs: 'Switches between related panels with one selected tab and orientation-aware keyboard navigation.',
+  'vertical-tabs': 'Presents the Tabs interaction model on a vertical axis.',
+  pagination:
+    'Moves through a bounded page range while exposing the current page and surrounding context.',
+  stepper:
+    'Shows progress through an ordered workflow and optionally prevents skipping incomplete steps.',
+  menu: 'Opens a transient list of commands and closes after selection or dismissal.',
+  menubar: 'Provides persistent top-level commands with roving focus and nested menu navigation.',
+  'context-menu':
+    'Opens commands for a specific target at the pointer or keyboard invocation point.',
+  'tree-navigation':
+    'Navigates hierarchical destinations with expansion, selection, and one managed tab stop.',
+  'bottom-navigation':
+    'Presents a small set of primary destinations in a touch-friendly bottom navigation bar.',
+  'command-palette':
+    'Searches a command collection and activates the focused result from a modal palette.',
+  'table-of-contents':
+    'Lists page headings and tracks the section currently active in the reading viewport.',
+  'back-button': 'Provides an explicitly labelled native link to the previous product destination.',
+  'skip-link': 'Reveals a keyboard shortcut that moves focus directly to the main content target.',
+  alert: 'Displays an inline status message with semantic tone and an optional dismiss action.',
+  banner:
+    'Shows an Alert across the page as a banner. For new work, use Alert with banner placement.',
+  toast:
+    'Queues transient status messages and controls their position, visible count, and expansion.',
+  tooltip: 'Shows short supplemental text on hover or keyboard focus without adding a tab stop.',
+  popover:
+    'Opens a focusable non-modal surface from an owned trigger and dismisses it predictably.',
+  'hover-card': 'Reveals richer non-modal preview content while its trigger is hovered or focused.',
+  dialog:
+    'Opens a modal or non-modal task surface with title, description, actions, and focus restoration.',
+  'alert-dialog':
+    'Requests a decision before a consequential action and keeps focus within the modal surface.',
+  drawer:
+    'Opens a side-anchored task surface with configurable modality, size, and focus restoration.',
+  'bottom-sheet': 'Opens a bottom-anchored task surface suited to compact and touch layouts.',
+  'loading-overlay':
+    'Marks a region as busy and optionally blocks interaction while work is in progress.',
+  'progress-bar': 'Shows determinate or indeterminate progress along a horizontal track.',
+  'circular-progress':
+    'Shows determinate or indeterminate progress in a compact circular indicator.',
+  spinner: 'Indicates ongoing work when no meaningful completion percentage is available.',
+  skeleton: 'Reserves content geometry with a non-interactive loading placeholder.',
+  'empty-state': 'Explains why no content is available and can offer one appropriate next action.',
+  'error-state':
+    'Presents Empty State for a failed outcome. For new work, use Empty State with the error kind.',
+  'success-state':
+    'Presents Empty State for a completed outcome. For new work, use Empty State with the success kind.',
+  'confirmation-pattern':
+    'Adds an explicit confirmation step before a consequential product action.',
+  badge: 'Displays compact supporting metadata or a count without implying interactive state.',
+  'status-badge':
+    'Displays a named domain status with coordinated text and non-color-only styling.',
+  chip: 'Displays a compact value that can be selected without becoming a form-control option.',
+  tag: 'Displays a compact removable label for a user- or system-assigned value.',
+  avatar:
+    'Represents a person or entity with an image, fallback initials, and optional presence status.',
+  'avatar-group':
+    'Overlaps several avatars and summarizes identities that do not fit the visible limit.',
+  card: 'Groups related content and optional actions on one bounded surface.',
+  stat: 'Pairs one prominent value with its label, context, and optional trend.',
+  'description-list': 'Presents term-and-description pairs with responsive semantic grouping.',
+  list: 'Provides semantic structure and spacing for a related sequence of items.',
+  'list-item':
+    'Presents one structured list row with heading, supporting content, and optional actions.',
+  accordion: 'Coordinates expansion across a set of labelled disclosure sections.',
+  disclosure: 'Reveals or hides one section of supporting content from a labelled trigger.',
+  timeline: 'Orders dated or sequential events along a shared visual and semantic axis.',
+  tree: 'Presents hierarchical data with expansion, selection, typeahead, and one managed tab stop.',
+  'data-table': 'Presents structured rows for scanning, sorting, filtering, and row-level actions.',
+  'data-grid':
+    'Provides an interactive grid with stable row identity, virtualization, selection, and managed cell actions.',
+  calendar: 'Displays a localized month grid and manages bounded date focus and selection.',
+  'code-block':
+    'Renders selectable source code with language metadata and an optional copy action.',
+  'json-view':
+    'Renders structured JSON as a collapsible searchable tree with typed syntax styling.',
+  'keyboard-shortcut': 'Displays a localized key combination without claiming activation behavior.',
+  meter:
+    'Shows a scalar measurement within known bounds and interprets low, high, and optimum ranges.',
+  rating: 'Captures or displays a bounded ordinal rating with keyboard and pointer interaction.',
+  'line-chart':
+    'Plots change across an ordered axis and exposes each datum through keyboard navigation.',
+  'bar-chart': 'Compares categorical values and exposes each bar through keyboard navigation.',
+  'donut-chart':
+    'Shows part-to-whole proportions with an interactive legend and accessible data summary.',
+  'responsive-media':
+    'Frames projected media in a fixed-ratio, clipped surface. For new work, use Aspect Ratio.',
+  'user-menu': 'Combines user identity with account and session actions in a transient menu.',
+  'notification-center':
+    'Collects recent notifications and exposes unread, empty, loading, and error states.',
+  'global-search': 'Searches product-wide destinations and actions from one command-style surface.',
+  'filter-bar': 'Coordinates visible filters, their current values, and clear or apply actions.',
+  'page-header':
+    'Composes page context, heading, description, index, and actions into one heading region.',
+  'settings-panel': 'Edits a focused group of settings in a dismissible side panel.',
+  'crud-toolbar': 'Groups create, search, filter, view, and record actions for a collection.',
+  'bulk-actions':
+    'Replaces collection actions with operations that apply to the current selection.',
+  'master-detail-layout':
+    'Coordinates collection and detail panes across wide and narrow viewports.',
+  'dashboard-widget':
+    'Packages one metric or visualization with context, states, and optional actions.',
+  'login-form': 'Collects credentials, exposes validation, and provides recovery navigation.',
+  'profile-form': 'Edits core profile fields with validation and explicit save progress.',
+  'multi-step-form': 'Coordinates validation, progress, and navigation across a multi-stage form.',
+  'mobile-navigation':
+    'Composes primary destinations into a compact navigation surface for narrow screens.',
+  'responsive-application-shell':
+    'Switches application navigation and content structure across wide and narrow viewports.',
+};
 
-  return `${name}. ${summaries[category]}`;
+function summaryFor(id: string, name: string): string {
+  const summary = COMPONENT_SUMMARIES[id];
+  if (!summary) throw new Error(`Missing component summary for "${id}".`);
+  return `${name}. ${summary}`;
 }
 
 const RUNTIME_COMPONENTS: Readonly<Record<string, KernRuntimeComponentContract>> =
@@ -265,12 +461,22 @@ const API_DESCRIPTIONS: Readonly<Record<string, string>> = {
   emptyLabel: 'Human-readable empty state announced to assistive technology.',
 };
 
-function apiDescription(name: string, kind: KernRuntimeApiKind): string {
+function apiDescription(
+  name: string,
+  kind: KernRuntimeApiKind,
+  sourceDescription?: string,
+): string {
+  if (sourceDescription?.trim()) return sourceDescription.trim();
   const explicit = API_DESCRIPTIONS[name];
   if (explicit) return explicit;
-  if (kind === 'model') return `Controlled ${name} state with a matching ${name}Change output.`;
-  if (kind === 'output') return `Emitted when the component completes the ${name} action.`;
-  return `Configures the component ${name} contract.`;
+  const words = name
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replaceAll(/[_-]+/g, ' ')
+    .toLowerCase();
+  if (kind === 'model')
+    return `Controlled ${words} state with a matching Angular model-change output.`;
+  if (kind === 'output') return `Notifies the consumer after the ${words} interaction completes.`;
+  return `Defines the component's ${words} behavior or presentation.`;
 }
 
 function apiFor(selector: string): readonly KernApiRow[] {
@@ -280,23 +486,356 @@ function apiFor(selector: string): readonly KernApiRow[] {
     name: row.name,
     type: row.type,
     defaultValue: row.defaultValue,
-    description: apiDescription(row.name, row.kind),
+    description: apiDescription(row.name, row.kind, row.description),
     kind: row.kind,
     required: row.required,
   }));
 }
 
-function keyboardFor(category: KernCategory): readonly string[] {
-  if (category === 'Actions') return ['Enter / Space activates', 'Tab follows document order'];
-  if (category === 'Forms')
-    return ['Tab focuses', 'Arrow keys operate grouped controls', 'Escape cancels transient UI'];
-  if (category === 'Navigation')
-    return ['Arrow keys move within composites', 'Home / End jump', 'Enter activates'];
-  if (category === 'Feedback')
-    return ['Escape closes modal layers', 'Focus returns to the trigger'];
-  if (category === 'Data display')
-    return ['Arrow keys navigate interactive data', 'Enter expands or selects'];
-  return ['No custom keyboard behavior unless the composition is interactive'];
+const KEYBOARD_BY_ID: Readonly<Record<string, readonly string[]>> = {
+  'split-button': [
+    'Tab visits the primary and menu actions in document order',
+    'Enter or Space activates the focused action',
+    'Arrow Down opens the secondary menu; Escape closes it and restores focus',
+  ],
+  'dropdown-button': [
+    'Tab focuses the native trigger button',
+    'Enter, Space, or Arrow Down opens the menu',
+    'Arrow keys move through menu items; Escape closes the menu and restores focus',
+  ],
+  'form-field': ['The projected control owns focus and all keyboard interaction'],
+  label: ['Clicking the label moves focus to its associated control'],
+  hint: ['Hint is not focusable and adds no keyboard interaction'],
+  'validation-message': ['Validation Message is not focusable and adds no keyboard interaction'],
+  'text-input': [
+    'Tab focuses the native input; native editing and selection keys remain available',
+  ],
+  textarea: [
+    'Tab focuses the textarea; native multiline editing and selection keys remain available',
+  ],
+  'password-input': [
+    'Tab visits the password input and reveal action in document order',
+    'Enter or Space toggles password visibility from the reveal action',
+  ],
+  'search-input': [
+    'Tab focuses the search field and its clear action',
+    'Enter submits the current query; Escape dismisses transient suggestions when present',
+  ],
+  'number-input': [
+    'Tab focuses the numeric input and optional stepper actions',
+    'Arrow Up and Arrow Down adjust the value by the configured step',
+  ],
+  checkbox: ['Tab focuses the checkbox; Space toggles checked state'],
+  'checkbox-group': ['Tab follows native checkbox order; Space toggles the focused checkbox'],
+  radio: ['Tab follows the owning radio-group contract; Arrow keys change the group selection'],
+  'radio-group': [
+    'Tab enters or leaves the group through its selected or first enabled radio',
+    'Arrow keys move and select within the configured orientation',
+  ],
+  switch: ['Tab focuses the switch; Space toggles its checked state'],
+  select: [
+    'Enter or Space opens the option list',
+    'Arrow keys move through options; Enter commits; Escape closes without a new value',
+  ],
+  'native-select': ['Uses the browser and operating system keyboard behavior for a native select'],
+  'multi-select': [
+    'Enter or Space opens the option list',
+    'Arrow keys move through options; Enter toggles a value; Escape closes the list',
+  ],
+  combobox: [
+    'Typing filters the option list',
+    'Arrow keys move through results; Enter commits an option; Escape closes the list',
+  ],
+  autocomplete: [
+    'Typing updates free text and filters suggestions',
+    'Arrow keys move through suggestions; Enter accepts one or keeps valid typed text',
+  ],
+  slider: ['Arrow keys adjust by one step; Page Up, Page Down, Home, and End make larger moves'],
+  'range-slider': [
+    'Tab moves between the start and end thumbs',
+    'Arrow keys adjust the focused thumb without crossing the other value',
+  ],
+  'segmented-control': [
+    'Tab enters the selected segment',
+    'Arrow keys move and select a segment according to orientation and text direction',
+  ],
+  'date-picker': [
+    'Enter or Space opens the calendar',
+    'Arrow keys move by day; Page keys move by month; Enter selects; Escape closes',
+  ],
+  'date-range-picker': [
+    'Enter or Space opens the calendar',
+    'Arrow keys move by day; Enter chooses range boundaries; Escape closes',
+  ],
+  'time-picker': [
+    'Typing edits the focused hour or minute part',
+    'Arrow keys adjust the part; Enter applies a valid time; Escape closes',
+  ],
+  'color-picker': ['Arrow keys move through colors; Enter or Space commits the focused color'],
+  'file-upload': ['Enter or Space on the browse action opens the native file picker'],
+  'drag-drop-upload': [
+    'Enter or Space on the browse action opens the native file picker',
+    'Drag and drop is an additional pointer path, not the only way to add files',
+  ],
+  'verification-code': [
+    'Typing fills the focused position and advances when possible',
+    'Backspace clears and moves backward; arrow keys move between positions',
+  ],
+  'tags-input': [
+    'Enter commits a valid draft tag',
+    'Backspace removes the previous tag from an empty input; arrow keys move through tags',
+  ],
+  breadcrumbs: ['Tab visits destination links in document order; Enter follows the focused link'],
+  tabs: [
+    'Arrow keys move focus between tabs according to orientation and text direction',
+    'Home and End move to the first and last tab; Enter or Space selects when activation is manual',
+  ],
+  'vertical-tabs': [
+    'Arrow Up and Arrow Down move focus between tabs',
+    'Home and End move to the first and last tab; Enter or Space selects when activation is manual',
+  ],
+  pagination: ['Tab visits page actions; Enter activates the focused page or boundary action'],
+  stepper: ['Tab visits available step actions; Enter activates an allowed step'],
+  menu: [
+    'Arrow keys move through menu items; Home and End move to the boundaries',
+    'Enter or Space activates an item; Escape closes and restores trigger focus',
+  ],
+  menubar: [
+    'Arrow keys move across top-level items and through open submenus',
+    'Enter or Space opens or activates; Escape closes the active submenu',
+  ],
+  'context-menu': [
+    'Shift+F10 or the Context Menu key opens commands for the focused target',
+    'Arrow keys move through commands; Escape closes and restores target focus',
+  ],
+  'tree-navigation': [
+    'Arrow keys move through visible destinations and expand or collapse branches',
+    'Home and End move to boundaries; Enter activates the focused destination',
+  ],
+  'bottom-navigation': ['Tab visits each destination; Enter follows the focused native link'],
+  'command-palette': [
+    'Typing filters commands; Arrow keys move the active result',
+    'Enter activates the result; Escape closes and restores focus',
+  ],
+  'table-of-contents': [
+    'Tab visits heading links in document order; Enter follows the focused link',
+  ],
+  'back-button': ['Tab focuses the native link; Enter follows its destination'],
+  'skip-link': ['Tab reveals and focuses the link; Enter moves focus to the main content target'],
+  tooltip: ['Focus shows the tooltip without adding a tab stop; Escape dismisses visible content'],
+  popover: ['Enter or Space toggles the trigger; Escape closes and restores focus'],
+  'hover-card': ['Focus reveals the card; Escape dismisses it without moving trigger focus'],
+  dialog: [
+    'Tab stays within a modal dialog; Escape closes when allowed and focus returns to the trigger',
+  ],
+  'alert-dialog': ['Tab stays within the alert dialog; Escape closes only when explicitly allowed'],
+  drawer: ['Tab stays within a modal drawer; Escape closes when allowed and focus returns'],
+  'bottom-sheet': ['Tab stays within a modal sheet; Escape closes when allowed and focus returns'],
+  accordion: ['Enter or Space toggles a header; arrow keys move among accordion headers'],
+  disclosure: ['Enter or Space toggles the disclosure trigger'],
+  tree: [
+    'Arrow keys move through visible nodes and expand or collapse branches',
+    'Home and End move to boundaries; typing performs typeahead; Enter selects',
+  ],
+  'data-table': [
+    'Tab reaches table-owned actions in document order',
+    'Sorting and row actions use their native button keyboard behavior',
+  ],
+  'data-grid': [
+    'Arrow keys, Home, End, Page Up, and Page Down move the single grid focus',
+    'Enter or F2 enters cell actions; Escape returns to grid navigation',
+  ],
+  calendar: [
+    'Arrow keys move the focused date; Page keys change month',
+    'Home and End move within the week; Enter or Space selects the date',
+  ],
+  'code-block': ['Tab reaches the optional copy action; code text remains natively selectable'],
+  rating: ['Arrow keys adjust the rating; Home and End select the minimum and maximum'],
+  'line-chart': [
+    'Arrow Left and Arrow Right move the roving focus between data marks',
+    'Home and End move to boundaries; Enter or Space discloses the focused value',
+  ],
+  'bar-chart': [
+    'Arrow Left and Arrow Right move the roving focus between data marks',
+    'Home and End move to boundaries; Enter or Space discloses the focused value',
+  ],
+  'donut-chart': ['Tab visits legend buttons; Enter or Space activates the focused legend item'],
+};
+
+function keyboardFor(id: string, category: KernCategory): readonly string[] {
+  const keyboard = KEYBOARD_BY_ID[id];
+  if (keyboard) return keyboard;
+  if (category === 'Patterns') {
+    return [
+      'Keyboard behavior is provided by the native elements and Kern primitives in the recipe',
+    ];
+  }
+  return ['The component adds no keyboard interaction or tab stop of its own'];
+}
+
+const ACCESSIBILITY_BY_ID: Readonly<Record<string, readonly string[]>> = {
+  'app-shell': [
+    'Keeps header, navigation, complementary, and main landmarks in a stable document order.',
+    'Mobile navigation owns its accessible name, focus entry, dismissal, and focus restoration.',
+  ],
+  header: [
+    'Renders a native header landmark and accepts aria-label or aria-labelledby when more than one header exists.',
+    'Sticky positioning does not change reading or focus order.',
+  ],
+  sidebar: [
+    'Renders a complementary landmark with a stable accessible name and description relationship.',
+    'Hidden collapse mode removes unavailable content from interaction as well as presentation.',
+  ],
+  'navigation-rail': [
+    'Renders a navigation landmark with a stable accessible name and description relationship.',
+    'Expansion changes available labels and width without changing destination order.',
+  ],
+  spacer: ['Is always aria-hidden because it communicates spacing, not content.'],
+  divider: [
+    'Exposes separator semantics and the configured orientation.',
+    'A visible label supplements rather than replaces the surrounding section structure.',
+  ],
+  'responsive-show-hide': [
+    'Hidden content is removed consistently from visual display and the accessibility tree.',
+    'Responsive visibility never changes the relative order of content that remains present.',
+  ],
+  'resizable-panels': [
+    'Resize handles expose separator value, orientation, and min/max state.',
+    'Pointer and keyboard resizing produce the same bounded panel sizes.',
+  ],
+  'form-field': [
+    'Exactly one projected control supplies field identity and Angular form state.',
+    'Only mounted hints and errors are included in the control description relationship.',
+  ],
+  label: [
+    'The for value resolves to one labelable control id.',
+    'Required state is visible and is not communicated by color alone.',
+  ],
+  hint: ['The hint id is composed into the associated control aria-describedby relationship.'],
+  'validation-message': [
+    'The message is visibly associated with the invalid control and announced with appropriate urgency.',
+  ],
+  tooltip: [
+    'The trigger retains its native role and accessible name.',
+    'Tooltip text is referenced as a description and is available on both hover and focus.',
+  ],
+  popover: [
+    'The owned trigger exposes expanded state and the relationship to the popover surface.',
+    'Dismissal restores focus without turning the popover into an implicit modal dialog.',
+  ],
+  'hover-card': [
+    'Preview content supplements the trigger and does not replace its accessible name.',
+    'Hover and focus provide equivalent access to the same content.',
+  ],
+  dialog: [
+    'The surface has dialog semantics and a visible title or explicit accessible name.',
+    'Modal mode traps focus, hides background interaction, and restores focus after exit.',
+  ],
+  'alert-dialog': [
+    'The surface exposes alertdialog semantics with a visible decision and consequence.',
+    'Initial focus, modal containment, and restoration follow the destructive decision flow.',
+  ],
+  drawer: [
+    'The surface exposes dialog semantics with an accessible title or name.',
+    'Modal drawers contain focus; non-modal drawers leave document navigation available.',
+  ],
+  'bottom-sheet': [
+    'The surface exposes dialog semantics independent of its bottom placement.',
+    'Modal sheets contain focus and restore it after the closing transition.',
+  ],
+  'loading-overlay': [
+    'The owned region exposes busy state while visible.',
+    'Blocking mode prevents interaction without removing the region or its status from perception.',
+  ],
+  'progress-bar': ['Exposes progressbar semantics with current bounds or an indeterminate state.'],
+  'circular-progress': ['Exposes progressbar semantics independent of its circular presentation.'],
+  spinner: ['Provides an accessible busy label without exposing meaningless numeric progress.'],
+  skeleton: [
+    'Is hidden from assistive technology so the eventual content remains the semantic target.',
+  ],
+  'empty-state': [
+    'Uses visible title and description; any next action retains native button or link semantics.',
+  ],
+  'error-state': [
+    'Keeps the failure message visible and associates recovery actions with clear labels.',
+  ],
+  'success-state': ['Communicates completion with text and iconography rather than color alone.'],
+  tree: [
+    'Exposes tree, treeitem, level, position, expansion, and selection semantics.',
+    'Stable unique node ids preserve roving focus through updates.',
+  ],
+  'data-table': [
+    'Uses table structure with programmatic headers and sort state.',
+    'Row actions retain native names and remain reachable in a predictable order.',
+  ],
+  'data-grid': [
+    'Exposes grid row, column, sort, selection, and virtual-position semantics.',
+    'One roving page tab stop prevents every cell action from entering the page tab sequence.',
+  ],
+  'line-chart': [
+    'Provides a visible chart title, description, keyboard data marks, and source-data summary.',
+    'Color is supplemented by series names and explicit values.',
+  ],
+  'bar-chart': [
+    'Provides a visible chart title, description, keyboard data marks, and source-data summary.',
+    'Color is supplemented by category names and explicit values.',
+  ],
+  'donut-chart': [
+    'Provides a visible title, description, interactive legend, and source-data summary.',
+    'Segment color is supplemented by legend text and explicit values.',
+  ],
+};
+
+function accessibilityFor(id: string, category: KernCategory): readonly string[] {
+  const accessibility = ACCESSIBILITY_BY_ID[id];
+  if (accessibility) return accessibility;
+  if (category === 'Layout') {
+    return [
+      'Projected content retains its document order and native semantics as layout changes.',
+      'Logical sizing and placement work in both LTR and RTL without duplicating content.',
+    ];
+  }
+  if (category === 'Actions') {
+    return [
+      'Native buttons and links retain their accessible names, focus, activation, and form behavior.',
+      'Disabled, loading, pressed, and destructive states are not communicated by color alone.',
+    ];
+  }
+  if (category === 'Forms') {
+    return [
+      'The real form control retains its visible name, described-by relationships, and Angular state.',
+      'Required, readonly, disabled, and invalid states remain programmatically perceivable.',
+    ];
+  }
+  if (category === 'Navigation') {
+    return [
+      'Destinations retain native link semantics and expose current location where applicable.',
+      'Composite navigation uses one documented focus model without changing reading order.',
+    ];
+  }
+  if (category === 'Feedback') {
+    return [
+      'Visible copy and semantic role communicate feedback independently of color or motion.',
+      'Announcements use only the urgency required by the message.',
+    ];
+  }
+  if (category === 'Data display') {
+    return [
+      'Visible labels and semantic structure preserve the meaning and relationships in the data.',
+      'Interactive descendants retain native names and a predictable focus order.',
+    ];
+  }
+  return [
+    'The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.',
+    'Loading, empty, error, and success states remain visible and programmatically perceivable.',
+  ];
+}
+
+function defaultGuidance(id: string, name: string): Readonly<Pick<KernCatalogItem, 'do' | 'dont'>> {
+  return {
+    do: `Use ${name} for this specific contract: ${COMPONENT_SUMMARIES[id]}`,
+    dont: `Do not choose ${name} for visual similarity alone; its semantics and interaction model must match the product task.`,
+  };
 }
 
 const COMPONENT_OVERRIDES: Readonly<Record<string, KernCatalogDocumentationOverride>> = {
@@ -624,6 +1163,7 @@ function createItem(indexItem: KernCatalogIndexItem): KernCatalogItem {
   const { id, name, category, status, variantOf } = indexItem;
   const selector = SELECTOR_BY_ID[id] ?? `krn-${id}`;
   const api = apiFor(selector);
+  const guidance = defaultGuidance(id, name);
 
   const item: KernCatalogItem = {
     id,
@@ -631,18 +1171,14 @@ function createItem(indexItem: KernCatalogIndexItem): KernCatalogItem {
     category,
     selector,
     variantOf,
-    summary: summaryFor(name, category),
+    summary: summaryFor(id, name),
     status,
     states: statesFor(id, category, api),
-    keyboard: keyboardFor(category),
-    accessibility: [
-      'Visible focus indicator with forced-colors support.',
-      'Works at 200% text zoom and in narrow containers.',
-      'State is communicated by text, shape, or icon in addition to color.',
-    ],
+    keyboard: keyboardFor(id, category),
+    accessibility: accessibilityFor(id, category),
     api,
-    do: 'Use the smallest semantic primitive that communicates the intended relationship.',
-    dont: 'Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.',
+    do: guidance.do,
+    dont: guidance.dont,
   };
   return { ...item, ...COMPONENT_OVERRIDES[id] };
 }

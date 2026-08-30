@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Inline. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Inline. Arranges children horizontally with optional wrapping, gap, alignment, and inline-axis distribution.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -106,11 +106,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Projected content retains its document order and native semantics as layout changes.",
+      "Logical sizing and placement work in both LTR and RTL without duplicating content."
     ],
     "manualValidationRequired": true
   },
@@ -147,8 +146,8 @@
     "wrap"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Inline for this specific contract: Arranges children horizontally with optional wrapping, gap, alignment, and inline-axis distribution.",
+    "avoidWhen": "Do not choose Inline for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -191,7 +190,7 @@
         "kind": "select",
         "defaultValue": "center",
         "testValue": "start",
-        "description": "Configures the component align contract.",
+        "description": "Cross-axis alignment of projected children within each flex line.",
         "binding": {
           "kind": "input",
           "publicName": "align",
@@ -226,7 +225,7 @@
         "kind": "text",
         "defaultValue": "3",
         "testValue": "20rem",
-        "description": "Configures the component gap contract.",
+        "description": "Logical spacing between adjacent projected children and wrapped flex lines.",
         "binding": {
           "kind": "input",
           "publicName": "gap",
@@ -239,7 +238,7 @@
         "kind": "select",
         "defaultValue": "start",
         "testValue": "center",
-        "description": "Configures the component justify contract.",
+        "description": "Distribution of projected children along the inline axis.",
         "binding": {
           "kind": "input",
           "publicName": "justify",

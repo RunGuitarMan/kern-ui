@@ -7,13 +7,13 @@
 - Lifecycle: **recipe**
 - Category: Patterns
 
-Global Search. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.
+Global Search. Searches product-wide destinations and actions from one command-style surface.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Global Search for this specific contract: Searches product-wide destinations and actions from one command-style surface.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Global Search for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -72,20 +72,20 @@ void bootstrapApplication(KernGlobalSearchAgentExample);
 
 ## API
 
-| Name                | Kind   | Type                                       | Required | Default                   | Description                                                            |
-| ------------------- | ------ | ------------------------------------------ | -------- | ------------------------- | ---------------------------------------------------------------------- |
-| `ariaLabel`         | input  | `string \| undefined`                      | no       | `undefined`               | Accessible name used when visible content is not sufficient.           |
-| `placeholder`       | input  | `string \| undefined`                      | no       | `undefined`               | Short input hint shown only while no value is present.                 |
-| `clearLabel`        | input  | `string \| undefined`                      | no       | `undefined`               | Human-readable copy for the clear state or control.                    |
-| `resultsLabel`      | input  | `((label: string) => string) \| undefined` | no       | `undefined`               | Human-readable copy for the results state or control.                  |
-| `emptyResultsLabel` | input  | `((query: string) => string) \| undefined` | no       | `undefined`               | Accessible copy announced when a search has no matching results.       |
-| `results`           | input  | `ReadonlyArray<KrnSearchResult>`           | no       | `[]`                      | Search result collection rendered in response to the current query.    |
-| `maxResults`        | input  | `number`                                   | no       | `8`                       | Upper or lower bound applied to the results value.                     |
-| `resultsId`         | input  | `string`                                   | no       | `this.generatedResultsId` | Stable identifier value used by the results contract.                  |
-| `query`             | model  | `string`                                   | no       | `''`                      | Current controlled search text used to derive visible results.         |
-| `open`              | model  | `boolean`                                  | no       | `false`                   | Controls whether the disclosure or overlay surface is visible.         |
-| `activeIndex`       | model  | `number`                                   | no       | `0`                       | Zero-based index currently participating in managed keyboard focus.    |
-| `resultSelected`    | output | `KrnSearchResult`                          | no       | `undefined`               | Notifies the consumer after the result selected interaction completes. |
+| Name                | Kind   | Type                                       | Required | Default                   | Description                                                                |
+| ------------------- | ------ | ------------------------------------------ | -------- | ------------------------- | -------------------------------------------------------------------------- |
+| `ariaLabel`         | input  | `string \| undefined`                      | no       | `undefined`               | Accessible name used when visible content is not sufficient.               |
+| `placeholder`       | input  | `string \| undefined`                      | no       | `undefined`               | Short input hint shown only while no value is present.                     |
+| `clearLabel`        | input  | `string \| undefined`                      | no       | `undefined`               | Human-readable copy for the clear state or control.                        |
+| `resultsLabel`      | input  | `((label: string) => string) \| undefined` | no       | `undefined`               | Human-readable copy for the results state or control.                      |
+| `emptyResultsLabel` | input  | `((query: string) => string) \| undefined` | no       | `undefined`               | Human-readable copy for the empty results state or control.                |
+| `results`           | input  | `ReadonlyArray<KrnSearchResult>`           | no       | `[]`                      | Search result collection rendered in response to the current query.        |
+| `maxResults`        | input  | `number`                                   | no       | `8`                       | Upper or lower bound applied to the results value.                         |
+| `resultsId`         | input  | `string`                                   | no       | `this.generatedResultsId` | Stable identifier used by the results contract.                            |
+| `query`             | model  | `string`                                   | no       | `''`                      | Current controlled search text used to derive visible results.             |
+| `open`              | model  | `boolean`                                  | no       | `false`                   | Controls whether the disclosure or overlay surface is visible.             |
+| `activeIndex`       | model  | `number`                                   | no       | `0`                       | Controlled active index state with a matching Angular model-change output. |
+| `resultSelected`    | output | `KrnSearchResult`                          | no       | `undefined`               | Notifies the consumer after the result selected interaction completes.     |
 
 ## Deprecated selectors
 
@@ -101,10 +101,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- No custom keyboard behavior unless the composition is interactive
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Keyboard behavior is provided by the native elements and Kern primitives in the recipe
+- The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.
+- Loading, empty, error, and success states remain visible and programmatically perceivable.
 
 Manual assistive-technology validation remains required in the consuming application.
 
@@ -146,13 +145,13 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument      | Control | Default                                  | Test value                                           | Binding                        | Description                                    |
-| ------------- | ------- | ---------------------------------------- | ---------------------------------------------------- | ------------------------------ | ---------------------------------------------- |
-| `query`       | text    | `""`                                     | `"Alternate value"`                                  | model `query`                  | Changes the active search query.               |
-| `activeIndex` | number  | `0`                                      | `1`                                                  | model `activeIndex`            | Changes the active result index.               |
-| `open`        | boolean | `false`                                  | `true`                                               | model `open`                   | Opens the search result surface.               |
-| `maxResults`  | number  | `8`                                      | `9`                                                  | input `maxResults` (property)  | Configures the component maxResults contract.  |
-| `placeholder` | text    | `"Search workspaces, projects, people…"` | `"Search workspaces, projects, people… · alternate"` | input `placeholder` (property) | Configures the component placeholder contract. |
+| Argument      | Control | Default                                  | Test value                                           | Binding                        | Description                                            |
+| ------------- | ------- | ---------------------------------------- | ---------------------------------------------------- | ------------------------------ | ------------------------------------------------------ |
+| `query`       | text    | `""`                                     | `"Alternate value"`                                  | model `query`                  | Changes the active search query.                       |
+| `activeIndex` | number  | `0`                                      | `1`                                                  | model `activeIndex`            | Changes the active result index.                       |
+| `open`        | boolean | `false`                                  | `true`                                               | model `open`                   | Opens the search result surface.                       |
+| `maxResults`  | number  | `8`                                      | `9`                                                  | input `maxResults` (property)  | Upper or lower bound applied to the results value.     |
+| `placeholder` | text    | `"Search workspaces, projects, people…"` | `"Search workspaces, projects, people… · alternate"` | input `placeholder` (property) | Short input hint shown only while no value is present. |
 
 Exact API exclusions:
 

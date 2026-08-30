@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Checkbox. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Checkbox. Represents an independent boolean choice and supports a separate indeterminate state.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -64,7 +64,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -74,7 +74,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Required human-readable name for the represented person, item, or action.",
+      "description": "Native form-control name forwarded to the owned interactive element.",
       "descriptionSource": "inferred"
     },
     {
@@ -184,7 +184,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Represents an unknown progress value or a mixed selection state.",
+      "description": "Controlled mixed state rendered independently from the checked value.",
       "descriptionSource": "inferred"
     },
     {
@@ -240,15 +240,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
-    ],
+    "keyboard": ["Tab focuses the checkbox; Space toggles checked state"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The real form control retains its visible name, described-by relationships, and Angular state.",
+      "Required, readonly, disabled, and invalid states remain programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -297,8 +292,8 @@
     "indeterminateChange"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Checkbox for this specific contract: Represents an independent boolean choice and supports a separate indeterminate state.",
+    "avoidWhen": "Do not choose Checkbox for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -408,7 +403,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component checked contract.",
+        "description": "Controlled checked state rendered by the native choice control.",
         "binding": {
           "kind": "input",
           "publicName": "checked",
@@ -421,7 +416,7 @@
         "kind": "text",
         "defaultValue": "Receive a summary every Monday at 09:00.",
         "testValue": "Receive a summary every Monday at 09:00. · alternate",
-        "description": "Configures the component description contract.",
+        "description": "Visible supporting description for the component content.",
         "binding": {
           "kind": "input",
           "publicName": "description",
@@ -434,7 +429,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -447,7 +442,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component tabindex contract.",
+        "description": "Native sequential-focus order forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "tabindex",
@@ -580,7 +575,9 @@
         "id": "filled",
         "label": "filled",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "selected": true
+        },
         "fixtureEffect": {
           "kind": "content",
           "mode": "filled",

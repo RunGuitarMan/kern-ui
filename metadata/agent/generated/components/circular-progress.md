@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Feedback
 
-Circular Progress. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Circular Progress. Shows determinate or indeterminate progress in a compact circular indicator.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Circular Progress for this specific contract: Shows determinate or indeterminate progress in a compact circular indicator.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Circular Progress for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -54,7 +54,7 @@ void bootstrapApplication(KernCircularProgressAgentExample);
 | --------------- | ----- | -------------------------------------- | -------- | ----------- | --------------------------------------------------------------------------- |
 | `value`         | input | `number`                               | no       | `0`         | Controlled component value.                                                 |
 | `max`           | input | `number`                               | no       | `100`       | Largest accepted numeric or temporal value.                                 |
-| `indeterminate` | input | `boolean`                              | no       | `false`     | Represents an unknown progress value or a mixed selection state.            |
+| `indeterminate` | input | `boolean`                              | no       | `false`     | Controlled mixed state rendered independently from the checked value.       |
 | `showValue`     | input | `boolean`                              | no       | `false`     | Controls whether the component applies the show value behavior.             |
 | `ariaLabel`     | input | `string \| undefined`                  | no       | `undefined` | Accessible name used when visible content is not sufficient.                |
 | `locale`        | input | `Array<string> \| string \| undefined` | no       | `undefined` | Locale identifier used for collation, formatting, and component-owned copy. |
@@ -73,11 +73,8 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Escape closes modal layers
-- Focus returns to the trigger
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Exposes progressbar semantics independent of its circular presentation.
 
 Manual assistive-technology validation remains required in the consuming application.
 

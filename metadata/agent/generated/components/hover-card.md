@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Feedback
 
-Hover Card. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Hover Card. Reveals richer non-modal preview content while its trigger is hovered or focused.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Hover Card for this specific contract: Reveals richer non-modal preview content while its trigger is hovered or focused.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Hover Card for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -49,11 +49,11 @@ void bootstrapApplication(KernHoverCardAgentExample);
 
 ## API
 
-| Name         | Kind  | Type                  | Required | Default     | Description                                                         |
-| ------------ | ----- | --------------------- | -------- | ----------- | ------------------------------------------------------------------- |
-| `ariaLabel`  | input | `string \| undefined` | no       | `undefined` | Accessible name used when visible content is not sufficient.        |
-| `openDelay`  | input | `number`              | no       | `350`       | Delay in milliseconds before the transient surface becomes visible. |
-| `closeDelay` | input | `number`              | no       | `120`       | Controls whether the component applies the close delay behavior.    |
+| Name         | Kind  | Type                  | Required | Default     | Description                                                      |
+| ------------ | ----- | --------------------- | -------- | ----------- | ---------------------------------------------------------------- |
+| `ariaLabel`  | input | `string \| undefined` | no       | `undefined` | Accessible name used when visible content is not sufficient.     |
+| `openDelay`  | input | `number`              | no       | `350`       | Defines the component's open delay behavior or presentation.     |
+| `closeDelay` | input | `number`              | no       | `120`       | Controls whether the component applies the close delay behavior. |
 
 ## Deprecated selectors
 
@@ -70,11 +70,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Escape closes modal layers
-- Focus returns to the trigger
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- Focus reveals the card; Escape dismisses it without moving trigger focus
+- Preview content supplements the trigger and does not replace its accessible name.
+- Hover and focus provide equivalent access to the same content.
 
 Manual assistive-technology validation remains required in the consuming application.
 

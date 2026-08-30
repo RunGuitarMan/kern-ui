@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Code Block. A dense, readable data primitive with semantic structure and resilient overflow.",
+  "summary": "Code Block. Renders selectable source code with language metadata and an optional copy action.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -53,7 +53,7 @@
       "type": "string",
       "required": true,
       "defaultValue": "required",
-      "description": "Required source text rendered by the syntax-aware code presentation.",
+      "description": "Defines the component's code behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -63,7 +63,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "'text'",
-      "description": "Language identifier used by syntax highlighting and accessible code metadata.",
+      "description": "Defines the component's language behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -99,11 +99,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys navigate interactive data", "Enter expands or selects"],
+    "keyboard": ["Tab reaches the optional copy action; code text remains natively selectable"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible labels and semantic structure preserve the meaning and relationships in the data.",
+      "Interactive descendants retain native names and a predictable focus order."
     ],
     "manualValidationRequired": true
   },
@@ -141,8 +140,8 @@
     "copied"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Code Block for this specific contract: Renders selectable source code with language metadata and an optional copy action.",
+    "avoidWhen": "Do not choose Code Block for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Do not omit required inputs: `code`.",

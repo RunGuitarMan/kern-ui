@@ -16,7 +16,7 @@
     "selectors": ["krn-otp-input"],
     "componentIds": []
   },
-  "summary": "Verification Code. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Verification Code. Captures a fixed-length verification code across coordinated editable positions.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -62,7 +62,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -82,7 +82,7 @@
       "type": "number",
       "required": false,
       "defaultValue": "6",
-      "description": "Required number of editable positions in the verification-code control.",
+      "description": "Defines the component's length behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -92,7 +92,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "true",
-      "description": "Restricts verification-code entry to decimal digits.",
+      "description": "Defines the component's numeric only behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -222,14 +222,12 @@
   "a11y": {
     "target": "WCAG 2.2 AA",
     "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
+      "Typing fills the focused position and advances when possible",
+      "Backspace clears and moves backward; arrow keys move between positions"
     ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The real form control retains its visible name, described-by relationships, and Angular state.",
+      "Required, readonly, disabled, and invalid states remain programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -278,8 +276,8 @@
     "completed"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Verification Code for this specific contract: Captures a fixed-length verification code across coordinated editable positions.",
+    "avoidWhen": "Do not choose Verification Code for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -327,7 +325,7 @@
         "kind": "text",
         "defaultValue": "one-time-code",
         "testValue": "one-time-code · alternate",
-        "description": "Configures the component autocomplete contract.",
+        "description": "Native autocomplete purpose forwarded to the editable control.",
         "binding": {
           "kind": "input",
           "publicName": "autocomplete",
@@ -340,7 +338,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Prevents interaction and participates in the component disabled contract.",
+        "description": "Prevents user interaction and participates in the disabled-state contract.",
         "binding": {
           "kind": "input",
           "publicName": "disabled",
@@ -353,7 +351,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -379,7 +377,7 @@
         "kind": "text",
         "defaultValue": "Enter the 6-digit verification code",
         "testValue": "Enter the 6-digit verification code · alternate",
-        "description": "Configures the component label contract.",
+        "description": "Visible text that names the control or data value.",
         "binding": {
           "kind": "input",
           "publicName": "label",
@@ -392,7 +390,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component numericOnly contract.",
+        "description": "Defines the component's numeric only behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "numericOnly",
@@ -405,7 +403,7 @@
         "kind": "boolean",
         "defaultValue": false,
         "testValue": true,
-        "description": "Configures the component readonly contract.",
+        "description": "Keeps the value perceivable while preventing user edits.",
         "binding": {
           "kind": "input",
           "publicName": "readonly",
@@ -431,7 +429,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component tabindex contract.",
+        "description": "Native sequential-focus order forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "tabindex",
@@ -564,7 +562,9 @@
         "id": "filled",
         "label": "filled",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "value": "482731"
+        },
         "fixtureEffect": {
           "kind": "content",
           "mode": "filled",

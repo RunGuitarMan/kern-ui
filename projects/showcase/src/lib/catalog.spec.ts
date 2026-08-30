@@ -1,5 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { KERN_CATALOG_INDEX, KERN_CATEGORIES } from '@kern-ui/showcase/catalog-index';
+import {
+  KERN_CANONICAL_CATALOG_INDEX,
+  KERN_CATALOG_ALIASES,
+  KERN_CATALOG_FAMILIES,
+  KERN_CATALOG_INDEX,
+  KERN_CATEGORIES,
+  KERN_COMPONENT_CATALOG_INDEX,
+  KERN_COMPONENT_CATEGORIES,
+  KERN_RECIPE_CATALOG_INDEX,
+  canonicalCatalogId,
+  catalogAliasesFor,
+  catalogFamilyFor,
+  catalogNavigationGroups,
+  relatedCatalogItems,
+} from '@kern-ui/showcase/catalog-index';
 
 import { KERN_CATALOG, KERN_COVERAGE, findKernComponent } from './catalog';
 import { KERN_RUNTIME_COMPONENTS } from './generated-component-contract';
@@ -22,12 +36,137 @@ describe('Kern showcase catalog', () => {
     );
   });
 
+  it('publishes one canonical documentation entry for every literal component alias', () => {
+    expect(KERN_CATALOG_ALIASES).toEqual({
+      'vertical-tabs': 'tabs',
+      'status-badge': 'badge',
+      tag: 'chip',
+      'data-table': 'data-grid',
+      'bulk-actions': 'crud-toolbar',
+    });
+    expect(KERN_CANONICAL_CATALOG_INDEX).toHaveLength(KERN_CATALOG_INDEX.length - 5);
+
+    for (const [alias, canonical] of Object.entries(KERN_CATALOG_ALIASES)) {
+      expect(canonicalCatalogId(alias)).toBe(canonical);
+      expect(KERN_CANONICAL_CATALOG_INDEX.some((item) => item.id === alias)).toBe(false);
+      expect(catalogAliasesFor(canonical).map((item) => item.id)).toContain(alias);
+    }
+  });
+
+  it('separates recipe compositions from the canonical component navigation', () => {
+    expect(KERN_COMPONENT_CATEGORIES).not.toContain('Patterns');
+    expect(KERN_COMPONENT_CATALOG_INDEX.every((item) => item.status !== 'recipe')).toBe(true);
+    expect(KERN_RECIPE_CATALOG_INDEX.every((item) => item.status === 'recipe')).toBe(true);
+    expect(KERN_COMPONENT_CATALOG_INDEX).toHaveLength(113);
+    expect(KERN_RECIPE_CATALOG_INDEX).toHaveLength(14);
+    expect(
+      new Set([...KERN_COMPONENT_CATALOG_INDEX, ...KERN_RECIPE_CATALOG_INDEX].map(({ id }) => id)),
+    ).toEqual(new Set(KERN_CANONICAL_CATALOG_INDEX.map(({ id }) => id)));
+  });
+
+  it('defines non-overlapping explanatory families with explicit member roles', () => {
+    const memberIds = KERN_CATALOG_FAMILIES.flatMap((family) =>
+      family.members.map((member) => member.id),
+    );
+    expect(new Set(memberIds).size).toBe(memberIds.length);
+    expect(KERN_CATALOG_FAMILIES.map((family) => family.id)).toEqual(
+      expect.arrayContaining([
+        'data-visualization',
+        'states',
+        'modal-surfaces',
+        'select-family',
+        'form-anatomy',
+        'action-groups',
+      ]),
+    );
+
+    for (const family of KERN_CATALOG_FAMILIES) {
+      expect(family.description.trim(), `${family.id}: description`).not.toBe('');
+      expect(family.members.length, `${family.id}: related member count`).toBeGreaterThan(1);
+      for (const member of family.members) {
+        expect(member.role.trim(), `${family.id}/${member.id}: role`).not.toBe('');
+        expect(
+          KERN_CANONICAL_CATALOG_INDEX.some((item) => item.id === member.id),
+          `${family.id}/${member.id}: canonical member`,
+        ).toBe(true);
+        expect(catalogFamilyFor(member.id)?.id).toBe(family.id);
+      }
+    }
+
+    expect(relatedCatalogItems('combobox').map((item) => item.id)).toEqual(
+      expect.arrayContaining(['select', 'native-select', 'multi-select', 'autocomplete']),
+    );
+  });
+
+  it('groups canonical category navigation without duplicating entries', () => {
+    for (const category of KERN_CATEGORIES) {
+      const groupedItems = catalogNavigationGroups(category).flatMap((group) => group.items);
+      expect(new Set(groupedItems.map((item) => item.id)).size).toBe(groupedItems.length);
+      expect(groupedItems).toEqual(
+        expect.arrayContaining(
+          KERN_CANONICAL_CATALOG_INDEX.filter((item) => item.category === category),
+        ),
+      );
+      expect(groupedItems).toHaveLength(
+        KERN_CANONICAL_CATALOG_INDEX.filter((item) => item.category === category).length,
+      );
+    }
+
+    expect(
+      catalogNavigationGroups('Feedback')
+        .find((group) => group.id === 'modal-surfaces')
+        ?.items.map((item) => item.id),
+    ).toEqual(['dialog', 'alert-dialog', 'drawer', 'bottom-sheet']);
+  });
+
   it('covers every category with docs and state metadata', () => {
     expect(KERN_CATEGORIES).toHaveLength(7);
     expect(KERN_COVERAGE.components).toBeGreaterThan(100);
     expect(KERN_CATALOG.every((item) => item.states.length > 0)).toBe(true);
     expect(KERN_CATALOG.every((item) => item.states.includes('default'))).toBe(true);
     expect(findKernComponent('data-grid')?.category).toBe('Data display');
+  });
+
+  it('publishes one concise component-specific summary per catalog id', () => {
+    const bodies = KERN_CATALOG.map((item) => {
+      expect(item.summary, item.id).toMatch(
+        new RegExp(`^${item.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\. `),
+      );
+      return item.summary.slice(item.name.length + 2);
+    });
+
+    expect(new Set(bodies).size).toBe(KERN_CATALOG.length);
+    expect(bodies).not.toContain(
+      'A composable spatial primitive that keeps product layouts predictable across containers.',
+    );
+    expect(bodies).not.toContain(
+      'A typed form control with visible state, reliable labeling, and Angular Forms semantics.',
+    );
+  });
+
+  it('does not publish generic or capability-inaccurate documentation fallbacks', () => {
+    for (const item of KERN_CATALOG) {
+      expect(item.do, item.id).not.toBe(
+        'Use the smallest semantic primitive that communicates the intended relationship.',
+      );
+      expect(item.dont, item.id).not.toBe(
+        'Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.',
+      );
+      expect(
+        item.api.every(({ description }) => !/^Configures the component /.test(description)),
+        item.id,
+      ).toBe(true);
+    }
+
+    expect(findKernComponent('alert')?.keyboard).toEqual([
+      'The component adds no keyboard interaction or tab stop of its own',
+    ]);
+    expect(findKernComponent('text-input')?.keyboard).toEqual([
+      'Tab focuses the native input; native editing and selection keys remain available',
+    ]);
+    expect(findKernComponent('spacer')?.accessibility).toEqual([
+      'Is always aria-hidden because it communicates spacing, not content.',
+    ]);
   });
 
   it('publishes capability-specific acceptance states without impossible generic interaction', () => {
@@ -64,7 +203,59 @@ describe('Kern showcase catalog', () => {
       expect(item.api.map(({ name, kind }) => ({ name, kind }))).toEqual(
         contract?.api.map(({ name, kind }) => ({ name, kind })),
       );
+      expect(item.api.map(({ name, description }) => ({ name, description }))).toEqual(
+        contract?.api.map(({ name, description }) => ({ name, description })),
+      );
+      expect(contract?.api.every(({ description }) => description.trim().length > 0)).toBe(true);
     }
+  });
+
+  it('publishes source-authored descriptions for merged component-family APIs', () => {
+    const expected = [
+      [
+        'alert',
+        'placement',
+        'Places the message inline or stretches it into a page-level banner treatment.',
+      ],
+      [
+        'empty-state',
+        'kind',
+        'Selects the state meaning, default visual, status role, title, and recommended tone.',
+      ],
+      [
+        'file-upload',
+        'presentation',
+        'Selects a compact picker button or a drag-and-drop surface.',
+      ],
+      [
+        'file-upload',
+        'dropLabel',
+        'Localized instruction shown inside the drag-and-drop upload surface.',
+      ],
+      [
+        'container',
+        'intrinsic',
+        'Centers projected children on the inline axis while preserving the container measure.',
+      ],
+    ] as const;
+
+    for (const [componentId, apiName, description] of expected) {
+      expect(
+        findKernComponent(componentId)?.api.find(({ name }) => name === apiName)?.description,
+        `${componentId}.${apiName}`,
+      ).toBe(description);
+    }
+
+    expect(
+      findKernComponent('banner')?.api.find(({ name }) => name === 'placement')?.description,
+    ).toBe(expected[0][2]);
+    expect(
+      findKernComponent('error-state')?.api.find(({ name }) => name === 'kind')?.description,
+    ).toBe(expected[1][2]);
+    expect(
+      findKernComponent('drag-drop-upload')?.api.find(({ name }) => name === 'presentation')
+        ?.description,
+    ).toBe(expected[2][2]);
   });
 
   it('uses lifecycle statuses instead of presenting recipes and complex previews as stable', () => {

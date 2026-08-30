@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Feedback
 
-Spinner. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.
+Spinner. Indicates ongoing work when no meaningful completion percentage is available.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Spinner for this specific contract: Indicates ongoing work when no meaningful completion percentage is available.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Spinner for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -61,11 +61,8 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Escape closes modal layers
-- Focus returns to the trigger
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Provides an accessible busy label without exposing meaningless numeric progress.
 
 Manual assistive-technology validation remains required in the consuming application.
 

@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Slider. A typed form control with visible state, reliable labeling, and Angular Forms semantics.",
+  "summary": "Slider. Selects one bounded numeric value through pointer, touch, or keyboard adjustment.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -63,7 +63,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Stable identifier value used by the id contract.",
+      "description": "Stable identifier used by the id contract.",
       "descriptionSource": "inferred"
     },
     {
@@ -73,7 +73,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "''",
-      "description": "Required human-readable name for the represented person, item, or action.",
+      "description": "Native form-control name forwarded to the owned interactive element.",
       "descriptionSource": "inferred"
     },
     {
@@ -223,14 +223,11 @@
   "a11y": {
     "target": "WCAG 2.2 AA",
     "keyboard": [
-      "Tab focuses",
-      "Arrow keys operate grouped controls",
-      "Escape cancels transient UI"
+      "Arrow keys adjust by one step; Page Up, Page Down, Home, and End make larger moves"
     ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The real form control retains its visible name, described-by relationships, and Angular state.",
+      "Required, readonly, disabled, and invalid states remain programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -278,8 +275,8 @@
     "valueChange"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Slider for this specific contract: Selects one bounded numeric value through pointer, touch, or keyboard adjustment.",
+    "avoidWhen": "Do not choose Slider for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -411,7 +408,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "Alternate value",
-        "description": "Configures the component id contract.",
+        "description": "Stable identifier used by the id contract.",
         "binding": {
           "kind": "input",
           "publicName": "id",
@@ -424,7 +421,7 @@
         "kind": "text",
         "defaultValue": "Seat allocation",
         "testValue": "Seat allocation · alternate",
-        "description": "Configures the component label contract.",
+        "description": "Visible text that names the control or data value.",
         "binding": {
           "kind": "input",
           "publicName": "label",
@@ -437,7 +434,7 @@
         "kind": "number",
         "defaultValue": 0,
         "testValue": 1,
-        "description": "Configures the component tabindex contract.",
+        "description": "Native sequential-focus order forwarded to the owned interactive element.",
         "binding": {
           "kind": "input",
           "publicName": "tabindex",
@@ -613,7 +610,9 @@
         "id": "minimum",
         "label": "minimum",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "value": 1
+        },
         "fixtureEffect": {
           "kind": "status",
           "mode": "neutral",
@@ -625,7 +624,9 @@
         "id": "maximum",
         "label": "maximum",
         "scenario": "default",
-        "args": {},
+        "args": {
+          "value": 100
+        },
         "fixtureEffect": {
           "kind": "status",
           "mode": "neutral",

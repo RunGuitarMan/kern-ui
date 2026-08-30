@@ -16,7 +16,7 @@
     "selectors": ["krn-tabs"],
     "componentIds": ["tabs"]
   },
-  "summary": "Vertical Tabs. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "summary": "Vertical Tabs. Presents the Tabs interaction model on a vertical axis.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -111,11 +111,13 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys move within composites", "Home / End jump", "Enter activates"],
+    "keyboard": [
+      "Arrow Up and Arrow Down move focus between tabs",
+      "Home and End move to the first and last tab; Enter or Space selects when activation is manual"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Destinations retain native link semantics and expose current location where applicable.",
+      "Composite navigation uses one documented focus model without changing reading order."
     ],
     "manualValidationRequired": true
   },
@@ -154,8 +156,8 @@
     "ariaLabel"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Vertical Tabs for this specific contract: Presents the Tabs interaction model on a vertical axis.",
+    "avoidWhen": "Do not choose Vertical Tabs for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -211,7 +213,7 @@
         "kind": "select",
         "defaultValue": "vertical",
         "testValue": "horizontal",
-        "description": "Logical axis exposed by the component; behavior follows its documented keyboard contract.",
+        "description": "Defines the logical axis used by layout and keyboard navigation.",
         "binding": {
           "kind": "input",
           "publicName": "orientation",

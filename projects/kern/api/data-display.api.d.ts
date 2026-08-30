@@ -679,6 +679,7 @@ declare class KrnRating {
   >;
 }
 
+/** @deprecated Use `KrnAspectRatio` from `@kern-ui/angular/layout`. */
 declare class KrnResponsiveMedia {
   readonly aspectRatio: _angular_core.InputSignal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnResponsiveMedia, never>;

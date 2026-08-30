@@ -64,16 +64,16 @@ void bootstrapApplication(KernComboboxAgentExample);
 | ------------------ | ------ | ---------------------------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------------ |
 | `autocompleteMode` | input  | `KrnAutocompleteMode \| undefined`       | no       | `undefined` | Controls whether the component applies the autocomplete mode input behavior.                     |
 | `allowCustomValue` | input  | `boolean \| undefined`                   | no       | `undefined` | Controls whether the component applies the allow custom value input behavior.                    |
-| `id`               | input  | `string`                                 | no       | `''`        | Stable identifier value used by the id contract.                                                 |
+| `id`               | input  | `string`                                 | no       | `''`        | Stable identifier used by the id contract.                                                       |
 | `placeholder`      | input  | `string \| undefined`                    | no       | `undefined` | Short input hint shown only while no value is present.                                           |
-| `emptyText`        | input  | `string \| undefined`                    | no       | `undefined` | Visible and announced copy when the data collection has no items.                                |
-| `loadingText`      | input  | `string \| undefined`                    | no       | `undefined` | Visible and announced copy while asynchronous data is loading.                                   |
-| `errorText`        | input  | `string \| undefined`                    | no       | `undefined` | Visible and announced copy when loading the data collection fails.                               |
+| `emptyText`        | input  | `string \| undefined`                    | no       | `undefined` | Human-readable copy for the empty state or control.                                              |
+| `loadingText`      | input  | `string \| undefined`                    | no       | `undefined` | Human-readable copy for the loading state or control.                                            |
+| `errorText`        | input  | `string \| undefined`                    | no       | `undefined` | Human-readable copy for the error state or control.                                              |
 | `ariaLabel`        | input  | `string`                                 | no       | `''`        | Accessible name used when visible content is not sufficient.                                     |
 | `ariaLabelledBy`   | input  | `string`                                 | no       | `''`        | Space-separated element ids that provide the accessible name and take precedence over ariaLabel. |
 | `ariaDescribedBy`  | input  | `string`                                 | no       | `''`        | Space-separated element ids composed with Form Field hints and validation descriptions.          |
 | `toggleLabel`      | input  | `string \| undefined`                    | no       | `undefined` | Human-readable copy for the toggle state or control.                                             |
-| `name`             | input  | `string`                                 | no       | `''`        | Required human-readable name for the represented person, item, or action.                        |
+| `name`             | input  | `string`                                 | no       | `''`        | Native form-control name forwarded to the owned interactive element.                             |
 | `options`          | input  | `ReadonlyArray<KrnSelectOption<string>>` | yes      | `required`  | Authoritative option collection presented by the selection control.                              |
 | `optionsState`     | input  | `KrnOptionsState`                        | no       | `'ready'`   | Controls whether options are interactive or replaced by an announced loading/error state.        |
 | `filterLocally`    | input  | `boolean`                                | no       | `true`      | Set to false when the consumer filters options remotely in response to queryChange.              |
@@ -156,23 +156,23 @@ configure the deterministic documentation specimen and are not public component 
 Preset fixture effects are documentation-only rendering metadata; never serialize them as
 component inputs or models.
 
-| Argument           | Control | Default                    | Test value                             | Binding                             | Description                                                          |
-| ------------------ | ------- | -------------------------- | -------------------------------------- | ----------------------------------- | -------------------------------------------------------------------- |
-| `placeholder`      | text    | `"Filter plans…"`          | `"Filter plans… · alternate"`          | input `placeholder` (property)      | Sets the empty input prompt.                                         |
-| `optionsState`     | select  | `"ready"`                  | `"loading"`                            | input `optionsState` (property)     | Shows ready, loading, or error option content.                       |
-| `emptyText`        | text    | `"No options"`             | `"No options · alternate"`             | input `emptyText` (property)        | Uses locale-aware empty-options copy until explicitly changed.       |
-| `errorText`        | text    | `"Could not load options"` | `"Could not load options · alternate"` | input `errorText` (property)        | Uses locale-aware option-load failure copy until explicitly changed. |
-| `loadingText`      | text    | `"Loading options…"`       | `"Loading options… · alternate"`       | input `loadingText` (property)      | Uses locale-aware loading copy until explicitly changed.             |
-| `open`             | boolean | `false`                    | `true`                                 | model `open`                        | Opens the filtered listbox.                                          |
-| `disabled`         | boolean | `false`                    | `true`                                 | input `disabled` (property)         | Prevents user interaction.                                           |
-| `readOnly`         | boolean | `false`                    | `true`                                 | input `readonly` (property)         | Keeps the value focusable while preventing edits.                    |
-| `required`         | boolean | `false`                    | `true`                                 | input `required` (property)         | Marks the control as required.                                       |
-| `invalid`          | boolean | `false`                    | `true`                                 | input `invalid` (property)          | Exposes the invalid visual and ARIA state.                           |
-| `allowCustomValue` | boolean | `false`                    | `true`                                 | input `allowCustomValue` (property) | Configures the component allowCustomValue contract.                  |
-| `filterLocally`    | boolean | `true`                     | `false`                                | input `filterLocally` (property)    | Configures the component filterLocally contract.                     |
-| `id`               | text    | `""`                       | `"Alternate value"`                    | input `id` (property)               | Configures the component id contract.                                |
-| `tabindex`         | number  | `0`                        | `1`                                    | input `tabindex` (property)         | Configures the component tabindex contract.                          |
-| `value`            | text    | `""`                       | `"Alternate value"`                    | input `value` (property)            | Controlled component value.                                          |
+| Argument           | Control | Default                    | Test value                             | Binding                             | Description                                                                         |
+| ------------------ | ------- | -------------------------- | -------------------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------- |
+| `placeholder`      | text    | `"Filter plans…"`          | `"Filter plans… · alternate"`          | input `placeholder` (property)      | Sets the empty input prompt.                                                        |
+| `optionsState`     | select  | `"ready"`                  | `"loading"`                            | input `optionsState` (property)     | Shows ready, loading, or error option content.                                      |
+| `emptyText`        | text    | `"No options"`             | `"No options · alternate"`             | input `emptyText` (property)        | Uses locale-aware empty-options copy until explicitly changed.                      |
+| `errorText`        | text    | `"Could not load options"` | `"Could not load options · alternate"` | input `errorText` (property)        | Uses locale-aware option-load failure copy until explicitly changed.                |
+| `loadingText`      | text    | `"Loading options…"`       | `"Loading options… · alternate"`       | input `loadingText` (property)      | Uses locale-aware loading copy until explicitly changed.                            |
+| `open`             | boolean | `false`                    | `true`                                 | model `open`                        | Opens the filtered listbox.                                                         |
+| `disabled`         | boolean | `false`                    | `true`                                 | input `disabled` (property)         | Prevents user interaction.                                                          |
+| `readOnly`         | boolean | `false`                    | `true`                                 | input `readonly` (property)         | Keeps the value focusable while preventing edits.                                   |
+| `required`         | boolean | `false`                    | `true`                                 | input `required` (property)         | Marks the control as required.                                                      |
+| `invalid`          | boolean | `false`                    | `true`                                 | input `invalid` (property)          | Exposes the invalid visual and ARIA state.                                          |
+| `allowCustomValue` | boolean | `false`                    | `true`                                 | input `allowCustomValue` (property) | Controls whether the component applies the allow custom value input behavior.       |
+| `filterLocally`    | boolean | `true`                     | `false`                                | input `filterLocally` (property)    | Set to false when the consumer filters options remotely in response to queryChange. |
+| `id`               | text    | `""`                       | `"Alternate value"`                    | input `id` (property)               | Stable identifier used by the id contract.                                          |
+| `tabindex`         | number  | `0`                        | `1`                                    | input `tabindex` (property)         | Native sequential-focus order forwarded to the owned interactive element.           |
+| `value`            | text    | `""`                       | `"Alternate value"`                    | input `value` (property)            | Controlled component value.                                                         |
 
 Exact API exclusions:
 
@@ -201,7 +201,7 @@ Presets:
 - `focus-visible` — Focus visible; scenario `default`; visual state `focus-visible`.
 - `active` — Active; scenario `default`; visual state `active`.
 - `disabled` — Disabled; scenario `default`; `disabled=true`.
-- `filled` — filled; scenario `default`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
+- `filled` — filled; scenario `default`; `value="team"`; fixture effect `content/filled` — filled: The component is composed with a representative populated value..
 - `empty` — empty; scenario `default`; fixture effect `content/empty` — empty: The component is composed with intentionally empty content..
 - `readonly` — Readonly; scenario `default`; `readOnly=true`.
 - `required` — Required; scenario `default`; `required=true`.

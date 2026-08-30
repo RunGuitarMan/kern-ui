@@ -220,6 +220,8 @@ declare class KrnContainer {
   readonly maxWidth: _angular_core.InputSignal<KrnLayoutSpace | null>;
   readonly gutter: _angular_core.InputSignal<KrnLayoutSpace>;
   readonly align: _angular_core.InputSignal<'start' | 'center' | 'end'>;
+  /** Centers projected children on the inline axis while preserving the container measure. */
+  readonly intrinsic: _angular_core.InputSignalWithTransform<boolean, unknown>;
   protected readonly resolvedMaxWidth: _angular_core.Signal<string>;
   protected readonly resolvedGutter: _angular_core.Signal<string>;
   static ɵfac: _angular_core.ɵɵFactoryDeclaration<KrnContainer, never>;
@@ -232,6 +234,7 @@ declare class KrnContainer {
       maxWidth: { alias: 'maxWidth'; required: false; isSignal: true };
       gutter: { alias: 'gutter'; required: false; isSignal: true };
       align: { alias: 'align'; required: false; isSignal: true };
+      intrinsic: { alias: 'intrinsic'; required: false; isSignal: true };
     },
     {},
     never,
@@ -240,6 +243,7 @@ declare class KrnContainer {
     never
   >;
 }
+/** @deprecated Use `KrnContainer`, adding `intrinsic` when child centering is required. */
 declare class KrnCenter {
   /** Maximum outer inline size as a container token, CSS length, or `full`. */
   readonly maxWidth: _angular_core.InputSignal<KrnLayoutSpace>;

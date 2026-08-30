@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Breadcrumbs. A keyboard-first wayfinding primitive that preserves orientation and current location.",
+  "summary": "Breadcrumbs. Shows the current location hierarchy and collapses middle items when space is limited.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -78,7 +78,7 @@
       "type": "string",
       "required": false,
       "defaultValue": "'›'",
-      "description": "Visible text inserted between adjacent values or navigation segments.",
+      "description": "Defines the component's separator behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -134,11 +134,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Arrow keys move within composites", "Home / End jump", "Enter activates"],
+    "keyboard": ["Tab visits destination links in document order; Enter follows the focused link"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Destinations retain native link semantics and expose current location where applicable.",
+      "Composite navigation uses one documented focus model without changing reading order."
     ],
     "manualValidationRequired": true
   },
@@ -178,8 +177,8 @@
     "itemActivated"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Breadcrumbs for this specific contract: Shows the current location hierarchy and collapses middle items when space is limited.",
+    "avoidWhen": "Do not choose Breadcrumbs for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -225,7 +224,7 @@
         "kind": "text",
         "defaultValue": "›",
         "testValue": "› · alternate",
-        "description": "Configures the component separator contract.",
+        "description": "Defines the component's separator behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "separator",

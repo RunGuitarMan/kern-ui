@@ -16,7 +16,7 @@
     "selectors": ["krn-snackbar", "krn-toast-viewport"],
     "componentIds": []
   },
-  "summary": "Toast. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "summary": "Toast. Queues transient status messages and controls their position, visible count, and expansion.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -55,7 +55,7 @@
       "type": "KrnToastPosition",
       "required": false,
       "defaultValue": "'bottom-end'",
-      "description": "Logical placement of the component relative to its owning surface.",
+      "description": "Defines the component's position behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -121,11 +121,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Escape closes modal layers", "Focus returns to the trigger"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Visible copy and semantic role communicate feedback independently of color or motion.",
+      "Announcements use only the urgency required by the message."
     ],
     "manualValidationRequired": true
   },
@@ -166,8 +165,8 @@
     "expanded"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Toast for this specific contract: Queues transient status messages and controls their position, visible count, and expansion.",
+    "avoidWhen": "Do not choose Toast for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -209,7 +208,7 @@
         "kind": "number",
         "defaultValue": 8,
         "testValue": 9,
-        "description": "Configures the component maxExpanded contract.",
+        "description": "Upper or lower bound applied to the expanded value.",
         "binding": {
           "kind": "input",
           "publicName": "maxExpanded",
@@ -225,7 +224,7 @@
         "kind": "number",
         "defaultValue": 3,
         "testValue": 4,
-        "description": "Configures the component maxVisible contract.",
+        "description": "Upper or lower bound applied to the visible value.",
         "binding": {
           "kind": "input",
           "publicName": "maxVisible",
@@ -241,7 +240,7 @@
         "kind": "select",
         "defaultValue": "bottom-end",
         "testValue": "top-start",
-        "description": "Configures the component position contract.",
+        "description": "Defines the component's position behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "position",

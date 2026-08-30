@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Container. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Container. Constrains content width, adds inline gutters, and aligns the content block within its parent.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -53,7 +53,7 @@
       "type": "KrnContainerSize",
       "required": false,
       "defaultValue": "'lg'",
-      "description": "Named semantic size resolved through KERN density and sizing tokens.",
+      "description": "Named semantic size resolved through Kern density and sizing tokens.",
       "descriptionSource": "inferred"
     },
     {
@@ -73,7 +73,7 @@
       "type": "KrnLayoutSpace",
       "required": false,
       "defaultValue": "'4'",
-      "description": "Outer or inter-column spacing applied by the layout.",
+      "description": "Defines the component's gutter behavior or presentation.",
       "descriptionSource": "inferred"
     },
     {
@@ -85,6 +85,16 @@
       "defaultValue": "'center'",
       "description": "Logical cross-axis alignment applied to children by the layout.",
       "descriptionSource": "inferred"
+    },
+    {
+      "name": "intrinsic",
+      "property": "intrinsic",
+      "kind": "input",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": "false",
+      "description": "Centers projected children on the inline axis while preserving the container measure.",
+      "descriptionSource": "source"
     }
   ],
   "slots": [
@@ -106,11 +116,10 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "Projected content retains its document order and native semantics as layout changes.",
+      "Logical sizing and placement work in both LTR and RTL without duplicating content."
     ],
     "manualValidationRequired": true
   },
@@ -144,11 +153,12 @@
     "size",
     "maxWidth",
     "gutter",
-    "align"
+    "align",
+    "intrinsic"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Container for this specific contract: Constrains content width, adds inline gutters, and aligns the content block within its parent.",
+    "avoidWhen": "Do not choose Container for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",
@@ -213,7 +223,7 @@
         "kind": "select",
         "defaultValue": "center",
         "testValue": "end",
-        "description": "Configures the component align contract.",
+        "description": "Logical cross-axis alignment applied to children by the layout.",
         "binding": {
           "kind": "input",
           "publicName": "align",
@@ -240,10 +250,23 @@
         "kind": "text",
         "defaultValue": "4",
         "testValue": "20rem",
-        "description": "Configures the component gutter contract.",
+        "description": "Defines the component's gutter behavior or presentation.",
         "binding": {
           "kind": "input",
           "publicName": "gutter",
+          "syntax": "property"
+        }
+      },
+      {
+        "key": "intrinsic",
+        "label": "Intrinsic",
+        "kind": "boolean",
+        "defaultValue": false,
+        "testValue": true,
+        "description": "Centers projected children on the inline axis while preserving the container measure.",
+        "binding": {
+          "kind": "input",
+          "publicName": "intrinsic",
           "syntax": "property"
         }
       },
@@ -253,7 +276,7 @@
         "kind": "text",
         "defaultValue": "",
         "testValue": "20rem",
-        "description": "Configures the component maxWidth contract.",
+        "description": "Upper or lower bound applied to the width value.",
         "binding": {
           "kind": "input",
           "publicName": "maxWidth",
@@ -339,8 +362,8 @@
       }
     ],
     "apiCoverage": {
-      "publicInputsAndModels": 4,
-      "controlled": 4,
+      "publicInputsAndModels": 5,
+      "controlled": 5,
       "excluded": 0,
       "unclassified": 0
     },

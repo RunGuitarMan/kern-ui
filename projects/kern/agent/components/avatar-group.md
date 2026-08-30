@@ -7,13 +7,13 @@
 - Lifecycle: **stable**
 - Category: Data display
 
-Avatar Group. A dense, readable data primitive with semantic structure and resilient overflow.
+Avatar Group. Overlaps several avatars and summarizes identities that do not fit the visible limit.
 
 ## Use
 
-Use the smallest semantic primitive that communicates the intended relationship.
+Use Avatar Group for this specific contract: Overlaps several avatars and summarizes identities that do not fit the visible limit.
 
-Avoid: Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner.
+Avoid: Do not choose Avatar Group for visual similarity alone; its semantics and interaction model must match the product task.
 
 ## Compile-verified standalone Angular example
 
@@ -49,10 +49,10 @@ void bootstrapApplication(KernAvatarGroupAgentExample);
 
 ## API
 
-| Name        | Kind  | Type                  | Required | Default      | Description                                                                |
-| ----------- | ----- | --------------------- | -------- | ------------ | -------------------------------------------------------------------------- |
-| `ariaLabel` | input | `string \| undefined` | no       | `undefined`  | Accessible name used when visible content is not sufficient.               |
-| `overlap`   | input | `string`              | no       | `'0.625rem'` | Allows the floating action surface to overlap its adjacent container edge. |
+| Name        | Kind  | Type                  | Required | Default      | Description                                                  |
+| ----------- | ----- | --------------------- | -------- | ------------ | ------------------------------------------------------------ |
+| `ariaLabel` | input | `string \| undefined` | no       | `undefined`  | Accessible name used when visible content is not sufficient. |
+| `overlap`   | input | `string`              | no       | `'0.625rem'` | Defines the component's overlap behavior or presentation.    |
 
 ## Deprecated selectors
 
@@ -68,11 +68,9 @@ Not an Angular Forms value accessor.
 
 ## Accessibility
 
-- Arrow keys navigate interactive data
-- Enter expands or selects
-- Visible focus indicator with forced-colors support.
-- Works at 200% text zoom and in narrow containers.
-- State is communicated by text, shape, or icon in addition to color.
+- The component adds no keyboard interaction or tab stop of its own
+- Visible labels and semantic structure preserve the meaning and relationships in the data.
+- Interactive descendants retain native names and a predictable focus order.
 
 Manual assistive-technology validation remains required in the consuming application.
 

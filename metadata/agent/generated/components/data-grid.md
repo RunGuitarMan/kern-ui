@@ -88,39 +88,39 @@ void bootstrapApplication(KernDataGridAgentExample);
 
 ## API
 
-| Name                    | Kind   | Type                                           | Required | Default                                | Description                                                                            |
-| ----------------------- | ------ | ---------------------------------------------- | -------- | -------------------------------------- | -------------------------------------------------------------------------------------- |
-| `data`                  | input  | `ReadonlyArray<T>`                             | yes      | `required`                             | Immutable data supplied by the consumer.                                               |
-| `columns`               | input  | `ReadonlyArray<KrnDataColumn<T>>`              | yes      | `required`                             | Typed column definitions with stable keys.                                             |
-| `rowIdentity`           | input  | `(row: T, index: number) => KrnDataRowKey`     | yes      | `required`                             | Returns a stable unique key for every source row occurrence.                           |
-| `mode`                  | input  | `KrnDataGridMode`                              | no       | `{ kind: 'client', pagination: true }` | Discriminated operating mode that selects the component data and interaction contract. |
-| `labels`                | input  | `Partial<KrnDataGridTranslations>`             | no       | `{}`                                   | Localized copy overrides for the component-owned interface text.                       |
-| `ariaLabel`             | input  | `string \| undefined`                          | no       | `undefined`                            | Accessible name used when visible content is not sufficient.                           |
-| `loading`               | input  | `boolean`                                      | no       | `false`                                | Prevents duplicate actions and exposes accessible busy state.                          |
-| `error`                 | input  | `string`                                       | no       | `''`                                   | Current failure message or error state exposed by asynchronous content.                |
-| `emptyLabel`            | input  | `string \| undefined`                          | no       | `undefined`                            | Accessible copy that explains the empty state.                                         |
-| `filterable`            | input  | `boolean`                                      | no       | `true`                                 | Enables the grid-owned text filtering interface.                                       |
-| `filterPlaceholder`     | input  | `string \| undefined`                          | no       | `undefined`                            | Short hint displayed in the grid filter input before a query is entered.               |
-| `filterPredicate`       | input  | `KrnDataFilterPredicate<T> \| null`            | no       | `null`                                 | Determines whether a row matches the current filter query.                             |
-| `selectable`            | input  | `boolean`                                      | no       | `false`                                | Enables row selection and the corresponding selected-key contract.                     |
-| `expandable`            | input  | `boolean`                                      | no       | `false`                                | Controls whether the component applies the expandable behavior.                        |
-| `expandedContent`       | input  | `(row: T) => string`                           | no       | `() => ''`                             | Template or projected content used to render expanded.                                 |
-| `expandedTemplate`      | input  | `TemplateRef<KrnDataRowContext<T>> \| null`    | no       | `null`                                 | Template or projected content used to render expanded.                                 |
-| `defaultCellTemplate`   | input  | `TemplateRef<KrnDataCellContext<T>> \| null`   | no       | `null`                                 | Template or projected content used to render default cell.                             |
-| `defaultHeaderTemplate` | input  | `TemplateRef<KrnDataHeaderContext<T>> \| null` | no       | `null`                                 | Template or projected content used to render default header.                           |
-| `resizable`             | input  | `boolean`                                      | no       | `true`                                 | Enables pointer and keyboard resizing for supported columns or panels.                 |
-| `compact`               | input  | `boolean`                                      | no       | `false`                                | Uses the reduced-density presentation intended for constrained data views.             |
-| `viewportHeight`        | input  | `number`                                       | no       | `360`                                  | Measured virtual viewport height used to determine visible rows.                       |
-| `pageSize`              | input  | `number`                                       | no       | `10`                                   | Maximum number of records requested or displayed on one page.                          |
-| `columnChooser`         | input  | `boolean`                                      | no       | `false`                                | Enables the grid-owned control for changing visible columns.                           |
-| `filter`                | model  | `string`                                       | no       | `''`                                   | Controlled filter state with a matching Angular model-change output.                   |
-| `page`                  | model  | `number`                                       | no       | `1`                                    | One-based controlled page index.                                                       |
-| `selected`              | model  | `ReadonlySet<KrnDataRowKey>`                   | no       | `new Set<KrnDataRowKey>()`             | Controlled selected state, distinct from keyboard focus.                               |
-| `expanded`              | model  | `ReadonlySet<KrnDataRowKey>`                   | no       | `new Set<KrnDataRowKey>()`             | Controlled expanded state for a disclosure or hierarchical item.                       |
-| `hiddenColumnKeys`      | model  | `ReadonlySet<string>`                          | no       | `new Set<string>()`                    | Stable column keys excluded from the current grid presentation.                        |
-| `sortKey`               | model  | `string`                                       | no       | `''`                                   | Stable column key that owns the current sort operation.                                |
-| `sortDirection`         | model  | `KrnDataSortDirection`                         | no       | `'asc'`                                | Current ascending, descending, or unsorted direction.                                  |
-| `queryChange`           | output | `KrnDataGridQuery`                             | no       | `undefined`                            | Notifies the consumer after the query change interaction completes.                    |
+| Name                    | Kind   | Type                                           | Required | Default                                | Description                                                                      |
+| ----------------------- | ------ | ---------------------------------------------- | -------- | -------------------------------------- | -------------------------------------------------------------------------------- |
+| `data`                  | input  | `ReadonlyArray<T>`                             | yes      | `required`                             | Immutable data supplied by the consumer.                                         |
+| `columns`               | input  | `ReadonlyArray<KrnDataColumn<T>>`              | yes      | `required`                             | Typed column definitions with stable keys.                                       |
+| `rowIdentity`           | input  | `(row: T, index: number) => KrnDataRowKey`     | yes      | `required`                             | Defines the component's row identity behavior or presentation.                   |
+| `mode`                  | input  | `KrnDataGridMode`                              | no       | `{ kind: 'client', pagination: true }` | Defines the component's mode behavior or presentation.                           |
+| `labels`                | input  | `Partial<KrnDataGridTranslations>`             | no       | `{}`                                   | Localized copy overrides for the component-owned interface text.                 |
+| `ariaLabel`             | input  | `string \| undefined`                          | no       | `undefined`                            | Accessible name used when visible content is not sufficient.                     |
+| `loading`               | input  | `boolean`                                      | no       | `false`                                | Prevents duplicate actions and exposes an accessible busy state.                 |
+| `error`                 | input  | `string`                                       | no       | `''`                                   | Defines the component's error behavior or presentation.                          |
+| `emptyLabel`            | input  | `string \| undefined`                          | no       | `undefined`                            | Human-readable copy for the empty state or control.                              |
+| `filterable`            | input  | `boolean`                                      | no       | `true`                                 | Defines the component's filterable behavior or presentation.                     |
+| `filterPlaceholder`     | input  | `string \| undefined`                          | no       | `undefined`                            | Defines the component's filter placeholder behavior or presentation.             |
+| `filterPredicate`       | input  | `KrnDataFilterPredicate<T> \| null`            | no       | `null`                                 | Consumer function used by the component to resolve filter predicate.             |
+| `selectable`            | input  | `boolean`                                      | no       | `false`                                | Defines the component's selectable behavior or presentation.                     |
+| `expandable`            | input  | `boolean`                                      | no       | `false`                                | Controls whether the component applies the expandable behavior.                  |
+| `expandedContent`       | input  | `(row: T) => string`                           | no       | `() => ''`                             | Template or projected content used to render expanded.                           |
+| `expandedTemplate`      | input  | `TemplateRef<KrnDataRowContext<T>> \| null`    | no       | `null`                                 | Template or projected content used to render expanded.                           |
+| `defaultCellTemplate`   | input  | `TemplateRef<KrnDataCellContext<T>> \| null`   | no       | `null`                                 | Template or projected content used to render default cell.                       |
+| `defaultHeaderTemplate` | input  | `TemplateRef<KrnDataHeaderContext<T>> \| null` | no       | `null`                                 | Template or projected content used to render default header.                     |
+| `resizable`             | input  | `boolean`                                      | no       | `true`                                 | Defines the component's resizable behavior or presentation.                      |
+| `compact`               | input  | `boolean`                                      | no       | `false`                                | Defines the component's compact behavior or presentation.                        |
+| `viewportHeight`        | input  | `number`                                       | no       | `360`                                  | Measured virtual viewport height used to determine visible rows.                 |
+| `pageSize`              | input  | `number`                                       | no       | `10`                                   | Maximum number of records requested or displayed on one page.                    |
+| `columnChooser`         | input  | `boolean`                                      | no       | `false`                                | Defines the component's column chooser behavior or presentation.                 |
+| `filter`                | model  | `string`                                       | no       | `''`                                   | Controlled filter state with a matching Angular model-change output.             |
+| `page`                  | model  | `number`                                       | no       | `1`                                    | One-based controlled page index.                                                 |
+| `selected`              | model  | `ReadonlySet<KrnDataRowKey>`                   | no       | `new Set<KrnDataRowKey>()`             | Controlled selected state, distinct from keyboard focus.                         |
+| `expanded`              | model  | `ReadonlySet<KrnDataRowKey>`                   | no       | `new Set<KrnDataRowKey>()`             | Controlled expanded state for a disclosure or hierarchical item.                 |
+| `hiddenColumnKeys`      | model  | `ReadonlySet<string>`                          | no       | `new Set<string>()`                    | Controlled hidden column keys state with a matching Angular model-change output. |
+| `sortKey`               | model  | `string`                                       | no       | `''`                                   | Controlled sort key state with a matching Angular model-change output.           |
+| `sortDirection`         | model  | `KrnDataSortDirection`                         | no       | `'asc'`                                | Controlled sort direction state with a matching Angular model-change output.     |
+| `queryChange`           | output | `KrnDataGridQuery`                             | no       | `undefined`                            | Notifies the consumer after the query change interaction completes.              |
 
 ## Deprecated selectors
 
@@ -209,8 +209,8 @@ component inputs or models.
 | `sortDirection`     | select  | `"asc"`          | `"desc"`                     | model `sortDirection`                | Changes the active sort direction.                                                |
 | `sortKey`           | text    | `""`             | `"usage"`                    | model `sortKey`                      | Changes the active sort column.                                                   |
 | `filterPlaceholder` | text    | `"Filter rows…"` | `"Filter rows… · alternate"` | input `filterPlaceholder` (property) | Uses locale-aware filter copy until explicitly changed.                           |
-| `columnChooser`     | boolean | `false`          | `true`                       | input `columnChooser` (property)     | Configures the component columnChooser contract.                                  |
-| `error`             | text    | `""`             | `"Alternate value"`          | input `error` (property)             | Configures the component error contract.                                          |
+| `columnChooser`     | boolean | `false`          | `true`                       | input `columnChooser` (property)     | Defines the component's column chooser behavior or presentation.                  |
+| `error`             | text    | `""`             | `"Alternate value"`          | input `error` (property)             | Defines the component's error behavior or presentation.                           |
 | `loading`           | boolean | `false`          | `true`                       | input `loading` (property)           | Prevents duplicate actions and exposes an accessible busy state.                  |
 
 Exact API exclusions:

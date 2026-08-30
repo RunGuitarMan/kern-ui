@@ -15,6 +15,7 @@ import {
 import { KRN_PLATFORM, KrnIdService, KrnOverlayCoordinator } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
 
+/** @deprecated Compose the responsive navigation behavior with `KrnAppShell`. */
 @Component({
   selector: 'krn-responsive-application-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,

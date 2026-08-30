@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Multi Step Form. A product pattern composed from Kern primitives, intended as a starting point rather than a sealed widget.",
+  "summary": "Multi Step Form. Coordinates validation, progress, and navigation across a multi-stage form.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -189,11 +189,12 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
+    "keyboard": [
+      "Keyboard behavior is provided by the native elements and Kern primitives in the recipe"
+    ],
     "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
+      "The recipe preserves the accessible names, roles, states, and focus behavior of its primitives.",
+      "Loading, empty, error, and success states remain visible and programmatically perceivable."
     ],
     "manualValidationRequired": true
   },
@@ -239,8 +240,8 @@
     "completed"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Multi Step Form for this specific contract: Coordinates validation, progress, and navigation across a multi-stage form.",
+    "avoidWhen": "Do not choose Multi Step Form for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Do not omit required inputs: `steps`.",
@@ -301,7 +302,7 @@
         "kind": "boolean",
         "defaultValue": true,
         "testValue": false,
-        "description": "Configures the component allowStepNavigation contract.",
+        "description": "Controls whether the component applies the allow step navigation behavior.",
         "binding": {
           "kind": "input",
           "publicName": "allowStepNavigation",
@@ -314,7 +315,7 @@
         "kind": "select",
         "defaultValue": "horizontal",
         "testValue": "vertical",
-        "description": "Logical axis exposed by the component; behavior follows its documented keyboard contract.",
+        "description": "Defines the logical axis used by layout and keyboard navigation.",
         "binding": {
           "kind": "input",
           "publicName": "orientation",

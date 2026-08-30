@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Spacer. A composable spatial primitive that keeps product layouts predictable across containers.",
+  "summary": "Spacer. Reserves decorative horizontal or vertical space and stays hidden from assistive technology.",
   "acceptanceStates": ["default", "dark", "high contrast", "compact", "RTL", "mobile"],
   "lifecycle": {
     "status": "stable",
@@ -70,12 +70,8 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["No custom keyboard behavior unless the composition is interactive"],
-    "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
-    ],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
+    "notes": ["Is always aria-hidden because it communicates spacing, not content."],
     "manualValidationRequired": true
   },
   "ssr": {
@@ -101,8 +97,8 @@
   "related": ["app-shell", "header", "sidebar", "navigation-rail"],
   "keywords": ["spacer", "Spacer", "Layout", "krn-spacer", "KrnSpacer", "size", "axis"],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Spacer for this specific contract: Reserves decorative horizontal or vertical space and stays hidden from assistive technology.",
+    "avoidWhen": "Do not choose Spacer for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

@@ -16,7 +16,7 @@
     "selectors": [],
     "componentIds": []
   },
-  "summary": "Progress Bar. A perceivable feedback primitive with focus, announcement, and reduced-motion behavior.",
+  "summary": "Progress Bar. Shows determinate or indeterminate progress along a horizontal track.",
   "acceptanceStates": [
     "default",
     "overflow",
@@ -76,7 +76,7 @@
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
-      "description": "Represents an unknown progress value or a mixed selection state.",
+      "description": "Controlled mixed state rendered independently from the checked value.",
       "descriptionSource": "inferred"
     },
     {
@@ -112,12 +112,8 @@
   },
   "a11y": {
     "target": "WCAG 2.2 AA",
-    "keyboard": ["Escape closes modal layers", "Focus returns to the trigger"],
-    "notes": [
-      "Visible focus indicator with forced-colors support.",
-      "Works at 200% text zoom and in narrow containers.",
-      "State is communicated by text, shape, or icon in addition to color."
-    ],
+    "keyboard": ["The component adds no keyboard interaction or tab stop of its own"],
+    "notes": ["Exposes progressbar semantics with current bounds or an indeterminate state."],
     "manualValidationRequired": true
   },
   "ssr": {
@@ -154,8 +150,8 @@
     "valueText"
   ],
   "guidance": {
-    "useWhen": "Use the smallest semantic primitive that communicates the intended relationship.",
-    "avoidWhen": "Do not remove labels, focus indicators, or overflow behavior to make a demo look cleaner."
+    "useWhen": "Use Progress Bar for this specific contract: Shows determinate or indeterminate progress along a horizontal track.",
+    "avoidWhen": "Do not choose Progress Bar for visual similarity alone; its semantics and interaction model must match the product task."
   },
   "commonMistakes": [
     "Importing from an undeclared family path or a source implementation file.",

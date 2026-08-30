@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { KrnCard } from '@kern-ui/angular/data-display';
 
+/** @deprecated Compose this recipe with `KrnCard` and a named product region. */
 @Component({
   selector: 'krn-dashboard-widget',
   changeDetection: ChangeDetectionStrategy.OnPush,

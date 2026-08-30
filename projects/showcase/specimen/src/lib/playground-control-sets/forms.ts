@@ -168,6 +168,7 @@ export const FORMS_CONTROL_SETS: Readonly<Record<string, readonly KernPlayground
     invalid,
   ],
   'number-input': [
+    number('value', 'Value', 250, 'Sets the controlled numeric value.', -10_000, 10_000),
     number('min', 'Minimum', 1, 'Sets the lowest accepted value.', -10_000, 10_000),
     number('max', 'Maximum', 500, 'Sets the highest accepted value.', -10_000, 10_000),
     number('step', 'Step', 5, 'Sets the keyboard and stepper increment.', 1, 100),
@@ -216,6 +217,17 @@ export const FORMS_CONTROL_SETS: Readonly<Record<string, readonly KernPlayground
     invalid,
   ],
   select: [
+    select(
+      'value',
+      'Selected plan',
+      '',
+      'Seeds the Forms API with one selected plan so the committed value is visible.',
+      ['', 'starter', 'team', 'scale'],
+      fixtureBinding(
+        'interaction',
+        'Writes the specimen value through the component Forms API rather than a public signal input.',
+      ),
+    ),
     text('placeholder', 'Placeholder', 'Choose a plan', 'Sets the empty selection prompt.'),
     select('size', 'Size', 'md', 'Changes the control height.', ['sm', 'md', 'lg']),
     select(
@@ -250,6 +262,17 @@ export const FORMS_CONTROL_SETS: Readonly<Record<string, readonly KernPlayground
     invalid,
   ],
   'native-select': [
+    select(
+      'value',
+      'Selected plan',
+      '',
+      'Seeds the native selection with one committed option.',
+      ['', 'starter', 'team', 'scale'],
+      fixtureBinding(
+        'interaction',
+        'Writes the specimen value through the component Forms API rather than a public signal input.',
+      ),
+    ),
     text('placeholder', 'Placeholder', 'Choose a region', 'Sets the empty selection prompt.'),
     select('size', 'Size', 'md', 'Changes the control height.', ['sm', 'md', 'lg']),
     disabled,

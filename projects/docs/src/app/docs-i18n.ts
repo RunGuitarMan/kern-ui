@@ -83,15 +83,16 @@ export class DocsI18n {
     const pack = this.packFor(locale);
     if (!pack) return item;
     const name = item.name;
+    const translatedSummary = pack.RU_COMPONENT_SUMMARIES[item.id];
     return {
       ...item,
       name,
-      summary: `${name}. ${pack.RU_SUMMARY[item.category]}`,
-      keyboard: pack.RU_KEYBOARD[item.category],
-      accessibility: pack.RU_ACCESSIBILITY[item.category],
+      summary: translatedSummary ? `${name}. ${translatedSummary}` : item.summary,
+      keyboard: pack.RU_COMPONENT_KEYBOARD[item.id] ?? item.keyboard,
+      accessibility: pack.RU_COMPONENT_ACCESSIBILITY[item.id] ?? item.accessibility,
       api: item.api.map((row) => ({ ...row, description: this.apiDescriptionFor(locale, row) })),
-      do: pack.RU_DO[item.category],
-      dont: pack.RU_DONT[item.category],
+      do: pack.RU_COMPONENT_DO[item.id] ?? item.do,
+      dont: pack.RU_COMPONENT_DONT[item.id] ?? item.dont,
     };
   }
 
@@ -108,11 +109,7 @@ export class DocsI18n {
     const explicit = pack?.RU_API_DESCRIPTIONS[row.name];
     if (explicit) return explicit;
     if (!pack) return row.description;
-    if (row.kind === 'model') {
-      return `Управляемое состояние ${row.name} с соответствующим событием ${row.name}Change.`;
-    }
-    if (row.kind === 'output') return `Отправляется при завершении действия ${row.name}.`;
-    return `Настраивает контракт ${row.name} компонента.`;
+    return row.description;
   }
 
   prepare(locale: string): Promise<void> {
