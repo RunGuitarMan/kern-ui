@@ -2,7 +2,7 @@
 
 - ID: `segmented-control`
 - Selector: `krn-segmented-control`
-- Import: `import { KrnSegmentedControl } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSegmentedControl } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnSegmentedControl`
 - Lifecycle: **stable**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSegmentedControl, type KrnSegmentOption } from '@kern-ui/angular/kit';
+import { KrnSegmentedControl, type KrnSegmentOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-segmented-control-agent-example',

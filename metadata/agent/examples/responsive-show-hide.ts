@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnResponsiveShowHide } from '@kern-ui/angular/kit';
+import { KrnResponsiveShowHide } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-responsive-show-hide-agent-example',

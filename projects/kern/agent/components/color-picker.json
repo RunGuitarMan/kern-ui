@@ -9,8 +9,8 @@
   "symbol": "KrnColorPicker",
   "canonicalSymbol": "KrnColorPicker",
   "canonicalId": "color-picker",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -243,7 +243,7 @@
       "title": "Typed chart accent color",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed chart accent color\n *\n * Bind a normalized color value for user-configurable reporting.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnColorPicker } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-color-picker-agent-example',\n  standalone: true,\n  imports: [KrnColorPicker, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-color-picker pickerLabel=\"Chart accent\" textLabel=\"Hex color\" [formControl]=\"control\" />\n  `,\n})\nexport class KernColorPickerAgentExample {\n  readonly control = new FormControl<string>('#4666da', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernColorPickerAgentExample);\n",
+      "code": "/**\n * Typed chart accent color\n *\n * Bind a normalized color value for user-configurable reporting.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnColorPicker } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-color-picker-agent-example',\n  standalone: true,\n  imports: [KrnColorPicker, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-color-picker pickerLabel=\"Chart accent\" textLabel=\"Hex color\" [formControl]=\"control\" />\n  `,\n})\nexport class KernColorPickerAgentExample {\n  readonly control = new FormControl<string>('#4666da', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernColorPickerAgentExample);\n",
       "verification": "compiled",
       "source": "examples/color-picker.ts"
     }

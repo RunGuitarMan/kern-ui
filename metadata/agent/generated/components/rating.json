@@ -9,8 +9,8 @@
   "symbol": "KrnRating",
   "canonicalSymbol": "KrnRating",
   "canonicalId": "rating",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -139,7 +139,7 @@
       "title": "Controlled customer rating",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled customer rating\n *\n * Keep the selected numeric rating in application state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnRating } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-rating-agent-example',\n  standalone: true,\n  imports: [KrnRating],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-rating ariaLabel=\"Customer satisfaction\" [max]=\"5\" [(value)]=\"rating\" /> `,\n})\nexport class KernRatingAgentExample {\n  rating = 4;\n}\n\nvoid bootstrapApplication(KernRatingAgentExample);\n",
+      "code": "/**\n * Controlled customer rating\n *\n * Keep the selected numeric rating in application state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnRating } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-rating-agent-example',\n  standalone: true,\n  imports: [KrnRating],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-rating ariaLabel=\"Customer satisfaction\" [max]=\"5\" [(value)]=\"rating\" /> `,\n})\nexport class KernRatingAgentExample {\n  rating = 4;\n}\n\nvoid bootstrapApplication(KernRatingAgentExample);\n",
       "verification": "compiled",
       "source": "examples/rating.ts"
     }

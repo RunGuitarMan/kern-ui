@@ -9,8 +9,8 @@
   "symbol": "KrnSkeleton",
   "canonicalSymbol": "KrnSkeleton",
   "canonicalId": "skeleton",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -113,7 +113,7 @@
       "title": "Stable customer-card placeholder",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Stable customer-card placeholder\n *\n * Reserve the final content geometry while data loads.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSkeleton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-skeleton-agent-example',\n  standalone: true,\n  imports: [KrnSkeleton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <section aria-label=\"Loading customer summary\">\n      <krn-skeleton width=\"40%\" height=\"1.25rem\" shape=\"text\" />\n      <krn-skeleton width=\"100%\" height=\"4rem\" shape=\"rectangle\" />\n    </section>\n  `,\n})\nexport class KernSkeletonAgentExample {}\n\nvoid bootstrapApplication(KernSkeletonAgentExample);\n",
+      "code": "/**\n * Stable customer-card placeholder\n *\n * Reserve the final content geometry while data loads.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSkeleton } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-skeleton-agent-example',\n  standalone: true,\n  imports: [KrnSkeleton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <section aria-label=\"Loading customer summary\">\n      <krn-skeleton width=\"40%\" height=\"1.25rem\" shape=\"text\" />\n      <krn-skeleton width=\"100%\" height=\"4rem\" shape=\"rectangle\" />\n    </section>\n  `,\n})\nexport class KernSkeletonAgentExample {}\n\nvoid bootstrapApplication(KernSkeletonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/skeleton.ts"
     }

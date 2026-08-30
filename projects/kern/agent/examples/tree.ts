@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTree, type KrnTreeNode } from '@kern-ui/angular/kit';
+import { KrnTree, type KrnTreeNode } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-tree-agent-example',

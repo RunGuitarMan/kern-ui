@@ -9,8 +9,8 @@
   "symbol": "KrnCheckbox",
   "canonicalSymbol": "KrnCheckbox",
   "canonicalId": "checkbox",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -267,7 +267,7 @@
       "title": "Typed policy acknowledgement",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed policy acknowledgement\n *\n * Bind a boolean consent value through Angular Forms.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCheckbox } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-checkbox-agent-example',\n  standalone: true,\n  imports: [KrnCheckbox, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-checkbox [formControl]=\"control\">\n      I confirm the account owner has approved this change.\n    </krn-checkbox>\n  `,\n})\nexport class KernCheckboxAgentExample {\n  readonly control = new FormControl<boolean>(false, { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernCheckboxAgentExample);\n",
+      "code": "/**\n * Typed policy acknowledgement\n *\n * Bind a boolean consent value through Angular Forms.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCheckbox } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-checkbox-agent-example',\n  standalone: true,\n  imports: [KrnCheckbox, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-checkbox [formControl]=\"control\">\n      I confirm the account owner has approved this change.\n    </krn-checkbox>\n  `,\n})\nexport class KernCheckboxAgentExample {\n  readonly control = new FormControl<boolean>(false, { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernCheckboxAgentExample);\n",
       "verification": "compiled",
       "source": "examples/checkbox.ts"
     }

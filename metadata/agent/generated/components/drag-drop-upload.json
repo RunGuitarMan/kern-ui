@@ -9,8 +9,8 @@
   "symbol": "KrnDragDropUpload",
   "canonicalSymbol": "KrnDropUpload",
   "canonicalId": "drag-drop-upload",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": ["KrnDropUpload"],
     "selectors": ["krn-drop-upload"],
@@ -286,7 +286,7 @@
       "title": "Typed evidence drop zone",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed evidence drop zone\n *\n * Bind immutable uploaded files while retaining an accessible browse action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDragDropUpload } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-drag-drop-upload-agent-example',\n  standalone: true,\n  imports: [KrnDragDropUpload, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-drag-drop-upload\n      label=\"Audit evidence\"\n      description=\"Drop files or choose from your device\"\n      [multiple]=\"true\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernDragDropUploadAgentExample {\n  readonly control = new FormControl<readonly File[]>([], { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernDragDropUploadAgentExample);\n",
+      "code": "/**\n * Typed evidence drop zone\n *\n * Bind immutable uploaded files while retaining an accessible browse action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDragDropUpload } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-drag-drop-upload-agent-example',\n  standalone: true,\n  imports: [KrnDragDropUpload, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-drag-drop-upload\n      label=\"Audit evidence\"\n      description=\"Drop files or choose from your device\"\n      [multiple]=\"true\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernDragDropUploadAgentExample {\n  readonly control = new FormControl<readonly File[]>([], { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernDragDropUploadAgentExample);\n",
       "verification": "compiled",
       "source": "examples/drag-drop-upload.ts"
     }

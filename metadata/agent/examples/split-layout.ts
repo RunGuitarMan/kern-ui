@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSplitLayout } from '@kern-ui/angular/kit';
+import { KrnSplitLayout } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-split-layout-agent-example',

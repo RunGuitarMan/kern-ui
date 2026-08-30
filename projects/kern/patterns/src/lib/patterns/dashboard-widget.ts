@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { KrnCard } from '@kern-ui/angular/kit';
+import { KrnCard } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'krn-dashboard-widget',

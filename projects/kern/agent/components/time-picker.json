@@ -9,8 +9,8 @@
   "symbol": "KrnTimePicker",
   "canonicalSymbol": "KrnTimePicker",
   "canonicalId": "time-picker",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -276,7 +276,7 @@
       "title": "Typed maintenance time",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed maintenance time\n *\n * Bind a 24-hour time string within an allowed operating window.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTimePicker } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-time-picker-agent-example',\n  standalone: true,\n  imports: [KrnTimePicker, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-time-picker\n      ariaLabel=\"Maintenance start\"\n      min=\"06:00\"\n      max=\"22:00\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernTimePickerAgentExample {\n  readonly control = new FormControl<string>('18:30', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernTimePickerAgentExample);\n",
+      "code": "/**\n * Typed maintenance time\n *\n * Bind a 24-hour time string within an allowed operating window.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTimePicker } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-time-picker-agent-example',\n  standalone: true,\n  imports: [KrnTimePicker, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-time-picker\n      ariaLabel=\"Maintenance start\"\n      min=\"06:00\"\n      max=\"22:00\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernTimePickerAgentExample {\n  readonly control = new FormControl<string>('18:30', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernTimePickerAgentExample);\n",
       "verification": "compiled",
       "source": "examples/time-picker.ts"
     }

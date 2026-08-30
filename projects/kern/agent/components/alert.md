@@ -2,7 +2,7 @@
 
 - ID: `alert`
 - Selector: `krn-alert`
-- Import: `import { KrnAlert } from '@kern-ui/angular/kit';`
+- Import: `import { KrnAlert } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnAlert`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnAlert } from '@kern-ui/angular/kit';
+import { KrnAlert } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-alert-agent-example',

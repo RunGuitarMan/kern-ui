@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSkipLink } from '@kern-ui/angular/kit';
+import { KrnSkipLink } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-skip-link-agent-example',

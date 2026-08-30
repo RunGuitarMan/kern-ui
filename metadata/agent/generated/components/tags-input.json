@@ -9,8 +9,8 @@
   "symbol": "KrnTagsInput",
   "canonicalSymbol": "KrnTagsInput",
   "canonicalId": "tags-input",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -308,7 +308,7 @@
       "title": "Typed account tags",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed account tags\n *\n * Bind an immutable tag array and provide an explicit creation label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTagsInput } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-tags-input-agent-example',\n  standalone: true,\n  imports: [KrnTagsInput, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tags-input label=\"Account tags\" placeholder=\"Add a tag\" [formControl]=\"control\" />\n  `,\n})\nexport class KernTagsInputAgentExample {\n  readonly control = new FormControl<readonly string[]>(['enterprise', 'renewal-q3'], {\n    nonNullable: true,\n  });\n}\n\nvoid bootstrapApplication(KernTagsInputAgentExample);\n",
+      "code": "/**\n * Typed account tags\n *\n * Bind an immutable tag array and provide an explicit creation label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTagsInput } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-tags-input-agent-example',\n  standalone: true,\n  imports: [KrnTagsInput, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tags-input label=\"Account tags\" placeholder=\"Add a tag\" [formControl]=\"control\" />\n  `,\n})\nexport class KernTagsInputAgentExample {\n  readonly control = new FormControl<readonly string[]>(['enterprise', 'renewal-q3'], {\n    nonNullable: true,\n  });\n}\n\nvoid bootstrapApplication(KernTagsInputAgentExample);\n",
       "verification": "compiled",
       "source": "examples/tags-input.ts"
     }

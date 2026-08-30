@@ -9,8 +9,8 @@
   "symbol": "KrnContextMenu",
   "canonicalSymbol": "KrnContextMenu",
   "canonicalId": "context-menu",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -128,7 +128,7 @@
       "title": "Typed row context actions",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed row context actions\n *\n * Provide nested context actions with stable ids.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnContextMenu, type KrnContextMenuItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-context-menu-agent-example',\n  standalone: true,\n  imports: [KrnContextMenu],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-context-menu ariaLabel=\"Customer row actions\" [items]=\"items\">\n      <button type=\"button\">Open row actions</button>\n    </krn-context-menu>\n  `,\n})\nexport class KernContextMenuAgentExample {\n  readonly items: readonly KrnContextMenuItem[] = [\n    { id: 'open', label: 'Open customer' },\n    {\n      id: 'export',\n      label: 'Export',\n      children: [\n        { id: 'export-csv', label: 'CSV' },\n        { id: 'export-json', label: 'JSON' },\n      ],\n    },\n  ];\n}\n\nvoid bootstrapApplication(KernContextMenuAgentExample);\n",
+      "code": "/**\n * Typed row context actions\n *\n * Provide nested context actions with stable ids.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnContextMenu, type KrnContextMenuItem } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-context-menu-agent-example',\n  standalone: true,\n  imports: [KrnContextMenu],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-context-menu ariaLabel=\"Customer row actions\" [items]=\"items\">\n      <button type=\"button\">Open row actions</button>\n    </krn-context-menu>\n  `,\n})\nexport class KernContextMenuAgentExample {\n  readonly items: readonly KrnContextMenuItem[] = [\n    { id: 'open', label: 'Open customer' },\n    {\n      id: 'export',\n      label: 'Export',\n      children: [\n        { id: 'export-csv', label: 'CSV' },\n        { id: 'export-json', label: 'JSON' },\n      ],\n    },\n  ];\n}\n\nvoid bootstrapApplication(KernContextMenuAgentExample);\n",
       "verification": "compiled",
       "source": "examples/context-menu.ts"
     }

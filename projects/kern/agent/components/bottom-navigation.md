@@ -2,7 +2,7 @@
 
 - ID: `bottom-navigation`
 - Selector: `krn-bottom-navigation`
-- Import: `import { KrnBottomNavigation } from '@kern-ui/angular/kit';`
+- Import: `import { KrnBottomNavigation } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnBottomNavigation`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnBottomNavigation, type KrnNavigationItem } from '@kern-ui/angular/kit';
+import { KrnBottomNavigation, type KrnNavigationItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-bottom-navigation-agent-example',

@@ -2,7 +2,7 @@
 
 - ID: `keyboard-shortcut`
 - Selector: `krn-keyboard-shortcut`
-- Import: `import { KrnKeyboardShortcut } from '@kern-ui/angular/kit';`
+- Import: `import { KrnKeyboardShortcut } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnKeyboardShortcut`
 - Lifecycle: **stable**
 - Category: Data display
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnKeyboardShortcut } from '@kern-ui/angular/kit';
+import { KrnKeyboardShortcut } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-keyboard-shortcut-agent-example',

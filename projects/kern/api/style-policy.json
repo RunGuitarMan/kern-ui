@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "description": "Maximum non-token CSS literals. A reduction is allowed; any increase requires replacing literals with semantic tokens or an explicit policy review.",
+  "literalBudgets": {
+    "base.css": { "colors": 2, "dimensions": 6 },
+    "kern.css": { "colors": 0, "dimensions": 1 },
+    "reset.css": { "colors": 0, "dimensions": 0 },
+    "utilities.css": { "colors": 0, "dimensions": 6 },
+    "components/actions-core.css": { "colors": 39, "dimensions": 41 },
+    "components/actions-groups.css": { "colors": 9, "dimensions": 19 },
+    "components/actions-menus.css": { "colors": 9, "dimensions": 24 },
+    "components/actions-utilities.css": { "colors": 2, "dimensions": 17 },
+    "components/forms-foundation.css": { "colors": 33, "dimensions": 77 },
+    "components/forms-pickers.css": { "colors": 31, "dimensions": 145 },
+    "components/forms-selection.css": { "colors": 18, "dimensions": 82 },
+    "components/forms-specialized.css": { "colors": 5, "dimensions": 42 },
+    "components/projection.css": { "colors": 2, "dimensions": 11 }
+  }
+}

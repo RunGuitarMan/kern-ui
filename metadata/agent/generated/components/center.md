@@ -2,7 +2,7 @@
 
 - ID: `center`
 - Selector: `krn-center`
-- Import: `import { KrnCenter } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCenter } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnCenter`
 - Lifecycle: **stable**
 - Category: Layout
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCenter } from '@kern-ui/angular/kit';
+import { KrnCenter } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-center-agent-example',

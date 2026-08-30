@@ -9,8 +9,8 @@
   "symbol": "KrnLoadingOverlay",
   "canonicalSymbol": "KrnLoadingOverlay",
   "canonicalId": "loading-overlay",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -120,7 +120,7 @@
       "title": "Controlled blocking save state",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled blocking save state\n *\n * Keep existing content perceivable while a blocking operation is active.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnLoadingOverlay } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-loading-overlay-agent-example',\n  standalone: true,\n  imports: [KrnLoadingOverlay],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-loading-overlay [active]=\"saving\" [blocking]=\"true\" label=\"Saving customer\">\n      <section>\n        <h2>Customer profile</h2>\n        <button type=\"button\" (click)=\"saving = !saving\">Toggle save state</button>\n      </section>\n    </krn-loading-overlay>\n  `,\n})\nexport class KernLoadingOverlayAgentExample {\n  saving = false;\n}\n\nvoid bootstrapApplication(KernLoadingOverlayAgentExample);\n",
+      "code": "/**\n * Controlled blocking save state\n *\n * Keep existing content perceivable while a blocking operation is active.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnLoadingOverlay } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-loading-overlay-agent-example',\n  standalone: true,\n  imports: [KrnLoadingOverlay],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-loading-overlay [active]=\"saving\" [blocking]=\"true\" label=\"Saving customer\">\n      <section>\n        <h2>Customer profile</h2>\n        <button type=\"button\" (click)=\"saving = !saving\">Toggle save state</button>\n      </section>\n    </krn-loading-overlay>\n  `,\n})\nexport class KernLoadingOverlayAgentExample {\n  saving = false;\n}\n\nvoid bootstrapApplication(KernLoadingOverlayAgentExample);\n",
       "verification": "compiled",
       "source": "examples/loading-overlay.ts"
     }

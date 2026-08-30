@@ -2,7 +2,7 @@
 
 - ID: `autocomplete`
 - Selector: `krn-autocomplete`
-- Import: `import { KrnAutocomplete } from '@kern-ui/angular/kit';`
+- Import: `import { KrnAutocomplete } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnAutocomplete`
 - Lifecycle: **beta**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Use Combobox or Select when the submitted value must match an authoritati
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnAutocomplete, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnAutocomplete, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-autocomplete-agent-example',

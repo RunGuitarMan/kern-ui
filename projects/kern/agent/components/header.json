@@ -9,8 +9,8 @@
   "symbol": "KrnHeader",
   "canonicalSymbol": "KrnHeader",
   "canonicalId": "header",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -161,7 +161,7 @@
       "title": "Application header",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Application header\n *\n * Arrange product identity, page context and account actions.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnHeader } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-header-agent-example',\n  standalone: true,\n  imports: [KrnHeader],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-header sticky>\n      <strong krnHeaderStart>KERN Console</strong>\n      <span>Production</span>\n      <button krnHeaderEnd type=\"button\">Account</button>\n    </krn-header>\n  `,\n})\nexport class KernHeaderAgentExample {}\n\nvoid bootstrapApplication(KernHeaderAgentExample);\n",
+      "code": "/**\n * Application header\n *\n * Arrange product identity, page context and account actions.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnHeader } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-header-agent-example',\n  standalone: true,\n  imports: [KrnHeader],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-header sticky>\n      <strong krnHeaderStart>KERN Console</strong>\n      <span>Production</span>\n      <button krnHeaderEnd type=\"button\">Account</button>\n    </krn-header>\n  `,\n})\nexport class KernHeaderAgentExample {}\n\nvoid bootstrapApplication(KernHeaderAgentExample);\n",
       "verification": "compiled",
       "source": "examples/header.ts"
     }

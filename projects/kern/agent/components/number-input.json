@@ -9,8 +9,8 @@
   "symbol": "KrnNumberInput",
   "canonicalSymbol": "KrnNumberInput",
   "canonicalId": "number-input",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -300,7 +300,7 @@
       "title": "Nullable seat limit",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Nullable seat limit\n *\n * Represent an optional numeric value without coercing empty input to zero.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnNumberInput } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-number-input-agent-example',\n  standalone: true,\n  imports: [KrnNumberInput, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-number-input\n      id=\"seat-limit\"\n      ariaLabel=\"Seat limit\"\n      [min]=\"1\"\n      [max]=\"10000\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernNumberInputAgentExample {\n  readonly control = new FormControl<number | null>(250, { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernNumberInputAgentExample);\n",
+      "code": "/**\n * Nullable seat limit\n *\n * Represent an optional numeric value without coercing empty input to zero.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnNumberInput } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-number-input-agent-example',\n  standalone: true,\n  imports: [KrnNumberInput, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-number-input\n      id=\"seat-limit\"\n      ariaLabel=\"Seat limit\"\n      [min]=\"1\"\n      [max]=\"10000\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernNumberInputAgentExample {\n  readonly control = new FormControl<number | null>(250, { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernNumberInputAgentExample);\n",
       "verification": "compiled",
       "source": "examples/number-input.ts"
     }

@@ -9,8 +9,8 @@
   "symbol": "KrnMeter",
   "canonicalSymbol": "KrnMeter",
   "canonicalId": "meter",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -165,7 +165,7 @@
       "title": "Account health meter",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Account health meter\n *\n * Communicate a bounded value with visible label and thresholds.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnMeter } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-meter-agent-example',\n  standalone: true,\n  imports: [KrnMeter],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-meter label=\"Account health\" [value]=\"82\" [min]=\"0\" [max]=\"100\" [low]=\"40\" [high]=\"75\" />\n  `,\n})\nexport class KernMeterAgentExample {}\n\nvoid bootstrapApplication(KernMeterAgentExample);\n",
+      "code": "/**\n * Account health meter\n *\n * Communicate a bounded value with visible label and thresholds.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnMeter } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-meter-agent-example',\n  standalone: true,\n  imports: [KrnMeter],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-meter label=\"Account health\" [value]=\"82\" [min]=\"0\" [max]=\"100\" [low]=\"40\" [high]=\"75\" />\n  `,\n})\nexport class KernMeterAgentExample {}\n\nvoid bootstrapApplication(KernMeterAgentExample);\n",
       "verification": "compiled",
       "source": "examples/meter.ts"
     }

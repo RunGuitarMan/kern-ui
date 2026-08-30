@@ -9,8 +9,8 @@
   "symbol": "KrnSplitButton",
   "canonicalSymbol": "KrnSplitButton",
   "canonicalId": "split-button",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "actions",
+  "importPath": "@kern-ui/angular/actions",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -222,7 +222,7 @@
       "title": "Primary export with alternatives",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Primary export with alternatives\n *\n * Keep the default action prominent and expose related export formats.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSplitButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-split-button-agent-example',\n  standalone: true,\n  imports: [KrnSplitButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-split-button [(open)]=\"open\">\n      <span krnLabel>Export CSV</span>\n      <div krnMenu>\n        <button type=\"button\">Export XLSX</button>\n        <button type=\"button\">Export JSON</button>\n      </div>\n    </krn-split-button>\n  `,\n})\nexport class KernSplitButtonAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernSplitButtonAgentExample);\n",
+      "code": "/**\n * Primary export with alternatives\n *\n * Keep the default action prominent and expose related export formats.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSplitButton } from '@kern-ui/angular/actions';\n\n@Component({\n  selector: 'app-kern-split-button-agent-example',\n  standalone: true,\n  imports: [KrnSplitButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-split-button [(open)]=\"open\">\n      <span krnLabel>Export CSV</span>\n      <div krnMenu>\n        <button type=\"button\">Export XLSX</button>\n        <button type=\"button\">Export JSON</button>\n      </div>\n    </krn-split-button>\n  `,\n})\nexport class KernSplitButtonAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernSplitButtonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/split-button.ts"
     }

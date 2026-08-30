@@ -9,8 +9,8 @@
   "symbol": "KrnTreeNavigation",
   "canonicalSymbol": "KrnTreeNavigation",
   "canonicalId": "tree-navigation",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -189,7 +189,7 @@
       "title": "Controlled product navigation tree",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled product navigation tree\n *\n * Own selected and expanded ids for a typed nested navigation model.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTreeNavigation, type KrnTreeNavigationItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-tree-navigation-agent-example',\n  standalone: true,\n  imports: [KrnTreeNavigation],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tree-navigation\n      ariaLabel=\"Product navigation\"\n      [items]=\"items\"\n      [(selectedId)]=\"selectedId\"\n      [(expandedIds)]=\"expandedIds\"\n    />\n  `,\n})\nexport class KernTreeNavigationAgentExample {\n  readonly items: readonly KrnTreeNavigationItem[] = [\n    {\n      id: 'customers',\n      label: 'Customers',\n      children: [\n        { id: 'active-customers', label: 'Active' },\n        { id: 'risk-customers', label: 'At risk' },\n      ],\n    },\n  ];\n\n  selectedId: string | null = 'active-customers';\n\n  expandedIds: readonly string[] = ['customers'];\n}\n\nvoid bootstrapApplication(KernTreeNavigationAgentExample);\n",
+      "code": "/**\n * Controlled product navigation tree\n *\n * Own selected and expanded ids for a typed nested navigation model.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTreeNavigation, type KrnTreeNavigationItem } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-tree-navigation-agent-example',\n  standalone: true,\n  imports: [KrnTreeNavigation],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tree-navigation\n      ariaLabel=\"Product navigation\"\n      [items]=\"items\"\n      [(selectedId)]=\"selectedId\"\n      [(expandedIds)]=\"expandedIds\"\n    />\n  `,\n})\nexport class KernTreeNavigationAgentExample {\n  readonly items: readonly KrnTreeNavigationItem[] = [\n    {\n      id: 'customers',\n      label: 'Customers',\n      children: [\n        { id: 'active-customers', label: 'Active' },\n        { id: 'risk-customers', label: 'At risk' },\n      ],\n    },\n  ];\n\n  selectedId: string | null = 'active-customers';\n\n  expandedIds: readonly string[] = ['customers'];\n}\n\nvoid bootstrapApplication(KernTreeNavigationAgentExample);\n",
       "verification": "compiled",
       "source": "examples/tree-navigation.ts"
     }

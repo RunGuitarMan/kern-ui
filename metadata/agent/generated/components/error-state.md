@@ -2,7 +2,7 @@
 
 - ID: `error-state`
 - Selector: `krn-error-state`
-- Import: `import { KrnErrorState } from '@kern-ui/angular/kit';`
+- Import: `import { KrnErrorState } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnErrorState`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnErrorState } from '@kern-ui/angular/kit';
+import { KrnErrorState } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-error-state-agent-example',

@@ -9,8 +9,8 @@
   "symbol": "KrnTextInput",
   "canonicalSymbol": "KrnTextInput",
   "canonicalId": "text-input",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -291,7 +291,7 @@
       "title": "Typed account-name input",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed account-name input\n *\n * Bind a non-nullable text control with an explicit accessible name.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTextInput } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-text-input-agent-example',\n  standalone: true,\n  imports: [KrnTextInput, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-text-input\n      id=\"account-name\"\n      ariaLabel=\"Account name\"\n      autocomplete=\"organization\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernTextInputAgentExample {\n  readonly control = new FormControl<string>('Acme Europe', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernTextInputAgentExample);\n",
+      "code": "/**\n * Typed account-name input\n *\n * Bind a non-nullable text control with an explicit accessible name.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTextInput } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-text-input-agent-example',\n  standalone: true,\n  imports: [KrnTextInput, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-text-input\n      id=\"account-name\"\n      ariaLabel=\"Account name\"\n      autocomplete=\"organization\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernTextInputAgentExample {\n  readonly control = new FormControl<string>('Acme Europe', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernTextInputAgentExample);\n",
       "verification": "compiled",
       "source": "examples/text-input.ts"
     }

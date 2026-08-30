@@ -15,7 +15,7 @@ control flow, typed reactive forms, SSR/hydration, and Angular's zoneless runtim
 | `projects/docs`     | SSR docs, interactive playground, and deterministic preview host | No                         |
 | `projects/showcase` | Typed documentation catalog and coverage metadata                | Private support library    |
 
-Kern contains 131 catalog entries across Layout, Actions, Forms, Navigation, Feedback,
+Kern contains 132 catalog entries across Layout, Actions, Forms, Navigation, Feedback,
 Data display, and Patterns. Each entry has an explicit lifecycle status; the inventory, status
 policy, and distinction between catalog requirements and test evidence are documented in
 [`docs/COMPONENTS.md`](docs/COMPONENTS.md).
@@ -139,7 +139,8 @@ Import standalone components directly:
 ```ts
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { KrnButton, KrnFormField, KrnTextInput } from '@kern-ui/angular/kit';
+import { KrnButton } from '@kern-ui/angular/actions';
+import { KrnFormField, KrnTextInput } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-profile-action',
@@ -180,10 +181,11 @@ Legacy `{token}` string overrides remain supported; optional typed `format…` f
 plural-aware formatting without evaluating or recursively expanding translation text.
 
 Runtime ownership is explicit: `/cdk` contains infrastructure, `/i18n` dependency-light UI-copy
-tokens, `/core` configuration and foundations, `/kit` general components, `/addon-grid` and
-`/addon-charts` heavy capabilities, and `/patterns` product compositions. The package root remains
-a compatibility aggregator with strict identity against these subpaths; new code should prefer
-the narrow owner.
+tokens, `/core` configuration and foundations, and `/actions`, `/forms`, `/navigation`,
+`/feedback`, `/layout`, and `/data-display` own the component families. `/addon-grid` and
+`/addon-charts` own heavy capabilities, while `/patterns` owns product compositions. `/kit` and
+the package root remain compatibility aggregators with strict identity against these canonical
+owners; new code should prefer the narrow owner.
 
 ## Consumer testing
 
@@ -209,7 +211,7 @@ the [package README](projects/kern/README.md). New tests can use the narrower
 ## Developer and agent discovery
 
 The optional `@kern-ui/mcp` package ships the compiler-derived manifest, per-component
-Markdown/JSON, `llms.txt`, import map, 131 standalone examples, and 13 enterprise recipes without
+Markdown/JSON, `llms.txt`, import map, 132 standalone examples, and 13 enterprise recipes without
 adding them to `@kern-ui/angular`. Every source is installed from its packed tarball and
 strict-AOT compiled in an isolated consumer. The repository server uses the same contract:
 

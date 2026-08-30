@@ -19,7 +19,10 @@ const rootExportMapPath = existsSync(resolve(__dirname, '../shared/root-export-m
   ? '../shared/root-export-map.json'
   : '../../agent/root-export-map.json';
 const KERN_ROOT_EXPORT_MAP = require(rootExportMapPath);
-const RUNTIME_ENTRYPOINTS = new Set(KERN_ROOT_EXPORT_MAP.entrypoints);
+const RUNTIME_ENTRYPOINTS = new Set([
+  ...KERN_ROOT_EXPORT_MAP.entrypoints,
+  ...(KERN_ROOT_EXPORT_MAP.compatibilityEntrypoints ?? []),
+]);
 const FALLBACK_PEER_RANGES = Object.freeze({
   '@angular/aria': '^22.0.0',
   '@angular/cdk': '^22.0.0',

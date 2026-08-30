@@ -9,8 +9,8 @@
   "symbol": "KrnSpinner",
   "canonicalSymbol": "KrnSpinner",
   "canonicalId": "spinner",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -93,7 +93,7 @@
       "title": "Indeterminate loading status",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Indeterminate loading status\n *\n * Announce a short unknown-duration operation.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSpinner } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-spinner-agent-example',\n  standalone: true,\n  imports: [KrnSpinner],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-spinner label=\"Loading audit log\" /> `,\n})\nexport class KernSpinnerAgentExample {}\n\nvoid bootstrapApplication(KernSpinnerAgentExample);\n",
+      "code": "/**\n * Indeterminate loading status\n *\n * Announce a short unknown-duration operation.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSpinner } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-spinner-agent-example',\n  standalone: true,\n  imports: [KrnSpinner],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-spinner label=\"Loading audit log\" /> `,\n})\nexport class KernSpinnerAgentExample {}\n\nvoid bootstrapApplication(KernSpinnerAgentExample);\n",
       "verification": "compiled",
       "source": "examples/spinner.ts"
     }

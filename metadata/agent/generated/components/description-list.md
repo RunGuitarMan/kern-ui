@@ -2,7 +2,7 @@
 
 - ID: `description-list`
 - Selector: `krn-description-list`
-- Import: `import { KrnDescriptionList } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDescriptionList } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnDescriptionList`
 - Lifecycle: **stable**
 - Category: Data display
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDescriptionItem, KrnDescriptionList } from '@kern-ui/angular/kit';
+import { KrnDescriptionItem, KrnDescriptionList } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-description-list-agent-example',

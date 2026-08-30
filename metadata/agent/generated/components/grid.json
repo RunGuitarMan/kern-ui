@@ -9,8 +9,8 @@
   "symbol": "KrnGrid",
   "canonicalSymbol": "KrnGrid",
   "canonicalId": "grid",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -139,7 +139,7 @@
       "title": "Responsive summary grid",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Responsive summary grid\n *\n * Lay out metric cards with a minimum usable column width.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnGrid } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-grid-agent-example',\n  standalone: true,\n  imports: [KrnGrid],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-grid columns=\"auto\" minColumnWidth=\"14rem\" gap=\"4\">\n      <article>Revenue: €1.8M</article>\n      <article>Renewals: 42</article>\n      <article>Risk accounts: 3</article>\n    </krn-grid>\n  `,\n})\nexport class KernGridAgentExample {}\n\nvoid bootstrapApplication(KernGridAgentExample);\n",
+      "code": "/**\n * Responsive summary grid\n *\n * Lay out metric cards with a minimum usable column width.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnGrid } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-grid-agent-example',\n  standalone: true,\n  imports: [KrnGrid],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-grid columns=\"auto\" minColumnWidth=\"14rem\" gap=\"4\">\n      <article>Revenue: €1.8M</article>\n      <article>Renewals: 42</article>\n      <article>Risk accounts: 3</article>\n    </krn-grid>\n  `,\n})\nexport class KernGridAgentExample {}\n\nvoid bootstrapApplication(KernGridAgentExample);\n",
       "verification": "compiled",
       "source": "examples/grid.ts"
     }

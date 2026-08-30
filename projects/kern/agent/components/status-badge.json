@@ -9,8 +9,8 @@
   "symbol": "KrnStatusBadge",
   "canonicalSymbol": "KrnBadge",
   "canonicalId": "badge",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": ["KrnBadge"],
     "selectors": ["krn-badge"],
@@ -135,7 +135,7 @@
       "title": "Alias status badge",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Alias status badge\n *\n * Use the status-focused alias with visible state text.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnStatusBadge } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-status-badge-agent-example',\n  standalone: true,\n  imports: [KrnStatusBadge],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-status-badge tone=\"warning\" [status]=\"true\">Review needed</krn-status-badge> `,\n})\nexport class KernStatusBadgeAgentExample {}\n\nvoid bootstrapApplication(KernStatusBadgeAgentExample);\n",
+      "code": "/**\n * Alias status badge\n *\n * Use the status-focused alias with visible state text.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnStatusBadge } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-status-badge-agent-example',\n  standalone: true,\n  imports: [KrnStatusBadge],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-status-badge tone=\"warning\" [status]=\"true\">Review needed</krn-status-badge> `,\n})\nexport class KernStatusBadgeAgentExample {}\n\nvoid bootstrapApplication(KernStatusBadgeAgentExample);\n",
       "verification": "compiled",
       "source": "examples/status-badge.ts"
     }

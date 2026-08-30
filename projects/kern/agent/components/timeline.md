@@ -2,7 +2,7 @@
 
 - ID: `timeline`
 - Selector: `krn-timeline`
-- Import: `import { KrnTimeline } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTimeline } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnTimeline`
 - Lifecycle: **stable**
 - Category: Data display
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTimeline, KrnTimelineItem } from '@kern-ui/angular/kit';
+import { KrnTimeline, KrnTimelineItem } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-timeline-agent-example',

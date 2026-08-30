@@ -9,8 +9,8 @@
   "symbol": "KrnVerticalTabs",
   "canonicalSymbol": "KrnTabs",
   "canonicalId": "tabs",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": ["KrnTabs"],
     "selectors": ["krn-tabs"],
@@ -135,7 +135,7 @@
       "title": "Controlled settings tabs",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled settings tabs\n *\n * Use vertical orientation for a stable settings subsection.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnVerticalTabs, type KrnTabItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-vertical-tabs-agent-example',\n  standalone: true,\n  imports: [KrnVerticalTabs],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-vertical-tabs ariaLabel=\"Settings sections\" [items]=\"items\" [(value)]=\"selectedTab\">\n      Selected settings section: {{ selectedTab }}\n    </krn-vertical-tabs>\n  `,\n})\nexport class KernVerticalTabsAgentExample {\n  readonly items: readonly KrnTabItem[] = [\n    { id: 'profile', label: 'Profile' },\n    { id: 'security', label: 'Security' },\n  ];\n\n  selectedTab: string | null = 'profile';\n}\n\nvoid bootstrapApplication(KernVerticalTabsAgentExample);\n",
+      "code": "/**\n * Controlled settings tabs\n *\n * Use vertical orientation for a stable settings subsection.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnVerticalTabs, type KrnTabItem } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-vertical-tabs-agent-example',\n  standalone: true,\n  imports: [KrnVerticalTabs],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-vertical-tabs ariaLabel=\"Settings sections\" [items]=\"items\" [(value)]=\"selectedTab\">\n      Selected settings section: {{ selectedTab }}\n    </krn-vertical-tabs>\n  `,\n})\nexport class KernVerticalTabsAgentExample {\n  readonly items: readonly KrnTabItem[] = [\n    { id: 'profile', label: 'Profile' },\n    { id: 'security', label: 'Security' },\n  ];\n\n  selectedTab: string | null = 'profile';\n}\n\nvoid bootstrapApplication(KernVerticalTabsAgentExample);\n",
       "verification": "compiled",
       "source": "examples/vertical-tabs.ts"
     }

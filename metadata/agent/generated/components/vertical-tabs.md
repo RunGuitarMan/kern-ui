@@ -2,7 +2,7 @@
 
 - ID: `vertical-tabs`
 - Selector: `krn-vertical-tabs`
-- Import: `import { KrnVerticalTabs } from '@kern-ui/angular/kit';`
+- Import: `import { KrnVerticalTabs } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnTabs`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnVerticalTabs, type KrnTabItem } from '@kern-ui/angular/kit';
+import { KrnVerticalTabs, type KrnTabItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-vertical-tabs-agent-example',

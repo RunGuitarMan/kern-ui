@@ -20,138 +20,138 @@ KERN is a standalone Angular component library for enterprise product interfaces
 
 ## Layout
 
-- [App Shell](./components/app-shell.md): `krn-app-shell`, stable, import from `@kern-ui/angular/kit`.
-- [Header](./components/header.md): `krn-header`, stable, import from `@kern-ui/angular/kit`.
-- [Sidebar](./components/sidebar.md): `krn-sidebar`, stable, import from `@kern-ui/angular/kit`.
-- [Navigation Rail](./components/navigation-rail.md): `krn-navigation-rail`, stable, import from `@kern-ui/angular/kit`.
-- [Container](./components/container.md): `krn-container`, stable, import from `@kern-ui/angular/kit`.
-- [Stack](./components/stack.md): `krn-stack`, stable, import from `@kern-ui/angular/kit`.
-- [Inline](./components/inline.md): `krn-inline`, stable, import from `@kern-ui/angular/kit`.
-- [Cluster](./components/cluster.md): `krn-cluster`, stable, import from `@kern-ui/angular/kit`.
-- [Grid](./components/grid.md): `krn-grid`, stable, import from `@kern-ui/angular/kit`.
-- [Split Layout](./components/split-layout.md): `krn-split-layout`, stable, import from `@kern-ui/angular/kit`.
-- [Center](./components/center.md): `krn-center`, stable, import from `@kern-ui/angular/kit`.
-- [Spacer](./components/spacer.md): `krn-spacer`, stable, import from `@kern-ui/angular/kit`.
-- [Divider](./components/divider.md): `krn-divider`, stable, import from `@kern-ui/angular/kit`.
-- [Aspect Ratio](./components/aspect-ratio.md): `krn-aspect-ratio`, stable, import from `@kern-ui/angular/kit`.
-- [Scroll Area](./components/scroll-area.md): `krn-scroll-area`, stable, import from `@kern-ui/angular/kit`.
-- [Responsive Show Hide](./components/responsive-show-hide.md): `krn-responsive-show-hide`, stable, import from `@kern-ui/angular/kit`.
-- [Resizable Panels](./components/resizable-panels.md): `krn-resizable-panels`, experimental, import from `@kern-ui/angular/kit`.
+- [App Shell](./components/app-shell.md): `krn-app-shell`, stable, import from `@kern-ui/angular/layout`.
+- [Header](./components/header.md): `krn-header`, stable, import from `@kern-ui/angular/layout`.
+- [Sidebar](./components/sidebar.md): `krn-sidebar`, stable, import from `@kern-ui/angular/layout`.
+- [Navigation Rail](./components/navigation-rail.md): `krn-navigation-rail`, stable, import from `@kern-ui/angular/layout`.
+- [Container](./components/container.md): `krn-container`, stable, import from `@kern-ui/angular/layout`.
+- [Stack](./components/stack.md): `krn-stack`, stable, import from `@kern-ui/angular/layout`.
+- [Inline](./components/inline.md): `krn-inline`, stable, import from `@kern-ui/angular/layout`.
+- [Cluster](./components/cluster.md): `krn-cluster`, stable, import from `@kern-ui/angular/layout`.
+- [Grid](./components/grid.md): `krn-grid`, stable, import from `@kern-ui/angular/layout`.
+- [Split Layout](./components/split-layout.md): `krn-split-layout`, stable, import from `@kern-ui/angular/layout`.
+- [Center](./components/center.md): `krn-center`, stable, import from `@kern-ui/angular/layout`.
+- [Spacer](./components/spacer.md): `krn-spacer`, stable, import from `@kern-ui/angular/layout`.
+- [Divider](./components/divider.md): `krn-divider`, stable, import from `@kern-ui/angular/layout`.
+- [Aspect Ratio](./components/aspect-ratio.md): `krn-aspect-ratio`, stable, import from `@kern-ui/angular/layout`.
+- [Scroll Area](./components/scroll-area.md): `krn-scroll-area`, stable, import from `@kern-ui/angular/layout`.
+- [Responsive Show Hide](./components/responsive-show-hide.md): `krn-responsive-show-hide`, stable, import from `@kern-ui/angular/layout`.
+- [Resizable Panels](./components/resizable-panels.md): `krn-resizable-panels`, experimental, import from `@kern-ui/angular/layout`.
 
 ## Actions
 
-- [Button](./components/button.md): `button[krnButton]`, stable, import from `@kern-ui/angular/kit`.
-- [Icon Button](./components/icon-button.md): `button[krnIconButton]`, stable, import from `@kern-ui/angular/kit`.
-- [Button Group](./components/button-group.md): `div[krnButtonGroup]`, stable, import from `@kern-ui/angular/kit`.
-- [Split Button](./components/split-button.md): `krn-split-button`, stable, import from `@kern-ui/angular/kit`.
-- [Floating Action Button](./components/floating-action-button.md): `button[krnFab]`, stable, import from `@kern-ui/angular/kit`.
-- [Toggle Button](./components/toggle-button.md): `button[krnToggleButton]`, stable, import from `@kern-ui/angular/kit`.
-- [Toggle Group](./components/toggle-group.md): `div[krnToggleGroup]`, stable, import from `@kern-ui/angular/kit`.
-- [Copy Button](./components/copy-button.md): `krn-copy-button`, stable, import from `@kern-ui/angular/kit`.
-- [Link](./components/link.md): `a[krnLink]`, stable, import from `@kern-ui/angular/kit`.
-- [Dropdown Button](./components/dropdown-button.md): `krn-dropdown-button`, stable, import from `@kern-ui/angular/kit`.
+- [Button](./components/button.md): `button[krnButton]`, stable, import from `@kern-ui/angular/actions`.
+- [Icon Button](./components/icon-button.md): `button[krnIconButton]`, stable, import from `@kern-ui/angular/actions`.
+- [Button Group](./components/button-group.md): `div[krnButtonGroup]`, stable, import from `@kern-ui/angular/actions`.
+- [Split Button](./components/split-button.md): `krn-split-button`, stable, import from `@kern-ui/angular/actions`.
+- [Floating Action Button](./components/floating-action-button.md): `button[krnFab]`, stable, import from `@kern-ui/angular/actions`.
+- [Toggle Button](./components/toggle-button.md): `button[krnToggleButton]`, stable, import from `@kern-ui/angular/actions`.
+- [Toggle Group](./components/toggle-group.md): `div[krnToggleGroup]`, stable, import from `@kern-ui/angular/actions`.
+- [Copy Button](./components/copy-button.md): `krn-copy-button`, stable, import from `@kern-ui/angular/actions`.
+- [Link](./components/link.md): `a[krnLink]`, stable, import from `@kern-ui/angular/actions`.
+- [Dropdown Button](./components/dropdown-button.md): `krn-dropdown-button`, stable, import from `@kern-ui/angular/actions`.
 
 ## Forms
 
-- [Form Field](./components/form-field.md): `krn-form-field`, stable, import from `@kern-ui/angular/kit`.
-- [Label](./components/label.md): `krn-label`, stable, import from `@kern-ui/angular/kit`.
-- [Hint](./components/hint.md): `krn-hint`, stable, import from `@kern-ui/angular/kit`.
-- [Validation Message](./components/validation-message.md): `krn-validation-message`, stable, import from `@kern-ui/angular/kit`.
-- [Text Input](./components/text-input.md): `krn-text-input`, stable, import from `@kern-ui/angular/kit`.
-- [Textarea](./components/textarea.md): `krn-textarea`, stable, import from `@kern-ui/angular/kit`.
-- [Password Input](./components/password-input.md): `krn-password-input`, stable, import from `@kern-ui/angular/kit`.
-- [Search Input](./components/search-input.md): `krn-search-input`, stable, import from `@kern-ui/angular/kit`.
-- [Number Input](./components/number-input.md): `krn-number-input`, stable, import from `@kern-ui/angular/kit`.
-- [Checkbox](./components/checkbox.md): `krn-checkbox`, stable, import from `@kern-ui/angular/kit`.
-- [Checkbox Group](./components/checkbox-group.md): `krn-checkbox-group`, stable, import from `@kern-ui/angular/kit`.
-- [Radio](./components/radio.md): `krn-radio`, stable, import from `@kern-ui/angular/kit`.
-- [Radio Group](./components/radio-group.md): `krn-radio-group`, stable, import from `@kern-ui/angular/kit`.
-- [Switch](./components/switch.md): `krn-switch`, stable, import from `@kern-ui/angular/kit`.
-- [Select](./components/select.md): `krn-select`, beta, import from `@kern-ui/angular/kit`.
-- [Native Select](./components/native-select.md): `krn-native-select`, stable, import from `@kern-ui/angular/kit`.
-- [Multi Select](./components/multi-select.md): `krn-multi-select`, beta, import from `@kern-ui/angular/kit`.
-- [Combobox](./components/combobox.md): `krn-combobox`, beta, import from `@kern-ui/angular/kit`.
-- [Autocomplete](./components/autocomplete.md): `krn-autocomplete`, beta, import from `@kern-ui/angular/kit`.
-- [Slider](./components/slider.md): `krn-slider`, stable, import from `@kern-ui/angular/kit`.
-- [Range Slider](./components/range-slider.md): `krn-range-slider`, stable, import from `@kern-ui/angular/kit`.
-- [Segmented Control](./components/segmented-control.md): `krn-segmented-control`, stable, import from `@kern-ui/angular/kit`.
-- [Date Picker](./components/date-picker.md): `krn-date-picker`, beta, import from `@kern-ui/angular/kit`.
-- [Date Range Picker](./components/date-range-picker.md): `krn-date-range-picker`, beta, import from `@kern-ui/angular/kit`.
-- [Time Picker](./components/time-picker.md): `krn-time-picker`, beta, import from `@kern-ui/angular/kit`.
-- [Color Picker](./components/color-picker.md): `krn-color-picker`, beta, import from `@kern-ui/angular/kit`.
-- [File Upload](./components/file-upload.md): `krn-file-upload`, stable, import from `@kern-ui/angular/kit`.
-- [Drag Drop Upload](./components/drag-drop-upload.md): `krn-drag-drop-upload`, stable, import from `@kern-ui/angular/kit`.
-- [Verification Code](./components/verification-code.md): `krn-verification-code`, stable, import from `@kern-ui/angular/kit`.
-- [Tags Input](./components/tags-input.md): `krn-tags-input`, stable, import from `@kern-ui/angular/kit`.
+- [Form Field](./components/form-field.md): `krn-form-field`, stable, import from `@kern-ui/angular/forms`.
+- [Label](./components/label.md): `krn-label`, stable, import from `@kern-ui/angular/forms`.
+- [Hint](./components/hint.md): `krn-hint`, stable, import from `@kern-ui/angular/forms`.
+- [Validation Message](./components/validation-message.md): `krn-validation-message`, stable, import from `@kern-ui/angular/forms`.
+- [Text Input](./components/text-input.md): `krn-text-input`, stable, import from `@kern-ui/angular/forms`.
+- [Textarea](./components/textarea.md): `krn-textarea`, stable, import from `@kern-ui/angular/forms`.
+- [Password Input](./components/password-input.md): `krn-password-input`, stable, import from `@kern-ui/angular/forms`.
+- [Search Input](./components/search-input.md): `krn-search-input`, stable, import from `@kern-ui/angular/forms`.
+- [Number Input](./components/number-input.md): `krn-number-input`, stable, import from `@kern-ui/angular/forms`.
+- [Checkbox](./components/checkbox.md): `krn-checkbox`, stable, import from `@kern-ui/angular/forms`.
+- [Checkbox Group](./components/checkbox-group.md): `krn-checkbox-group`, stable, import from `@kern-ui/angular/forms`.
+- [Radio](./components/radio.md): `krn-radio`, stable, import from `@kern-ui/angular/forms`.
+- [Radio Group](./components/radio-group.md): `krn-radio-group`, stable, import from `@kern-ui/angular/forms`.
+- [Switch](./components/switch.md): `krn-switch`, stable, import from `@kern-ui/angular/forms`.
+- [Select](./components/select.md): `krn-select`, beta, import from `@kern-ui/angular/forms`.
+- [Native Select](./components/native-select.md): `krn-native-select`, stable, import from `@kern-ui/angular/forms`.
+- [Multi Select](./components/multi-select.md): `krn-multi-select`, beta, import from `@kern-ui/angular/forms`.
+- [Combobox](./components/combobox.md): `krn-combobox`, beta, import from `@kern-ui/angular/forms`.
+- [Autocomplete](./components/autocomplete.md): `krn-autocomplete`, beta, import from `@kern-ui/angular/forms`.
+- [Slider](./components/slider.md): `krn-slider`, stable, import from `@kern-ui/angular/forms`.
+- [Range Slider](./components/range-slider.md): `krn-range-slider`, stable, import from `@kern-ui/angular/forms`.
+- [Segmented Control](./components/segmented-control.md): `krn-segmented-control`, stable, import from `@kern-ui/angular/forms`.
+- [Date Picker](./components/date-picker.md): `krn-date-picker`, beta, import from `@kern-ui/angular/forms`.
+- [Date Range Picker](./components/date-range-picker.md): `krn-date-range-picker`, beta, import from `@kern-ui/angular/forms`.
+- [Time Picker](./components/time-picker.md): `krn-time-picker`, beta, import from `@kern-ui/angular/forms`.
+- [Color Picker](./components/color-picker.md): `krn-color-picker`, beta, import from `@kern-ui/angular/forms`.
+- [File Upload](./components/file-upload.md): `krn-file-upload`, stable, import from `@kern-ui/angular/forms`.
+- [Drag Drop Upload](./components/drag-drop-upload.md): `krn-drag-drop-upload`, stable, import from `@kern-ui/angular/forms`.
+- [Verification Code](./components/verification-code.md): `krn-verification-code`, stable, import from `@kern-ui/angular/forms`.
+- [Tags Input](./components/tags-input.md): `krn-tags-input`, stable, import from `@kern-ui/angular/forms`.
 
 ## Navigation
 
-- [Breadcrumbs](./components/breadcrumbs.md): `krn-breadcrumbs`, stable, import from `@kern-ui/angular/kit`.
-- [Tabs](./components/tabs.md): `krn-tabs`, stable, import from `@kern-ui/angular/kit`.
-- [Vertical Tabs](./components/vertical-tabs.md): `krn-vertical-tabs`, stable, import from `@kern-ui/angular/kit`.
-- [Pagination](./components/pagination.md): `krn-pagination`, stable, import from `@kern-ui/angular/kit`.
-- [Stepper](./components/stepper.md): `krn-stepper`, stable, import from `@kern-ui/angular/kit`.
-- [Menu](./components/menu.md): `krn-menu`, stable, import from `@kern-ui/angular/kit`.
-- [Menubar](./components/menubar.md): `krn-menubar`, stable, import from `@kern-ui/angular/kit`.
-- [Context Menu](./components/context-menu.md): `krn-context-menu`, stable, import from `@kern-ui/angular/kit`.
-- [Tree Navigation](./components/tree-navigation.md): `krn-tree-navigation`, beta, import from `@kern-ui/angular/kit`.
-- [Bottom Navigation](./components/bottom-navigation.md): `krn-bottom-navigation`, stable, import from `@kern-ui/angular/kit`.
-- [Command Palette](./components/command-palette.md): `krn-command-palette`, beta, import from `@kern-ui/angular/kit`.
-- [Table of Contents](./components/table-of-contents.md): `krn-table-of-contents`, stable, import from `@kern-ui/angular/kit`.
-- [Back Button](./components/back-button.md): `krn-back-button`, stable, import from `@kern-ui/angular/kit`.
-- [Skip Link](./components/skip-link.md): `krn-skip-link`, stable, import from `@kern-ui/angular/kit`.
+- [Breadcrumbs](./components/breadcrumbs.md): `krn-breadcrumbs`, stable, import from `@kern-ui/angular/navigation`.
+- [Tabs](./components/tabs.md): `krn-tabs`, stable, import from `@kern-ui/angular/navigation`.
+- [Vertical Tabs](./components/vertical-tabs.md): `krn-vertical-tabs`, stable, import from `@kern-ui/angular/navigation`.
+- [Pagination](./components/pagination.md): `krn-pagination`, stable, import from `@kern-ui/angular/navigation`.
+- [Stepper](./components/stepper.md): `krn-stepper`, stable, import from `@kern-ui/angular/navigation`.
+- [Menu](./components/menu.md): `krn-menu`, stable, import from `@kern-ui/angular/navigation`.
+- [Menubar](./components/menubar.md): `krn-menubar`, stable, import from `@kern-ui/angular/navigation`.
+- [Context Menu](./components/context-menu.md): `krn-context-menu`, stable, import from `@kern-ui/angular/navigation`.
+- [Tree Navigation](./components/tree-navigation.md): `krn-tree-navigation`, beta, import from `@kern-ui/angular/navigation`.
+- [Bottom Navigation](./components/bottom-navigation.md): `krn-bottom-navigation`, stable, import from `@kern-ui/angular/navigation`.
+- [Command Palette](./components/command-palette.md): `krn-command-palette`, beta, import from `@kern-ui/angular/navigation`.
+- [Table of Contents](./components/table-of-contents.md): `krn-table-of-contents`, stable, import from `@kern-ui/angular/navigation`.
+- [Back Button](./components/back-button.md): `krn-back-button`, stable, import from `@kern-ui/angular/navigation`.
+- [Skip Link](./components/skip-link.md): `krn-skip-link`, stable, import from `@kern-ui/angular/navigation`.
 
 ## Feedback
 
-- [Alert](./components/alert.md): `krn-alert`, stable, import from `@kern-ui/angular/kit`.
-- [Banner](./components/banner.md): `krn-banner`, stable, import from `@kern-ui/angular/kit`.
-- [Toast](./components/toast.md): `krn-toast`, stable, import from `@kern-ui/angular/kit`.
-- [Tooltip](./components/tooltip.md): `[krnTooltip]`, stable, import from `@kern-ui/angular/kit`.
-- [Popover](./components/popover.md): `krn-popover`, stable, import from `@kern-ui/angular/kit`.
-- [Hover Card](./components/hover-card.md): `krn-hover-card`, stable, import from `@kern-ui/angular/kit`.
-- [Dialog](./components/dialog.md): `krn-dialog`, beta, import from `@kern-ui/angular/kit`.
-- [Alert Dialog](./components/alert-dialog.md): `krn-alert-dialog`, stable, import from `@kern-ui/angular/kit`.
-- [Drawer](./components/drawer.md): `krn-drawer`, beta, import from `@kern-ui/angular/kit`.
-- [Bottom Sheet](./components/bottom-sheet.md): `krn-bottom-sheet`, beta, import from `@kern-ui/angular/kit`.
-- [Loading Overlay](./components/loading-overlay.md): `krn-loading-overlay`, stable, import from `@kern-ui/angular/kit`.
-- [Progress Bar](./components/progress-bar.md): `krn-progress-bar`, stable, import from `@kern-ui/angular/kit`.
-- [Circular Progress](./components/circular-progress.md): `krn-circular-progress`, stable, import from `@kern-ui/angular/kit`.
-- [Spinner](./components/spinner.md): `krn-spinner`, stable, import from `@kern-ui/angular/kit`.
-- [Skeleton](./components/skeleton.md): `krn-skeleton`, stable, import from `@kern-ui/angular/kit`.
-- [Empty State](./components/empty-state.md): `krn-empty-state`, stable, import from `@kern-ui/angular/kit`.
-- [Error State](./components/error-state.md): `krn-error-state`, stable, import from `@kern-ui/angular/kit`.
-- [Success State](./components/success-state.md): `krn-success-state`, stable, import from `@kern-ui/angular/kit`.
-- [Confirmation Pattern](./components/confirmation-pattern.md): `krn-confirmation-pattern`, stable, import from `@kern-ui/angular/kit`.
+- [Alert](./components/alert.md): `krn-alert`, stable, import from `@kern-ui/angular/feedback`.
+- [Banner](./components/banner.md): `krn-banner`, stable, import from `@kern-ui/angular/feedback`.
+- [Toast](./components/toast.md): `krn-toast`, stable, import from `@kern-ui/angular/feedback`.
+- [Tooltip](./components/tooltip.md): `[krnTooltip]`, stable, import from `@kern-ui/angular/feedback`.
+- [Popover](./components/popover.md): `krn-popover`, stable, import from `@kern-ui/angular/feedback`.
+- [Hover Card](./components/hover-card.md): `krn-hover-card`, stable, import from `@kern-ui/angular/feedback`.
+- [Dialog](./components/dialog.md): `krn-dialog`, beta, import from `@kern-ui/angular/feedback`.
+- [Alert Dialog](./components/alert-dialog.md): `krn-alert-dialog`, stable, import from `@kern-ui/angular/feedback`.
+- [Drawer](./components/drawer.md): `krn-drawer`, beta, import from `@kern-ui/angular/feedback`.
+- [Bottom Sheet](./components/bottom-sheet.md): `krn-bottom-sheet`, beta, import from `@kern-ui/angular/feedback`.
+- [Loading Overlay](./components/loading-overlay.md): `krn-loading-overlay`, stable, import from `@kern-ui/angular/feedback`.
+- [Progress Bar](./components/progress-bar.md): `krn-progress-bar`, stable, import from `@kern-ui/angular/feedback`.
+- [Circular Progress](./components/circular-progress.md): `krn-circular-progress`, stable, import from `@kern-ui/angular/feedback`.
+- [Spinner](./components/spinner.md): `krn-spinner`, stable, import from `@kern-ui/angular/feedback`.
+- [Skeleton](./components/skeleton.md): `krn-skeleton`, stable, import from `@kern-ui/angular/feedback`.
+- [Empty State](./components/empty-state.md): `krn-empty-state`, stable, import from `@kern-ui/angular/feedback`.
+- [Error State](./components/error-state.md): `krn-error-state`, stable, import from `@kern-ui/angular/feedback`.
+- [Success State](./components/success-state.md): `krn-success-state`, stable, import from `@kern-ui/angular/feedback`.
+- [Confirmation Pattern](./components/confirmation-pattern.md): `krn-confirmation-pattern`, stable, import from `@kern-ui/angular/feedback`.
 
 ## Data display
 
-- [Badge](./components/badge.md): `krn-badge`, stable, import from `@kern-ui/angular/kit`.
-- [Status Badge](./components/status-badge.md): `krn-status-badge`, stable, import from `@kern-ui/angular/kit`.
-- [Chip](./components/chip.md): `krn-chip`, stable, import from `@kern-ui/angular/kit`.
-- [Tag](./components/tag.md): `krn-tag`, stable, import from `@kern-ui/angular/kit`.
-- [Avatar](./components/avatar.md): `krn-avatar`, stable, import from `@kern-ui/angular/kit`.
-- [Avatar Group](./components/avatar-group.md): `krn-avatar-group`, stable, import from `@kern-ui/angular/kit`.
-- [Card](./components/card.md): `krn-card`, stable, import from `@kern-ui/angular/kit`.
-- [Stat](./components/stat.md): `krn-stat`, stable, import from `@kern-ui/angular/kit`.
-- [Description List](./components/description-list.md): `krn-description-list`, stable, import from `@kern-ui/angular/kit`.
-- [List](./components/list.md): `krn-list`, stable, import from `@kern-ui/angular/kit`.
-- [List Item](./components/list-item.md): `krn-list-item`, stable, import from `@kern-ui/angular/kit`.
-- [Accordion](./components/accordion.md): `krn-accordion`, stable, import from `@kern-ui/angular/kit`.
-- [Disclosure](./components/disclosure.md): `krn-disclosure`, stable, import from `@kern-ui/angular/kit`.
-- [Timeline](./components/timeline.md): `krn-timeline`, stable, import from `@kern-ui/angular/kit`.
-- [Tree](./components/tree.md): `krn-tree`, beta, import from `@kern-ui/angular/kit`.
+- [Badge](./components/badge.md): `krn-badge`, stable, import from `@kern-ui/angular/data-display`.
+- [Status Badge](./components/status-badge.md): `krn-status-badge`, stable, import from `@kern-ui/angular/data-display`.
+- [Chip](./components/chip.md): `krn-chip`, stable, import from `@kern-ui/angular/data-display`.
+- [Tag](./components/tag.md): `krn-tag`, stable, import from `@kern-ui/angular/data-display`.
+- [Avatar](./components/avatar.md): `krn-avatar`, stable, import from `@kern-ui/angular/data-display`.
+- [Avatar Group](./components/avatar-group.md): `krn-avatar-group`, stable, import from `@kern-ui/angular/data-display`.
+- [Card](./components/card.md): `krn-card`, stable, import from `@kern-ui/angular/data-display`.
+- [Stat](./components/stat.md): `krn-stat`, stable, import from `@kern-ui/angular/data-display`.
+- [Description List](./components/description-list.md): `krn-description-list`, stable, import from `@kern-ui/angular/data-display`.
+- [List](./components/list.md): `krn-list`, stable, import from `@kern-ui/angular/data-display`.
+- [List Item](./components/list-item.md): `krn-list-item`, stable, import from `@kern-ui/angular/data-display`.
+- [Accordion](./components/accordion.md): `krn-accordion`, stable, import from `@kern-ui/angular/data-display`.
+- [Disclosure](./components/disclosure.md): `krn-disclosure`, stable, import from `@kern-ui/angular/data-display`.
+- [Timeline](./components/timeline.md): `krn-timeline`, stable, import from `@kern-ui/angular/data-display`.
+- [Tree](./components/tree.md): `krn-tree`, beta, import from `@kern-ui/angular/data-display`.
 - [Data Table](./components/data-table.md): `krn-data-table`, beta, import from `@kern-ui/angular/addon-grid`.
 - [Data Grid](./components/data-grid.md): `krn-data-grid`, beta, import from `@kern-ui/angular/addon-grid`.
-- [Calendar](./components/calendar.md): `krn-calendar`, stable, import from `@kern-ui/angular/kit`.
-- [Code Block](./components/code-block.md): `krn-code-block`, stable, import from `@kern-ui/angular/kit`.
-- [JSON View](./components/json-view.md): `krn-json-view`, beta, import from `@kern-ui/angular/kit`.
-- [Keyboard Shortcut](./components/keyboard-shortcut.md): `krn-keyboard-shortcut`, stable, import from `@kern-ui/angular/kit`.
-- [Meter](./components/meter.md): `krn-meter`, stable, import from `@kern-ui/angular/kit`.
-- [Rating](./components/rating.md): `krn-rating`, stable, import from `@kern-ui/angular/kit`.
+- [Calendar](./components/calendar.md): `krn-calendar`, stable, import from `@kern-ui/angular/data-display`.
+- [Code Block](./components/code-block.md): `krn-code-block`, stable, import from `@kern-ui/angular/data-display`.
+- [JSON View](./components/json-view.md): `krn-json-view`, beta, import from `@kern-ui/angular/data-display`.
+- [Keyboard Shortcut](./components/keyboard-shortcut.md): `krn-keyboard-shortcut`, stable, import from `@kern-ui/angular/data-display`.
+- [Meter](./components/meter.md): `krn-meter`, stable, import from `@kern-ui/angular/data-display`.
+- [Rating](./components/rating.md): `krn-rating`, stable, import from `@kern-ui/angular/data-display`.
 - [Line Chart](./components/line-chart.md): `krn-line-chart`, beta, import from `@kern-ui/angular/addon-charts`.
 - [Bar Chart](./components/bar-chart.md): `krn-bar-chart`, beta, import from `@kern-ui/angular/addon-charts`.
 - [Donut Chart](./components/donut-chart.md): `krn-donut-chart`, beta, import from `@kern-ui/angular/addon-charts`.
-- [Responsive Media](./components/responsive-media.md): `krn-responsive-media`, stable, import from `@kern-ui/angular/kit`.
+- [Responsive Media](./components/responsive-media.md): `krn-responsive-media`, stable, import from `@kern-ui/angular/data-display`.
 
 ## Patterns
 
@@ -187,7 +187,7 @@ Register the required global stylesheet and optionally configure application-wid
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideKrn } from '@kern-ui/angular/core';
-import { KrnButton } from '@kern-ui/angular/kit';
+import { KrnButton } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-install-recipe',
@@ -233,7 +233,7 @@ import {
   KrnSelect,
   KrnTagsInput,
   type KrnSelectOption,
-} from '@kern-ui/angular/kit';
+} from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-selection-recipe',
@@ -308,7 +308,7 @@ import {
   KrnTextInput,
   KrnValidationMessage,
   type KrnSelectOption,
-} from '@kern-ui/angular/kit';
+} from '@kern-ui/angular/forms';
 
 interface CustomerProfile {
   readonly name: string;
@@ -597,13 +597,8 @@ Preserve focus, Escape ordering and modal ownership when popups open inside a di
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import {
-  KrnDialog,
-  KrnPopover,
-  KrnSelect,
-  KrnTooltip,
-  type KrnSelectOption,
-} from '@kern-ui/angular/kit';
+import { KrnDialog, KrnPopover, KrnTooltip } from '@kern-ui/angular/feedback';
+import { KrnSelect, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-nested-overlays-recipe',
@@ -667,7 +662,9 @@ Keep server and client configuration, locale, dates, ids and overlay host determ
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication, provideClientHydration } from '@angular/platform-browser';
 import { provideKrn } from '@kern-ui/angular/core';
-import { KrnAppShell, KrnCalendar, KrnDialog } from '@kern-ui/angular/kit';
+import { KrnCalendar } from '@kern-ui/angular/data-display';
+import { KrnDialog } from '@kern-ui/angular/feedback';
+import { KrnAppShell } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-hydration-recipe',
@@ -740,7 +737,7 @@ import {
   KrnNativeSelect,
   KrnTimePicker,
   type KrnSelectOption,
-} from '@kern-ui/angular/kit';
+} from '@kern-ui/angular/forms';
 
 interface ScheduledLocalTime {
   readonly date: string;
@@ -830,7 +827,7 @@ Treat node identifiers and expanded state as domain contracts while loading immu
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import type { OnInit } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTree, type KrnTreeNode } from '@kern-ui/angular/kit';
+import { KrnTree, type KrnTreeNode } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-lazy-tree-recipe',
@@ -993,7 +990,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '
 import type { OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCombobox, type KrnOptionsState, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnCombobox, type KrnOptionsState, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-remote-combobox-recipe',
@@ -1194,7 +1191,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { KRN_RU_RU_LOCALE, krnLocaleConfig, provideKrn } from '@kern-ui/angular/core';
-import { KrnDatePicker, KrnSelect, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnDatePicker, KrnSelect, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-russian-locale-recipe',
@@ -1236,7 +1233,7 @@ import type { HarnessLoader } from '@angular/cdk/testing';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSelect, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnSelect, type KrnSelectOption } from '@kern-ui/angular/forms';
 import { KrnSelectHarness } from '@kern-ui/angular/testing';
 
 @Component({
@@ -1283,7 +1280,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { KrnDataGrid, type KrnDataColumn, type KrnDataRowKey } from '@kern-ui/angular/addon-grid';
-import { KrnFormField, KrnLabel, KrnTextInput } from '@kern-ui/angular/kit';
+import { KrnFormField, KrnLabel, KrnTextInput } from '@kern-ui/angular/forms';
 import { KrnCrudToolbar, KrnMasterDetailLayout } from '@kern-ui/angular/patterns';
 
 interface Customer {
@@ -1385,7 +1382,7 @@ void bootstrapApplication(KernGeneratedEnterpriseFeature);
 
 - ID: `app-shell`
 - Selector: `krn-app-shell`
-- Import: `import { KrnAppShell } from '@kern-ui/angular/kit';`
+- Import: `import { KrnAppShell } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnAppShell`
 - Lifecycle: **stable**
 - Category: Layout
@@ -1410,7 +1407,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnAppShell } from '@kern-ui/angular/kit';
+import { KrnAppShell } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-app-shell-agent-example',
@@ -1572,7 +1569,7 @@ Presets:
 
 - ID: `header`
 - Selector: `krn-header`
-- Import: `import { KrnHeader } from '@kern-ui/angular/kit';`
+- Import: `import { KrnHeader } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnHeader`
 - Lifecycle: **stable**
 - Category: Layout
@@ -1597,7 +1594,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnHeader } from '@kern-ui/angular/kit';
+import { KrnHeader } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-header-agent-example',
@@ -1736,7 +1733,7 @@ Presets:
 
 - ID: `sidebar`
 - Selector: `krn-sidebar`
-- Import: `import { KrnSidebar } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSidebar } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnSidebar`
 - Lifecycle: **stable**
 - Category: Layout
@@ -1761,7 +1758,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSidebar } from '@kern-ui/angular/kit';
+import { KrnSidebar } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-sidebar-agent-example',
@@ -1906,7 +1903,7 @@ Presets:
 
 - ID: `navigation-rail`
 - Selector: `krn-navigation-rail`
-- Import: `import { KrnNavigationRail } from '@kern-ui/angular/kit';`
+- Import: `import { KrnNavigationRail } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnNavigationRail`
 - Lifecycle: **stable**
 - Category: Layout
@@ -1931,7 +1928,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnNavigationRail } from '@kern-ui/angular/kit';
+import { KrnNavigationRail } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-navigation-rail-agent-example',
@@ -2078,7 +2075,7 @@ Presets:
 
 - ID: `container`
 - Selector: `krn-container`
-- Import: `import { KrnContainer } from '@kern-ui/angular/kit';`
+- Import: `import { KrnContainer } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnContainer`
 - Lifecycle: **stable**
 - Category: Layout
@@ -2103,7 +2100,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnContainer } from '@kern-ui/angular/kit';
+import { KrnContainer } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-container-agent-example',
@@ -2234,7 +2231,7 @@ Presets:
 
 - ID: `stack`
 - Selector: `krn-stack`
-- Import: `import { KrnStack } from '@kern-ui/angular/kit';`
+- Import: `import { KrnStack } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnStack`
 - Lifecycle: **stable**
 - Category: Layout
@@ -2259,7 +2256,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnStack } from '@kern-ui/angular/kit';
+import { KrnStack } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-stack-agent-example',
@@ -2389,7 +2386,7 @@ Presets:
 
 - ID: `inline`
 - Selector: `krn-inline`
-- Import: `import { KrnInline } from '@kern-ui/angular/kit';`
+- Import: `import { KrnInline } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnInline`
 - Lifecycle: **stable**
 - Category: Layout
@@ -2414,7 +2411,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnInline } from '@kern-ui/angular/kit';
+import { KrnInline } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-inline-agent-example',
@@ -2545,7 +2542,7 @@ Presets:
 
 - ID: `cluster`
 - Selector: `krn-cluster`
-- Import: `import { KrnCluster } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCluster } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnCluster`
 - Lifecycle: **stable**
 - Category: Layout
@@ -2570,7 +2567,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCluster } from '@kern-ui/angular/kit';
+import { KrnCluster } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-cluster-agent-example',
@@ -2704,7 +2701,7 @@ Presets:
 
 - ID: `grid`
 - Selector: `krn-grid`
-- Import: `import { KrnGrid } from '@kern-ui/angular/kit';`
+- Import: `import { KrnGrid } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnGrid`
 - Lifecycle: **stable**
 - Category: Layout
@@ -2729,7 +2726,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnGrid } from '@kern-ui/angular/kit';
+import { KrnGrid } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-grid-agent-example',
@@ -2863,7 +2860,7 @@ Presets:
 
 - ID: `split-layout`
 - Selector: `krn-split-layout`
-- Import: `import { KrnSplitLayout } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSplitLayout } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnSplitLayout`
 - Lifecycle: **stable**
 - Category: Layout
@@ -2888,7 +2885,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSplitLayout } from '@kern-ui/angular/kit';
+import { KrnSplitLayout } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-split-layout-agent-example',
@@ -3023,7 +3020,7 @@ Presets:
 
 - ID: `center`
 - Selector: `krn-center`
-- Import: `import { KrnCenter } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCenter } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnCenter`
 - Lifecycle: **stable**
 - Category: Layout
@@ -3048,7 +3045,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCenter } from '@kern-ui/angular/kit';
+import { KrnCenter } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-center-agent-example',
@@ -3177,7 +3174,7 @@ Presets:
 
 - ID: `spacer`
 - Selector: `krn-spacer`
-- Import: `import { KrnSpacer } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSpacer } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnSpacer`
 - Lifecycle: **stable**
 - Category: Layout
@@ -3202,7 +3199,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSpacer } from '@kern-ui/angular/kit';
+import { KrnSpacer } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-spacer-agent-example',
@@ -3324,7 +3321,7 @@ Presets:
 
 - ID: `divider`
 - Selector: `krn-divider`
-- Import: `import { KrnDivider } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDivider } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnDivider`
 - Lifecycle: **stable**
 - Category: Layout
@@ -3349,7 +3346,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDivider } from '@kern-ui/angular/kit';
+import { KrnDivider } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-divider-agent-example',
@@ -3469,7 +3466,7 @@ Presets:
 
 - ID: `aspect-ratio`
 - Selector: `krn-aspect-ratio`
-- Import: `import { KrnAspectRatio } from '@kern-ui/angular/kit';`
+- Import: `import { KrnAspectRatio } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnAspectRatio`
 - Lifecycle: **stable**
 - Category: Layout
@@ -3494,7 +3491,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnAspectRatio } from '@kern-ui/angular/kit';
+import { KrnAspectRatio } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-aspect-ratio-agent-example',
@@ -3617,7 +3614,7 @@ Presets:
 
 - ID: `scroll-area`
 - Selector: `krn-scroll-area`
-- Import: `import { KrnScrollArea } from '@kern-ui/angular/kit';`
+- Import: `import { KrnScrollArea } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnScrollArea`
 - Lifecycle: **stable**
 - Category: Layout
@@ -3642,7 +3639,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnScrollArea } from '@kern-ui/angular/kit';
+import { KrnScrollArea } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-scroll-area-agent-example',
@@ -3786,7 +3783,7 @@ Presets:
 
 - ID: `responsive-show-hide`
 - Selector: `krn-responsive-show-hide`
-- Import: `import { KrnResponsiveShowHide } from '@kern-ui/angular/kit';`
+- Import: `import { KrnResponsiveShowHide } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnShow`
 - Lifecycle: **stable**
 - Category: Layout
@@ -3811,7 +3808,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnResponsiveShowHide } from '@kern-ui/angular/kit';
+import { KrnResponsiveShowHide } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-responsive-show-hide-agent-example',
@@ -3935,7 +3932,7 @@ Presets:
 
 - ID: `resizable-panels`
 - Selector: `krn-resizable-panels`
-- Import: `import { KrnResizablePanels } from '@kern-ui/angular/kit';`
+- Import: `import { KrnResizablePanels } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnResizablePanels`
 - Lifecycle: **experimental**
 - Category: Layout
@@ -3960,7 +3957,7 @@ Avoid: Use Split Layout when regions should follow responsive rules without dire
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnResizablePanel, KrnResizablePanels, KrnResizeHandle } from '@kern-ui/angular/kit';
+import { KrnResizablePanel, KrnResizablePanels, KrnResizeHandle } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-resizable-panels-agent-example',
@@ -4116,7 +4113,7 @@ Presets:
 
 - ID: `button`
 - Selector: `button[krnButton]`
-- Import: `import { KrnButton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnButton } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnButton`
 - Lifecycle: **stable**
 - Category: Actions
@@ -4141,7 +4138,7 @@ Avoid: Do not add role="button", proxy click through a custom output, or use But
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnButton, provideKrnButtonOptions } from '@kern-ui/angular/kit';
+import { KrnButton, provideKrnButtonOptions } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-button-agent-example',
@@ -4299,7 +4296,7 @@ Presets:
 
 - ID: `icon-button`
 - Selector: `button[krnIconButton]`
-- Import: `import { KrnIconButton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnIconButton } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnIconButton`
 - Lifecycle: **stable**
 - Category: Actions
@@ -4324,7 +4321,7 @@ Avoid: Do not add role="button", proxy native attributes through component input
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnIconButton } from '@kern-ui/angular/kit';
+import { KrnIconButton } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-icon-button-agent-example',
@@ -4470,7 +4467,7 @@ Presets:
 
 - ID: `button-group`
 - Selector: `div[krnButtonGroup]`
-- Import: `import { KrnButtonGroup } from '@kern-ui/angular/kit';`
+- Import: `import { KrnButtonGroup } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnButtonGroup`
 - Lifecycle: **stable**
 - Category: Actions
@@ -4495,7 +4492,7 @@ Avoid: Do not add Arrow-key navigation, selected state, or group-level disabled/
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnButton, KrnButtonGroup } from '@kern-ui/angular/kit';
+import { KrnButton, KrnButtonGroup } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-button-group-agent-example',
@@ -4631,7 +4628,7 @@ Presets:
 
 - ID: `split-button`
 - Selector: `krn-split-button`
-- Import: `import { KrnSplitButton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSplitButton } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnSplitButton`
 - Lifecycle: **stable**
 - Category: Actions
@@ -4656,7 +4653,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSplitButton } from '@kern-ui/angular/kit';
+import { KrnSplitButton } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-split-button-agent-example',
@@ -4824,7 +4821,7 @@ Presets:
 
 - ID: `floating-action-button`
 - Selector: `button[krnFab]`
-- Import: `import { KrnFloatingActionButton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnFloatingActionButton } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnFloatingActionButton`
 - Lifecycle: **stable**
 - Category: Actions
@@ -4849,7 +4846,7 @@ Avoid: Do not use Floating Action Button for navigation, multiple equal-priority
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnFloatingActionButton } from '@kern-ui/angular/kit';
+import { KrnFloatingActionButton } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-floating-action-button-agent-example',
@@ -5002,7 +4999,7 @@ Presets:
 
 - ID: `toggle-button`
 - Selector: `button[krnToggleButton]`
-- Import: `import { KrnToggleButton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnToggleButton } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnToggleButton`
 - Lifecycle: **stable**
 - Category: Actions
@@ -5027,7 +5024,7 @@ Avoid: Do not nest a button, link, or other interactive control inside Toggle Bu
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnToggleButton } from '@kern-ui/angular/kit';
+import { KrnToggleButton } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-toggle-button-agent-example',
@@ -5188,7 +5185,7 @@ Presets:
 
 - ID: `toggle-group`
 - Selector: `div[krnToggleGroup]`
-- Import: `import { KrnToggleGroup } from '@kern-ui/angular/kit';`
+- Import: `import { KrnToggleGroup } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnToggleGroup`
 - Lifecycle: **stable**
 - Category: Actions
@@ -5213,7 +5210,7 @@ Avoid: Do not use Toggle Group as an Angular form radio control or project arbit
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnToggleButton, KrnToggleGroup } from '@kern-ui/angular/kit';
+import { KrnToggleButton, KrnToggleGroup } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-toggle-group-agent-example',
@@ -5380,7 +5377,7 @@ Presets:
 
 - ID: `copy-button`
 - Selector: `krn-copy-button`
-- Import: `import { KrnCopyButton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCopyButton } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnCopyButton`
 - Lifecycle: **stable**
 - Category: Actions
@@ -5405,7 +5402,7 @@ Avoid: Do not scrape projected DOM text, mutate navigator.clipboard in tests, or
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCopyButton, provideKrnCopyButtonOptions } from '@kern-ui/angular/kit';
+import { KrnCopyButton, provideKrnCopyButtonOptions } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-copy-button-agent-example',
@@ -5594,7 +5591,7 @@ Presets:
 
 - ID: `link`
 - Selector: `a[krnLink]`
-- Import: `import { KrnLink } from '@kern-ui/angular/kit';`
+- Import: `import { KrnLink } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnLink`
 - Lifecycle: **stable**
 - Category: Actions
@@ -5619,7 +5616,7 @@ Avoid: Do not simulate disabled navigation or use Link for an action in the curr
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnLink } from '@kern-ui/angular/kit';
+import { KrnLink } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-link-agent-example',
@@ -5756,7 +5753,7 @@ Presets:
 
 - ID: `dropdown-button`
 - Selector: `krn-dropdown-button`
-- Import: `import { KrnDropdownButton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDropdownButton } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnDropdownButton`
 - Lifecycle: **stable**
 - Category: Actions
@@ -5781,7 +5778,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDropdownButton, provideKrnMenuButtonOptions } from '@kern-ui/angular/kit';
+import { KrnDropdownButton, provideKrnMenuButtonOptions } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-dropdown-button-agent-example',
@@ -5953,7 +5950,7 @@ Presets:
 
 - ID: `form-field`
 - Selector: `krn-form-field`
-- Import: `import { KrnFormField } from '@kern-ui/angular/kit';`
+- Import: `import { KrnFormField } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnFormField`
 - Lifecycle: **stable**
 - Category: Forms
@@ -5979,7 +5976,7 @@ Avoid: Do not project multiple controls or proxy id, required, disabled, readonl
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnFormField, KrnHint, KrnLabel, KrnTextInput } from '@kern-ui/angular/kit';
+import { KrnFormField, KrnHint, KrnLabel, KrnTextInput } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-form-field-agent-example',
@@ -6131,7 +6128,7 @@ Presets:
 
 - ID: `label`
 - Selector: `krn-label`
-- Import: `import { KrnLabel } from '@kern-ui/angular/kit';`
+- Import: `import { KrnLabel } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnLabel`
 - Lifecycle: **stable**
 - Category: Forms
@@ -6156,7 +6153,7 @@ Avoid: Do not use Label as a picker; it has no selection behavior of its own.
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnLabel } from '@kern-ui/angular/kit';
+import { KrnLabel } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-label-agent-example',
@@ -6286,7 +6283,7 @@ Presets:
 
 - ID: `hint`
 - Selector: `krn-hint`
-- Import: `import { KrnHint } from '@kern-ui/angular/kit';`
+- Import: `import { KrnHint } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnHint`
 - Lifecycle: **stable**
 - Category: Forms
@@ -6311,7 +6308,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnHint } from '@kern-ui/angular/kit';
+import { KrnHint } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-hint-agent-example',
@@ -6434,7 +6431,7 @@ Presets:
 
 - ID: `validation-message`
 - Selector: `krn-validation-message`
-- Import: `import { KrnValidationMessage } from '@kern-ui/angular/kit';`
+- Import: `import { KrnValidationMessage } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnValidationMessage`
 - Lifecycle: **stable**
 - Category: Forms
@@ -6459,7 +6456,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnValidationMessage } from '@kern-ui/angular/kit';
+import { KrnValidationMessage } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-validation-message-agent-example',
@@ -6586,7 +6583,7 @@ Presets:
 
 - ID: `text-input`
 - Selector: `krn-text-input`
-- Import: `import { KrnTextInput } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTextInput } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnTextInput`
 - Lifecycle: **stable**
 - Category: Forms
@@ -6612,7 +6609,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTextInput } from '@kern-ui/angular/kit';
+import { KrnTextInput } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-text-input-agent-example',
@@ -6798,7 +6795,7 @@ Presets:
 
 - ID: `textarea`
 - Selector: `krn-textarea`
-- Import: `import { KrnTextarea } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTextarea } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnTextarea`
 - Lifecycle: **stable**
 - Category: Forms
@@ -6824,7 +6821,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTextarea } from '@kern-ui/angular/kit';
+import { KrnTextarea } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-textarea-agent-example',
@@ -7010,7 +7007,7 @@ Presets:
 
 - ID: `password-input`
 - Selector: `krn-password-input`
-- Import: `import { KrnPasswordInput } from '@kern-ui/angular/kit';`
+- Import: `import { KrnPasswordInput } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnPasswordInput`
 - Lifecycle: **stable**
 - Category: Forms
@@ -7036,7 +7033,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnPasswordInput } from '@kern-ui/angular/kit';
+import { KrnPasswordInput } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-password-input-agent-example',
@@ -7223,7 +7220,7 @@ Presets:
 
 - ID: `search-input`
 - Selector: `krn-search-input`
-- Import: `import { KrnSearchInput } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSearchInput } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnSearchInput`
 - Lifecycle: **stable**
 - Category: Forms
@@ -7249,7 +7246,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSearchInput } from '@kern-ui/angular/kit';
+import { KrnSearchInput } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-search-input-agent-example',
@@ -7435,7 +7432,7 @@ Presets:
 
 - ID: `number-input`
 - Selector: `krn-number-input`
-- Import: `import { KrnNumberInput } from '@kern-ui/angular/kit';`
+- Import: `import { KrnNumberInput } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnNumberInput`
 - Lifecycle: **stable**
 - Category: Forms
@@ -7461,7 +7458,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnNumberInput } from '@kern-ui/angular/kit';
+import { KrnNumberInput } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-number-input-agent-example',
@@ -7655,7 +7652,7 @@ Presets:
 
 - ID: `checkbox`
 - Selector: `krn-checkbox`
-- Import: `import { KrnCheckbox } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCheckbox } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnCheckbox`
 - Lifecycle: **stable**
 - Category: Forms
@@ -7681,7 +7678,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCheckbox } from '@kern-ui/angular/kit';
+import { KrnCheckbox } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-checkbox-agent-example',
@@ -7864,7 +7861,7 @@ Presets:
 
 - ID: `checkbox-group`
 - Selector: `krn-checkbox-group`
-- Import: `import { KrnCheckboxGroup } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCheckboxGroup } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnCheckboxGroup`
 - Lifecycle: **stable**
 - Category: Forms
@@ -7890,7 +7887,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCheckbox, KrnCheckboxGroup } from '@kern-ui/angular/kit';
+import { KrnCheckbox, KrnCheckboxGroup } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-checkbox-group-agent-example',
@@ -8063,7 +8060,7 @@ Presets:
 
 - ID: `radio`
 - Selector: `krn-radio`
-- Import: `import { KrnRadio } from '@kern-ui/angular/kit';`
+- Import: `import { KrnRadio } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnRadio`
 - Lifecycle: **stable**
 - Category: Forms
@@ -8088,7 +8085,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnRadio } from '@kern-ui/angular/kit';
+import { KrnRadio } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-radio-agent-example',
@@ -8252,7 +8249,7 @@ Presets:
 
 - ID: `radio-group`
 - Selector: `krn-radio-group`
-- Import: `import { KrnRadioGroup } from '@kern-ui/angular/kit';`
+- Import: `import { KrnRadioGroup } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnRadioGroup`
 - Lifecycle: **stable**
 - Category: Forms
@@ -8278,7 +8275,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnRadio, KrnRadioGroup } from '@kern-ui/angular/kit';
+import { KrnRadio, KrnRadioGroup } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-radio-group-agent-example',
@@ -8453,7 +8450,7 @@ Presets:
 
 - ID: `switch`
 - Selector: `krn-switch`
-- Import: `import { KrnSwitch } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSwitch } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnSwitch`
 - Lifecycle: **stable**
 - Category: Forms
@@ -8479,7 +8476,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSwitch } from '@kern-ui/angular/kit';
+import { KrnSwitch } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-switch-agent-example',
@@ -8654,7 +8651,7 @@ Presets:
 
 - ID: `select`
 - Selector: `krn-select`
-- Import: `import { KrnSelect } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSelect } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnSelect`
 - Lifecycle: **beta**
 - Category: Forms
@@ -8680,7 +8677,7 @@ Avoid: Use Native Select for platform selection, Combobox for searchable options
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSelect, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnSelect, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-select-agent-example',
@@ -8905,7 +8902,7 @@ Presets:
 
 - ID: `native-select`
 - Selector: `krn-native-select`
-- Import: `import { KrnNativeSelect } from '@kern-ui/angular/kit';`
+- Import: `import { KrnNativeSelect } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnNativeSelect`
 - Lifecycle: **stable**
 - Category: Forms
@@ -8931,7 +8928,7 @@ Avoid: Do not expect the option popup to inherit Kern surface styling across ope
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnNativeSelect, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnNativeSelect, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-native-select-agent-example',
@@ -9124,7 +9121,7 @@ Presets:
 
 - ID: `multi-select`
 - Selector: `krn-multi-select`
-- Import: `import { KrnMultiSelect } from '@kern-ui/angular/kit';`
+- Import: `import { KrnMultiSelect } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnMultiSelect`
 - Lifecycle: **beta**
 - Category: Forms
@@ -9150,7 +9147,7 @@ Avoid: Use Tags Input for user-authored values and Checkbox Group when the compl
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnMultiSelect, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnMultiSelect, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-multi-select-agent-example',
@@ -9375,7 +9372,7 @@ Presets:
 
 - ID: `combobox`
 - Selector: `krn-combobox`
-- Import: `import { KrnCombobox } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCombobox } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnCombobox`
 - Lifecycle: **beta**
 - Category: Forms
@@ -9401,7 +9398,7 @@ Avoid: Use Autocomplete when unmatched free text is valid, or Select when filter
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCombobox, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnCombobox, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-combobox-agent-example',
@@ -9621,7 +9618,7 @@ Presets:
 
 - ID: `autocomplete`
 - Selector: `krn-autocomplete`
-- Import: `import { KrnAutocomplete } from '@kern-ui/angular/kit';`
+- Import: `import { KrnAutocomplete } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnAutocomplete`
 - Lifecycle: **beta**
 - Category: Forms
@@ -9647,7 +9644,7 @@ Avoid: Use Combobox or Select when the submitted value must match an authoritati
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnAutocomplete, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnAutocomplete, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-autocomplete-agent-example',
@@ -9866,7 +9863,7 @@ Presets:
 
 - ID: `slider`
 - Selector: `krn-slider`
-- Import: `import { KrnSlider } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSlider } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnSlider`
 - Lifecycle: **stable**
 - Category: Forms
@@ -9892,7 +9889,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSlider } from '@kern-ui/angular/kit';
+import { KrnSlider } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-slider-agent-example',
@@ -10069,7 +10066,7 @@ Presets:
 
 - ID: `range-slider`
 - Selector: `krn-range-slider`
-- Import: `import { KrnRangeSlider } from '@kern-ui/angular/kit';`
+- Import: `import { KrnRangeSlider } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnRangeSlider`
 - Lifecycle: **stable**
 - Category: Forms
@@ -10095,7 +10092,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnRangeSlider, type KrnRangeValue } from '@kern-ui/angular/kit';
+import { KrnRangeSlider, type KrnRangeValue } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-range-slider-agent-example',
@@ -10276,7 +10273,7 @@ Presets:
 
 - ID: `segmented-control`
 - Selector: `krn-segmented-control`
-- Import: `import { KrnSegmentedControl } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSegmentedControl } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnSegmentedControl`
 - Lifecycle: **stable**
 - Category: Forms
@@ -10302,7 +10299,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSegmentedControl, type KrnSegmentOption } from '@kern-ui/angular/kit';
+import { KrnSegmentedControl, type KrnSegmentOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-segmented-control-agent-example',
@@ -10491,7 +10488,7 @@ Presets:
 
 - ID: `date-picker`
 - Selector: `krn-date-picker`
-- Import: `import { KrnDatePicker } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDatePicker } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnDatePicker`
 - Lifecycle: **beta**
 - Category: Forms
@@ -10517,7 +10514,7 @@ Avoid: Use Date Range Picker for an interval and a native date input only when p
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDatePicker } from '@kern-ui/angular/kit';
+import { KrnDatePicker } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-date-picker-agent-example',
@@ -10719,7 +10716,7 @@ Presets:
 
 - ID: `date-range-picker`
 - Selector: `krn-date-range-picker`
-- Import: `import { KrnDateRangePicker } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDateRangePicker } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnDateRangePicker`
 - Lifecycle: **beta**
 - Category: Forms
@@ -10745,7 +10742,7 @@ Avoid: Use two independent Date Pickers only when the dates do not form one vali
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDateRangePicker, type KrnDateRangeValue } from '@kern-ui/angular/kit';
+import { KrnDateRangePicker, type KrnDateRangeValue } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-date-range-picker-agent-example',
@@ -10954,7 +10951,7 @@ Presets:
 
 - ID: `time-picker`
 - Selector: `krn-time-picker`
-- Import: `import { KrnTimePicker } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTimePicker } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnTimePicker`
 - Lifecycle: **beta**
 - Category: Forms
@@ -10980,7 +10977,7 @@ Avoid: Use a short Select when only a few fixed times are valid, and keep timezo
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTimePicker } from '@kern-ui/angular/kit';
+import { KrnTimePicker } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-time-picker-agent-example',
@@ -11176,7 +11173,7 @@ Presets:
 
 - ID: `color-picker`
 - Selector: `krn-color-picker`
-- Import: `import { KrnColorPicker } from '@kern-ui/angular/kit';`
+- Import: `import { KrnColorPicker } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnColorPicker`
 - Lifecycle: **beta**
 - Category: Forms
@@ -11202,7 +11199,7 @@ Avoid: Use a fixed Select or Radio Group when the product accepts only a small s
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnColorPicker } from '@kern-ui/angular/kit';
+import { KrnColorPicker } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-color-picker-agent-example',
@@ -11378,7 +11375,7 @@ Presets:
 
 - ID: `file-upload`
 - Selector: `krn-file-upload`
-- Import: `import { KrnFileUpload } from '@kern-ui/angular/kit';`
+- Import: `import { KrnFileUpload } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnFileUpload`
 - Lifecycle: **stable**
 - Category: Forms
@@ -11404,7 +11401,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnFileUpload } from '@kern-ui/angular/kit';
+import { KrnFileUpload } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-file-upload-agent-example',
@@ -11588,7 +11585,7 @@ Presets:
 
 - ID: `drag-drop-upload`
 - Selector: `krn-drag-drop-upload`
-- Import: `import { KrnDragDropUpload } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDragDropUpload } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnDropUpload`
 - Lifecycle: **stable**
 - Category: Forms
@@ -11614,7 +11611,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDragDropUpload } from '@kern-ui/angular/kit';
+import { KrnDragDropUpload } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-drag-drop-upload-agent-example',
@@ -11799,7 +11796,7 @@ Presets:
 
 - ID: `verification-code`
 - Selector: `krn-verification-code`
-- Import: `import { KrnVerificationCode } from '@kern-ui/angular/kit';`
+- Import: `import { KrnVerificationCode } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnOtpInput`
 - Lifecycle: **stable**
 - Category: Forms
@@ -11825,7 +11822,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnVerificationCode } from '@kern-ui/angular/kit';
+import { KrnVerificationCode } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-verification-code-agent-example',
@@ -11998,7 +11995,7 @@ Presets:
 
 - ID: `tags-input`
 - Selector: `krn-tags-input`
-- Import: `import { KrnTagsInput } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTagsInput } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnTagsInput`
 - Lifecycle: **stable**
 - Category: Forms
@@ -12024,7 +12021,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTagsInput } from '@kern-ui/angular/kit';
+import { KrnTagsInput } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-tags-input-agent-example',
@@ -12210,7 +12207,7 @@ Presets:
 
 - ID: `breadcrumbs`
 - Selector: `krn-breadcrumbs`
-- Import: `import { KrnBreadcrumbs } from '@kern-ui/angular/kit';`
+- Import: `import { KrnBreadcrumbs } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnBreadcrumbs`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -12235,7 +12232,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnBreadcrumbs, type KrnBreadcrumbItem } from '@kern-ui/angular/kit';
+import { KrnBreadcrumbs, type KrnBreadcrumbItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-breadcrumbs-agent-example',
@@ -12384,7 +12381,7 @@ Presets:
 
 - ID: `tabs`
 - Selector: `krn-tabs`
-- Import: `import { KrnTabs } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTabs } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnTabs`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -12409,7 +12406,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTabs, type KrnTabItem } from '@kern-ui/angular/kit';
+import { KrnTabs, type KrnTabItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-tabs-agent-example',
@@ -12561,7 +12558,7 @@ Presets:
 
 - ID: `vertical-tabs`
 - Selector: `krn-vertical-tabs`
-- Import: `import { KrnVerticalTabs } from '@kern-ui/angular/kit';`
+- Import: `import { KrnVerticalTabs } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnTabs`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -12586,7 +12583,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnVerticalTabs, type KrnTabItem } from '@kern-ui/angular/kit';
+import { KrnVerticalTabs, type KrnTabItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-vertical-tabs-agent-example',
@@ -12737,7 +12734,7 @@ Presets:
 
 - ID: `pagination`
 - Selector: `krn-pagination`
-- Import: `import { KrnPagination } from '@kern-ui/angular/kit';`
+- Import: `import { KrnPagination } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnPagination`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -12762,7 +12759,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnPagination } from '@kern-ui/angular/kit';
+import { KrnPagination } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-pagination-agent-example',
@@ -12921,7 +12918,7 @@ Presets:
 
 - ID: `stepper`
 - Selector: `krn-stepper`
-- Import: `import { KrnStepper } from '@kern-ui/angular/kit';`
+- Import: `import { KrnStepper } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnStepper`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -12946,7 +12943,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnStepper, type KrnStepItem } from '@kern-ui/angular/kit';
+import { KrnStepper, type KrnStepItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-stepper-agent-example',
@@ -13109,7 +13106,7 @@ Presets:
 
 - ID: `menu`
 - Selector: `krn-menu`
-- Import: `import { KrnMenu } from '@kern-ui/angular/kit';`
+- Import: `import { KrnMenu } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnMenu`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -13134,7 +13131,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnMenu, type KrnNavigationItem } from '@kern-ui/angular/kit';
+import { KrnMenu, type KrnNavigationItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-menu-agent-example',
@@ -13297,7 +13294,7 @@ Presets:
 
 - ID: `menubar`
 - Selector: `krn-menubar`
-- Import: `import { KrnMenubar } from '@kern-ui/angular/kit';`
+- Import: `import { KrnMenubar } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnMenubar`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -13322,7 +13319,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnMenubar, type KrnNavigationItem } from '@kern-ui/angular/kit';
+import { KrnMenubar, type KrnNavigationItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-menubar-agent-example',
@@ -13464,7 +13461,7 @@ Presets:
 
 - ID: `context-menu`
 - Selector: `krn-context-menu`
-- Import: `import { KrnContextMenu } from '@kern-ui/angular/kit';`
+- Import: `import { KrnContextMenu } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnContextMenu`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -13489,7 +13486,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnContextMenu, type KrnContextMenuItem } from '@kern-ui/angular/kit';
+import { KrnContextMenu, type KrnContextMenuItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-context-menu-agent-example',
@@ -13650,7 +13647,7 @@ Presets:
 
 - ID: `tree-navigation`
 - Selector: `krn-tree-navigation`
-- Import: `import { KrnTreeNavigation } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTreeNavigation } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnTreeNavigation`
 - Lifecycle: **beta**
 - Category: Navigation
@@ -13675,7 +13672,7 @@ Avoid: Use Tree for selectable domain data and Menu for a short transient action
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTreeNavigation, type KrnTreeNavigationItem } from '@kern-ui/angular/kit';
+import { KrnTreeNavigation, type KrnTreeNavigationItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-tree-navigation-agent-example',
@@ -13858,7 +13855,7 @@ Presets:
 
 - ID: `bottom-navigation`
 - Selector: `krn-bottom-navigation`
-- Import: `import { KrnBottomNavigation } from '@kern-ui/angular/kit';`
+- Import: `import { KrnBottomNavigation } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnBottomNavigation`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -13883,7 +13880,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnBottomNavigation, type KrnNavigationItem } from '@kern-ui/angular/kit';
+import { KrnBottomNavigation, type KrnNavigationItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-bottom-navigation-agent-example',
@@ -14035,7 +14032,7 @@ Presets:
 
 - ID: `command-palette`
 - Selector: `krn-command-palette`
-- Import: `import { KrnCommandPalette } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCommandPalette } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnCommandPalette`
 - Lifecycle: **beta**
 - Category: Navigation
@@ -14060,7 +14057,7 @@ Avoid: Use Menu for a small contextual action set and Global Search for content 
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCommandPalette, type KrnCommandItem } from '@kern-ui/angular/kit';
+import { KrnCommandPalette, type KrnCommandItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-command-palette-agent-example',
@@ -14249,7 +14246,7 @@ Presets:
 
 - ID: `table-of-contents`
 - Selector: `krn-table-of-contents`
-- Import: `import { KrnTableOfContents } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTableOfContents } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnTableOfContents`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -14274,7 +14271,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTableOfContents, type KrnTocItem } from '@kern-ui/angular/kit';
+import { KrnTableOfContents, type KrnTocItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-table-of-contents-agent-example',
@@ -14431,7 +14428,7 @@ Presets:
 
 - ID: `back-button`
 - Selector: `krn-back-button`
-- Import: `import { KrnBackButton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnBackButton } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnBackButton`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -14456,7 +14453,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnBackButton } from '@kern-ui/angular/kit';
+import { KrnBackButton } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-back-button-agent-example',
@@ -14591,7 +14588,7 @@ Presets:
 
 - ID: `skip-link`
 - Selector: `krn-skip-link`
-- Import: `import { KrnSkipLink } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSkipLink } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnSkipLink`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -14616,7 +14613,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSkipLink } from '@kern-ui/angular/kit';
+import { KrnSkipLink } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-skip-link-agent-example',
@@ -14755,7 +14752,7 @@ Presets:
 
 - ID: `alert`
 - Selector: `krn-alert`
-- Import: `import { KrnAlert } from '@kern-ui/angular/kit';`
+- Import: `import { KrnAlert } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnAlert`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -14780,7 +14777,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnAlert } from '@kern-ui/angular/kit';
+import { KrnAlert } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-alert-agent-example',
@@ -14921,7 +14918,7 @@ Presets:
 
 - ID: `banner`
 - Selector: `krn-banner`
-- Import: `import { KrnBanner } from '@kern-ui/angular/kit';`
+- Import: `import { KrnBanner } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnBanner`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -14946,7 +14943,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnBanner } from '@kern-ui/angular/kit';
+import { KrnBanner } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-banner-agent-example',
@@ -15085,7 +15082,7 @@ Presets:
 
 - ID: `toast`
 - Selector: `krn-toast`
-- Import: `import { KrnToast } from '@kern-ui/angular/kit';`
+- Import: `import { KrnToast } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnToastViewport`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -15110,7 +15107,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnToast, KrnToastService } from '@kern-ui/angular/kit';
+import { KrnToast, KrnToastService } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-toast-agent-example',
@@ -15257,7 +15254,7 @@ Presets:
 
 - ID: `tooltip`
 - Selector: `[krnTooltip]`
-- Import: `import { KrnTooltip } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTooltip } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnTooltip`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -15282,7 +15279,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTooltip } from '@kern-ui/angular/kit';
+import { KrnTooltip } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-tooltip-agent-example',
@@ -15429,7 +15426,7 @@ Presets:
 
 - ID: `popover`
 - Selector: `krn-popover`
-- Import: `import { KrnPopover } from '@kern-ui/angular/kit';`
+- Import: `import { KrnPopover } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnPopover`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -15454,7 +15451,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnPopover } from '@kern-ui/angular/kit';
+import { KrnPopover } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-popover-agent-example',
@@ -15602,7 +15599,7 @@ Presets:
 
 - ID: `hover-card`
 - Selector: `krn-hover-card`
-- Import: `import { KrnHoverCard } from '@kern-ui/angular/kit';`
+- Import: `import { KrnHoverCard } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnHoverCard`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -15627,7 +15624,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnHoverCard } from '@kern-ui/angular/kit';
+import { KrnHoverCard } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-hover-card-agent-example',
@@ -15771,7 +15768,7 @@ Presets:
 
 - ID: `dialog`
 - Selector: `krn-dialog`
-- Import: `import { KrnDialog } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDialog } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnDialog`
 - Lifecycle: **beta**
 - Category: Feedback
@@ -15796,7 +15793,7 @@ Avoid: Use Popover for non-modal supplemental content and a route when the task 
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDialog } from '@kern-ui/angular/kit';
+import { KrnDialog } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-dialog-agent-example',
@@ -15976,7 +15973,7 @@ Presets:
 
 - ID: `alert-dialog`
 - Selector: `krn-alert-dialog`
-- Import: `import { KrnAlertDialog } from '@kern-ui/angular/kit';`
+- Import: `import { KrnAlertDialog } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnAlertDialog`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -16001,7 +15998,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnAlertDialog } from '@kern-ui/angular/kit';
+import { KrnAlertDialog } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-alert-dialog-agent-example',
@@ -16178,7 +16175,7 @@ Presets:
 
 - ID: `drawer`
 - Selector: `krn-drawer`
-- Import: `import { KrnDrawer } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDrawer } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnDrawer`
 - Lifecycle: **beta**
 - Category: Feedback
@@ -16203,7 +16200,7 @@ Avoid: Do not use a modal Drawer as permanent application navigation; use Sideba
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDrawer } from '@kern-ui/angular/kit';
+import { KrnDrawer } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-drawer-agent-example',
@@ -16383,7 +16380,7 @@ Presets:
 
 - ID: `bottom-sheet`
 - Selector: `krn-bottom-sheet`
-- Import: `import { KrnBottomSheet } from '@kern-ui/angular/kit';`
+- Import: `import { KrnBottomSheet } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnBottomSheet`
 - Lifecycle: **beta**
 - Category: Feedback
@@ -16408,7 +16405,7 @@ Avoid: Use Dialog for viewport-independent modal work and Drawer for a side-orie
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnBottomSheet } from '@kern-ui/angular/kit';
+import { KrnBottomSheet } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-bottom-sheet-agent-example',
@@ -16582,7 +16579,7 @@ Presets:
 
 - ID: `loading-overlay`
 - Selector: `krn-loading-overlay`
-- Import: `import { KrnLoadingOverlay } from '@kern-ui/angular/kit';`
+- Import: `import { KrnLoadingOverlay } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnLoadingOverlay`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -16607,7 +16604,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnLoadingOverlay } from '@kern-ui/angular/kit';
+import { KrnLoadingOverlay } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-loading-overlay-agent-example',
@@ -16744,7 +16741,7 @@ Presets:
 
 - ID: `progress-bar`
 - Selector: `krn-progress-bar`
-- Import: `import { KrnProgressBar } from '@kern-ui/angular/kit';`
+- Import: `import { KrnProgressBar } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnProgressBar`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -16769,7 +16766,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnProgressBar } from '@kern-ui/angular/kit';
+import { KrnProgressBar } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-progress-bar-agent-example',
@@ -16917,7 +16914,7 @@ Presets:
 
 - ID: `circular-progress`
 - Selector: `krn-circular-progress`
-- Import: `import { KrnCircularProgress } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCircularProgress } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnCircularProgress`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -16942,7 +16939,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCircularProgress } from '@kern-ui/angular/kit';
+import { KrnCircularProgress } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-circular-progress-agent-example',
@@ -17089,7 +17086,7 @@ Presets:
 
 - ID: `spinner`
 - Selector: `krn-spinner`
-- Import: `import { KrnSpinner } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSpinner } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnSpinner`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -17114,7 +17111,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSpinner } from '@kern-ui/angular/kit';
+import { KrnSpinner } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-spinner-agent-example',
@@ -17237,7 +17234,7 @@ Presets:
 
 - ID: `skeleton`
 - Selector: `krn-skeleton`
-- Import: `import { KrnSkeleton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSkeleton } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnSkeleton`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -17262,7 +17259,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSkeleton } from '@kern-ui/angular/kit';
+import { KrnSkeleton } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-skeleton-agent-example',
@@ -17394,7 +17391,7 @@ Presets:
 
 - ID: `empty-state`
 - Selector: `krn-empty-state`
-- Import: `import { KrnEmptyState } from '@kern-ui/angular/kit';`
+- Import: `import { KrnEmptyState } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnEmptyState`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -17419,7 +17416,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnEmptyState } from '@kern-ui/angular/kit';
+import { KrnEmptyState } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-empty-state-agent-example',
@@ -17557,7 +17554,7 @@ Presets:
 
 - ID: `error-state`
 - Selector: `krn-error-state`
-- Import: `import { KrnErrorState } from '@kern-ui/angular/kit';`
+- Import: `import { KrnErrorState } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnErrorState`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -17582,7 +17579,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnErrorState } from '@kern-ui/angular/kit';
+import { KrnErrorState } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-error-state-agent-example',
@@ -17722,7 +17719,7 @@ Presets:
 
 - ID: `success-state`
 - Selector: `krn-success-state`
-- Import: `import { KrnSuccessState } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSuccessState } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnSuccessState`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -17747,7 +17744,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSuccessState } from '@kern-ui/angular/kit';
+import { KrnSuccessState } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-success-state-agent-example',
@@ -17885,7 +17882,7 @@ Presets:
 
 - ID: `confirmation-pattern`
 - Selector: `krn-confirmation-pattern`
-- Import: `import { KrnConfirmationPattern } from '@kern-ui/angular/kit';`
+- Import: `import { KrnConfirmationPattern } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnConfirmation`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -17910,7 +17907,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnConfirmationPattern } from '@kern-ui/angular/kit';
+import { KrnConfirmationPattern } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-confirmation-pattern-agent-example',
@@ -18051,7 +18048,7 @@ Presets:
 
 - ID: `badge`
 - Selector: `krn-badge`
-- Import: `import { KrnBadge } from '@kern-ui/angular/kit';`
+- Import: `import { KrnBadge } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnBadge`
 - Lifecycle: **stable**
 - Category: Data display
@@ -18076,7 +18073,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnBadge } from '@kern-ui/angular/kit';
+import { KrnBadge } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-badge-agent-example',
@@ -18205,7 +18202,7 @@ Presets:
 
 - ID: `status-badge`
 - Selector: `krn-status-badge`
-- Import: `import { KrnStatusBadge } from '@kern-ui/angular/kit';`
+- Import: `import { KrnStatusBadge } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnBadge`
 - Lifecycle: **stable**
 - Category: Data display
@@ -18230,7 +18227,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnStatusBadge } from '@kern-ui/angular/kit';
+import { KrnStatusBadge } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-status-badge-agent-example',
@@ -18360,7 +18357,7 @@ Presets:
 
 - ID: `chip`
 - Selector: `krn-chip`
-- Import: `import { KrnChip } from '@kern-ui/angular/kit';`
+- Import: `import { KrnChip } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnChip`
 - Lifecycle: **stable**
 - Category: Data display
@@ -18385,7 +18382,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnChip } from '@kern-ui/angular/kit';
+import { KrnChip } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-chip-agent-example',
@@ -18538,7 +18535,7 @@ Presets:
 
 - ID: `tag`
 - Selector: `krn-tag`
-- Import: `import { KrnTag } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTag } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnChip`
 - Lifecycle: **stable**
 - Category: Data display
@@ -18563,7 +18560,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTag } from '@kern-ui/angular/kit';
+import { KrnTag } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-tag-agent-example',
@@ -18716,7 +18713,7 @@ Presets:
 
 - ID: `avatar`
 - Selector: `krn-avatar`
-- Import: `import { KrnAvatar } from '@kern-ui/angular/kit';`
+- Import: `import { KrnAvatar } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnAvatar`
 - Lifecycle: **stable**
 - Category: Data display
@@ -18741,7 +18738,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnAvatar } from '@kern-ui/angular/kit';
+import { KrnAvatar } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-avatar-agent-example',
@@ -18877,7 +18874,7 @@ Presets:
 
 - ID: `avatar-group`
 - Selector: `krn-avatar-group`
-- Import: `import { KrnAvatarGroup } from '@kern-ui/angular/kit';`
+- Import: `import { KrnAvatarGroup } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnAvatarGroup`
 - Lifecycle: **stable**
 - Category: Data display
@@ -18902,7 +18899,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnAvatar, KrnAvatarGroup } from '@kern-ui/angular/kit';
+import { KrnAvatar, KrnAvatarGroup } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-avatar-group-agent-example',
@@ -19032,7 +19029,7 @@ Presets:
 
 - ID: `card`
 - Selector: `krn-card`
-- Import: `import { KrnCard } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCard } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnCard`
 - Lifecycle: **stable**
 - Category: Data display
@@ -19057,7 +19054,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCard } from '@kern-ui/angular/kit';
+import { KrnCard } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-card-agent-example',
@@ -19194,7 +19191,7 @@ Presets:
 
 - ID: `stat`
 - Selector: `krn-stat`
-- Import: `import { KrnStat } from '@kern-ui/angular/kit';`
+- Import: `import { KrnStat } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnStat`
 - Lifecycle: **stable**
 - Category: Data display
@@ -19219,7 +19216,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnStat } from '@kern-ui/angular/kit';
+import { KrnStat } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-stat-agent-example',
@@ -19354,7 +19351,7 @@ Presets:
 
 - ID: `description-list`
 - Selector: `krn-description-list`
-- Import: `import { KrnDescriptionList } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDescriptionList } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnDescriptionList`
 - Lifecycle: **stable**
 - Category: Data display
@@ -19379,7 +19376,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDescriptionItem, KrnDescriptionList } from '@kern-ui/angular/kit';
+import { KrnDescriptionItem, KrnDescriptionList } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-description-list-agent-example',
@@ -19504,7 +19501,7 @@ Presets:
 
 - ID: `list`
 - Selector: `krn-list`
-- Import: `import { KrnList } from '@kern-ui/angular/kit';`
+- Import: `import { KrnList } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnList`
 - Lifecycle: **stable**
 - Category: Data display
@@ -19529,7 +19526,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnList, KrnListItem } from '@kern-ui/angular/kit';
+import { KrnList, KrnListItem } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-list-agent-example',
@@ -19658,7 +19655,7 @@ Presets:
 
 - ID: `list-item`
 - Selector: `krn-list-item`
-- Import: `import { KrnListItem } from '@kern-ui/angular/kit';`
+- Import: `import { KrnListItem } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnListItem`
 - Lifecycle: **stable**
 - Category: Data display
@@ -19683,7 +19680,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnListItem } from '@kern-ui/angular/kit';
+import { KrnListItem } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-list-item-agent-example',
@@ -19821,7 +19818,7 @@ Presets:
 
 - ID: `accordion`
 - Selector: `krn-accordion`
-- Import: `import { KrnAccordion } from '@kern-ui/angular/kit';`
+- Import: `import { KrnAccordion } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnAccordion`
 - Lifecycle: **stable**
 - Category: Data display
@@ -19846,7 +19843,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnAccordion, KrnDisclosure } from '@kern-ui/angular/kit';
+import { KrnAccordion, KrnDisclosure } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-accordion-agent-example',
@@ -19988,7 +19985,7 @@ Presets:
 
 - ID: `disclosure`
 - Selector: `krn-disclosure`
-- Import: `import { KrnDisclosure } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDisclosure } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnDisclosure`
 - Lifecycle: **stable**
 - Category: Data display
@@ -20013,7 +20010,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDisclosure } from '@kern-ui/angular/kit';
+import { KrnDisclosure } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-disclosure-agent-example',
@@ -20155,7 +20152,7 @@ Presets:
 
 - ID: `timeline`
 - Selector: `krn-timeline`
-- Import: `import { KrnTimeline } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTimeline } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnTimeline`
 - Lifecycle: **stable**
 - Category: Data display
@@ -20180,7 +20177,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTimeline, KrnTimelineItem } from '@kern-ui/angular/kit';
+import { KrnTimeline, KrnTimelineItem } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-timeline-agent-example',
@@ -20313,7 +20310,7 @@ Presets:
 
 - ID: `tree`
 - Selector: `krn-tree`
-- Import: `import { KrnTree } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTree } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnTree`
 - Lifecycle: **beta**
 - Category: Data display
@@ -20338,7 +20335,7 @@ Avoid: Use Tree Navigation for route wayfinding and nested lists when items do n
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTree, type KrnTreeNode } from '@kern-ui/angular/kit';
+import { KrnTree, type KrnTreeNode } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-tree-agent-example',
@@ -21108,7 +21105,7 @@ Presets:
 
 - ID: `calendar`
 - Selector: `krn-calendar`
-- Import: `import { KrnCalendar } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCalendar } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnCalendar`
 - Lifecycle: **stable**
 - Category: Data display
@@ -21133,7 +21130,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCalendar } from '@kern-ui/angular/kit';
+import { KrnCalendar } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-calendar-agent-example',
@@ -21310,7 +21307,7 @@ Presets:
 
 - ID: `code-block`
 - Selector: `krn-code-block`
-- Import: `import { KrnCodeBlock } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCodeBlock } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnCodeBlock`
 - Lifecycle: **stable**
 - Category: Data display
@@ -21335,7 +21332,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCodeBlock } from '@kern-ui/angular/kit';
+import { KrnCodeBlock } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-code-block-agent-example',
@@ -21476,7 +21473,7 @@ Presets:
 
 - ID: `json-view`
 - Selector: `krn-json-view`
-- Import: `import { KrnJsonView } from '@kern-ui/angular/kit';`
+- Import: `import { KrnJsonView } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnJsonView`
 - Lifecycle: **beta**
 - Category: Data display
@@ -21501,7 +21498,7 @@ Avoid: Use Code Block for an immutable source excerpt, and a purpose-built detai
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnJsonView } from '@kern-ui/angular/kit';
+import { KrnJsonView } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-json-view-agent-example',
@@ -21666,7 +21663,7 @@ Presets:
 
 - ID: `keyboard-shortcut`
 - Selector: `krn-keyboard-shortcut`
-- Import: `import { KrnKeyboardShortcut } from '@kern-ui/angular/kit';`
+- Import: `import { KrnKeyboardShortcut } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnKeyboardShortcut`
 - Lifecycle: **stable**
 - Category: Data display
@@ -21691,7 +21688,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnKeyboardShortcut } from '@kern-ui/angular/kit';
+import { KrnKeyboardShortcut } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-keyboard-shortcut-agent-example',
@@ -21817,7 +21814,7 @@ Presets:
 
 - ID: `meter`
 - Selector: `krn-meter`
-- Import: `import { KrnMeter } from '@kern-ui/angular/kit';`
+- Import: `import { KrnMeter } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnMeter`
 - Lifecycle: **stable**
 - Category: Data display
@@ -21842,7 +21839,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnMeter } from '@kern-ui/angular/kit';
+import { KrnMeter } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-meter-agent-example',
@@ -21987,7 +21984,7 @@ Presets:
 
 - ID: `rating`
 - Selector: `krn-rating`
-- Import: `import { KrnRating } from '@kern-ui/angular/kit';`
+- Import: `import { KrnRating } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnRating`
 - Lifecycle: **stable**
 - Category: Data display
@@ -22012,7 +22009,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnRating } from '@kern-ui/angular/kit';
+import { KrnRating } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-rating-agent-example',
@@ -22758,7 +22755,7 @@ Presets:
 
 - ID: `responsive-media`
 - Selector: `krn-responsive-media`
-- Import: `import { KrnResponsiveMedia } from '@kern-ui/angular/kit';`
+- Import: `import { KrnResponsiveMedia } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnResponsiveMedia`
 - Lifecycle: **stable**
 - Category: Data display
@@ -22783,7 +22780,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnResponsiveMedia } from '@kern-ui/angular/kit';
+import { KrnResponsiveMedia } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-responsive-media-agent-example',

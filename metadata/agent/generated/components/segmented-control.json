@@ -9,8 +9,8 @@
   "symbol": "KrnSegmentedControl",
   "canonicalSymbol": "KrnSegmentedControl",
   "canonicalId": "segmented-control",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -268,7 +268,7 @@
       "title": "Typed report period",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed report period\n *\n * Select one typed period from stable segment options.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSegmentedControl, type KrnSegmentOption } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-segmented-control-agent-example',\n  standalone: true,\n  imports: [KrnSegmentedControl, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-segmented-control\n      ariaLabel=\"Report period\"\n      [options]=\"periodOptions\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernSegmentedControlAgentExample {\n  readonly control = new FormControl<string | null>('quarter', { nonNullable: true });\n\n  readonly periodOptions: readonly KrnSegmentOption<string>[] = [\n    { value: 'month', label: 'Month' },\n    { value: 'quarter', label: 'Quarter' },\n    { value: 'year', label: 'Year' },\n  ];\n}\n\nvoid bootstrapApplication(KernSegmentedControlAgentExample);\n",
+      "code": "/**\n * Typed report period\n *\n * Select one typed period from stable segment options.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSegmentedControl, type KrnSegmentOption } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-segmented-control-agent-example',\n  standalone: true,\n  imports: [KrnSegmentedControl, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-segmented-control\n      ariaLabel=\"Report period\"\n      [options]=\"periodOptions\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernSegmentedControlAgentExample {\n  readonly control = new FormControl<string | null>('quarter', { nonNullable: true });\n\n  readonly periodOptions: readonly KrnSegmentOption<string>[] = [\n    { value: 'month', label: 'Month' },\n    { value: 'quarter', label: 'Quarter' },\n    { value: 'year', label: 'Year' },\n  ];\n}\n\nvoid bootstrapApplication(KernSegmentedControlAgentExample);\n",
       "verification": "compiled",
       "source": "examples/segmented-control.ts"
     }

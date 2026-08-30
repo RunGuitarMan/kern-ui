@@ -9,8 +9,8 @@
   "symbol": "KrnTextarea",
   "canonicalSymbol": "KrnTextarea",
   "canonicalId": "textarea",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -298,7 +298,7 @@
       "title": "Typed review notes",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed review notes\n *\n * Edit long-form review notes through a non-nullable control.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTextarea } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-textarea-agent-example',\n  standalone: true,\n  imports: [KrnTextarea, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-textarea id=\"review-notes\" ariaLabel=\"Review notes\" [rows]=\"5\" [formControl]=\"control\" />\n  `,\n})\nexport class KernTextareaAgentExample {\n  readonly control = new FormControl<string>('Renewal approved pending legal review.', {\n    nonNullable: true,\n  });\n}\n\nvoid bootstrapApplication(KernTextareaAgentExample);\n",
+      "code": "/**\n * Typed review notes\n *\n * Edit long-form review notes through a non-nullable control.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTextarea } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-textarea-agent-example',\n  standalone: true,\n  imports: [KrnTextarea, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-textarea id=\"review-notes\" ariaLabel=\"Review notes\" [rows]=\"5\" [formControl]=\"control\" />\n  `,\n})\nexport class KernTextareaAgentExample {\n  readonly control = new FormControl<string>('Renewal approved pending legal review.', {\n    nonNullable: true,\n  });\n}\n\nvoid bootstrapApplication(KernTextareaAgentExample);\n",
       "verification": "compiled",
       "source": "examples/textarea.ts"
     }

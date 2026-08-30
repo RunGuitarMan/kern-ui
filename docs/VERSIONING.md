@@ -6,9 +6,9 @@ published products.
 
 ## Compatibility matrix
 
-| Kern line | Angular peers | RxJS peer | Contributor Node | Status               |
-| --------- | ------------- | --------- | ---------------- | -------------------- |
-| `0.1.x`   | `^22.0.0`     | `^7.4.0`  | `24.x`           | Unreleased candidate |
+| Kern line | Angular peers | RxJS peer | Contributor Node | Status                    |
+| --------- | ------------- | --------- | ---------------- | ------------------------- |
+| `0.1.x`   | `^22.0.0`     | `^7.4.0`  | `24.x`           | Current public 0.1.2 line |
 
 The exact peer dependency ranges in the published package remain authoritative. Supporting a new
 Angular major requires its own compatibility work and release; consumers should not use forced
@@ -18,9 +18,10 @@ peer installation as evidence of support.
 
 The compatibility contract includes:
 
-- the `@kern-ui/angular` compatibility entry point; the `/cdk`, `/i18n`, `/core`, `/kit`,
-  `/addon-grid`, `/addon-charts`, `/patterns`, `/testing`, and declared `/testing/*` entry points;
-  declared style subpaths; and their exported declarations;
+- the `@kern-ui/angular` compatibility entry point; the `/cdk`, `/i18n`, `/core`, `/actions`,
+  `/forms`, `/navigation`, `/feedback`, `/layout`, `/data-display`, `/addon-grid`,
+  `/addon-charts`, `/patterns`, compatibility `/kit`, `/testing`, and declared `/testing/*`
+  entry points; declared style subpaths; and their exported declarations;
 - the optional `@kern-ui/mcp` executable, programmatic API, and declared agent-contract subpaths;
 - component and directive selectors;
 - inputs, models, outputs, defaults, required state, and generic type behavior;
@@ -29,7 +30,7 @@ The compatibility contract includes:
   to load `styles/kern.css` for complete component presentation;
 - documented keyboard interaction, focus behavior, accessible names, and form contracts.
 
-Deep source imports, undeclared family subpaths such as `/forms`, undocumented DOM structure,
+Deep source imports, undeclared package subpaths, undocumented DOM structure,
 generated class names, private/protected members, test fixtures, preview internals, and
 documentation-application code are not public API.
 

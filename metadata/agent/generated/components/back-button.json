@@ -9,8 +9,8 @@
   "symbol": "KrnBackButton",
   "canonicalSymbol": "KrnBackButton",
   "canonicalId": "back-button",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -117,7 +117,7 @@
       "title": "Explicit back navigation",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Explicit back navigation\n *\n * Provide a deterministic href when browser history is not sufficient.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBackButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-back-button-agent-example',\n  standalone: true,\n  imports: [KrnBackButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-back-button href=\"/customers\" label=\"Back to customers\" /> `,\n})\nexport class KernBackButtonAgentExample {}\n\nvoid bootstrapApplication(KernBackButtonAgentExample);\n",
+      "code": "/**\n * Explicit back navigation\n *\n * Provide a deterministic href when browser history is not sufficient.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBackButton } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-back-button-agent-example',\n  standalone: true,\n  imports: [KrnBackButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-back-button href=\"/customers\" label=\"Back to customers\" /> `,\n})\nexport class KernBackButtonAgentExample {}\n\nvoid bootstrapApplication(KernBackButtonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/back-button.ts"
     }

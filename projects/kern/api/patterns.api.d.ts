@@ -7,7 +7,7 @@
 
 import * as _angular_core from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { KrnOverlayCloseReason } from '@kern-ui/angular/kit';
+import { KrnOverlayCloseReason } from '@kern-ui/angular/feedback';
 
 interface KrnLoginCredentials {
   readonly email: string;

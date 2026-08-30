@@ -9,8 +9,8 @@
   "symbol": "KrnVerificationCode",
   "canonicalSymbol": "KrnOtpInput",
   "canonicalId": "verification-code",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": ["KrnOtpInput"],
     "selectors": ["krn-otp-input"],
@@ -248,7 +248,7 @@
       "title": "Typed six-digit verification code",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed six-digit verification code\n *\n * Bind the complete code as one string while rendering segmented inputs.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnVerificationCode } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-verification-code-agent-example',\n  standalone: true,\n  imports: [KrnVerificationCode, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-verification-code label=\"Verification code\" [length]=\"6\" [formControl]=\"control\" />\n  `,\n})\nexport class KernVerificationCodeAgentExample {\n  readonly control = new FormControl<string>('', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernVerificationCodeAgentExample);\n",
+      "code": "/**\n * Typed six-digit verification code\n *\n * Bind the complete code as one string while rendering segmented inputs.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnVerificationCode } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-verification-code-agent-example',\n  standalone: true,\n  imports: [KrnVerificationCode, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-verification-code label=\"Verification code\" [length]=\"6\" [formControl]=\"control\" />\n  `,\n})\nexport class KernVerificationCodeAgentExample {\n  readonly control = new FormControl<string>('', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernVerificationCodeAgentExample);\n",
       "verification": "compiled",
       "source": "examples/verification-code.ts"
     }

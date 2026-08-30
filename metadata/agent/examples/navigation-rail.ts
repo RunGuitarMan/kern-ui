@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnNavigationRail } from '@kern-ui/angular/kit';
+import { KrnNavigationRail } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-navigation-rail-agent-example',

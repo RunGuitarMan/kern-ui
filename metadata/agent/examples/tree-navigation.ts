@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTreeNavigation, type KrnTreeNavigationItem } from '@kern-ui/angular/kit';
+import { KrnTreeNavigation, type KrnTreeNavigationItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-tree-navigation-agent-example',

@@ -2,7 +2,7 @@
 
 - ID: `date-picker`
 - Selector: `krn-date-picker`
-- Import: `import { KrnDatePicker } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDatePicker } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnDatePicker`
 - Lifecycle: **beta**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Use Date Range Picker for an interval and a native date input only when p
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDatePicker } from '@kern-ui/angular/kit';
+import { KrnDatePicker } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-date-picker-agent-example',

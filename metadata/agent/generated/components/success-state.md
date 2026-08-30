@@ -2,7 +2,7 @@
 
 - ID: `success-state`
 - Selector: `krn-success-state`
-- Import: `import { KrnSuccessState } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSuccessState } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnSuccessState`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSuccessState } from '@kern-ui/angular/kit';
+import { KrnSuccessState } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-success-state-agent-example',

@@ -2,7 +2,7 @@
 
 - ID: `responsive-show-hide`
 - Selector: `krn-responsive-show-hide`
-- Import: `import { KrnResponsiveShowHide } from '@kern-ui/angular/kit';`
+- Import: `import { KrnResponsiveShowHide } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnShow`
 - Lifecycle: **stable**
 - Category: Layout
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnResponsiveShowHide } from '@kern-ui/angular/kit';
+import { KrnResponsiveShowHide } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-responsive-show-hide-agent-example',

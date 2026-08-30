@@ -9,8 +9,8 @@
   "symbol": "KrnValidationMessage",
   "canonicalSymbol": "KrnValidationMessage",
   "canonicalId": "validation-message",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -103,7 +103,7 @@
       "title": "Actionable validation message",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Actionable validation message\n *\n * Explain how to correct an invalid form value.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnValidationMessage } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-validation-message-agent-example',\n  standalone: true,\n  imports: [KrnValidationMessage],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-validation-message id=\"email-error\">\n      Enter a complete business email address.\n    </krn-validation-message>\n  `,\n})\nexport class KernValidationMessageAgentExample {}\n\nvoid bootstrapApplication(KernValidationMessageAgentExample);\n",
+      "code": "/**\n * Actionable validation message\n *\n * Explain how to correct an invalid form value.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnValidationMessage } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-validation-message-agent-example',\n  standalone: true,\n  imports: [KrnValidationMessage],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-validation-message id=\"email-error\">\n      Enter a complete business email address.\n    </krn-validation-message>\n  `,\n})\nexport class KernValidationMessageAgentExample {}\n\nvoid bootstrapApplication(KernValidationMessageAgentExample);\n",
       "verification": "compiled",
       "source": "examples/validation-message.ts"
     }

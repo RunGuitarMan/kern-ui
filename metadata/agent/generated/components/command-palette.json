@@ -9,8 +9,8 @@
   "symbol": "KrnCommandPalette",
   "canonicalSymbol": "KrnCommandPalette",
   "canonicalId": "command-palette",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -230,7 +230,7 @@
       "title": "Controlled command palette",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled command palette\n *\n * Own query and open state while supplying typed commands.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCommandPalette, type KrnCommandItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-command-palette-agent-example',\n  standalone: true,\n  imports: [KrnCommandPalette],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button type=\"button\" (click)=\"open = true\">Open commands</button>\n    <krn-command-palette [items]=\"commands\" [(query)]=\"query\" [(open)]=\"open\" />\n  `,\n})\nexport class KernCommandPaletteAgentExample {\n  readonly commands: readonly KrnCommandItem[] = [\n    {\n      id: 'create-customer',\n      label: 'Create customer',\n      group: 'Customers',\n      shortcut: 'C',\n      keywords: ['new', 'account'],\n    },\n    {\n      id: 'open-audit-log',\n      label: 'Open audit log',\n      group: 'Security',\n      shortcut: 'A',\n    },\n  ];\n\n  query = '';\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernCommandPaletteAgentExample);\n",
+      "code": "/**\n * Controlled command palette\n *\n * Own query and open state while supplying typed commands.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCommandPalette, type KrnCommandItem } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-command-palette-agent-example',\n  standalone: true,\n  imports: [KrnCommandPalette],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button type=\"button\" (click)=\"open = true\">Open commands</button>\n    <krn-command-palette [items]=\"commands\" [(query)]=\"query\" [(open)]=\"open\" />\n  `,\n})\nexport class KernCommandPaletteAgentExample {\n  readonly commands: readonly KrnCommandItem[] = [\n    {\n      id: 'create-customer',\n      label: 'Create customer',\n      group: 'Customers',\n      shortcut: 'C',\n      keywords: ['new', 'account'],\n    },\n    {\n      id: 'open-audit-log',\n      label: 'Open audit log',\n      group: 'Security',\n      shortcut: 'A',\n    },\n  ];\n\n  query = '';\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernCommandPaletteAgentExample);\n",
       "verification": "compiled",
       "source": "examples/command-palette.ts"
     }

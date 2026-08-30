@@ -1,0 +1,133 @@
+.krn-button-group,
+.krn-toggle-group {
+  align-items: stretch;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--krn-space-1, 0.25rem);
+  inline-size: fit-content;
+  isolation: isolate;
+  max-inline-size: 100%;
+}
+
+.krn-toggle-group[data-connected='true'] {
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 2px;
+  padding: 3px;
+  border: 0;
+  border-radius: calc(var(--krn-radius-control, 0.625rem) + 2px);
+  background: var(--krn-color-surface-sunken, #eef0f2);
+  box-shadow: inset 0 0 0 1px var(--krn-color-border, #d8dbe0);
+}
+
+.krn-toggle-group[data-connected='true'] > .krn-toggle-action {
+  --_action-height: var(--krn-control-height-sm, 2rem);
+  --_action-radius: var(--krn-radius-sm, 0.375rem);
+  min-inline-size: var(--_action-height);
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--krn-color-text-muted, #65716b);
+}
+
+.krn-toggle-group[data-size='md'][data-connected='true'] > .krn-toggle-action {
+  --_action-height: var(--krn-control-height-md, 2.5rem);
+}
+
+.krn-toggle-group[data-size='lg'][data-connected='true'] > .krn-toggle-action {
+  --_action-height: var(--krn-control-height-lg, 3rem);
+}
+
+.krn-toggle-group[data-connected='true'] > .krn-toggle-action:hover:not(:disabled) {
+  background: var(--krn-color-surface-hover, #edf1ef);
+  color: var(--krn-color-text, #17201c);
+}
+
+.krn-toggle-group[data-connected='true'] > .krn-toggle-action[data-pressed='true'] {
+  background: var(--krn-color-surface-raised, #fff);
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 12%),
+    0 0 0 1px color-mix(in oklab, var(--krn-color-border) 68%, transparent);
+  color: var(--krn-color-text, #17201c);
+}
+
+.krn-toggle-group[data-connected='true'] > .krn-toggle-action:focus-visible {
+  box-shadow: var(--_action-ring);
+}
+
+.krn-toggle-group[data-connected='true'] > .krn-toggle-action[data-pressed='true']:focus-visible {
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 12%),
+    0 0 0 1px color-mix(in oklab, var(--krn-color-border) 68%, transparent),
+    var(--_action-ring);
+}
+
+.krn-toggle-group[data-connected='true'][data-orientation='vertical'] {
+  align-items: stretch;
+}
+
+@media (forced-colors: active) {
+  .krn-toggle-group[data-connected='true'] > .krn-toggle-action[data-pressed='true'] {
+    color: HighlightText;
+    background: Highlight;
+    box-shadow: 0 0 0 1px Highlight;
+  }
+}
+
+.krn-button-group {
+  flex-wrap: wrap;
+  isolation: isolate;
+}
+
+.krn-button-group[data-orientation='vertical'],
+.krn-toggle-group[data-orientation='vertical'] {
+  flex-direction: column;
+}
+
+.krn-button-group[data-connected='true'] {
+  flex-wrap: nowrap;
+  gap: 0;
+}
+
+.krn-button-group[data-connected='true'] > .krn-action {
+  border-radius: 0;
+}
+
+.krn-button-group[data-connected='true'][data-orientation='horizontal']
+  > .krn-action
+  + .krn-action {
+  margin-inline-start: -1px;
+}
+
+.krn-button-group[data-connected='true'][data-orientation='horizontal'] > .krn-action:first-child {
+  border-end-start-radius: var(--_action-radius);
+  border-start-start-radius: var(--_action-radius);
+}
+
+.krn-button-group[data-connected='true'][data-orientation='horizontal'] > .krn-action:last-child {
+  border-end-end-radius: var(--_action-radius);
+  border-start-end-radius: var(--_action-radius);
+}
+
+.krn-button-group[data-connected='true'][data-orientation='vertical'] > .krn-action + .krn-action {
+  margin-block-start: -1px;
+}
+
+.krn-button-group[data-connected='true'][data-orientation='vertical'] > .krn-action:first-child {
+  border-start-end-radius: var(--_action-radius);
+  border-start-start-radius: var(--_action-radius);
+}
+
+.krn-button-group[data-connected='true'][data-orientation='vertical'] > .krn-action:last-child {
+  border-end-end-radius: var(--_action-radius);
+  border-end-start-radius: var(--_action-radius);
+}
+
+.krn-button-group[data-connected='true'] > .krn-action:only-child {
+  border-radius: var(--_action-radius);
+}
+
+.krn-button-group[data-connected='true']
+  > .krn-action:is(:hover, :focus-visible, [data-loading='true']) {
+  z-index: 1;
+}

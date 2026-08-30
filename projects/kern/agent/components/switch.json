@@ -9,8 +9,8 @@
   "symbol": "KrnSwitch",
   "canonicalSymbol": "KrnSwitch",
   "canonicalId": "switch",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -237,7 +237,7 @@
       "title": "Typed audit-alert switch",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed audit-alert switch\n *\n * Bind a boolean preference with a visible label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSwitch } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-switch-agent-example',\n  standalone: true,\n  imports: [KrnSwitch, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-switch [formControl]=\"control\"> Send an alert when audit policy changes </krn-switch>\n  `,\n})\nexport class KernSwitchAgentExample {\n  readonly control = new FormControl<boolean>(true, { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernSwitchAgentExample);\n",
+      "code": "/**\n * Typed audit-alert switch\n *\n * Bind a boolean preference with a visible label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSwitch } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-switch-agent-example',\n  standalone: true,\n  imports: [KrnSwitch, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-switch [formControl]=\"control\"> Send an alert when audit policy changes </krn-switch>\n  `,\n})\nexport class KernSwitchAgentExample {\n  readonly control = new FormControl<boolean>(true, { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernSwitchAgentExample);\n",
       "verification": "compiled",
       "source": "examples/switch.ts"
     }

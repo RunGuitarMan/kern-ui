@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCalendar } from '@kern-ui/angular/kit';
+import { KrnCalendar } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-calendar-agent-example',

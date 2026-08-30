@@ -2,7 +2,7 @@
 
 - ID: `number-input`
 - Selector: `krn-number-input`
-- Import: `import { KrnNumberInput } from '@kern-ui/angular/kit';`
+- Import: `import { KrnNumberInput } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnNumberInput`
 - Lifecycle: **stable**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnNumberInput } from '@kern-ui/angular/kit';
+import { KrnNumberInput } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-number-input-agent-example',

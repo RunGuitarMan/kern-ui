@@ -9,8 +9,8 @@
   "symbol": "KrnTableOfContents",
   "canonicalSymbol": "KrnTableOfContents",
   "canonicalId": "table-of-contents",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -147,7 +147,7 @@
       "title": "Controlled document contents",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled document contents\n *\n * Track the active heading against stable document ids.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTableOfContents, type KrnTocItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-table-of-contents-agent-example',\n  standalone: true,\n  imports: [KrnTableOfContents],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-table-of-contents\n      title=\"Onboarding guide\"\n      [items]=\"items\"\n      [observe]=\"false\"\n      [(activeId)]=\"activeId\"\n    />\n  `,\n})\nexport class KernTableOfContentsAgentExample {\n  readonly items: readonly KrnTocItem[] = [\n    { id: 'company', label: 'Company', level: 2 },\n    { id: 'owners', label: 'Owners', level: 2 },\n    { id: 'permissions', label: 'Permissions', level: 3 },\n  ];\n\n  activeId: string | null = 'company';\n}\n\nvoid bootstrapApplication(KernTableOfContentsAgentExample);\n",
+      "code": "/**\n * Controlled document contents\n *\n * Track the active heading against stable document ids.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTableOfContents, type KrnTocItem } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-table-of-contents-agent-example',\n  standalone: true,\n  imports: [KrnTableOfContents],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-table-of-contents\n      title=\"Onboarding guide\"\n      [items]=\"items\"\n      [observe]=\"false\"\n      [(activeId)]=\"activeId\"\n    />\n  `,\n})\nexport class KernTableOfContentsAgentExample {\n  readonly items: readonly KrnTocItem[] = [\n    { id: 'company', label: 'Company', level: 2 },\n    { id: 'owners', label: 'Owners', level: 2 },\n    { id: 'permissions', label: 'Permissions', level: 3 },\n  ];\n\n  activeId: string | null = 'company';\n}\n\nvoid bootstrapApplication(KernTableOfContentsAgentExample);\n",
       "verification": "compiled",
       "source": "examples/table-of-contents.ts"
     }

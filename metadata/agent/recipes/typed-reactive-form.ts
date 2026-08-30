@@ -10,7 +10,7 @@ import {
   KrnTextInput,
   KrnValidationMessage,
   type KrnSelectOption,
-} from '@kern-ui/angular/kit';
+} from '@kern-ui/angular/forms';
 
 interface CustomerProfile {
   readonly name: string;

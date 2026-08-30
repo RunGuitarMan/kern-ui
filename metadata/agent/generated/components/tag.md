@@ -2,7 +2,7 @@
 
 - ID: `tag`
 - Selector: `krn-tag`
-- Import: `import { KrnTag } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTag } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnChip`
 - Lifecycle: **stable**
 - Category: Data display
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTag } from '@kern-ui/angular/kit';
+import { KrnTag } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-tag-agent-example',

@@ -2,7 +2,7 @@
 
 - ID: `range-slider`
 - Selector: `krn-range-slider`
-- Import: `import { KrnRangeSlider } from '@kern-ui/angular/kit';`
+- Import: `import { KrnRangeSlider } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnRangeSlider`
 - Lifecycle: **stable**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnRangeSlider, type KrnRangeValue } from '@kern-ui/angular/kit';
+import { KrnRangeSlider, type KrnRangeValue } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-range-slider-agent-example',

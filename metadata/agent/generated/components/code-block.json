@@ -9,8 +9,8 @@
   "symbol": "KrnCodeBlock",
   "canonicalSymbol": "KrnCodeBlock",
   "canonicalId": "code-block",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -123,7 +123,7 @@
       "title": "Copyable API request example",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Copyable API request example\n *\n * Render a complete short code sample with language metadata.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCodeBlock } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-code-block-agent-example',\n  standalone: true,\n  imports: [KrnCodeBlock],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-code-block\n      language=\"typescript\"\n      languageLabel=\"TypeScript\"\n      [code]=\"sourceCode\"\n      [(copied)]=\"copied\"\n    />\n  `,\n})\nexport class KernCodeBlockAgentExample {\n  readonly sourceCode = \"const customer = await client.customers.get('cus-2048');\";\n\n  copied = false;\n}\n\nvoid bootstrapApplication(KernCodeBlockAgentExample);\n",
+      "code": "/**\n * Copyable API request example\n *\n * Render a complete short code sample with language metadata.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCodeBlock } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-code-block-agent-example',\n  standalone: true,\n  imports: [KrnCodeBlock],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-code-block\n      language=\"typescript\"\n      languageLabel=\"TypeScript\"\n      [code]=\"sourceCode\"\n      [(copied)]=\"copied\"\n    />\n  `,\n})\nexport class KernCodeBlockAgentExample {\n  readonly sourceCode = \"const customer = await client.customers.get('cus-2048');\";\n\n  copied = false;\n}\n\nvoid bootstrapApplication(KernCodeBlockAgentExample);\n",
       "verification": "compiled",
       "source": "examples/code-block.ts"
     }

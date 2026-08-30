@@ -9,8 +9,8 @@
   "symbol": "KrnCenter",
   "canonicalSymbol": "KrnCenter",
   "canonicalId": "center",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -119,7 +119,7 @@
       "title": "Centered empty-state copy",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Centered empty-state copy\n *\n * Constrain and center a short content block.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCenter } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-center-agent-example',\n  standalone: true,\n  imports: [KrnCenter],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-center maxWidth=\"32rem\" [intrinsic]=\"true\">\n      <h2>No incidents</h2>\n      <p>All monitored services are currently healthy.</p>\n    </krn-center>\n  `,\n})\nexport class KernCenterAgentExample {}\n\nvoid bootstrapApplication(KernCenterAgentExample);\n",
+      "code": "/**\n * Centered empty-state copy\n *\n * Constrain and center a short content block.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCenter } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-center-agent-example',\n  standalone: true,\n  imports: [KrnCenter],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-center maxWidth=\"32rem\" [intrinsic]=\"true\">\n      <h2>No incidents</h2>\n      <p>All monitored services are currently healthy.</p>\n    </krn-center>\n  `,\n})\nexport class KernCenterAgentExample {}\n\nvoid bootstrapApplication(KernCenterAgentExample);\n",
       "verification": "compiled",
       "source": "examples/center.ts"
     }

@@ -2,7 +2,7 @@
 
 - ID: `aspect-ratio`
 - Selector: `krn-aspect-ratio`
-- Import: `import { KrnAspectRatio } from '@kern-ui/angular/kit';`
+- Import: `import { KrnAspectRatio } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnAspectRatio`
 - Lifecycle: **stable**
 - Category: Layout
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnAspectRatio } from '@kern-ui/angular/kit';
+import { KrnAspectRatio } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-aspect-ratio-agent-example',

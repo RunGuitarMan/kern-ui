@@ -7,7 +7,7 @@
   "entries": [
     {
       "id": "krn-button-group-element-selector",
-      "entrypoint": "./kit",
+      "entrypoint": "./actions",
       "symbol": "KrnButtonGroup",
       "selector": "krn-button-group",
       "kind": "selector",
@@ -20,7 +20,7 @@
     },
     {
       "id": "krn-button-group-aria-label",
-      "entrypoint": "./kit",
+      "entrypoint": "./actions",
       "symbol": "KrnButtonGroup",
       "member": "ariaLabel",
       "kind": "input",
@@ -33,7 +33,7 @@
     },
     {
       "id": "krn-toggle-group-element-selector",
-      "entrypoint": "./kit",
+      "entrypoint": "./actions",
       "symbol": "KrnToggleGroup",
       "selector": "krn-toggle-group",
       "kind": "selector",
@@ -46,7 +46,7 @@
     },
     {
       "id": "krn-toggle-group-aria-label",
-      "entrypoint": "./kit",
+      "entrypoint": "./actions",
       "symbol": "KrnToggleGroup",
       "member": "ariaLabel",
       "kind": "input",
@@ -85,7 +85,7 @@
     },
     {
       "id": "krn-menu-has-projected-trigger",
-      "entrypoint": "./kit",
+      "entrypoint": "./navigation",
       "symbol": "KrnMenu",
       "member": "hasProjectedTrigger",
       "kind": "input",

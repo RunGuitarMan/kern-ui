@@ -2,7 +2,7 @@
 
 - ID: `stack`
 - Selector: `krn-stack`
-- Import: `import { KrnStack } from '@kern-ui/angular/kit';`
+- Import: `import { KrnStack } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnStack`
 - Lifecycle: **stable**
 - Category: Layout
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnStack } from '@kern-ui/angular/kit';
+import { KrnStack } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-stack-agent-example',

@@ -9,8 +9,8 @@
   "symbol": "KrnSplitLayout",
   "canonicalSymbol": "KrnSplitLayout",
   "canonicalId": "split-layout",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -135,7 +135,7 @@
       "title": "Master and supporting content",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Master and supporting content\n *\n * Compose a responsive primary and secondary column.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSplitLayout } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-split-layout-agent-example',\n  standalone: true,\n  imports: [KrnSplitLayout],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-split-layout ratio=\"2fr 1fr\" collapseAt=\"md\">\n      <main krnSplitPrimary>\n        <h1>Account health</h1>\n        <p>Primary analysis and recent activity.</p>\n      </main>\n      <aside krnSplitSecondary>Owner and renewal details</aside>\n    </krn-split-layout>\n  `,\n})\nexport class KernSplitLayoutAgentExample {}\n\nvoid bootstrapApplication(KernSplitLayoutAgentExample);\n",
+      "code": "/**\n * Master and supporting content\n *\n * Compose a responsive primary and secondary column.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSplitLayout } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-split-layout-agent-example',\n  standalone: true,\n  imports: [KrnSplitLayout],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-split-layout ratio=\"2fr 1fr\" collapseAt=\"md\">\n      <main krnSplitPrimary>\n        <h1>Account health</h1>\n        <p>Primary analysis and recent activity.</p>\n      </main>\n      <aside krnSplitSecondary>Owner and renewal details</aside>\n    </krn-split-layout>\n  `,\n})\nexport class KernSplitLayoutAgentExample {}\n\nvoid bootstrapApplication(KernSplitLayoutAgentExample);\n",
       "verification": "compiled",
       "source": "examples/split-layout.ts"
     }

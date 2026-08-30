@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kern-ui.dev/schemas/bundle-budgets.schema.json",
+  "type": "object",
+  "required": ["schemaVersion", "entrypoints"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "description": { "type": "string" },
+    "entrypoints": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 1 }
+    }
+  },
+  "additionalProperties": true
+}

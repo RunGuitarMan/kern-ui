@@ -9,8 +9,8 @@
   "symbol": "KrnTimeline",
   "canonicalSymbol": "KrnTimeline",
   "canonicalId": "timeline",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -99,7 +99,7 @@
       "title": "Customer activity timeline",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Customer activity timeline\n *\n * Compose chronologically ordered typed timeline items.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTimeline, KrnTimelineItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-timeline-agent-example',\n  standalone: true,\n  imports: [KrnTimeline, KrnTimelineItem],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-timeline ariaLabel=\"Recent customer activity\">\n      <krn-timeline-item heading=\"Contract approved\" time=\"09:42\">\n        Legal review completed by Grace Hopper.\n      </krn-timeline-item>\n      <krn-timeline-item heading=\"Owner assigned\" time=\"08:15\">\n        Ada Lovelace became the account owner.\n      </krn-timeline-item>\n    </krn-timeline>\n  `,\n})\nexport class KernTimelineAgentExample {}\n\nvoid bootstrapApplication(KernTimelineAgentExample);\n",
+      "code": "/**\n * Customer activity timeline\n *\n * Compose chronologically ordered typed timeline items.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTimeline, KrnTimelineItem } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-timeline-agent-example',\n  standalone: true,\n  imports: [KrnTimeline, KrnTimelineItem],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-timeline ariaLabel=\"Recent customer activity\">\n      <krn-timeline-item heading=\"Contract approved\" time=\"09:42\">\n        Legal review completed by Grace Hopper.\n      </krn-timeline-item>\n      <krn-timeline-item heading=\"Owner assigned\" time=\"08:15\">\n        Ada Lovelace became the account owner.\n      </krn-timeline-item>\n    </krn-timeline>\n  `,\n})\nexport class KernTimelineAgentExample {}\n\nvoid bootstrapApplication(KernTimelineAgentExample);\n",
       "verification": "compiled",
       "source": "examples/timeline.ts"
     }

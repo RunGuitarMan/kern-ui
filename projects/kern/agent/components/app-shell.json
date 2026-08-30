@@ -9,8 +9,8 @@
   "symbol": "KrnAppShell",
   "canonicalSymbol": "KrnAppShell",
   "canonicalId": "app-shell",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -248,7 +248,7 @@
       "title": "Responsive application shell",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Responsive application shell\n *\n * Compose header, navigation and main content with controlled mobile navigation.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAppShell } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-app-shell-agent-example',\n  standalone: true,\n  imports: [KrnAppShell],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-app-shell [(mobileNavigationOpen)]=\"navigationOpen\">\n      <header krnAppHeader>Operations workspace</header>\n      <nav krnAppSidebar aria-label=\"Workspace\">Overview · Reports · Settings</nav>\n      <main>\n        <h1>Overview</h1>\n        <p>Quarterly operating summary.</p>\n      </main>\n    </krn-app-shell>\n  `,\n})\nexport class KernAppShellAgentExample {\n  navigationOpen = false;\n}\n\nvoid bootstrapApplication(KernAppShellAgentExample);\n",
+      "code": "/**\n * Responsive application shell\n *\n * Compose header, navigation and main content with controlled mobile navigation.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAppShell } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-app-shell-agent-example',\n  standalone: true,\n  imports: [KrnAppShell],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-app-shell [(mobileNavigationOpen)]=\"navigationOpen\">\n      <header krnAppHeader>Operations workspace</header>\n      <nav krnAppSidebar aria-label=\"Workspace\">Overview · Reports · Settings</nav>\n      <main>\n        <h1>Overview</h1>\n        <p>Quarterly operating summary.</p>\n      </main>\n    </krn-app-shell>\n  `,\n})\nexport class KernAppShellAgentExample {\n  navigationOpen = false;\n}\n\nvoid bootstrapApplication(KernAppShellAgentExample);\n",
       "verification": "compiled",
       "source": "examples/app-shell.ts"
     }

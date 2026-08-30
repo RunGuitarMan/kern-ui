@@ -9,8 +9,8 @@
   "symbol": "KrnToggleButton",
   "canonicalSymbol": "KrnToggleButton",
   "canonicalId": "toggle-button",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "actions",
+  "importPath": "@kern-ui/angular/actions",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -192,7 +192,7 @@
       "title": "Controlled formatting toggle",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled formatting toggle\n *\n * Keep formatting state controlled while native button semantics remain intact.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnToggleButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-toggle-button-agent-example',\n  standalone: true,\n  imports: [KrnToggleButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button krnToggleButton type=\"button\" value=\"bold\" [(pressed)]=\"boldEnabled\">Bold</button>\n  `,\n})\nexport class KernToggleButtonAgentExample {\n  boldEnabled = false;\n}\n\nvoid bootstrapApplication(KernToggleButtonAgentExample);\n",
+      "code": "/**\n * Controlled formatting toggle\n *\n * Keep formatting state controlled while native button semantics remain intact.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnToggleButton } from '@kern-ui/angular/actions';\n\n@Component({\n  selector: 'app-kern-toggle-button-agent-example',\n  standalone: true,\n  imports: [KrnToggleButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button krnToggleButton type=\"button\" value=\"bold\" [(pressed)]=\"boldEnabled\">Bold</button>\n  `,\n})\nexport class KernToggleButtonAgentExample {\n  boldEnabled = false;\n}\n\nvoid bootstrapApplication(KernToggleButtonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/toggle-button.ts"
     }

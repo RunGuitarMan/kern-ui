@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { KrnIdService } from '@kern-ui/angular/cdk';
 import { KRN_TRANSLATIONS } from '@kern-ui/angular/core';
-import { KrnBadge } from '@kern-ui/angular/kit';
+import { KrnBadge } from '@kern-ui/angular/data-display';
 import type { KrnNotification } from './product-types';
 
 @Component({

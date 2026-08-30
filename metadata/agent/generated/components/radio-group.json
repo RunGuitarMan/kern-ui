@@ -9,8 +9,8 @@
   "symbol": "KrnRadioGroup",
   "canonicalSymbol": "KrnRadioGroup",
   "canonicalId": "radio-group",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -245,7 +245,7 @@
       "title": "Typed billing-cycle choice",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed billing-cycle choice\n *\n * Bind one selected value while composing visible radio options.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnRadio, KrnRadioGroup } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-radio-group-agent-example',\n  standalone: true,\n  imports: [KrnRadioGroup, ReactiveFormsModule, KrnRadio],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-radio-group label=\"Billing cycle\" [formControl]=\"control\">\n      <krn-radio value=\"monthly\">Monthly</krn-radio>\n      <krn-radio value=\"annual\">Annual</krn-radio>\n    </krn-radio-group>\n  `,\n})\nexport class KernRadioGroupAgentExample {\n  readonly control = new FormControl<string | null>('annual', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernRadioGroupAgentExample);\n",
+      "code": "/**\n * Typed billing-cycle choice\n *\n * Bind one selected value while composing visible radio options.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnRadio, KrnRadioGroup } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-radio-group-agent-example',\n  standalone: true,\n  imports: [KrnRadioGroup, ReactiveFormsModule, KrnRadio],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-radio-group label=\"Billing cycle\" [formControl]=\"control\">\n      <krn-radio value=\"monthly\">Monthly</krn-radio>\n      <krn-radio value=\"annual\">Annual</krn-radio>\n    </krn-radio-group>\n  `,\n})\nexport class KernRadioGroupAgentExample {\n  readonly control = new FormControl<string | null>('annual', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernRadioGroupAgentExample);\n",
       "verification": "compiled",
       "source": "examples/radio-group.ts"
     }

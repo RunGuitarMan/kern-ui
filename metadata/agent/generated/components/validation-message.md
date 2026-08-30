@@ -2,7 +2,7 @@
 
 - ID: `validation-message`
 - Selector: `krn-validation-message`
-- Import: `import { KrnValidationMessage } from '@kern-ui/angular/kit';`
+- Import: `import { KrnValidationMessage } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnValidationMessage`
 - Lifecycle: **stable**
 - Category: Forms
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnValidationMessage } from '@kern-ui/angular/kit';
+import { KrnValidationMessage } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-validation-message-agent-example',

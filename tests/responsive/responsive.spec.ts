@@ -1,8 +1,33 @@
 import { expect, test } from '@playwright/test';
 
+import { KERN_CATALOG } from '../../projects/showcase/src/lib/catalog';
 import { DOCS_URL, expectNoPageOverflow, previewUrl, settlePage } from '../support/browser';
 
+const RECIPE_COMPONENTS = KERN_CATALOG.filter((item) => item.status === 'recipe');
+
 test.describe('Responsive, RTL, and text zoom contracts', () => {
+  for (const recipe of RECIPE_COMPONENTS) {
+    test(`${recipe.id}: every recipe has a 320px high-contrast RTL specimen without page overflow`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 320, height: 800 });
+      await page.goto(
+        previewUrl({
+          component: recipe.id,
+          state: 'long-text',
+          theme: 'high-contrast',
+          density: 'spacious',
+          direction: 'rtl',
+        }),
+      );
+      await settlePage(page);
+
+      await expect(page.getByTestId(`component-specimen-${recipe.id}`)).toBeVisible();
+      await expect(page.getByTestId('specimen-stage')).toHaveAttribute('dir', 'rtl');
+      await expectNoPageOverflow(page);
+    });
+  }
+
   test('Docs reflows at a narrow mobile viewport without page overflow', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(DOCS_URL);

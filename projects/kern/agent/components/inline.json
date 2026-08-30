@@ -9,8 +9,8 @@
   "symbol": "KrnInline",
   "canonicalSymbol": "KrnInline",
   "canonicalId": "inline",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -129,7 +129,7 @@
       "title": "Inline action row",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Inline action row\n *\n * Align related actions with predictable wrapping.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnInline } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-inline-agent-example',\n  standalone: true,\n  imports: [KrnInline],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-inline gap=\"2\" justify=\"end\" [wrap]=\"true\">\n      <button type=\"button\">Cancel</button>\n      <button type=\"button\">Save changes</button>\n    </krn-inline>\n  `,\n})\nexport class KernInlineAgentExample {}\n\nvoid bootstrapApplication(KernInlineAgentExample);\n",
+      "code": "/**\n * Inline action row\n *\n * Align related actions with predictable wrapping.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnInline } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-inline-agent-example',\n  standalone: true,\n  imports: [KrnInline],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-inline gap=\"2\" justify=\"end\" [wrap]=\"true\">\n      <button type=\"button\">Cancel</button>\n      <button type=\"button\">Save changes</button>\n    </krn-inline>\n  `,\n})\nexport class KernInlineAgentExample {}\n\nvoid bootstrapApplication(KernInlineAgentExample);\n",
       "verification": "compiled",
       "source": "examples/inline.ts"
     }

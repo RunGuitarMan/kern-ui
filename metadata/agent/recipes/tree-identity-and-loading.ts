@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import type { OnInit } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTree, type KrnTreeNode } from '@kern-ui/angular/kit';
+import { KrnTree, type KrnTreeNode } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-lazy-tree-recipe',

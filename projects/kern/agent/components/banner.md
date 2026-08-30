@@ -2,7 +2,7 @@
 
 - ID: `banner`
 - Selector: `krn-banner`
-- Import: `import { KrnBanner } from '@kern-ui/angular/kit';`
+- Import: `import { KrnBanner } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnBanner`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnBanner } from '@kern-ui/angular/kit';
+import { KrnBanner } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-banner-agent-example',

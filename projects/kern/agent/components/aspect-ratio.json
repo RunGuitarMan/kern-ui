@@ -9,8 +9,8 @@
   "symbol": "KrnAspectRatio",
   "canonicalSymbol": "KrnAspectRatio",
   "canonicalId": "aspect-ratio",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -100,7 +100,7 @@
       "title": "Stable media preview",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Stable media preview\n *\n * Reserve a 16:9 region before preview content is available.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAspectRatio } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-aspect-ratio-agent-example',\n  standalone: true,\n  imports: [KrnAspectRatio],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-aspect-ratio ratio=\"16 / 9\" fit=\"cover\">\n      <div role=\"img\" aria-label=\"Quarterly report preview\">Q3 report preview</div>\n    </krn-aspect-ratio>\n  `,\n})\nexport class KernAspectRatioAgentExample {}\n\nvoid bootstrapApplication(KernAspectRatioAgentExample);\n",
+      "code": "/**\n * Stable media preview\n *\n * Reserve a 16:9 region before preview content is available.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAspectRatio } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-aspect-ratio-agent-example',\n  standalone: true,\n  imports: [KrnAspectRatio],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-aspect-ratio ratio=\"16 / 9\" fit=\"cover\">\n      <div role=\"img\" aria-label=\"Quarterly report preview\">Q3 report preview</div>\n    </krn-aspect-ratio>\n  `,\n})\nexport class KernAspectRatioAgentExample {}\n\nvoid bootstrapApplication(KernAspectRatioAgentExample);\n",
       "verification": "compiled",
       "source": "examples/aspect-ratio.ts"
     }

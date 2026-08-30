@@ -10,6 +10,9 @@ directory does **not** claim AT certification, WCAG conformance, or a VPAT/ACR. 
 verification remains usable during local development. Pre-1.0 release candidates may carry
 honest pending evidence, but reject failed, blocked, malformed, or stale completed records. Strict
 release and stable-promotion modes reject pending, failed, blocked, or stale required evidence.
+The verifier also requires a scenario for every target in
+[`manual-test-plan.md`](manual-test-plan.md), so adding a high-risk target cannot leave the human
+procedure implicit.
 
 ## Recording a run
 

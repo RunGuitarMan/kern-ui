@@ -56,14 +56,21 @@
   },
   "exports": {
     "./styles/kern.css": "./styles/kern.css",
+    "./styles/foundation.css": "./styles/foundation.css",
+    "./styles/layers.css": "./styles/layers.css",
+    "./styles/reset.css": "./styles/reset.css",
     "./styles/tokens.css": "./styles/tokens.css",
     "./styles/themes.css": "./styles/themes.css",
     "./styles/density.css": "./styles/density.css",
     "./styles/preferences.css": "./styles/preferences.css",
     "./styles/base.css": "./styles/base.css",
-    "./styles/utilities.css": "./styles/utilities.css"
+    "./styles/utilities.css": "./styles/utilities.css",
+    "./styles/components/actions.css": "./styles/components/actions.css",
+    "./styles/components/forms.css": "./styles/components/forms.css",
+    "./styles/components/projection.css": "./styles/components/projection.css"
   },
   "sideEffects": [
-    "./styles/*.css"
+    "./styles/*.css",
+    "./styles/**/*.css"
   ]
 }

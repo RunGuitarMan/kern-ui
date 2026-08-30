@@ -6,26 +6,38 @@ Runtime code follows one physical package graph. CI rejects undeclared edges, cr
 imports, cycles, duplicate owners, and root imports from secondary entrypoints.
 
 ```text
-core        ← cdk + i18n
-kit         ← cdk + i18n + core
+core         ← cdk + i18n
+actions      ← cdk + i18n
+forms        ← actions + cdk + core
+navigation   ← cdk + core
+feedback     ← cdk + core
+layout       ← cdk + core
+data-display ← cdk + core + navigation
 addon-grid  ← cdk + i18n + core
 addon-charts ← cdk + i18n + core
-patterns    ← cdk + i18n + core + kit
+patterns    ← cdk + i18n + core + data-display + feedback
 
-root ─→ compatibility re-export of every runtime entrypoint
+kit ─→ compatibility re-export of the six component families
+root ─→ compatibility re-export of every canonical runtime entrypoint plus kit
 styles ─→ every rendered component
 ```
 
-| Entrypoint     | Responsibility                                                      |
-| -------------- | ------------------------------------------------------------------- |
-| `cdk`          | Platform boundary, stable IDs, content, and overlay coordination    |
-| `i18n`         | Dependency-light UI-copy tokens safe for leaf components            |
-| `core`         | Foundations, tokens, icons, theme, configuration, and locale packs  |
-| `kit`          | General layout, action, form, navigation, feedback, and display UI  |
-| `addon-grid`   | Virtualized enterprise data grid                                    |
-| `addon-charts` | Accessible data visualizations                                      |
-| `patterns`     | Opinionated product compositions; depends on Kit, never the reverse |
-| `testing/*`    | Runtime-free, family-scoped Angular CDK harnesses                   |
+| Entrypoint     | Responsibility                                                     |
+| -------------- | ------------------------------------------------------------------ |
+| `cdk`          | Platform boundary, stable IDs, content, and overlay coordination   |
+| `i18n`         | Dependency-light UI-copy tokens safe for leaf components           |
+| `core`         | Foundations, tokens, icons, theme, configuration, and locale packs |
+| `actions`      | Native actions, groups, and scoped action defaults                 |
+| `forms`        | Form fields, inputs, selection, upload, and date/time controls     |
+| `navigation`   | Menus, tabs, commands, breadcrumbs, and application navigation     |
+| `feedback`     | Alerts, overlays, toast, progress, and loading surfaces            |
+| `layout`       | Layout primitives, responsive structure, and application shells    |
+| `data-display` | Lightweight content, calendar, tree, and display components        |
+| `kit`          | Source-free compatibility facade for the six component families    |
+| `addon-grid`   | Virtualized enterprise data grid                                   |
+| `addon-charts` | Accessible data visualizations                                     |
+| `patterns`     | Product compositions over Core, data-display, feedback, and i18n   |
+| `testing/*`    | Runtime-free, family-scoped Angular CDK harnesses                  |
 
 Components have safe root-provided defaults; `provideKrn` is not mandatory. Applications use it
 when they own locale, direction, density, motion preference, theme, shared UI-copy translations,
@@ -45,9 +57,10 @@ deleted before and after each run, while only Angular's nested compiler and i18n
 replaced with process-local maps. This keeps Vite and esbuild on their real runtime paths without
 introducing a second persistent cache owner.
 
-- `kern` publishes the browser/runtime package `@kern-ui/angular`. `/cdk`, `/i18n`, `/core`,
-  `/kit`, `/addon-grid`, `/addon-charts`, `/patterns`, and the `/testing/*` harness families are
-  its supported physical entrypoints. `/testing` is their test-only compatibility aggregator.
+- `kern` publishes the browser/runtime package `@kern-ui/angular`. `/cdk`, `/i18n`, `/core`, the
+  six component families, `/addon-grid`, `/addon-charts`, `/patterns`, and the `/testing/*`
+  harness families are its supported physical owners. `/kit` and `/testing` are source-free
+  compatibility aggregators.
 - `kern-mcp` publishes the optional `@kern-ui/mcp` tooling package. It owns the MCP executable,
   generated AI contracts, recipes, and examples so parser/tooling dependencies and multi-megabyte
   agent assets never enter application bundles. Both npm packages share one version and immutable
@@ -62,7 +75,7 @@ introducing a second persistent cache owner.
 - `docs` consumes the built public package, uses SSR plus hydration, and lazy-loads its page
   families. Its `/preview/:component` route exposes stable query-driven specimens for browser
   automation without a second application runtime.
-- `metadata/agent` is a compiler-derived, closed 131-component contract. Its examples are mirrored
+- `metadata/agent` is a compiler-derived, closed 132-component contract. Its examples are mirrored
   into the package, strict-AOT compiled against the tarball, exposed through the read-only MCP
   adapter, and used by the Docs Code tab.
 
@@ -151,12 +164,12 @@ for server-visible initially open content.
 
 ## Styling and theming
 
-`src/styles/kern.css` composes tokens, themes, density, preferences, base rules, utilities, CDK
-overlay rules, and shared structural styles for action and form controls. It must be loaded once
-globally for the supported component presentation. Public CSS custom properties are semantic:
-consumers override intent rather than internal component selectors. Source palettes are
-expressed with safe fallbacks and OKLCH enhancements. Runtime brand palettes are generated from a
-validated hexadecimal color.
+`src/styles/kern.css` composes CDK overlay rules, `foundation.css`, and the family style
+aggregators. Foundation separates layer order, reset, tokens, themes, density, preferences, base,
+and utilities; action and form aggregators are further divided into bounded responsibility
+modules. It must be loaded once globally for the supported component presentation. A committed
+literal policy blocks growth of non-token colors and dimensions, while per-entrypoint FESM
+budgets replace the former monolithic Kit budget. Public CSS custom properties remain semantic.
 
 `KRN_TOKEN_NAMES` is the public typed contract. `KRN_TOKEN_MANIFEST` adds tier, visibility, and
 typed access paths for both public and internal variables. `npm run verify:tokens` requires

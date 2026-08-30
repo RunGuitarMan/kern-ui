@@ -2,7 +2,7 @@
 
 - ID: `confirmation-pattern`
 - Selector: `krn-confirmation-pattern`
-- Import: `import { KrnConfirmationPattern } from '@kern-ui/angular/kit';`
+- Import: `import { KrnConfirmationPattern } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnConfirmation`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnConfirmationPattern } from '@kern-ui/angular/kit';
+import { KrnConfirmationPattern } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-confirmation-pattern-agent-example',

@@ -9,8 +9,8 @@
   "symbol": "KrnCombobox",
   "canonicalSymbol": "KrnCombobox",
   "canonicalId": "combobox",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -371,7 +371,7 @@
       "title": "Typed editable owner combobox",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed editable owner combobox\n *\n * Offer typed suggestions for an application-owned text value.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCombobox, type KrnSelectOption } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-combobox-agent-example',\n  standalone: true,\n  imports: [KrnCombobox, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-combobox\n      ariaLabel=\"Escalation owner\"\n      [options]=\"ownerOptions\"\n      [formControl]=\"control\"\n      [(open)]=\"open\"\n    />\n  `,\n})\nexport class KernComboboxAgentExample {\n  readonly control = new FormControl<string>('Platform team', { nonNullable: true });\n\n  readonly ownerOptions: readonly KrnSelectOption<string>[] = [\n    { value: 'Platform team', label: 'Platform team' },\n    { value: 'Security team', label: 'Security team' },\n  ];\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernComboboxAgentExample);\n",
+      "code": "/**\n * Typed editable owner combobox\n *\n * Offer typed suggestions for an application-owned text value.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCombobox, type KrnSelectOption } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-combobox-agent-example',\n  standalone: true,\n  imports: [KrnCombobox, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-combobox\n      ariaLabel=\"Escalation owner\"\n      [options]=\"ownerOptions\"\n      [formControl]=\"control\"\n      [(open)]=\"open\"\n    />\n  `,\n})\nexport class KernComboboxAgentExample {\n  readonly control = new FormControl<string>('Platform team', { nonNullable: true });\n\n  readonly ownerOptions: readonly KrnSelectOption<string>[] = [\n    { value: 'Platform team', label: 'Platform team' },\n    { value: 'Security team', label: 'Security team' },\n  ];\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernComboboxAgentExample);\n",
       "verification": "compiled",
       "source": "examples/combobox.ts"
     }

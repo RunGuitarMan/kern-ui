@@ -2,7 +2,7 @@
 
 - ID: `text-input`
 - Selector: `krn-text-input`
-- Import: `import { KrnTextInput } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTextInput } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnTextInput`
 - Lifecycle: **stable**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTextInput } from '@kern-ui/angular/kit';
+import { KrnTextInput } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-text-input-agent-example',

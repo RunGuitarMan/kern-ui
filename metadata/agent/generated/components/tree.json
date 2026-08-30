@@ -9,8 +9,8 @@
   "symbol": "KrnTree",
   "canonicalSymbol": "KrnTree",
   "canonicalId": "tree",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -160,7 +160,7 @@
       "title": "Controlled organization tree",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled organization tree\n *\n * Use stable node ids and own expanded and selected state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTree, type KrnTreeNode } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-tree-agent-example',\n  standalone: true,\n  imports: [KrnTree],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tree\n      ariaLabel=\"Organization units\"\n      [nodes]=\"nodes\"\n      [(selected)]=\"selectedId\"\n      [(expanded)]=\"expandedIds\"\n    />\n  `,\n})\nexport class KernTreeAgentExample {\n  readonly nodes: readonly KrnTreeNode[] = [\n    {\n      id: 'engineering',\n      label: 'Engineering',\n      children: [\n        { id: 'platform', label: 'Platform' },\n        { id: 'security', label: 'Security' },\n      ],\n    },\n  ];\n\n  selectedId = 'platform';\n\n  expandedIds: ReadonlySet<string> = new Set(['engineering']);\n}\n\nvoid bootstrapApplication(KernTreeAgentExample);\n",
+      "code": "/**\n * Controlled organization tree\n *\n * Use stable node ids and own expanded and selected state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTree, type KrnTreeNode } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-tree-agent-example',\n  standalone: true,\n  imports: [KrnTree],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tree\n      ariaLabel=\"Organization units\"\n      [nodes]=\"nodes\"\n      [(selected)]=\"selectedId\"\n      [(expanded)]=\"expandedIds\"\n    />\n  `,\n})\nexport class KernTreeAgentExample {\n  readonly nodes: readonly KrnTreeNode[] = [\n    {\n      id: 'engineering',\n      label: 'Engineering',\n      children: [\n        { id: 'platform', label: 'Platform' },\n        { id: 'security', label: 'Security' },\n      ],\n    },\n  ];\n\n  selectedId = 'platform';\n\n  expandedIds: ReadonlySet<string> = new Set(['engineering']);\n}\n\nvoid bootstrapApplication(KernTreeAgentExample);\n",
       "verification": "compiled",
       "source": "examples/tree.ts"
     }

@@ -2,7 +2,7 @@
 
 - ID: `split-button`
 - Selector: `krn-split-button`
-- Import: `import { KrnSplitButton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSplitButton } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnSplitButton`
 - Lifecycle: **stable**
 - Category: Actions
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSplitButton } from '@kern-ui/angular/kit';
+import { KrnSplitButton } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-split-button-agent-example',

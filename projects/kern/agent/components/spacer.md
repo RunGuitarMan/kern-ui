@@ -2,7 +2,7 @@
 
 - ID: `spacer`
 - Selector: `krn-spacer`
-- Import: `import { KrnSpacer } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSpacer } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnSpacer`
 - Lifecycle: **stable**
 - Category: Layout
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSpacer } from '@kern-ui/angular/kit';
+import { KrnSpacer } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-spacer-agent-example',

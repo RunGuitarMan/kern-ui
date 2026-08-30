@@ -9,8 +9,8 @@
   "symbol": "KrnDateRangePicker",
   "canonicalSymbol": "KrnDateRangePicker",
   "canonicalId": "date-range-picker",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -316,7 +316,7 @@
       "title": "Typed reporting period",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed reporting period\n *\n * Bind an explicit ISO start and end date range.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDateRangePicker, type KrnDateRangeValue } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-date-range-picker-agent-example',\n  standalone: true,\n  imports: [KrnDateRangePicker, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-date-range-picker\n      ariaLabel=\"Reporting period\"\n      locale=\"en-GB\"\n      today=\"2026-07-29\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernDateRangePickerAgentExample {\n  readonly control = new FormControl<KrnDateRangeValue>(\n    { start: '2026-07-01', end: '2026-09-30' },\n    { nonNullable: true },\n  );\n}\n\nvoid bootstrapApplication(KernDateRangePickerAgentExample);\n",
+      "code": "/**\n * Typed reporting period\n *\n * Bind an explicit ISO start and end date range.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDateRangePicker, type KrnDateRangeValue } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-date-range-picker-agent-example',\n  standalone: true,\n  imports: [KrnDateRangePicker, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-date-range-picker\n      ariaLabel=\"Reporting period\"\n      locale=\"en-GB\"\n      today=\"2026-07-29\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernDateRangePickerAgentExample {\n  readonly control = new FormControl<KrnDateRangeValue>(\n    { start: '2026-07-01', end: '2026-09-30' },\n    { nonNullable: true },\n  );\n}\n\nvoid bootstrapApplication(KernDateRangePickerAgentExample);\n",
       "verification": "compiled",
       "source": "examples/date-range-picker.ts"
     }

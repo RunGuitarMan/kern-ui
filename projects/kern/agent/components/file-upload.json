@@ -9,8 +9,8 @@
   "symbol": "KrnFileUpload",
   "canonicalSymbol": "KrnFileUpload",
   "canonicalId": "file-upload",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -276,7 +276,7 @@
       "title": "Typed contract upload",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed contract upload\n *\n * Bind an immutable file list with accepted document formats.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnFileUpload } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-file-upload-agent-example',\n  standalone: true,\n  imports: [KrnFileUpload, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-file-upload\n      label=\"Signed contract\"\n      description=\"PDF, up to 10 MB\"\n      accept=\".pdf,application/pdf\"\n      [maxSize]=\"10485760\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernFileUploadAgentExample {\n  readonly control = new FormControl<readonly File[]>([], { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernFileUploadAgentExample);\n",
+      "code": "/**\n * Typed contract upload\n *\n * Bind an immutable file list with accepted document formats.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnFileUpload } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-file-upload-agent-example',\n  standalone: true,\n  imports: [KrnFileUpload, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-file-upload\n      label=\"Signed contract\"\n      description=\"PDF, up to 10 MB\"\n      accept=\".pdf,application/pdf\"\n      [maxSize]=\"10485760\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernFileUploadAgentExample {\n  readonly control = new FormControl<readonly File[]>([], { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernFileUploadAgentExample);\n",
       "verification": "compiled",
       "source": "examples/file-upload.ts"
     }

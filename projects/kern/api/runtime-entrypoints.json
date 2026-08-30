@@ -51,22 +51,58 @@
       ]
     },
     {
-      "name": "kit",
-      "subpath": "./kit",
-      "sourceRoot": "projects/kern/kit/src",
-      "publicApi": "projects/kern/kit/src/public-api.ts",
-      "owns": [
-        "lib/actions",
-        "lib/data-display",
-        "lib/feedback",
-        "lib/forms",
-        "lib/layout",
-        "lib/navigation",
-        "lib/reactive-input.ts",
-        "lib/reactive-locale.ts"
-      ],
-      "dependencies": ["cdk", "core", "i18n"],
-      "identityExports": ["KrnButton", "KrnCard", "KrnFormField", "KrnSelect", "KrnToastService"]
+      "name": "actions",
+      "subpath": "./actions",
+      "sourceRoot": "projects/kern/actions/src",
+      "publicApi": "projects/kern/actions/src/public-api.ts",
+      "owns": ["lib/actions"],
+      "dependencies": ["cdk", "i18n"],
+      "identityExports": ["KrnButton", "KrnButtonGroup", "KrnCopyButton"]
+    },
+    {
+      "name": "forms",
+      "subpath": "./forms",
+      "sourceRoot": "projects/kern/forms/src",
+      "publicApi": "projects/kern/forms/src/public-api.ts",
+      "owns": ["lib/forms"],
+      "dependencies": ["actions", "cdk", "core"],
+      "identityExports": ["KrnFormField", "KrnSelect", "KrnTextInput"]
+    },
+    {
+      "name": "navigation",
+      "subpath": "./navigation",
+      "sourceRoot": "projects/kern/navigation/src",
+      "publicApi": "projects/kern/navigation/src/public-api.ts",
+      "owns": ["lib/navigation"],
+      "dependencies": ["cdk", "core"],
+      "identityExports": ["KrnCommandPalette", "KrnMenu", "KrnTabs"]
+    },
+    {
+      "name": "feedback",
+      "subpath": "./feedback",
+      "sourceRoot": "projects/kern/feedback/src",
+      "publicApi": "projects/kern/feedback/src/public-api.ts",
+      "owns": ["lib/feedback"],
+      "dependencies": ["cdk", "core"],
+      "identityExports": ["KrnDialog", "KrnToastService", "KrnTooltip"]
+    },
+    {
+      "name": "layout",
+      "subpath": "./layout",
+      "sourceRoot": "projects/kern/layout/src",
+      "publicApi": "projects/kern/layout/src/public-api.ts",
+      "owns": ["lib/layout"],
+      "dependencies": ["cdk", "core"],
+      "identityExports": ["KrnAppShell", "KrnContainer", "KrnStack"]
+    },
+    {
+      "name": "data-display",
+      "subpath": "./data-display",
+      "sourceRoot": "projects/kern/data-display/src",
+      "publicApi": "projects/kern/data-display/src/public-api.ts",
+      "owns": ["lib/data-display"],
+      "dependencies": ["cdk", "core", "navigation"],
+      "identityExports": ["KrnCalendar", "KrnCard", "KrnTree"]
     },
     {
       "name": "addon-grid",
@@ -92,8 +128,18 @@
       "sourceRoot": "projects/kern/patterns/src",
       "publicApi": "projects/kern/patterns/src/public-api.ts",
       "owns": ["lib/patterns"],
-      "dependencies": ["cdk", "core", "i18n", "kit"],
+      "dependencies": ["cdk", "core", "data-display", "feedback", "i18n"],
       "identityExports": ["KrnLoginForm", "KrnPageHeader"]
+    }
+  ],
+  "compatibilityEntrypoints": [
+    {
+      "name": "kit",
+      "subpath": "./kit",
+      "sourceRoot": "projects/kern/kit/src",
+      "publicApi": "projects/kern/kit/src/public-api.ts",
+      "dependencies": ["actions", "forms", "navigation", "feedback", "layout", "data-display"],
+      "identityExports": ["KrnButton", "KrnCard", "KrnFormField", "KrnSelect", "KrnToastService"]
     }
   ]
 }

@@ -9,8 +9,8 @@
   "symbol": "KrnNativeSelect",
   "canonicalSymbol": "KrnNativeSelect",
   "canonicalId": "native-select",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -301,7 +301,7 @@
       "title": "Typed native region select",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed native region select\n *\n * Use native select semantics with the same typed option contract.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnNativeSelect, type KrnSelectOption } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-native-select-agent-example',\n  standalone: true,\n  imports: [KrnNativeSelect, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-native-select ariaLabel=\"Data region\" [options]=\"regionOptions\" [formControl]=\"control\" />\n  `,\n})\nexport class KernNativeSelectAgentExample {\n  readonly control = new FormControl<string | null>('eu-central', { nonNullable: true });\n\n  readonly regionOptions: readonly KrnSelectOption<string>[] = [\n    { value: 'eu-central', label: 'EU Central' },\n    { value: 'us-east', label: 'US East' },\n  ];\n}\n\nvoid bootstrapApplication(KernNativeSelectAgentExample);\n",
+      "code": "/**\n * Typed native region select\n *\n * Use native select semantics with the same typed option contract.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnNativeSelect, type KrnSelectOption } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-native-select-agent-example',\n  standalone: true,\n  imports: [KrnNativeSelect, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-native-select ariaLabel=\"Data region\" [options]=\"regionOptions\" [formControl]=\"control\" />\n  `,\n})\nexport class KernNativeSelectAgentExample {\n  readonly control = new FormControl<string | null>('eu-central', { nonNullable: true });\n\n  readonly regionOptions: readonly KrnSelectOption<string>[] = [\n    { value: 'eu-central', label: 'EU Central' },\n    { value: 'us-east', label: 'US East' },\n  ];\n}\n\nvoid bootstrapApplication(KernNativeSelectAgentExample);\n",
       "verification": "compiled",
       "source": "examples/native-select.ts"
     }

@@ -9,8 +9,8 @@
   "symbol": "KrnAvatar",
   "canonicalSymbol": "KrnAvatar",
   "canonicalId": "avatar",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -152,7 +152,7 @@
       "title": "Named account-owner avatar",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Named account-owner avatar\n *\n * Provide initials fallback and meaningful alternative text.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAvatar } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-avatar-agent-example',\n  standalone: true,\n  imports: [KrnAvatar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-avatar name=\"Ada Lovelace\" alt=\"Ada Lovelace, account owner\" status=\"online\" />\n  `,\n})\nexport class KernAvatarAgentExample {}\n\nvoid bootstrapApplication(KernAvatarAgentExample);\n",
+      "code": "/**\n * Named account-owner avatar\n *\n * Provide initials fallback and meaningful alternative text.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAvatar } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-avatar-agent-example',\n  standalone: true,\n  imports: [KrnAvatar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-avatar name=\"Ada Lovelace\" alt=\"Ada Lovelace, account owner\" status=\"online\" />\n  `,\n})\nexport class KernAvatarAgentExample {}\n\nvoid bootstrapApplication(KernAvatarAgentExample);\n",
       "verification": "compiled",
       "source": "examples/avatar.ts"
     }

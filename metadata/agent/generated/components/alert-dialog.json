@@ -9,8 +9,8 @@
   "symbol": "KrnAlertDialog",
   "canonicalSymbol": "KrnAlertDialog",
   "canonicalId": "alert-dialog",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -269,7 +269,7 @@
       "title": "Controlled destructive confirmation",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled destructive confirmation\n *\n * Require an explicit decision for a destructive action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAlertDialog } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-alert-dialog-agent-example',\n  standalone: true,\n  imports: [KrnAlertDialog],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button type=\"button\" (click)=\"open = true\">Open Archive customer</button>\n    <krn-alert-dialog\n      [(open)]=\"open\"\n      title=\"Archive customer\"\n      description=\"Archived customers are removed from active reporting.\"\n      [closeOnOutside]=\"false\"\n    >\n      <p>Archived customers are removed from active reporting.</p>\n      <button krnDialogAction type=\"button\" (click)=\"open = false\">Done</button>\n    </krn-alert-dialog>\n  `,\n})\nexport class KernAlertDialogAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernAlertDialogAgentExample);\n",
+      "code": "/**\n * Controlled destructive confirmation\n *\n * Require an explicit decision for a destructive action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAlertDialog } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-alert-dialog-agent-example',\n  standalone: true,\n  imports: [KrnAlertDialog],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button type=\"button\" (click)=\"open = true\">Open Archive customer</button>\n    <krn-alert-dialog\n      [(open)]=\"open\"\n      title=\"Archive customer\"\n      description=\"Archived customers are removed from active reporting.\"\n      [closeOnOutside]=\"false\"\n    >\n      <p>Archived customers are removed from active reporting.</p>\n      <button krnDialogAction type=\"button\" (click)=\"open = false\">Done</button>\n    </krn-alert-dialog>\n  `,\n})\nexport class KernAlertDialogAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernAlertDialogAgentExample);\n",
       "verification": "compiled",
       "source": "examples/alert-dialog.ts"
     }

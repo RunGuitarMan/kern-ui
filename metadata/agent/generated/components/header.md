@@ -2,7 +2,7 @@
 
 - ID: `header`
 - Selector: `krn-header`
-- Import: `import { KrnHeader } from '@kern-ui/angular/kit';`
+- Import: `import { KrnHeader } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnHeader`
 - Lifecycle: **stable**
 - Category: Layout
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnHeader } from '@kern-ui/angular/kit';
+import { KrnHeader } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-header-agent-example',

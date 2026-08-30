@@ -2,7 +2,7 @@
 
 - ID: `resizable-panels`
 - Selector: `krn-resizable-panels`
-- Import: `import { KrnResizablePanels } from '@kern-ui/angular/kit';`
+- Import: `import { KrnResizablePanels } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnResizablePanels`
 - Lifecycle: **experimental**
 - Category: Layout
@@ -27,7 +27,7 @@ Avoid: Use Split Layout when regions should follow responsive rules without dire
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnResizablePanel, KrnResizablePanels, KrnResizeHandle } from '@kern-ui/angular/kit';
+import { KrnResizablePanel, KrnResizablePanels, KrnResizeHandle } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-resizable-panels-agent-example',

@@ -2,7 +2,7 @@
 
 - ID: `skeleton`
 - Selector: `krn-skeleton`
-- Import: `import { KrnSkeleton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSkeleton } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnSkeleton`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSkeleton } from '@kern-ui/angular/kit';
+import { KrnSkeleton } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-skeleton-agent-example',

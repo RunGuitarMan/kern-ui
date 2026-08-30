@@ -9,8 +9,8 @@
   "symbol": "KrnMultiSelect",
   "canonicalSymbol": "KrnMultiSelect",
   "canonicalId": "multi-select",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -364,7 +364,7 @@
       "title": "Typed multi-owner selection",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed multi-owner selection\n *\n * Own a readonly selection array and controlled popup state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnMultiSelect, type KrnSelectOption } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-multi-select-agent-example',\n  standalone: true,\n  imports: [KrnMultiSelect, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-multi-select\n      ariaLabel=\"Reviewers\"\n      [options]=\"reviewerOptions\"\n      [formControl]=\"control\"\n      [(open)]=\"open\"\n    />\n  `,\n})\nexport class KernMultiSelectAgentExample {\n  readonly control = new FormControl<readonly string[]>(['reviewer-security'], {\n    nonNullable: true,\n  });\n\n  readonly reviewerOptions: readonly KrnSelectOption<string>[] = [\n    { value: 'reviewer-security', label: 'Security team' },\n    { value: 'reviewer-legal', label: 'Legal team' },\n    { value: 'reviewer-finance', label: 'Finance team' },\n  ];\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernMultiSelectAgentExample);\n",
+      "code": "/**\n * Typed multi-owner selection\n *\n * Own a readonly selection array and controlled popup state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnMultiSelect, type KrnSelectOption } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-multi-select-agent-example',\n  standalone: true,\n  imports: [KrnMultiSelect, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-multi-select\n      ariaLabel=\"Reviewers\"\n      [options]=\"reviewerOptions\"\n      [formControl]=\"control\"\n      [(open)]=\"open\"\n    />\n  `,\n})\nexport class KernMultiSelectAgentExample {\n  readonly control = new FormControl<readonly string[]>(['reviewer-security'], {\n    nonNullable: true,\n  });\n\n  readonly reviewerOptions: readonly KrnSelectOption<string>[] = [\n    { value: 'reviewer-security', label: 'Security team' },\n    { value: 'reviewer-legal', label: 'Legal team' },\n    { value: 'reviewer-finance', label: 'Finance team' },\n  ];\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernMultiSelectAgentExample);\n",
       "verification": "compiled",
       "source": "examples/multi-select.ts"
     }

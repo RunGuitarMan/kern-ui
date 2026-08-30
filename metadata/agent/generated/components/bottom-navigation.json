@@ -9,8 +9,8 @@
   "symbol": "KrnBottomNavigation",
   "canonicalSymbol": "KrnBottomNavigation",
   "canonicalId": "bottom-navigation",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -127,7 +127,7 @@
       "title": "Controlled mobile primary navigation",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled mobile primary navigation\n *\n * Use stable ids and owned selected destination.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBottomNavigation, type KrnNavigationItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-bottom-navigation-agent-example',\n  standalone: true,\n  imports: [KrnBottomNavigation],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-bottom-navigation\n      ariaLabel=\"Primary mobile navigation\"\n      [items]=\"items\"\n      [(value)]=\"selectedDestination\"\n    />\n  `,\n})\nexport class KernBottomNavigationAgentExample {\n  readonly items: readonly KrnNavigationItem[] = [\n    { id: 'home', label: 'Home', href: '/home' },\n    { id: 'tasks', label: 'Tasks', href: '/tasks', badge: 3 },\n    { id: 'account', label: 'Account', href: '/account' },\n  ];\n\n  selectedDestination: string | null = 'home';\n}\n\nvoid bootstrapApplication(KernBottomNavigationAgentExample);\n",
+      "code": "/**\n * Controlled mobile primary navigation\n *\n * Use stable ids and owned selected destination.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBottomNavigation, type KrnNavigationItem } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-bottom-navigation-agent-example',\n  standalone: true,\n  imports: [KrnBottomNavigation],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-bottom-navigation\n      ariaLabel=\"Primary mobile navigation\"\n      [items]=\"items\"\n      [(value)]=\"selectedDestination\"\n    />\n  `,\n})\nexport class KernBottomNavigationAgentExample {\n  readonly items: readonly KrnNavigationItem[] = [\n    { id: 'home', label: 'Home', href: '/home' },\n    { id: 'tasks', label: 'Tasks', href: '/tasks', badge: 3 },\n    { id: 'account', label: 'Account', href: '/account' },\n  ];\n\n  selectedDestination: string | null = 'home';\n}\n\nvoid bootstrapApplication(KernBottomNavigationAgentExample);\n",
       "verification": "compiled",
       "source": "examples/bottom-navigation.ts"
     }

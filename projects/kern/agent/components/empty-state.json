@@ -9,8 +9,8 @@
   "symbol": "KrnEmptyState",
   "canonicalSymbol": "KrnEmptyState",
   "canonicalId": "empty-state",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -133,7 +133,7 @@
       "title": "Empty customer portfolio",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Empty customer portfolio\n *\n * Explain the absence of records and provide a next action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnEmptyState } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-empty-state-agent-example',\n  standalone: true,\n  imports: [KrnEmptyState],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-empty-state\n      title=\"No customers yet\"\n      description=\"Create the first customer to start tracking renewals.\"\n    >\n      <button type=\"button\">Create customer</button>\n    </krn-empty-state>\n  `,\n})\nexport class KernEmptyStateAgentExample {}\n\nvoid bootstrapApplication(KernEmptyStateAgentExample);\n",
+      "code": "/**\n * Empty customer portfolio\n *\n * Explain the absence of records and provide a next action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnEmptyState } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-empty-state-agent-example',\n  standalone: true,\n  imports: [KrnEmptyState],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-empty-state\n      title=\"No customers yet\"\n      description=\"Create the first customer to start tracking renewals.\"\n    >\n      <button type=\"button\">Create customer</button>\n    </krn-empty-state>\n  `,\n})\nexport class KernEmptyStateAgentExample {}\n\nvoid bootstrapApplication(KernEmptyStateAgentExample);\n",
       "verification": "compiled",
       "source": "examples/empty-state.ts"
     }

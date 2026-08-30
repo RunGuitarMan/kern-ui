@@ -9,8 +9,8 @@
   "symbol": "KrnSuccessState",
   "canonicalSymbol": "KrnSuccessState",
   "canonicalId": "success-state",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -133,7 +133,7 @@
       "title": "Completed import state",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Completed import state\n *\n * Confirm completion and identify the next useful destination.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSuccessState } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-success-state-agent-example',\n  standalone: true,\n  imports: [KrnSuccessState],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-success-state\n      title=\"Import complete\"\n      description=\"100 customers were added without errors.\"\n    >\n      <a href=\"/customers\">Review customers</a>\n    </krn-success-state>\n  `,\n})\nexport class KernSuccessStateAgentExample {}\n\nvoid bootstrapApplication(KernSuccessStateAgentExample);\n",
+      "code": "/**\n * Completed import state\n *\n * Confirm completion and identify the next useful destination.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSuccessState } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-success-state-agent-example',\n  standalone: true,\n  imports: [KrnSuccessState],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-success-state\n      title=\"Import complete\"\n      description=\"100 customers were added without errors.\"\n    >\n      <a href=\"/customers\">Review customers</a>\n    </krn-success-state>\n  `,\n})\nexport class KernSuccessStateAgentExample {}\n\nvoid bootstrapApplication(KernSuccessStateAgentExample);\n",
       "verification": "compiled",
       "source": "examples/success-state.ts"
     }

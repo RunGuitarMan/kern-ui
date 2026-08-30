@@ -6,735 +6,735 @@
       "symbol": "KrnAppShell",
       "canonicalSymbol": "KrnAppShell",
       "selector": "krn-app-shell",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "stable"
     },
     "header": {
       "symbol": "KrnHeader",
       "canonicalSymbol": "KrnHeader",
       "selector": "krn-header",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "stable"
     },
     "sidebar": {
       "symbol": "KrnSidebar",
       "canonicalSymbol": "KrnSidebar",
       "selector": "krn-sidebar",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "stable"
     },
     "navigation-rail": {
       "symbol": "KrnNavigationRail",
       "canonicalSymbol": "KrnNavigationRail",
       "selector": "krn-navigation-rail",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "stable"
     },
     "container": {
       "symbol": "KrnContainer",
       "canonicalSymbol": "KrnContainer",
       "selector": "krn-container",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "stable"
     },
     "stack": {
       "symbol": "KrnStack",
       "canonicalSymbol": "KrnStack",
       "selector": "krn-stack",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "stable"
     },
     "inline": {
       "symbol": "KrnInline",
       "canonicalSymbol": "KrnInline",
       "selector": "krn-inline",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "stable"
     },
     "cluster": {
       "symbol": "KrnCluster",
       "canonicalSymbol": "KrnCluster",
       "selector": "krn-cluster",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "stable"
     },
     "grid": {
       "symbol": "KrnGrid",
       "canonicalSymbol": "KrnGrid",
       "selector": "krn-grid",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "stable"
     },
     "split-layout": {
       "symbol": "KrnSplitLayout",
       "canonicalSymbol": "KrnSplitLayout",
       "selector": "krn-split-layout",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "stable"
     },
     "center": {
       "symbol": "KrnCenter",
       "canonicalSymbol": "KrnCenter",
       "selector": "krn-center",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "stable"
     },
     "spacer": {
       "symbol": "KrnSpacer",
       "canonicalSymbol": "KrnSpacer",
       "selector": "krn-spacer",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "stable"
     },
     "divider": {
       "symbol": "KrnDivider",
       "canonicalSymbol": "KrnDivider",
       "selector": "krn-divider",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "stable"
     },
     "aspect-ratio": {
       "symbol": "KrnAspectRatio",
       "canonicalSymbol": "KrnAspectRatio",
       "selector": "krn-aspect-ratio",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "stable"
     },
     "scroll-area": {
       "symbol": "KrnScrollArea",
       "canonicalSymbol": "KrnScrollArea",
       "selector": "krn-scroll-area",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "stable"
     },
     "responsive-show-hide": {
       "symbol": "KrnResponsiveShowHide",
       "canonicalSymbol": "KrnShow",
       "selector": "krn-responsive-show-hide",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "stable"
     },
     "resizable-panels": {
       "symbol": "KrnResizablePanels",
       "canonicalSymbol": "KrnResizablePanels",
       "selector": "krn-resizable-panels",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/layout",
       "lifecycle": "experimental"
     },
     "button": {
       "symbol": "KrnButton",
       "canonicalSymbol": "KrnButton",
       "selector": "button[krnButton]",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/actions",
       "lifecycle": "stable"
     },
     "icon-button": {
       "symbol": "KrnIconButton",
       "canonicalSymbol": "KrnIconButton",
       "selector": "button[krnIconButton]",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/actions",
       "lifecycle": "stable"
     },
     "button-group": {
       "symbol": "KrnButtonGroup",
       "canonicalSymbol": "KrnButtonGroup",
       "selector": "div[krnButtonGroup]",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/actions",
       "lifecycle": "stable"
     },
     "split-button": {
       "symbol": "KrnSplitButton",
       "canonicalSymbol": "KrnSplitButton",
       "selector": "krn-split-button",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/actions",
       "lifecycle": "stable"
     },
     "floating-action-button": {
       "symbol": "KrnFloatingActionButton",
       "canonicalSymbol": "KrnFloatingActionButton",
       "selector": "button[krnFab]",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/actions",
       "lifecycle": "stable"
     },
     "toggle-button": {
       "symbol": "KrnToggleButton",
       "canonicalSymbol": "KrnToggleButton",
       "selector": "button[krnToggleButton]",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/actions",
       "lifecycle": "stable"
     },
     "toggle-group": {
       "symbol": "KrnToggleGroup",
       "canonicalSymbol": "KrnToggleGroup",
       "selector": "div[krnToggleGroup]",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/actions",
       "lifecycle": "stable"
     },
     "copy-button": {
       "symbol": "KrnCopyButton",
       "canonicalSymbol": "KrnCopyButton",
       "selector": "krn-copy-button",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/actions",
       "lifecycle": "stable"
     },
     "link": {
       "symbol": "KrnLink",
       "canonicalSymbol": "KrnLink",
       "selector": "a[krnLink]",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/actions",
       "lifecycle": "stable"
     },
     "dropdown-button": {
       "symbol": "KrnDropdownButton",
       "canonicalSymbol": "KrnDropdownButton",
       "selector": "krn-dropdown-button",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/actions",
       "lifecycle": "stable"
     },
     "form-field": {
       "symbol": "KrnFormField",
       "canonicalSymbol": "KrnFormField",
       "selector": "krn-form-field",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "label": {
       "symbol": "KrnLabel",
       "canonicalSymbol": "KrnLabel",
       "selector": "krn-label",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "hint": {
       "symbol": "KrnHint",
       "canonicalSymbol": "KrnHint",
       "selector": "krn-hint",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "validation-message": {
       "symbol": "KrnValidationMessage",
       "canonicalSymbol": "KrnValidationMessage",
       "selector": "krn-validation-message",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "text-input": {
       "symbol": "KrnTextInput",
       "canonicalSymbol": "KrnTextInput",
       "selector": "krn-text-input",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "textarea": {
       "symbol": "KrnTextarea",
       "canonicalSymbol": "KrnTextarea",
       "selector": "krn-textarea",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "password-input": {
       "symbol": "KrnPasswordInput",
       "canonicalSymbol": "KrnPasswordInput",
       "selector": "krn-password-input",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "search-input": {
       "symbol": "KrnSearchInput",
       "canonicalSymbol": "KrnSearchInput",
       "selector": "krn-search-input",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "number-input": {
       "symbol": "KrnNumberInput",
       "canonicalSymbol": "KrnNumberInput",
       "selector": "krn-number-input",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "checkbox": {
       "symbol": "KrnCheckbox",
       "canonicalSymbol": "KrnCheckbox",
       "selector": "krn-checkbox",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "checkbox-group": {
       "symbol": "KrnCheckboxGroup",
       "canonicalSymbol": "KrnCheckboxGroup",
       "selector": "krn-checkbox-group",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "radio": {
       "symbol": "KrnRadio",
       "canonicalSymbol": "KrnRadio",
       "selector": "krn-radio",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "radio-group": {
       "symbol": "KrnRadioGroup",
       "canonicalSymbol": "KrnRadioGroup",
       "selector": "krn-radio-group",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "switch": {
       "symbol": "KrnSwitch",
       "canonicalSymbol": "KrnSwitch",
       "selector": "krn-switch",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "select": {
       "symbol": "KrnSelect",
       "canonicalSymbol": "KrnSelect",
       "selector": "krn-select",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "beta"
     },
     "native-select": {
       "symbol": "KrnNativeSelect",
       "canonicalSymbol": "KrnNativeSelect",
       "selector": "krn-native-select",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "multi-select": {
       "symbol": "KrnMultiSelect",
       "canonicalSymbol": "KrnMultiSelect",
       "selector": "krn-multi-select",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "beta"
     },
     "combobox": {
       "symbol": "KrnCombobox",
       "canonicalSymbol": "KrnCombobox",
       "selector": "krn-combobox",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "beta"
     },
     "autocomplete": {
       "symbol": "KrnAutocomplete",
       "canonicalSymbol": "KrnAutocomplete",
       "selector": "krn-autocomplete",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "beta"
     },
     "slider": {
       "symbol": "KrnSlider",
       "canonicalSymbol": "KrnSlider",
       "selector": "krn-slider",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "range-slider": {
       "symbol": "KrnRangeSlider",
       "canonicalSymbol": "KrnRangeSlider",
       "selector": "krn-range-slider",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "segmented-control": {
       "symbol": "KrnSegmentedControl",
       "canonicalSymbol": "KrnSegmentedControl",
       "selector": "krn-segmented-control",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "date-picker": {
       "symbol": "KrnDatePicker",
       "canonicalSymbol": "KrnDatePicker",
       "selector": "krn-date-picker",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "beta"
     },
     "date-range-picker": {
       "symbol": "KrnDateRangePicker",
       "canonicalSymbol": "KrnDateRangePicker",
       "selector": "krn-date-range-picker",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "beta"
     },
     "time-picker": {
       "symbol": "KrnTimePicker",
       "canonicalSymbol": "KrnTimePicker",
       "selector": "krn-time-picker",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "beta"
     },
     "color-picker": {
       "symbol": "KrnColorPicker",
       "canonicalSymbol": "KrnColorPicker",
       "selector": "krn-color-picker",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "beta"
     },
     "file-upload": {
       "symbol": "KrnFileUpload",
       "canonicalSymbol": "KrnFileUpload",
       "selector": "krn-file-upload",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "drag-drop-upload": {
       "symbol": "KrnDragDropUpload",
       "canonicalSymbol": "KrnDropUpload",
       "selector": "krn-drag-drop-upload",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "verification-code": {
       "symbol": "KrnVerificationCode",
       "canonicalSymbol": "KrnOtpInput",
       "selector": "krn-verification-code",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "tags-input": {
       "symbol": "KrnTagsInput",
       "canonicalSymbol": "KrnTagsInput",
       "selector": "krn-tags-input",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/forms",
       "lifecycle": "stable"
     },
     "breadcrumbs": {
       "symbol": "KrnBreadcrumbs",
       "canonicalSymbol": "KrnBreadcrumbs",
       "selector": "krn-breadcrumbs",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/navigation",
       "lifecycle": "stable"
     },
     "tabs": {
       "symbol": "KrnTabs",
       "canonicalSymbol": "KrnTabs",
       "selector": "krn-tabs",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/navigation",
       "lifecycle": "stable"
     },
     "vertical-tabs": {
       "symbol": "KrnVerticalTabs",
       "canonicalSymbol": "KrnTabs",
       "selector": "krn-vertical-tabs",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/navigation",
       "lifecycle": "stable"
     },
     "pagination": {
       "symbol": "KrnPagination",
       "canonicalSymbol": "KrnPagination",
       "selector": "krn-pagination",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/navigation",
       "lifecycle": "stable"
     },
     "stepper": {
       "symbol": "KrnStepper",
       "canonicalSymbol": "KrnStepper",
       "selector": "krn-stepper",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/navigation",
       "lifecycle": "stable"
     },
     "menu": {
       "symbol": "KrnMenu",
       "canonicalSymbol": "KrnMenu",
       "selector": "krn-menu",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/navigation",
       "lifecycle": "stable"
     },
     "menubar": {
       "symbol": "KrnMenubar",
       "canonicalSymbol": "KrnMenubar",
       "selector": "krn-menubar",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/navigation",
       "lifecycle": "stable"
     },
     "context-menu": {
       "symbol": "KrnContextMenu",
       "canonicalSymbol": "KrnContextMenu",
       "selector": "krn-context-menu",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/navigation",
       "lifecycle": "stable"
     },
     "tree-navigation": {
       "symbol": "KrnTreeNavigation",
       "canonicalSymbol": "KrnTreeNavigation",
       "selector": "krn-tree-navigation",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/navigation",
       "lifecycle": "beta"
     },
     "bottom-navigation": {
       "symbol": "KrnBottomNavigation",
       "canonicalSymbol": "KrnBottomNavigation",
       "selector": "krn-bottom-navigation",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/navigation",
       "lifecycle": "stable"
     },
     "command-palette": {
       "symbol": "KrnCommandPalette",
       "canonicalSymbol": "KrnCommandPalette",
       "selector": "krn-command-palette",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/navigation",
       "lifecycle": "beta"
     },
     "table-of-contents": {
       "symbol": "KrnTableOfContents",
       "canonicalSymbol": "KrnTableOfContents",
       "selector": "krn-table-of-contents",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/navigation",
       "lifecycle": "stable"
     },
     "back-button": {
       "symbol": "KrnBackButton",
       "canonicalSymbol": "KrnBackButton",
       "selector": "krn-back-button",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/navigation",
       "lifecycle": "stable"
     },
     "skip-link": {
       "symbol": "KrnSkipLink",
       "canonicalSymbol": "KrnSkipLink",
       "selector": "krn-skip-link",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/navigation",
       "lifecycle": "stable"
     },
     "alert": {
       "symbol": "KrnAlert",
       "canonicalSymbol": "KrnAlert",
       "selector": "krn-alert",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "stable"
     },
     "banner": {
       "symbol": "KrnBanner",
       "canonicalSymbol": "KrnBanner",
       "selector": "krn-banner",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "stable"
     },
     "toast": {
       "symbol": "KrnToast",
       "canonicalSymbol": "KrnToastViewport",
       "selector": "krn-toast",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "stable"
     },
     "tooltip": {
       "symbol": "KrnTooltip",
       "canonicalSymbol": "KrnTooltip",
       "selector": "[krnTooltip]",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "stable"
     },
     "popover": {
       "symbol": "KrnPopover",
       "canonicalSymbol": "KrnPopover",
       "selector": "krn-popover",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "stable"
     },
     "hover-card": {
       "symbol": "KrnHoverCard",
       "canonicalSymbol": "KrnHoverCard",
       "selector": "krn-hover-card",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "stable"
     },
     "dialog": {
       "symbol": "KrnDialog",
       "canonicalSymbol": "KrnDialog",
       "selector": "krn-dialog",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "beta"
     },
     "alert-dialog": {
       "symbol": "KrnAlertDialog",
       "canonicalSymbol": "KrnAlertDialog",
       "selector": "krn-alert-dialog",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "stable"
     },
     "drawer": {
       "symbol": "KrnDrawer",
       "canonicalSymbol": "KrnDrawer",
       "selector": "krn-drawer",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "beta"
     },
     "bottom-sheet": {
       "symbol": "KrnBottomSheet",
       "canonicalSymbol": "KrnBottomSheet",
       "selector": "krn-bottom-sheet",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "beta"
     },
     "loading-overlay": {
       "symbol": "KrnLoadingOverlay",
       "canonicalSymbol": "KrnLoadingOverlay",
       "selector": "krn-loading-overlay",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "stable"
     },
     "progress-bar": {
       "symbol": "KrnProgressBar",
       "canonicalSymbol": "KrnProgressBar",
       "selector": "krn-progress-bar",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "stable"
     },
     "circular-progress": {
       "symbol": "KrnCircularProgress",
       "canonicalSymbol": "KrnCircularProgress",
       "selector": "krn-circular-progress",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "stable"
     },
     "spinner": {
       "symbol": "KrnSpinner",
       "canonicalSymbol": "KrnSpinner",
       "selector": "krn-spinner",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "stable"
     },
     "skeleton": {
       "symbol": "KrnSkeleton",
       "canonicalSymbol": "KrnSkeleton",
       "selector": "krn-skeleton",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "stable"
     },
     "empty-state": {
       "symbol": "KrnEmptyState",
       "canonicalSymbol": "KrnEmptyState",
       "selector": "krn-empty-state",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "stable"
     },
     "error-state": {
       "symbol": "KrnErrorState",
       "canonicalSymbol": "KrnErrorState",
       "selector": "krn-error-state",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "stable"
     },
     "success-state": {
       "symbol": "KrnSuccessState",
       "canonicalSymbol": "KrnSuccessState",
       "selector": "krn-success-state",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "stable"
     },
     "confirmation-pattern": {
       "symbol": "KrnConfirmationPattern",
       "canonicalSymbol": "KrnConfirmation",
       "selector": "krn-confirmation-pattern",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/feedback",
       "lifecycle": "stable"
     },
     "badge": {
       "symbol": "KrnBadge",
       "canonicalSymbol": "KrnBadge",
       "selector": "krn-badge",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "status-badge": {
       "symbol": "KrnStatusBadge",
       "canonicalSymbol": "KrnBadge",
       "selector": "krn-status-badge",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "chip": {
       "symbol": "KrnChip",
       "canonicalSymbol": "KrnChip",
       "selector": "krn-chip",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "tag": {
       "symbol": "KrnTag",
       "canonicalSymbol": "KrnChip",
       "selector": "krn-tag",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "avatar": {
       "symbol": "KrnAvatar",
       "canonicalSymbol": "KrnAvatar",
       "selector": "krn-avatar",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "avatar-group": {
       "symbol": "KrnAvatarGroup",
       "canonicalSymbol": "KrnAvatarGroup",
       "selector": "krn-avatar-group",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "card": {
       "symbol": "KrnCard",
       "canonicalSymbol": "KrnCard",
       "selector": "krn-card",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "stat": {
       "symbol": "KrnStat",
       "canonicalSymbol": "KrnStat",
       "selector": "krn-stat",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "description-list": {
       "symbol": "KrnDescriptionList",
       "canonicalSymbol": "KrnDescriptionList",
       "selector": "krn-description-list",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "list": {
       "symbol": "KrnList",
       "canonicalSymbol": "KrnList",
       "selector": "krn-list",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "list-item": {
       "symbol": "KrnListItem",
       "canonicalSymbol": "KrnListItem",
       "selector": "krn-list-item",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "accordion": {
       "symbol": "KrnAccordion",
       "canonicalSymbol": "KrnAccordion",
       "selector": "krn-accordion",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "disclosure": {
       "symbol": "KrnDisclosure",
       "canonicalSymbol": "KrnDisclosure",
       "selector": "krn-disclosure",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "timeline": {
       "symbol": "KrnTimeline",
       "canonicalSymbol": "KrnTimeline",
       "selector": "krn-timeline",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "tree": {
       "symbol": "KrnTree",
       "canonicalSymbol": "KrnTree",
       "selector": "krn-tree",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "beta"
     },
     "data-table": {
@@ -755,42 +755,42 @@
       "symbol": "KrnCalendar",
       "canonicalSymbol": "KrnCalendar",
       "selector": "krn-calendar",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "code-block": {
       "symbol": "KrnCodeBlock",
       "canonicalSymbol": "KrnCodeBlock",
       "selector": "krn-code-block",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "json-view": {
       "symbol": "KrnJsonView",
       "canonicalSymbol": "KrnJsonView",
       "selector": "krn-json-view",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "beta"
     },
     "keyboard-shortcut": {
       "symbol": "KrnKeyboardShortcut",
       "canonicalSymbol": "KrnKeyboardShortcut",
       "selector": "krn-keyboard-shortcut",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "meter": {
       "symbol": "KrnMeter",
       "canonicalSymbol": "KrnMeter",
       "selector": "krn-meter",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "rating": {
       "symbol": "KrnRating",
       "canonicalSymbol": "KrnRating",
       "selector": "krn-rating",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "line-chart": {
@@ -818,7 +818,7 @@
       "symbol": "KrnResponsiveMedia",
       "canonicalSymbol": "KrnResponsiveMedia",
       "selector": "krn-responsive-media",
-      "importPath": "@kern-ui/angular/kit",
+      "importPath": "@kern-ui/angular/data-display",
       "lifecycle": "stable"
     },
     "user-menu": {
@@ -948,8 +948,8 @@
     },
     "defineKrnOverlayContent": {
       "canonicalSymbol": "defineKrnOverlayContent",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "function"
     },
     "generateKrnBrandPalette": {
@@ -960,14 +960,14 @@
     },
     "injectKrnOverlayData": {
       "canonicalSymbol": "injectKrnOverlayData",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "function"
     },
     "injectKrnOverlayRef": {
       "canonicalSymbol": "injectKrnOverlayRef",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "function"
     },
     "isKrnComponentContent": {
@@ -996,26 +996,26 @@
     },
     "KRN_BUTTON_DEFAULT_OPTIONS": {
       "canonicalSymbol": "KRN_BUTTON_DEFAULT_OPTIONS",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "KRN_BUTTON_GROUP_DEFAULT_OPTIONS": {
       "canonicalSymbol": "KRN_BUTTON_GROUP_DEFAULT_OPTIONS",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "KRN_BUTTON_GROUP_OPTIONS": {
       "canonicalSymbol": "KRN_BUTTON_GROUP_OPTIONS",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "KRN_BUTTON_OPTIONS": {
       "canonicalSymbol": "KRN_BUTTON_OPTIONS",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "KRN_CLIPBOARD_WRITER": {
@@ -1032,14 +1032,14 @@
     },
     "KRN_COPY_BUTTON_DEFAULT_OPTIONS": {
       "canonicalSymbol": "KRN_COPY_BUTTON_DEFAULT_OPTIONS",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "KRN_COPY_BUTTON_OPTIONS": {
       "canonicalSymbol": "KRN_COPY_BUTTON_OPTIONS",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "KRN_COPY_LABELS": {
@@ -1092,26 +1092,26 @@
     },
     "KRN_FLOATING_ACTION_BUTTON_DEFAULT_OPTIONS": {
       "canonicalSymbol": "KRN_FLOATING_ACTION_BUTTON_DEFAULT_OPTIONS",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "KRN_FLOATING_ACTION_BUTTON_OPTIONS": {
       "canonicalSymbol": "KRN_FLOATING_ACTION_BUTTON_OPTIONS",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "KRN_ICON_BUTTON_DEFAULT_OPTIONS": {
       "canonicalSymbol": "KRN_ICON_BUTTON_DEFAULT_OPTIONS",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "KRN_ICON_BUTTON_OPTIONS": {
       "canonicalSymbol": "KRN_ICON_BUTTON_OPTIONS",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "KRN_ICONS": {
@@ -1140,14 +1140,14 @@
     },
     "KRN_MENU_BUTTON_DEFAULT_OPTIONS": {
       "canonicalSymbol": "KRN_MENU_BUTTON_DEFAULT_OPTIONS",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "KRN_MENU_BUTTON_OPTIONS": {
       "canonicalSymbol": "KRN_MENU_BUTTON_OPTIONS",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "KRN_MORE_ACTIONS_LABEL": {
@@ -1164,8 +1164,8 @@
     },
     "KRN_OVERLAY_DATA": {
       "canonicalSymbol": "KRN_OVERLAY_DATA",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "constant"
     },
     "KRN_OVERLAY_HOST": {
@@ -1194,26 +1194,26 @@
     },
     "KRN_TOGGLE_BUTTON_DEFAULT_OPTIONS": {
       "canonicalSymbol": "KRN_TOGGLE_BUTTON_DEFAULT_OPTIONS",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "KRN_TOGGLE_BUTTON_OPTIONS": {
       "canonicalSymbol": "KRN_TOGGLE_BUTTON_OPTIONS",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "KRN_TOGGLE_GROUP_DEFAULT_OPTIONS": {
       "canonicalSymbol": "KRN_TOGGLE_GROUP_DEFAULT_OPTIONS",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "KRN_TOGGLE_GROUP_OPTIONS": {
       "canonicalSymbol": "KRN_TOGGLE_GROUP_OPTIONS",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "KRN_TOKEN_MANIFEST": {
@@ -1236,8 +1236,8 @@
     },
     "KrnAccordion": {
       "canonicalSymbol": "KrnAccordion",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnActionTranslations": {
@@ -1248,26 +1248,26 @@
     },
     "KrnActionVariant": {
       "canonicalSymbol": "KrnActionVariant",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "type"
     },
     "KrnAlert": {
       "canonicalSymbol": "KrnAlert",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnAlertAppearance": {
       "canonicalSymbol": "KrnAlertAppearance",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "type"
     },
     "KrnAlertDialog": {
       "canonicalSymbol": "KrnAlertDialog",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnAlertDialogHarness": {
@@ -1278,20 +1278,20 @@
     },
     "KrnAppShell": {
       "canonicalSymbol": "KrnAppShell",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnAspectRatio": {
       "canonicalSymbol": "KrnAspectRatio",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnAutocomplete": {
       "canonicalSymbol": "KrnAutocomplete",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnAutocompleteHarness": {
@@ -1302,50 +1302,50 @@
     },
     "KrnAutocompleteMode": {
       "canonicalSymbol": "KrnAutocompleteMode",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "type"
     },
     "KrnAvatar": {
       "canonicalSymbol": "KrnAvatar",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnAvatarGroup": {
       "canonicalSymbol": "KrnAvatarGroup",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnBackButton": {
       "canonicalSymbol": "KrnBackButton",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "class"
     },
     "KrnBadge": {
       "canonicalSymbol": "KrnBadge",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnBadgeSize": {
       "canonicalSymbol": "KrnBadgeSize",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "type"
     },
     "KrnBadgeVariant": {
       "canonicalSymbol": "KrnBadgeVariant",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "type"
     },
     "KrnBanner": {
       "canonicalSymbol": "KrnBanner",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnBarChart": {
@@ -1362,14 +1362,14 @@
     },
     "KrnBottomNavigation": {
       "canonicalSymbol": "KrnBottomNavigation",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "class"
     },
     "KrnBottomSheet": {
       "canonicalSymbol": "KrnBottomSheet",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnBottomSheetHarness": {
@@ -1398,14 +1398,14 @@
     },
     "KrnBreadcrumbItem": {
       "canonicalSymbol": "KrnBreadcrumbItem",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "interface"
     },
     "KrnBreadcrumbs": {
       "canonicalSymbol": "KrnBreadcrumbs",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "class"
     },
     "KrnBreakpoint": {
@@ -1428,14 +1428,14 @@
     },
     "KrnButton": {
       "canonicalSymbol": "KrnButton",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "class"
     },
     "KrnButtonGroup": {
       "canonicalSymbol": "KrnButtonGroup",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "class"
     },
     "KrnButtonGroupHarness": {
@@ -1452,8 +1452,8 @@
     },
     "KrnButtonGroupOptions": {
       "canonicalSymbol": "KrnButtonGroupOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "interface"
     },
     "KrnButtonHarness": {
@@ -1470,14 +1470,14 @@
     },
     "KrnButtonOptions": {
       "canonicalSymbol": "KrnButtonOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "interface"
     },
     "KrnCalendar": {
       "canonicalSymbol": "KrnCalendar",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnCalendarCellHarness": {
@@ -1494,8 +1494,8 @@
     },
     "KrnCalendarDay": {
       "canonicalSymbol": "KrnCalendarDay",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "interface"
     },
     "KrnCalendarHarness": {
@@ -1512,14 +1512,14 @@
     },
     "KrnCard": {
       "canonicalSymbol": "KrnCard",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnCenter": {
       "canonicalSymbol": "KrnCenter",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnChart": {
@@ -1608,26 +1608,26 @@
     },
     "KrnCheckbox": {
       "canonicalSymbol": "KrnCheckbox",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnCheckboxGroup": {
       "canonicalSymbol": "KrnCheckboxGroup",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnChip": {
       "canonicalSymbol": "KrnChip",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnCircularProgress": {
       "canonicalSymbol": "KrnCircularProgress",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnClipboardWriter": {
@@ -1650,20 +1650,20 @@
     },
     "KrnCluster": {
       "canonicalSymbol": "KrnCluster",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnCodeBlock": {
       "canonicalSymbol": "KrnCodeBlock",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnColorPicker": {
       "canonicalSymbol": "KrnColorPicker",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnColorPickerHarness": {
@@ -1698,8 +1698,8 @@
     },
     "KrnCombobox": {
       "canonicalSymbol": "KrnCombobox",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnComboboxHarness": {
@@ -1710,14 +1710,14 @@
     },
     "KrnCommandItem": {
       "canonicalSymbol": "KrnCommandItem",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "interface"
     },
     "KrnCommandPalette": {
       "canonicalSymbol": "KrnCommandPalette",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "class"
     },
     "KrnCommandPaletteHarness": {
@@ -1734,8 +1734,8 @@
     },
     "KrnCommandPaletteLabels": {
       "canonicalSymbol": "KrnCommandPaletteLabels",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "interface"
     },
     "KrnCommandPaletteOptionHarness": {
@@ -1764,26 +1764,26 @@
     },
     "KrnConfirmation": {
       "canonicalSymbol": "KrnConfirmation",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnConfirmationPattern": {
       "canonicalSymbol": "KrnConfirmation",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnContainer": {
       "canonicalSymbol": "KrnContainer",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnContainerSize": {
       "canonicalSymbol": "KrnContainerSize",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "type"
     },
     "KrnContent": {
@@ -1794,32 +1794,32 @@
     },
     "KrnContextMenu": {
       "canonicalSymbol": "KrnContextMenu",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "class"
     },
     "KrnContextMenuItem": {
       "canonicalSymbol": "KrnContextMenuItem",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "interface"
     },
     "KrnControlSize": {
       "canonicalSymbol": "KrnControlSize",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "type"
     },
     "KrnControlState": {
       "canonicalSymbol": "KrnControlState",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "type"
     },
     "KrnCopyButton": {
       "canonicalSymbol": "KrnCopyButton",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "class"
     },
     "KrnCopyButtonHarness": {
@@ -1836,8 +1836,8 @@
     },
     "KrnCopyButtonOptions": {
       "canonicalSymbol": "KrnCopyButtonOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "interface"
     },
     "KrnCopyLabels": {
@@ -1848,8 +1848,8 @@
     },
     "KrnCopyState": {
       "canonicalSymbol": "KrnCopyState",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "type"
     },
     "KrnCrudToolbar": {
@@ -1866,8 +1866,8 @@
     },
     "krnCssLength": {
       "canonicalSymbol": "krnCssLength",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "function"
     },
     "KrnCssReferenceTree": {
@@ -2070,8 +2070,8 @@
     },
     "KrnDatePicker": {
       "canonicalSymbol": "KrnDatePicker",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnDatePickerHarness": {
@@ -2082,8 +2082,8 @@
     },
     "KrnDatePickerLabels": {
       "canonicalSymbol": "KrnDatePickerLabels",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "interface"
     },
     "KrnDatePickerTranslations": {
@@ -2094,8 +2094,8 @@
     },
     "KrnDateRangePicker": {
       "canonicalSymbol": "KrnDateRangePicker",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnDateRangePickerHarness": {
@@ -2106,8 +2106,8 @@
     },
     "KrnDateRangeValue": {
       "canonicalSymbol": "KrnDateRangeValue",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "interface"
     },
     "KrnDateTimeSnapshot": {
@@ -2124,20 +2124,20 @@
     },
     "KrnDescriptionItem": {
       "canonicalSymbol": "KrnDescriptionItem",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnDescriptionList": {
       "canonicalSymbol": "KrnDescriptionList",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnDialog": {
       "canonicalSymbol": "KrnDialog",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnDialogHarness": {
@@ -2154,20 +2154,20 @@
     },
     "KrnDisclosure": {
       "canonicalSymbol": "KrnDisclosure",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnDisplayTone": {
       "canonicalSymbol": "KrnDisplayTone",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "type"
     },
     "KrnDivider": {
       "canonicalSymbol": "KrnDivider",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnDonutChart": {
@@ -2184,14 +2184,14 @@
     },
     "KrnDragDropUpload": {
       "canonicalSymbol": "KrnDropUpload",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnDrawer": {
       "canonicalSymbol": "KrnDrawer",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnDrawerHarness": {
@@ -2202,8 +2202,8 @@
     },
     "KrnDropdownButton": {
       "canonicalSymbol": "KrnDropdownButton",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "class"
     },
     "KrnDropdownButtonHarness": {
@@ -2220,8 +2220,8 @@
     },
     "KrnDropUpload": {
       "canonicalSymbol": "KrnDropUpload",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnDropUploadHarness": {
@@ -2256,20 +2256,20 @@
     },
     "KrnEmptyState": {
       "canonicalSymbol": "KrnEmptyState",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnErrorState": {
       "canonicalSymbol": "KrnErrorState",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnFeedbackTone": {
       "canonicalSymbol": "KrnFeedbackTone",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "type"
     },
     "KrnFeedbackTranslations": {
@@ -2280,8 +2280,8 @@
     },
     "KrnFileUpload": {
       "canonicalSymbol": "KrnFileUpload",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnFileUploadHarness": {
@@ -2316,8 +2316,8 @@
     },
     "KrnFloatingActionButton": {
       "canonicalSymbol": "KrnFloatingActionButton",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "class"
     },
     "KrnFloatingActionButtonHarness": {
@@ -2334,8 +2334,8 @@
     },
     "KrnFloatingActionButtonOptions": {
       "canonicalSymbol": "KrnFloatingActionButtonOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "interface"
     },
     "krnFormatTranslation": {
@@ -2358,8 +2358,8 @@
     },
     "KrnFormField": {
       "canonicalSymbol": "KrnFormField",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnFormFieldHarness": {
@@ -2400,8 +2400,8 @@
     },
     "KrnGrid": {
       "canonicalSymbol": "KrnGrid",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnHarnessText": {
@@ -2412,26 +2412,26 @@
     },
     "KrnHeader": {
       "canonicalSymbol": "KrnHeader",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnHide": {
       "canonicalSymbol": "KrnHide",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnHint": {
       "canonicalSymbol": "KrnHint",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnHoverCard": {
       "canonicalSymbol": "KrnHoverCard",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnI18n": {
@@ -2454,8 +2454,8 @@
     },
     "KrnIconButton": {
       "canonicalSymbol": "KrnIconButton",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "class"
     },
     "KrnIconButtonHarness": {
@@ -2472,8 +2472,8 @@
     },
     "KrnIconButtonOptions": {
       "canonicalSymbol": "KrnIconButtonOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "interface"
     },
     "KrnIconDefinition": {
@@ -2502,8 +2502,8 @@
     },
     "KrnIdentityMatcher": {
       "canonicalSymbol": "KrnIdentityMatcher",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "type"
     },
     "KrnIdService": {
@@ -2512,16 +2512,34 @@
       "owner": "cdk",
       "kind": "class"
     },
+    "krnInheritedLocale": {
+      "canonicalSymbol": "krnInheritedLocale",
+      "importPath": "@kern-ui/angular/core",
+      "owner": "core",
+      "kind": "function"
+    },
     "KrnInline": {
       "canonicalSymbol": "KrnInline",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
+    },
+    "krnInputFallback": {
+      "canonicalSymbol": "krnInputFallback",
+      "importPath": "@kern-ui/angular/core",
+      "owner": "core",
+      "kind": "function"
     },
     "KrnInputMode": {
       "canonicalSymbol": "KrnInputMode",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
+      "kind": "type"
+    },
+    "KrnIntlLocale": {
+      "canonicalSymbol": "KrnIntlLocale",
+      "importPath": "@kern-ui/angular/core",
+      "owner": "core",
       "kind": "type"
     },
     "krnIsElement": {
@@ -2568,20 +2586,20 @@
     },
     "KrnJsonPrimitive": {
       "canonicalSymbol": "KrnJsonPrimitive",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "type"
     },
     "KrnJsonValue": {
       "canonicalSymbol": "KrnJsonValue",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "type"
     },
     "KrnJsonView": {
       "canonicalSymbol": "KrnJsonView",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnJsonViewHarness": {
@@ -2590,40 +2608,46 @@
       "owner": "testing",
       "kind": "class"
     },
+    "KrnJsonViewHarnessFilters": {
+      "canonicalSymbol": "KrnJsonViewHarnessFilters",
+      "importPath": "@kern-ui/angular/testing",
+      "owner": "testing",
+      "kind": "interface"
+    },
     "KrnKeyboardShortcut": {
       "canonicalSymbol": "KrnKeyboardShortcut",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnLabel": {
       "canonicalSymbol": "KrnLabel",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnLayoutAlignment": {
       "canonicalSymbol": "KrnLayoutAlignment",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "type"
     },
     "KrnLayoutAxis": {
       "canonicalSymbol": "KrnLayoutAxis",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "type"
     },
     "KrnLayoutJustification": {
       "canonicalSymbol": "KrnLayoutJustification",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "type"
     },
     "KrnLayoutSpace": {
       "canonicalSymbol": "KrnLayoutSpace",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "type"
     },
     "KrnLayoutTranslations": {
@@ -2646,8 +2670,8 @@
     },
     "KrnLink": {
       "canonicalSymbol": "KrnLink",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "class"
     },
     "KrnLinkHarness": {
@@ -2664,20 +2688,20 @@
     },
     "KrnList": {
       "canonicalSymbol": "KrnList",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnListItem": {
       "canonicalSymbol": "KrnListItem",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnLoadingOverlay": {
       "canonicalSymbol": "KrnLoadingOverlay",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "krnLocaleConfig": {
@@ -2718,26 +2742,26 @@
     },
     "KrnMenu": {
       "canonicalSymbol": "KrnMenu",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "class"
     },
     "KrnMenuAlignment": {
       "canonicalSymbol": "KrnMenuAlignment",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "type"
     },
     "KrnMenubar": {
       "canonicalSymbol": "KrnMenubar",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "class"
     },
     "KrnMenuButtonOptions": {
       "canonicalSymbol": "KrnMenuButtonOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "interface"
     },
     "KrnMenuHarness": {
@@ -2748,14 +2772,14 @@
     },
     "KrnMenuTrigger": {
       "canonicalSymbol": "KrnMenuTrigger",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "class"
     },
     "KrnMeter": {
       "canonicalSymbol": "KrnMeter",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnMobileNavigation": {
@@ -2772,8 +2796,8 @@
     },
     "KrnMultiSelect": {
       "canonicalSymbol": "KrnMultiSelect",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnMultiSelectHarness": {
@@ -2790,26 +2814,26 @@
     },
     "KrnNativeSelect": {
       "canonicalSymbol": "KrnNativeSelect",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnNavigationItem": {
       "canonicalSymbol": "KrnNavigationItem",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "interface"
     },
     "KrnNavigationOrientation": {
       "canonicalSymbol": "KrnNavigationOrientation",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "type"
     },
     "KrnNavigationRail": {
       "canonicalSymbol": "KrnNavigationRail",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnNavigationTranslations": {
@@ -2832,8 +2856,8 @@
     },
     "KrnNumberInput": {
       "canonicalSymbol": "KrnNumberInput",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnOklchColor": {
@@ -2844,62 +2868,62 @@
     },
     "KrnOptionDisabledHandler": {
       "canonicalSymbol": "KrnOptionDisabledHandler",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "type"
     },
     "KrnOptionFilter": {
       "canonicalSymbol": "KrnOptionFilter",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "type"
     },
     "KrnOptionsState": {
       "canonicalSymbol": "KrnOptionsState",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "type"
     },
     "KrnOptionStringifier": {
       "canonicalSymbol": "KrnOptionStringifier",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "type"
     },
     "KrnOptionTrackBy": {
       "canonicalSymbol": "KrnOptionTrackBy",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "type"
     },
     "KrnOrientation": {
       "canonicalSymbol": "KrnOrientation",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "type"
     },
     "KrnOtpInput": {
       "canonicalSymbol": "KrnOtpInput",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnOverlayCloseReason": {
       "canonicalSymbol": "KrnOverlayCloseReason",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "type"
     },
     "KrnOverlayConfig": {
       "canonicalSymbol": "KrnOverlayConfig",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "type"
     },
     "KrnOverlayContent": {
       "canonicalSymbol": "KrnOverlayContent",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "interface"
     },
     "KrnOverlayCoordinator": {
@@ -2910,8 +2934,8 @@
     },
     "KrnOverlayDismissReason": {
       "canonicalSymbol": "KrnOverlayDismissReason",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "type"
     },
     "KrnOverlayHarness": {
@@ -2946,50 +2970,50 @@
     },
     "KrnOverlayOutcome": {
       "canonicalSymbol": "KrnOverlayOutcome",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "type"
     },
     "KrnOverlayPosition": {
       "canonicalSymbol": "KrnOverlayPosition",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "type"
     },
     "KrnOverlayRef": {
       "canonicalSymbol": "KrnOverlayRef",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnOverlayService": {
       "canonicalSymbol": "KrnOverlayService",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnOverlaySide": {
       "canonicalSymbol": "KrnOverlaySide",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "type"
     },
     "KrnOverlaySize": {
       "canonicalSymbol": "KrnOverlaySize",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "type"
     },
     "KrnOverlayTemplateContext": {
       "canonicalSymbol": "KrnOverlayTemplateContext",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "interface"
     },
     "KrnOverlayVariant": {
       "canonicalSymbol": "KrnOverlayVariant",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "type"
     },
     "KrnPageHeader": {
@@ -3000,14 +3024,14 @@
     },
     "KrnPagination": {
       "canonicalSymbol": "KrnPagination",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "class"
     },
     "KrnPasswordInput": {
       "canonicalSymbol": "KrnPasswordInput",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnPatternTranslations": {
@@ -3036,8 +3060,8 @@
     },
     "KrnPopover": {
       "canonicalSymbol": "KrnPopover",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "krnPrefersReducedMotion": {
@@ -3072,20 +3096,20 @@
     },
     "KrnProgressBar": {
       "canonicalSymbol": "KrnProgressBar",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnRadio": {
       "canonicalSymbol": "KrnRadio",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnRadioGroup": {
       "canonicalSymbol": "KrnRadioGroup",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnRadius": {
@@ -3096,20 +3120,20 @@
     },
     "KrnRangeSlider": {
       "canonicalSymbol": "KrnRangeSlider",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnRangeValue": {
       "canonicalSymbol": "KrnRangeValue",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "interface"
     },
     "KrnRating": {
       "canonicalSymbol": "KrnRating",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "krnReadI18nValue": {
@@ -3120,8 +3144,8 @@
     },
     "KrnResizablePanel": {
       "canonicalSymbol": "KrnResizablePanel",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnResizablePanelHarness": {
@@ -3138,8 +3162,8 @@
     },
     "KrnResizablePanels": {
       "canonicalSymbol": "KrnResizablePanels",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnResizablePanelsHarness": {
@@ -3156,8 +3180,8 @@
     },
     "KrnResizeHandle": {
       "canonicalSymbol": "KrnResizeHandle",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnResizeHandleHarness": {
@@ -3171,6 +3195,12 @@
       "importPath": "@kern-ui/angular/testing",
       "owner": "testing",
       "kind": "interface"
+    },
+    "krnResolvedLocale": {
+      "canonicalSymbol": "krnResolvedLocale",
+      "importPath": "@kern-ui/angular/core",
+      "owner": "core",
+      "kind": "function"
     },
     "KrnResolvedTheme": {
       "canonicalSymbol": "KrnResolvedTheme",
@@ -3186,26 +3216,26 @@
     },
     "KrnResponsiveBreakpoint": {
       "canonicalSymbol": "KrnResponsiveBreakpoint",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "type"
     },
     "KrnResponsiveDisplay": {
       "canonicalSymbol": "KrnResponsiveDisplay",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "type"
     },
     "KrnResponsiveMedia": {
       "canonicalSymbol": "KrnResponsiveMedia",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnResponsiveShowHide": {
       "canonicalSymbol": "KrnShow",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnScheduledHandle": {
@@ -3216,14 +3246,14 @@
     },
     "KrnScrollArea": {
       "canonicalSymbol": "KrnScrollArea",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnSearchInput": {
       "canonicalSymbol": "KrnSearchInput",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnSearchResult": {
@@ -3234,38 +3264,38 @@
     },
     "KrnSegmentDisabledHandler": {
       "canonicalSymbol": "KrnSegmentDisabledHandler",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "type"
     },
     "KrnSegmentedControl": {
       "canonicalSymbol": "KrnSegmentedControl",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnSegmentOption": {
       "canonicalSymbol": "KrnSegmentOption",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "interface"
     },
     "KrnSegmentOptionContext": {
       "canonicalSymbol": "KrnSegmentOptionContext",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "interface"
     },
     "KrnSegmentTrackBy": {
       "canonicalSymbol": "KrnSegmentTrackBy",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "type"
     },
     "KrnSelect": {
       "canonicalSymbol": "KrnSelect",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnSelectHarness": {
@@ -3282,14 +3312,14 @@
     },
     "KrnSelectOption": {
       "canonicalSymbol": "KrnSelectOption",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "interface"
     },
     "KrnSelectOptionContext": {
       "canonicalSymbol": "KrnSelectOptionContext",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "interface"
     },
     "KrnSelectOptionHarness": {
@@ -3312,44 +3342,44 @@
     },
     "KrnShow": {
       "canonicalSymbol": "KrnShow",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnSidebar": {
       "canonicalSymbol": "KrnSidebar",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnSize": {
       "canonicalSymbol": "KrnSize",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "type"
     },
     "KrnSkeleton": {
       "canonicalSymbol": "KrnSkeleton",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnSkipLink": {
       "canonicalSymbol": "KrnSkipLink",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "class"
     },
     "KrnSlider": {
       "canonicalSymbol": "KrnSlider",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnSnackbar": {
       "canonicalSymbol": "KrnToastViewport",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnSpace": {
@@ -3360,20 +3390,20 @@
     },
     "KrnSpacer": {
       "canonicalSymbol": "KrnSpacer",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnSpinner": {
       "canonicalSymbol": "KrnSpinner",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnSplitButton": {
       "canonicalSymbol": "KrnSplitButton",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "class"
     },
     "KrnSplitButtonHarness": {
@@ -3390,74 +3420,74 @@
     },
     "KrnSplitLayout": {
       "canonicalSymbol": "KrnSplitLayout",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnSplitRatio": {
       "canonicalSymbol": "KrnSplitRatio",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "type"
     },
     "KrnStack": {
       "canonicalSymbol": "KrnStack",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/layout",
+      "owner": "layout",
       "kind": "class"
     },
     "KrnStat": {
       "canonicalSymbol": "KrnStat",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnStatusBadge": {
       "canonicalSymbol": "KrnBadge",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnStepItem": {
       "canonicalSymbol": "KrnStepItem",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "interface"
     },
     "KrnStepper": {
       "canonicalSymbol": "KrnStepper",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "class"
     },
     "KrnSuccessState": {
       "canonicalSymbol": "KrnSuccessState",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnSwitch": {
       "canonicalSymbol": "KrnSwitch",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnTabItem": {
       "canonicalSymbol": "KrnTabItem",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "interface"
     },
     "KrnTableOfContents": {
       "canonicalSymbol": "KrnTableOfContents",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "class"
     },
     "KrnTabs": {
       "canonicalSymbol": "KrnTabs",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "class"
     },
     "KrnTabsHarness": {
@@ -3468,26 +3498,26 @@
     },
     "KrnTag": {
       "canonicalSymbol": "KrnChip",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnTagsInput": {
       "canonicalSymbol": "KrnTagsInput",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnTextarea": {
       "canonicalSymbol": "KrnTextarea",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnTextInput": {
       "canonicalSymbol": "KrnTextInput",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnTheme": {
@@ -3516,20 +3546,20 @@
     },
     "KrnTimeline": {
       "canonicalSymbol": "KrnTimeline",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnTimelineItem": {
       "canonicalSymbol": "KrnTimelineItem",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnTimePicker": {
       "canonicalSymbol": "KrnTimePicker",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnTimePickerHarness": {
@@ -3546,38 +3576,38 @@
     },
     "KrnToast": {
       "canonicalSymbol": "KrnToastViewport",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnToastOptions": {
       "canonicalSymbol": "KrnToastOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "interface"
     },
     "KrnToastPauseReason": {
       "canonicalSymbol": "KrnToastPauseReason",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "type"
     },
     "KrnToastPosition": {
       "canonicalSymbol": "KrnToastPosition",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "type"
     },
     "KrnToastRecord": {
       "canonicalSymbol": "KrnToastRecord",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "interface"
     },
     "KrnToastService": {
       "canonicalSymbol": "KrnToastService",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnToastTranslations": {
@@ -3588,8 +3618,8 @@
     },
     "KrnToastViewport": {
       "canonicalSymbol": "KrnToastViewport",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnToastViewportHarness": {
@@ -3600,14 +3630,14 @@
     },
     "KrnTocItem": {
       "canonicalSymbol": "KrnTocItem",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "interface"
     },
     "KrnToggleButton": {
       "canonicalSymbol": "KrnToggleButton",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "class"
     },
     "KrnToggleButtonHarness": {
@@ -3624,14 +3654,14 @@
     },
     "KrnToggleButtonOptions": {
       "canonicalSymbol": "KrnToggleButtonOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "interface"
     },
     "KrnToggleGroup": {
       "canonicalSymbol": "KrnToggleGroup",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "class"
     },
     "KrnToggleGroupHarness": {
@@ -3648,8 +3678,8 @@
     },
     "KrnToggleGroupOptions": {
       "canonicalSymbol": "KrnToggleGroupOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "interface"
     },
     "KrnTokenDescriptor": {
@@ -3690,14 +3720,14 @@
     },
     "KrnTone": {
       "canonicalSymbol": "KrnTone",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "type"
     },
     "KrnTooltip": {
       "canonicalSymbol": "KrnTooltip",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/feedback",
+      "owner": "feedback",
       "kind": "class"
     },
     "KrnTranslations": {
@@ -3714,14 +3744,14 @@
     },
     "KrnTree": {
       "canonicalSymbol": "KrnTree",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "class"
     },
     "KrnTreeChildrenState": {
       "canonicalSymbol": "KrnTreeChildrenState",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "type"
     },
     "KrnTreeHarness": {
@@ -3738,8 +3768,8 @@
     },
     "KrnTreeNavigation": {
       "canonicalSymbol": "KrnTreeNavigation",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "class"
     },
     "KrnTreeNavigationHarness": {
@@ -3750,14 +3780,14 @@
     },
     "KrnTreeNavigationItem": {
       "canonicalSymbol": "KrnTreeNavigationItem",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "interface"
     },
     "KrnTreeNode": {
       "canonicalSymbol": "KrnTreeNode",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/data-display",
+      "owner": "data-display",
       "kind": "interface"
     },
     "KrnUploadHarness": {
@@ -3768,8 +3798,8 @@
     },
     "KrnUploadRejection": {
       "canonicalSymbol": "KrnUploadRejection",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "interface"
     },
     "KrnUserMenu": {
@@ -3780,20 +3810,20 @@
     },
     "KrnValidationMessage": {
       "canonicalSymbol": "KrnValidationMessage",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnVerificationCode": {
       "canonicalSymbol": "KrnOtpInput",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/forms",
+      "owner": "forms",
       "kind": "class"
     },
     "KrnVerticalTabs": {
       "canonicalSymbol": "KrnTabs",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/navigation",
+      "owner": "navigation",
       "kind": "class"
     },
     "ɵgetKrnDocumentRuntimeChannel": {
@@ -3816,32 +3846,32 @@
     },
     "provideKrnButtonGroupOptions": {
       "canonicalSymbol": "provideKrnButtonGroupOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "provideKrnButtonOptions": {
       "canonicalSymbol": "provideKrnButtonOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "provideKrnCopyButtonOptions": {
       "canonicalSymbol": "provideKrnCopyButtonOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "provideKrnFloatingActionButtonOptions": {
       "canonicalSymbol": "provideKrnFloatingActionButtonOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "provideKrnIconButtonOptions": {
       "canonicalSymbol": "provideKrnIconButtonOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "provideKrnIcons": {
@@ -3852,8 +3882,8 @@
     },
     "provideKrnMenuButtonOptions": {
       "canonicalSymbol": "provideKrnMenuButtonOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "provideKrnTheme": {
@@ -3864,14 +3894,14 @@
     },
     "provideKrnToggleButtonOptions": {
       "canonicalSymbol": "provideKrnToggleButtonOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "provideKrnToggleGroupOptions": {
       "canonicalSymbol": "provideKrnToggleGroupOptions",
-      "importPath": "@kern-ui/angular/kit",
-      "owner": "kit",
+      "importPath": "@kern-ui/angular/actions",
+      "owner": "actions",
       "kind": "constant"
     },
     "provideKrnTranslationBridge": {

@@ -2,7 +2,7 @@
 
 - ID: `pagination`
 - Selector: `krn-pagination`
-- Import: `import { KrnPagination } from '@kern-ui/angular/kit';`
+- Import: `import { KrnPagination } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnPagination`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnPagination } from '@kern-ui/angular/kit';
+import { KrnPagination } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-pagination-agent-example',

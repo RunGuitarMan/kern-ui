@@ -9,8 +9,8 @@
   "symbol": "KrnSpacer",
   "canonicalSymbol": "KrnSpacer",
   "canonicalId": "spacer",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -93,7 +93,7 @@
       "title": "Semantic layout spacer",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Semantic layout spacer\n *\n * Reserve tokenized vertical space between independent regions.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSpacer } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-spacer-agent-example',\n  standalone: true,\n  imports: [KrnSpacer],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <p>Summary</p>\n    <krn-spacer size=\"6\" axis=\"vertical\" />\n    <p>Detailed report</p>\n  `,\n})\nexport class KernSpacerAgentExample {}\n\nvoid bootstrapApplication(KernSpacerAgentExample);\n",
+      "code": "/**\n * Semantic layout spacer\n *\n * Reserve tokenized vertical space between independent regions.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSpacer } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-spacer-agent-example',\n  standalone: true,\n  imports: [KrnSpacer],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <p>Summary</p>\n    <krn-spacer size=\"6\" axis=\"vertical\" />\n    <p>Detailed report</p>\n  `,\n})\nexport class KernSpacerAgentExample {}\n\nvoid bootstrapApplication(KernSpacerAgentExample);\n",
       "verification": "compiled",
       "source": "examples/spacer.ts"
     }

@@ -42,5 +42,5 @@ it('serves initialize, tools/list and tools/call over read-only stdio JSON-RPC',
   assert.equal(responses[0].result.serverInfo.name, 'kern-agent-contract');
   assert.equal(responses[1].result.tools.length, 7);
   assert.equal(responses[2].result.structuredContent.id, 'button');
-  assert.equal(responses[2].result.structuredContent.importPath, '@kern-ui/angular/kit');
+  assert.equal(responses[2].result.structuredContent.importPath, '@kern-ui/angular/actions');
 });

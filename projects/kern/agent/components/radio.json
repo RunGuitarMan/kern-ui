@@ -9,8 +9,8 @@
   "symbol": "KrnRadio",
   "canonicalSymbol": "KrnRadio",
   "canonicalId": "radio",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -222,7 +222,7 @@
       "title": "Individual radio option",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Individual radio option\n *\n * Provide a stable submitted value and visible option label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnRadio } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-radio-agent-example',\n  standalone: true,\n  imports: [KrnRadio],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-radio name=\"plan\" value=\"enterprise\">Enterprise plan</krn-radio> `,\n})\nexport class KernRadioAgentExample {}\n\nvoid bootstrapApplication(KernRadioAgentExample);\n",
+      "code": "/**\n * Individual radio option\n *\n * Provide a stable submitted value and visible option label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnRadio } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-radio-agent-example',\n  standalone: true,\n  imports: [KrnRadio],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-radio name=\"plan\" value=\"enterprise\">Enterprise plan</krn-radio> `,\n})\nexport class KernRadioAgentExample {}\n\nvoid bootstrapApplication(KernRadioAgentExample);\n",
       "verification": "compiled",
       "source": "examples/radio.ts"
     }

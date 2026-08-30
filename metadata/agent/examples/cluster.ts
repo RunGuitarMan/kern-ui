@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCluster } from '@kern-ui/angular/kit';
+import { KrnCluster } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-cluster-agent-example',

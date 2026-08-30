@@ -2,7 +2,7 @@
 
 - ID: `tabs`
 - Selector: `krn-tabs`
-- Import: `import { KrnTabs } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTabs } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnTabs`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTabs, type KrnTabItem } from '@kern-ui/angular/kit';
+import { KrnTabs, type KrnTabItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-tabs-agent-example',

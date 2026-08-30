@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDropdownButton, provideKrnMenuButtonOptions } from '@kern-ui/angular/kit';
+import { KrnDropdownButton, provideKrnMenuButtonOptions } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-dropdown-button-agent-example',

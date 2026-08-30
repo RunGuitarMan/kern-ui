@@ -9,8 +9,8 @@
   "symbol": "KrnListItem",
   "canonicalSymbol": "KrnListItem",
   "canonicalId": "list-item",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -123,7 +123,7 @@
       "title": "Customer list row",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Customer list row\n *\n * Compose leading identity, text and trailing metadata.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnListItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-list-item-agent-example',\n  standalone: true,\n  imports: [KrnListItem],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-list-item heading=\"Acme Europe\" [selected]=\"true\">\n      <span krnListLeading aria-hidden=\"true\">AC</span>\n      Enterprise account\n      <span krnListTrailing>Healthy</span>\n    </krn-list-item>\n  `,\n})\nexport class KernListItemAgentExample {}\n\nvoid bootstrapApplication(KernListItemAgentExample);\n",
+      "code": "/**\n * Customer list row\n *\n * Compose leading identity, text and trailing metadata.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnListItem } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-list-item-agent-example',\n  standalone: true,\n  imports: [KrnListItem],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-list-item heading=\"Acme Europe\" [selected]=\"true\">\n      <span krnListLeading aria-hidden=\"true\">AC</span>\n      Enterprise account\n      <span krnListTrailing>Healthy</span>\n    </krn-list-item>\n  `,\n})\nexport class KernListItemAgentExample {}\n\nvoid bootstrapApplication(KernListItemAgentExample);\n",
       "verification": "compiled",
       "source": "examples/list-item.ts"
     }

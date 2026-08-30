@@ -2,7 +2,7 @@
 
 - ID: `stepper`
 - Selector: `krn-stepper`
-- Import: `import { KrnStepper } from '@kern-ui/angular/kit';`
+- Import: `import { KrnStepper } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnStepper`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnStepper, type KrnStepItem } from '@kern-ui/angular/kit';
+import { KrnStepper, type KrnStepItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-stepper-agent-example',

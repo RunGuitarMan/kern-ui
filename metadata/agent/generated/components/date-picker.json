@@ -9,8 +9,8 @@
   "symbol": "KrnDatePicker",
   "canonicalSymbol": "KrnDatePicker",
   "canonicalId": "date-picker",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -296,7 +296,7 @@
       "title": "Typed renewal date",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed renewal date\n *\n * Bind an ISO date string with explicit locale and reference date.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDatePicker } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-date-picker-agent-example',\n  standalone: true,\n  imports: [KrnDatePicker, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-date-picker\n      ariaLabel=\"Renewal date\"\n      locale=\"en-GB\"\n      today=\"2026-07-29\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernDatePickerAgentExample {\n  readonly control = new FormControl<string>('2026-10-15', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernDatePickerAgentExample);\n",
+      "code": "/**\n * Typed renewal date\n *\n * Bind an ISO date string with explicit locale and reference date.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDatePicker } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-date-picker-agent-example',\n  standalone: true,\n  imports: [KrnDatePicker, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-date-picker\n      ariaLabel=\"Renewal date\"\n      locale=\"en-GB\"\n      today=\"2026-07-29\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernDatePickerAgentExample {\n  readonly control = new FormControl<string>('2026-10-15', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernDatePickerAgentExample);\n",
       "verification": "compiled",
       "source": "examples/date-picker.ts"
     }

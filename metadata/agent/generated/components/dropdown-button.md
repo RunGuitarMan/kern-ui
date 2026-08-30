@@ -2,7 +2,7 @@
 
 - ID: `dropdown-button`
 - Selector: `krn-dropdown-button`
-- Import: `import { KrnDropdownButton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDropdownButton } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnDropdownButton`
 - Lifecycle: **stable**
 - Category: Actions
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDropdownButton, provideKrnMenuButtonOptions } from '@kern-ui/angular/kit';
+import { KrnDropdownButton, provideKrnMenuButtonOptions } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-dropdown-button-agent-example',

@@ -2,7 +2,7 @@
 
 - ID: `radio`
 - Selector: `krn-radio`
-- Import: `import { KrnRadio } from '@kern-ui/angular/kit';`
+- Import: `import { KrnRadio } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnRadio`
 - Lifecycle: **stable**
 - Category: Forms
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnRadio } from '@kern-ui/angular/kit';
+import { KrnRadio } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-radio-agent-example',

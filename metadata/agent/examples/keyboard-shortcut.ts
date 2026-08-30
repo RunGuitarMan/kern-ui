@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnKeyboardShortcut } from '@kern-ui/angular/kit';
+import { KrnKeyboardShortcut } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-keyboard-shortcut-agent-example',

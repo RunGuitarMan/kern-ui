@@ -2,7 +2,7 @@
 
 - ID: `button`
 - Selector: `button[krnButton]`
-- Import: `import { KrnButton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnButton } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnButton`
 - Lifecycle: **stable**
 - Category: Actions
@@ -27,7 +27,7 @@ Avoid: Do not add role="button", proxy click through a custom output, or use But
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnButton, provideKrnButtonOptions } from '@kern-ui/angular/kit';
+import { KrnButton, provideKrnButtonOptions } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-button-agent-example',

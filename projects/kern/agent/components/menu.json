@@ -9,8 +9,8 @@
   "symbol": "KrnMenu",
   "canonicalSymbol": "KrnMenu",
   "canonicalId": "menu",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -178,7 +178,7 @@
       "title": "Controlled record action menu",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled record action menu\n *\n * Render typed actions and own disclosure state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnMenu, type KrnNavigationItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-menu-agent-example',\n  standalone: true,\n  imports: [KrnMenu],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-menu triggerLabel=\"Record actions\" [items]=\"items\" [(open)]=\"open\" /> `,\n})\nexport class KernMenuAgentExample {\n  readonly items: readonly (KrnNavigationItem & { readonly shortcut?: string })[] = [\n    { id: 'duplicate', label: 'Duplicate', shortcut: '⌘D' },\n    { id: 'archive', label: 'Archive' },\n  ];\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernMenuAgentExample);\n",
+      "code": "/**\n * Controlled record action menu\n *\n * Render typed actions and own disclosure state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnMenu, type KrnNavigationItem } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-menu-agent-example',\n  standalone: true,\n  imports: [KrnMenu],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-menu triggerLabel=\"Record actions\" [items]=\"items\" [(open)]=\"open\" /> `,\n})\nexport class KernMenuAgentExample {\n  readonly items: readonly (KrnNavigationItem & { readonly shortcut?: string })[] = [\n    { id: 'duplicate', label: 'Duplicate', shortcut: '⌘D' },\n    { id: 'archive', label: 'Archive' },\n  ];\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernMenuAgentExample);\n",
       "verification": "compiled",
       "source": "examples/menu.ts"
     }

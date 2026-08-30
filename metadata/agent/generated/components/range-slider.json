@@ -9,8 +9,8 @@
   "symbol": "KrnRangeSlider",
   "canonicalSymbol": "KrnRangeSlider",
   "canonicalId": "range-slider",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -239,7 +239,7 @@
       "title": "Typed contract-value range",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed contract-value range\n *\n * Bind start and end values through the public range value type.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnRangeSlider, type KrnRangeValue } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-range-slider-agent-example',\n  standalone: true,\n  imports: [KrnRangeSlider, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-range-slider\n      label=\"Contract value range\"\n      startLabel=\"Minimum value\"\n      endLabel=\"Maximum value\"\n      [min]=\"0\"\n      [max]=\"100\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernRangeSliderAgentExample {\n  readonly control = new FormControl<KrnRangeValue>({ start: 20, end: 80 }, { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernRangeSliderAgentExample);\n",
+      "code": "/**\n * Typed contract-value range\n *\n * Bind start and end values through the public range value type.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnRangeSlider, type KrnRangeValue } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-range-slider-agent-example',\n  standalone: true,\n  imports: [KrnRangeSlider, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-range-slider\n      label=\"Contract value range\"\n      startLabel=\"Minimum value\"\n      endLabel=\"Maximum value\"\n      [min]=\"0\"\n      [max]=\"100\"\n      [formControl]=\"control\"\n    />\n  `,\n})\nexport class KernRangeSliderAgentExample {\n  readonly control = new FormControl<KrnRangeValue>({ start: 20, end: 80 }, { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernRangeSliderAgentExample);\n",
       "verification": "compiled",
       "source": "examples/range-slider.ts"
     }

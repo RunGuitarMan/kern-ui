@@ -878,7 +878,9 @@ export const appConfig: ApplicationConfig = {
     assert.match(source, /FormGroup/);
     assert.match(source, /nonNullable: true/);
     assert.match(source, /output<AccountProfileFormValue>/);
-    assert.match(source, /from '@kern-ui\/angular\/kit'/);
+    assert.match(source, /KrnButton } from '@kern-ui\/angular\/actions'/);
+    assert.match(source, /KrnFormField, KrnTextInput } from '@kern-ui\/angular\/forms'/);
+    assert.doesNotMatch(source, /from '@kern-ui\/angular\/kit'/);
     assert.doesNotMatch(source, /from '@kern-ui\/angular';/);
     assertTypeScriptSyntax(source, file);
   });
@@ -997,7 +999,8 @@ export const imports = [KrnButton, KrnDataGrid];
     const template = first.readText('/projects/app/src/app/app.html');
 
     assert.match(source, /from '@kern-ui\/angular\/addon-grid'/);
-    assert.match(source, /from '@kern-ui\/angular\/kit'/);
+    assert.match(source, /from '@kern-ui\/angular\/actions'/);
+    assert.doesNotMatch(source, /from '@kern-ui\/angular\/kit'/);
     assert.doesNotMatch(source, /from '@kern-ui\/angular';/);
     assert.match(template, /\[mode\]="\{ kind: 'client', pagination: false \}"/);
     assert.equal(second.readText('/projects/app/src/app/app.ts'), source);
@@ -1062,7 +1065,8 @@ export class App {
     assert.doesNotMatch(firstSource, /from '@kern-ui\/angular';/);
     assert.match(firstSource, /from '@kern-ui\/angular\/addon-grid'/);
     assert.match(firstSource, /from '@kern-ui\/angular\/core'/);
-    assert.match(firstSource, /from '@kern-ui\/angular\/kit'/);
+    assert.match(firstSource, /from '@kern-ui\/angular\/actions'/);
+    assert.doesNotMatch(firstSource, /from '@kern-ui\/angular\/kit'/);
     assert.match(firstSource, /from '@kern-ui\/angular\/patterns'/);
     assert.equal(count(firstTemplate, /\[mode\]="\{ kind: 'client', pagination: false \}"/g), 2);
     assert.equal(count(firstTemplate, /\[mode\]="\{ kind: 'client', pagination: true \}"/g), 4);
@@ -1200,6 +1204,6 @@ export const imports = [KrnButton];
 
     const result = await runner.runSchematic('migration-v1', {}, tree);
 
-    assert.match(result.readText('/src/app/app.ts'), /from '@kern-ui\/angular\/kit'/);
+    assert.match(result.readText('/src/app/app.ts'), /from '@kern-ui\/angular\/actions'/);
   });
 });

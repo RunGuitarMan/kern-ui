@@ -10,6 +10,7 @@ import { internalButtonTriggerViolations } from './trigger-slot-policy.mjs';
 
 const workspaceRoot = resolve(import.meta.dirname, '../..');
 const manifestPath = join(workspaceRoot, 'metadata/agent/generated/component-manifest.json');
+const inventoryPath = join(workspaceRoot, 'projects/kern/api/component-inventory.json');
 const outputRoots = [
   join(workspaceRoot, 'metadata/agent/examples'),
   join(workspaceRoot, 'projects/kern/agent/examples'),
@@ -158,7 +159,21 @@ void bootstrapApplication(${className});
 
 async function expectedOutputs() {
   const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
-  const componentIds = manifest.components.map((component) => component.id);
+  const inventory = JSON.parse(await readFile(inventoryPath, 'utf8'));
+  const symbolOwners = new Map(
+    manifest.symbols.flatMap((symbol) =>
+      [symbol.name, ...(symbol.aliases ?? [])].map((name) => [name, symbol.importPath]),
+    ),
+  );
+  const inventoryByCatalogId = new Map(
+    inventory.units.flatMap((unit) => unit.catalog.map((catalog) => [catalog.id, unit])),
+  );
+  const components = manifest.components.map((component) => {
+    const owner = inventoryByCatalogId.get(component.id);
+    if (!owner) throw new Error(`Component inventory has no catalog owner for "${component.id}".`);
+    return { ...component, owner: owner.entrypoint, importPath: owner.importPath };
+  });
+  const componentIds = components.map((component) => component.id);
   const recipeIds = Object.keys(KERN_AGENT_EXAMPLE_RECIPES);
   const missing = componentIds.filter((id) => !recipeIds.includes(id));
   const stale = recipeIds.filter((id) => !componentIds.includes(id));
@@ -176,8 +191,26 @@ async function expectedOutputs() {
   const prettierConfig = (await resolveConfig(join(workspaceRoot, 'package.json'))) ?? {};
   const files = new Map();
   const records = [];
-  for (const component of manifest.components) {
+  for (const component of components) {
     const recipe = KERN_AGENT_EXAMPLE_RECIPES[component.id];
+    for (const imports of [recipe.valueImports ?? {}, recipe.typeImports ?? {}]) {
+      for (const [moduleName, symbols] of Object.entries(imports)) {
+        if (!moduleName.startsWith(`${manifest.library.package}/`)) continue;
+        for (const symbol of symbols) {
+          const owner = symbolOwners.get(symbol);
+          if (!owner) {
+            throw new Error(
+              `Agent example "${component.id}" imports unknown KERN symbol ${symbol}.`,
+            );
+          }
+          if (owner !== moduleName) {
+            throw new Error(
+              `Agent example "${component.id}" imports ${symbol} from ${moduleName}; canonical owner is ${owner}.`,
+            );
+          }
+        }
+      }
+    }
     const rendered = renderExample(component, recipe);
     const formatted = await format(rendered.source, {
       ...prettierConfig,

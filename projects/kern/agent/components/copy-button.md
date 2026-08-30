@@ -2,7 +2,7 @@
 
 - ID: `copy-button`
 - Selector: `krn-copy-button`
-- Import: `import { KrnCopyButton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCopyButton } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnCopyButton`
 - Lifecycle: **stable**
 - Category: Actions
@@ -27,7 +27,7 @@ Avoid: Do not scrape projected DOM text, mutate navigator.clipboard in tests, or
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCopyButton, provideKrnCopyButtonOptions } from '@kern-ui/angular/kit';
+import { KrnCopyButton, provideKrnCopyButtonOptions } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-copy-button-agent-example',

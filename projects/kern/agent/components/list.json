@@ -9,8 +9,8 @@
   "symbol": "KrnList",
   "canonicalSymbol": "KrnList",
   "canonicalId": "list",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -109,7 +109,7 @@
       "title": "Selected customer list",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Selected customer list\n *\n * Compose semantic list items and expose current selection.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnList, KrnListItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-list-agent-example',\n  standalone: true,\n  imports: [KrnList, KrnListItem],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-list role=\"listbox\" ariaLabel=\"Customers\">\n      <krn-list-item heading=\"Acme Europe\" [selected]=\"true\"> Enterprise · Healthy </krn-list-item>\n      <krn-list-item heading=\"Globex\">Commercial · Review needed</krn-list-item>\n    </krn-list>\n  `,\n})\nexport class KernListAgentExample {}\n\nvoid bootstrapApplication(KernListAgentExample);\n",
+      "code": "/**\n * Selected customer list\n *\n * Compose semantic list items and expose current selection.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnList, KrnListItem } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-list-agent-example',\n  standalone: true,\n  imports: [KrnList, KrnListItem],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-list role=\"listbox\" ariaLabel=\"Customers\">\n      <krn-list-item heading=\"Acme Europe\" [selected]=\"true\"> Enterprise · Healthy </krn-list-item>\n      <krn-list-item heading=\"Globex\">Commercial · Review needed</krn-list-item>\n    </krn-list>\n  `,\n})\nexport class KernListAgentExample {}\n\nvoid bootstrapApplication(KernListAgentExample);\n",
       "verification": "compiled",
       "source": "examples/list.ts"
     }

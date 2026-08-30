@@ -9,8 +9,8 @@
   "symbol": "KrnFormField",
   "canonicalSymbol": "KrnFormField",
   "canonicalId": "form-field",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -146,7 +146,7 @@
       "title": "Labeled reactive form field",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Labeled reactive form field\n *\n * Compose visible label, control and hint around one typed FormControl.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnFormField, KrnHint, KrnLabel, KrnTextInput } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-form-field-agent-example',\n  standalone: true,\n  imports: [KrnFormField, ReactiveFormsModule, KrnHint, KrnLabel, KrnTextInput],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-form-field>\n      <krn-label for=\"account-name\">Account name</krn-label>\n      <krn-text-input id=\"account-name\" [formControl]=\"control\" />\n      <krn-hint>Use the legal customer name.</krn-hint>\n    </krn-form-field>\n  `,\n})\nexport class KernFormFieldAgentExample {\n  readonly control = new FormControl<string>('Acme Europe', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernFormFieldAgentExample);\n",
+      "code": "/**\n * Labeled reactive form field\n *\n * Compose visible label, control and hint around one typed FormControl.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnFormField, KrnHint, KrnLabel, KrnTextInput } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-form-field-agent-example',\n  standalone: true,\n  imports: [KrnFormField, ReactiveFormsModule, KrnHint, KrnLabel, KrnTextInput],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-form-field>\n      <krn-label for=\"account-name\">Account name</krn-label>\n      <krn-text-input id=\"account-name\" [formControl]=\"control\" />\n      <krn-hint>Use the legal customer name.</krn-hint>\n    </krn-form-field>\n  `,\n})\nexport class KernFormFieldAgentExample {\n  readonly control = new FormControl<string>('Acme Europe', { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernFormFieldAgentExample);\n",
       "verification": "compiled",
       "source": "examples/form-field.ts"
     }

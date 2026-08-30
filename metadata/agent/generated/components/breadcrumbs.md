@@ -2,7 +2,7 @@
 
 - ID: `breadcrumbs`
 - Selector: `krn-breadcrumbs`
-- Import: `import { KrnBreadcrumbs } from '@kern-ui/angular/kit';`
+- Import: `import { KrnBreadcrumbs } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnBreadcrumbs`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnBreadcrumbs, type KrnBreadcrumbItem } from '@kern-ui/angular/kit';
+import { KrnBreadcrumbs, type KrnBreadcrumbItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-breadcrumbs-agent-example',

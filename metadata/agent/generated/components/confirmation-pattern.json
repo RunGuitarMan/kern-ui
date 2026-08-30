@@ -9,8 +9,8 @@
   "symbol": "KrnConfirmationPattern",
   "canonicalSymbol": "KrnConfirmation",
   "canonicalId": "confirmation-pattern",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": ["KrnConfirmation"],
     "selectors": ["krn-confirmation"],
@@ -152,7 +152,7 @@
       "title": "Inline archive confirmation",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Inline archive confirmation\n *\n * Use a reversible inline confirmation for a local record action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnConfirmationPattern } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-confirmation-pattern-agent-example',\n  standalone: true,\n  imports: [KrnConfirmationPattern],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-confirmation-pattern\n      requestLabel=\"Archive customer\"\n      prompt=\"Archive Acme Europe?\"\n      confirmLabel=\"Archive\"\n      [(confirming)]=\"confirming\"\n    />\n  `,\n})\nexport class KernConfirmationPatternAgentExample {\n  confirming = false;\n}\n\nvoid bootstrapApplication(KernConfirmationPatternAgentExample);\n",
+      "code": "/**\n * Inline archive confirmation\n *\n * Use a reversible inline confirmation for a local record action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnConfirmationPattern } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-confirmation-pattern-agent-example',\n  standalone: true,\n  imports: [KrnConfirmationPattern],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-confirmation-pattern\n      requestLabel=\"Archive customer\"\n      prompt=\"Archive Acme Europe?\"\n      confirmLabel=\"Archive\"\n      [(confirming)]=\"confirming\"\n    />\n  `,\n})\nexport class KernConfirmationPatternAgentExample {\n  confirming = false;\n}\n\nvoid bootstrapApplication(KernConfirmationPatternAgentExample);\n",
       "verification": "compiled",
       "source": "examples/confirmation-pattern.ts"
     }

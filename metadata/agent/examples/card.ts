@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCard } from '@kern-ui/angular/kit';
+import { KrnCard } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-card-agent-example',

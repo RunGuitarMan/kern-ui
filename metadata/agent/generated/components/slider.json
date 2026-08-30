@@ -9,8 +9,8 @@
   "symbol": "KrnSlider",
   "canonicalSymbol": "KrnSlider",
   "canonicalId": "slider",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -249,7 +249,7 @@
       "title": "Typed risk threshold",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed risk threshold\n *\n * Bind a numeric threshold with explicit range and label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSlider } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-slider-agent-example',\n  standalone: true,\n  imports: [KrnSlider, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-slider label=\"Risk threshold\" [min]=\"0\" [max]=\"100\" [step]=\"5\" [formControl]=\"control\" />\n  `,\n})\nexport class KernSliderAgentExample {\n  readonly control = new FormControl<number>(65, { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernSliderAgentExample);\n",
+      "code": "/**\n * Typed risk threshold\n *\n * Bind a numeric threshold with explicit range and label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSlider } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-slider-agent-example',\n  standalone: true,\n  imports: [KrnSlider, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-slider label=\"Risk threshold\" [min]=\"0\" [max]=\"100\" [step]=\"5\" [formControl]=\"control\" />\n  `,\n})\nexport class KernSliderAgentExample {\n  readonly control = new FormControl<number>(65, { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernSliderAgentExample);\n",
       "verification": "compiled",
       "source": "examples/slider.ts"
     }

@@ -2,7 +2,7 @@
 
 - ID: `back-button`
 - Selector: `krn-back-button`
-- Import: `import { KrnBackButton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnBackButton } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnBackButton`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnBackButton } from '@kern-ui/angular/kit';
+import { KrnBackButton } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-back-button-agent-example',

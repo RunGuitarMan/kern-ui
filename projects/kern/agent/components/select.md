@@ -2,7 +2,7 @@
 
 - ID: `select`
 - Selector: `krn-select`
-- Import: `import { KrnSelect } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSelect } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnSelect`
 - Lifecycle: **beta**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Use Native Select for platform selection, Combobox for searchable options
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSelect, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnSelect, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-select-agent-example',

@@ -2,7 +2,7 @@
 
 - ID: `loading-overlay`
 - Selector: `krn-loading-overlay`
-- Import: `import { KrnLoadingOverlay } from '@kern-ui/angular/kit';`
+- Import: `import { KrnLoadingOverlay } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnLoadingOverlay`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnLoadingOverlay } from '@kern-ui/angular/kit';
+import { KrnLoadingOverlay } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-loading-overlay-agent-example',

@@ -2,7 +2,7 @@
 
 - ID: `accordion`
 - Selector: `krn-accordion`
-- Import: `import { KrnAccordion } from '@kern-ui/angular/kit';`
+- Import: `import { KrnAccordion } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnAccordion`
 - Lifecycle: **stable**
 - Category: Data display
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnAccordion, KrnDisclosure } from '@kern-ui/angular/kit';
+import { KrnAccordion, KrnDisclosure } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-accordion-agent-example',

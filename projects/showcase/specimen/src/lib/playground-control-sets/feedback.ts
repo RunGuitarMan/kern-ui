@@ -1,0 +1,188 @@
+import {
+  boolean,
+  closeOnOutside,
+  inputBinding,
+  loading,
+  modelBinding,
+  number,
+  placeholder,
+  range,
+  select,
+  text,
+  type KernPlaygroundControl,
+} from '../playground-foundation';
+
+export const FEEDBACK_CONTROL_SETS: Readonly<Record<string, readonly KernPlaygroundControl[]>> = {
+  banner: [boolean('dismissible', 'Dismissible', false, 'Shows the dismiss action.')],
+  toast: [
+    boolean(
+      'expanded',
+      'Expanded',
+      false,
+      'Expands the toast viewport stack.',
+      modelBinding('expanded'),
+    ),
+  ],
+  'empty-state': [
+    select('tone', 'Tone', 'neutral', 'Changes the state illustration tone.', [
+      'neutral',
+      'info',
+      'success',
+      'warning',
+      'danger',
+    ]),
+  ],
+  'error-state': [
+    select('tone', 'Tone', 'danger', 'Changes the state illustration tone.', [
+      'neutral',
+      'info',
+      'success',
+      'warning',
+      'danger',
+    ]),
+  ],
+  'success-state': [
+    select('tone', 'Tone', 'success', 'Changes the state illustration tone.', [
+      'neutral',
+      'info',
+      'success',
+      'warning',
+      'danger',
+    ]),
+  ],
+  'confirmation-pattern': [
+    boolean(
+      'confirming',
+      'Confirming',
+      false,
+      'Opens the confirmation surface.',
+      modelBinding('confirming'),
+    ),
+  ],
+  alert: [
+    select('tone', 'Tone', 'success', 'Changes urgency and announcement behavior.', [
+      'neutral',
+      'info',
+      'success',
+      'warning',
+      'danger',
+    ]),
+    select('appearance', 'Appearance', 'subtle', 'Changes the alert surface contrast.', [
+      'subtle',
+      'outline',
+      'contrast',
+    ]),
+    text('title', 'Title', 'Changes published', 'Sets the alert heading.'),
+    boolean('dismissible', 'Dismissible', true, 'Shows a close action.'),
+  ],
+  tooltip: [
+    text(
+      'text',
+      'Text',
+      'Copy public link',
+      'Sets the concise tooltip content.',
+      inputBinding('krnTooltip'),
+    ),
+    select(
+      'position',
+      'Position',
+      'above',
+      'Chooses the preferred placement around the trigger.',
+      ['above', 'below', 'before', 'after'],
+      inputBinding('krnTooltipPosition'),
+    ),
+    number(
+      'showDelay',
+      'Show delay',
+      400,
+      'Delays opening in milliseconds.',
+      0,
+      2_000,
+      50,
+      inputBinding('krnTooltipShowDelay'),
+    ),
+    number(
+      'hideDelay',
+      'Hide delay',
+      80,
+      'Delays closing in milliseconds.',
+      0,
+      1_000,
+      20,
+      inputBinding('krnTooltipHideDelay'),
+    ),
+  ],
+  popover: [boolean('open', 'Open', false, 'Opens the popover surface.', modelBinding('open'))],
+  'hover-card': [
+    number('openDelay', 'Open delay', 350, 'Sets the pointer/focus opening delay.', 0, 2_000, 50),
+    number('closeDelay', 'Close delay', 120, 'Sets the pointer/focus closing delay.', 0, 1_000, 20),
+  ],
+  dialog: [
+    text('title', 'Title', 'Edit workspace', 'Sets the dialog heading.'),
+    text(
+      'description',
+      'Description',
+      'Changes apply to every member.',
+      'Sets the dialog description.',
+    ),
+    select('size', 'Size', 'md', 'Sets the dialog width.', ['sm', 'md', 'lg']),
+    boolean('modal', 'Modal', true, 'Traps focus and makes the background inert.'),
+    boolean('open', 'Open', false, 'Opens the modal surface.', modelBinding('open')),
+    boolean('showClose', 'Show close', true, 'Shows the close icon action.'),
+    boolean('closeOnEscape', 'Close on Escape', true, 'Allows Escape to dismiss the dialog.'),
+    closeOnOutside,
+  ],
+  'alert-dialog': [
+    boolean('open', 'Open', false, 'Opens the destructive confirmation.', modelBinding('open')),
+    closeOnOutside,
+  ],
+  drawer: [
+    boolean('open', 'Open', false, 'Opens the edge-aligned drawer.', modelBinding('open')),
+    select('side', 'Side', 'right', 'Chooses the viewport edge.', [
+      'top',
+      'right',
+      'bottom',
+      'left',
+    ]),
+    select('size', 'Size', 'md', 'Sets the sheet width or height.', ['sm', 'md', 'lg']),
+    boolean('modal', 'Modal', true, 'Controls focus trapping and backdrop behavior.'),
+    closeOnOutside,
+  ],
+  'bottom-sheet': [
+    boolean('open', 'Open', false, 'Opens the mobile action sheet.', modelBinding('open')),
+    select('size', 'Size', 'md', 'Sets the sheet width.', ['sm', 'md', 'lg']),
+    boolean('modal', 'Modal', true, 'Controls focus trapping and backdrop behavior.'),
+    closeOnOutside,
+  ],
+  'loading-overlay': [
+    boolean('active', 'Active', true, 'Shows or hides the blocking loading layer.'),
+    text(
+      'label',
+      'Label',
+      'Importing customer records…',
+      'Names the loading operation for assistive technology.',
+    ),
+  ],
+  'progress-bar': [
+    range('value', 'Value', 68, 'Sets determinate completion.', 0, 100),
+    number('max', 'Maximum', 100, 'Sets the completion scale maximum.', 1, 1_000),
+    boolean('indeterminate', 'Indeterminate', false, 'Shows progress without a known value.'),
+    text('valueText', 'Value text', '', 'Overrides the computed accessible progress description.'),
+  ],
+  'circular-progress': [
+    range('value', 'Value', 68, 'Sets determinate completion.', 0, 100),
+    number('max', 'Maximum', 100, 'Sets the completion scale maximum.', 1, 1_000),
+    boolean('indeterminate', 'Indeterminate', false, 'Shows progress without a known value.'),
+    boolean('showValue', 'Show value', true, 'Shows the formatted percentage.'),
+  ],
+  spinner: [text('label', 'Label', 'Refreshing workspace data', 'Sets the accessible label.')],
+  skeleton: [
+    text('width', 'Width', '100%', 'Sets the placeholder inline size.'),
+    text('height', 'Height', '5rem', 'Sets the placeholder block size.'),
+    select('shape', 'Shape', 'rectangle', 'Chooses a text, rectangle, or circle silhouette.', [
+      'text',
+      'rectangle',
+      'circle',
+    ]),
+  ],
+};

@@ -9,8 +9,8 @@
   "symbol": "KrnFloatingActionButton",
   "canonicalSymbol": "KrnFloatingActionButton",
   "canonicalId": "floating-action-button",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "actions",
+  "importPath": "@kern-ui/angular/actions",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -164,7 +164,7 @@
       "title": "Create-record floating action",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Create-record floating action\n *\n * Expose a single high-priority creation action on compact layouts.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnFloatingActionButton } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-floating-action-button-agent-example',\n  standalone: true,\n  imports: [KrnFloatingActionButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button krnFab type=\"button\">\n      <span krnFabIcon>+</span>\n      Create customer\n    </button>\n  `,\n})\nexport class KernFloatingActionButtonAgentExample {}\n\nvoid bootstrapApplication(KernFloatingActionButtonAgentExample);\n",
+      "code": "/**\n * Create-record floating action\n *\n * Expose a single high-priority creation action on compact layouts.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnFloatingActionButton } from '@kern-ui/angular/actions';\n\n@Component({\n  selector: 'app-kern-floating-action-button-agent-example',\n  standalone: true,\n  imports: [KrnFloatingActionButton],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button krnFab type=\"button\">\n      <span krnFabIcon>+</span>\n      Create customer\n    </button>\n  `,\n})\nexport class KernFloatingActionButtonAgentExample {}\n\nvoid bootstrapApplication(KernFloatingActionButtonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/floating-action-button.ts"
     }

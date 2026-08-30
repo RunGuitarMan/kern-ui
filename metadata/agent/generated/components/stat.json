@@ -9,8 +9,8 @@
   "symbol": "KrnStat",
   "canonicalSymbol": "KrnStat",
   "canonicalId": "stat",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -122,7 +122,7 @@
       "title": "Revenue metric",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Revenue metric\n *\n * Pair a formatted value with label, trend and supporting detail.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnStat } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-stat-agent-example',\n  standalone: true,\n  imports: [KrnStat],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-stat\n      label=\"Annual recurring revenue\"\n      value=\"€1.8M\"\n      detail=\"+8.4% year over year\"\n      trend=\"up\"\n    />\n  `,\n})\nexport class KernStatAgentExample {}\n\nvoid bootstrapApplication(KernStatAgentExample);\n",
+      "code": "/**\n * Revenue metric\n *\n * Pair a formatted value with label, trend and supporting detail.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnStat } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-stat-agent-example',\n  standalone: true,\n  imports: [KrnStat],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-stat\n      label=\"Annual recurring revenue\"\n      value=\"€1.8M\"\n      detail=\"+8.4% year over year\"\n      trend=\"up\"\n    />\n  `,\n})\nexport class KernStatAgentExample {}\n\nvoid bootstrapApplication(KernStatAgentExample);\n",
       "verification": "compiled",
       "source": "examples/stat.ts"
     }

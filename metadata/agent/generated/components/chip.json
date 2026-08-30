@@ -9,8 +9,8 @@
   "symbol": "KrnChip",
   "canonicalSymbol": "KrnChip",
   "canonicalId": "chip",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": ["KrnTag"],
     "selectors": ["krn-tag"],
@@ -152,7 +152,7 @@
       "title": "Controlled removable filter chip",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled removable filter chip\n *\n * Keep selected filter state application-owned.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnChip } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-chip-agent-example',\n  standalone: true,\n  imports: [KrnChip],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-chip\n      [interactive]=\"true\"\n      [removable]=\"true\"\n      accessibleLabel=\"Enterprise filter\"\n      [(selected)]=\"selected\"\n    >\n      Enterprise\n    </krn-chip>\n  `,\n})\nexport class KernChipAgentExample {\n  selected = true;\n}\n\nvoid bootstrapApplication(KernChipAgentExample);\n",
+      "code": "/**\n * Controlled removable filter chip\n *\n * Keep selected filter state application-owned.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnChip } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-chip-agent-example',\n  standalone: true,\n  imports: [KrnChip],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-chip\n      [interactive]=\"true\"\n      [removable]=\"true\"\n      accessibleLabel=\"Enterprise filter\"\n      [(selected)]=\"selected\"\n    >\n      Enterprise\n    </krn-chip>\n  `,\n})\nexport class KernChipAgentExample {\n  selected = true;\n}\n\nvoid bootstrapApplication(KernChipAgentExample);\n",
       "verification": "compiled",
       "source": "examples/chip.ts"
     }

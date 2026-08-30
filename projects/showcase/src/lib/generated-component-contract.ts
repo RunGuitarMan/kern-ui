@@ -25,7 +25,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   '[krnMenuTrigger]': {
     className: 'KrnMenuTrigger',
     kind: 'directive',
-    source: 'projects/kern/kit/src/lib/navigation/menu.ts',
+    source: 'projects/kern/navigation/src/lib/navigation/menu.ts',
     api: [],
   },
   '[krnTheme]': {
@@ -62,7 +62,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   '[krnTooltip]': {
     className: 'KrnTooltip',
     kind: 'directive',
-    source: 'projects/kern/kit/src/lib/feedback/hint-overlays.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/hint-overlays.ts',
     api: [
       {
         name: 'krnTooltip',
@@ -101,13 +101,13 @@ export const KERN_RUNTIME_COMPONENTS = {
   'a[krnLink]': {
     className: 'KrnLink',
     kind: 'directive',
-    source: 'projects/kern/kit/src/lib/actions/link.ts',
+    source: 'projects/kern/actions/src/lib/actions/link.ts',
     api: [],
   },
   'button[krnButton]': {
     className: 'KrnButton',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/actions/button.ts',
+    source: 'projects/kern/actions/src/lib/actions/button.ts',
     api: [
       {
         name: 'loading',
@@ -154,7 +154,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'button[krnFab]': {
     className: 'KrnFloatingActionButton',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/actions/button.ts',
+    source: 'projects/kern/actions/src/lib/actions/button.ts',
     api: [
       {
         name: 'extended',
@@ -209,7 +209,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'button[krnIconButton]': {
     className: 'KrnIconButton',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/actions/icon-button.ts',
+    source: 'projects/kern/actions/src/lib/actions/icon-button.ts',
     api: [
       {
         name: 'loading',
@@ -256,7 +256,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'button[krnToggleButton]': {
     className: 'KrnToggleButton',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/actions/toggle-button.ts',
+    source: 'projects/kern/actions/src/lib/actions/toggle-button.ts',
     api: [
       {
         name: 'disabled',
@@ -327,7 +327,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'div[krnButtonGroup]': {
     className: 'KrnButtonGroup',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/actions/button-group.ts',
+    source: 'projects/kern/actions/src/lib/actions/button-group.ts',
     api: [
       {
         name: 'connected',
@@ -350,7 +350,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'div[krnToggleGroup]': {
     className: 'KrnToggleGroup',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/actions/toggle-group.ts',
+    source: 'projects/kern/actions/src/lib/actions/toggle-group.ts',
     api: [
       {
         name: 'connected',
@@ -405,7 +405,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'input[krnEditableComboboxSemantics]': {
     className: 'KrnEditableComboboxSemantics',
     kind: 'directive',
-    source: 'projects/kern/kit/src/lib/forms/select-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/select-controls.ts',
     api: [
       {
         name: 'krnComboboxSemanticsExpanded',
@@ -428,7 +428,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-accordion': {
     className: 'KrnAccordion',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/disclosure.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/disclosure.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -443,7 +443,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-alert': {
     className: 'KrnAlert',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/alert.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/alert.ts',
     api: [
       {
         name: 'appearance',
@@ -506,7 +506,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-alert-dialog': {
     className: 'KrnAlertDialog',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/modal-overlays.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/modal-overlays.ts',
     api: [
       {
         name: 'actionsTemplate',
@@ -649,7 +649,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-app-shell': {
     className: 'KrnAppShell',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/app-shell.ts',
+    source: 'projects/kern/layout/src/lib/layout/app-shell.ts',
     api: [
       {
         name: 'closeNavigationLabel',
@@ -768,7 +768,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-aspect-ratio': {
     className: 'KrnAspectRatio',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/media-layout.ts',
+    source: 'projects/kern/layout/src/lib/layout/media-layout.ts',
     api: [
       {
         name: 'fit',
@@ -791,7 +791,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-autocomplete': {
     className: 'KrnAutocomplete',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/select-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/select-controls.ts',
     api: [
       {
         name: 'allowCustomValue',
@@ -1006,7 +1006,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-avatar': {
     className: 'KrnAvatar',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/avatar.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/avatar.ts',
     api: [
       {
         name: 'alt',
@@ -1069,7 +1069,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-avatar-group': {
     className: 'KrnAvatarGroup',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/avatar.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/avatar.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -1092,7 +1092,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-back-button': {
     className: 'KrnBackButton',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/navigation/navigation-extras.ts',
+    source: 'projects/kern/navigation/src/lib/navigation/navigation-extras.ts',
     api: [
       {
         name: 'href',
@@ -1123,7 +1123,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-badge': {
     className: 'KrnBadge',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/badge.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/badge.ts',
     api: [
       {
         name: 'size',
@@ -1162,7 +1162,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-banner': {
     className: 'KrnBanner',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/alert.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/alert.ts',
     api: [
       {
         name: 'appearance',
@@ -1344,7 +1344,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-bottom-navigation': {
     className: 'KrnBottomNavigation',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/navigation/navigation-extras.ts',
+    source: 'projects/kern/navigation/src/lib/navigation/navigation-extras.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -1383,7 +1383,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-bottom-sheet': {
     className: 'KrnBottomSheet',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/modal-overlays.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/modal-overlays.ts',
     api: [
       {
         name: 'actionsTemplate',
@@ -1526,7 +1526,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-breadcrumbs': {
     className: 'KrnBreadcrumbs',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/navigation/breadcrumbs.ts',
+    source: 'projects/kern/navigation/src/lib/navigation/breadcrumbs.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -1620,7 +1620,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-calendar': {
     className: 'KrnCalendar',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/calendar.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/calendar.ts',
     api: [
       {
         name: 'disabledDates',
@@ -1723,7 +1723,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-card': {
     className: 'KrnCard',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/card.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/card.ts',
     api: [
       {
         name: 'eyebrow',
@@ -1754,7 +1754,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-center': {
     className: 'KrnCenter',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/container.ts',
+    source: 'projects/kern/layout/src/lib/layout/container.ts',
     api: [
       {
         name: 'gutters',
@@ -1913,7 +1913,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-checkbox': {
     className: 'KrnCheckbox',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/selection-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/selection-controls.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -2048,7 +2048,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-checkbox-group': {
     className: 'KrnCheckboxGroup',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/selection-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/selection-controls.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -2159,7 +2159,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-chip': {
     className: 'KrnChip',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/badge.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/badge.ts',
     api: [
       {
         name: 'accessibleLabel',
@@ -2214,7 +2214,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-circular-progress': {
     className: 'KrnCircularProgress',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/progress.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/progress.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -2269,7 +2269,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-cluster': {
     className: 'KrnCluster',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/flex-layout.ts',
+    source: 'projects/kern/layout/src/lib/layout/flex-layout.ts',
     api: [
       {
         name: 'align',
@@ -2316,7 +2316,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-code-block': {
     className: 'KrnCodeBlock',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/code-block.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/code-block.ts',
     api: [
       {
         name: 'code',
@@ -2355,7 +2355,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-color-picker': {
     className: 'KrnColorPicker',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/date-time-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/date-time-controls.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -2466,7 +2466,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-combobox': {
     className: 'KrnCombobox',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/select-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/select-controls.ts',
     api: [
       {
         name: 'allowCustomValue',
@@ -2681,7 +2681,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-command-palette': {
     className: 'KrnCommandPalette',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/navigation/command-palette.ts',
+    source: 'projects/kern/navigation/src/lib/navigation/command-palette.ts',
     api: [
       {
         name: 'closeShortcut',
@@ -2784,7 +2784,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-confirmation': {
     className: 'KrnConfirmation',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/states.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/states.ts',
     api: [
       {
         name: 'cancelLabel',
@@ -2847,7 +2847,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-confirmation-pattern': {
     className: 'KrnConfirmation',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/states.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/states.ts',
     api: [
       {
         name: 'cancelLabel',
@@ -2910,7 +2910,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-container': {
     className: 'KrnContainer',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/container.ts',
+    source: 'projects/kern/layout/src/lib/layout/container.ts',
     api: [
       {
         name: 'align',
@@ -2949,7 +2949,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-context-menu': {
     className: 'KrnContextMenu',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/navigation/menu.ts',
+    source: 'projects/kern/navigation/src/lib/navigation/menu.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -2980,7 +2980,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-copy-button': {
     className: 'KrnCopyButton',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/actions/copy-button.ts',
+    source: 'projects/kern/actions/src/lib/actions/copy-button.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -3655,7 +3655,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-date-picker': {
     className: 'KrnDatePicker',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/date-time-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/date-time-controls.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -3806,7 +3806,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-date-range-picker': {
     className: 'KrnDateRangePicker',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/date-time-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/date-time-controls.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -3973,7 +3973,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-description-item': {
     className: 'KrnDescriptionItem',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/description-list.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/description-list.ts',
     api: [
       {
         name: 'term',
@@ -3988,13 +3988,13 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-description-list': {
     className: 'KrnDescriptionList',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/description-list.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/description-list.ts',
     api: [],
   },
   'krn-dialog': {
     className: 'KrnDialog',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/modal-overlays.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/modal-overlays.ts',
     api: [
       {
         name: 'actionsTemplate',
@@ -4137,7 +4137,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-disclosure': {
     className: 'KrnDisclosure',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/disclosure.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/disclosure.ts',
     api: [
       {
         name: 'heading',
@@ -4160,7 +4160,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-divider': {
     className: 'KrnDivider',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/media-layout.ts',
+    source: 'projects/kern/layout/src/lib/layout/media-layout.ts',
     api: [
       {
         name: 'inset',
@@ -4311,7 +4311,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-drag-drop-upload': {
     className: 'KrnDropUpload',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/upload-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/upload-controls.ts',
     api: [
       {
         name: 'accept',
@@ -4470,7 +4470,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-drawer': {
     className: 'KrnDrawer',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/modal-overlays.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/modal-overlays.ts',
     api: [
       {
         name: 'actionsTemplate',
@@ -4621,7 +4621,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-drop-upload': {
     className: 'KrnDropUpload',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/upload-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/upload-controls.ts',
     api: [
       {
         name: 'accept',
@@ -4780,7 +4780,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-dropdown-button': {
     className: 'KrnDropdownButton',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/actions/dropdown-button.ts',
+    source: 'projects/kern/actions/src/lib/actions/dropdown-button.ts',
     api: [
       {
         name: 'closeOnSelection',
@@ -4867,7 +4867,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-empty-state': {
     className: 'KrnEmptyState',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/states.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/states.ts',
     api: [
       {
         name: 'description',
@@ -4898,7 +4898,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-error-state': {
     className: 'KrnErrorState',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/states.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/states.ts',
     api: [
       {
         name: 'description',
@@ -4929,7 +4929,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-file-upload': {
     className: 'KrnFileUpload',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/upload-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/upload-controls.ts',
     api: [
       {
         name: 'accept',
@@ -5135,7 +5135,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-form-field': {
     className: 'KrnFormField',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/form-field.ts',
+    source: 'projects/kern/forms/src/lib/forms/form-field.ts',
     api: [
       {
         name: 'error',
@@ -5277,7 +5277,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-grid': {
     className: 'KrnGrid',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/grid.ts',
+    source: 'projects/kern/layout/src/lib/layout/grid.ts',
     api: [
       {
         name: 'align',
@@ -5324,7 +5324,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-header': {
     className: 'KrnHeader',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/app-shell.ts',
+    source: 'projects/kern/layout/src/lib/layout/app-shell.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -5379,7 +5379,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-hide': {
     className: 'KrnHide',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/media-layout.ts',
+    source: 'projects/kern/layout/src/lib/layout/media-layout.ts',
     api: [
       {
         name: 'display',
@@ -5410,7 +5410,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-hint': {
     className: 'KrnHint',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/form-field.ts',
+    source: 'projects/kern/forms/src/lib/forms/form-field.ts',
     api: [
       {
         name: 'id',
@@ -5425,7 +5425,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-hover-card': {
     className: 'KrnHoverCard',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/hint-overlays.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/hint-overlays.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -5487,7 +5487,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-inline': {
     className: 'KrnInline',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/flex-layout.ts',
+    source: 'projects/kern/layout/src/lib/layout/flex-layout.ts',
     api: [
       {
         name: 'align',
@@ -5526,7 +5526,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-json-view': {
     className: 'KrnJsonView',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/json-view.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/json-view.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -5589,7 +5589,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-keyboard-shortcut': {
     className: 'KrnKeyboardShortcut',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/code-block.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/code-block.ts',
     api: [
       {
         name: 'keys',
@@ -5604,7 +5604,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-label': {
     className: 'KrnLabel',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/form-field.ts',
+    source: 'projects/kern/forms/src/lib/forms/form-field.ts',
     api: [
       {
         name: 'for',
@@ -5746,7 +5746,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-list': {
     className: 'KrnList',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/list.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/list.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -5769,7 +5769,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-list-item': {
     className: 'KrnListItem',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/list.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/list.ts',
     api: [
       {
         name: 'heading',
@@ -5792,7 +5792,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-loading-overlay': {
     className: 'KrnLoadingOverlay',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/progress.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/progress.ts',
     api: [
       {
         name: 'active',
@@ -5965,7 +5965,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-menu': {
     className: 'KrnMenu',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/navigation/menu.ts',
+    source: 'projects/kern/navigation/src/lib/navigation/menu.ts',
     api: [
       {
         name: 'emptyLabel',
@@ -6036,7 +6036,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-menubar': {
     className: 'KrnMenubar',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/navigation/menu.ts',
+    source: 'projects/kern/navigation/src/lib/navigation/menu.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -6067,7 +6067,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-meter': {
     className: 'KrnMeter',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/meter.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/meter.ts',
     api: [
       {
         name: 'high',
@@ -6153,7 +6153,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-multi-select': {
     className: 'KrnMultiSelect',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/select-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/select-controls.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -6463,7 +6463,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-native-select': {
     className: 'KrnNativeSelect',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/select-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/select-controls.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -6622,7 +6622,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-navigation-rail': {
     className: 'KrnNavigationRail',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/app-shell.ts',
+    source: 'projects/kern/layout/src/lib/layout/app-shell.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -6764,7 +6764,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-number-input': {
     className: 'KrnNumberInput',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/text-inputs.ts',
+    source: 'projects/kern/forms/src/lib/forms/text-inputs.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -6931,7 +6931,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-otp-input': {
     className: 'KrnOtpInput',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/otp-tags.ts',
+    source: 'projects/kern/forms/src/lib/forms/otp-tags.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -7097,7 +7097,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-pagination': {
     className: 'KrnPagination',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/navigation/pagination.ts',
+    source: 'projects/kern/navigation/src/lib/navigation/pagination.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -7200,7 +7200,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-password-input': {
     className: 'KrnPasswordInput',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/text-inputs.ts',
+    source: 'projects/kern/forms/src/lib/forms/text-inputs.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -7359,7 +7359,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-popover': {
     className: 'KrnPopover',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/hint-overlays.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/hint-overlays.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -7525,7 +7525,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-programmatic-overlay-host': {
     className: 'KrnProgrammaticOverlayHost',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/programmatic-overlay.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/programmatic-overlay.ts',
     api: [
       {
         name: 'afterExited',
@@ -7548,7 +7548,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-progress-bar': {
     className: 'KrnProgressBar',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/progress.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/progress.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -7595,7 +7595,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-radio': {
     className: 'KrnRadio',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/selection-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/selection-controls.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -7698,7 +7698,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-radio-group': {
     className: 'KrnRadioGroup',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/selection-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/selection-controls.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -7817,7 +7817,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-range-slider': {
     className: 'KrnRangeSlider',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/range-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/range-controls.ts',
     api: [
       {
         name: 'disabled',
@@ -7936,7 +7936,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-rating': {
     className: 'KrnRating',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/meter.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/meter.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -7983,7 +7983,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-resizable-panel': {
     className: 'KrnResizablePanel',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/resizable-panels.ts',
+    source: 'projects/kern/layout/src/lib/layout/resizable-panels.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -8038,7 +8038,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-resizable-panels': {
     className: 'KrnResizablePanels',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/resizable-panels.ts',
+    source: 'projects/kern/layout/src/lib/layout/resizable-panels.ts',
     api: [
       {
         name: 'disabled',
@@ -8085,7 +8085,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-resize-handle': {
     className: 'KrnResizeHandle',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/resizable-panels.ts',
+    source: 'projects/kern/layout/src/lib/layout/resizable-panels.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -8147,7 +8147,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-responsive-media': {
     className: 'KrnResponsiveMedia',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/responsive-media.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/responsive-media.ts',
     api: [
       {
         name: 'aspectRatio',
@@ -8162,7 +8162,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-responsive-show-hide': {
     className: 'KrnShow',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/media-layout.ts',
+    source: 'projects/kern/layout/src/lib/layout/media-layout.ts',
     api: [
       {
         name: 'display',
@@ -8193,7 +8193,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-scroll-area': {
     className: 'KrnScrollArea',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/media-layout.ts',
+    source: 'projects/kern/layout/src/lib/layout/media-layout.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -8248,7 +8248,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-search-input': {
     className: 'KrnSearchInput',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/text-inputs.ts',
+    source: 'projects/kern/forms/src/lib/forms/text-inputs.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -8407,7 +8407,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-segmented-control': {
     className: 'KrnSegmentedControl',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/selection-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/selection-controls.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -8550,7 +8550,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-select': {
     className: 'KrnSelect',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/select-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/select-controls.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -8828,7 +8828,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-show': {
     className: 'KrnShow',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/media-layout.ts',
+    source: 'projects/kern/layout/src/lib/layout/media-layout.ts',
     api: [
       {
         name: 'display',
@@ -8859,7 +8859,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-sidebar': {
     className: 'KrnSidebar',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/app-shell.ts',
+    source: 'projects/kern/layout/src/lib/layout/app-shell.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -8930,7 +8930,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-skeleton': {
     className: 'KrnSkeleton',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/progress.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/progress.ts',
     api: [
       {
         name: 'height',
@@ -8961,7 +8961,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-skip-link': {
     className: 'KrnSkipLink',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/navigation/navigation-extras.ts',
+    source: 'projects/kern/navigation/src/lib/navigation/navigation-extras.ts',
     api: [
       {
         name: 'label',
@@ -8992,7 +8992,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-slider': {
     className: 'KrnSlider',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/range-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/range-controls.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -9119,7 +9119,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-snackbar': {
     className: 'KrnToastViewport',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/toast.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/toast.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -9174,7 +9174,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-spacer': {
     className: 'KrnSpacer',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/flex-layout.ts',
+    source: 'projects/kern/layout/src/lib/layout/flex-layout.ts',
     api: [
       {
         name: 'axis',
@@ -9197,7 +9197,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-spinner': {
     className: 'KrnSpinner',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/progress.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/progress.ts',
     api: [
       {
         name: 'label',
@@ -9212,7 +9212,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-split-button': {
     className: 'KrnSplitButton',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/actions/dropdown-button.ts',
+    source: 'projects/kern/actions/src/lib/actions/dropdown-button.ts',
     api: [
       {
         name: 'closeOnSelection',
@@ -9315,7 +9315,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-split-layout': {
     className: 'KrnSplitLayout',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/split-layout.ts',
+    source: 'projects/kern/layout/src/lib/layout/split-layout.ts',
     api: [
       {
         name: 'align',
@@ -9354,7 +9354,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-stack': {
     className: 'KrnStack',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/layout/flex-layout.ts',
+    source: 'projects/kern/layout/src/lib/layout/flex-layout.ts',
     api: [
       {
         name: 'align',
@@ -9385,7 +9385,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-stat': {
     className: 'KrnStat',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/card.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/card.ts',
     api: [
       {
         name: 'detail',
@@ -9424,7 +9424,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-status-badge': {
     className: 'KrnBadge',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/badge.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/badge.ts',
     api: [
       {
         name: 'size',
@@ -9463,7 +9463,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-stepper': {
     className: 'KrnStepper',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/navigation/stepper.ts',
+    source: 'projects/kern/navigation/src/lib/navigation/stepper.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -9526,7 +9526,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-success-state': {
     className: 'KrnSuccessState',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/states.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/states.ts',
     api: [
       {
         name: 'description',
@@ -9557,7 +9557,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-switch': {
     className: 'KrnSwitch',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/selection-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/selection-controls.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -9668,7 +9668,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-table-of-contents': {
     className: 'KrnTableOfContents',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/navigation/navigation-extras.ts',
+    source: 'projects/kern/navigation/src/lib/navigation/navigation-extras.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -9723,7 +9723,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-tabs': {
     className: 'KrnTabs',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/navigation/tabs.ts',
+    source: 'projects/kern/navigation/src/lib/navigation/tabs.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -9763,7 +9763,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-tag': {
     className: 'KrnChip',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/badge.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/badge.ts',
     api: [
       {
         name: 'accessibleLabel',
@@ -9818,7 +9818,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-tags-input': {
     className: 'KrnTagsInput',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/otp-tags.ts',
+    source: 'projects/kern/forms/src/lib/forms/otp-tags.ts',
     api: [
       {
         name: 'addOnBlur',
@@ -9993,7 +9993,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-text-input': {
     className: 'KrnTextInput',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/text-inputs.ts',
+    source: 'projects/kern/forms/src/lib/forms/text-inputs.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -10144,7 +10144,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-textarea': {
     className: 'KrnTextarea',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/text-inputs.ts',
+    source: 'projects/kern/forms/src/lib/forms/text-inputs.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -10311,7 +10311,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-time-picker': {
     className: 'KrnTimePicker',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/date-time-controls.ts',
+    source: 'projects/kern/forms/src/lib/forms/date-time-controls.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -10446,7 +10446,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-timeline': {
     className: 'KrnTimeline',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/timeline.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/timeline.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -10461,7 +10461,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-timeline-item': {
     className: 'KrnTimelineItem',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/timeline.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/timeline.ts',
     api: [
       {
         name: 'heading',
@@ -10484,7 +10484,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-toast': {
     className: 'KrnToastViewport',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/toast.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/toast.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -10539,7 +10539,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-toast-viewport': {
     className: 'KrnToastViewport',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/toast.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/toast.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -10594,7 +10594,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-tooltip-surface': {
     className: 'KrnTooltipSurface',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/feedback/hint-overlays.ts',
+    source: 'projects/kern/feedback/src/lib/feedback/hint-overlays.ts',
     api: [
       {
         name: 'id',
@@ -10617,7 +10617,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-tree': {
     className: 'KrnTree',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/data-display/tree.ts',
+    source: 'projects/kern/data-display/src/lib/data-display/tree.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -10664,7 +10664,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-tree-navigation': {
     className: 'KrnTreeNavigation',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/navigation/tree-navigation.ts',
+    source: 'projects/kern/navigation/src/lib/navigation/tree-navigation.ts',
     api: [
       {
         name: 'ariaLabel',
@@ -10774,7 +10774,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-validation-message': {
     className: 'KrnValidationMessage',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/form-field.ts',
+    source: 'projects/kern/forms/src/lib/forms/form-field.ts',
     api: [
       {
         name: 'id',
@@ -10789,7 +10789,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-verification-code': {
     className: 'KrnOtpInput',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/forms/otp-tags.ts',
+    source: 'projects/kern/forms/src/lib/forms/otp-tags.ts',
     api: [
       {
         name: 'ariaDescribedBy',
@@ -10916,7 +10916,7 @@ export const KERN_RUNTIME_COMPONENTS = {
   'krn-vertical-tabs': {
     className: 'KrnTabs',
     kind: 'component',
-    source: 'projects/kern/kit/src/lib/navigation/tabs.ts',
+    source: 'projects/kern/navigation/src/lib/navigation/tabs.ts',
     api: [
       {
         name: 'ariaLabel',

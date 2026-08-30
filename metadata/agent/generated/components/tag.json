@@ -9,8 +9,8 @@
   "symbol": "KrnTag",
   "canonicalSymbol": "KrnChip",
   "canonicalId": "chip",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": ["KrnChip"],
     "selectors": ["krn-chip"],
@@ -152,7 +152,7 @@
       "title": "Controlled tag alias",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled tag alias\n *\n * Use the tag alias for removable classification metadata.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTag } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-tag-agent-example',\n  standalone: true,\n  imports: [KrnTag],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tag\n      [interactive]=\"true\"\n      [removable]=\"true\"\n      accessibleLabel=\"Renewal Q3 tag\"\n      [(selected)]=\"selected\"\n    >\n      Renewal Q3\n    </krn-tag>\n  `,\n})\nexport class KernTagAgentExample {\n  selected = true;\n}\n\nvoid bootstrapApplication(KernTagAgentExample);\n",
+      "code": "/**\n * Controlled tag alias\n *\n * Use the tag alias for removable classification metadata.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTag } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-tag-agent-example',\n  standalone: true,\n  imports: [KrnTag],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tag\n      [interactive]=\"true\"\n      [removable]=\"true\"\n      accessibleLabel=\"Renewal Q3 tag\"\n      [(selected)]=\"selected\"\n    >\n      Renewal Q3\n    </krn-tag>\n  `,\n})\nexport class KernTagAgentExample {\n  selected = true;\n}\n\nvoid bootstrapApplication(KernTagAgentExample);\n",
       "verification": "compiled",
       "source": "examples/tag.ts"
     }

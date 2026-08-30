@@ -6,8 +6,9 @@ with every `@deprecated` declaration in the committed public API baselines and r
 selector entries to their compiler-derived public component or directive. A deprecation without a
 replacement, migration, documentation link, and removal version fails the lifecycle gate.
 
-The `0.1.0` line is not yet published. The entries below were removed before the first release, so
-they are retained only as migration history and are not part of the shipped compatibility surface.
+The entries below were removed during pre-publication development, before the first public `0.1.2`
+release. They are retained only as migration history and are not part of the shipped compatibility
+surface.
 
 <a id="krn-button-group-element-selector"></a>
 

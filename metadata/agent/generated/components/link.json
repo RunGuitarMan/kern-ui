@@ -9,8 +9,8 @@
   "symbol": "KrnLink",
   "canonicalSymbol": "KrnLink",
   "canonicalId": "link",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "actions",
+  "importPath": "@kern-ui/angular/actions",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -88,7 +88,7 @@
       "title": "External audit documentation link",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * External audit documentation link\n *\n * Render a semantic link with safe external navigation metadata.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnLink } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-link-agent-example',\n  standalone: true,\n  imports: [KrnLink],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <a krnLink href=\"https://example.com/audit-policy\" target=\"_blank\" rel=\"noopener noreferrer\">\n      Audit policy\n    </a>\n  `,\n})\nexport class KernLinkAgentExample {}\n\nvoid bootstrapApplication(KernLinkAgentExample);\n",
+      "code": "/**\n * External audit documentation link\n *\n * Render a semantic link with safe external navigation metadata.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnLink } from '@kern-ui/angular/actions';\n\n@Component({\n  selector: 'app-kern-link-agent-example',\n  standalone: true,\n  imports: [KrnLink],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <a krnLink href=\"https://example.com/audit-policy\" target=\"_blank\" rel=\"noopener noreferrer\">\n      Audit policy\n    </a>\n  `,\n})\nexport class KernLinkAgentExample {}\n\nvoid bootstrapApplication(KernLinkAgentExample);\n",
       "verification": "compiled",
       "source": "examples/link.ts"
     }

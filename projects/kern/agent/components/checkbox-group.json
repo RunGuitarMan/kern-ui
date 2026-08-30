@@ -9,8 +9,8 @@
   "symbol": "KrnCheckboxGroup",
   "canonicalSymbol": "KrnCheckboxGroup",
   "canonicalId": "checkbox-group",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -235,7 +235,7 @@
       "title": "Typed notification channels",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed notification channels\n *\n * Bind a stable array of selected string values.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCheckbox, KrnCheckboxGroup } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-checkbox-group-agent-example',\n  standalone: true,\n  imports: [KrnCheckboxGroup, ReactiveFormsModule, KrnCheckbox],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-checkbox-group label=\"Notification channels\" [formControl]=\"control\">\n      <krn-checkbox value=\"email\">Email</krn-checkbox>\n      <krn-checkbox value=\"slack\">Slack</krn-checkbox>\n    </krn-checkbox-group>\n  `,\n})\nexport class KernCheckboxGroupAgentExample {\n  readonly control = new FormControl<readonly string[]>(['email'], { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernCheckboxGroupAgentExample);\n",
+      "code": "/**\n * Typed notification channels\n *\n * Bind a stable array of selected string values.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCheckbox, KrnCheckboxGroup } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-checkbox-group-agent-example',\n  standalone: true,\n  imports: [KrnCheckboxGroup, ReactiveFormsModule, KrnCheckbox],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-checkbox-group label=\"Notification channels\" [formControl]=\"control\">\n      <krn-checkbox value=\"email\">Email</krn-checkbox>\n      <krn-checkbox value=\"slack\">Slack</krn-checkbox>\n    </krn-checkbox-group>\n  `,\n})\nexport class KernCheckboxGroupAgentExample {\n  readonly control = new FormControl<readonly string[]>(['email'], { nonNullable: true });\n}\n\nvoid bootstrapApplication(KernCheckboxGroupAgentExample);\n",
       "verification": "compiled",
       "source": "examples/checkbox-group.ts"
     }

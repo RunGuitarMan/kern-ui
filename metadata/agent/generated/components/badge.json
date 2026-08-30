@@ -9,8 +9,8 @@
   "symbol": "KrnBadge",
   "canonicalSymbol": "KrnBadge",
   "canonicalId": "badge",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": ["KrnStatusBadge"],
     "selectors": ["krn-status-badge"],
@@ -135,7 +135,7 @@
       "title": "Semantic account status badge",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Semantic account status badge\n *\n * Express status through text, marker and semantic tone.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBadge } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-badge-agent-example',\n  standalone: true,\n  imports: [KrnBadge],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-badge tone=\"success\" [status]=\"true\">Healthy</krn-badge> `,\n})\nexport class KernBadgeAgentExample {}\n\nvoid bootstrapApplication(KernBadgeAgentExample);\n",
+      "code": "/**\n * Semantic account status badge\n *\n * Express status through text, marker and semantic tone.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBadge } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-badge-agent-example',\n  standalone: true,\n  imports: [KrnBadge],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-badge tone=\"success\" [status]=\"true\">Healthy</krn-badge> `,\n})\nexport class KernBadgeAgentExample {}\n\nvoid bootstrapApplication(KernBadgeAgentExample);\n",
       "verification": "compiled",
       "source": "examples/badge.ts"
     }

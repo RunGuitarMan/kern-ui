@@ -36,6 +36,7 @@ async function main() {
     !config ||
     typeof config.primarySourceRoot !== 'string' ||
     !Array.isArray(config.entrypoints) ||
+    !Array.isArray(config.compatibilityEntrypoints) ||
     !config.entrypoints.every(
       (entrypoint) => entrypoint && typeof entrypoint.sourceRoot === 'string',
     )
@@ -46,6 +47,7 @@ async function main() {
   const sourceRoots = [
     config.primarySourceRoot,
     ...config.entrypoints.map((entrypoint) => entrypoint.sourceRoot),
+    ...config.compatibilityEntrypoints.map((entrypoint) => entrypoint.sourceRoot),
   ];
   if (new Set(sourceRoots).size !== sourceRoots.length) {
     throw new Error('Kern source-pollution roots must be unique.');

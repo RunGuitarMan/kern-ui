@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
-import { dirname, relative, resolve, sep } from 'node:path';
+import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 
@@ -372,6 +373,9 @@ function rootExportMap(checker, program, runtimeConfig, symbols) {
     package: packageName,
     generatedFrom: runtimeConfig.rootPublicApi,
     entrypoints: runtimeConfig.entrypoints.map((entrypoint) => `${packageName}/${entrypoint.name}`),
+    compatibilityEntrypoints: (runtimeConfig.compatibilityEntrypoints ?? []).map(
+      (entrypoint) => `${packageName}/${entrypoint.name}`,
+    ),
     exports: Object.fromEntries(rootNames.map((name) => [name, ownership.get(name)])),
   };
 }
@@ -947,40 +951,52 @@ function executeCatalog(sourceText, indexSourceText, runtimeComponents) {
 }
 
 function executePlayground(sourceText, catalog) {
-  const compiled = ts.transpileModule(sourceText, {
-    compilerOptions: {
-      module: ts.ModuleKind.CommonJS,
-      target: ts.ScriptTarget.ES2022,
-      esModuleInterop: true,
-    },
-    fileName: paths.playground,
-  }).outputText;
-  const module = { exports: {} };
-  const sandbox = {
-    module,
-    exports: module.exports,
-    require: (specifier) => {
-      if (specifier === '@kern-ui/showcase') return { KERN_CATALOG: catalog };
-      throw new Error(`Playground evaluation rejected unexpected import ${specifier}`);
-    },
-    console,
+  const modules = new Map();
+  const load = (fileName, source = readFileSync(fileName, 'utf8')) => {
+    if (modules.has(fileName)) return modules.get(fileName).exports;
+    const module = { exports: {} };
+    modules.set(fileName, module);
+    const compiled = ts.transpileModule(source, {
+      compilerOptions: {
+        module: ts.ModuleKind.CommonJS,
+        target: ts.ScriptTarget.ES2022,
+        esModuleInterop: true,
+      },
+      fileName,
+    }).outputText;
+    const sandbox = {
+      module,
+      exports: module.exports,
+      require: (specifier) => {
+        if (specifier === '@kern-ui/showcase') return { KERN_CATALOG: catalog };
+        if (specifier.startsWith('.')) {
+          const unresolved = resolve(dirname(fileName), specifier);
+          const candidates = [`${unresolved}.ts`, join(unresolved, 'index.ts'), unresolved];
+          const resolved = candidates.find(
+            (candidate) => existsSync(candidate) && statSync(candidate).isFile(),
+          );
+          if (resolved) return load(resolved);
+        }
+        throw new Error(`Playground evaluation rejected unexpected import ${specifier}`);
+      },
+      console,
+    };
+    vm.runInNewContext(compiled, sandbox, { filename: fileName, timeout: 2_000 });
+    return module.exports;
   };
-  vm.runInNewContext(compiled, sandbox, {
-    filename: paths.playground,
-    timeout: 2_000,
-  });
-  const definitions = module.exports.KERN_PLAYGROUND_DEFINITIONS;
+  const playground = load(paths.playground, sourceText);
+  const definitions = playground.KERN_PLAYGROUND_DEFINITIONS;
   if (!Array.isArray(definitions)) {
     throw new Error('Playground evaluation did not export KERN_PLAYGROUND_DEFINITIONS.');
   }
-  const normalizeStateId = module.exports.normalizeKernPlaygroundStateId;
+  const normalizeStateId = playground.normalizeKernPlaygroundStateId;
   if (typeof normalizeStateId !== 'function') {
     throw new Error('Playground evaluation did not export normalizeKernPlaygroundStateId.');
   }
   return {
     definitions: JSON.parse(JSON.stringify(definitions)),
-    exclusions: JSON.parse(JSON.stringify(module.exports.KERN_PLAYGROUND_API_EXCLUSIONS ?? [])),
-    coverage: JSON.parse(JSON.stringify(module.exports.KERN_PLAYGROUND_API_COVERAGE ?? {})),
+    exclusions: JSON.parse(JSON.stringify(playground.KERN_PLAYGROUND_API_EXCLUSIONS ?? [])),
+    coverage: JSON.parse(JSON.stringify(playground.KERN_PLAYGROUND_API_COVERAGE ?? {})),
     normalizeStateId,
   };
 }
@@ -2128,6 +2144,9 @@ async function main() {
       },
       playground: playgroundQueryContract(),
       entrypoints: entrypoints.map((entrypoint) => entrypoint.importPath),
+      compatibilityEntrypoints: (runtimeConfig.compatibilityEntrypoints ?? []).map(
+        (entrypoint) => `${packageName}/${entrypoint.name}`,
+      ),
       sourceDigest: sourceDigest([
         catalogSource,
         catalogIndexSource,

@@ -2,7 +2,7 @@
 
 - ID: `checkbox-group`
 - Selector: `krn-checkbox-group`
-- Import: `import { KrnCheckboxGroup } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCheckboxGroup } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnCheckboxGroup`
 - Lifecycle: **stable**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCheckbox, KrnCheckboxGroup } from '@kern-ui/angular/kit';
+import { KrnCheckbox, KrnCheckboxGroup } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-checkbox-group-agent-example',

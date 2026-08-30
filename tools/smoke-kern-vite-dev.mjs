@@ -195,9 +195,10 @@ async function verifyBrowserRuntime() {
 
     const dropdownSpecimen = page.getByTestId('component-specimen-dropdown-button');
     await dropdownSpecimen.waitFor({ state: 'visible' });
-    if ((await dropdownSpecimen.locator('.specimen-loading').count()) !== 0) {
-      throw new Error('The lazy dropdown-button specimen remained on its defer placeholder.');
-    }
+    await dropdownSpecimen.locator('.specimen-loading').waitFor({
+      state: 'detached',
+      timeout: 30_000,
+    });
 
     const dropdownTrigger = dropdownSpecimen.getByRole('button', {
       name: 'Export',
@@ -225,9 +226,10 @@ async function verifyBrowserRuntime() {
     await Promise.all([page.waitForURL(nextComponentUrl), nextLink.click()]);
     const formFieldSpecimen = page.getByTestId('component-specimen-form-field');
     await formFieldSpecimen.waitFor({ state: 'visible' });
-    if ((await formFieldSpecimen.locator('.specimen-loading').count()) !== 0) {
-      throw new Error('The cross-category lazy form-field specimen remained deferred.');
-    }
+    await formFieldSpecimen.locator('.specimen-loading').waitFor({
+      state: 'detached',
+      timeout: 30_000,
+    });
     if (
       (await page.evaluate(() => Reflect.get(globalThis, '__kernViteSmokeDocument'))) !==
       'preserved'

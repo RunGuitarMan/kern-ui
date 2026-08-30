@@ -9,8 +9,8 @@
   "symbol": "KrnCard",
   "canonicalSymbol": "KrnCard",
   "canonicalId": "card",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -131,7 +131,7 @@
       "title": "Interactive customer summary card",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Interactive customer summary card\n *\n * Compose heading, action and footer without hiding semantic content.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCard } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-card-agent-example',\n  standalone: true,\n  imports: [KrnCard],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-card eyebrow=\"Enterprise\" heading=\"Acme Europe\" [interactive]=\"true\">\n      <button krnCardAction type=\"button\">Open account</button>\n      <p>Renewal: 15 October · Owner: Ada Lovelace</p>\n      <small krnCardFooter>Updated 12 minutes ago</small>\n    </krn-card>\n  `,\n})\nexport class KernCardAgentExample {}\n\nvoid bootstrapApplication(KernCardAgentExample);\n",
+      "code": "/**\n * Interactive customer summary card\n *\n * Compose heading, action and footer without hiding semantic content.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCard } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-card-agent-example',\n  standalone: true,\n  imports: [KrnCard],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-card eyebrow=\"Enterprise\" heading=\"Acme Europe\" [interactive]=\"true\">\n      <button krnCardAction type=\"button\">Open account</button>\n      <p>Renewal: 15 October · Owner: Ada Lovelace</p>\n      <small krnCardFooter>Updated 12 minutes ago</small>\n    </krn-card>\n  `,\n})\nexport class KernCardAgentExample {}\n\nvoid bootstrapApplication(KernCardAgentExample);\n",
       "verification": "compiled",
       "source": "examples/card.ts"
     }

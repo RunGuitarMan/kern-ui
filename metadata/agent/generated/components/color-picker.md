@@ -2,7 +2,7 @@
 
 - ID: `color-picker`
 - Selector: `krn-color-picker`
-- Import: `import { KrnColorPicker } from '@kern-ui/angular/kit';`
+- Import: `import { KrnColorPicker } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnColorPicker`
 - Lifecycle: **beta**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Use a fixed Select or Radio Group when the product accepts only a small s
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnColorPicker } from '@kern-ui/angular/kit';
+import { KrnColorPicker } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-color-picker-agent-example',

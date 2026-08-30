@@ -2,7 +2,7 @@
 
 - ID: `navigation-rail`
 - Selector: `krn-navigation-rail`
-- Import: `import { KrnNavigationRail } from '@kern-ui/angular/kit';`
+- Import: `import { KrnNavigationRail } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnNavigationRail`
 - Lifecycle: **stable**
 - Category: Layout
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnNavigationRail } from '@kern-ui/angular/kit';
+import { KrnNavigationRail } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-navigation-rail-agent-example',

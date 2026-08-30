@@ -9,8 +9,8 @@
   "symbol": "KrnCalendar",
   "canonicalSymbol": "KrnCalendar",
   "canonicalId": "calendar",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -208,7 +208,7 @@
       "title": "Controlled renewal calendar",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled renewal calendar\n *\n * Own ISO date, active month and focus state with stable disabled dates.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCalendar } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-calendar-agent-example',\n  standalone: true,\n  imports: [KrnCalendar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-calendar\n      ariaLabel=\"Renewal calendar\"\n      locale=\"en-GB\"\n      today=\"2026-07-29\"\n      [disabledDates]=\"disabledDates\"\n      [(value)]=\"selectedDate\"\n      [(activeMonth)]=\"activeMonth\"\n      [(focusedDate)]=\"focusedDate\"\n    />\n  `,\n})\nexport class KernCalendarAgentExample {\n  selectedDate = '2026-08-14';\n\n  activeMonth = '2026-08';\n\n  focusedDate = '2026-08-14';\n\n  readonly disabledDates: ReadonlySet<string> = new Set(['2026-08-16']);\n}\n\nvoid bootstrapApplication(KernCalendarAgentExample);\n",
+      "code": "/**\n * Controlled renewal calendar\n *\n * Own ISO date, active month and focus state with stable disabled dates.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCalendar } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-calendar-agent-example',\n  standalone: true,\n  imports: [KrnCalendar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-calendar\n      ariaLabel=\"Renewal calendar\"\n      locale=\"en-GB\"\n      today=\"2026-07-29\"\n      [disabledDates]=\"disabledDates\"\n      [(value)]=\"selectedDate\"\n      [(activeMonth)]=\"activeMonth\"\n      [(focusedDate)]=\"focusedDate\"\n    />\n  `,\n})\nexport class KernCalendarAgentExample {\n  selectedDate = '2026-08-14';\n\n  activeMonth = '2026-08';\n\n  focusedDate = '2026-08-14';\n\n  readonly disabledDates: ReadonlySet<string> = new Set(['2026-08-16']);\n}\n\nvoid bootstrapApplication(KernCalendarAgentExample);\n",
       "verification": "compiled",
       "source": "examples/calendar.ts"
     }

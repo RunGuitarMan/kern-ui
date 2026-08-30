@@ -4,7 +4,7 @@ This cookbook covers the decisions that are easy to get wrong when a team adopts
 prior library knowledge. The generated component manifest remains authoritative for individual
 inputs and outputs; these recipes explain how components should be composed in production. The
 machine-readable contract includes complete standalone sources for all 13 recipes. CI installs
-those sources from the packed npm artifact and strict-AOT compiles them together with all 131
+those sources from the packed npm artifact and strict-AOT compiles them together with all 132
 per-component examples.
 
 ## Install and diagnose

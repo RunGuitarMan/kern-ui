@@ -9,8 +9,8 @@
   "symbol": "KrnBreadcrumbs",
   "canonicalSymbol": "KrnBreadcrumbs",
   "canonicalId": "breadcrumbs",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -157,7 +157,7 @@
       "title": "Typed account breadcrumbs",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed account breadcrumbs\n *\n * Describe hierarchy with a typed immutable breadcrumb collection.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBreadcrumbs, type KrnBreadcrumbItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-breadcrumbs-agent-example',\n  standalone: true,\n  imports: [KrnBreadcrumbs],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-breadcrumbs [items]=\"items\" ariaLabel=\"Account location\" /> `,\n})\nexport class KernBreadcrumbsAgentExample {\n  readonly items: readonly KrnBreadcrumbItem[] = [\n    { label: 'Customers', href: '/customers' },\n    { label: 'Acme Europe', current: true },\n  ];\n}\n\nvoid bootstrapApplication(KernBreadcrumbsAgentExample);\n",
+      "code": "/**\n * Typed account breadcrumbs\n *\n * Describe hierarchy with a typed immutable breadcrumb collection.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBreadcrumbs, type KrnBreadcrumbItem } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-breadcrumbs-agent-example',\n  standalone: true,\n  imports: [KrnBreadcrumbs],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-breadcrumbs [items]=\"items\" ariaLabel=\"Account location\" /> `,\n})\nexport class KernBreadcrumbsAgentExample {\n  readonly items: readonly KrnBreadcrumbItem[] = [\n    { label: 'Customers', href: '/customers' },\n    { label: 'Acme Europe', current: true },\n  ];\n}\n\nvoid bootstrapApplication(KernBreadcrumbsAgentExample);\n",
       "verification": "compiled",
       "source": "examples/breadcrumbs.ts"
     }

@@ -9,8 +9,8 @@
   "symbol": "KrnTooltip",
   "canonicalSymbol": "KrnTooltip",
   "canonicalId": "tooltip",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -127,7 +127,7 @@
       "title": "Accessible abbreviated-action tooltip",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Accessible abbreviated-action tooltip\n *\n * Supplement an already named control with concise hover and focus guidance.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTooltip } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-tooltip-agent-example',\n  standalone: true,\n  imports: [KrnTooltip],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button\n      type=\"button\"\n      aria-label=\"Download audit report\"\n      krnTooltip=\"Download audit report\"\n      krnTooltipPosition=\"below\"\n    >\n      ↓\n    </button>\n  `,\n})\nexport class KernTooltipAgentExample {}\n\nvoid bootstrapApplication(KernTooltipAgentExample);\n",
+      "code": "/**\n * Accessible abbreviated-action tooltip\n *\n * Supplement an already named control with concise hover and focus guidance.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTooltip } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-tooltip-agent-example',\n  standalone: true,\n  imports: [KrnTooltip],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button\n      type=\"button\"\n      aria-label=\"Download audit report\"\n      krnTooltip=\"Download audit report\"\n      krnTooltipPosition=\"below\"\n    >\n      ↓\n    </button>\n  `,\n})\nexport class KernTooltipAgentExample {}\n\nvoid bootstrapApplication(KernTooltipAgentExample);\n",
       "verification": "compiled",
       "source": "examples/tooltip.ts"
     }

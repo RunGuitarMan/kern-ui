@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnResponsiveMedia } from '@kern-ui/angular/kit';
+import { KrnResponsiveMedia } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-responsive-media-agent-example',

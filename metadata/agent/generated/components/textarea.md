@@ -2,7 +2,7 @@
 
 - ID: `textarea`
 - Selector: `krn-textarea`
-- Import: `import { KrnTextarea } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTextarea } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnTextarea`
 - Lifecycle: **stable**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTextarea } from '@kern-ui/angular/kit';
+import { KrnTextarea } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-textarea-agent-example',

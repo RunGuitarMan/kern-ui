@@ -9,8 +9,8 @@
   "symbol": "KrnDisclosure",
   "canonicalSymbol": "KrnDisclosure",
   "canonicalId": "disclosure",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -115,7 +115,7 @@
       "title": "Controlled policy disclosure",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled policy disclosure\n *\n * Keep an expandable policy section synchronized with application state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDisclosure } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-disclosure-agent-example',\n  standalone: true,\n  imports: [KrnDisclosure],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-disclosure heading=\"Data residency\" [(open)]=\"open\">\n      Customer data is stored in the EU Central region.\n    </krn-disclosure>\n  `,\n})\nexport class KernDisclosureAgentExample {\n  open = true;\n}\n\nvoid bootstrapApplication(KernDisclosureAgentExample);\n",
+      "code": "/**\n * Controlled policy disclosure\n *\n * Keep an expandable policy section synchronized with application state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDisclosure } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-disclosure-agent-example',\n  standalone: true,\n  imports: [KrnDisclosure],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-disclosure heading=\"Data residency\" [(open)]=\"open\">\n      Customer data is stored in the EU Central region.\n    </krn-disclosure>\n  `,\n})\nexport class KernDisclosureAgentExample {\n  open = true;\n}\n\nvoid bootstrapApplication(KernDisclosureAgentExample);\n",
       "verification": "compiled",
       "source": "examples/disclosure.ts"
     }

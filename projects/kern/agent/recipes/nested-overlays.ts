@@ -1,13 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import {
-  KrnDialog,
-  KrnPopover,
-  KrnSelect,
-  KrnTooltip,
-  type KrnSelectOption,
-} from '@kern-ui/angular/kit';
+import { KrnDialog, KrnPopover, KrnTooltip } from '@kern-ui/angular/feedback';
+import { KrnSelect, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-nested-overlays-recipe',

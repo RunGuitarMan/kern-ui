@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideKrn } from '@kern-ui/angular/core';
-import { KrnButton } from '@kern-ui/angular/kit';
+import { KrnButton } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-install-recipe',

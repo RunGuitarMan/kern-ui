@@ -9,8 +9,8 @@
   "symbol": "KrnContainer",
   "canonicalSymbol": "KrnContainer",
   "canonicalId": "container",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -129,7 +129,7 @@
       "title": "Bounded content container",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Bounded content container\n *\n * Center page content with a stable readable width.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnContainer } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-container-agent-example',\n  standalone: true,\n  imports: [KrnContainer],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-container size=\"lg\">\n      <h1>Customer portfolio</h1>\n      <p>Review ownership, risk and renewal dates.</p>\n    </krn-container>\n  `,\n})\nexport class KernContainerAgentExample {}\n\nvoid bootstrapApplication(KernContainerAgentExample);\n",
+      "code": "/**\n * Bounded content container\n *\n * Center page content with a stable readable width.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnContainer } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-container-agent-example',\n  standalone: true,\n  imports: [KrnContainer],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-container size=\"lg\">\n      <h1>Customer portfolio</h1>\n      <p>Review ownership, risk and renewal dates.</p>\n    </krn-container>\n  `,\n})\nexport class KernContainerAgentExample {}\n\nvoid bootstrapApplication(KernContainerAgentExample);\n",
       "verification": "compiled",
       "source": "examples/container.ts"
     }

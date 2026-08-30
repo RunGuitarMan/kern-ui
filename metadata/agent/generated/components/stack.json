@@ -9,8 +9,8 @@
   "symbol": "KrnStack",
   "canonicalSymbol": "KrnStack",
   "canonicalId": "stack",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -119,7 +119,7 @@
       "title": "Vertical form stack",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Vertical form stack\n *\n * Apply consistent vertical rhythm to related content.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnStack } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-stack-agent-example',\n  standalone: true,\n  imports: [KrnStack],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-stack gap=\"4\">\n      <h2>Billing profile</h2>\n      <p>Invoices are sent to the finance owner.</p>\n      <button type=\"button\">Edit profile</button>\n    </krn-stack>\n  `,\n})\nexport class KernStackAgentExample {}\n\nvoid bootstrapApplication(KernStackAgentExample);\n",
+      "code": "/**\n * Vertical form stack\n *\n * Apply consistent vertical rhythm to related content.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnStack } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-stack-agent-example',\n  standalone: true,\n  imports: [KrnStack],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-stack gap=\"4\">\n      <h2>Billing profile</h2>\n      <p>Invoices are sent to the finance owner.</p>\n      <button type=\"button\">Edit profile</button>\n    </krn-stack>\n  `,\n})\nexport class KernStackAgentExample {}\n\nvoid bootstrapApplication(KernStackAgentExample);\n",
       "verification": "compiled",
       "source": "examples/stack.ts"
     }

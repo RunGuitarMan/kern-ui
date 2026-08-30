@@ -9,8 +9,8 @@
   "symbol": "KrnDivider",
   "canonicalSymbol": "KrnDivider",
   "canonicalId": "divider",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -103,7 +103,7 @@
       "title": "Labeled section divider",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Labeled section divider\n *\n * Separate two form sections with visible context.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDivider } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-divider-agent-example',\n  standalone: true,\n  imports: [KrnDivider],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-divider label=\"Advanced settings\" /> `,\n})\nexport class KernDividerAgentExample {}\n\nvoid bootstrapApplication(KernDividerAgentExample);\n",
+      "code": "/**\n * Labeled section divider\n *\n * Separate two form sections with visible context.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDivider } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-divider-agent-example',\n  standalone: true,\n  imports: [KrnDivider],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-divider label=\"Advanced settings\" /> `,\n})\nexport class KernDividerAgentExample {}\n\nvoid bootstrapApplication(KernDividerAgentExample);\n",
       "verification": "compiled",
       "source": "examples/divider.ts"
     }

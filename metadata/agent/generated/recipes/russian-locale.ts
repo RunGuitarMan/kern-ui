@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { KRN_RU_RU_LOCALE, krnLocaleConfig, provideKrn } from '@kern-ui/angular/core';
-import { KrnDatePicker, KrnSelect, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnDatePicker, KrnSelect, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-russian-locale-recipe',

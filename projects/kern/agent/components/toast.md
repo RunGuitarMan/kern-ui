@@ -2,7 +2,7 @@
 
 - ID: `toast`
 - Selector: `krn-toast`
-- Import: `import { KrnToast } from '@kern-ui/angular/kit';`
+- Import: `import { KrnToast } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnToastViewport`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnToast, KrnToastService } from '@kern-ui/angular/kit';
+import { KrnToast, KrnToastService } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-toast-agent-example',

@@ -9,8 +9,8 @@
   "symbol": "KrnPagination",
   "canonicalSymbol": "KrnPagination",
   "canonicalId": "pagination",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -207,7 +207,7 @@
       "title": "Controlled customer pagination",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled customer pagination\n *\n * Keep the current one-based page in application state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnPagination } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-pagination-agent-example',\n  standalone: true,\n  imports: [KrnPagination],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-pagination [totalItems]=\"245\" [pageSize]=\"25\" [(page)]=\"page\" ariaLabel=\"Customer pages\" />\n  `,\n})\nexport class KernPaginationAgentExample {\n  page = 1;\n}\n\nvoid bootstrapApplication(KernPaginationAgentExample);\n",
+      "code": "/**\n * Controlled customer pagination\n *\n * Keep the current one-based page in application state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnPagination } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-pagination-agent-example',\n  standalone: true,\n  imports: [KrnPagination],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-pagination [totalItems]=\"245\" [pageSize]=\"25\" [(page)]=\"page\" ariaLabel=\"Customer pages\" />\n  `,\n})\nexport class KernPaginationAgentExample {\n  page = 1;\n}\n\nvoid bootstrapApplication(KernPaginationAgentExample);\n",
       "verification": "compiled",
       "source": "examples/pagination.ts"
     }

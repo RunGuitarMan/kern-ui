@@ -2,7 +2,7 @@
 
 - ID: `date-range-picker`
 - Selector: `krn-date-range-picker`
-- Import: `import { KrnDateRangePicker } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDateRangePicker } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnDateRangePicker`
 - Lifecycle: **beta**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Use two independent Date Pickers only when the dates do not form one vali
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDateRangePicker, type KrnDateRangeValue } from '@kern-ui/angular/kit';
+import { KrnDateRangePicker, type KrnDateRangeValue } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-date-range-picker-agent-example',

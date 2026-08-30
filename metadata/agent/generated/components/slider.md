@@ -2,7 +2,7 @@
 
 - ID: `slider`
 - Selector: `krn-slider`
-- Import: `import { KrnSlider } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSlider } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnSlider`
 - Lifecycle: **stable**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSlider } from '@kern-ui/angular/kit';
+import { KrnSlider } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-slider-agent-example',

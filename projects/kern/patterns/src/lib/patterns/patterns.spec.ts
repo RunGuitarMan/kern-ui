@@ -11,7 +11,7 @@ import {
   KrnI18n,
   provideKrn,
 } from '@kern-ui/angular/core';
-import { KrnDrawer } from '@kern-ui/angular/kit';
+import { KrnDrawer } from '@kern-ui/angular/feedback';
 
 import { KrnLoginForm, KrnMultiStepForm, KrnProfileForm } from './form-patterns';
 import {

@@ -9,8 +9,8 @@
   "symbol": "KrnButton",
   "canonicalSymbol": "KrnButton",
   "canonicalId": "button",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "actions",
+  "importPath": "@kern-ui/angular/actions",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -161,7 +161,7 @@
       "title": "Primary save action",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Primary save action\n *\n * Render an explicit form action with scoped visual and loading-copy defaults.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnButton, provideKrnButtonOptions } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-button-agent-example',\n  standalone: true,\n  imports: [KrnButton],\n  providers: [\n    provideKrnButtonOptions({\n      size: 'lg',\n      loadingLabel: 'Saving workspace…',\n    }),\n  ],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <form (submit)=\"saving = true; $event.preventDefault()\">\n      <button krnButton type=\"submit\" [loading]=\"saving\">Save changes</button>\n    </form>\n  `,\n})\nexport class KernButtonAgentExample {\n  saving = false;\n}\n\nvoid bootstrapApplication(KernButtonAgentExample);\n",
+      "code": "/**\n * Primary save action\n *\n * Render an explicit form action with scoped visual and loading-copy defaults.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnButton, provideKrnButtonOptions } from '@kern-ui/angular/actions';\n\n@Component({\n  selector: 'app-kern-button-agent-example',\n  standalone: true,\n  imports: [KrnButton],\n  providers: [\n    provideKrnButtonOptions({\n      size: 'lg',\n      loadingLabel: 'Saving workspace…',\n    }),\n  ],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <form (submit)=\"saving = true; $event.preventDefault()\">\n      <button krnButton type=\"submit\" [loading]=\"saving\">Save changes</button>\n    </form>\n  `,\n})\nexport class KernButtonAgentExample {\n  saving = false;\n}\n\nvoid bootstrapApplication(KernButtonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/button.ts"
     }

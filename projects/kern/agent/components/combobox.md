@@ -2,7 +2,7 @@
 
 - ID: `combobox`
 - Selector: `krn-combobox`
-- Import: `import { KrnCombobox } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCombobox } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnCombobox`
 - Lifecycle: **beta**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Use Autocomplete when unmatched free text is valid, or Select when filter
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCombobox, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnCombobox, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-combobox-agent-example',

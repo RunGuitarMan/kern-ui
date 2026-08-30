@@ -2,7 +2,7 @@
 
 - ID: `bottom-sheet`
 - Selector: `krn-bottom-sheet`
-- Import: `import { KrnBottomSheet } from '@kern-ui/angular/kit';`
+- Import: `import { KrnBottomSheet } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnBottomSheet`
 - Lifecycle: **beta**
 - Category: Feedback
@@ -27,7 +27,7 @@ Avoid: Use Dialog for viewport-independent modal work and Drawer for a side-orie
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnBottomSheet } from '@kern-ui/angular/kit';
+import { KrnBottomSheet } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-bottom-sheet-agent-example',

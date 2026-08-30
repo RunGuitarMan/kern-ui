@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnBottomSheet } from '@kern-ui/angular/kit';
+import { KrnBottomSheet } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-bottom-sheet-agent-example',

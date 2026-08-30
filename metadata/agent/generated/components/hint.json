@@ -9,8 +9,8 @@
   "symbol": "KrnHint",
   "canonicalSymbol": "KrnHint",
   "canonicalId": "hint",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -103,7 +103,7 @@
       "title": "Persistent field guidance",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Persistent field guidance\n *\n * Provide concise guidance that can be referenced by a control.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnHint } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-hint-agent-example',\n  standalone: true,\n  imports: [KrnHint],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-hint id=\"cost-center-hint\">Use the six-digit finance code.</krn-hint> `,\n})\nexport class KernHintAgentExample {}\n\nvoid bootstrapApplication(KernHintAgentExample);\n",
+      "code": "/**\n * Persistent field guidance\n *\n * Provide concise guidance that can be referenced by a control.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnHint } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-hint-agent-example',\n  standalone: true,\n  imports: [KrnHint],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-hint id=\"cost-center-hint\">Use the six-digit finance code.</krn-hint> `,\n})\nexport class KernHintAgentExample {}\n\nvoid bootstrapApplication(KernHintAgentExample);\n",
       "verification": "compiled",
       "source": "examples/hint.ts"
     }

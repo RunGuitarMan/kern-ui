@@ -9,8 +9,8 @@
   "symbol": "KrnDropdownButton",
   "canonicalSymbol": "KrnDropdownButton",
   "canonicalId": "dropdown-button",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "actions",
+  "importPath": "@kern-ui/angular/actions",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -204,7 +204,7 @@
       "title": "Controlled bulk-action menu",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled bulk-action menu\n *\n * Expose keyboard-operable secondary actions with controlled state and scoped placement.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDropdownButton, provideKrnMenuButtonOptions } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-dropdown-button-agent-example',\n  standalone: true,\n  imports: [KrnDropdownButton],\n  providers: [\n    provideKrnMenuButtonOptions({\n      menuAlign: 'start',\n      matchTriggerWidth: true,\n    }),\n  ],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-dropdown-button [(open)]=\"open\">\n      <span krnLabel>Bulk actions</span>\n      <button krnMenu type=\"button\">Assign owner</button>\n      <button krnMenu type=\"button\">Archive</button>\n    </krn-dropdown-button>\n  `,\n})\nexport class KernDropdownButtonAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernDropdownButtonAgentExample);\n",
+      "code": "/**\n * Controlled bulk-action menu\n *\n * Expose keyboard-operable secondary actions with controlled state and scoped placement.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDropdownButton, provideKrnMenuButtonOptions } from '@kern-ui/angular/actions';\n\n@Component({\n  selector: 'app-kern-dropdown-button-agent-example',\n  standalone: true,\n  imports: [KrnDropdownButton],\n  providers: [\n    provideKrnMenuButtonOptions({\n      menuAlign: 'start',\n      matchTriggerWidth: true,\n    }),\n  ],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-dropdown-button [(open)]=\"open\">\n      <span krnLabel>Bulk actions</span>\n      <button krnMenu type=\"button\">Assign owner</button>\n      <button krnMenu type=\"button\">Archive</button>\n    </krn-dropdown-button>\n  `,\n})\nexport class KernDropdownButtonAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernDropdownButtonAgentExample);\n",
       "verification": "compiled",
       "source": "examples/dropdown-button.ts"
     }

@@ -1,0 +1,20 @@
+{
+  "$schema": "./bundle-budgets.schema.json",
+  "schemaVersion": "1.0.0",
+  "description": "Uncompressed FESM budgets for canonical runtime owners and the compatibility facade.",
+  "entrypoints": {
+    "actions": 110000,
+    "addon-charts": 90000,
+    "addon-grid": 155000,
+    "cdk": 45000,
+    "core": 105000,
+    "data-display": 170000,
+    "feedback": 300000,
+    "forms": 600000,
+    "i18n": 5000,
+    "kit": 2000,
+    "layout": 170000,
+    "navigation": 230000,
+    "patterns": 200000
+  }
+}

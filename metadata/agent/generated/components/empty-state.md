@@ -2,7 +2,7 @@
 
 - ID: `empty-state`
 - Selector: `krn-empty-state`
-- Import: `import { KrnEmptyState } from '@kern-ui/angular/kit';`
+- Import: `import { KrnEmptyState } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnEmptyState`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnEmptyState } from '@kern-ui/angular/kit';
+import { KrnEmptyState } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-empty-state-agent-example',

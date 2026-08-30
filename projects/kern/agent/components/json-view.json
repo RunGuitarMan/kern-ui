@@ -9,8 +9,8 @@
   "symbol": "KrnJsonView",
   "canonicalSymbol": "KrnJsonView",
   "canonicalId": "json-view",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -176,7 +176,7 @@
       "title": "Inspectable deployment payload",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Inspectable deployment payload\n *\n * Render structured JSON with accessible tree navigation and a highlighted field.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnJsonView } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-json-view-agent-example',\n  standalone: true,\n  imports: [KrnJsonView],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-json-view\n      ariaLabel=\"Deployment payload\"\n      [data]=\"payload\"\n      [defaultExpandDepth]=\"2\"\n      highlightPattern=\"active\"\n    />\n  `,\n})\nexport class KernJsonViewAgentExample {\n  readonly payload = {\n    deployment: { id: 'dep_01KERN', active: true, replicas: 3 },\n    region: 'eu-central',\n    error: null,\n  } as const;\n}\n\nvoid bootstrapApplication(KernJsonViewAgentExample);\n",
+      "code": "/**\n * Inspectable deployment payload\n *\n * Render structured JSON with accessible tree navigation and a highlighted field.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnJsonView } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-json-view-agent-example',\n  standalone: true,\n  imports: [KrnJsonView],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-json-view\n      ariaLabel=\"Deployment payload\"\n      [data]=\"payload\"\n      [defaultExpandDepth]=\"2\"\n      highlightPattern=\"active\"\n    />\n  `,\n})\nexport class KernJsonViewAgentExample {\n  readonly payload = {\n    deployment: { id: 'dep_01KERN', active: true, replicas: 3 },\n    region: 'eu-central',\n    error: null,\n  } as const;\n}\n\nvoid bootstrapApplication(KernJsonViewAgentExample);\n",
       "verification": "compiled",
       "source": "examples/json-view.ts"
     }

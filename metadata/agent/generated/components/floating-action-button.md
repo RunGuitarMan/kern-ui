@@ -2,7 +2,7 @@
 
 - ID: `floating-action-button`
 - Selector: `button[krnFab]`
-- Import: `import { KrnFloatingActionButton } from '@kern-ui/angular/kit';`
+- Import: `import { KrnFloatingActionButton } from '@kern-ui/angular/actions';`
 - Canonical symbol: `KrnFloatingActionButton`
 - Lifecycle: **stable**
 - Category: Actions
@@ -27,7 +27,7 @@ Avoid: Do not use Floating Action Button for navigation, multiple equal-priority
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnFloatingActionButton } from '@kern-ui/angular/kit';
+import { KrnFloatingActionButton } from '@kern-ui/angular/actions';
 
 @Component({
   selector: 'app-kern-floating-action-button-agent-example',

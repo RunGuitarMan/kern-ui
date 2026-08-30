@@ -246,6 +246,10 @@ interface KrnJsonNodeHarnessFilters extends BaseHarnessFilters {
   readonly text?: KrnHarnessText;
   readonly expanded?: boolean;
 }
+interface KrnJsonViewHarnessFilters extends BaseHarnessFilters {
+  readonly ariaLabel?: KrnHarnessText;
+  readonly nodeCount?: number;
+}
 declare class KrnJsonNodeHarness extends ComponentHarness {
   static readonly hostSelector = 'krn-json-view [role="treeitem"]';
   static with(options?: KrnJsonNodeHarnessFilters): HarnessPredicate<KrnJsonNodeHarness>;
@@ -256,6 +260,9 @@ declare class KrnJsonNodeHarness extends ComponentHarness {
 }
 declare class KrnJsonViewHarness extends ComponentHarness {
   static readonly hostSelector = 'krn-json-view';
+  static with(options?: KrnJsonViewHarnessFilters): HarnessPredicate<KrnJsonViewHarness>;
+  private readonly tree;
+  getAriaLabel(): Promise<string | null>;
   getNodes(filters?: KrnJsonNodeHarnessFilters): Promise<readonly KrnJsonNodeHarness[]>;
 }
 
@@ -285,4 +292,5 @@ export type {
   KrnDataGridHeaderHarnessFilters,
   KrnDataGridRowHarnessFilters,
   KrnJsonNodeHarnessFilters,
+  KrnJsonViewHarnessFilters,
 };

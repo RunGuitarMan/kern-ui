@@ -2,7 +2,7 @@
 
 - ID: `table-of-contents`
 - Selector: `krn-table-of-contents`
-- Import: `import { KrnTableOfContents } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTableOfContents } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnTableOfContents`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTableOfContents, type KrnTocItem } from '@kern-ui/angular/kit';
+import { KrnTableOfContents, type KrnTocItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-table-of-contents-agent-example',

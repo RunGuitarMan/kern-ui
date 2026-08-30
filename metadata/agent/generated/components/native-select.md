@@ -2,7 +2,7 @@
 
 - ID: `native-select`
 - Selector: `krn-native-select`
-- Import: `import { KrnNativeSelect } from '@kern-ui/angular/kit';`
+- Import: `import { KrnNativeSelect } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnNativeSelect`
 - Lifecycle: **stable**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Do not expect the option popup to inherit Kern surface styling across ope
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnNativeSelect, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnNativeSelect, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-native-select-agent-example',

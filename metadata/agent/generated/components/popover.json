@@ -9,8 +9,8 @@
   "symbol": "KrnPopover",
   "canonicalSymbol": "KrnPopover",
   "canonicalId": "popover",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -140,7 +140,7 @@
       "title": "Controlled contextual popover",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled contextual popover\n *\n * Compose trigger and content while keeping disclosure state application-owned.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnPopover } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-popover-agent-example',\n  standalone: true,\n  imports: [KrnPopover],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-popover [(open)]=\"open\" ariaLabel=\"Account health details\">\n      <span krnPopoverTrigger>Health details</span>\n      <p>Three checks passed and one requires attention.</p>\n    </krn-popover>\n  `,\n})\nexport class KernPopoverAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernPopoverAgentExample);\n",
+      "code": "/**\n * Controlled contextual popover\n *\n * Compose trigger and content while keeping disclosure state application-owned.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnPopover } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-popover-agent-example',\n  standalone: true,\n  imports: [KrnPopover],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-popover [(open)]=\"open\" ariaLabel=\"Account health details\">\n      <span krnPopoverTrigger>Health details</span>\n      <p>Three checks passed and one requires attention.</p>\n    </krn-popover>\n  `,\n})\nexport class KernPopoverAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernPopoverAgentExample);\n",
       "verification": "compiled",
       "source": "examples/popover.ts"
     }

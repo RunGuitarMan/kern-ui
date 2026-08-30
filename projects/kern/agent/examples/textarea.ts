@@ -8,7 +8,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTextarea } from '@kern-ui/angular/kit';
+import { KrnTextarea } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-textarea-agent-example',

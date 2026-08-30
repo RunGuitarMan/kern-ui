@@ -9,8 +9,8 @@
   "symbol": "KrnAvatarGroup",
   "canonicalSymbol": "KrnAvatarGroup",
   "canonicalId": "avatar-group",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -109,7 +109,7 @@
       "title": "Account team avatar group",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Account team avatar group\n *\n * Compose named avatars under one accessible group label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAvatar, KrnAvatarGroup } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-avatar-group-agent-example',\n  standalone: true,\n  imports: [KrnAvatarGroup, KrnAvatar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-avatar-group ariaLabel=\"Account team\">\n      <krn-avatar name=\"Ada Lovelace\" alt=\"Ada Lovelace\" />\n      <krn-avatar name=\"Grace Hopper\" alt=\"Grace Hopper\" />\n      <krn-avatar name=\"Margaret Hamilton\" alt=\"Margaret Hamilton\" />\n    </krn-avatar-group>\n  `,\n})\nexport class KernAvatarGroupAgentExample {}\n\nvoid bootstrapApplication(KernAvatarGroupAgentExample);\n",
+      "code": "/**\n * Account team avatar group\n *\n * Compose named avatars under one accessible group label.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAvatar, KrnAvatarGroup } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-avatar-group-agent-example',\n  standalone: true,\n  imports: [KrnAvatarGroup, KrnAvatar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-avatar-group ariaLabel=\"Account team\">\n      <krn-avatar name=\"Ada Lovelace\" alt=\"Ada Lovelace\" />\n      <krn-avatar name=\"Grace Hopper\" alt=\"Grace Hopper\" />\n      <krn-avatar name=\"Margaret Hamilton\" alt=\"Margaret Hamilton\" />\n    </krn-avatar-group>\n  `,\n})\nexport class KernAvatarGroupAgentExample {}\n\nvoid bootstrapApplication(KernAvatarGroupAgentExample);\n",
       "verification": "compiled",
       "source": "examples/avatar-group.ts"
     }

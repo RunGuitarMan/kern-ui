@@ -9,8 +9,8 @@
   "symbol": "KrnBanner",
   "canonicalSymbol": "KrnBanner",
   "canonicalId": "banner",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -165,7 +165,7 @@
       "title": "Dismissible system banner",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Dismissible system banner\n *\n * Present a page-wide operational message with explicit tone.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBanner } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-banner-agent-example',\n  standalone: true,\n  imports: [KrnBanner],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-banner tone=\"info\" title=\"Scheduled maintenance\" [dismissible]=\"true\">\n      Reporting will be read-only from 22:00 to 23:00 UTC.\n    </krn-banner>\n  `,\n})\nexport class KernBannerAgentExample {}\n\nvoid bootstrapApplication(KernBannerAgentExample);\n",
+      "code": "/**\n * Dismissible system banner\n *\n * Present a page-wide operational message with explicit tone.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnBanner } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-banner-agent-example',\n  standalone: true,\n  imports: [KrnBanner],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-banner tone=\"info\" title=\"Scheduled maintenance\" [dismissible]=\"true\">\n      Reporting will be read-only from 22:00 to 23:00 UTC.\n    </krn-banner>\n  `,\n})\nexport class KernBannerAgentExample {}\n\nvoid bootstrapApplication(KernBannerAgentExample);\n",
       "verification": "compiled",
       "source": "examples/banner.ts"
     }

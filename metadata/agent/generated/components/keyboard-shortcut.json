@@ -9,8 +9,8 @@
   "symbol": "KrnKeyboardShortcut",
   "canonicalSymbol": "KrnKeyboardShortcut",
   "canonicalId": "keyboard-shortcut",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -92,7 +92,7 @@
       "title": "Command shortcut hint",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Command shortcut hint\n *\n * Expose the ordered keys for a common command.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnKeyboardShortcut } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-keyboard-shortcut-agent-example',\n  standalone: true,\n  imports: [KrnKeyboardShortcut],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-keyboard-shortcut [keys]=\"shortcut\" /> `,\n})\nexport class KernKeyboardShortcutAgentExample {\n  readonly shortcut: readonly string[] = ['Ctrl', 'K'];\n}\n\nvoid bootstrapApplication(KernKeyboardShortcutAgentExample);\n",
+      "code": "/**\n * Command shortcut hint\n *\n * Expose the ordered keys for a common command.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnKeyboardShortcut } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-keyboard-shortcut-agent-example',\n  standalone: true,\n  imports: [KrnKeyboardShortcut],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: ` <krn-keyboard-shortcut [keys]=\"shortcut\" /> `,\n})\nexport class KernKeyboardShortcutAgentExample {\n  readonly shortcut: readonly string[] = ['Ctrl', 'K'];\n}\n\nvoid bootstrapApplication(KernKeyboardShortcutAgentExample);\n",
       "verification": "compiled",
       "source": "examples/keyboard-shortcut.ts"
     }

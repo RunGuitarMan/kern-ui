@@ -9,8 +9,8 @@
   "symbol": "KrnDialog",
   "canonicalSymbol": "KrnDialog",
   "canonicalId": "dialog",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -285,7 +285,7 @@
       "title": "Controlled edit dialog",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled edit dialog\n *\n * Open and close a modal dialog through application-owned state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDialog } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-dialog-agent-example',\n  standalone: true,\n  imports: [KrnDialog],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button type=\"button\" (click)=\"open = true\">Open Edit customer</button>\n    <krn-dialog\n      [(open)]=\"open\"\n      title=\"Edit customer\"\n      description=\"Update customer ownership and renewal details.\"\n    >\n      <p>Update customer ownership and renewal details.</p>\n      <button krnDialogAction type=\"button\" (click)=\"open = false\">Done</button>\n    </krn-dialog>\n  `,\n})\nexport class KernDialogAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernDialogAgentExample);\n",
+      "code": "/**\n * Controlled edit dialog\n *\n * Open and close a modal dialog through application-owned state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnDialog } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-dialog-agent-example',\n  standalone: true,\n  imports: [KrnDialog],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button type=\"button\" (click)=\"open = true\">Open Edit customer</button>\n    <krn-dialog\n      [(open)]=\"open\"\n      title=\"Edit customer\"\n      description=\"Update customer ownership and renewal details.\"\n    >\n      <p>Update customer ownership and renewal details.</p>\n      <button krnDialogAction type=\"button\" (click)=\"open = false\">Done</button>\n    </krn-dialog>\n  `,\n})\nexport class KernDialogAgentExample {\n  open = false;\n}\n\nvoid bootstrapApplication(KernDialogAgentExample);\n",
       "verification": "compiled",
       "source": "examples/dialog.ts"
     }

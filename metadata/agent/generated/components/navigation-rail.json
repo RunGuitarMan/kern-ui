@@ -9,8 +9,8 @@
   "symbol": "KrnNavigationRail",
   "canonicalSymbol": "KrnNavigationRail",
   "canonicalId": "navigation-rail",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -173,7 +173,7 @@
       "title": "Expandable navigation rail",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Expandable navigation rail\n *\n * Expose compact navigation while preserving controlled expansion.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnNavigationRail } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-navigation-rail-agent-example',\n  standalone: true,\n  imports: [KrnNavigationRail],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-navigation-rail [(expanded)]=\"expanded\" ariaLabel=\"Primary navigation\">\n      <strong krnRailHeader>AC</strong>\n      <nav aria-label=\"Primary\">Home · Tasks · Reports</nav>\n      <button krnRailFooter type=\"button\">Help</button>\n    </krn-navigation-rail>\n  `,\n})\nexport class KernNavigationRailAgentExample {\n  expanded = false;\n}\n\nvoid bootstrapApplication(KernNavigationRailAgentExample);\n",
+      "code": "/**\n * Expandable navigation rail\n *\n * Expose compact navigation while preserving controlled expansion.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnNavigationRail } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-navigation-rail-agent-example',\n  standalone: true,\n  imports: [KrnNavigationRail],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-navigation-rail [(expanded)]=\"expanded\" ariaLabel=\"Primary navigation\">\n      <strong krnRailHeader>AC</strong>\n      <nav aria-label=\"Primary\">Home · Tasks · Reports</nav>\n      <button krnRailFooter type=\"button\">Help</button>\n    </krn-navigation-rail>\n  `,\n})\nexport class KernNavigationRailAgentExample {\n  expanded = false;\n}\n\nvoid bootstrapApplication(KernNavigationRailAgentExample);\n",
       "verification": "compiled",
       "source": "examples/navigation-rail.ts"
     }

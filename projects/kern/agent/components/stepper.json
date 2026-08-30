@@ -9,8 +9,8 @@
   "symbol": "KrnStepper",
   "canonicalSymbol": "KrnStepper",
   "canonicalId": "stepper",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -164,7 +164,7 @@
       "title": "Controlled onboarding progress",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled onboarding progress\n *\n * Drive a linear multi-step flow with typed immutable steps.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnStepper, type KrnStepItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-stepper-agent-example',\n  standalone: true,\n  imports: [KrnStepper],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-stepper\n      ariaLabel=\"Customer onboarding progress\"\n      [steps]=\"steps\"\n      [linear]=\"true\"\n      [completedSteps]=\"completedSteps\"\n      [(activeStep)]=\"activeStep\"\n    />\n  `,\n})\nexport class KernStepperAgentExample {\n  readonly steps: readonly KrnStepItem[] = [\n    { id: 'company', label: 'Company' },\n    { id: 'owners', label: 'Owners' },\n    { id: 'review', label: 'Review' },\n  ];\n\n  completedSteps: readonly number[] = [0];\n\n  activeStep = 1;\n}\n\nvoid bootstrapApplication(KernStepperAgentExample);\n",
+      "code": "/**\n * Controlled onboarding progress\n *\n * Drive a linear multi-step flow with typed immutable steps.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnStepper, type KrnStepItem } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-stepper-agent-example',\n  standalone: true,\n  imports: [KrnStepper],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-stepper\n      ariaLabel=\"Customer onboarding progress\"\n      [steps]=\"steps\"\n      [linear]=\"true\"\n      [completedSteps]=\"completedSteps\"\n      [(activeStep)]=\"activeStep\"\n    />\n  `,\n})\nexport class KernStepperAgentExample {\n  readonly steps: readonly KrnStepItem[] = [\n    { id: 'company', label: 'Company' },\n    { id: 'owners', label: 'Owners' },\n    { id: 'review', label: 'Review' },\n  ];\n\n  completedSteps: readonly number[] = [0];\n\n  activeStep = 1;\n}\n\nvoid bootstrapApplication(KernStepperAgentExample);\n",
       "verification": "compiled",
       "source": "examples/stepper.ts"
     }

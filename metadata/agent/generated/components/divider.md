@@ -2,7 +2,7 @@
 
 - ID: `divider`
 - Selector: `krn-divider`
-- Import: `import { KrnDivider } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDivider } from '@kern-ui/angular/layout';`
 - Canonical symbol: `KrnDivider`
 - Lifecycle: **stable**
 - Category: Layout
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDivider } from '@kern-ui/angular/kit';
+import { KrnDivider } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-divider-agent-example',

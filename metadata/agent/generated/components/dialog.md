@@ -2,7 +2,7 @@
 
 - ID: `dialog`
 - Selector: `krn-dialog`
-- Import: `import { KrnDialog } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDialog } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnDialog`
 - Lifecycle: **beta**
 - Category: Feedback
@@ -27,7 +27,7 @@ Avoid: Use Popover for non-modal supplemental content and a route when the task 
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDialog } from '@kern-ui/angular/kit';
+import { KrnDialog } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-dialog-agent-example',

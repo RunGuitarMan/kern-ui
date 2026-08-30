@@ -2,7 +2,7 @@
 
 - ID: `disclosure`
 - Selector: `krn-disclosure`
-- Import: `import { KrnDisclosure } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDisclosure } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnDisclosure`
 - Lifecycle: **stable**
 - Category: Data display
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDisclosure } from '@kern-ui/angular/kit';
+import { KrnDisclosure } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-disclosure-agent-example',

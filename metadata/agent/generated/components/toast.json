@@ -9,8 +9,8 @@
   "symbol": "KrnToast",
   "canonicalSymbol": "KrnToastViewport",
   "canonicalId": "toast",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": ["KrnSnackbar", "KrnToastViewport"],
     "selectors": ["krn-snackbar", "krn-toast-viewport"],
@@ -144,7 +144,7 @@
       "title": "Application toast viewport",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Application toast viewport\n *\n * Place one viewport and create notifications through the root service.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component, inject } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnToast, KrnToastService } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-toast-agent-example',\n  standalone: true,\n  imports: [KrnToast],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button type=\"button\" (click)=\"notify()\">Save report</button>\n    <krn-toast [(expanded)]=\"expanded\" position=\"top-end\" />\n  `,\n})\nexport class KernToastAgentExample {\n  private readonly toasts = inject(KrnToastService);\n\n  expanded = false;\n\n  notify(): void {\n    this.toasts.success('Report saved', { title: 'Saved' });\n  }\n}\n\nvoid bootstrapApplication(KernToastAgentExample);\n",
+      "code": "/**\n * Application toast viewport\n *\n * Place one viewport and create notifications through the root service.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component, inject } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnToast, KrnToastService } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-toast-agent-example',\n  standalone: true,\n  imports: [KrnToast],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <button type=\"button\" (click)=\"notify()\">Save report</button>\n    <krn-toast [(expanded)]=\"expanded\" position=\"top-end\" />\n  `,\n})\nexport class KernToastAgentExample {\n  private readonly toasts = inject(KrnToastService);\n\n  expanded = false;\n\n  notify(): void {\n    this.toasts.success('Report saved', { title: 'Saved' });\n  }\n}\n\nvoid bootstrapApplication(KernToastAgentExample);\n",
       "verification": "compiled",
       "source": "examples/toast.ts"
     }

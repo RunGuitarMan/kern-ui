@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDialog } from '@kern-ui/angular/kit';
+import { KrnDialog } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-dialog-agent-example',

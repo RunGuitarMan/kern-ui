@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSidebar } from '@kern-ui/angular/kit';
+import { KrnSidebar } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-sidebar-agent-example',

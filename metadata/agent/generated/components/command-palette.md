@@ -2,7 +2,7 @@
 
 - ID: `command-palette`
 - Selector: `krn-command-palette`
-- Import: `import { KrnCommandPalette } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCommandPalette } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnCommandPalette`
 - Lifecycle: **beta**
 - Category: Navigation
@@ -27,7 +27,7 @@ Avoid: Use Menu for a small contextual action set and Global Search for content 
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCommandPalette, type KrnCommandItem } from '@kern-ui/angular/kit';
+import { KrnCommandPalette, type KrnCommandItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-command-palette-agent-example',

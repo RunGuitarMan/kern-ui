@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication, provideClientHydration } from '@angular/platform-browser';
 import { provideKrn } from '@kern-ui/angular/core';
-import { KrnAppShell, KrnCalendar, KrnDialog } from '@kern-ui/angular/kit';
+import { KrnCalendar } from '@kern-ui/angular/data-display';
+import { KrnDialog } from '@kern-ui/angular/feedback';
+import { KrnAppShell } from '@kern-ui/angular/layout';
 
 @Component({
   selector: 'app-kern-hydration-recipe',

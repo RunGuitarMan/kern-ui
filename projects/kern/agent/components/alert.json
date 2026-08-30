@@ -9,8 +9,8 @@
   "symbol": "KrnAlert",
   "canonicalSymbol": "KrnAlert",
   "canonicalId": "alert",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -171,7 +171,7 @@
       "title": "Persistent warning alert",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Persistent warning alert\n *\n * Communicate a recoverable issue with title and supporting action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAlert } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-alert-agent-example',\n  standalone: true,\n  imports: [KrnAlert],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-alert tone=\"warning\" title=\"Verification required\">\n      Confirm the billing owner before the next renewal.\n      <button type=\"button\">Review owner</button>\n    </krn-alert>\n  `,\n})\nexport class KernAlertAgentExample {}\n\nvoid bootstrapApplication(KernAlertAgentExample);\n",
+      "code": "/**\n * Persistent warning alert\n *\n * Communicate a recoverable issue with title and supporting action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAlert } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-alert-agent-example',\n  standalone: true,\n  imports: [KrnAlert],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-alert tone=\"warning\" title=\"Verification required\">\n      Confirm the billing owner before the next renewal.\n      <button type=\"button\">Review owner</button>\n    </krn-alert>\n  `,\n})\nexport class KernAlertAgentExample {}\n\nvoid bootstrapApplication(KernAlertAgentExample);\n",
       "verification": "compiled",
       "source": "examples/alert.ts"
     }

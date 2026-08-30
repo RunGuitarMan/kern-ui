@@ -2,7 +2,7 @@
 
 - ID: `verification-code`
 - Selector: `krn-verification-code`
-- Import: `import { KrnVerificationCode } from '@kern-ui/angular/kit';`
+- Import: `import { KrnVerificationCode } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnOtpInput`
 - Lifecycle: **stable**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnVerificationCode } from '@kern-ui/angular/kit';
+import { KrnVerificationCode } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-verification-code-agent-example',

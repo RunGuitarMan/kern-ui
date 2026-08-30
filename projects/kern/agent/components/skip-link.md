@@ -2,7 +2,7 @@
 
 - ID: `skip-link`
 - Selector: `krn-skip-link`
-- Import: `import { KrnSkipLink } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSkipLink } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnSkipLink`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSkipLink } from '@kern-ui/angular/kit';
+import { KrnSkipLink } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-skip-link-agent-example',

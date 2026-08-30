@@ -2,7 +2,7 @@
 
 - ID: `tree-navigation`
 - Selector: `krn-tree-navigation`
-- Import: `import { KrnTreeNavigation } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTreeNavigation } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnTreeNavigation`
 - Lifecycle: **beta**
 - Category: Navigation
@@ -27,7 +27,7 @@ Avoid: Use Tree for selectable domain data and Menu for a short transient action
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTreeNavigation, type KrnTreeNavigationItem } from '@kern-ui/angular/kit';
+import { KrnTreeNavigation, type KrnTreeNavigationItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-tree-navigation-agent-example',

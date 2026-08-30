@@ -9,8 +9,8 @@
   "symbol": "KrnCluster",
   "canonicalSymbol": "KrnCluster",
   "canonicalId": "cluster",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -139,7 +139,7 @@
       "title": "Wrapping metadata cluster",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Wrapping metadata cluster\n *\n * Wrap independent metadata items without manual margins.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCluster } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-cluster-agent-example',\n  standalone: true,\n  imports: [KrnCluster],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-cluster gap=\"2\">\n      <span>Owner: Platform</span>\n      <span>Region: EU</span>\n      <span>Status: Healthy</span>\n    </krn-cluster>\n  `,\n})\nexport class KernClusterAgentExample {}\n\nvoid bootstrapApplication(KernClusterAgentExample);\n",
+      "code": "/**\n * Wrapping metadata cluster\n *\n * Wrap independent metadata items without manual margins.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCluster } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-cluster-agent-example',\n  standalone: true,\n  imports: [KrnCluster],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-cluster gap=\"2\">\n      <span>Owner: Platform</span>\n      <span>Region: EU</span>\n      <span>Status: Healthy</span>\n    </krn-cluster>\n  `,\n})\nexport class KernClusterAgentExample {}\n\nvoid bootstrapApplication(KernClusterAgentExample);\n",
       "verification": "compiled",
       "source": "examples/cluster.ts"
     }

@@ -2,7 +2,7 @@
 
 - ID: `menubar`
 - Selector: `krn-menubar`
-- Import: `import { KrnMenubar } from '@kern-ui/angular/kit';`
+- Import: `import { KrnMenubar } from '@kern-ui/angular/navigation';`
 - Canonical symbol: `KrnMenubar`
 - Lifecycle: **stable**
 - Category: Navigation
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnMenubar, type KrnNavigationItem } from '@kern-ui/angular/kit';
+import { KrnMenubar, type KrnNavigationItem } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-menubar-agent-example',

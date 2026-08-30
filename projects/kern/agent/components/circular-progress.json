@@ -9,8 +9,8 @@
   "symbol": "KrnCircularProgress",
   "canonicalSymbol": "KrnCircularProgress",
   "canonicalId": "circular-progress",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -145,7 +145,7 @@
       "title": "Compact sync progress",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Compact sync progress\n *\n * Show known progress where horizontal space is constrained.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCircularProgress } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-circular-progress-agent-example',\n  standalone: true,\n  imports: [KrnCircularProgress],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-circular-progress\n      ariaLabel=\"Account sync progress\"\n      [value]=\"72\"\n      [max]=\"100\"\n      [showValue]=\"true\"\n    />\n  `,\n})\nexport class KernCircularProgressAgentExample {}\n\nvoid bootstrapApplication(KernCircularProgressAgentExample);\n",
+      "code": "/**\n * Compact sync progress\n *\n * Show known progress where horizontal space is constrained.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnCircularProgress } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-circular-progress-agent-example',\n  standalone: true,\n  imports: [KrnCircularProgress],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-circular-progress\n      ariaLabel=\"Account sync progress\"\n      [value]=\"72\"\n      [max]=\"100\"\n      [showValue]=\"true\"\n    />\n  `,\n})\nexport class KernCircularProgressAgentExample {}\n\nvoid bootstrapApplication(KernCircularProgressAgentExample);\n",
       "verification": "compiled",
       "source": "examples/circular-progress.ts"
     }

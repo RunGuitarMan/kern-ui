@@ -2,7 +2,7 @@
 
 - ID: `hover-card`
 - Selector: `krn-hover-card`
-- Import: `import { KrnHoverCard } from '@kern-ui/angular/kit';`
+- Import: `import { KrnHoverCard } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnHoverCard`
 - Lifecycle: **stable**
 - Category: Feedback
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnHoverCard } from '@kern-ui/angular/kit';
+import { KrnHoverCard } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-hover-card-agent-example',

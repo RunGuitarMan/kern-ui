@@ -254,7 +254,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
       </krn-resizable-panels>
     `,
     valueImports: {
-      '@kern-ui/angular/kit': ['KrnResizablePanel', 'KrnResizeHandle'],
+      '@kern-ui/angular/layout': ['KrnResizablePanel', 'KrnResizeHandle'],
     },
     componentImports: ['KrnResizablePanel', 'KrnResizeHandle'],
     members: ['panelSizes: readonly number[] = [38, 62];'],
@@ -270,7 +270,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
       </form>
     `,
     valueImports: {
-      '@kern-ui/angular/kit': ['provideKrnButtonOptions'],
+      '@kern-ui/angular/actions': ['provideKrnButtonOptions'],
     },
     providers: [
       `provideKrnButtonOptions({
@@ -297,7 +297,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         <button krnButton type="button">Approve</button>
       </div>
     `,
-    valueImports: { '@kern-ui/angular/kit': ['KrnButton'] },
+    valueImports: { '@kern-ui/angular/actions': ['KrnButton'] },
     componentImports: ['KrnButton'],
     riskTags: ['compound-component', 'accessibility-copy'],
     assertions: ['div krnButtonGroup', 'aria-label="Review actions"', 'type="button"'],
@@ -359,7 +359,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         <button krnToggleButton value="forecast">Forecast</button>
       </div>
     `,
-    valueImports: { '@kern-ui/angular/kit': ['KrnToggleButton'] },
+    valueImports: { '@kern-ui/angular/actions': ['KrnToggleButton'] },
     componentImports: ['KrnToggleButton'],
     members: [`visibleLayers: readonly string[] = ['targets'];`],
     riskTags: ['controlled-state', 'compound-component'],
@@ -386,7 +386,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
       <output>{{ lastResult }}</output>
     `,
     valueImports: {
-      '@kern-ui/angular/kit': ['provideKrnCopyButtonOptions'],
+      '@kern-ui/angular/actions': ['provideKrnCopyButtonOptions'],
     },
     providers: [
       `provideKrnCopyButtonOptions({
@@ -429,7 +429,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
       </krn-dropdown-button>
     `,
     valueImports: {
-      '@kern-ui/angular/kit': ['provideKrnMenuButtonOptions'],
+      '@kern-ui/angular/actions': ['provideKrnMenuButtonOptions'],
     },
     providers: [
       `provideKrnMenuButtonOptions({
@@ -461,7 +461,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
     `,
     valueImports: {
       '@angular/forms': ['FormControl', 'ReactiveFormsModule'],
-      '@kern-ui/angular/kit': ['KrnHint', 'KrnLabel', 'KrnTextInput'],
+      '@kern-ui/angular/forms': ['KrnHint', 'KrnLabel', 'KrnTextInput'],
     },
     componentImports: ['ReactiveFormsModule', 'KrnHint', 'KrnLabel', 'KrnTextInput'],
     members: [`readonly control = new FormControl<string>('Acme Europe', { nonNullable: true });`],
@@ -586,7 +586,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
     `,
     controlType: 'readonly string[]',
     initialValue: "['email']",
-    extraValueImports: { '@kern-ui/angular/kit': ['KrnCheckbox'] },
+    extraValueImports: { '@kern-ui/angular/forms': ['KrnCheckbox'] },
     componentImports: ['KrnCheckbox'],
   }),
   radio: defineRecipe({
@@ -606,7 +606,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
     `,
     controlType: 'string | null',
     initialValue: "'annual'",
-    extraValueImports: { '@kern-ui/angular/kit': ['KrnRadio'] },
+    extraValueImports: { '@kern-ui/angular/forms': ['KrnRadio'] },
     componentImports: ['KrnRadio'],
   }),
   switch: reactiveFormRecipe({
@@ -633,7 +633,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
     `,
     controlType: 'string | null',
     initialValue: "'owner-ada'",
-    extraTypeImports: { '@kern-ui/angular/kit': ['KrnSelectOption'] },
+    extraTypeImports: { '@kern-ui/angular/forms': ['KrnSelectOption'] },
     members: [
       `readonly ownerOptions: readonly KrnSelectOption<string>[] = [
         { value: 'owner-ada', label: 'Ada Lovelace' },
@@ -656,7 +656,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
     `,
     controlType: 'string | null',
     initialValue: "'eu-central'",
-    extraTypeImports: { '@kern-ui/angular/kit': ['KrnSelectOption'] },
+    extraTypeImports: { '@kern-ui/angular/forms': ['KrnSelectOption'] },
     members: [
       `readonly regionOptions: readonly KrnSelectOption<string>[] = [
         { value: 'eu-central', label: 'EU Central' },
@@ -679,7 +679,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
     `,
     controlType: 'readonly string[]',
     initialValue: "['reviewer-security']",
-    extraTypeImports: { '@kern-ui/angular/kit': ['KrnSelectOption'] },
+    extraTypeImports: { '@kern-ui/angular/forms': ['KrnSelectOption'] },
     members: [
       `readonly reviewerOptions: readonly KrnSelectOption<string>[] = [
         { value: 'reviewer-security', label: 'Security team' },
@@ -704,7 +704,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
     `,
     controlType: 'string',
     initialValue: "'Platform team'",
-    extraTypeImports: { '@kern-ui/angular/kit': ['KrnSelectOption'] },
+    extraTypeImports: { '@kern-ui/angular/forms': ['KrnSelectOption'] },
     members: [
       `readonly ownerOptions: readonly KrnSelectOption<string>[] = [
         { value: 'Platform team', label: 'Platform team' },
@@ -728,7 +728,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
     `,
     controlType: 'string',
     initialValue: "'Acme Europe'",
-    extraTypeImports: { '@kern-ui/angular/kit': ['KrnSelectOption'] },
+    extraTypeImports: { '@kern-ui/angular/forms': ['KrnSelectOption'] },
     members: [
       `readonly accountOptions: readonly KrnSelectOption<string>[] = [
         { value: 'Acme Europe', label: 'Acme Europe' },
@@ -769,7 +769,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
     `,
     controlType: 'KrnRangeValue',
     initialValue: '{ start: 20, end: 80 }',
-    extraTypeImports: { '@kern-ui/angular/kit': ['KrnRangeValue'] },
+    extraTypeImports: { '@kern-ui/angular/forms': ['KrnRangeValue'] },
     assertions: ['FormControl<KrnRangeValue>'],
   }),
   'segmented-control': reactiveFormRecipe({
@@ -784,7 +784,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
     `,
     controlType: 'string | null',
     initialValue: "'quarter'",
-    extraTypeImports: { '@kern-ui/angular/kit': ['KrnSegmentOption'] },
+    extraTypeImports: { '@kern-ui/angular/forms': ['KrnSegmentOption'] },
     members: [
       `readonly periodOptions: readonly KrnSegmentOption<string>[] = [
         { value: 'month', label: 'Month' },
@@ -824,7 +824,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
     `,
     controlType: 'KrnDateRangeValue',
     initialValue: `{ start: '2026-07-01', end: '2026-09-30' }`,
-    extraTypeImports: { '@kern-ui/angular/kit': ['KrnDateRangeValue'] },
+    extraTypeImports: { '@kern-ui/angular/forms': ['KrnDateRangeValue'] },
     riskTags: ['forms', 'date-time', 'overlay'],
     assertions: ['FormControl<KrnDateRangeValue>', 'today="2026-07-29"'],
   }),
@@ -920,7 +920,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
     title: 'Typed account breadcrumbs',
     scenario: 'Describe hierarchy with a typed immutable breadcrumb collection.',
     template: `<krn-breadcrumbs [items]="items" ariaLabel="Account location" />`,
-    typeImports: { '@kern-ui/angular/kit': ['KrnBreadcrumbItem'] },
+    typeImports: { '@kern-ui/angular/navigation': ['KrnBreadcrumbItem'] },
     members: [
       `readonly items: readonly KrnBreadcrumbItem[] = [
         { label: 'Customers', href: '/customers' },
@@ -942,7 +942,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         Selected section: {{ selectedTab }}
       </krn-tabs>
     `,
-    typeImports: { '@kern-ui/angular/kit': ['KrnTabItem'] },
+    typeImports: { '@kern-ui/angular/navigation': ['KrnTabItem'] },
     members: [
       `readonly items: readonly KrnTabItem[] = [
         { id: 'overview', label: 'Overview' },
@@ -966,7 +966,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         Selected settings section: {{ selectedTab }}
       </krn-vertical-tabs>
     `,
-    typeImports: { '@kern-ui/angular/kit': ['KrnTabItem'] },
+    typeImports: { '@kern-ui/angular/navigation': ['KrnTabItem'] },
     members: [
       `readonly items: readonly KrnTabItem[] = [
         { id: 'profile', label: 'Profile' },
@@ -1004,7 +1004,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         [(activeStep)]="activeStep"
       />
     `,
-    typeImports: { '@kern-ui/angular/kit': ['KrnStepItem'] },
+    typeImports: { '@kern-ui/angular/navigation': ['KrnStepItem'] },
     members: [
       `readonly steps: readonly KrnStepItem[] = [
         { id: 'company', label: 'Company' },
@@ -1027,7 +1027,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         [(open)]="open"
       />
     `,
-    typeImports: { '@kern-ui/angular/kit': ['KrnNavigationItem'] },
+    typeImports: { '@kern-ui/angular/navigation': ['KrnNavigationItem'] },
     members: [
       `readonly items: readonly (KrnNavigationItem & { readonly shortcut?: string })[] = [
         { id: 'duplicate', label: 'Duplicate', shortcut: '⌘D' },
@@ -1042,7 +1042,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
     title: 'Typed application menubar',
     scenario: 'Expose a compact keyboard-oriented application menu.',
     template: `<krn-menubar ariaLabel="Application menu" [items]="items" />`,
-    typeImports: { '@kern-ui/angular/kit': ['KrnNavigationItem'] },
+    typeImports: { '@kern-ui/angular/navigation': ['KrnNavigationItem'] },
     members: [
       `readonly items: readonly KrnNavigationItem[] = [
         { id: 'customers', label: 'Customers', href: '/customers' },
@@ -1063,7 +1063,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         <button type="button">Open row actions</button>
       </krn-context-menu>
     `,
-    typeImports: { '@kern-ui/angular/kit': ['KrnContextMenuItem'] },
+    typeImports: { '@kern-ui/angular/navigation': ['KrnContextMenuItem'] },
     members: [
       `readonly items: readonly KrnContextMenuItem[] = [
         { id: 'open', label: 'Open customer' },
@@ -1091,7 +1091,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         [(expandedIds)]="expandedIds"
       />
     `,
-    typeImports: { '@kern-ui/angular/kit': ['KrnTreeNavigationItem'] },
+    typeImports: { '@kern-ui/angular/navigation': ['KrnTreeNavigationItem'] },
     members: [
       `readonly items: readonly KrnTreeNavigationItem[] = [
         {
@@ -1123,7 +1123,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         [(value)]="selectedDestination"
       />
     `,
-    typeImports: { '@kern-ui/angular/kit': ['KrnNavigationItem'] },
+    typeImports: { '@kern-ui/angular/navigation': ['KrnNavigationItem'] },
     members: [
       `readonly items: readonly KrnNavigationItem[] = [
         { id: 'home', label: 'Home', href: '/home' },
@@ -1146,7 +1146,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         [(open)]="open"
       />
     `,
-    typeImports: { '@kern-ui/angular/kit': ['KrnCommandItem'] },
+    typeImports: { '@kern-ui/angular/navigation': ['KrnCommandItem'] },
     members: [
       `readonly commands: readonly KrnCommandItem[] = [
         {
@@ -1180,7 +1180,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         [(activeId)]="activeId"
       />
     `,
-    typeImports: { '@kern-ui/angular/kit': ['KrnTocItem'] },
+    typeImports: { '@kern-ui/angular/navigation': ['KrnTocItem'] },
     members: [
       `readonly items: readonly KrnTocItem[] = [
         { id: 'company', label: 'Company', level: 2 },
@@ -1232,7 +1232,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
       <krn-toast [(expanded)]="expanded" position="top-end" />
     `,
     coreImports: ['inject'],
-    valueImports: { '@kern-ui/angular/kit': ['KrnToastService'] },
+    valueImports: { '@kern-ui/angular/feedback': ['KrnToastService'] },
     members: [
       'private readonly toasts = inject(KrnToastService);',
       'expanded = false;',
@@ -1483,7 +1483,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         <krn-avatar name="Margaret Hamilton" alt="Margaret Hamilton" />
       </krn-avatar-group>
     `,
-    valueImports: { '@kern-ui/angular/kit': ['KrnAvatar'] },
+    valueImports: { '@kern-ui/angular/data-display': ['KrnAvatar'] },
     componentImports: ['KrnAvatar'],
     riskTags: ['compound-component'],
   }),
@@ -1519,7 +1519,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         <krn-description-item term="Renewal date">15 October 2026</krn-description-item>
       </krn-description-list>
     `,
-    valueImports: { '@kern-ui/angular/kit': ['KrnDescriptionItem'] },
+    valueImports: { '@kern-ui/angular/data-display': ['KrnDescriptionItem'] },
     componentImports: ['KrnDescriptionItem'],
     riskTags: ['compound-component'],
   }),
@@ -1534,7 +1534,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         <krn-list-item heading="Globex">Commercial · Review needed</krn-list-item>
       </krn-list>
     `,
-    valueImports: { '@kern-ui/angular/kit': ['KrnListItem'] },
+    valueImports: { '@kern-ui/angular/data-display': ['KrnListItem'] },
     componentImports: ['KrnListItem'],
     riskTags: ['compound-component'],
   }),
@@ -1560,7 +1560,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         <krn-disclosure heading="Retention">Audit records are retained for seven years.</krn-disclosure>
       </krn-accordion>
     `,
-    valueImports: { '@kern-ui/angular/kit': ['KrnDisclosure'] },
+    valueImports: { '@kern-ui/angular/data-display': ['KrnDisclosure'] },
     componentImports: ['KrnDisclosure'],
     members: ['dataResidencyOpen = true;'],
     riskTags: ['compound-component', 'controlled-state'],
@@ -1591,7 +1591,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         </krn-timeline-item>
       </krn-timeline>
     `,
-    valueImports: { '@kern-ui/angular/kit': ['KrnTimelineItem'] },
+    valueImports: { '@kern-ui/angular/data-display': ['KrnTimelineItem'] },
     componentImports: ['KrnTimelineItem'],
     riskTags: ['compound-component'],
   }),
@@ -1606,7 +1606,7 @@ export const KERN_AGENT_EXAMPLE_RECIPES = Object.freeze({
         [(expanded)]="expandedIds"
       />
     `,
-    typeImports: { '@kern-ui/angular/kit': ['KrnTreeNode'] },
+    typeImports: { '@kern-ui/angular/data-display': ['KrnTreeNode'] },
     members: [
       `readonly nodes: readonly KrnTreeNode[] = [
         {

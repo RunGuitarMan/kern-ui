@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '
 import type { OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCombobox, type KrnOptionsState, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnCombobox, type KrnOptionsState, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-remote-combobox-recipe',

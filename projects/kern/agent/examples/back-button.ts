@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnBackButton } from '@kern-ui/angular/kit';
+import { KrnBackButton } from '@kern-ui/angular/navigation';
 
 @Component({
   selector: 'app-kern-back-button-agent-example',

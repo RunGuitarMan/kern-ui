@@ -2,7 +2,7 @@
 
 - ID: `multi-select`
 - Selector: `krn-multi-select`
-- Import: `import { KrnMultiSelect } from '@kern-ui/angular/kit';`
+- Import: `import { KrnMultiSelect } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnMultiSelect`
 - Lifecycle: **beta**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Use Tags Input for user-authored values and Checkbox Group when the compl
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnMultiSelect, type KrnSelectOption } from '@kern-ui/angular/kit';
+import { KrnMultiSelect, type KrnSelectOption } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-multi-select-agent-example',

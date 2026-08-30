@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "libraryVersion": "0.1.2",
+  "components": {
+    "autocomplete": {
+      "symbol": "KrnAutocompleteHarness",
+      "source": "projects/kern/testing/forms/src/selection-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnAutocompleteHarness.with({ ariaLabel: 'Custom tag'"
+    },
+    "bar-chart": {
+      "symbol": "KrnBarChartHarness",
+      "source": "projects/kern/testing/data-display/src/chart-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnBarChartHarness.with({ title: 'Bar trend'"
+    },
+    "bottom-sheet": {
+      "symbol": "KrnBottomSheetHarness",
+      "source": "projects/kern/testing/feedback/src/overlay-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnBottomSheetHarness.with({ title: 'Mobile actions'"
+    },
+    "color-picker": {
+      "symbol": "KrnColorPickerHarness",
+      "source": "projects/kern/testing/forms/src/color-picker-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnColorPickerHarness.with({"
+    },
+    "combobox": {
+      "symbol": "KrnComboboxHarness",
+      "source": "projects/kern/testing/forms/src/selection-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnComboboxHarness.with({ ariaLabel: 'Deployment region'"
+    },
+    "command-palette": {
+      "symbol": "KrnCommandPaletteHarness",
+      "source": "projects/kern/testing/navigation/src/command-palette-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnCommandPaletteHarness.with({"
+    },
+    "data-grid": {
+      "symbol": "KrnDataGridHarness",
+      "source": "projects/kern/testing/data-display/src/data-grid-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnDataGridHarness.with({\n        ariaLabel: 'Workspace plans'"
+    },
+    "data-table": {
+      "symbol": "KrnDataGridHarness",
+      "source": "projects/kern/testing/data-display/src/data-grid-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnDataGridHarness.with({\n        ariaLabel: 'Workspace plan table'"
+    },
+    "date-picker": {
+      "symbol": "KrnDatePickerHarness",
+      "source": "projects/kern/testing/forms/src/date-time-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnDatePickerHarness.with({ ariaLabel: 'Deployment date'"
+    },
+    "date-range-picker": {
+      "symbol": "KrnDateRangePickerHarness",
+      "source": "projects/kern/testing/forms/src/date-time-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnDateRangePickerHarness.with({ ariaLabel: 'Reporting period'"
+    },
+    "dialog": {
+      "symbol": "KrnDialogHarness",
+      "source": "projects/kern/testing/feedback/src/overlay-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnDialogHarness.with({"
+    },
+    "donut-chart": {
+      "symbol": "KrnDonutChartHarness",
+      "source": "projects/kern/testing/data-display/src/chart-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnDonutChartHarness.with({ title: 'Donut mix'"
+    },
+    "drawer": {
+      "symbol": "KrnDrawerHarness",
+      "source": "projects/kern/testing/feedback/src/overlay-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnDrawerHarness.with({ title: 'Customer details'"
+    },
+    "json-view": {
+      "symbol": "KrnJsonViewHarness",
+      "source": "projects/kern/testing/data-display/src/json-view-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnJsonViewHarness.with({ ariaLabel: 'Deployment payload'"
+    },
+    "line-chart": {
+      "symbol": "KrnLineChartHarness",
+      "source": "projects/kern/testing/data-display/src/chart-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnLineChartHarness.with({ title: 'Line trend'"
+    },
+    "multi-select": {
+      "symbol": "KrnMultiSelectHarness",
+      "source": "projects/kern/testing/forms/src/selection-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnMultiSelectHarness.with({"
+    },
+    "select": {
+      "symbol": "KrnSelectHarness",
+      "source": "projects/kern/testing/forms/src/select-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnSelectHarness.with({"
+    },
+    "time-picker": {
+      "symbol": "KrnTimePickerHarness",
+      "source": "projects/kern/testing/forms/src/date-time-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "KrnTimePickerHarness.with({ ariaLabel: 'Deployment time'"
+    },
+    "tree": {
+      "symbol": "KrnTreeHarness",
+      "source": "projects/kern/testing/data-display/src/tree-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "loader.getHarness(KrnTreeHarness)"
+    },
+    "tree-navigation": {
+      "symbol": "KrnTreeNavigationHarness",
+      "source": "projects/kern/testing/navigation/src/navigation-harness.ts",
+      "spec": "projects/kern/src/lib/testing/harnesses.spec.ts",
+      "specAnchor": "loader.getHarness(KrnTreeNavigationHarness)"
+    }
+  }
+}

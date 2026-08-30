@@ -9,8 +9,8 @@
   "symbol": "KrnErrorState",
   "canonicalSymbol": "KrnErrorState",
   "canonicalId": "error-state",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -134,7 +134,7 @@
       "title": "Recoverable report error",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Recoverable report error\n *\n * Describe a failed load and expose a recovery action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnErrorState } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-error-state-agent-example',\n  standalone: true,\n  imports: [KrnErrorState],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-error-state\n      title=\"Report unavailable\"\n      description=\"The latest report could not be loaded.\"\n    >\n      <button type=\"button\">Try again</button>\n    </krn-error-state>\n  `,\n})\nexport class KernErrorStateAgentExample {}\n\nvoid bootstrapApplication(KernErrorStateAgentExample);\n",
+      "code": "/**\n * Recoverable report error\n *\n * Describe a failed load and expose a recovery action.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnErrorState } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-error-state-agent-example',\n  standalone: true,\n  imports: [KrnErrorState],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-error-state\n      title=\"Report unavailable\"\n      description=\"The latest report could not be loaded.\"\n    >\n      <button type=\"button\">Try again</button>\n    </krn-error-state>\n  `,\n})\nexport class KernErrorStateAgentExample {}\n\nvoid bootstrapApplication(KernErrorStateAgentExample);\n",
       "verification": "compiled",
       "source": "examples/error-state.ts"
     }

@@ -9,8 +9,8 @@
   "symbol": "KrnScrollArea",
   "canonicalSymbol": "KrnScrollArea",
   "canonicalId": "scroll-area",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -149,7 +149,7 @@
       "title": "Keyboard-accessible activity log",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Keyboard-accessible activity log\n *\n * Constrain a long activity stream without hiding keyboard access.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnScrollArea } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-scroll-area-agent-example',\n  standalone: true,\n  imports: [KrnScrollArea],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-scroll-area\n      axis=\"vertical\"\n      maxBlockSize=\"16rem\"\n      ariaLabel=\"Recent account activity\"\n      [keyboardAccessible]=\"true\"\n    >\n      <ol>\n        <li>Contract approved</li>\n        <li>Risk review completed</li>\n        <li>Renewal owner assigned</li>\n      </ol>\n    </krn-scroll-area>\n  `,\n})\nexport class KernScrollAreaAgentExample {}\n\nvoid bootstrapApplication(KernScrollAreaAgentExample);\n",
+      "code": "/**\n * Keyboard-accessible activity log\n *\n * Constrain a long activity stream without hiding keyboard access.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnScrollArea } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-scroll-area-agent-example',\n  standalone: true,\n  imports: [KrnScrollArea],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-scroll-area\n      axis=\"vertical\"\n      maxBlockSize=\"16rem\"\n      ariaLabel=\"Recent account activity\"\n      [keyboardAccessible]=\"true\"\n    >\n      <ol>\n        <li>Contract approved</li>\n        <li>Risk review completed</li>\n        <li>Renewal owner assigned</li>\n      </ol>\n    </krn-scroll-area>\n  `,\n})\nexport class KernScrollAreaAgentExample {}\n\nvoid bootstrapApplication(KernScrollAreaAgentExample);\n",
       "verification": "compiled",
       "source": "examples/scroll-area.ts"
     }

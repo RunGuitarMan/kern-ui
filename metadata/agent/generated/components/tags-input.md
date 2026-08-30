@@ -2,7 +2,7 @@
 
 - ID: `tags-input`
 - Selector: `krn-tags-input`
-- Import: `import { KrnTagsInput } from '@kern-ui/angular/kit';`
+- Import: `import { KrnTagsInput } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnTagsInput`
 - Lifecycle: **stable**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnTagsInput } from '@kern-ui/angular/kit';
+import { KrnTagsInput } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-tags-input-agent-example',

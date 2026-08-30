@@ -2,7 +2,7 @@
 
 - ID: `calendar`
 - Selector: `krn-calendar`
-- Import: `import { KrnCalendar } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCalendar } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnCalendar`
 - Lifecycle: **stable**
 - Category: Data display
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCalendar } from '@kern-ui/angular/kit';
+import { KrnCalendar } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-calendar-agent-example',

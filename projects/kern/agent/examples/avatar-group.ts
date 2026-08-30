@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnAvatar, KrnAvatarGroup } from '@kern-ui/angular/kit';
+import { KrnAvatar, KrnAvatarGroup } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-avatar-group-agent-example',

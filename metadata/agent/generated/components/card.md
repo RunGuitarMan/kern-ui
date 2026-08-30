@@ -2,7 +2,7 @@
 
 - ID: `card`
 - Selector: `krn-card`
-- Import: `import { KrnCard } from '@kern-ui/angular/kit';`
+- Import: `import { KrnCard } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnCard`
 - Lifecycle: **stable**
 - Category: Data display
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnCard } from '@kern-ui/angular/kit';
+import { KrnCard } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-card-agent-example',

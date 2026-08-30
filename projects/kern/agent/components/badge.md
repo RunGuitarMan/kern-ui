@@ -2,7 +2,7 @@
 
 - ID: `badge`
 - Selector: `krn-badge`
-- Import: `import { KrnBadge } from '@kern-ui/angular/kit';`
+- Import: `import { KrnBadge } from '@kern-ui/angular/data-display';`
 - Canonical symbol: `KrnBadge`
 - Lifecycle: **stable**
 - Category: Data display
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnBadge } from '@kern-ui/angular/kit';
+import { KrnBadge } from '@kern-ui/angular/data-display';
 
 @Component({
   selector: 'app-kern-badge-agent-example',

@@ -2,7 +2,7 @@
 
 - ID: `hint`
 - Selector: `krn-hint`
-- Import: `import { KrnHint } from '@kern-ui/angular/kit';`
+- Import: `import { KrnHint } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnHint`
 - Lifecycle: **stable**
 - Category: Forms
@@ -27,7 +27,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnHint } from '@kern-ui/angular/kit';
+import { KrnHint } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-hint-agent-example',

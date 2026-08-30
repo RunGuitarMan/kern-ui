@@ -9,8 +9,8 @@
   "symbol": "KrnSidebar",
   "canonicalSymbol": "KrnSidebar",
   "canonicalId": "sidebar",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -181,7 +181,7 @@
       "title": "Collapsible workspace sidebar",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Collapsible workspace sidebar\n *\n * Keep sidebar collapse state application-owned.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSidebar } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-sidebar-agent-example',\n  standalone: true,\n  imports: [KrnSidebar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-sidebar [(collapsed)]=\"collapsed\" ariaLabel=\"Workspace navigation\">\n      <strong krnSidebarHeader>Workspace</strong>\n      <nav aria-label=\"Sections\">Overview · Members · Audit log</nav>\n      <small krnSidebarFooter>Acme Europe</small>\n    </krn-sidebar>\n  `,\n})\nexport class KernSidebarAgentExample {\n  collapsed = false;\n}\n\nvoid bootstrapApplication(KernSidebarAgentExample);\n",
+      "code": "/**\n * Collapsible workspace sidebar\n *\n * Keep sidebar collapse state application-owned.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSidebar } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-sidebar-agent-example',\n  standalone: true,\n  imports: [KrnSidebar],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-sidebar [(collapsed)]=\"collapsed\" ariaLabel=\"Workspace navigation\">\n      <strong krnSidebarHeader>Workspace</strong>\n      <nav aria-label=\"Sections\">Overview · Members · Audit log</nav>\n      <small krnSidebarFooter>Acme Europe</small>\n    </krn-sidebar>\n  `,\n})\nexport class KernSidebarAgentExample {\n  collapsed = false;\n}\n\nvoid bootstrapApplication(KernSidebarAgentExample);\n",
       "verification": "compiled",
       "source": "examples/sidebar.ts"
     }

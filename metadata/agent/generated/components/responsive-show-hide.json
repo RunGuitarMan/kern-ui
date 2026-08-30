@@ -9,8 +9,8 @@
   "symbol": "KrnResponsiveShowHide",
   "canonicalSymbol": "KrnShow",
   "canonicalId": "responsive-show-hide",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "layout",
+  "importPath": "@kern-ui/angular/layout",
   "aliases": {
     "symbols": ["KrnShow"],
     "selectors": ["krn-show"],
@@ -110,7 +110,7 @@
       "title": "Responsive supporting guidance",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Responsive supporting guidance\n *\n * Show supplemental copy only when its target layout has enough room.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnResponsiveShowHide } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-responsive-show-hide-agent-example',\n  standalone: true,\n  imports: [KrnResponsiveShowHide],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-responsive-show-hide from=\"md\" display=\"block\">\n      Keyboard shortcuts are available from the command palette.\n    </krn-responsive-show-hide>\n  `,\n})\nexport class KernResponsiveShowHideAgentExample {}\n\nvoid bootstrapApplication(KernResponsiveShowHideAgentExample);\n",
+      "code": "/**\n * Responsive supporting guidance\n *\n * Show supplemental copy only when its target layout has enough room.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnResponsiveShowHide } from '@kern-ui/angular/layout';\n\n@Component({\n  selector: 'app-kern-responsive-show-hide-agent-example',\n  standalone: true,\n  imports: [KrnResponsiveShowHide],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-responsive-show-hide from=\"md\" display=\"block\">\n      Keyboard shortcuts are available from the command palette.\n    </krn-responsive-show-hide>\n  `,\n})\nexport class KernResponsiveShowHideAgentExample {}\n\nvoid bootstrapApplication(KernResponsiveShowHideAgentExample);\n",
       "verification": "compiled",
       "source": "examples/responsive-show-hide.ts"
     }

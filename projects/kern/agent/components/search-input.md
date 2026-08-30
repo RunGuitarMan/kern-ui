@@ -2,7 +2,7 @@
 
 - ID: `search-input`
 - Selector: `krn-search-input`
-- Import: `import { KrnSearchInput } from '@kern-ui/angular/kit';`
+- Import: `import { KrnSearchInput } from '@kern-ui/angular/forms';`
 - Canonical symbol: `KrnSearchInput`
 - Lifecycle: **stable**
 - Category: Forms
@@ -28,7 +28,7 @@ Avoid: Do not remove labels, focus indicators, or overflow behavior to make a de
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnSearchInput } from '@kern-ui/angular/kit';
+import { KrnSearchInput } from '@kern-ui/angular/forms';
 
 @Component({
   selector: 'app-kern-search-input-agent-example',

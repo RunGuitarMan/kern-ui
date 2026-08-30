@@ -9,8 +9,8 @@
   "symbol": "KrnResponsiveMedia",
   "canonicalSymbol": "KrnResponsiveMedia",
   "canonicalId": "responsive-media",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "data-display",
+  "importPath": "@kern-ui/angular/data-display",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -99,7 +99,7 @@
       "title": "Responsive report preview",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Responsive report preview\n *\n * Contain responsive media within a stable aspect ratio.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnResponsiveMedia } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-responsive-media-agent-example',\n  standalone: true,\n  imports: [KrnResponsiveMedia],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-responsive-media aspectRatio=\"16 / 9\">\n      <div role=\"img\" aria-label=\"Revenue dashboard preview\">Revenue dashboard preview</div>\n    </krn-responsive-media>\n  `,\n})\nexport class KernResponsiveMediaAgentExample {}\n\nvoid bootstrapApplication(KernResponsiveMediaAgentExample);\n",
+      "code": "/**\n * Responsive report preview\n *\n * Contain responsive media within a stable aspect ratio.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnResponsiveMedia } from '@kern-ui/angular/data-display';\n\n@Component({\n  selector: 'app-kern-responsive-media-agent-example',\n  standalone: true,\n  imports: [KrnResponsiveMedia],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-responsive-media aspectRatio=\"16 / 9\">\n      <div role=\"img\" aria-label=\"Revenue dashboard preview\">Revenue dashboard preview</div>\n    </krn-responsive-media>\n  `,\n})\nexport class KernResponsiveMediaAgentExample {}\n\nvoid bootstrapApplication(KernResponsiveMediaAgentExample);\n",
       "verification": "compiled",
       "source": "examples/responsive-media.ts"
     }

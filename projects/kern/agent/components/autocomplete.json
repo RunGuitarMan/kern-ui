@@ -9,8 +9,8 @@
   "symbol": "KrnAutocomplete",
   "canonicalSymbol": "KrnAutocomplete",
   "canonicalId": "autocomplete",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -371,7 +371,7 @@
       "title": "Typed account autocomplete",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed account autocomplete\n *\n * Provide explicit suggestions and controlled popup state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAutocomplete, type KrnSelectOption } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-autocomplete-agent-example',\n  standalone: true,\n  imports: [KrnAutocomplete, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-autocomplete\n      ariaLabel=\"Customer account\"\n      [options]=\"accountOptions\"\n      [formControl]=\"control\"\n      [(open)]=\"open\"\n    />\n  `,\n})\nexport class KernAutocompleteAgentExample {\n  readonly control = new FormControl<string>('Acme Europe', { nonNullable: true });\n\n  readonly accountOptions: readonly KrnSelectOption<string>[] = [\n    { value: 'Acme Europe', label: 'Acme Europe' },\n    { value: 'Acme North America', label: 'Acme North America' },\n  ];\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernAutocompleteAgentExample);\n",
+      "code": "/**\n * Typed account autocomplete\n *\n * Provide explicit suggestions and controlled popup state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnAutocomplete, type KrnSelectOption } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-autocomplete-agent-example',\n  standalone: true,\n  imports: [KrnAutocomplete, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-autocomplete\n      ariaLabel=\"Customer account\"\n      [options]=\"accountOptions\"\n      [formControl]=\"control\"\n      [(open)]=\"open\"\n    />\n  `,\n})\nexport class KernAutocompleteAgentExample {\n  readonly control = new FormControl<string>('Acme Europe', { nonNullable: true });\n\n  readonly accountOptions: readonly KrnSelectOption<string>[] = [\n    { value: 'Acme Europe', label: 'Acme Europe' },\n    { value: 'Acme North America', label: 'Acme North America' },\n  ];\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernAutocompleteAgentExample);\n",
       "verification": "compiled",
       "source": "examples/autocomplete.ts"
     }

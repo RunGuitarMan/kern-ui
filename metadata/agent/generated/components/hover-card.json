@@ -9,8 +9,8 @@
   "symbol": "KrnHoverCard",
   "canonicalSymbol": "KrnHoverCard",
   "canonicalId": "hover-card",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "feedback",
+  "importPath": "@kern-ui/angular/feedback",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -130,7 +130,7 @@
       "title": "Account preview hover card",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Account preview hover card\n *\n * Provide supplemental preview content through the component-owned focusable trigger.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnHoverCard } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-hover-card-agent-example',\n  standalone: true,\n  imports: [KrnHoverCard],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-hover-card ariaLabel=\"Acme Europe preview\">\n      <span krnHoverCardTrigger>Acme Europe</span>\n      <strong>Acme Europe</strong>\n      <p>Enterprise · Renewal 15 October</p>\n    </krn-hover-card>\n  `,\n})\nexport class KernHoverCardAgentExample {}\n\nvoid bootstrapApplication(KernHoverCardAgentExample);\n",
+      "code": "/**\n * Account preview hover card\n *\n * Provide supplemental preview content through the component-owned focusable trigger.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnHoverCard } from '@kern-ui/angular/feedback';\n\n@Component({\n  selector: 'app-kern-hover-card-agent-example',\n  standalone: true,\n  imports: [KrnHoverCard],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-hover-card ariaLabel=\"Acme Europe preview\">\n      <span krnHoverCardTrigger>Acme Europe</span>\n      <strong>Acme Europe</strong>\n      <p>Enterprise · Renewal 15 October</p>\n    </krn-hover-card>\n  `,\n})\nexport class KernHoverCardAgentExample {}\n\nvoid bootstrapApplication(KernHoverCardAgentExample);\n",
       "verification": "compiled",
       "source": "examples/hover-card.ts"
     }

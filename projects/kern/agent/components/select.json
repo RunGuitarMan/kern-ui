@@ -9,8 +9,8 @@
   "symbol": "KrnSelect",
   "canonicalSymbol": "KrnSelect",
   "canonicalId": "select",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "forms",
+  "importPath": "@kern-ui/angular/forms",
   "aliases": {
     "symbols": [],
     "selectors": [],
@@ -387,7 +387,7 @@
       "title": "Typed owner select",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Typed owner select\n *\n * Supply stable typed options and controlled overlay state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSelect, type KrnSelectOption } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-select-agent-example',\n  standalone: true,\n  imports: [KrnSelect, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-select\n      ariaLabel=\"Account owner\"\n      [options]=\"ownerOptions\"\n      [formControl]=\"control\"\n      [(open)]=\"open\"\n    />\n  `,\n})\nexport class KernSelectAgentExample {\n  readonly control = new FormControl<string | null>('owner-ada', { nonNullable: true });\n\n  readonly ownerOptions: readonly KrnSelectOption<string>[] = [\n    { value: 'owner-ada', label: 'Ada Lovelace' },\n    { value: 'owner-grace', label: 'Grace Hopper' },\n  ];\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernSelectAgentExample);\n",
+      "code": "/**\n * Typed owner select\n *\n * Supply stable typed options and controlled overlay state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { FormControl, ReactiveFormsModule } from '@angular/forms';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnSelect, type KrnSelectOption } from '@kern-ui/angular/forms';\n\n@Component({\n  selector: 'app-kern-select-agent-example',\n  standalone: true,\n  imports: [KrnSelect, ReactiveFormsModule],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-select\n      ariaLabel=\"Account owner\"\n      [options]=\"ownerOptions\"\n      [formControl]=\"control\"\n      [(open)]=\"open\"\n    />\n  `,\n})\nexport class KernSelectAgentExample {\n  readonly control = new FormControl<string | null>('owner-ada', { nonNullable: true });\n\n  readonly ownerOptions: readonly KrnSelectOption<string>[] = [\n    { value: 'owner-ada', label: 'Ada Lovelace' },\n    { value: 'owner-grace', label: 'Grace Hopper' },\n  ];\n\n  open = false;\n}\n\nvoid bootstrapApplication(KernSelectAgentExample);\n",
       "verification": "compiled",
       "source": "examples/select.ts"
     }

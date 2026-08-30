@@ -2,7 +2,7 @@
 
 - ID: `drawer`
 - Selector: `krn-drawer`
-- Import: `import { KrnDrawer } from '@kern-ui/angular/kit';`
+- Import: `import { KrnDrawer } from '@kern-ui/angular/feedback';`
 - Canonical symbol: `KrnDrawer`
 - Lifecycle: **beta**
 - Category: Feedback
@@ -27,7 +27,7 @@ Avoid: Do not use a modal Drawer as permanent application navigation; use Sideba
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnDrawer } from '@kern-ui/angular/kit';
+import { KrnDrawer } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-drawer-agent-example',

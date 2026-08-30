@@ -9,8 +9,8 @@
   "symbol": "KrnTabs",
   "canonicalSymbol": "KrnTabs",
   "canonicalId": "tabs",
-  "owner": "kit",
-  "importPath": "@kern-ui/angular/kit",
+  "owner": "navigation",
+  "importPath": "@kern-ui/angular/navigation",
   "aliases": {
     "symbols": ["KrnVerticalTabs"],
     "selectors": ["krn-vertical-tabs"],
@@ -135,7 +135,7 @@
       "title": "Controlled account tabs",
       "kind": "minimal",
       "language": "typescript",
-      "code": "/**\n * Controlled account tabs\n *\n * Use stable ids and application-owned selected tab state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTabs, type KrnTabItem } from '@kern-ui/angular/kit';\n\n@Component({\n  selector: 'app-kern-tabs-agent-example',\n  standalone: true,\n  imports: [KrnTabs],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tabs ariaLabel=\"Account sections\" [items]=\"items\" [(value)]=\"selectedTab\">\n      Selected section: {{ selectedTab }}\n    </krn-tabs>\n  `,\n})\nexport class KernTabsAgentExample {\n  readonly items: readonly KrnTabItem[] = [\n    { id: 'overview', label: 'Overview' },\n    { id: 'activity', label: 'Activity', badge: 4 },\n    { id: 'settings', label: 'Settings' },\n  ];\n\n  selectedTab: string | null = 'overview';\n}\n\nvoid bootstrapApplication(KernTabsAgentExample);\n",
+      "code": "/**\n * Controlled account tabs\n *\n * Use stable ids and application-owned selected tab state.\n *\n * Compile-verified against the packed @kern-ui/angular package by the KERN agent DX gate.\n */\nimport { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KrnTabs, type KrnTabItem } from '@kern-ui/angular/navigation';\n\n@Component({\n  selector: 'app-kern-tabs-agent-example',\n  standalone: true,\n  imports: [KrnTabs],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    <krn-tabs ariaLabel=\"Account sections\" [items]=\"items\" [(value)]=\"selectedTab\">\n      Selected section: {{ selectedTab }}\n    </krn-tabs>\n  `,\n})\nexport class KernTabsAgentExample {\n  readonly items: readonly KrnTabItem[] = [\n    { id: 'overview', label: 'Overview' },\n    { id: 'activity', label: 'Activity', badge: 4 },\n    { id: 'settings', label: 'Settings' },\n  ];\n\n  selectedTab: string | null = 'overview';\n}\n\nvoid bootstrapApplication(KernTabsAgentExample);\n",
       "verification": "compiled",
       "source": "examples/tabs.ts"
     }

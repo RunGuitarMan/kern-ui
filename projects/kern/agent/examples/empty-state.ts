@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { KrnEmptyState } from '@kern-ui/angular/kit';
+import { KrnEmptyState } from '@kern-ui/angular/feedback';
 
 @Component({
   selector: 'app-kern-empty-state-agent-example',

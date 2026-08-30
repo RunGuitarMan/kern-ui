@@ -1270,6 +1270,24 @@ declare class KrnThemeDirective {
  */
 declare function provideKrnTranslationBridge(): Provider[];
 
+/**
+ * Resolves an optional local input ahead of a reactive application fallback.
+ * `null`, empty strings, and falsey values remain explicit overrides.
+ */
+declare function krnInputFallback<T>(value: Signal<T | undefined>, fallback: () => T): Signal<T>;
+
+type KrnIntlLocale = string | string[];
+/**
+ * Returns either the reactive application locale or the closest fixed scoped
+ * `KRN_LOCALE` override.
+ */
+declare function krnInheritedLocale(): Signal<string>;
+/** Resolves a component locale input ahead of the reactive inherited locale. */
+declare function krnResolvedLocale(locale: Signal<string | undefined>): Signal<string>;
+declare function krnResolvedLocale(
+  locale: Signal<KrnIntlLocale | undefined>,
+): Signal<KrnIntlLocale>;
+
 export {
   KRN_BRAND_STEPS,
   KRN_BUILT_IN_ICONS,
@@ -1297,7 +1315,10 @@ export {
   generateKrnBrandPalette,
   krnBrandPaletteVariables,
   krnFormatTranslation,
+  krnInheritedLocale,
+  krnInputFallback,
   krnLocaleConfig,
+  krnResolvedLocale,
   krnTokens,
   parseHexColor,
   provideKrn,
@@ -1329,6 +1350,7 @@ export type {
   KrnIconDefinition,
   KrnIconName,
   KrnIconSize,
+  KrnIntlLocale,
   KrnLayoutTranslations,
   KrnLocaleConfig,
   KrnLocalePack,
